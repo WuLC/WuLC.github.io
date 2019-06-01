@@ -1,0 +1,847 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="数学," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="本文主要讲述先验概率，后验概率，共轭分布和共轭先验这几个概念。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="先验概率，后验概率，共轭分布与共轭先验">
+<meta property="og:url" content="http://wulc.github.io/2017/01/08/先验概率，后验概率，共轭分布与共轭先验/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="本文主要讲述先验概率，后验概率，共轭分布和共轭先验这几个概念。">
+<meta property="og:updated_time" content="2019-06-01T09:14:44.137Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="先验概率，后验概率，共轭分布与共轭先验">
+<meta name="twitter:description" content="本文主要讲述先验概率，后验概率，共轭分布和共轭先验这几个概念。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"always"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://wulc.github.io/2017/01/08/先验概率，后验概率，共轭分布与共轭先验/"/>
+
+
+
+
+
+  <title> 先验概率，后验概率，共轭分布与共轭先验 | 吴良超的学习笔记 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1258114456&web_id=1258114456" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">吴良超的学习笔记</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <h1 class="site-subtitle" itemprop="description"></h1>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            站内搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://wulc.github.io/2017/01/08/先验概率，后验概率，共轭分布与共轭先验/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="良超">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="吴良超的学习笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                先验概率，后验概率，共轭分布与共轭先验
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-08T20:08:55+08:00">
+                2017-01-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-tags"></i>
+              </span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/tags/数学/" itemprop="url" rel="index">
+                    <span itemprop="name">数学</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文主要讲述先验概率，后验概率，共轭分布和共轭先验这几个概念。</p>
+<a id="more"></a>
+<p>众所周知，概率论中有两大学派：频率学派和贝叶斯学派。<strong>先验概率，后验概率，共轭分布和共轭先验是贝叶斯学派中的几个概念。原因是贝叶斯学派认为分布存在先验分布和后验分布的不同，而频率学派则认为一个事件的概率只有一个</strong>。</p>
+<p>下面先以一个直观的例子来说明先验概率和后验概率的概念</p>
+<p>比如说，你来到一个山洞,这个山洞里可能有熊也可能没有熊, 记你觉得山洞有熊的为事件 $Y$. 然后,你也许听到山洞里传来熊的吼声, 记听到熊吼声为事件 $X$. 你一开始认为山洞有熊的概率是 $P(Y)$; 听到熊的吼声之后,你认为有熊的概率是 $P(Y|X)$。在这里，$P(Y)$就是先验概率,$P(Y|X)$是后验概率.</p>
+<p>回到概率论中一个经典的例子:抛硬币。抛硬币时抛出正面的概率为多大？假如事前关于这枚硬币没有任何额外信息，那么一般都会认为是 1/2，这时候的 1/2 就是正面朝上的先验概率 。但是在经过一系列实验确认后再得到的正面朝上的概率很可能就不是1/2了(受到到硬币的质地，重量分布等因素的影响)，这个概率便是后验概率。</p>
+<p>简单理解就是<strong>在事件发生之前，根据以往的经验推测的与该事件相关的概率就是先验概率，而在事件(试验)真正发生后，通过事件(试验)的结果可以修正先验概率，从而得到后验概率。</strong></p>
+<p>那么对于抛硬币这个事件来说，<strong>抛出正面硬币的概率就应该是一个概率的概率，也就是说它的结果不是一个单一的值 1/2，而是一个概率分布，可能有很高的概率是1/2，但是也有一定的概率是100%（比如抛100次结果还真都100次都是正面）</strong>。那么在这里<strong>这个概率的分布用函数来表示就是一个似然函数</strong>，所以似然函数也被称为“分布的分布”。用公式来表示就是：</p>
+<p><strong>后验概率（posterior probability）∝ 似然函数（likelyhood function）*先验概率（prior probability）</strong></p>
+<p>即：</p>
+<p>$P(X|D) ∝ P(μ|D)*P(X)$</p>
+<p>这里 $D$ 表示一组观测实验(比如我扔了五次硬币得到5次正反面的结果)，$X$ 表示随机变量（在这里是硬币的正反面），表示随机函数里面的参数（在这里就是硬币掷为正面的概率）。</p>
+<p>注意这里是正比于而不是等于，这个是理解似然函数的一个关键，右侧直接的乘积其实是不满足概率分布归一化的条件的（就是右侧的积分最后不会等于1）那么这个正比符号怎样才能变成等号呢？其实只要再除以一个系数进行归一化就可以了：</p>
+<p>$P(X|D)  =P(μ|D)*P(X)/P(D)$</p>
+<p>这个归一化的系数是怎么来的呢？让我们回忆一下贝叶斯公式：</p>
+<p>$P(X|D)*P(D)=P(XD)$</p>
+<p>而$P(μ|D)=P(D|X)$(似然函数在计算时的做法就是将D的观察结果代入P(X)的分布式子中去得到的)</p>
+<p>于是</p>
+<p>$(P(μ|D)/P(D))*P(X)=P(D|X)*P(X)/P(D)=P(XD)/P(D)=P(X|D)$</p>
+<p><strong>似然函数的形式是依赖于观测值的</strong>，它在贝叶斯学派与频率学派都有很大的作用，不过在两家的用法并不相同。</p>
+<p><strong>频率学派认为每个事件的概率是一个客观存在的常数值，只是我们不知道而已</strong>。比如抛硬币，在实验估计之前我们不知道它是多少，频率学派也不会管之前大家说抛硬币出现正面的概率是1/2还是多少，所谓“眼见为实，耳听为虚”，他们的<strong>最终结论只和在实验中观测到的数据有关系</strong>。但是它肯定是一个确定的常数，然后我们通过观察实验，获得一组样本值 $D$，再将这组样本值代入似然函数 $P(D|X)$ ，求解使得似然函数最大的值就是估计出来的（当然由于实验的结果不同，这个估计出来的也很可能不是1/2，实验不同得到的结果也不同，但是根据大数定律，理论上实验次数足够多以后，求出来的是会越来越接近真实的概率的）。也就是说<strong>频率学派认为答案只有一个，我们不断地通过各种估计法来猜测这个值。</strong></p>
+<p>而贝叶斯学派并不会完全拒绝大家之前所说的“硬币扔出正面的概率是1/2”的说法，只是<strong>贝叶斯学派认为最终硬币扔出正面反面的概率并不是一个常数值，不是一个有唯一答案的真理，这个值本身应该也是一个随机变量</strong>，是在不断变化的一个数值，如何得到这个值，<strong>贝叶斯学派认为也需要通过实验在“硬币扔出正面的概率是1/2”的说法（先验概率）的基础上通过实验数据（似然函数）不断去预估这个扔出正面概率的实际分布（后验分布）。</strong></p>
+<p>举个例子：假如我扔了5次硬币，先出现了3次正面，后出现了两次反面，那么这时的似然函数就应该是 $P(μ|D)=P(D|X)=L(μ)=μ*μ*μ*（1-μ）*（1-μ）$ ($\mu$ 是硬币抛正面的概率，在似然函数里就相当于概率分布函数里的随机变量一样变成一个随机变化的值了）</p>
+<p> 如果用我们以前统计课本上的频率学派的最大似然估计法，对$L(μ)$求导求最大值，得到 $μ=3/5$， 那么得出结论就是最后抛硬币为正面的概率就是 3/5，当然还要附上一个参数估计的置信度，表示这个结论自然不是100%准确的</p>
+<p>但是如果采用贝叶斯学派的后验概率$P(X|D) = P(D|X)*P(X)/P(D)=L(μ)*P(X)/P(D)$，</p>
+<p>其中 $P(D)$ 可以简单地由古典概型算出来：$P(D)=1/=1/32=0.03125$。如果 $μ$ 取了 3/5，代入上式那么抛硬币为正面的概率就是 0.55296，而不是1/2，当然<strong>贝叶斯学派最终得到的后验概率是一个随 $μ$ 变化的分布，只不过在这种情况这个分布取到 0.55296 这个值的概率最大而已</strong></p>
+<p>清楚似然函数、先验概率、后验概率的几个贝叶斯学派的基本概念，要明白共轭分布和共轭先验就很简单了，所谓<strong>共轭分布就是先验概率和后验概率具有一样函数形式的分布形式</strong>，举个例子就是假如先验分布函数是形如 $C_1\mu^a (1-\mu)^b$ 的形式（比如二项分布就是这种形式）而后验分布是 $C_2\mu^m (1-\mu)^n$ 这样的形式，两者只是具体参数值不同，或者先验分布和后验分布都是高斯分布等等的情形就可为认为先验分布和后验分布具有同样的形式。</p>
+<p><strong>这种形式不变的好处是，我们能够在先验分布中赋予参数很明确的物理意义，这个物理意义可以延续到后验分布中进行解释，同时从先验变换到后验的过程中从数据中补充的知识也容易有物理解释。同时能够后验分布和先验分布共轭的情况下是可以大大简化计算量。</strong></p>
+<p>那么共轭先验又是什么概念呢？因为在现实建模问题中，往往我们<strong>先得到和固定的反而是似然函数</strong>（其实也很好理解，客观的实验观察数据才是第一手最solid的材料），这时先验函数（可以理解为先验知识或者是对后验分布的一种假设和猜测）是可以选择的。这时如果我选的先验分布最后乘上这个似然函数，使得后验分布与先验分布共轭，那么我们就称这个<strong>先验函数为似然函数的共轭先验</strong>。基于上面说到的共轭分布的好处，往往选择先验函数时都会让先验概率分布和后验概率分布共轭。</p>
+<p><a href="http://blog.huanghao.me/?p=250" target="_blank" rel="external">共轭分布与共轭先验</a><br><a href="https://www.zhihu.com/question/22905989/answer/25679831" target="_blank" rel="external">条件概率和后验概率有什么不同？</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/数学/" rel="tag">数学</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/03/使用sklearn做单机特征工程/" rel="next" title="使用sklearn做单机特征工程">
+                <i class="fa fa-chevron-left"></i> 使用sklearn做单机特征工程
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/01/16/使用sklearn优雅地进行数据挖掘/" rel="prev" title="使用sklearn优雅地进行数据挖掘">
+                使用sklearn优雅地进行数据挖掘 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://wulc.me/files/profile.jpg"
+               alt="良超" />
+          <p class="site-author-name" itemprop="name">良超</p>
+          <p class="site-description motion-element" itemprop="description">算法工程师首先得是个工程师</p>
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">208</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">39</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/WuLC" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github-alt"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.linkedin.com/in/wuliangchao/" target="_blank" title="LinkedIn">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  LinkedIn
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <center>
+<div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2019</span>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
+  </br>
+  <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
+</div>
+</center>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>

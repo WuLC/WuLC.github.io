@@ -1,0 +1,889 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="python,工具使用," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="最近在魔改 loss function，涉及到很多矩阵运算，而矩阵运算中维度的对齐免不了要多次的调试；沿袭着之前的 print 大法弄了一段时间后，不仅代码凌乱不堪，而且心累：每次 import tensorflow as tf 都要十几秒，然后 print 完之后想进一步看其他变量的信息，又要重新执行一遍。后来找到了 ipdb 这个好用的工具，才发现自己过去调试程序的方法是多么的低效和 naiv">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ipdb 使用小记">
+<meta property="og:url" content="http://wulc.github.io/2018/12/21/ipdb 使用小记/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="最近在魔改 loss function，涉及到很多矩阵运算，而矩阵运算中维度的对齐免不了要多次的调试；沿袭着之前的 print 大法弄了一段时间后，不仅代码凌乱不堪，而且心累：每次 import tensorflow as tf 都要十几秒，然后 print 完之后想进一步看其他变量的信息，又要重新执行一遍。后来找到了 ipdb 这个好用的工具，才发现自己过去调试程序的方法是多么的低效和 naiv">
+<meta property="og:updated_time" content="2019-06-01T09:14:44.095Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ipdb 使用小记">
+<meta name="twitter:description" content="最近在魔改 loss function，涉及到很多矩阵运算，而矩阵运算中维度的对齐免不了要多次的调试；沿袭着之前的 print 大法弄了一段时间后，不仅代码凌乱不堪，而且心累：每次 import tensorflow as tf 都要十几秒，然后 print 完之后想进一步看其他变量的信息，又要重新执行一遍。后来找到了 ipdb 这个好用的工具，才发现自己过去调试程序的方法是多么的低效和 naiv">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"always"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://wulc.github.io/2018/12/21/ipdb 使用小记/"/>
+
+
+
+
+
+  <title> ipdb 使用小记 | 吴良超的学习笔记 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1258114456&web_id=1258114456" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">吴良超的学习笔记</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <h1 class="site-subtitle" itemprop="description"></h1>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            站内搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://wulc.github.io/2018/12/21/ipdb 使用小记/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="良超">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="吴良超的学习笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                ipdb 使用小记
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-21T12:00:37+08:00">
+                2018-12-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-tags"></i>
+              </span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/tags/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/tags/工具使用/" itemprop="url" rel="index">
+                    <span itemprop="name">工具使用</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近在魔改 loss function，涉及到很多矩阵运算，而矩阵运算中维度的对齐免不了要多次的调试；沿袭着之前的 print 大法弄了一段时间后，不仅代码凌乱不堪，而且心累：每次 <code>import tensorflow as tf</code> 都要十几秒，然后 print 完之后想进一步看其他变量的信息，又要重新执行一遍。后来找到了 <a href="https://pypi.org/project/ipdb/" target="_blank" rel="external">ipdb</a> 这个好用的工具，才发现自己过去调试程序的方法是多么的低效和 naive。</p>
+<a id="more"></a>
+<p>python 提供了一个默认的 debugger：<a href="https://docs.python.org/3.5/library/pdb.html" target="_blank" rel="external">pdb</a>，而 ipdb 则是 pdb 的增强版，提供了补全、语法高亮等功能，类似于 ipython 与 python 默认的交互终端的关系，通过 <code>pip install ipdb</code> 即可安装 ipdb。</p>
+<h2 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h2><p>ipdb 的使用方法一般有两种：<strong>集成到源代码或通过命令交互</strong>。</p>
+<p>集成到源代码可以直接在代码指定位置插入断点。如下所示：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> ipdb</span><br><span class="line">var1 = <span class="number">23</span></span><br><span class="line">ipdb.set_trace()</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>上面的代码会在执行完 <code>var1 = 23</code> 这条语句之后停止，展开 ipython 环境，之后就可以自由地调试了。</p>
+<p>上面的方式虽然简单，但是存在着两个较为比较明显的问题：</p>
+<ol>
+<li>插入的断点代码会污染原来的代码空间 </li>
+<li>每次插入断点都需要修改源码</li>
+</ol>
+<p>因此，相比于上面的方式，交互式的命令式调试方法更加方便。启动命令式调试环境的方法也很简单：</p>
+<p><code>python -m ipdb code.py</code></p>
+<p>接着就是通过一些常用的命令来进行 debug了，如上面插入断点的样例代码就可以通过以下命令达到同样效果：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$python -m ipdb code.py</span><br><span class="line">ipdb&gt; b <span class="number">3</span></span><br><span class="line">Breakpoint <span class="number">1</span> at /test.py:<span class="number">3</span></span><br><span class="line">ipdb&gt; c</span><br></pre></td></tr></table></figure>
+<p>上面的命令 <code>b 3</code> 表示在第三行设置一个断点，然后通过命令 <code>c</code> 一直执行至断点处，接着就会展开 ipython 环境进行调试了。（<code>b</code> 和 <code>c</code> 分别代表了 break 和 continue，可以用整条命令，也可以只用首字母）</p>
+<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><p>上面的设置断点和一直执行至断点是比较常见的用法，除此之外，还有其他一些常用命令。</p>
+<h3 id="帮助"><a href="#帮助" class="headerlink" title="帮助"></a>帮助</h3><p>通过命令 <code>h</code> 可以列出所有命令，后面跟上具体的命令如 <code>h command</code> 则可以显示出这条命令的具体作用，非常有用，依靠这条命令能够节省不少 google 的次数。</p>
+<h3 id="断点"><a href="#断点" class="headerlink" title="断点"></a>断点</h3><p>上面提到了断点的一种常见用法，即命令 <code>b line_number</code> 和 <code>c</code> 的组合，<code>b line_number</code> 默认是对当前文件设置断点，也可以在 line_number 前加上其他文件名（比如说要将要引用的其他文件），即 <code>b file_name:line_number</code>；file_name 需要在 <code>sys.path</code> 中，当前目录已经默认存在  <code>sys.path</code> , 也可通过 <code>..</code> 引用上一层目录的文件。</p>
+<p>另外，<strong>通过 <code>b</code> 设置的断点在重新运行 debug 程序 (命令 <code>restart</code> 或 <code>run</code>) 后会依然保留</strong>，如果要忽略这些断点，有两种做法</p>
+<ol>
+<li>通过 <code>disable</code> 关闭这些断点，<code>enable</code> 打开这些断点</li>
+<li>通过命令 <code>clear</code> 或 <code>cl</code> 清除这些断点</li>
+</ol>
+<p>此外，除了上面那种一直存在的断点，ipdb 中还有一种<strong>只生效一次的断点，命令为 <code>tbreak</code>, 使用方法同命令 <code>b</code>。</strong></p>
+<p>上面的断点都是直接指定的，pdb 中还有一种<strong>条件断点</strong>，即只有当某个条件成立时，才设置断点，其使用命令为 <code>condition line_num bool_expression</code>, condition 为关键字，line_num 为设定断点的位置，只有当 expression 为 true 时, 才会设置这个断点。</p>
+<p>如果需要列出已经设置的所有断点，可以单独使用命令 <code>b</code>。</p>
+<h3 id="逐行执行"><a href="#逐行执行" class="headerlink" title="逐行执行"></a>逐行执行</h3><p>有两条命令可以进行逐行执行： <code>s</code>（step) 或 <code>n</code>（next), 两个命令的主要区别是：<strong>假如当前行调用了某个函数，<code>s</code> 会进入这个函数，<code>n</code> 则不会</strong>。因此，如果需要了解函数内部执行的细节，需要 <code>s</code> 命令进入函数内部进行 debug。</p>
+<p><strong>进入了函数之后</strong>，通过命令 <code>a</code>（argument） 可列出当前的函数的参数，通过 <code>r</code>（return）则可以直接执行至 return 语句。</p>
+<h3 id="忽略某段代码"><a href="#忽略某段代码" class="headerlink" title="忽略某段代码"></a>忽略某段代码</h3><p>使用 <code>j line_number</code> 可以忽略某段代码，下一步直接从 line_number 开始执行。</p>
+<h3 id="查看源码"><a href="#查看源码" class="headerlink" title="查看源码"></a>查看源码</h3><p>通过命令 <code>l</code> 或 <code>ll</code> 可查看源码， <code>ll</code> 是查看整个源码文件， <code>l</code> 可指定需要查看的行数，默认是当前往后 11 行，也可指定具体的范围，如 <code>l 2,5</code> 是查看第 2-5 行的源码。</p>
+<h3 id="重启或退出-debugger"><a href="#重启或退出-debugger" class="headerlink" title="重启或退出 debugger"></a>重启或退出 debugger</h3><p>上面已经提到了重启 debugger 可通过 <code>restart</code> 或 <code>run</code> 命令，需要注意的是，<strong>重启 debugger 后断点、debugger 的设置等是会保留的。</strong>如果要一个全新的 debugger，可通过命令 <code>q</code>、<code>quit</code> 或 <code>exit</code> 退出 debugger 后进入。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>以上就是 ipdb 的一些基本用法, 除此之外，更多的用法可参考 <a href="https://docs.python.org/3.5/library/pdb.html" target="_blank" rel="external">pdb 的官方文档</a>，ipdb 的命令跟 pdb 是一样的。另外，gdb 也是一个类似的命令行 debugger，只是一般用来调试 C/C++ 而已，使用的方法类似，甚至很多命令的名称更 pdb 都一样，具体可参考 <a href="http://wiki.ubuntu.org.cn/%E7%94%A8GDB%E8%B0%83%E8%AF%95%E7%A8%8B%E5%BA%8F" target="_blank" rel="external">用GDB调试程序</a>。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag">python</a>
+          
+            <a href="/tags/工具使用/" rel="tag">工具使用</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/12/17/python 语法杂记--生成器、迭代器、上下文管理器/" rel="next" title="python 语法杂记--迭代器、生成器、上下文管理器">
+                <i class="fa fa-chevron-left"></i> python 语法杂记--迭代器、生成器、上下文管理器
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/12/28/LeetCode 解题报告(739,901,907)-线性时间寻找数组中各个元素作为最值的最大范围/" rel="prev" title="LeetCode 解题报告(739,901,907)-线性时间寻找数组中各个元素作为最值的最大范围">
+                LeetCode 解题报告(739,901,907)-线性时间寻找数组中各个元素作为最值的最大范围 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://wulc.me/files/profile.jpg"
+               alt="良超" />
+          <p class="site-author-name" itemprop="name">良超</p>
+          <p class="site-description motion-element" itemprop="description">算法工程师首先得是个工程师</p>
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">208</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">39</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/WuLC" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github-alt"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.linkedin.com/in/wuliangchao/" target="_blank" title="LinkedIn">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  LinkedIn
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#使用方式"><span class="nav-number">1.</span> <span class="nav-text">使用方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常用命令"><span class="nav-number">2.</span> <span class="nav-text">常用命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#帮助"><span class="nav-number">2.1.</span> <span class="nav-text">帮助</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#断点"><span class="nav-number">2.2.</span> <span class="nav-text">断点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#逐行执行"><span class="nav-number">2.3.</span> <span class="nav-text">逐行执行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#忽略某段代码"><span class="nav-number">2.4.</span> <span class="nav-text">忽略某段代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看源码"><span class="nav-number">2.5.</span> <span class="nav-text">查看源码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重启或退出-debugger"><span class="nav-number">2.6.</span> <span class="nav-text">重启或退出 debugger</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">3.</span> <span class="nav-text">小结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <center>
+<div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2019</span>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
+  </br>
+  <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
+</div>
+</center>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>

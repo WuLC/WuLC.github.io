@@ -1,0 +1,944 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="python,树,图," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="本文主要以LeetCode上的几道题目： 684. Redundant Connection 、 685. Redundant Connection II 和 721. Accounts Merge 为例讲解并查集（merge–find set）这种数据结构的应用。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LeetCode 解题报告(684,685,721)-并查集介绍及应用">
+<meta property="og:url" content="http://wulc.github.io/2017/10/12/LeetCode 解题报告(684,685,721)-并查集介绍及应用/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="本文主要以LeetCode上的几道题目： 684. Redundant Connection 、 685. Redundant Connection II 和 721. Accounts Merge 为例讲解并查集（merge–find set）这种数据结构的应用。">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/5gaeww8ac4s6alzqw8rfrwoj/KruskalDemo.gif">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/clwk2r1u5482mqwz6woc803f/PrimAlgDemo.gif">
+<meta property="og:updated_time" content="2019-06-01T09:14:44.042Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="LeetCode 解题报告(684,685,721)-并查集介绍及应用">
+<meta name="twitter:description" content="本文主要以LeetCode上的几道题目： 684. Redundant Connection 、 685. Redundant Connection II 和 721. Accounts Merge 为例讲解并查集（merge–find set）这种数据结构的应用。">
+<meta name="twitter:image" content="http://static.zybuluo.com/WuLiangchao/5gaeww8ac4s6alzqw8rfrwoj/KruskalDemo.gif">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"always"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://wulc.github.io/2017/10/12/LeetCode 解题报告(684,685,721)-并查集介绍及应用/"/>
+
+
+
+
+
+  <title> LeetCode 解题报告(684,685,721)-并查集介绍及应用 | 吴良超的学习笔记 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1258114456&web_id=1258114456" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">吴良超的学习笔记</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <h1 class="site-subtitle" itemprop="description"></h1>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            站内搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://wulc.github.io/2017/10/12/LeetCode 解题报告(684,685,721)-并查集介绍及应用/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="良超">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="吴良超的学习笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                LeetCode 解题报告(684,685,721)-并查集介绍及应用
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-10-12T22:29:11+08:00">
+                2017-10-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-tags"></i>
+              </span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/tags/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/tags/树/" itemprop="url" rel="index">
+                    <span itemprop="name">树</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/tags/图/" itemprop="url" rel="index">
+                    <span itemprop="name">图</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文主要以LeetCode上的几道题目： <a href="https://leetcode.com/problems/redundant-connection/description/" target="_blank" rel="external">684. Redundant Connection</a> 、 <a href="https://leetcode.com/problems/redundant-connection-ii/description/" target="_blank" rel="external">685. Redundant Connection II</a> 和 <a href="https://leetcode.com/problems/accounts-merge/description/" target="_blank" rel="external">721. Accounts Merge</a> 为例讲解并查集（<a href="https://en.wikipedia.org/wiki/Disjoint-set_data_structure" target="_blank" rel="external">merge–find set</a>）这种数据结构的应用。</p>
+<a id="more"></a>
+<p>说到并查集，不得不提的是最小生成树，因为并查集的最经典的应用地方便是解决最小生成树的 Kruskal 算法。</p>
+<h2 id="最小生成树"><a href="#最小生成树" class="headerlink" title="最小生成树"></a>最小生成树</h2><p>有两个经典的算法可用来解决 <a href="https://zh.wikipedia.org/wiki/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91" target="_blank" rel="external">最小生成树</a> 问题： <a href="https://en.wikipedia.org/wiki/Kruskal%27s_algorithm" target="_blank" rel="external">Kruskal 算法</a> 和 <a href="https://en.wikipedia.org/wiki/Prim%27s_algorithm" target="_blank" rel="external">Prim 算法</a>。其中 Kruskal 算法中便应用了并查集这种数据结构，该算法的步骤如下</p>
+<ol>
+<li>新建图G，G中拥有原图中相同的节点，但没有边</li>
+<li>将原图中所有的边按权值从小到大排序</li>
+<li>从权值最小的边开始，如果这条边连接的两个节点于图G中不在同一个连通分量中，则添加这条边到图G中</li>
+<li>重复3，直至图G中所有的节点都在同一个连通分量中</li>
+</ol>
+<p>该算法的动图显示如下(摘自维基百科)</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/5gaeww8ac4s6alzqw8rfrwoj/KruskalDemo.gif" alt="KruskalDemo.gif-415.5kB"></p>
+<p>Kruskal 算法很简单，实际上 Kruskal 算法是一种贪心算法，并且已被证明最终能够收敛到最好结果。而在实现 Kruskal 算法时，则需要用到并查集这种数据结构来减小算法的时间复杂度。下面将详细介绍这种数据结构。</p>
+<p>在介绍并查集前，顺便介绍一下 Prime 算法，Prime 算法也是一种贪心算法，而且也被证明了最终能够得到最好的结果，只是两者的侧重点不同， Kruskal 算法维护的是一个边的集合，而 Prime 算法则同时维护了一个边的集合和一个点的集合，Prim 算法的过程如下</p>
+<ol>
+<li>输入：一个加权连通图，其中顶点集合为V，边集合为E；</li>
+<li>初始化：Vnew = {x}，其中x为集合V中的任一节点（起始点），Enew = {}；</li>
+<li>重复下列操作，直到Vnew = V：<ol>
+<li>在集合E中选取权值最小的边（u, v），其中<strong>u为集合 Vnew 中的元素</strong>，而v则是V中没有加入Vnew的顶点（如果存在有多条满足前述条件即具有相同权值的边，则可任意选取其中之一）；</li>
+<li>将v加入集合Vnew中，将（u, v）加入集合Enew中；</li>
+</ol>
+</li>
+<li>输出：使用集合Vnew和Enew来描述所得到的最小生成树。</li>
+</ol>
+<p>其动图描述如下(摘自维基百科)</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/clwk2r1u5482mqwz6woc803f/PrimAlgDemo.gif" alt="PrimAlgDemo.gif-51.1kB"></p>
+<h2 id="并查集"><a href="#并查集" class="headerlink" title="并查集"></a>并查集</h2><p>在上面描述的 Kruskal 算法中，第三步是</p>
+<blockquote>
+<ol>
+<li>从权值最小的边开始，如果这条边连接的两个节点于图G中不在同一个连通分量中，则添加这条边到图G中</li>
+</ol>
+</blockquote>
+<p><strong>而判断这条边连接的两个节点是否在同一个连通分量中， 实际上就是判断加入了这条边后，是否会与原来已经添加的边形成环路</strong>，并查集正是高效的实现了这个功能。</p>
+<p>并查集主要有三种操作：MakeSet，Find 和 Union。</p>
+<ul>
+<li><strong>MakeSet</strong> 是初始化操作，即为每个 node 创建一个连通分量，且这个 node 为这个连通分量的代表，这里连通分量的代表指的是当连通分量中有多个点时，需要从这些点中选出一个点来代表这个连通分量，而这个点也往往被称为这个连通分量的 parent（意思即指这个点是其他点的 parent）</li>
+<li><strong>Find</strong> 是指找到这个点所属的连通分量的 parent</li>
+<li><strong>Union</strong> 是指将两个连通分量合并成一个连通分量，并选出代表这个连通分量的新的 parent</li>
+</ul>
+<p><strong>那么怎么通过上面这几种操作判断某条边是否会与原来的边形成环路呢？</strong>具体操作如下</p>
+<ol>
+<li>给定一条边，为这条边的两个顶点执行 Find 操作，假如两个顶点的 parent 一样，那么说明这两个点已经在同一个连通分量中，再添加就会导致闭环</li>
+<li>当两个点的 parent 不同，即两个点在不同的连通分量时，需要通过 Union 操作将这两个连通分量连起来</li>
+<li>重复 1、2 步操作直到所有边遍历完</li>
+</ol>
+<p>在具体实现，往往并不需要集合这种数据结构，而是仅仅通过数组即可，比如说有 n 个点，那么就创建一个长度为 n 的数组，每个下标代表一个点，而下标对应的值则代表这个点的 parent。</p>
+<p>并查集还有两个重要的概念 path compression 和 union by rank，目的均是降低时间复杂度，下面会详细说明。</p>
+<p>现在通过具体的题目来讲解上面提到若干概念</p>
+<h2 id="Redundant-Connection"><a href="#Redundant-Connection" class="headerlink" title="Redundant Connection"></a>Redundant Connection</h2><p><a href="https://leetcode.com/problems/redundant-connection/description/" target="_blank" rel="external">684. Redundant Connection</a> 这道题目实际上就是要找到一个无向图中形成环路的最后那条边(输入保证了所有边会形成回路)。首先，看一种最简单的解决方法</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">findRedundantConnection</span><span class="params">(self, edges)</span>:</span></span><br><span class="line">        parents = range(<span class="number">1001</span>)</span><br><span class="line">        <span class="keyword">for</span> edge <span class="keyword">in</span> edges:</span><br><span class="line">            v1, v2 = edge[<span class="number">0</span>], edge[<span class="number">1</span>]</span><br><span class="line">            <span class="keyword">if</span> parents[v1] == parents[v2]:</span><br><span class="line">                <span class="keyword">return</span> edge</span><br><span class="line">            tmp = parents[v2]</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> xrange(len(parents)):</span><br><span class="line">                <span class="keyword">if</span> parents[i] == tmp:</span><br><span class="line">                    parents[i] = parents[v1]</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">None</span></span><br></pre></td></tr></table></figure>
+<p>这种方法中每次 Find 的时间复杂度为 $O(1)$（即 parents[v1] 操作）, 每次 Union 则需要遍历所有的点，时间复杂度是 $O(n)$，总体时间复杂度是 $O(mn)$, $m$ 为边的数目，而 $n$ 为点的数目。</p>
+<p>而我们也可以改变思路，就是进行 Union 操作时不再将某个连通分量中所有点的 parent 改为另一个连通分量的 parent，而是只改变那个连通分量的代表；这样进行 Find 操作的时候只需要递归的查找即可，下面为这种思路对应的代码</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UnionFindSet</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.parents = range(<span class="number">1001</span>)</span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">find</span><span class="params">(self, val)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> self.parents[val] != val:</span><br><span class="line">            <span class="keyword">return</span> self.find(self.parents[val])</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> self.parents[val]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">union</span><span class="params">(self, v1, v2)</span>:</span></span><br><span class="line">        p1, p2 = self.find(v1), self.find(v2)</span><br><span class="line">        <span class="keyword">if</span> p1 == p2:</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">True</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.parents[p1] = p2</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">False</span></span><br><span class="line">            </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">findRedundantConnection</span><span class="params">(self, edges)</span>:</span></span><br><span class="line">        <span class="string">"""</span><br><span class="line">        :type edges: List[List[int]]</span><br><span class="line">        :rtype: List[int]</span><br><span class="line">        """</span></span><br><span class="line">        ufs = UnionFindSet()</span><br><span class="line">        <span class="keyword">for</span> edge <span class="keyword">in</span> edges:</span><br><span class="line">            <span class="keyword">if</span> ufs.union(edge[<span class="number">0</span>], edge[<span class="number">1</span>]):</span><br><span class="line">                <span class="keyword">return</span> edge</span><br></pre></td></tr></table></figure>
+<p>这个方法每次 Union 的时间复杂度为 $O(1)$, 但是每次 Find 的时间复杂度是 $O(n)$，所以总体时间复杂度还是 $O(mn)$, 那么有没有一种改进总体时间复杂度的方法呢？</p>
+<p>答案就是上面提到的 path compression 和 union by rank。</p>
+<p>path compression 指的是在上面的递归的 Find 操作中，将最终得到的结果赋给递归过程中经过的所有点，从而降低连通分量的高度，实际上<strong>可以将一个连通分量当做一颗树，树的每个节点都连着其 parent</strong>，而 path compression 则相当于将搜寻路径中的所有点直接连到最终的那个 parent 上，因此能够降低树的高度。</p>
+<p>降低树的高度有什么好处？那就是能够降低查找的时间复杂度，从 $O(n)$ 降为了 $O(logn)$, 因为原来的递归搜索实际上是在一颗每个节点只有一个子节点的树上进行搜索，树的高度即为点的个数，而通过 path compression 则能够有效降低树的高度。</p>
+<p>另外一个问题就是进行 Union 操作时，需要将高度低的树连接到高度较高的树上，目的是为了减少 Union 后的整棵树的高度，这就是 union by rank, rank 代表的就是树的高度。</p>
+<p>采用 path compression 和 union by rank 后，Find 的时间复杂度变为了 $O(logn)$, Union 的时间复杂度为 $O(1)$, 因此总体时间复杂度是 $O(mlogn)$, $m$ 为边的数目，而 $n$ 为点的数目。改进后的代码如下</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UnionFindSet</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.parents = range(<span class="number">1001</span>)</span><br><span class="line">        self.rank = [<span class="number">0</span>] * <span class="number">1001</span></span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">find</span><span class="params">(self, val)</span>:</span></span><br><span class="line">        <span class="string">"""find with path compression"""</span></span><br><span class="line">        <span class="keyword">if</span> self.parents[val] != val:</span><br><span class="line">            self.parents[val] = self.find(self.parents[val])</span><br><span class="line">        <span class="keyword">return</span> self.parents[val]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">union</span><span class="params">(self, v1, v2)</span>:</span></span><br><span class="line">        <span class="string">"""union by rank, check whether union two vertics will lead to a cycle"""</span></span><br><span class="line">        p1, p2 = self.find(v1), self.find(v2)</span><br><span class="line">        <span class="keyword">if</span> p1 == p2:</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">True</span></span><br><span class="line">        <span class="keyword">elif</span> self.rank[p1] &gt; self.rank[p2]:</span><br><span class="line">            self.parents[p2] = p1</span><br><span class="line">        <span class="keyword">elif</span> self.rank[p1] &lt; self.rank[p2]:</span><br><span class="line">            self.parents[p1] = p2</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.rank[p2] += <span class="number">1</span></span><br><span class="line">            self.parents[p1] = p2</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">False</span></span><br><span class="line">            </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">findRedundantConnection</span><span class="params">(self, edges)</span>:</span></span><br><span class="line">        <span class="string">"""</span><br><span class="line">        :type edges: List[List[int]]</span><br><span class="line">        :rtype: List[int]</span><br><span class="line">        """</span></span><br><span class="line">        ufs = UnionFindSet()</span><br><span class="line">        <span class="keyword">for</span> edge <span class="keyword">in</span> edges:</span><br><span class="line">            <span class="keyword">if</span> ufs.union(edge[<span class="number">0</span>], edge[<span class="number">1</span>]):</span><br><span class="line">                <span class="keyword">return</span> edge</span><br></pre></td></tr></table></figure>
+<h2 id="Redundant-Connection-II"><a href="#Redundant-Connection-II" class="headerlink" title="Redundant Connection II"></a>Redundant Connection II</h2><p><a href="https://leetcode.com/problems/redundant-connection-ii/description/" target="_blank" rel="external">685. Redundant Connection II</a> 从前面的无向图升级到了有向图，对应的要求从原来的仅要求不形成环路升级到在不形成环路的基础上，拓扑必须要是一棵合法树，也就是每个点只能有一个父节点，例如 <code>[[2,1],[3,1]]</code> 这两条边虽然没有形成环路，但是 1 有两个父亲节点（2和3），因此不是一棵合法的树。</p>
+<p>由于题目说明了输入只有一条不合法的边，因此<strong>首先可以统计一下这些边中是否存在某个点有两个父亲节点，假如有，则需要移除的边必定为连着这个点的两条边中的一条</strong>，通过上面 Union-find 的方法，可以判断出假如移除掉连着这个点的第一条边时，是否会形成回路。如果会，则说明需要移除第二条边，否则直接移除第一条边。</p>
+<p>如果统计的结果中没有点含有两个父亲节点，那么可以直接通过第一题的方法直接找到形成回路的最后那条边。AC的代码如下</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UnionFindSet</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.parents = range(<span class="number">1001</span>)</span><br><span class="line">        self.rank = [<span class="number">0</span>] * <span class="number">1001</span></span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">find</span><span class="params">(self, val)</span>:</span></span><br><span class="line">        <span class="string">"""find with path compression"""</span></span><br><span class="line">        <span class="keyword">if</span> self.parents[val] != val:</span><br><span class="line">            self.parents[val] = self.find(self.parents[val])</span><br><span class="line">        <span class="keyword">return</span> self.parents[val]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">union</span><span class="params">(self, v1, v2)</span>:</span></span><br><span class="line">        <span class="string">"""union by rank, check whether union two vertics will lead to a cycle"""</span></span><br><span class="line">        p1, p2 = self.find(v1), self.find(v2)</span><br><span class="line">        <span class="keyword">if</span> p1 == p2:</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">True</span></span><br><span class="line">        <span class="keyword">elif</span> self.rank[p1] &gt; self.rank[p2]:</span><br><span class="line">            self.parents[p2] = p1</span><br><span class="line">        <span class="keyword">elif</span> self.rank[p1] &lt; self.rank[p2]:</span><br><span class="line">            self.parents[p1] = p2</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.rank[p2] += <span class="number">1</span></span><br><span class="line">            self.parents[p1] = p2</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">False</span></span><br><span class="line">    </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">findRedundantDirectedConnection</span><span class="params">(self, edges)</span>:</span></span><br><span class="line">        <span class="string">"""</span><br><span class="line">        :type edges: List[List[int]]</span><br><span class="line">        :rtype: List[int]</span><br><span class="line">        """</span></span><br><span class="line">        redundant_edges = <span class="keyword">None</span></span><br><span class="line">        count = &#123;&#125;</span><br><span class="line">        <span class="keyword">for</span> e <span class="keyword">in</span> edges:</span><br><span class="line">            <span class="keyword">if</span> e[<span class="number">1</span>] <span class="keyword">not</span> <span class="keyword">in</span> count:</span><br><span class="line">                count[e[<span class="number">1</span>]] = []</span><br><span class="line">            count[e[<span class="number">1</span>]].append(e)</span><br><span class="line">            <span class="keyword">if</span> len(count[e[<span class="number">1</span>]]) == <span class="number">2</span>:</span><br><span class="line">                redundant_edges = count[e[<span class="number">1</span>]]</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            </span><br><span class="line">        <span class="keyword">if</span> redundant_edges:</span><br><span class="line">            ufs = UnionFindSet()</span><br><span class="line">            <span class="keyword">for</span> edge <span class="keyword">in</span> edges:</span><br><span class="line">                <span class="keyword">if</span> edge == redundant_edges[<span class="number">1</span>]:</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                <span class="keyword">if</span> ufs.union(edge[<span class="number">0</span>], edge[<span class="number">1</span>]):</span><br><span class="line">                    <span class="keyword">return</span> redundant_edges[<span class="number">0</span>]</span><br><span class="line">            <span class="keyword">return</span> redundant_edges[<span class="number">1</span>]</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            ufs = UnionFindSet()</span><br><span class="line">            <span class="keyword">for</span> edge <span class="keyword">in</span> edges:</span><br><span class="line">                <span class="keyword">if</span> ufs.union(edge[<span class="number">0</span>], edge[<span class="number">1</span>]):</span><br><span class="line">                    <span class="keyword">return</span> edge</span><br></pre></td></tr></table></figure>
+<h2 id="Accounts-Merge"><a href="#Accounts-Merge" class="headerlink" title="Accounts Merge"></a>Accounts Merge</h2><p>这道题目虽然也用到了并查集的数据结构，但是与前面的两道题目又有点不同，主要体现在两个方面</p>
+<ol>
+<li>节点不再以数字标识，因此标识 parents 的数据结构要从 array 变为 map</li>
+<li>不需要判断是否形成闭环，而要返回最终各个集合内的元素；在这个操作中需要注意的是不能直接利用存储各个节点的 parent 的 map 直接为每个节点找到其 parent， 因为并非各个节点都进行了 path compression。对应有两种方法 (1)借助 find 方法找到各个节点的parent (2) 对存储各个节点的 parent 的 map 再进行一次 path compression, 然后直接在 map 中找到各个节点的 parent 对应的方法入下</li>
+</ol>
+<p>方法(1)</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">accountsMerge</span><span class="params">(self, accounts)</span>:</span></span><br><span class="line">        <span class="string">"""</span><br><span class="line">        :type accounts: List[List[str]]</span><br><span class="line">        :rtype: List[List[str]]</span><br><span class="line">        """</span></span><br><span class="line">        owners, parents = &#123;&#125;, &#123;&#125;</span><br><span class="line">        <span class="keyword">for</span> account <span class="keyword">in</span> accounts:</span><br><span class="line">            owners[account[<span class="number">1</span>]] = account[<span class="number">0</span>]</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> xrange(<span class="number">1</span>, len(account)):</span><br><span class="line">                parents[account[i]] = account[i]</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> account <span class="keyword">in</span> accounts:</span><br><span class="line">            p = self.find(account[<span class="number">1</span>], parents)</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> xrange(<span class="number">1</span>, len(account)):</span><br><span class="line">                parents[self.find(account[i], parents)] = p</span><br><span class="line">        </span><br><span class="line">        unions = &#123;&#125;</span><br><span class="line">        <span class="keyword">for</span> account <span class="keyword">in</span> accounts:</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> xrange(<span class="number">1</span>, len(account)):</span><br><span class="line">                p = self.find(account[i], parents)</span><br><span class="line">                unions.setdefault(p, set())</span><br><span class="line">                unions[p].add(account[i])</span><br><span class="line">        </span><br><span class="line">        result = []</span><br><span class="line">        <span class="keyword">for</span> k, v <span class="keyword">in</span> unions.items():</span><br><span class="line">            result.append([owners[k]] + sorted(v))</span><br><span class="line">        <span class="keyword">return</span> result</span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">find</span><span class="params">(self, email, parents)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> parents[email] !=  email:</span><br><span class="line">            parents[email] = self.find(parents[email], parents)</span><br><span class="line">        <span class="keyword">return</span> parents[email]</span><br></pre></td></tr></table></figure>
+<p>方法(2)</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">accountsMerge</span><span class="params">(self, accounts)</span>:</span></span><br><span class="line">        <span class="string">"""</span><br><span class="line">        :type accounts: List[List[str]]</span><br><span class="line">        :rtype: List[List[str]]</span><br><span class="line">        """</span></span><br><span class="line">        owners, parents = &#123;&#125;, &#123;&#125;</span><br><span class="line">        <span class="keyword">for</span> account <span class="keyword">in</span> accounts:</span><br><span class="line">            owners[account[<span class="number">1</span>]] = account[<span class="number">0</span>]</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> xrange(<span class="number">1</span>, len(account)):</span><br><span class="line">                parents[account[i]] = account[i]</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> account <span class="keyword">in</span> accounts:</span><br><span class="line">            p = self.find(account[<span class="number">1</span>], parents)</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> xrange(<span class="number">1</span>, len(account)):</span><br><span class="line">                parents[self.find(account[i], parents)] = p</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># not all paths are compressed currently</span></span><br><span class="line">        <span class="keyword">for</span> k, v <span class="keyword">in</span> parents.items():</span><br><span class="line">            <span class="keyword">if</span> k!=v:</span><br><span class="line">                parents[k] = self.find(parents[v], parents)</span><br><span class="line">            </span><br><span class="line">        unions = &#123;&#125;</span><br><span class="line">        <span class="keyword">for</span> k, v <span class="keyword">in</span> parents.items():</span><br><span class="line">            <span class="keyword">if</span> v  <span class="keyword">not</span> <span class="keyword">in</span> unions:</span><br><span class="line">                unions[v] = set()</span><br><span class="line">            unions[v].add(k)</span><br><span class="line">        </span><br><span class="line">        result = []</span><br><span class="line">        <span class="keyword">for</span> k, v <span class="keyword">in</span> unions.items():</span><br><span class="line">            result.append([owners[k]] + sorted(v))</span><br><span class="line">        <span class="keyword">return</span> result</span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">find</span><span class="params">(self, email, parents)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> parents[email] !=  email:</span><br><span class="line">            parents[email] = self.find(parents[email], parents)</span><br><span class="line">        <span class="keyword">return</span> parents[email]</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag">python</a>
+          
+            <a href="/tags/树/" rel="tag">树</a>
+          
+            <a href="/tags/图/" rel="tag">图</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/09/23/Google 图片爬虫/" rel="next" title="Google 图片爬虫">
+                <i class="fa fa-chevron-left"></i> Google 图片爬虫
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/11/05/MachineLearning with Spark 简介/" rel="prev" title="Machine Learning with Spark 简介">
+                Machine Learning with Spark 简介 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://wulc.me/files/profile.jpg"
+               alt="良超" />
+          <p class="site-author-name" itemprop="name">良超</p>
+          <p class="site-description motion-element" itemprop="description">算法工程师首先得是个工程师</p>
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">208</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">39</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/WuLC" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github-alt"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.linkedin.com/in/wuliangchao/" target="_blank" title="LinkedIn">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  LinkedIn
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#最小生成树"><span class="nav-number">1.</span> <span class="nav-text">最小生成树</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#并查集"><span class="nav-number">2.</span> <span class="nav-text">并查集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redundant-Connection"><span class="nav-number">3.</span> <span class="nav-text">Redundant Connection</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redundant-Connection-II"><span class="nav-number">4.</span> <span class="nav-text">Redundant Connection II</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Accounts-Merge"><span class="nav-number">5.</span> <span class="nav-text">Accounts Merge</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <center>
+<div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2019</span>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
+  </br>
+  <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
+</div>
+</center>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>

@@ -1,0 +1,960 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="数学," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="在数理统计中，常常需要通过样本来估计总体的参数，估计可划分为两大类：点估计和区间估计。点估计就是估计总体中某个参数的值，而区间估计是估计总体的某个参数落在某个区间的概率大小。本文主要讲述点估计中的矩估计法和最大似然估计法，以及针对服从正态分布的期望和方差进行区间估计。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="概率论与数理统计知识整理(6)-参数估计">
+<meta property="og:url" content="http://wulc.github.io/2017/02/18/概率论与数理统计知识整理(6)-参数估计/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="在数理统计中，常常需要通过样本来估计总体的参数，估计可划分为两大类：点估计和区间估计。点估计就是估计总体中某个参数的值，而区间估计是估计总体的某个参数落在某个区间的概率大小。本文主要讲述点估计中的矩估计法和最大似然估计法，以及针对服从正态分布的期望和方差进行区间估计。">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/l26k1scaun40jf076oamtxtb/image_1bbtqbjdvkhlh8raho11oihu79.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/9tgaqpl2toqjqetezp63rixj/image_1bbtrksj91lu411vmcbu1ncb11u4m.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/1n0bpbuwsg0oh3usnpxd5165/image_1bbtt8so0bb71rpm16dh1ces19u13.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/hyovbljzbrwlc8deirs2k08o/image_1bc2bajjf1jgrove10r6tah1ub19.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/6a8dzxreiyafxlp85k10j6w6/image_1bc2de1u91i7gd9q1shjm7spnam.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/hhbgy7ifcpoywnn4cno8nai1/image_1bc2g7o8u16mbarpd82nmie6h13.png">
+<meta property="og:updated_time" content="2019-06-01T09:14:44.183Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="概率论与数理统计知识整理(6)-参数估计">
+<meta name="twitter:description" content="在数理统计中，常常需要通过样本来估计总体的参数，估计可划分为两大类：点估计和区间估计。点估计就是估计总体中某个参数的值，而区间估计是估计总体的某个参数落在某个区间的概率大小。本文主要讲述点估计中的矩估计法和最大似然估计法，以及针对服从正态分布的期望和方差进行区间估计。">
+<meta name="twitter:image" content="http://static.zybuluo.com/WuLiangchao/l26k1scaun40jf076oamtxtb/image_1bbtqbjdvkhlh8raho11oihu79.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"always"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://wulc.github.io/2017/02/18/概率论与数理统计知识整理(6)-参数估计/"/>
+
+
+
+
+
+  <title> 概率论与数理统计知识整理(6)-参数估计 | 吴良超的学习笔记 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1258114456&web_id=1258114456" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">吴良超的学习笔记</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <h1 class="site-subtitle" itemprop="description"></h1>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            站内搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://wulc.github.io/2017/02/18/概率论与数理统计知识整理(6)-参数估计/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="良超">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="吴良超的学习笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                概率论与数理统计知识整理(6)-参数估计
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-18T20:08:55+08:00">
+                2017-02-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-tags"></i>
+              </span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/tags/数学/" itemprop="url" rel="index">
+                    <span itemprop="name">数学</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在数理统计中，常常需要通过样本来估计总体的参数，估计可划分为两大类：点估计和区间估计。点估计就是估计总体中某个参数的值，而区间估计是估计总体的某个参数落在某个区间的概率大小。本文主要讲述点估计中的矩估计法和最大似然估计法，以及针对服从正态分布的期望和方差进行区间估计。</p>
+<a id="more"></a>
+<h2 id="点估计"><a href="#点估计" class="headerlink" title="点估计"></a>点估计</h2><p>点估计一般解决的问题是总体 $X$ 的分布函数 $F(X,\theta)$ 形式为已知，但是 $\theta$ 参数未知。点估计的目的就是通过样本 $X_1,X_2,…X_n$ 构造一个适当的统计量 $\theta’(X_1,X_2,…X_n)$，用于作为未知参数 $\theta$ 的近似值。由于 $\theta’$ 是样本的函数，因此对于不同的样本，$\theta’$ 的值一般不同。</p>
+<p>点估计中一般用到的方法包括<strong>矩估计法和最大似然估计法</strong>。</p>
+<h3 id="矩估计法"><a href="#矩估计法" class="headerlink" title="矩估计法"></a>矩估计法</h3><p><strong>矩估计法的核心思想是样本矩总是依概率收敛于相应的总体矩，因此可通过样本矩作为相应的总体矩的估计量，进而根据总体矩与待估参数的关系求出待估参数。</strong></p>
+<p>矩估计法的一般描述如下：<br>设 $X$ 为连续型随机变量，其概率密度函数为 $f(x;\theta_1, \theta_2,..\theta_k)$；离散型随机变量，其分布律为$P(X=x) = p(x; \theta_1, \theta_2,..\theta_k)$；则总体的 $k$ 阶矩分别为<br>$$\mu_k = E(X^k) =  \int_{-\infty}^{\infty} x^kf(x;\theta_1, \theta_2…\theta_k) dx$$<br>$$\mu_k = E(X^k) =  \sum_{x \in R_x} x^kp(x;\theta_1, \theta_2….\theta_k)$$</p>
+<p>上式中的 $R_x$ 是 $X$ 可能取值的范围；上面是总体的 k 阶矩的定义，但是实际估计时，往往到只需要使用其一阶矩和二阶矩，也就是 $E(X)$ 和 $E(X^2)$。</p>
+<p>而样本 $X_1, X_2…X_n$ 的 $k$ 阶矩的定义为 $$A_k = \frac{1}{n} \sum_{i=1}^{n}X_i^k$$</p>
+<p>由于总体的 k 阶矩往往是未知参数 $\theta$ 的函数，因此常常先用总体的 k 阶 $\mu_k$ 矩将参数 $\theta$ 表示出来，然后用样本矩 $A_k$ 代替 $\mu_k$,进而得出估计的 $\theta$ 的值。下面是一个简单的例子</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/l26k1scaun40jf076oamtxtb/image_1bbtqbjdvkhlh8raho11oihu79.png" alt="矩估计法的例子"></p>
+<h3 id="最大似然估计法"><a href="#最大似然估计法" class="headerlink" title="最大似然估计法"></a>最大似然估计法</h3><p><strong>最大似然估计的思想是既然当前取得了这组样本，那么有理由相信已取得的样本出现的概率是很大的。因此通过极大化这组样本的联合概率来估计未知参数的值。</strong></p>
+<h4 id="离散型总体"><a href="#离散型总体" class="headerlink" title="离散型总体"></a>离散型总体</h4><p>单总体为离散型的时候，设当前样本为 $X_1,X_2,…X_n$， 则其联合概率为 $\prod_{i=1}^{n} p(x_i;\theta)$, 其中 $x_i$ 是 $X_i$ 相应的观测值，则上面的联合概率实际上是参数 $\theta$ 的函数，记为$$L(\theta) = \prod_{i=1}^{n} p(x_i;\theta)$$<br>上面的 $L(\theta)$ 被称为样本的<strong>似然函数</strong>。</p>
+<p>选择 $\theta$ 的值使得 $L(\theta)$ 最大便是最大似然估计做的事情。一般通过对 似然函数求导便可求得其最大值对应的 $\theta$。如下是一个简单的例子</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/9tgaqpl2toqjqetezp63rixj/image_1bbtrksj91lu411vmcbu1ncb11u4m.png" alt="离散型极大似然估计"></p>
+<p>上面最后求解的结果是 $p’ = \overline x$。同时也注意到求解似然函数最大化时会先对似然函数取 $log$ , 目的是将连乘变为连加，方便运算，同时这种方法也被称为对数极大似然估计。</p>
+<h4 id="连续型总体"><a href="#连续型总体" class="headerlink" title="连续型总体"></a>连续型总体</h4><p>若总体是连续型，设其概率密度函数为 $f(x,\theta)$，则当前样本 $X_1,X_2,…X_n$ 的联合概率密度函数为<br>$$\prod_{i=1}^{n}f(x_i;\theta)$$<br>其中 $x_1,x_2,…x_n$ 是相应于样本的一个样本值，则随机点落在 （$x_1,x_2,…x_n$）的领域（边长为 $dx_1, dx_2,…dx_n$的n维立方体）内的概率近似为$$\prod_{i=1}^{n}f(x_i;\theta)dx_i$$</p>
+<p>同样我们要让上式取到最大，但是因子 $\prod_{i=1}^{n}dx_i$ 不随 $\theta$ 改变，因此只需考虑函数$ L(\theta) = \prod_{i=1}^{n}f(x_i;\theta)$最大即可，这里 $L(\theta)$ 被称为似然函数，极大化也是通过求导来解决。</p>
+<p>下面是一个连续型总体进行极大似然估计的例子</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/1n0bpbuwsg0oh3usnpxd5165/image_1bbtt8so0bb71rpm16dh1ces19u13.png" alt="正态分布"></p>
+<h3 id="评选标准"><a href="#评选标准" class="headerlink" title="评选标准"></a>评选标准</h3><p>对于同一参数，不同的估计方法求出的估计量可能不一样，那么如何判断不同的估计量之间的优劣，<strong>无偏性，有效性和相合性</strong>是常用的三个指标。</p>
+<h4 id="无偏性"><a href="#无偏性" class="headerlink" title="无偏性"></a>无偏性</h4><p>无偏性指的是从样本中得到的估计量 $\theta’$ 的期望与总体的参数 $\theta$ 相等，也就是 $$E(\theta’) = \theta$$<br>此时称 $\theta’$ 是 $\theta$ 的无偏估计量。无偏估计量的意义是对于某些样本值，这一估计量得到的估计值比真实值要打，而对于另外一些样本则偏小，反复将这一估计量使用多次，就平均来说其偏差为零。</p>
+<h4 id="有效性"><a href="#有效性" class="headerlink" title="有效性"></a>有效性</h4><p>当两个估计量 $\theta_1’, \theta_2’$ 均是无偏估计量时，就要通过比较他们的有效性来决定选取哪个估计量。有效性指的是在样本容量 $n$ 相同的情况下，假如 $\theta_1’$ 的观察值较 $\theta_2’$ 的值更密集在真值 $\theta$ 附近，那么认为$\theta_1’$ 比 $\theta_2’$ 更为理想。</p>
+<p>实际上，上面比较的就是两个估计量的方差大小，方差越小，则越有效，因此当两个总体的样本数相同的时候，若 $D(\theta_1’) &lt; D(\theta_2’)$ 时， 就称 $\theta_1’$ 比 $\theta_2’$ 更有效。</p>
+<h4 id="相合性"><a href="#相合性" class="headerlink" title="相合性"></a>相合性</h4><p>当样本数目 $n \rightarrow \infty$ 时，估计量 $\theta’(X_1，X_2…X_n)$ 依概率收敛于真正的 $\theta$ ,则称 $\theta’$ 为 $\theta$ 的相合估计量。即有以下式子成立$$ \lim_{n \rightarrow \infty}P(|\theta’ - \theta| &lt; \epsilon) = 1$$</p>
+<p>相合性是一个估计量的基本要求，如果估计量没有相合性，那么无论样本数量 n 取多大，这些估计量都无法准确估计正确参数，都是不可取的。</p>
+<h2 id="区间估计"><a href="#区间估计" class="headerlink" title="区间估计"></a>区间估计</h2><p>对于总体中的未知参数，我们的估计总是存在着一定的误差的，如何去衡量这个误差是一个需要考虑的事情。同时，除了上面的点估计，在实际中我们往往还希望估计出参数的一个范围，同时参数落在这个范围的概率，或者是说可信程度。</p>
+<p>估计参数落在某个范围以及落在这个范围的可信程度就是区间估计干的事情。</p>
+<p>其严格定义如下</p>
+<blockquote>
+<p>设总体的分布中存在一个未知参数 $\theta$, 对于给定的值 $\alpha(0 &lt; \alpha &lt;1)$, 若通过样本 $X_1,X_2,X_3…X_n$ 估计的两个统计量 $\theta’_1$ 和 $\theta’_2$满足下面不等式时$$P(\theta’_1 &lt; \theta &lt; \theta’_2) \ge 1 - \alpha$$则称区间 $(\theta’_1, \theta’_2)$ 是参数 $\theta$ 置信水平为 $1-\alpha$ 的置信区间, $\theta’_1, \theta’_2$ 分别称为置信下限和置信上限。</p>
+</blockquote>
+<p>上面式子的含义是若反复抽样多次（每次得到的样本的容量相等），每个样本值确定一个区间$(\theta’_1, \theta’_2)$，这个区间要么包含 $\theta$ 的真值，要么不包含 $\theta$ 的真值,在这么多的区间中，包含 $\theta$ 真值的约占 $1-\alpha$.</p>
+<h3 id="正态分布均值与方差的区间估计"><a href="#正态分布均值与方差的区间估计" class="headerlink" title="正态分布均值与方差的区间估计"></a>正态分布均值与方差的区间估计</h3><p>由于正态分布的普遍性，下面主要讲述对正态分布的期望和方差进行区间估计的方法，而这里会用到我们前面讲到的统计量的三大分布： $\chi^2$ 分布， $t$ 分布， $F$ 分布，以及对其拓展的一些定理，具体的定理及其证明可参考<a href="http://wulc.me/2016/11/18/%E6%A6%82%E7%8E%87%E8%AE%BA%E4%B8%8E%E6%95%B0%E7%90%86%E7%BB%9F%E8%AE%A1%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86%285%29--%E6%A0%B7%E6%9C%AC%E5%8F%8A%E6%8A%BD%E6%A0%B7%E5%88%86%E5%B8%83/" target="_blank" rel="external">这篇文章</a>。</p>
+<p>下面会讲述单个正态分布的期望和方差的估计，以及两个正态分布的期望差和方差比的估计。</p>
+<h4 id="单个正态分布"><a href="#单个正态分布" class="headerlink" title="单个正态分布"></a>单个正态分布</h4><p>下面的关于单个正态分布的讨论都是基于以下假设：给定置信水平为 $1-\alpha$, 设 $X_1,X_2,X_3…X_n$ 为总体 $N(\mu, \sigma^2)$ 的样本，$\overline X，S^2$ 分别是样本的期望和方差。</p>
+<h5 id="估计期望-mu-的置信区间"><a href="#估计期望-mu-的置信区间" class="headerlink" title="估计期望 $\mu$ 的置信区间"></a>估计期望 $\mu$ 的置信区间</h5><p>通过样本 $X_1,X_2,X_3…X_n$ 估计总体 $N(\mu, \sigma^2)$  的期望 $\mu$ 时可以分为两种情况：</p>
+<ol>
+<li>总体的方差 $\sigma^2$ 已知</li>
+<li>总体的方差 $\sigma^2$ 未知</li>
+</ol>
+<p><strong>总体的方差 $\sigma^2$ 已知</strong><br>若已知总体的方差，则因为 $\overline X \sim N(\mu , \sigma^2/n)$, 即$\frac{\overline X - \mu}{\sqrt{\sigma^2/n}} \sim N(0,1)$, 下面都会这样不加证明给出这些统计量服从的分布，具体的证明参考<a href="http://wulc.me/2016/11/18/%E6%A6%82%E7%8E%87%E8%AE%BA%E4%B8%8E%E6%95%B0%E7%90%86%E7%BB%9F%E8%AE%A1%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86%285%29--%E6%A0%B7%E6%9C%AC%E5%8F%8A%E6%8A%BD%E6%A0%B7%E5%88%86%E5%B8%83/" target="_blank" rel="external">这篇文章</a>。</p>
+<p>按照标准正态分布的上 $\alpha$ 分位点的定义有<br>$$P(|\frac{\overline X - \mu}{\sqrt{\sigma^2/n}} | &lt; z_{\alpha/2}) = 1 - \alpha$$</p>
+<p>从概率密度函数上直观看为：</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/hyovbljzbrwlc8deirs2k08o/image_1bc2bajjf1jgrove10r6tah1ub19.png" alt="正态分布分位点"></p>
+<p>进一步化简有<br>$$P(\overline X - \frac{\sigma}{\sqrt{n}}z_{\alpha/2} &lt; \mu &lt; \overline X + \frac{\sigma}{\sqrt{n}}z_{\alpha/2}) = 1 - \alpha$$</p>
+<p>给定 $\alpha, z_{\alpha/2}$ 的值可以通过查表获得。这样便得到了期望 $\mu$ 的一个估计区间为 $(\overline X - \frac{\sigma}{\sqrt{n}}z_{\alpha/2}, \overline X + \frac{\sigma}{\sqrt{n}}z_{\alpha/2})$, 其置信度为 $1 - \alpha$。注意置信水平为 $1 - \alpha$ 的置信区间并不是唯一的，假如说给定 $\alpha = 0.05$, 则上面的式子可写为$$P(\overline X - \frac{\sigma}{\sqrt{n}}z_{0.025} &lt; \mu &lt; \overline X + \frac{\sigma}{\sqrt{n}}z_{0.025}) = 1 - \alpha$$</p>
+<p>同时也可写为<br>$$P(\overline X - \frac{\sigma}{\sqrt{n}}z_{0.04} &lt; \mu &lt; \overline X + \frac{\sigma}{\sqrt{n}}z_{0.01}) = 1 - \alpha$$</p>
+<p>但是写成不对称的形式计算出来的区间长度要更长，显然，置信度相同的情况下，置信区间肯定是越小越好，所以对于正态分布的分位点往往选择对称形式。</p>
+<p>下面的求解方法与这方法类似，只是构造的统计量不同，因而服从的分布也不同。</p>
+<p><strong>总体的方差 $\sigma^2$ 未知</strong></p>
+<p>当总体方差未知时，就无法利用上面标准正态分布。但是回忆 $t$ 分布的作用及其定理，可知 </p>
+<p>$$\frac{\overline X - \mu}{S/\sqrt{n}} \sim t(n-1)$$</p>
+<p>同样按照 $t$ 分布的上 $\alpha$ 分位点的定义有<br>$$P(|\frac{\overline X - \mu}{S/\sqrt{n}}| &lt; t_{\alpha/2}(n-1)) = 1 - \alpha$$</p>
+<p>其对应的概率密度函数如下所示</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/6a8dzxreiyafxlp85k10j6w6/image_1bc2de1u91i7gd9q1shjm7spnam.png" alt="t分布的概率密度函数"></p>
+<p>进一步化简可得<br>$$P(\overline X - \frac{S}{\sqrt{n}}t_{\alpha/2}(n - 1) &lt; \mu &lt; \overline X + \frac{S}{\sqrt{n}}t_{\alpha/2}(n - 1)) = 1 - \alpha$$</p>
+<p>则期望 $\mu$ 的一个置信水平为 $1-\alpha$ 的置信区间为<br>$$(\overline X - \frac{S}{\sqrt{n}}t_{\alpha/2}(n - 1), \overline X + \frac{S}{\sqrt{n}}t_{\alpha/2}(n - 1))$$</p>
+<h5 id="估计方差-sigma-2-的置信区间"><a href="#估计方差-sigma-2-的置信区间" class="headerlink" title="估计方差 $\sigma^2$ 的置信区间"></a>估计方差 $\sigma^2$ 的置信区间</h5><p>估计方差 $\sigma^2$ 的置信区间也可分为两种情况</p>
+<ol>
+<li>总体的期望 $\mu$ 已知</li>
+<li>总体的期望 $\mu$ 未知</li>
+</ol>
+<p><strong>总体的期望 $\mu$ 已知</strong></p>
+<p>当期望 $\mu$ 已知时，求解方差 $\sigma^2$ 的置信区间的方法跟上面已知方差 $\sigma^2$ 求解期望 $\mu$ 的一样，都是利用 $\frac{\overline X - \mu}{\sqrt{\sigma^2/n}} \sim N(0,1)$，然后写出对应未知量的区间，这里就不详细讲述已知 $\mu$ 求解方差 $\sigma^2$ 的详细过程了。</p>
+<p><strong>总体的期望 $\mu$ 未知</strong></p>
+<p>当期望 $\mu$ 未知时，求解方差 $\sigma^2$ 的区间估计就再也不能利用上面的 $\frac{\overline X - \mu}{\sqrt{\sigma^2/n}} \sim N(0,1)$。结合 $\chi^2$ 分布的特性及其推导的定理可知</p>
+<p>$$\frac{(n-1)S^2}{\sigma^2} \sim \chi^2(n-1)$$</p>
+<p>同样按照 $\chi^2$ 分布的 $\alpha$ 分位点的定义有</p>
+<p>$$P( \chi^2_{1 - \alpha/2}(n-1) &lt; \frac{(n-1)S^2}{\sigma^2} &lt; \chi^2_{\alpha/2}(n-1)) = 1 - \alpha$$</p>
+<p>注意这里不能用绝对值了，原因是 $\chi^2$ 分布的概率密度函数不像标准正态分布或 $t$ 分布那样是对称的。其对应的概率密度函数如下所示</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/hhbgy7ifcpoywnn4cno8nai1/image_1bc2g7o8u16mbarpd82nmie6h13.png" alt="卡方分布的概率密度函数"></p>
+<p>进一步化简可得</p>
+<p>$$P(\frac{(n-1)S^2}{\chi^2_{\alpha/2}(n-1)} &lt; \sigma^2 &lt; \frac{(n-1)S^2}{\chi^2_{1 - \alpha/2}(n-1)}) = 1 - \alpha$$</p>
+<p>即给定样本，总体期望 $\mu$ 未知的时候，总体方差 $\sigma^2$ 的一个置信水平为 $1-\alpha$ 的置信区间为</p>
+<p>$$(\frac{(n-1)S^2}{\chi^2_{\alpha/2}(n-1)}, \frac{(n-1)S^2}{\chi^2_{1 - \alpha/2}(n-1)})$$</p>
+<p>实际上， <strong>$\chi^2$ 分布的一个作用就是在正态总体分布中期望未知时估计其方差的置信区间</strong>。</p>
+<h4 id="两个正态分布"><a href="#两个正态分布" class="headerlink" title="两个正态分布"></a>两个正态分布</h4><p>下面讲述两个正态分布的期望差值的区间估计以及方差比的估计。考虑以下问题：已知产品的某一质量指标服从正态分布，但由于原料、操作人员不同，或工艺过程的改变等因素，引起总体均值、方差有所变化。我们需要知道这些变化有多大，就需要考虑两个正态分布均值差或方差比的估计问题。</p>
+<p>下面的讨论都是假设给定了置信水平为 $1- \alpha$, 并设 $X_1, X_2,….X_n$ 是来自第一个总体 $N_1(\mu_1, \sigma_1^2)$ 的样本，$Y_1, Y_2,….Y_n$ 是来自第二个总体 $N_2(\mu_2, \sigma_2^2)$ 的样本，并假设 $\overline X, \overline Y$ 是第一、第二个样本的均值，$S_1^2, S_2^2$ 是第一、第二个样本的方差。</p>
+<h5 id="估计-mu-1-mu-2-的置信区间"><a href="#估计-mu-1-mu-2-的置信区间" class="headerlink" title="估计  $\mu_1 - \mu_2$ 的置信区间"></a>估计  $\mu_1 - \mu_2$ 的置信区间</h5><p>估计  $\mu_1 - \mu_2$ 的置信区间时也可以分为两种情况</p>
+<ol>
+<li>总体的方差 $\sigma_1^2, \sigma_2^2$ 已知</li>
+<li>总体的方差 $\sigma_1^2, \sigma_2^2$ 未知，但是知道 $\sigma_1^2 = \sigma_2^2 = \sigma^2$（$\sigma$未知）</li>
+</ol>
+<p><strong>总体的方差 $\sigma_1^2, \sigma_2^2$ 已知</strong><br>由 $\overline X \sim N(\mu_1, \sigma_1^2/n_1), \overline Y \sim N(\mu_2, \sigma_2^2/n_2)$ 可知$$\overline X - \overline Y \sim N(\mu_1 - \mu_2, \sigma_1^2/n_1 + \sigma_2^2/n_2)\ \frac{(\overline X - \overline Y) - (\mu_1 - \mu_2)}{\sqrt{\sigma_1^2/n_1 + \sigma_2^2/n_2}} \sim N(0, 1)$$</p>
+<p>与上面相同，按照标准正态分布的上 $\alpha$ 分位点的定义有<br>$$P(|\frac{(\overline X - \overline Y) - (\mu_1 - \mu_2)}{\sqrt{\sigma_1^2/n_1 + \sigma_2^2/n_2}} | &lt; z_{\alpha/2}) = 1 - \alpha$$</p>
+<p>同样可解得 $\mu_1 - \mu_2$ 置信度为 $1-\alpha$ 的区间。</p>
+<p><strong>总体的方差 $\sigma_1^2, \sigma_2^2$ 未知，但 $\sigma_1^2 = \sigma_2^2 = \sigma^2$（$\sigma$未知）</strong></p>
+<p>根据 $t$ 分布的作用及其推导的定理可知</p>
+<p>$$\frac{(\overline X - \overline Y) - (\mu_1 - \mu_2)}{S_w\sqrt{1/n_1+1/n_2}} \sim t(n_1+n_2-2)$$</p>
+<p>其中 $S_w = \sqrt{\frac{(n_1 -1)S_1^2+(n_2 -1)S_2^2}{n_1+n_2-2}}$</p>
+<p>同样根据 $t$ 分布的上 $\alpha$ 分位点的定义有<br>$$P(|\frac{(\overline X - \overline Y) - (\mu_1 - \mu_2)}{S_w\sqrt{1/n_1+1/n_2}}| &lt; t_{\alpha/2}(n_1+n_2-2)) = 1 - \alpha$$</p>
+<p>通过查表同样可以求出 $\mu_1 - \mu_2$ 置信度为 $1-\alpha$ 的区间，结合上面 $t$ 分布在单个正态总体分布参数估计的问题可知， <strong>$t$ 分布专门用于解决正态分布中方差未知时估计其期望的问题</strong>。</p>
+<h5 id="估计-sigma-1-2-sigma-2-2-的置信区间"><a href="#估计-sigma-1-2-sigma-2-2-的置信区间" class="headerlink" title="估计  $\sigma_1^2 / \sigma_2^2$ 的置信区间"></a>估计  $\sigma_1^2 / \sigma_2^2$ 的置信区间</h5><p>估计  $\sigma_1^2 / \sigma_2^2$ 的置信区间同样可以分为两种情况</p>
+<ol>
+<li>总体期望 $\mu_1, \mu_2$ 已知</li>
+<li>总体期望 $\mu_1, \mu_2$ 未知</li>
+</ol>
+<p>总体期望 $\mu_1, \mu_2$ 已知时可以先通过标准正态分布求出 $\sigma_1^2, \sigma_2^2$ 各自的范围, 然后求解 $\sigma_1^2 / \sigma_2^2$ 的范围。下面主要讲总体期望 $\mu_1, \mu_2$ 未知时，如何估计 $\sigma_1^2 / \sigma_2^2$ 的范围。</p>
+<p>由 $F$ 分布的定义以及推导的定理可知</p>
+<p>$$\frac{S_1^2/S_2^2}{\sigma_1^2/ \sigma_2^2} \sim F(n_1 - 1, n_2 - 1)$$</p>
+<p>根据 $F$ 分布的 $\alpha$ 分位点的定义有</p>
+<p>$$P( F_{1 - \alpha/2}(n_1 - 1, n_2 - 1) &lt; \frac{S_1^2/S_2^2}{\sigma_1^2/ \sigma_2^2} &lt; F_{\alpha/2}(n_1 - 1, n_2 - 1)) = 1 - \alpha$$</p>
+<p>化简可得</p>
+<p>$$P( \frac{S_1^2}{S_2^2}\frac{1}{F_{\alpha/2}(n_1 - 1, n_2 - 1)} &lt; \frac{\sigma_1^2}{ \sigma_2^2} &lt; \frac{S_1^2}{S_2^2}\frac{1}{F_{1 - \alpha/2}(n_1 - 1, n_2 - 1)}) = 1 - \alpha$$</p>
+<p>即 $\sigma_1^2 / \sigma_2^2$ 一个置信度为 $1-\alpha$ 的置信区间为<br>$$(\frac{S_1^2}{S_2^2}\frac{1}{F_{\alpha/2}(n_1 - 1, n_2 - 1)} &lt; \frac{\sigma_1^2}{ \sigma_2^2}, \frac{S_1^2}{S_2^2}\frac{1}{F_{1 - \alpha/2}(n_1 - 1, n_2 - 1)})$$</p>
+<h4 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h4><p>在上面对正态分布总体进行参数估计中，用到了数理统计中的三大分布： $\chi^2$分布， $t$分布和$F$分布， 其中 <strong>$\chi^2$ 分布主要解决总体期望未知时估计其方差的问题， $t$ 分布主要解决总体方差未知时估计其期望的问题，$F$ 主要解决期望未知时两个正态分布的方差比值问题。</strong></p>
+<h3 id="单侧置信区间"><a href="#单侧置信区间" class="headerlink" title="单侧置信区间"></a>单侧置信区间</h3><p>上面均是讨论未知参数 $\theta$ 的双侧置信区间，但是在实际问题中，往往考虑的只是一个上限或下限，比如说设备、原件的寿命我们关心的是平均寿命 $\theta$ 的下限。这就引出了单侧置信区间的概念。单侧置信区间跟双侧置信区间的概念非常类似。</p>
+<blockquote>
+<p>总体的参数 $\theta$ 未知, 对于给定的 $\alpha$ ,若由样本 $X_1, X_2..X_n$ 确定的统计量 $\theta’$满足$$P(\theta &gt; \theta’) = 1 - \alpha$$则称 $(\theta’, \infty)$ 是参数 $\theta$ 的置信水平为 $1 - \alpha$ 的单侧置信区间，而 $\theta’$ 是单侧置信下限，将 $\theta &gt; \theta’$ 变为 $\theta &lt; \theta’$ 后，相应地变为单侧置信上限。</p>
+</blockquote>
+<p>单侧置信区间的计算方法与上面提到的双侧置信区间的计算方法已知，都是根据给定的 $\alpha$ 值和统计量服从的分布去查表，找到相应的分位点后带入不等式求解目标估计量的范围即可。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/数学/" rel="tag">数学</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/02/01/最优化计算课程总结/" rel="next" title="最优化计算课程总结">
+                <i class="fa fa-chevron-left"></i> 最优化计算课程总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/02/25/机器学习基石--PLA/" rel="prev" title="机器学习基石--PLA">
+                机器学习基石--PLA <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://wulc.me/files/profile.jpg"
+               alt="良超" />
+          <p class="site-author-name" itemprop="name">良超</p>
+          <p class="site-description motion-element" itemprop="description">算法工程师首先得是个工程师</p>
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">208</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">39</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/WuLC" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github-alt"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.linkedin.com/in/wuliangchao/" target="_blank" title="LinkedIn">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  LinkedIn
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#点估计"><span class="nav-number">1.</span> <span class="nav-text">点估计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#矩估计法"><span class="nav-number">1.1.</span> <span class="nav-text">矩估计法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#最大似然估计法"><span class="nav-number">1.2.</span> <span class="nav-text">最大似然估计法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#离散型总体"><span class="nav-number">1.2.1.</span> <span class="nav-text">离散型总体</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#连续型总体"><span class="nav-number">1.2.2.</span> <span class="nav-text">连续型总体</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#评选标准"><span class="nav-number">1.3.</span> <span class="nav-text">评选标准</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#无偏性"><span class="nav-number">1.3.1.</span> <span class="nav-text">无偏性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#有效性"><span class="nav-number">1.3.2.</span> <span class="nav-text">有效性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#相合性"><span class="nav-number">1.3.3.</span> <span class="nav-text">相合性</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#区间估计"><span class="nav-number">2.</span> <span class="nav-text">区间估计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#正态分布均值与方差的区间估计"><span class="nav-number">2.1.</span> <span class="nav-text">正态分布均值与方差的区间估计</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#单个正态分布"><span class="nav-number">2.1.1.</span> <span class="nav-text">单个正态分布</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#估计期望-mu-的置信区间"><span class="nav-number">2.1.1.1.</span> <span class="nav-text">估计期望 $\mu$ 的置信区间</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#估计方差-sigma-2-的置信区间"><span class="nav-number">2.1.1.2.</span> <span class="nav-text">估计方差 $\sigma^2$ 的置信区间</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#两个正态分布"><span class="nav-number">2.1.2.</span> <span class="nav-text">两个正态分布</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#估计-mu-1-mu-2-的置信区间"><span class="nav-number">2.1.2.1.</span> <span class="nav-text">估计  $\mu_1 - \mu_2$ 的置信区间</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#估计-sigma-1-2-sigma-2-2-的置信区间"><span class="nav-number">2.1.2.2.</span> <span class="nav-text">估计  $\sigma_1^2 / \sigma_2^2$ 的置信区间</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#小结"><span class="nav-number">2.1.3.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#单侧置信区间"><span class="nav-number">2.2.</span> <span class="nav-text">单侧置信区间</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <center>
+<div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2019</span>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
+  </br>
+  <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
+</div>
+</center>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>

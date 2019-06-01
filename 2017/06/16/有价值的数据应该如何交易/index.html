@@ -1,0 +1,892 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="计算广告," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="本文的内容主要来源于该知乎 live，主要介绍了哪些行为数据是有价值的，以及广告领域中数据是如何交易的，最后还讨论了数据隐私的问题。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="有价值的数据应该如何交易">
+<meta property="og:url" content="http://wulc.github.io/2017/06/16/有价值的数据应该如何交易/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="本文的内容主要来源于该知乎 live，主要介绍了哪些行为数据是有价值的，以及广告领域中数据是如何交易的，最后还讨论了数据隐私的问题。">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/1oyw8bsmxmso88m4xq1o6co6/image_1bijcs38i1i2l1au243pm9u15sq1g.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/i68mgqq9bjvc8a5zmdl4g390/image_1bijepnkc1uv2sthoap143vce82a.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/5ag0ka6z9pjxr49s4u8x5vrn/image_1bijf1h1m1tk0os71sei1dgava02n.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/tet4ff7i3w54ul0x8iehur4q/image_1bijffr3s16rc1etl15nllao1pan34.png">
+<meta property="og:updated_time" content="2019-06-01T09:14:44.172Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="有价值的数据应该如何交易">
+<meta name="twitter:description" content="本文的内容主要来源于该知乎 live，主要介绍了哪些行为数据是有价值的，以及广告领域中数据是如何交易的，最后还讨论了数据隐私的问题。">
+<meta name="twitter:image" content="http://static.zybuluo.com/WuLiangchao/1oyw8bsmxmso88m4xq1o6co6/image_1bijcs38i1i2l1au243pm9u15sq1g.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"always"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://wulc.github.io/2017/06/16/有价值的数据应该如何交易/"/>
+
+
+
+
+
+  <title> 有价值的数据应该如何交易 | 吴良超的学习笔记 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1258114456&web_id=1258114456" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">吴良超的学习笔记</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <h1 class="site-subtitle" itemprop="description"></h1>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            站内搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://wulc.github.io/2017/06/16/有价值的数据应该如何交易/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="良超">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="吴良超的学习笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                有价值的数据应该如何交易
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-16T21:37:39+08:00">
+                2017-06-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-tags"></i>
+              </span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/tags/计算广告/" itemprop="url" rel="index">
+                    <span itemprop="name">计算广告</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文的内容主要来源于<a href="https://www.zhihu.com/lives/778740481268920320" target="_blank" rel="external">该知乎 live</a>，主要介绍了哪些行为数据是有价值的，以及广告领域中数据是如何交易的，最后还讨论了数据隐私的问题。</p>
+<a id="more"></a>
+<h2 id="有价值的数据分类"><a href="#有价值的数据分类" class="headerlink" title="有价值的数据分类"></a>有价值的数据分类</h2><p>数据有价值密度之分，并不是说数据量越多就一定越有效</p>
+<p>这里的数据主要指的是用户的行为数据和用户的标识数据，而有价值的用户行为数据主要有: 决策行为、主动行为、半主动行为、被动行为，这些行为的价值递减，但是数据的量递增，因为有价值的数据一般量都不大</p>
+<h3 id="决策行为"><a href="#决策行为" class="headerlink" title="决策行为"></a>决策行为</h3><p>决策行为对应着<strong>转化(conversion)或预转化(pre-conversion)</strong>, 也就是购买了商品或将商品加入了购物车。这些行为对应着非常明确的用户兴趣，价值也非常高</p>
+<h3 id="主动行为"><a href="#主动行为" class="headerlink" title="主动行为"></a>主动行为</h3><p>主动行为对应着<strong>搜索（search）、广告点击（Ad Click)、搜索点击（Search Click）</strong>，这种行为表明了用户已经有了明确的意图，但是最终决定还不清楚，价值也很高。</p>
+<p>需要注意的是，这些行为里面往往会有作弊的流量在里面，需要去除掉。</p>
+<h3 id="半主动行为"><a href="#半主动行为" class="headerlink" title="半主动行为"></a>半主动行为</h3><p>半主动行为对应着分享<strong>（share），网页浏览（page view)</strong>,这种数据的量最大，用户意图较弱，因为用户可能只是随意在浏览，这些数据也有一定价值。</p>
+<h3 id="被动行为"><a href="#被动行为" class="headerlink" title="被动行为"></a>被动行为</h3><p>被动行为是强加给用户的行为，如广告的浏览（注意不是点击，而是强推给用户浏览），这种行为甚至会有负面作用，价值基本可以忽略</p>
+<h3 id="社交关系"><a href="#社交关系" class="headerlink" title="社交关系"></a>社交关系</h3><p>社交关系指的是不直接利用用户的行为数据（有可能是用户的行为数据过于稀疏），而是利用与其在社交网络（微博、Facebook 等）上有关联的的用户的信息进行定向。</p>
+<p>这种方法在某个人的行为不足而无法进行精准的行为定向时有效。</p>
+<h3 id="用户-ID"><a href="#用户-ID" class="headerlink" title="用户 ID"></a>用户 ID</h3><p>用户 ID ，也就是用户标示，是最重要的数据，因为所有的行为数据有效的前提是需要先确认这些行为数据是属于哪个用户的，标识一个用户的 ID 在不同的环境下有不同的方法，下面是常见的场景和方法</p>
+<ol>
+<li>web/wap 环境：使用 cookie，生命周期短（1~2周），存续性差，但是跨域名的时候需要映射</li>
+<li>ios 应用：使用 IDFA（ID For Advertiser)，存续性好于 cookie，但 ios10 有更严格的政策</li>
+<li>安卓应用：使用 Android ID，存续好于 IDFA；有些也使用 IMEI（手机标识），但是 Google Play 上是不给用的</li>
+<li>无以上 ID 场景：使用 FingerPrint（IP+UserAgent -&gt; hash），存在 http 头中，可作缺省标识; 但是在移动端使用效果不是很好，因为几乎每个应用都有一个内置的浏览器</li>
+</ol>
+<h2 id="三方数据划分"><a href="#三方数据划分" class="headerlink" title="三方数据划分"></a>三方数据划分</h2><p>下面以广告中用到的用户数据为例讲述三方数据的划分，在广告中根据数据来源的不同可以将数据划分为第一方数据，第二方数据和第三方数据。</p>
+<p>如下图所示，第一方和第二方分别是指广告主和广告平台，而不直接参与广告交易的其他数据提供方统称为第三方。   </p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/1oyw8bsmxmso88m4xq1o6co6/image_1bijcs38i1i2l1au243pm9u15sq1g.png" alt="三方数据"></p>
+<h2 id="数据管理平台-DMP"><a href="#数据管理平台-DMP" class="headerlink" title="数据管理平台(DMP)"></a>数据管理平台(DMP)</h2><p>第一方数据的收集和加工是广告市场上非常重要的环节，不过对于没有这方面技术积累的广告主而言，专门设团队进行数据加工是没有必要的，因此市场上出现了 数据管理平台（DMP),专门从事此业务，而 DMP 又可划分为第一方 DMP 和第三方 DMP。</p>
+<h3 id="第一方-DMP"><a href="#第一方-DMP" class="headerlink" title="第一方 DMP"></a>第一方 DMP</h3><p>第一方 DMP 的目的是对广告主提供的第一方数据（也可结合公开市场第三方数据）进行加工，进而得到广告主指定的用户标签，用于支持网站业务运营和广告投放。</p>
+<p>需要注意的是第一方 DMP 只能加工第一方数据，而不能使用第一方的数据，也就是不能把数据进行售卖（除非与广告主达成协议）</p>
+<p>因此，第一方的 DMP 的商业模式如下</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/i68mgqq9bjvc8a5zmdl4g390/image_1bijepnkc1uv2sthoap143vce82a.png" alt="第一方DMP商业模式"></p>
+<h3 id="第三方-DMP"><a href="#第三方-DMP" class="headerlink" title="第三方 DMP"></a>第三方 DMP</h3><p>对于中小网站，其规模不大，没有利用数据的能力，只是单纯想将数据卖给需要数据的广告主，同时也没有加工数据的能力，因此产生了满足中小网站的这项需求的第三方 DMP。</p>
+<p>第三方 DMP 与第一方 DMP 的一个不同点在于服务对象的不同，另外一个不同点则是两者的加工标签的逻辑不一样，第一方 DMP 是根据广告主的需求进行标签的加工，而第三方 DMP 则是根据 DMP 其自己的逻辑进行加工然后售卖。</p>
+<p>第三方的 DMP 的商业模式如下所示</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/5ag0ka6z9pjxr49s4u8x5vrn/image_1bijf1h1m1tk0os71sei1dgava02n.png" alt="第三方DMP的商业模式"></p>
+<h2 id="数据的交易"><a href="#数据的交易" class="headerlink" title="数据的交易"></a>数据的交易</h2><p>上面提到的 DMP 的一个重要功能就是售卖标签，实际上就是一种数据交易，这些标签一般售卖的对象是广告主，而广告主往往由于缺乏相应的技术而将手中定向委托给其他平台也就是 DSP（Demand Side Platform），因此交易发生在 DMP 和 DSP 之间。</p>
+<p>同时由于往往存在着多个 DMP 和多个 DSP，假如 DMP 和 DSP 间都要一一连接的话，那么通信的代价会非常大，因此在实际中往往是通过广告交易平台也就是 ADX（AD Exchange) 将两者联系起来，从而降低通信代价。整个数据交易的过程如下所示</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/tet4ff7i3w54ul0x8iehur4q/image_1bijffr3s16rc1etl15nllao1pan34.png" alt="数据交易怎么做"></p>
+<p>通过 ADX 进行 DMP 和 DSP 间的通信避免了 DMP 和 DSP 直接通信的开销，因为实时竞价的时候 ADX 本来就要跟 DSP 发生通信，因此没有增加二次通信。</p>
+<p>上面简单提到数据交易时的收费是按照实际的广告展示次数付费的，目前来说这种市场化的定价方式是唯一的选择，这种方式并没有限制数据供给次数，直觉上似乎是利润最大化的。</p>
+<p>但是这有可能间接地抬高了流量价格，而低估了数据价格。因为不限量地售卖标签，会导致竞价同一次展示的广告主的数目增加，因为有了标签，各个广告主能够更精准地定向到更多用户，因此更多的广告主的竞价抬高了流量的价格， 而假如广告主的预算是一定的情况下，购买流量需要更多的钱，因此用于购买数据支出会变少。当然这只是宏观上的探讨，目前业界对此并没有一套完善的理论来指导。</p>
+<p>如果采用限量的售卖，那就要采用竞价的方式，而有了竞价，整个市场的活跃程度和价值会最大化。</p>
+<h2 id="数据隐私"><a href="#数据隐私" class="headerlink" title="数据隐私"></a>数据隐私</h2><p>在数据交易过程中不可避免地会设计到数据隐私的问题。针对数据隐私，欧盟负责隐私保护条例指定的委员会 A29 制定了以下相关原则</p>
+<ol>
+<li>Personal Identifiable Information（PII）不能使用，PII指的是可以主动接触到用户的信息，比如手机号、QQ号、微信号、e-mail等都不能使用</li>
+<li>用户可以要求系统停止记录和使用自己的行为数据，比如说网站会在网页上说明收集到的用户数据的作用，同时可让用户选择是否允许收集其数据，实际上对商业影响非常小，因为选择不允许收集的用户比例不大</li>
+<li>不能长期保存和使用用户的行为数据，实际上数据也具有时效性，时间太久远的数据基本上无价值</li>
+</ol>
+<p>另外一个数据隐私问题就是稀疏的行为数据带来的挑战，一个典型的例子就是 Netflix 推荐大赛中，有人从数据集里面发现了自己的同时是同性恋，原因是数据的稀疏性使得个人的行为数据更加容易被熟悉这个人的其他人所辨识。</p>
+<p>目前对于这个领域相关的研究课题是差分隐私（differential privacy）。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/计算广告/" rel="tag">计算广告</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/10/怎样用数据洞察你的用户/" rel="next" title="怎样用数据洞察你的用户">
+                <i class="fa fa-chevron-left"></i> 怎样用数据洞察你的用户
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/18/如何用数据武装运营工作/" rel="prev" title="如何用数据武装运营工作">
+                如何用数据武装运营工作 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://wulc.me/files/profile.jpg"
+               alt="良超" />
+          <p class="site-author-name" itemprop="name">良超</p>
+          <p class="site-description motion-element" itemprop="description">算法工程师首先得是个工程师</p>
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">208</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">39</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/WuLC" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github-alt"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.linkedin.com/in/wuliangchao/" target="_blank" title="LinkedIn">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  LinkedIn
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#有价值的数据分类"><span class="nav-number">1.</span> <span class="nav-text">有价值的数据分类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#决策行为"><span class="nav-number">1.1.</span> <span class="nav-text">决策行为</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#主动行为"><span class="nav-number">1.2.</span> <span class="nav-text">主动行为</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#半主动行为"><span class="nav-number">1.3.</span> <span class="nav-text">半主动行为</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#被动行为"><span class="nav-number">1.4.</span> <span class="nav-text">被动行为</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#社交关系"><span class="nav-number">1.5.</span> <span class="nav-text">社交关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#用户-ID"><span class="nav-number">1.6.</span> <span class="nav-text">用户 ID</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三方数据划分"><span class="nav-number">2.</span> <span class="nav-text">三方数据划分</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据管理平台-DMP"><span class="nav-number">3.</span> <span class="nav-text">数据管理平台(DMP)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#第一方-DMP"><span class="nav-number">3.1.</span> <span class="nav-text">第一方 DMP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第三方-DMP"><span class="nav-number">3.2.</span> <span class="nav-text">第三方 DMP</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据的交易"><span class="nav-number">4.</span> <span class="nav-text">数据的交易</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据隐私"><span class="nav-number">5.</span> <span class="nav-text">数据隐私</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <center>
+<div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2019</span>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
+  </br>
+  <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
+</div>
+</center>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>

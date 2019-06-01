@@ -1,0 +1,884 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="计算广告," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="本文内容主要来源于该知乎 live，主要介绍了深度学习为什么能在大数据的环境下有效，并描述了大数据的三个特点：行为数据、全量加工和自动化应用。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="大数据是否能够改造你的行业">
+<meta property="og:url" content="http://wulc.github.io/2017/06/01/大数据是否能够改造你的行业/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="本文内容主要来源于该知乎 live，主要介绍了深度学习为什么能在大数据的环境下有效，并描述了大数据的三个特点：行为数据、全量加工和自动化应用。">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/bgz7xtp1ybboy75fnbqgds69/image_1bibon900cpa18bnft25jm1v1l9.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/p91dor2znelewz61arppsm9s/image_1biboqno31et14vufm3jqanogm.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/u235a5nmidx67hun0p54s6hy/image_1bibpk6le148m1kbm1cobs68lpi1g.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/25asmeghu9mqoveq5su4g5p3/image_1bibq50b31boak2s1ntfktrmf41t.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/rjo73v2of076s9927e1qpov7/image_1bibqfpl114vp1h9s15nak9t1ftq2a.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/rm43xqcglblwptihy5b98kge/image_1bibr8ek9gd7cecftn1fm3mqg2n.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/zj4wmurb6cwotyo7dla5ws3k/image_1bibreoiq1c3cm561ausnqpvc534.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/f1v68t4ygv50vukh1a23otb2/image_1bibsfvk3100ns471bdd3abq023h.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/ivzbjvl4vu7lb8ukfqwrhnzz/image_1bibuiuc31d6h77k188415gs16m23u.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/s70v4qml3gspankng2jlb0fe/image_1bibusqjp1ud23h118qaqdes0t4b.png">
+<meta property="og:updated_time" content="2019-06-01T09:14:44.152Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="大数据是否能够改造你的行业">
+<meta name="twitter:description" content="本文内容主要来源于该知乎 live，主要介绍了深度学习为什么能在大数据的环境下有效，并描述了大数据的三个特点：行为数据、全量加工和自动化应用。">
+<meta name="twitter:image" content="http://static.zybuluo.com/WuLiangchao/bgz7xtp1ybboy75fnbqgds69/image_1bibon900cpa18bnft25jm1v1l9.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"always"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://wulc.github.io/2017/06/01/大数据是否能够改造你的行业/"/>
+
+
+
+
+
+  <title> 大数据是否能够改造你的行业 | 吴良超的学习笔记 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1258114456&web_id=1258114456" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">吴良超的学习笔记</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <h1 class="site-subtitle" itemprop="description"></h1>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            站内搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://wulc.github.io/2017/06/01/大数据是否能够改造你的行业/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="良超">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="吴良超的学习笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                大数据是否能够改造你的行业
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-01T21:37:39+08:00">
+                2017-06-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-tags"></i>
+              </span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/tags/计算广告/" itemprop="url" rel="index">
+                    <span itemprop="name">计算广告</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文内容主要来源于<a href="https://www.zhihu.com/lives/778738193250942976" target="_blank" rel="external">该知乎 live</a>，主要介绍了深度学习为什么能在大数据的环境下有效，并描述了大数据的三个特点：<strong>行为数据、全量加工和自动化应用</strong>。</p>
+<a id="more"></a>
+<h2 id="深度学习为何有效"><a href="#深度学习为何有效" class="headerlink" title="深度学习为何有效"></a>深度学习为何有效</h2><p><img src="http://static.zybuluo.com/WuLiangchao/bgz7xtp1ybboy75fnbqgds69/image_1bibon900cpa18bnft25jm1v1l9.png" alt="机器学习的发展"></p>
+<p>深度学习属于表示表示学习的一种，将特征提取和模型训练放到一起，消除了领域知识(特征工程)的影响</p>
+<p>深度学习有效的原因</p>
+<p>1）深度学习的表达能力更强，模型能够容纳更多的数据<br>2）深度学习的模型很早就提出了，但是一直缺乏有效的优化方法（求解方法），无法将桶灌满，直到 GPU 的出现，相当于图中的水管的出现<br>3）能够获取的数据量变得更大（水源）</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/p91dor2znelewz61arppsm9s/image_1biboqno31et14vufm3jqanogm.png" alt="深度学习模型"></p>
+<h2 id="行为数据、全量加工、自动化应用"><a href="#行为数据、全量加工、自动化应用" class="headerlink" title="行为数据、全量加工、自动化应用"></a>行为数据、全量加工、自动化应用</h2><p>能够利用大数据改造的产业必须要有以下三个特点</p>
+<p>1）具有行为数据<br>2）需要进行全量加工<br>3）能够部署自动化应用</p>
+<h3 id="行为数据-v-s-交易数据"><a href="#行为数据-v-s-交易数据" class="headerlink" title="行为数据 v.s 交易数据"></a><strong>行为数据 v.s 交易数据</strong></h3><p><img src="http://static.zybuluo.com/WuLiangchao/u235a5nmidx67hun0p54s6hy/image_1bibpk6le148m1kbm1cobs68lpi1g.png" alt="交易数据和行为数据"></p>
+<p>由于两者的特点不同，交易数据和行为数据的加工方式差别很大</p>
+<h3 id="全量加工-v-s-采样加工"><a href="#全量加工-v-s-采样加工" class="headerlink" title="全量加工 v.s 采样加工"></a><strong>全量加工 v.s 采样加工</strong></h3><p>问题属性决定采用哪种加工</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/25asmeghu9mqoveq5su4g5p3/image_1bibq50b31boak2s1ntfktrmf41t.png" alt="采样分析和全量加工"></p>
+<p>全量加工是大数据的一个根本特点</p>
+<p>CTR 预估是一个全量加工的问题，但是实际中往往要对负样本抽样以解决正负样本不平衡问题</p>
+<h3 id="洞察应用-v-s-全自动化应用"><a href="#洞察应用-v-s-全自动化应用" class="headerlink" title="洞察应用 v.s 全自动化应用"></a><strong>洞察应用 v.s 全自动化应用</strong></h3><p>洞察指的是根据大量数据生成报表，然后通过人观察这些报表并作出决策</p>
+<p>全自动化指的是数据的产生，加工，交易形成闭环</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/rjo73v2of076s9927e1qpov7/image_1bibqfpl114vp1h9s15nak9t1ftq2a.png" alt="全自动化应用"></p>
+<p>因此，要将大数据应用到业务中，需要回答这三个问题</p>
+<p>1）行为数据从哪里来？<br>2）要全量加工的问题是什么？<br>3）如何做到自动化</p>
+<p>下面是根据大数据的三个特点介绍的三个应用场景，其中广告行业是已经发展的比较成熟的了，而保险行业和医疗行业则是未来有这种发展趋势的</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/rm43xqcglblwptihy5b98kge/image_1bibr8ek9gd7cecftn1fm3mqg2n.png" alt="广告行业"></p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/zj4wmurb6cwotyo7dla5ws3k/image_1bibreoiq1c3cm561ausnqpvc534.png" alt="保险行业"></p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/f1v68t4ygv50vukh1a23otb2/image_1bibsfvk3100ns471bdd3abq023h.png" alt="大数据医疗行业"></p>
+<h2 id="自动化系统一般框架"><a href="#自动化系统一般框架" class="headerlink" title="自动化系统一般框架"></a>自动化系统一般框架</h2><p>上面提到了在大数据的环境下需要将处理自动化，下面以发展得较为成熟的计算广告为例讲述自动化系统的一般框架</p>
+<p>这个系统的分解以及各部分的作用如下所示，更详细的可参考<a href="http://wulc.me/2017/04/20/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A%E7%AC%94%E8%AE%B0%281%29--%E5%B9%BF%E5%91%8A%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86/" target="_blank" rel="external">这里</a></p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/ivzbjvl4vu7lb8ukfqwrhnzz/image_1bibuiuc31d6h77k188415gs16m23u.png" alt="自动化系统一般框架"></p>
+<p>由于开源软件的发展，搭建这样的系统难度不大，开源软件的几个优势和顾虑如下所示</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/s70v4qml3gspankng2jlb0fe/image_1bibusqjp1ud23h118qaqdes0t4b.png" alt="搭建系统"></p>
+<p>核心业务的迭代应该是非常快而且非常重要的，不能被开源软件的开发进度控制。</p>
+<p>最后，在具体的业务中应用到数据时，一定要遵循以下准则：<strong>数据高于经验，让数据来决策，不能只是先入为主做假设</strong>，有些现象是想不到的</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/计算广告/" rel="tag">计算广告</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/28/LeetCode解题报告(382, 398)--随机采样算法 Reservoir Sampling/" rel="next" title="LeetCode解题报告(382, 398)--随机采样算法 Reservoir Sampling">
+                <i class="fa fa-chevron-left"></i> LeetCode解题报告(382, 398)--随机采样算法 Reservoir Sampling
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/05/如何用数据来挣钱/" rel="prev" title="如何用数据来挣钱">
+                如何用数据来挣钱 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://wulc.me/files/profile.jpg"
+               alt="良超" />
+          <p class="site-author-name" itemprop="name">良超</p>
+          <p class="site-description motion-element" itemprop="description">算法工程师首先得是个工程师</p>
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">208</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">39</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/WuLC" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github-alt"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.linkedin.com/in/wuliangchao/" target="_blank" title="LinkedIn">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  LinkedIn
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#深度学习为何有效"><span class="nav-number">1.</span> <span class="nav-text">深度学习为何有效</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#行为数据、全量加工、自动化应用"><span class="nav-number">2.</span> <span class="nav-text">行为数据、全量加工、自动化应用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#行为数据-v-s-交易数据"><span class="nav-number">2.1.</span> <span class="nav-text">行为数据 v.s 交易数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#全量加工-v-s-采样加工"><span class="nav-number">2.2.</span> <span class="nav-text">全量加工 v.s 采样加工</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#洞察应用-v-s-全自动化应用"><span class="nav-number">2.3.</span> <span class="nav-text">洞察应用 v.s 全自动化应用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自动化系统一般框架"><span class="nav-number">3.</span> <span class="nav-text">自动化系统一般框架</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <center>
+<div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2019</span>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
+  </br>
+  <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
+</div>
+</center>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>

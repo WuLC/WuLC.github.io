@@ -1,0 +1,909 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="分布式,机器学习," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="这一讲主要介绍了挖掘频繁项集中的经典方法 FP-growth，以及如何通过 MapReduce 实现这个算法，通过MapReduce实现的 FP-growth 也称为 PFP，这个方法不仅能够挖掘频繁项集，还能够挖掘非频繁项集。原视频在这里，需要自备梯子。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="分布式机器学习(2)-Infrequent Pattern Mining using MapReduce">
+<meta property="og:url" content="http://wulc.github.io/2018/02/11/分布式机器学习(2)-Infrequent Pattern Mining using MapReduce/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="这一讲主要介绍了挖掘频繁项集中的经典方法 FP-growth，以及如何通过 MapReduce 实现这个算法，通过MapReduce实现的 FP-growth 也称为 PFP，这个方法不仅能够挖掘频繁项集，还能够挖掘非频繁项集。原视频在这里，需要自备梯子。">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/94uad7u0e8n60ptwm9ux4wlm/image_1c5s43rc91en7uks12ji49518fs9.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/9jkfmnp12wj1qaouvcgweda3/image_1c6h1582b13lr1h1f14v46fhd1u13.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/gkgi3kky9hs8hcjifmgz1qd0/image_1c6h170i0v2jhn6v871v7g1dvj1g.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/dnzu9aedxkxoetidebvj0vyb/image_1c6hdlsfq1hvc126tsvlfarno11t.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/5fnprxgq08tegjbuoivexhz8/image_1c6hds4av12hr1j421m2gk8h1dmg2a.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/bb3h170sp9q6yftdg4nv1uoc/image_1c6he1m4fk03eo412dro4m1ain2n.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/s4da82obd76bxvhauvqmucho/image_1c5saqi2j1is3156872reg9rdam.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/21a8skx0kkdy44z6wbfp74bg/image_1c6hmpeev1f601ocpg0o17me1q4j34.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/py2zdqctjzqo2wwgxxj4dtt5/image_1c6hn2fhsikv18ok1pccnbj1m4g3h.png">
+<meta property="og:updated_time" content="2019-06-01T09:14:44.143Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="分布式机器学习(2)-Infrequent Pattern Mining using MapReduce">
+<meta name="twitter:description" content="这一讲主要介绍了挖掘频繁项集中的经典方法 FP-growth，以及如何通过 MapReduce 实现这个算法，通过MapReduce实现的 FP-growth 也称为 PFP，这个方法不仅能够挖掘频繁项集，还能够挖掘非频繁项集。原视频在这里，需要自备梯子。">
+<meta name="twitter:image" content="http://static.zybuluo.com/WuLiangchao/94uad7u0e8n60ptwm9ux4wlm/image_1c5s43rc91en7uks12ji49518fs9.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"always"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://wulc.github.io/2018/02/11/分布式机器学习(2)-Infrequent Pattern Mining using MapReduce/"/>
+
+
+
+
+
+  <title> 分布式机器学习(2)-Infrequent Pattern Mining using MapReduce | 吴良超的学习笔记 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1258114456&web_id=1258114456" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">吴良超的学习笔记</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <h1 class="site-subtitle" itemprop="description"></h1>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            站内搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://wulc.github.io/2018/02/11/分布式机器学习(2)-Infrequent Pattern Mining using MapReduce/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="良超">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="吴良超的学习笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                分布式机器学习(2)-Infrequent Pattern Mining using MapReduce
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-02-11T12:00:37+08:00">
+                2018-02-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-tags"></i>
+              </span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/tags/分布式/" itemprop="url" rel="index">
+                    <span itemprop="name">分布式</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/tags/机器学习/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这一讲主要介绍了挖掘频繁项集中的经典方法 <a href="https://dl.acm.org/citation.cfm?doid=335191.335372" target="_blank" rel="external">FP-growth</a>，以及如何通过 MapReduce 实现这个算法，通过MapReduce实现的 FP-growth 也称为 <a href="https://dl.acm.org/citation.cfm?doid=1454008.1454027" target="_blank" rel="external">PFP</a>，这个方法不仅能够挖掘频繁项集，还能够挖掘非频繁项集。原视频在<a href="https://www.youtube.com/watch?v=eCrhaUCqiiE&amp;t=4400s" target="_blank" rel="external">这里</a>，需要自备梯子。</p>
+<a id="more"></a>
+<h2 id="频繁项挖掘"><a href="#频繁项挖掘" class="headerlink" title="频繁项挖掘"></a>频繁项挖掘</h2><p>频繁项集挖掘（Frequent Itemset Mining）指的是将那些共同出现较为频繁的项集找出来，其中一个经典的例子就是啤酒和尿布。下图展示了频繁项挖掘中的一些基本概念</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/94uad7u0e8n60ptwm9ux4wlm/image_1c5s43rc91en7uks12ji49518fs9.png" alt="基本概念"></p>
+<ul>
+<li>Transaction：每一行就是一个 Transaction，表示一个订单</li>
+<li>Item &amp; ItemSet：每个 Transaction 包含了若干个 Item，表示订单中的商品，任意数量的 Item 可组成一个 ItemSet</li>
+<li>Support：表示某个 ItemSet 出现的次数</li>
+</ul>
+<p>挖掘频繁项集有两个基本方法：Apriori 和 FP-growth，其中 Apriori 需要对原始数据进行多次的扫描，导致速度很慢。这里不展开讲述，具体可参考<a href="http://www.cnblogs.com/fengfenggirl/p/associate_apriori.html" target="_blank" rel="external">这篇文章</a>。</p>
+<p>这里讲述的是 FP-growth 算法，该算法通过构建一棵 prefix tree，使得只需要遍历两次原始的数据，下面先介绍这个算法的流程，再介绍如何通过 MapReduce 实现。</p>
+<h2 id="FP-growth-算法"><a href="#FP-growth-算法" class="headerlink" title="FP-growth 算法"></a>FP-growth 算法</h2><p>FP-growth 算法首先需要构建一棵 FP-tree ，FP-tree 是一棵 prefix tree，构造的方法跟一般的 prefix tree 一样，但是在构造前需要对每个 transaction 中的 items 按照统一的规则排序（可以按照item出现的频率，也可以按照item的名称，总之各个transaction保持一致即可）</p>
+<p>由于原始的 items 已经按照items名称排序，因此这里直接按照构建prefix tree 的方法构建 FP-tree 即可，如下图所示是读入前两条记录的构建结果</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/9jkfmnp12wj1qaouvcgweda3/image_1c6h1582b13lr1h1f14v46fhd1u13.png" alt="prefix tree 1"></p>
+<p>按照这种方法可以构建出整棵 FP-tree 如下图所示</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/gkgi3kky9hs8hcjifmgz1qd0/image_1c6h170i0v2jhn6v871v7g1dvj1g.png" alt="prefix tree 2"></p>
+<p><strong>这里需要注意的是上述的过程忽略了一步，就是在构造 FP-tree 前还还需要设定一个 min-support 值，这个值表示某个 item 至少要出现 min-support 次，如果小于 min-support 次，则将这个 item 从所有的 transaction 中剔除，再按照上面的方法构造 prefix tree。</strong></p>
+<p>这么做的原因一是出现频率不高的 itemset 中的item被认为是相关度较低的，二是当输入很大的时候，构造出来的树也会很大，因此可通过设定阈值，去掉 infrequent item。但是从我们前面讲的内容可知，这样做其实已经去掉了部分长尾数据。</p>
+<p><strong>构造完 FP-tree 后，挖掘频繁项集时需要先指定一个 item，再挖掘与这个 item 相关的频繁项集</strong>，挖掘与这个item相关的频繁项集需要构造 Conditional FP-tree，所谓的 Conditional FP-Tree，就是与该 item 相关的所有 transaction 所组成的 FP-tree。如要挖掘与 e 这个 item 相关的频繁项集，则构造 Conditional FP-tree 过程如下</p>
+<p>首先需要找到以 e 为叶子节点的所有 branch 组成的 tree，如下图 (a) 所示</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/dnzu9aedxkxoetidebvj0vyb/image_1c6hdlsfq1hvc126tsvlfarno11t.png" alt="conditional FP-tree 1"></p>
+<p>接着更新父节点的计数为子节点的计数之和，并且去掉 e 这个叶子节点，如下图所示</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/5fnprxgq08tegjbuoivexhz8/image_1c6hds4av12hr1j421m2gk8h1dmg2a.png" alt="conditional FP-tree 2"></p>
+<p>在这个过程中需要去掉那些 support 数不满足 min-support 的item，这里令 min-support 为2，,则由于上图中的 b 的support 数只有 1，需要去掉 b 这个 item，如下图所示</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/bb3h170sp9q6yftdg4nv1uoc/image_1c6he1m4fk03eo412dro4m1ain2n.png" alt="conditional FP-tree 3"></p>
+<p>构造出 e 的 conditional FP-tree 后，只需要挖掘出 conditional FP-tree 中的频繁项集，并在所有的频繁项集后加上 e 即可，如从 conditional FP-tree 中挖掘出的频繁项集为 <code>{a:2, d:2}</code> 和 <code>{c:2}</code>, 则关于 e 的频繁项集为 <code>{a:2, d:2, e:2}</code> 和 <code>{c:2, e:2}</code>。这样实际上是在解决一个递归问题了。</p>
+<h2 id="MapReduce-实现-FP-growth"><a href="#MapReduce-实现-FP-growth" class="headerlink" title="MapReduce 实现 FP-growth"></a>MapReduce 实现 FP-growth</h2><p>一般来说，挖掘频繁项集的原始数据都相当庞大，因此构造出来的 FP-tree 也会很大，当内存无法存储 FP-tree 时，一种解决方法就是通过提高 min-support 的值，从而将 FP-tree 的大小降低，但是根据之前讲的长尾效应，这样做会将长尾数据切掉。</p>
+<p>另外一种方法就是通过分布式的方式实现该算法，通过分布式使得能够 构建 FP-tree 时支持更小的 min-support，从而能够挖掘非频繁项集。这里采用的分布式框架就是 MapReduce，下面讲述的是这个方法实现的细节。</p>
+<p>下面首先介绍一下MapReduce 的编程范式，输入、中间结果和输出均是 key-value pairs, 中间的 shuffling 过程目的就是要将 key 相同的 pairs 交给同一个 worker 处理。</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/s4da82obd76bxvhauvqmucho/image_1c5saqi2j1is3156872reg9rdam.png" alt="mapreduce"></p>
+<p>在具体的实现上，shuffling 过程可通过对 key 做 hash 后，再取模（worker 的数量）决定这个 kv 对由哪个 worker 来负责。</p>
+<p>另外数据的传输是通过分布式文件系统实现的，也就是需要通过反复写磁盘来进行数据的传输，这导致了 MapReduce 的速度无法快起来。</p>
+<p>从上面可知，找到 item A 和 item B 的频繁项集这两个任务是不相关的，只需要分别找出 item A 和 item B 的 conditional FP-tree 即可，因此可以分别交给两个 worker 进行处理。</p>
+<p>通过 MapReduce 实现的 FP-growth，<strong>每一次的 map + reduce 过程能够输出 item 对应的 conditional FP-tree</strong>，下图所示的是 map 过程，能够从 transaction 中输出各个 item 对应的 conditional transaction</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/21a8skx0kkdy44z6wbfp74bg/image_1c6hmpeev1f601ocpg0o17me1q4j34.png" alt="PFP map"></p>
+<p>上图中最左边的 map input 是最开始的 transactions, 经过排序和过滤掉非频繁项后能够得到各个 item 对应的conditional transaction，作为 map output 输入到 reduce 过程中，reduce 过程如下图所示，reduce 能够将相同的 key(item) 的conditional transactions 聚合在一起，进而构建出这个 item 对应的conditional FP-tree。</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/py2zdqctjzqo2wwgxxj4dtt5/image_1c6hn2fhsikv18ok1pccnbj1m4g3h.png" alt="PFP reduce"></p>
+<p>得到这个 item 的 conditional FP-tree 后，可对这棵 conditional FP-tree 进行相同的 MapReduce 操作，因此，<strong>原始的 FP-growth 算法递归一次在这里就是一个 MapReduce Job。</strong></p>
+<p>上面的实现方法实际上就是 <a href="https://dl.acm.org/citation.cfm?doid=1454008.1454027" target="_blank" rel="external">PFP(Parallel FP-growth)</a> 算法，目前在 spark 框架中有<a href="https://spark.apache.org/docs/2.1.0/mllib-frequent-pattern-mining.html" target="_blank" rel="external">相应的实现</a>，可以直接调用。</p>
+<p>最后需要注意的一点是，PFP 虽然能够挖掘出非频繁项集，也就是长尾数据的尾巴部分，但是却无法判断出这些非频繁项集中那些项集是有效的，那些是噪声。</p>
+<p>综上，本文主要介绍了频繁项挖掘中的 FP-growth 算法以及如何通过 MapReduce 实现这个算法，通过 MapReduce 实现的版本能够支持更小的 min-support，因此能够挖掘出非频繁项集，也就是长尾数据中的尾巴部分，但是这个方法不能判断出那些非频繁项集是有效的。</p>
+<hr>
+<p>参考</p>
+<p><a href="https://www.youtube.com/watch?v=eCrhaUCqiiE&amp;t=4400s" target="_blank" rel="external">分布式机器学习系列讲座 - 01 Infrequent Pattern Mining using MapReduce</a><br><a href="http://www.cnblogs.com/pinard/p/6307064.html" target="_blank" rel="external">FP Tree算法原理总结</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/分布式/" rel="tag">分布式</a>
+          
+            <a href="/tags/机器学习/" rel="tag">机器学习</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/02/08/分布式机器学习(1)-A New Era/" rel="next" title="分布式机器学习(1)-A New Era">
+                <i class="fa fa-chevron-left"></i> 分布式机器学习(1)-A New Era
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/02/18/分布式机器学习(3)-Application Driven/" rel="prev" title="分布式机器学习(3)-Application Driven">
+                分布式机器学习(3)-Application Driven <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://wulc.me/files/profile.jpg"
+               alt="良超" />
+          <p class="site-author-name" itemprop="name">良超</p>
+          <p class="site-description motion-element" itemprop="description">算法工程师首先得是个工程师</p>
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">208</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">39</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/WuLC" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github-alt"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.linkedin.com/in/wuliangchao/" target="_blank" title="LinkedIn">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  LinkedIn
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#频繁项挖掘"><span class="nav-number">1.</span> <span class="nav-text">频繁项挖掘</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FP-growth-算法"><span class="nav-number">2.</span> <span class="nav-text">FP-growth 算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MapReduce-实现-FP-growth"><span class="nav-number">3.</span> <span class="nav-text">MapReduce 实现 FP-growth</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <center>
+<div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2019</span>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
+  </br>
+  <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
+</div>
+</center>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>

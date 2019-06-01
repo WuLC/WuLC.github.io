@@ -1,0 +1,968 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="数学," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="前面几部分主要总结了概率论中的一些知识，后面主要讲述与数理统计相关的知识。
+概率论与数理统计的主要区别为，在概率论中所研究的随机变量，其分布都是假设已知的，在这一前提下去研究它的性质（数字特征，分布函数等）；而在数理统计中研究的随机变量其分布是未知的，通过对所研究的随机变量进行重复独立的试验和观察，得到许多观察值，再对观察值进行分析，从而对所研究的随机变量的分布做出各种推断。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="概率论与数理统计知识整理(5)--样本及抽样分布">
+<meta property="og:url" content="http://wulc.github.io/2016/11/18/概率论与数理统计知识整理(5)--样本及抽样分布/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="前面几部分主要总结了概率论中的一些知识，后面主要讲述与数理统计相关的知识。
+概率论与数理统计的主要区别为，在概率论中所研究的随机变量，其分布都是假设已知的，在这一前提下去研究它的性质（数字特征，分布函数等）；而在数理统计中研究的随机变量其分布是未知的，通过对所研究的随机变量进行重复独立的试验和观察，得到许多观察值，再对观察值进行分析，从而对所研究的随机变量的分布做出各种推断。">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/x39jhwwd6cqhcvgo0wqmeug4/image_1b2b4i5eu1923bao1e801k76816p.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/yc4vnw70ofi0h3t0larzlslb/image_1b2b76hpl42rb2o8ig1aki11kq2q.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/zvnpwplptlma6nlwmv5yt3g6/image_1b2b8ahhmc23e9l80doqjq3q58.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/8dkl1jimzpgdm6yolotwga0j/image_1b2b8il5d15avfccade13di1o3062.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/s7c57tfaav6qkhkg66h1o55o/image_1b2b8n0cm104q18c2mtbkf9am6f.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/4kukccq2gmdonlv9mbv7ptb9/image_1b2b92aidk0hul81ehmbr01jjq7m.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/8yy24rbbvucei1q85qhbebg8/image_1b2b9718u1s8hg3h1m6v10fqs8l83.png">
+<meta property="og:updated_time" content="2019-06-01T09:14:44.182Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="概率论与数理统计知识整理(5)--样本及抽样分布">
+<meta name="twitter:description" content="前面几部分主要总结了概率论中的一些知识，后面主要讲述与数理统计相关的知识。
+概率论与数理统计的主要区别为，在概率论中所研究的随机变量，其分布都是假设已知的，在这一前提下去研究它的性质（数字特征，分布函数等）；而在数理统计中研究的随机变量其分布是未知的，通过对所研究的随机变量进行重复独立的试验和观察，得到许多观察值，再对观察值进行分析，从而对所研究的随机变量的分布做出各种推断。">
+<meta name="twitter:image" content="http://static.zybuluo.com/WuLiangchao/x39jhwwd6cqhcvgo0wqmeug4/image_1b2b4i5eu1923bao1e801k76816p.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"always"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://wulc.github.io/2016/11/18/概率论与数理统计知识整理(5)--样本及抽样分布/"/>
+
+
+
+
+
+  <title> 概率论与数理统计知识整理(5)--样本及抽样分布 | 吴良超的学习笔记 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1258114456&web_id=1258114456" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">吴良超的学习笔记</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <h1 class="site-subtitle" itemprop="description"></h1>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            站内搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://wulc.github.io/2016/11/18/概率论与数理统计知识整理(5)--样本及抽样分布/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="良超">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="吴良超的学习笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                概率论与数理统计知识整理(5)--样本及抽样分布
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-11-18T20:08:55+08:00">
+                2016-11-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-tags"></i>
+              </span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/tags/数学/" itemprop="url" rel="index">
+                    <span itemprop="name">数学</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>前面几部分主要总结了概率论中的一些知识，后面主要讲述与数理统计相关的知识。</p>
+<p>概率论与数理统计的主要区别为，在概率论中所研究的随机变量，其<strong>分布都是假设已知</strong>的，在这一前提下去研究它的性质（数字特征，分布函数等）；而在数理统计中研究的随机变量其<strong>分布是未知的</strong>，通过对所研究的随机变量进行<strong>重复独立的试验和观察</strong>，得到许多观察值，再对观察值进行分析，从而<strong>对所研究的随机变量的分布做出各种推断</strong>。</p>
+<a id="more"></a>
+<p>因此数理统计的主要内容包括两部分，一是如何收集，整理数据资料，二是如何对得到的数据资料进行分析和研究，从而对所研究的对象的性质和特点做出推断。第二部分其实就是统计推断的问题，也是后面主要讲述的内容。本文主要讲述数理统计中的两个基本概念：样本和抽样分布。</p>
+<h2 id="样本"><a href="#样本" class="headerlink" title="样本"></a>样本</h2><p>从前面可知，数理统计就是通过数据来推断变量的分布，比如说现在要求求出全国成年男人的身高的一个分布，那只需要测出每个成年男人的身高后进行统计即可。</p>
+<p>但是在实际中，受限于人力物力和测试的难度，我们往往不会对每个成年男人进行身高的测试，而是在全国男人中选择部分的男人进行测试(如根据每个地区的人口数量按比例测试)，然后用这部分男人的身高分布来推断全国男人的分布，这样的推断肯定会存在误差，但是通过增加样本的数量，可以减少这种误差(大数定理)。</p>
+<p>上面其实就是一个很简单的数理统计过程，当中有几个概念需要注意，例子中的全国男人的身高是一个<strong>总体</strong>，选择出来实际测试身高的男人是一个<strong>样本</strong>，测试得到的身高称为<strong>样本值（观测值）</strong>，总体和样本中的数目分别称为他们的<strong>容量</strong>。</p>
+<p>其严格定义如下：</p>
+<blockquote>
+<p>设 $X$ 是具有分布函数 $F$ 的随机变量, 若 $X_1, X_2, …,X_n$ 是具有同一分布函数 $F$ 的相互独立的随机变量，则称 $X_1, X_2,…X_n$ 为从分布函数 $F$ 得到的容量为n的简单随机样本，简称样本，他们的观测值 $x_1, x_2,…x_n$ 称为样本值，又称为 $X$ 的 $n$ 个独立的观测值。</p>
+</blockquote>
+<p>由定义可知样本 $ X_1,X_2,…,X_n $ 相互独立，且他们的分布函数均为 $F$, 所以 $ (X_1,X_2,…,X_n) $的分布函数为</p>
+<p>$$ F^*(x_1,x_2,…,x_n) = \prod_{i=1}^nF(x_i)$$</p>
+<p>同样,$ (X_1,X_2,…,X_n) $的概率密度函数为：</p>
+<p>$$ f^*(x_1,x_2,…,x_n) = \prod_{i=1}^nf(x_i) $$</p>
+<h2 id="抽样分布"><a href="#抽样分布" class="headerlink" title="抽样分布"></a>抽样分布</h2><h3 id="统计量"><a href="#统计量" class="headerlink" title="统计量"></a>统计量</h3><p>样本是进行统计推断的依据，但是在应用中，往往不是直接使用样本本身，而是<strong>针对不同问题构造适当的样本的函数，利用这些样本的函数进行统计推断</strong>。</p>
+<p>当这些样本的函数中不含未知变量时，我们称其为<strong>统计量</strong>，如下面就是几个常用的统计量，其中 $ X_1,X_2,….,X_n $ 为总体的一个样本。</p>
+<p>样本平均值： $$\overline X = \frac{1}{n} \sum_{i=1}^{n} X_i$$</p>
+<p>样本方差：$$S^2 = \frac{1}{n-1} \sum_{i=1}^{n} (X_i - \overline X)^2$$</p>
+<p>样本标准差：$$S = \sqrt {S^2}$$</p>
+<p>样本 k 阶原点矩： $$A_k = \frac{1}{n} \sum_{i=1}^{n} X_i^k (k=1,2,…)$$</p>
+<p>样本 k 阶中心矩: $$B_k = \frac{1}{n} \sum_{i=1}^{n}(X_i - \overline X)^k (k=2,3,4…..)$$</p>
+<p>这些统计量的定义与概率论中的基本相似，唯一比较奇怪的是为什么样本方差的分母是 $n - 1$ 而不是 n，原因是通过数学证明可以得到<strong>只有当分母取n-1时，用样本来估计总体才是无偏的(无偏指的是估计量的期望与总体的参数一致)</strong>，下面是分母取n时得到的有偏估计的证明过程（$S_1^2$为样本方差）</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/x39jhwwd6cqhcvgo0wqmeug4/image_1b2b4i5eu1923bao1e801k76816p.png" alt=""></p>
+<p>更多的解释可参考<a href="https://www.zhihu.com/question/20099757" target="_blank" rel="external">这里</a></p>
+<p>除了上面的统计量还定义了与总体分布函数 $F(x)$ 相应的统计量–经验分布函数。其定义如下</p>
+<blockquote>
+<p>设 $ X_1,X_2,….,X_n $ 为总体的一个样本，$ S(x)(-\infty &lt; x &lt; \infty) $表示为样本中不大于 $x$ 的随机变量的个数，则经验分布函数 $F_n(x)$ 的定义如下$$F_n(x) = \frac{1}{n}S(x) (-\infty &lt; x &lt; \infty)$$</p>
+</blockquote>
+<p>下面是关于经验分布函数的一个简单例子。</p>
+<p>设总体 $F$ 具有一个样本值1,2,3，则经验分布函数 $F_3(x)$ 的观测值为</p>
+<p>$$f(y) = \begin{cases}<br>0 &amp;{x&lt;1} \\<br>\frac{1}{3} &amp;{1\le x&lt;2}\\<br>\frac{2}{3} &amp;{2\le x&lt;3}\\<br>1 &amp;{x \ge 3}\end{cases}$$</p>
+<p><strong>经验分布函数的意义在于当 n 充分大的时候，$F_n(x)$ 以概率1收敛于总体分布函数 $F(x)$</strong></p>
+<h3 id="统计量的分布"><a href="#统计量的分布" class="headerlink" title="统计量的分布"></a>统计量的分布</h3><p>使用统计量进行统计推断时，常常需要知道其分布，<strong>统计量的分布也称为抽样分布</strong>，下面介绍三种来自<strong>正态分布</strong>的抽样分布： $\chi^2$ 分布，$t$ 分布和 $F$ 分布。</p>
+<h4 id="chi-2-分布"><a href="#chi-2-分布" class="headerlink" title="$\chi^2$ 分布"></a>$\chi^2$ 分布</h4><p>$\chi^2$ 分布的定义如下</p>
+<blockquote>
+<p>设 $X_1, X_2,…X_n$ 是来自总体 $N(0,1)$ 的样本，则称统计量$$\chi^2 = X_1^2 + X_2^2 +….X_n^2$$为服从自由度为 $n$ 的 $\chi^2$ 分布</p>
+</blockquote>
+<p>上面的自由度指的是右端独立变量的个数。</p>
+<p>$\chi^2(n)$ 的概率密度函数为</p>
+<p>$$f(y) = \begin{cases}  \frac{1}{2^{\frac{n}{2}}\Gamma(n/2)}y^{n/2-1}e^{-y/2} &amp;{y&gt;0} \\ 0&amp;{其他}\end{cases}$$</p>
+<p>上式的 $\Gamma$ 函数定义为</p>
+<p>$$\Gamma = \int_{0}^{\infty} \frac{t^z - 1}{e^t} dt$$</p>
+<p>$f(y)$ 的图像如下所示</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/yc4vnw70ofi0h3t0larzlslb/image_1b2b76hpl42rb2o8ig1aki11kq2q.png" alt="卡方分布的概率密度函数"></p>
+<p>关于 $\chi^2(n)$ 有以下几个有用的结论：</p>
+<ul>
+<li><strong>可加性</strong></li>
+</ul>
+<p>设 $\chi_1^2$~$\chi^2(n_1), \chi_2^2$~$\chi^2(n_2)$, 并且 $\chi_1^2, \chi_2^2$相互独立，则有 $$\chi_1^2 + \chi_2^2 \sim \chi^2(n_1 + n_2)$$ </p>
+<ul>
+<li><strong>期望和方差</strong></li>
+</ul>
+<p>若$\chi^2$~$\chi^2(n)$，则$\chi^2$的期望和方差如下所示<br>$$E(\chi^2) = n, D(\chi^2)=2n$$</p>
+<ul>
+<li><strong>分位点</strong></li>
+</ul>
+<p>分位点的定义如下，给定正数 $a, 0&lt;a&lt;1$, 称满足下面条件</p>
+<p>$$P(\chi^2 \gt \chi_a^2(n)) = \int_{\chi_a^2(n)}^{\infty}f(y)dy= a$$ </p>
+<p>的 $\chi_a^2(n)$ 为 $\chi^2(n)$上的a分位点，其图像如下所示</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/zvnpwplptlma6nlwmv5yt3g6/image_1b2b8ahhmc23e9l80doqjq3q58.png" alt=""></p>
+<p>由定义可知，分位点由 $a,n$ 共同决定，因此对于不同的 $a，n$ 可以查阅表格得到其 $a$ 分位点。 </p>
+<h4 id="t-分布"><a href="#t-分布" class="headerlink" title="$t$ 分布"></a>$t$ 分布</h4><p>$t$分布的定义如下：</p>
+<blockquote>
+<p>设 $X \sim N(0,1), Y \sim \chi^2(n)$, 且 $X,Y$ 相互独立，则称随机变量 $$ t = \frac{X}{\sqrt{Y/n}}$$ 服从自由度为 $n$ 的 $t$ 分布, 记为 $t \sim t(n)$</p>
+</blockquote>
+<p>其概率密度函数和对应的图像如下所示：</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/8dkl1jimzpgdm6yolotwga0j/image_1b2b8il5d15avfccade13di1o3062.png" alt="t分布的概率密度函数和图像"></p>
+<p>其分位点的定义与上面讲述的一样，</p>
+<p>$$P(t \gt t_a(n)) = \int_{t_a(n)}^{\infty}h(t)dt= a$$ </p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/s7c57tfaav6qkhkg66h1o55o/image_1b2b8n0cm104q18c2mtbkf9am6f.png" alt=""></p>
+<p>且由于其概率密度函数的对称性可知,总是存在这样对称的两个分位点 ： $t_{1-a}(n) = -t_a(n)$</p>
+<h4 id="F-分布"><a href="#F-分布" class="headerlink" title="$F$ 分布"></a>$F$ 分布</h4><p>F 分布的定义如下</p>
+<blockquote>
+<p>设 $U \sim \chi^2(n_1), V \sim \chi^2(n_2)$， 且 $U,V$相互独立，则称随机变量$$F = \frac{U/n_1}{V/n_2}$$服从自由度为$(n_1,n_2)$的$F$分布，记为$F \sim F(n_1, n_2)$</p>
+</blockquote>
+<p>其概率密度函数为：</p>
+<p>$$\psi(y) = \begin{cases}  \frac{\Gamma((n_1+n_2)/2)(n_1/n_2)^{n_1/2}y^{n_1/2-1}}{\Gamma(n_1/2)\Gamma(n_2/2)[1+(n_1y/n_2)]^{(n_1+n_2/)2}} &amp;{y&gt;0} \\ 0&amp;{其他}\end{cases}$$</p>
+<p>概率密度函数的图像如下所示</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/4kukccq2gmdonlv9mbv7ptb9/image_1b2b92aidk0hul81ehmbr01jjq7m.png" alt="F分布的概率密度函数"></p>
+<p>其分位点定义同上<br>$$P(F \gt F_a(n_1,n_2)) = \int_{F_a(n_1,n_2)}^{\infty}\psi(y)dy= a$$ </p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/8yy24rbbvucei1q85qhbebg8/image_1b2b9718u1s8hg3h1m6v10fqs8l83.png" alt="F分布的分为点"></p>
+<p>且具有以下性质<br>$$F_{1-a}(n_1,n_2) = \frac{1}{F_a(n_2,n_1)}$$</p>
+<p>上面只是简单地介绍了三大抽样分布，并未介绍其作用，<strong>实际上三大抽样分布主要用于参数的区间估计中，而这主要基于从正态分布中抽取的样本所构造的统计量服从这三大分布这一事实，从下面要介绍的定理中可以看到了这三大抽样分布的作用</strong>。更详细的作用会在区间估计中进一步体现。</p>
+<h3 id="正态总体的样本均值与样本方差的分布"><a href="#正态总体的样本均值与样本方差的分布" class="headerlink" title="正态总体的样本均值与样本方差的分布"></a>正态总体的样本均值与样本方差的分布</h3><p>由于正态分布的普遍性，这里特意指出从服从正态分布的总体中抽取出的样本的所服从的分布。</p>
+<p>假设上面的 $X$ 服从正态分布 $N(\mu, \sigma^2)$, 则有以下几条定理，这几条定理在数理统计的区间估计中起了重要作用。</p>
+<blockquote>
+<p>定理一： 设$X_1, X_2,….X_n$服从$N(\mu, \sigma^2)$，$\overline X$是样本均值，则有 $$\overline X \sim N(\mu,\sigma^2/n)$$</p>
+</blockquote>
+<p>证明如下：<br>$$E(\overline X) = E(\frac{1}{n}\sum_{i=1}^{n} X_i) = \frac{1}{n}E(\sum_{i=1}^{n} X_i) = \frac{1}{n}n E(X) = \mu$$</p>
+<p>$$D(\overline X) = D(\frac{1}{n}\sum_{i=1}^{n} X_i) = \frac{1}{n^2}D(\sum_{i=1}^{n} X_i) = \frac{1}{n}n D(X) = \sigma^2/n$$</p>
+<p><strong>定理一通常用于区间估计中已知总体（服从正态分布）的期望 $\mu$ 来估计其未知的方差 $\sigma^2$ ,或已知方差 $\sigma^2$ 来估计未知的期望 $\mu$。</strong></p>
+<blockquote>
+<p>定理二 ：设$X_1, X_2,….X_n$服从$N(\mu, \sigma^2)$，$\overline X$是样本均值，$S^2$ 是样本的方差，则 $\overline X$ 和 $S^2$ 相互独立，且有 $$\frac{(n-1)S^2}{\sigma^2} \sim \chi^2(n-1)$$</p>
+</blockquote>
+<p>由于该定理的证明部分较为冗长，这里略去证明过程，感兴趣的读者可参考相关书籍。<strong>定理二主要用于区间估计中总体（服从正态分布）的期望、方差均未知时，估计其方差的范围，这也是 $\chi^2$ 分布的作用之一。</strong></p>
+<blockquote>
+<p>定理三：设$X_1, X_2,….X_n$服从$N(\mu, \sigma^2)$，$\overline X$是样本均值，$S^2$ 是样本的方差，则$$\frac{\overline X - \mu}{S/\sqrt{n}} \sim t(n-1)$$</p>
+</blockquote>
+<p>证明：<br>根据定理一，易知 $\overline X - \mu \sim N(0, \sigma^2/n)$, 则 $\frac{\overline X - \mu}{\sqrt{\sigma^2/n}} \sim N(0,1)$, 从定理二可知<br>$$\frac{(n-1)S^2}{\sigma^2} \sim \chi^2(n-1)$$<br>则根据t分布的定义有<br>$$ \frac{\frac{\overline X - \mu}{\sqrt{\sigma^2/n}}} {\sqrt{\frac{(n-1)S^2}{\sigma^2(n-1)}}} \sim t(n-1)$$</p>
+<p>化简可得<br>$$\frac{\overline X - \mu}{\sqrt{\sigma^2/n}} \sim t(n-1)$$</p>
+<p><strong>定理三主要用于区间估计中总体（服从正态分布）的期望、方差均未知时，估计其期望的范围，这也是 $t$ 分布的作用之一,注意前面讲到的$\chi^2$分布估计的是方差。</strong></p>
+<blockquote>
+<p>定理四：设 $X_1, X_2…X_n$与$Y_1,Y_2,…Y_n$分别是来自正态总体 $N(\mu_1, \sigma_1^2)$和$N(\mu_2, \sigma_2^2)$的样本, $\overline X, \overline Y$分别是其样本均值，$S_1^2, S_2^2$分别是其样本方差。则有$$\frac{S_1^2/S_2^2}{\sigma_1^2/ \sigma_2^2} \sim F(n_1 - 1, n_2 - 1)$$<br>且当$\sigma_1^2 = \sigma_2^2 = \sigma^2$ 时，$$\frac{(\overline X - \overline Y) - (\mu_1 - \mu_2)}{S_w\sqrt{1/n_1+1/n_2}} \sim t(n_1+n_2-2)$$其中，$S_w = \sqrt{\frac{(n_1 -1)S_1^2+(n_2 -1)S_2^2}{n_1+n_2-2}}$</p>
+</blockquote>
+<p>证明如下:<br>由定理二可知$$\frac{(n_1-1)S_1^2}{\sigma_1^2} \sim \chi^2(n_1-1), \frac{(n_2-1)S_2^2}{\sigma_2^2} \sim \chi^2(n_2-1)$$</p>
+<p>由 F 分布的定义可知<br>$$ \frac{(n_1-1)S_1^2}{\sigma_1^2(n_1-1)} / \frac{(n_2-1)S_2^2}{\sigma_2^2(n_2-1)} \sim F(n_1-1, n_2-1)$$化简可得$$\frac{S_1^2/S_2^2}{\sigma_1^2/ \sigma_2^2} \sim F(n_1 - 1, n_2 - 1)$$</p>
+<p>当$\sigma_1^2 = \sigma_2^2 = \sigma^2$ 时,</p>
+<p>易知 $(\overline X - \overline Y) \sim N(\mu_1 - \mu_2,\sigma_1^2/n_1 + \sigma_2^2/n_2)$</p>
+<p>则$\frac{(\overline X - \overline Y)- (\mu_1 - \mu_2)}{\sqrt{\sigma_1^2/n_1 + \sigma_2^2/n_2}} \sim N(0,1)$</p>
+<p>由定理二可知$$\frac{(n_1-1)S_1^2}{\sigma_1^2} \sim \chi^2(n_1-1), \frac{(n_2-1)S_2^2}{\sigma_2^2} \sim \chi^2(n_2-1)$$, 由 $\chi^2$ 分布的可加性可知：<br>$$\frac{(n_1-1)S_1^2}{\sigma_1^2} + \frac{(n_2-1)S_2^2}{\sigma_2^2} \sim \chi^2(n_1+n_2-2)$$</p>
+<p>由t分布的定义可知：<br>$$\frac{(\overline X - \overline Y)- (\mu_1 - \mu_2)}{\sqrt{\sigma_1^2/n_1 + \sigma_2^2/n_2}} / (\sqrt{(\frac{(n_1-1)S_1^2}{\sigma_1^2} + \frac{(n_2-1)S_2^2}{\sigma_2^2})/(n_1+n_2-2)}) \sim t(n_1+n_2-2)$$</p>
+<p>将 $\sigma_1^2 = \sigma_2^2 = \sigma^2$代入到上式化简即可得到$$\frac{(\overline X - \overline Y) - (\mu_1 - \mu_2)}{S_w\sqrt{1/n_1+1/n_2}} \sim t(n_1+n_2-2)$$其中，$S_w = \sqrt{\frac{(n_1 -1)S_1^2+(n_2 -1)S_2^2}{n_1+n_2-2}}$</p>
+<p><strong>定理四的作用是在区间估计时估计两个均服从正态分布的总体的方差的比值（期望未知）以及两者期望的差距（方差未知）</strong></p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>本文主要介绍了数理统计的概念，数理统计主要做的事情就是通过有限的样本构造的统计量去推断总体分布的参数。同时介绍了数理统计中的三大分布 $\chi^2$分布， $t$分布和$F$分布，这三大分布与前面讲的随机变量的分布不同（伯努利分布，泊松分布，正态分布等等），随机变量的分布可以认为是整体的分布，而三大分布则是描述样本的分布情况。这三大分布在区间估计中有重要作用： 其中 <strong>$\chi^2$分布主要解决总体期望未知时估计其方差的问题， $t$分布主要解决总体方差未知时估计其期望的问题，$F$主要解决期望未知时两个正态分布的方差比值问题。需要注意的是上面估计的前提是总体服从正态分布。</strong></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/数学/" rel="tag">数学</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/10/23/LeetCode解题报告(10, 44)--正则表达式的匹配与通配符的匹配/" rel="next" title="LeetCode解题报告(10, 44)--正则表达式的匹配与通配符的匹配">
+                <i class="fa fa-chevron-left"></i> LeetCode解题报告(10, 44)--正则表达式的匹配与通配符的匹配
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/11/28/《Reducing the Dimensionality of Data with Neural Networks》阅读笔记/" rel="prev" title="《Reducing the Dimensionality of Data with Neural Networks》阅读笔记">
+                《Reducing the Dimensionality of Data with Neural Networks》阅读笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://wulc.me/files/profile.jpg"
+               alt="良超" />
+          <p class="site-author-name" itemprop="name">良超</p>
+          <p class="site-description motion-element" itemprop="description">算法工程师首先得是个工程师</p>
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">208</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">39</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/WuLC" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github-alt"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.linkedin.com/in/wuliangchao/" target="_blank" title="LinkedIn">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  LinkedIn
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#样本"><span class="nav-number">1.</span> <span class="nav-text">样本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#抽样分布"><span class="nav-number">2.</span> <span class="nav-text">抽样分布</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#统计量"><span class="nav-number">2.1.</span> <span class="nav-text">统计量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#统计量的分布"><span class="nav-number">2.2.</span> <span class="nav-text">统计量的分布</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#chi-2-分布"><span class="nav-number">2.2.1.</span> <span class="nav-text">$\chi^2$ 分布</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#t-分布"><span class="nav-number">2.2.2.</span> <span class="nav-text">$t$ 分布</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#F-分布"><span class="nav-number">2.2.3.</span> <span class="nav-text">$F$ 分布</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#正态总体的样本均值与样本方差的分布"><span class="nav-number">2.3.</span> <span class="nav-text">正态总体的样本均值与样本方差的分布</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">3.</span> <span class="nav-text">小结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <center>
+<div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2019</span>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
+  </br>
+  <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
+</div>
+</center>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>

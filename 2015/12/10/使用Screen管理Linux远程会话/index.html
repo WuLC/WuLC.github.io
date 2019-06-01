@@ -1,0 +1,895 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Linux,工具使用," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="通过 SSH 或者 telent 远程登录到 Linux服务器执行一些长时间运行的任务，比如系统备份、ftp 传输等等。因为他们执行的时间太长了。必须等待它执行完毕，在此期间可不能关掉窗口或者断开连接，否则这个任务就会被杀掉，一切半途而废了。本文分析了这个问题的原因以及解决方法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用Screen管理Linux远程会话">
+<meta property="og:url" content="http://wulc.github.io/2015/12/10/使用Screen管理Linux远程会话/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="通过 SSH 或者 telent 远程登录到 Linux服务器执行一些长时间运行的任务，比如系统备份、ftp 传输等等。因为他们执行的时间太长了。必须等待它执行完毕，在此期间可不能关掉窗口或者断开连接，否则这个任务就会被杀掉，一切半途而废了。本文分析了这个问题的原因以及解决方法。">
+<meta property="og:updated_time" content="2019-06-01T09:14:44.132Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用Screen管理Linux远程会话">
+<meta name="twitter:description" content="通过 SSH 或者 telent 远程登录到 Linux服务器执行一些长时间运行的任务，比如系统备份、ftp 传输等等。因为他们执行的时间太长了。必须等待它执行完毕，在此期间可不能关掉窗口或者断开连接，否则这个任务就会被杀掉，一切半途而废了。本文分析了这个问题的原因以及解决方法。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"always"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://wulc.github.io/2015/12/10/使用Screen管理Linux远程会话/"/>
+
+
+
+
+
+  <title> 使用Screen管理Linux远程会话 | 吴良超的学习笔记 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1258114456&web_id=1258114456" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">吴良超的学习笔记</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <h1 class="site-subtitle" itemprop="description"></h1>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            站内搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://wulc.github.io/2015/12/10/使用Screen管理Linux远程会话/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="良超">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="吴良超的学习笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                使用Screen管理Linux远程会话
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2015-12-10T20:15:44+08:00">
+                2015-12-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-tags"></i>
+              </span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/tags/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/tags/工具使用/" itemprop="url" rel="index">
+                    <span itemprop="name">工具使用</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>通过 SSH 或者 telent 远程登录到 Linux服务器执行一些长时间运行的任务，比如系统备份、ftp 传输等等。因为他们执行的时间太长了。必须等待它执行完毕，在此期间可不能关掉窗口或者断开连接，否则这个任务就会被杀掉，一切半途而废了。<br>本文分析了这个问题的原因以及解决方法。<br><a id="more"></a></p>
+<h2 id="为什么关掉窗口-断开连接会使得正在运行的程序死掉？"><a href="#为什么关掉窗口-断开连接会使得正在运行的程序死掉？" class="headerlink" title="为什么关掉窗口/断开连接会使得正在运行的程序死掉？"></a>为什么关掉窗口/断开连接会使得正在运行的程序死掉？</h2><p><strong>元凶：SIGHUP 信号</strong><br>在Linux/Unix中，有这样几个概念：</p>
+<ul>
+<li><p><strong>进程组（process group）</strong>：一个或多个进程的集合，每一个进程组有唯一一个<strong>进程组ID</strong>，即<strong>组长进程的ID</strong>。</p>
+</li>
+<li><p><strong>会话（session）</strong>：一个或多个进程组的集合，开始于用户登录，终止与用户退出，此期间所有进程都属于这个会话。一个会话一般包含一个<strong>会话首进程、一个前台进程组和一个后台进程组</strong>。</p>
+</li>
+<li><p><strong>守护进程（daemon）</strong>：Linux大多数服务都是通过守护进程实现的，完成许多系统任务如0号进程为调度进程，是内核一部分；1号进程为init进程,负责内核启动后启动Linux系统。守护进程不因为用户、终端或者其他的变化而受到影响。</p>
+</li>
+</ul>
+<p>当<strong>终端接口检测到网络连接断开，将挂断信号（SIGHUP）发送给控制进程（会话期首进程）</strong>。而挂断信号默认的动作是终止程序。如果会话期首进程终止，则该信号发送到<strong>该会话期前台进程组</strong>。</p>
+<p>也就是说：ssh打开以后，bash等都是他的子程序，一旦ssh关闭，系统将所有<strong>前台进程</strong>杀掉。（<strong>后台进程和守护进程不会被关闭</strong>！！！）
+　　</p>
+<h2 id="测试案例"><a href="#测试案例" class="headerlink" title="测试案例"></a>测试案例</h2><h3 id="测试例一"><a href="#测试例一" class="headerlink" title="测试例一"></a>测试例一</h3><p>打开两个SSH终端窗口，在其中一个运行了一个循环打印的python脚本。执行命令如下：<br><code>[root@localhost ~]# python test.py</code><br><code>test.py</code>内容如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">while True:</span><br><span class="line">    print &quot;hehe&quot;</span><br></pre></td></tr></table></figure></p>
+<p>另外一个终端用<code>pstree -p</code>查看当前的进程树。显示如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# pstree -p</span><br><span class="line">（省略）</span><br><span class="line">├─sshd(958)─┬─sshd(1282)───bash(1286)───pstree(1436)</span><br><span class="line">│           └─sshd(1410)───bash(1414)───python(1433)</span><br></pre></td></tr></table></figure></p>
+<p>可以看到2个bash进程代表了2个终端，pstree是当前进程正在运行的程序，而python进程则是另外一个终端正在运行的程序。</p>
+<p>关掉启动python的终端，在刚刚执行pstree的终端上查找pid为1433的进程（也就是原来的python进程），发现没有这个pid的进程，说明python随着终端的关闭而终止了，此时输入<code>pstree -p</code>变为了下面这样：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# pstree -p</span><br><span class="line">（省略）</span><br><span class="line">├─sshd(958)──sshd(1282)───bash(1286)───pstree(1436)</span><br></pre></td></tr></table></figure></p>
+<h3 id="测试例二"><a href="#测试例二" class="headerlink" title="测试例二"></a>测试例二</h3><p>步骤同例一，只是在执行python脚本时将其放到后台执行，执行命令如下：<br><code>[root@localhost ~]# python test.py &amp;</code><br>这样在关闭执行python的中断后，<strong>python进程并没有被中断</strong>，通过<code>pstree -p</code>查看到进程数类似于下面的情况：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(省略)</span><br><span class="line">├─python(1493)</span><br><span class="line">├─sshd(958)───sshd(1282)───bash(1286)───pstree(1497)</span><br></pre></td></tr></table></figure></p>
+<p>因为python执行的是个后台进程，而SIGHup信号只会发送给前台进程组，当父进程结束后，其原来子进程中的后台进程会成为孤儿进程被init进程收养。详见<a href="http://wulc.me/2015/12/05/%E5%AD%A4%E5%84%BF%E8%BF%9B%E7%A8%8B%E5%92%8C%E5%83%B5%E5%B0%B8%E8%BF%9B%E7%A8%8B/" target="_blank" rel="external">孤儿进程和僵尸进程</a></p>
+<p>注：网上一些资料显示执行某些复杂程序的时候，只加<code>&amp;</code>也会终止，但是博主还没遇到过这种情况，因为我不会这样去执行一个执行时间较长的程序。</p>
+<p>同样,nohup命令可以达到这个目的，值得注意的是nohup命令只是使得程序忽略SIGHUP信号，还需要使用标记&amp;把它放在后台运行。这种情况能够保证程序不会被终止。<br><code>nohup &lt;command&gt; [argument…] &amp;</code></p>
+<h2 id="使用screen管理远程会话"><a href="#使用screen管理远程会话" class="headerlink" title="使用screen管理远程会话"></a>使用screen管理远程会话</h2><p>虽然nohup和后台进程很容易使用，但还是比较“简陋”的，对于简单的命令能够应付过来，对于复杂的需要人机交互的任务就麻烦了。</p>
+<p>其实我们可以使用一个更为强大的实用程序screen。</p>
+<p>简单来说，Screen是一个可以在多个进程之间多路复用一个<strong>物理终端</strong>的窗口管理器。Screen中有会话的概念，用户可以在一个screen会话中创建多个screen窗口。</p>
+<h3 id="创建新的会话"><a href="#创建新的会话" class="headerlink" title="创建新的会话"></a>创建新的会话</h3><p>在screen中创建一个新的会话有2种方式</p>
+<p><strong>1．直接在命令行键入screen命令</strong><br><code>[root@localhost ~]# screen</code><br>Screen将创建一个执行shell的全屏窗口。你可以执行任意shell程序，就像在ssh窗口中那样。在该窗口中键入exit退出该窗口，如果这是该screen会话的唯一窗口，该screen会话退出，否则screen自动切换到前一个窗口。<br>也可通过<code>screen -S name</code> 来为启动的session取名字。<br><strong>2．Screen命令后跟你要执行的程序</strong><br>[root@localhost ~]# python test.py<br>Screen创建一个执行python test.py的单窗口会话，终止进程将退出该窗口/会话。</p>
+<h3 id="进入已创建会话"><a href="#进入已创建会话" class="headerlink" title="进入已创建会话"></a>进入已创建会话</h3><p>即使关闭了启动所有终端，在screen会话中启动的进程也不会终止，再次连接时可通过<code>screen -ls</code>查看已经启动的screen会话(detached状态)，用<code>screen -r name</code>恢复指定会话，也可在会话中通过exit退出screen会话。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# screen -ls</span><br><span class="line">There is a screen on:</span><br><span class="line">	1518.lc	(Detached)</span><br><span class="line">1 Socket in /var/run/screen/S-root.</span><br><span class="line">重新连接会话</span><br><span class="line">[root@localhost ~]# screen -r lc或screen -r 1518</span><br><span class="line">退出当前screen会话</span><br><span class="line">[root@localhost ~]#exit</span><br></pre></td></tr></table></figure></p>
+<h3 id="screen的一些常用参数如下所示"><a href="#screen的一些常用参数如下所示" class="headerlink" title="screen的一些常用参数如下所示"></a>screen的一些常用参数如下所示</h3><ul>
+<li><p><strong>分享操作</strong></p>
+<p><code>screen -x name</code>进入一个还在连接着（attached）的screen，然后所有操作能够被另外所有正在连着的screen看到</p>
+</li>
+<li><p><strong>分屏</strong> </p>
+<ul>
+<li>创建一个新的窗口：ctrl+a+S （注意是大写的s）,此时新的窗口还没启动bash</li>
+<li>启动新窗口的bash：ctrl+a+c</li>
+<li>切换窗口：ctrl+a+tab </li>
+<li>关掉当前窗口:ctrl+a+X（注意是大写的x） </li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux/" rel="tag">Linux</a>
+          
+            <a href="/tags/工具使用/" rel="tag">工具使用</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/12/08/以太网中的MTU与MSS/" rel="next" title="以太网中的MTU与MSS">
+                <i class="fa fa-chevron-left"></i> 以太网中的MTU与MSS
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/12/12/为什么相爱容易-相守不易？/" rel="prev" title="为什么相爱容易,相守不易？">
+                为什么相爱容易,相守不易？ <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://wulc.me/files/profile.jpg"
+               alt="良超" />
+          <p class="site-author-name" itemprop="name">良超</p>
+          <p class="site-description motion-element" itemprop="description">算法工程师首先得是个工程师</p>
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">208</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">39</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/WuLC" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github-alt"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.linkedin.com/in/wuliangchao/" target="_blank" title="LinkedIn">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  LinkedIn
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么关掉窗口-断开连接会使得正在运行的程序死掉？"><span class="nav-number">1.</span> <span class="nav-text">为什么关掉窗口/断开连接会使得正在运行的程序死掉？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试案例"><span class="nav-number">2.</span> <span class="nav-text">测试案例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#测试例一"><span class="nav-number">2.1.</span> <span class="nav-text">测试例一</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#测试例二"><span class="nav-number">2.2.</span> <span class="nav-text">测试例二</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用screen管理远程会话"><span class="nav-number">3.</span> <span class="nav-text">使用screen管理远程会话</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建新的会话"><span class="nav-number">3.1.</span> <span class="nav-text">创建新的会话</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#进入已创建会话"><span class="nav-number">3.2.</span> <span class="nav-text">进入已创建会话</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#screen的一些常用参数如下所示"><span class="nav-number">3.3.</span> <span class="nav-text">screen的一些常用参数如下所示</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <center>
+<div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2019</span>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
+  </br>
+  <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
+</div>
+</center>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>

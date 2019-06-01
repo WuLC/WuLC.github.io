@@ -1,0 +1,953 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="计算机网络," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="路由器工作在IP层，其作用是根据IP地址将数据包传输到正确的目的地，因此路由器必须要知道网络的“地图”才能正确投递，而这个网络的“地图”就是存储在路由表中的路由规则，简称为路由。
+根据获得路由的方式可以将其分为静态路由和动态路由，静态路由就是管理员静态配置的路由，动态路由则是路由器通过算法动态地学习和调整而得到的路由。而常说的路由协议就是指这些动态路由的学习算法，根据其作用域的不同，又可分为内部网">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计算机网络课程总结--BGP协议">
+<meta property="og:url" content="http://wulc.github.io/2016/12/25/计算机网络课程总结--BGP协议/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="路由器工作在IP层，其作用是根据IP地址将数据包传输到正确的目的地，因此路由器必须要知道网络的“地图”才能正确投递，而这个网络的“地图”就是存储在路由表中的路由规则，简称为路由。
+根据获得路由的方式可以将其分为静态路由和动态路由，静态路由就是管理员静态配置的路由，动态路由则是路由器通过算法动态地学习和调整而得到的路由。而常说的路由协议就是指这些动态路由的学习算法，根据其作用域的不同，又可分为内部网">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/mm9gbomjuo2a643566lppji1/image_1b4prb5s1hkr1g1e10ct6m31tbi9.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/uztnjnb78h6xqsz6gaiswrsg/image_1b4priggn1jm11lenathpn3ksfm.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/iu0unnlp27sxrn2sq6hebm99/image_1b4ps6iif7jivkb1c48ba08gh13.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/d7t22ttx505wde7zd8zanz4a/image_1b4pt0mcc2f1rg51ql8j0p1iad1g.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/mfci4dkrfw324d8iq4irm8ax/image_1b4ptstpf1kfkdiqc3fe561i561t.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/om4zmlsl9slft9rygsqrlcc6/image_1b4pvi3j614k817qs426jfc1v22a.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/8c15hmjuvjcenryq87dh4bnw/image_1b4pvj0ts61dfimft2m4k7q2n.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/0323cnqi2hu4rldxes2uxeqz/image_1b4pvlkhvvb1uai1l5smuc1eks34.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/lw9kuk49hmdb84a4ub54lksd/image_1b4r0qskcqgv7k8qt21502gjo9.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/b39vekgja50vyd26uhptb375/image_1b4r18fev79qqsg1pin9r7lt1m.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/v6em0af1ylern92p41dl3kl2/image_1b4r1jbg51jo0ncd1uc81i4p14mi13.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/jlvg5aq15gnvc7w16jo9ixpw/image_1b4r1m0rh1h0etab7ha14ih38q1t.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/t98r51sgx3t6c4ybgyxq4t2b/image_1b4r21j0o1shtjj51ljoksef3j2a.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/qf6r8v850t3mo2vbki2slbwz/image_1b4r2bo1e1g9ff12lu21kf6sr52n.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/ulxwj3kkty8c0c6gs44gq0st/image_1b4r3gu921kqn1b8b1nab3i31btbm.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/80jbown8hoca0bwpyyd0t912/image_1b4r3o8geqal133vuvp1i0ij251j.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/ypqmj5sba6z54q9gzjacnopr/image_1b4r4ha631mpv1dhu1hb355dpl420.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/sjj7n55gcyg1ui2kyko1hlur/image_1b4r55j8612a01umq1ker16cbdbm2d.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/4fl0d8lo637xgdl6p1u0wryz/image_1b4r58c36qjn1b7s18001rsmq762q.png">
+<meta property="og:updated_time" content="2019-06-01T09:14:44.198Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="计算机网络课程总结--BGP协议">
+<meta name="twitter:description" content="路由器工作在IP层，其作用是根据IP地址将数据包传输到正确的目的地，因此路由器必须要知道网络的“地图”才能正确投递，而这个网络的“地图”就是存储在路由表中的路由规则，简称为路由。
+根据获得路由的方式可以将其分为静态路由和动态路由，静态路由就是管理员静态配置的路由，动态路由则是路由器通过算法动态地学习和调整而得到的路由。而常说的路由协议就是指这些动态路由的学习算法，根据其作用域的不同，又可分为内部网">
+<meta name="twitter:image" content="http://static.zybuluo.com/WuLiangchao/mm9gbomjuo2a643566lppji1/image_1b4prb5s1hkr1g1e10ct6m31tbi9.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"always"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://wulc.github.io/2016/12/25/计算机网络课程总结--BGP协议/"/>
+
+
+
+
+
+  <title> 计算机网络课程总结--BGP协议 | 吴良超的学习笔记 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1258114456&web_id=1258114456" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">吴良超的学习笔记</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <h1 class="site-subtitle" itemprop="description"></h1>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            站内搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://wulc.github.io/2016/12/25/计算机网络课程总结--BGP协议/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="良超">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="吴良超的学习笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                计算机网络课程总结--BGP协议
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-25T21:37:39+08:00">
+                2016-12-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-tags"></i>
+              </span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/tags/计算机网络/" itemprop="url" rel="index">
+                    <span itemprop="name">计算机网络</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>路由器工作在IP层，其作用是根据IP地址将数据包传输到正确的目的地，因此路由器必须要知道网络的“地图”才能正确投递，而这个网络的“地图”就是存储在路由表中的路由规则，简称为路由。</p>
+<p>根据获得路由的方式可以将其分为静态路由和动态路由，静态路由就是管理员静态配置的路由，动态路由则是路由器通过算法动态地学习和调整而得到的路由。而常说的路由协议就是指这些动态路由的学习算法，根据其作用域的不同，又可分为内部网管协议(IGP)和边界网络协议(BGP)；内部网络协议包括RIP，OSPF等，边界网关协议则包括BGP等。</p>
+<p>本文主要讲述BGP相关的一些知识。</p>
+<a id="more"></a>
+<p>当网络过大的时候，也会导致路由表过大而难以维护，这时候采用分治的方法，将一个大网络划分为若干个小网络，这些小网络称为自治系统(AS)，BGP的诞生就是用于自治系统间的通信。其在网络中的位置如下</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/mm9gbomjuo2a643566lppji1/image_1b4prb5s1hkr1g1e10ct6m31tbi9.png" alt="BGP在网络中的作用"></p>
+<p>那么是不是AS之间的通信都要使用BGP？答案并不是，<strong>只有当两AS间存在多条路径，需要做路由策略和选择才需要BGP；如果AS只有一个出口或者所有出口指向一个ISP的时候，是不需要BGP的。</strong></p>
+<h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>BGP允许基于策略（policy-based）的路由选择，策略与政治、安全和经济等因素相关，由AS的网络管理者确定，也就是说人为影响的因素较大。</p>
+<p>从上面可知，每个划分后的小网络称为AS，每个AS都有自己独特的AS号码(ASN),ASN的原来使用16位表示。但是由于和和IP地址一样,ASN同样面临分配告罄的危机，自2006年12月1日起,原为16位(1-65535) 的ASN扩展为32位空间。</p>
+<p>AS根据其位置的不同，也被分为为不同类型的AS。</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/uztnjnb78h6xqsz6gaiswrsg/image_1b4priggn1jm11lenathpn3ksfm.png" alt="AS类型"></p>
+<p>一般来说，AS号码只是在一家ISP与至少两家ISP做对等互联，交换路由的时候才需要用到，也就是说一个国家的AS号码的数量实际上是跟大中型ISP的数量有关。</p>
+<p>BGP 是运行在TCP协议上的，与其他路由协议对比如下</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/iu0unnlp27sxrn2sq6hebm99/image_1b4ps6iif7jivkb1c48ba08gh13.png" alt="BGP与其他路由协议所在位置对比"></p>
+<p>BGP 是一种距离矢量路由协议，但避免了环路；其避免环路的策略是不仅仅记录路径代价，还记录下全路径信息。如下图所示<br><img src="http://static.zybuluo.com/WuLiangchao/d7t22ttx505wde7zd8zanz4a/image_1b4pt0mcc2f1rg51ql8j0p1iad1g.png" alt="BGP避免环路"></p>
+<p>BGP有两种邻居，其中运行在同一个AS内的BGP邻居称为IBGP(Interior BGP),不同AS间的邻居称为EBGP(Exterior BGP)，注意无论是IBGP或者EBGP，上面都必须运行着BGP协议，也就是说与BGP路由器直连的内部路由器不一定是它的IBGP，如下图所示<br><img src="http://static.zybuluo.com/WuLiangchao/mfci4dkrfw324d8iq4irm8ax/image_1b4ptstpf1kfkdiqc3fe561i561t.png" alt="BGP的邻居类型"></p>
+<p>注意：BGP邻居不是自动发现的，而是手动配置的，原因有以下两点：<br>1）可以<strong>与对端设备用任何IP地址建立邻居，而不限于某个固定的接口IP</strong>。这样，当两台<br>设备采用环回地址而非直连地址建立BGP邻居时，即使主链路中断了，也可以切换到备份链路<br>上，保持邻居不断。这种稳定性正是BGP作为大型网络路由承载的必要特质。<br>2）可以<strong>跨越多台设备建立邻居</strong>。当一个AS有多个设备运行BGP 建立域内全连接时，<strong>不必每台设备物理直连，只要用IGP保证建立邻居的地址可达，即可建立全网连接，减少不必要的链路建设。</strong></p>
+<h2 id="BGP报文"><a href="#BGP报文" class="headerlink" title="BGP报文"></a>BGP报文</h2><p>BGP报文类型有以下四种：</p>
+<ul>
+<li><strong>Open报文</strong>：打招呼，“你好，交个朋友吧”（协商参数） </li>
+<li><strong>Keepalive报文</strong>：我还活着，别不理我（30秒钟交换一次） </li>
+<li><strong>Update报文</strong>：有新闻（链路的变化）</li>
+<li><strong>Notification报文</strong>：我不跟你玩了（异常情况的通报，终止连接）</li>
+</ul>
+<p>BGP的工作机制也可以通过这四种报文描述：<br>1）通过TCP建立BGP连接时，发送OPEN报文<br>2）连接建立后，如果有路由器需要发送路由或路由发生变化时，发送UPDATE报文<br>3）稳定后，<strong>周期发送</strong>KEEPALIVE报文，维持连接有效性<br>4）当本地BGP运行中发生错误时，发送NOTIFICATION报文通告BGP对端</p>
+<h2 id="路由注入及通告"><a href="#路由注入及通告" class="headerlink" title="路由注入及通告"></a>路由注入及通告</h2><p>首先要明确一点，BGP路由器的路由注入和通告都是为了<strong>修改BGP路由表</strong>。</p>
+<p>当路由器之间建立BGP邻居之后，就可以相互交换BGP路由。一台运行了BGP协议的路由器，会将BGP得到的路由与普通路由分开存放，所以<strong>BGP路由器会同时拥有两张路由表</strong>。</p>
+<p>一张是存放普通路由的路由表，被称为<strong>IGP路由表</strong>，就时平时我们使用命令<code>show ip route</code>看到的路由表，IGP路由表的路由信息只能从<strong>IGP协议和手工配置</strong>获得，并且只能传递给IGP协议；另外一张就是运行BGP之后创建的路由表，称为<strong>BGP路由表</strong>，需要通过命令<code>show ip bgp</code>才能查看，<strong>BGP路由表的路由信息只能传递给BGP协议，如果两台BGP邻居的BGP路由表为空，就不会有任何路由传递。</strong></p>
+<p>在初始状态下，BGP的路由表为空，没有任何路由，要让BGP传递相应的路由，只能先<strong>将该路由注入BGP路由表，之后才能在BGP邻居之间传递。</strong>注入的方式有多种，如<br>1）<strong>动态注入</strong>：将IGP(如OSPF)发现的路由纯动态地注入到BGP路由表中，这种方式配置简单，但操控性差，可能不稳定。具体过程及配置如下图所示：<br><img src="http://static.zybuluo.com/WuLiangchao/om4zmlsl9slft9rygsqrlcc6/image_1b4pvi3j614k817qs426jfc1v22a.png" alt="动态注入"><br>2）<strong>半动态路由注入</strong>：通过IGP协议(如OSPF)学习到的路由，再通过 network 发布到BGP中。具体过程及配置如下图所示：<br><img src="http://static.zybuluo.com/WuLiangchao/8c15hmjuvjcenryq87dh4bnw/image_1b4pvj0ts61dfimft2m4k7q2n.png" alt="半动态路由"></p>
+<p>3）<strong>静态路由注入</strong>：工配置的静态路由，再由network发布到BGP中。具体过程及配置如下图所示：<br><img src="http://static.zybuluo.com/WuLiangchao/0323cnqi2hu4rldxes2uxeqz/image_1b4pvlkhvvb1uai1l5smuc1eks34.png" alt="静态路由注入"></p>
+<p>在BGP路由表注入路由后，BGP路由器之间会将这些路由在BGP路由器间进行<strong>通告</strong>。通告要遵守以下规则</p>
+<ul>
+<li>BGP 路由器只把自己使用的路由通告给<strong>相邻体</strong></li>
+<li>BGP 路由器从EBGP获得的路由会向它的所有BGP相邻体通告（包括EBGP和IBGP）</li>
+<li>BGP路由器从IBGP获得的路由不会向它的IBGP相邻体通告（避免内部产生环路）</li>
+<li>BGP 路由器从IBGP获得的路由是否通告给它的EBGP相邻体要依IGP和BGP同步的情况而定</li>
+</ul>
+<p>对于最后一条，只有当 IGP 与 BGP 同步时（也就是该路由可以通过 IGP 获得），才能通告，反之不通告，这样做的目的是为了避免路由黑洞。</p>
+<h2 id="路径属性"><a href="#路径属性" class="headerlink" title="路径属性"></a>路径属性</h2><p>在默认情况下，到达同一目的地，BGP只走单条路径，并不会在多条路径之间执行负载均衡。对于IGP路由协议，当有多条路径可以到达同一目的地时，则根据最小metric值来选择最优路径，而 BGP 存在多条路径到达同一目的地时，对于最优路径的选择，BGP并不会以metric值大小为依据，<strong>BGP对于最优路径的选择，需要靠比较路由条目中的Path Attributes，即路径属性</strong>，只有在比较多条路由的属性之后，才能决定选择哪条为最优路径。</p>
+<p>BGP的路径属性可以划分为以下四类：</p>
+<ul>
+<li>公认强制 （Well-Known Mandatory）:所有的路由中都需要写入公认强制属性</li>
+<li>公认自选 （Well-Known Discretionary）：能够理解和支持即可，不一定要写入路由</li>
+<li>可选可传递 （Optional Transitive）：不一定要理解或支持</li>
+<li>可选不可传递（Optional Nontransitive）：只有特定的BGP路由器才能理解和传递</li>
+</ul>
+<p>对于任何一台运行BGP的路由器，都必须支持公认强制属性，并且在将路由信息发给其它BGP邻居时，<strong>必须在路由中写入公认强制属性</strong>，这些属性是被强制写入路由中的，一条不带公认强制属性的路由被BGP路由器被视为无效而被丢弃，一个不支持公认强制属性的BGP，是不正常的，不合法的BGP。BGP路由必须携带的公认强制属性有三个：<code>Origin，Next_Hop，AS-path</code>。 </p>
+<h3 id="origin属性"><a href="#origin属性" class="headerlink" title="origin属性"></a><strong>origin属性</strong></h3><p>origin属性为起源属性，描述路由是以何种方式注入到BGP路由表中的，主要有以下两种情况<br>1）以 <code>network</code> 命令注入到BGP路由表中，origin 属性为 IGP<br>2）以 <code>redistribute</code> 命令注入到BGP路由表中，origin 属性为 Incomplete<br>其中，IGP优先级比Incomplete的要高。</p>
+<h3 id="AS-Path属性"><a href="#AS-Path属性" class="headerlink" title="AS Path属性"></a><strong>AS Path属性</strong></h3><p>描述了该路由经过的AS组成的路径，AS路径中不能算上自己的AS，从离自己最近的AS开始，以目的网络的AS结束。下图为 AS5 到 AS1 的路由的AS Path属性</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/lw9kuk49hmdb84a4ub54lksd/image_1b4r0qskcqgv7k8qt21502gjo9.png" alt="as path属性"></p>
+<p>借助路由的AS Path属性，可以避免环路，具体操作就是收到一条AS Path属性中含有自己AS的路由的时候丢弃该路由。</p>
+<p>在选路的时候，优先选<code>AS PATH</code>最短的那条，如果<code>AS PATH</code>距离相等，则优选本AS内到出口路由器最短的那根，如果还相等，则选择Router_ID（发送路由的路由器）最小的那根</p>
+<p>但是要注意，这种选择并不总是明智的，如下图所示</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/b39vekgja50vyd26uhptb375/image_1b4r18fev79qqsg1pin9r7lt1m.png" alt="as path选路并非最优"></p>
+<h3 id="Next-Hop属性"><a href="#Next-Hop属性" class="headerlink" title="Next Hop属性"></a><strong>Next Hop属性</strong></h3><p>指示下一个AS的路由器入口的网段，同一个AS内Next hop的值不变,如下图所示</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/v6em0af1ylern92p41dl3kl2/image_1b4r1jbg51jo0ncd1uc81i4p14mi13.png" alt="next hop 属性"></p>
+<h3 id="local-pref属性"><a href="#local-pref属性" class="headerlink" title="local pref属性"></a><strong>local pref属性</strong></h3><p>可选的属性，用于引导流量，local pref的缺省值是100，如下图所示</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/jlvg5aq15gnvc7w16jo9ixpw/image_1b4r1m0rh1h0etab7ha14ih38q1t.png" alt="local pref 属性"></p>
+<h3 id="MED-Multi-Exit-Distiguisher-属性"><a href="#MED-Multi-Exit-Distiguisher-属性" class="headerlink" title="MED(Multi Exit Distiguisher)属性"></a><strong>MED(Multi Exit Distiguisher)属性</strong></h3><p>当AS有多个出口的时候，告诉上游的AS如何选最优的路，MED值越小，优先级越高<br><img src="http://static.zybuluo.com/WuLiangchao/t98r51sgx3t6c4ybgyxq4t2b/image_1b4r21j0o1shtjj51ljoksef3j2a.png" alt="MED属性"></p>
+<p>BGP 选路的策略为</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/qf6r8v850t3mo2vbki2slbwz/image_1b4r2bo1e1g9ff12lu21kf6sr52n.png" alt="BGP选路策略"></p>
+<h2 id="其他概念"><a href="#其他概念" class="headerlink" title="其他概念"></a>其他概念</h2><p><strong>BGP过滤</strong><br>BGP 拥有强大的过滤功能，可以按照以下规则进行过滤：</p>
+<ul>
+<li>可按照路由的IP地址过滤</li>
+<li>可依照路由经过的AS-Path过滤</li>
+<li>可以依照路由的属性过滤</li>
+<li>可以依照路由到来的接口过滤</li>
+</ul>
+<p><strong>BGP聚合</strong><br>由于BGP路由器的路由表庞大，往往超过10万条，通过BGP聚合(BGP支持CIDR)解决这个问题，如下图AS100先将内部的路由聚合再通告给AS200</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/ulxwj3kkty8c0c6gs44gq0st/image_1b4r3gu921kqn1b8b1nab3i31btbm.png" alt="BGP聚合"></p>
+<p><strong>BGP联盟和反射</strong><br>从前面的描述可知，从IBGP收到的路由不会通告给其他的IBGP（避免环路），所以AS内部的IBGP必须全连接。但是IBGP相邻体过多，逻辑全链接不现实，实际中通过BGP联盟和反射解决这个问题。</p>
+<p>BGP联盟就是将大的AS分割成小的AS，从而减少全连接的数目。</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/80jbown8hoca0bwpyyd0t912/image_1b4r3o8geqal133vuvp1i0ij251j.png" alt="BGP联盟"></p>
+<p>BGP反射是通过将网络内的路由器划分为客户机，非客户机以及路由反射器的角色，从而减少IBGP间的连接，如下图所示：</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/ypqmj5sba6z54q9gzjacnopr/image_1b4r4ha631mpv1dhu1hb355dpl420.png" alt="BGP反射"></p>
+<p>BGP反射中需要遵循以下规则</p>
+<ul>
+<li>来自客户机的路由通告给其它的客户机和非客户机</li>
+<li>来自非客户机的路由只通告给它的客户机</li>
+<li>来自EBGP的路由向所有相邻体通告</li>
+</ul>
+<p><strong>BGP衰减</strong><br>BGP衰减是为了处理不稳定的路由（如路由频繁更新），避免影响整个互联网络的稳定运行</p>
+<p>  路由抑制可以阻止公布不稳定的路由，它为每条路由分配一个动态的度量数字用来反映稳定程度，当一条路由出现摆动，就给他分配一个惩罚值，摆动得越多，惩罚值越大。当一段时间不摆动，惩罚值降低，在一个半衰期后，降到原来的一半。如果惩罚值超过抑制上限，该路由就被抑制，只有当一个半衰期后惩罚值降低到重新使用界限时，才重新使用。 </p>
+<h2 id="BGP配置"><a href="#BGP配置" class="headerlink" title="BGP配置"></a>BGP配置</h2><p>通常在路由器配置BGP需要开启BGP进程，指定AS号码，指定邻居(EBGP或IBGP)并注入BGP路由，如下是一个简单的例子<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">//开启BGP进程，指定AS号</span><br><span class="line">Router(config)#router bgp as-number  </span><br><span class="line">//注入BGP路由</span><br><span class="line">Router(config-router)#network network-number [mask network-mask] </span><br><span class="line">//指定EBGP或IBGP(as-number 决定)</span><br><span class="line">Router(config-router)#neighbor ip-address remote-as as-number</span><br></pre></td></tr></table></figure></p>
+<p>下图是一个简单的例子：</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/sjj7n55gcyg1ui2kyko1hlur/image_1b4r55j8612a01umq1ker16cbdbm2d.png" alt="BGP配置"></p>
+<p>除此以外，还有一些检查BGP工作情况的命令如下所示</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/4fl0d8lo637xgdl6p1u0wryz/image_1b4r58c36qjn1b7s18001rsmq762q.png" alt="检查BGP配置"></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/计算机网络/" rel="tag">计算机网络</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/20/计算机网络课程总结--组播基础/" rel="next" title="计算机网络课程总结--组播基础">
+                <i class="fa fa-chevron-left"></i> 计算机网络课程总结--组播基础
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/12/26/计算机网络课程总结--IPV6/" rel="prev" title="计算机网络课程总结--IPV6">
+                计算机网络课程总结--IPV6 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://wulc.me/files/profile.jpg"
+               alt="良超" />
+          <p class="site-author-name" itemprop="name">良超</p>
+          <p class="site-description motion-element" itemprop="description">算法工程师首先得是个工程师</p>
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">208</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">39</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/WuLC" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github-alt"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.linkedin.com/in/wuliangchao/" target="_blank" title="LinkedIn">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  LinkedIn
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基本概念"><span class="nav-number">1.</span> <span class="nav-text">基本概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BGP报文"><span class="nav-number">2.</span> <span class="nav-text">BGP报文</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#路由注入及通告"><span class="nav-number">3.</span> <span class="nav-text">路由注入及通告</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#路径属性"><span class="nav-number">4.</span> <span class="nav-text">路径属性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#origin属性"><span class="nav-number">4.1.</span> <span class="nav-text">origin属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AS-Path属性"><span class="nav-number">4.2.</span> <span class="nav-text">AS Path属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Next-Hop属性"><span class="nav-number">4.3.</span> <span class="nav-text">Next Hop属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#local-pref属性"><span class="nav-number">4.4.</span> <span class="nav-text">local pref属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MED-Multi-Exit-Distiguisher-属性"><span class="nav-number">4.5.</span> <span class="nav-text">MED(Multi Exit Distiguisher)属性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他概念"><span class="nav-number">5.</span> <span class="nav-text">其他概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BGP配置"><span class="nav-number">6.</span> <span class="nav-text">BGP配置</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <center>
+<div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2019</span>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
+  </br>
+  <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
+</div>
+</center>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>

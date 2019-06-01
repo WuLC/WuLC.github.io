@@ -1,0 +1,994 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="机器学习,计算广告," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="本系列文章是刘鹏老师的计算广告学中的一些记录。本文是第一章的相关笔记：广告的基本知识，主要介绍广告的定义与模型，目前在线广告的特点、技术架构与市场形态，可以说简要地概括了整个课程的内容。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计算广告笔记(1)--广告的基本知识">
+<meta property="og:url" content="http://wulc.github.io/2017/04/20/计算广告笔记(1)--广告的基本知识/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="本系列文章是刘鹏老师的计算广告学中的一些记录。本文是第一章的相关笔记：广告的基本知识，主要介绍广告的定义与模型，目前在线广告的特点、技术架构与市场形态，可以说简要地概括了整个课程的内容。">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/fjy5hx5mnc2iwktugf7sebrf/image_1bedb9224c2f10df1pn9m1o1fg413.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/lyzck3kso9mtbvp8qaj2gbhf/image_1bedb9svv5n4h6217d81g8pg4b1g.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/lz8dd0e5zj5siypsqw6f2myj/image_1bh7rmedu2b68f41qkd19imfbr9.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/6lyikbvkxc5181sogx1fwssv/image_1bh7rp7pc10ti1am4on0cd919uhm.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/wvce7vo1obj5n2nnpl6v4uz5/image_1bedfs4ft1dau44j10of1dbfstvm.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/5trnnl3irivvqokj5yy040sp/image_1bedfsgru1ndc14qe1n3v1ps5n1t13.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/2d85xmmii03syc53y8yec2il/image_1beejom04mi91t2t1j9pjh6c6a9.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/p9l52z2n03zdneltza5a6k9d/image_1bh7sbaqo4u216vppmrfo3cm13.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/jkow4skow4xavjm8dyt0tgot/image_1bh7sru9gvr71qtd1uufl1le3r1g.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/kbd55ma6r0jkob3ydemrgo16/image_1bedoi0jlq2t1i4v1io719501uo82n.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/bd7u01enuou7rnx0d35ztedy/image_1bh7suuk0sm21em8lvg1743ajr1t.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/wuc51bolw5b5rpqzno8bk5jd/image_1beg937q514t51k1r2j6158uie013.png">
+<meta property="og:updated_time" content="2019-06-01T09:14:44.192Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="计算广告笔记(1)--广告的基本知识">
+<meta name="twitter:description" content="本系列文章是刘鹏老师的计算广告学中的一些记录。本文是第一章的相关笔记：广告的基本知识，主要介绍广告的定义与模型，目前在线广告的特点、技术架构与市场形态，可以说简要地概括了整个课程的内容。">
+<meta name="twitter:image" content="http://static.zybuluo.com/WuLiangchao/fjy5hx5mnc2iwktugf7sebrf/image_1bedb9224c2f10df1pn9m1o1fg413.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"always"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://wulc.github.io/2017/04/20/计算广告笔记(1)--广告的基本知识/"/>
+
+
+
+
+
+  <title> 计算广告笔记(1)--广告的基本知识 | 吴良超的学习笔记 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1258114456&web_id=1258114456" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">吴良超的学习笔记</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <h1 class="site-subtitle" itemprop="description"></h1>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            站内搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://wulc.github.io/2017/04/20/计算广告笔记(1)--广告的基本知识/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="良超">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="吴良超的学习笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                计算广告笔记(1)--广告的基本知识
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-20T21:37:39+08:00">
+                2017-04-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-tags"></i>
+              </span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/tags/机器学习/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/tags/计算广告/" itemprop="url" rel="index">
+                    <span itemprop="name">计算广告</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本系列文章是刘鹏老师的<a href="http://study.163.com/course/courseMain.htm?courseId=321007" target="_blank" rel="external">计算广告学</a>中的一些记录。本文是第一章的相关笔记：广告的基本知识，主要介绍广告的定义与模型，目前在线广告的特点、技术架构与市场形态，可以说简要地概括了整个课程的内容。</p>
+<a id="more"></a>
+<h2 id="什么是广告？"><a href="#什么是广告？" class="headerlink" title="什么是广告？"></a>什么是广告？</h2><p> 广告有商业上的诉求和目的，并不是简单的技术的堆砌。</p>
+<h3 id="广告的定义"><a href="#广告的定义" class="headerlink" title="广告的定义"></a>广告的定义</h3><blockquote>
+<p>广告是由已确定的出资人通过各种媒介进行的有关产品(商品、服务和观点)的，通常是有偿的、有组织的、综合的、劝服性的非人员的信息传播活动。</p>
+</blockquote>
+<p>重点：</p>
+<p><strong>广告的主体</strong>：出资人(sponsor)即广告主(advertiser)，媒介(medium)，受众(audience)<br><strong>广告的本质功能</strong>：是借助某种有广泛受众的媒介的力量，完成较低成本的用户接触(reach)</p>
+<h3 id="品牌广告-Brand-Awareness-与效果广告-Direct-Response"><a href="#品牌广告-Brand-Awareness-与效果广告-Direct-Response" class="headerlink" title="品牌广告(Brand Awareness)与效果广告(Direct Response)"></a>品牌广告(Brand Awareness)与效果广告(Direct Response)</h3><p>品牌广告：创造独特良好的品牌或产品形象, 目的在于提升较长时期内的离线转化率</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/fjy5hx5mnc2iwktugf7sebrf/image_1bedb9224c2f10df1pn9m1o1fg413.png" alt="品牌广告"></p>
+<p>效果广告：有短期内明确用户转化行为诉求的广告。用户转化行为例如：购买, 注册, 投票, 捐款等。大部分互联网广告都是这种类型。</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/lyzck3kso9mtbvp8qaj2gbhf/image_1bedb9svv5n4h6217d81g8pg4b1g.png" alt="效果广告"></p>
+<h2 id="广告的有效性模型"><a href="#广告的有效性模型" class="headerlink" title="广告的有效性模型"></a>广告的有效性模型</h2><p>三个大阶段，同时可分为6个小阶段</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/lz8dd0e5zj5siypsqw6f2myj/image_1bh7rmedu2b68f41qkd19imfbr9.png" alt="广告有效性模型"></p>
+<p>这里值得注意的几点有</p>
+<p>1.广告的天然属性（如广告的位置）很重要，远远强于技术带来的效果<br>2.引起用户关注时需要遵循一定的原则：以上列出了三点<br>3.解释阶段包括用户对广告的<strong>理解和认可</strong>两方面；理解阶段<br>4.保持（retention）主要指品牌在用户中树立起其形象，但是点击率往往不会高</p>
+<p>下面一些广告策略的效果,这些广告策略都是有利有弊的，下面的 <code>+</code> 表示对该项有正面效果， <code>-</code> 表示对该项有负面效果。</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/6lyikbvkxc5181sogx1fwssv/image_1bh7rp7pc10ti1am4on0cd919uhm.png" alt="广告策略的效果"></p>
+<h2 id="在线广告"><a href="#在线广告" class="headerlink" title="在线广告"></a>在线广告</h2><p>在线广告是与传统的线下广告对比而言的，下面主要介绍在线广告的特点、目前的市场、核心计算问题。</p>
+<h3 id="在线广告的特点"><a href="#在线广告的特点" class="headerlink" title="在线广告的特点"></a>在线广告的特点</h3><p>当前的在线广告行业的有以下特点</p>
+<p>1） <strong>技术和计算导向</strong>。原因是数字媒体的特点使在线广告可以进行精细的受众定向，而技术使得广告决策和交易朝着计算驱动的方向发展<br>2） <strong>可衡量性</strong>。指的是可以用量化的方式来衡量广告的效果，广告的点击是效果的直接收集途径<br>3） <strong>标准化</strong>。指的是有行业制定了相关的规则来指导广告市场。如下是一些美国广告行业相关的机构。</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/wvce7vo1obj5n2nnpl6v4uz5/image_1bedfs4ft1dau44j10of1dbfstvm.png" alt="iab"></p>
+<ul>
+<li><strong>Interactive Advertising Bureau</strong><ul>
+<li>在线广告供给方的行业协会，推动数字化市场营销行业的发展</li>
+<li>制定市场效果衡量标准和在线广告创意的标准</li>
+<li>会员: Google, Yahoo, Microsoft, Facebook等</li>
+</ul>
+</li>
+</ul>
+<p><img src="http://static.zybuluo.com/WuLiangchao/5trnnl3irivvqokj5yy040sp/image_1bedfsgru1ndc14qe1n3v1ps5n1t13.png" alt="4a"></p>
+<ul>
+<li><strong>American Association of Advertising Agencies</strong><ul>
+<li>主要的协议是关于广告代理费用的收取约定(17.65%)，以避免恶意竞争</li>
+<li>主要集中在创意和客户服务，在线业务是一部分</li>
+<li>会员：Ogilvy &amp; Mather, JWT, McCann等,Dentsu等非4A会员的大公司但也被列为4A公司</li>
+</ul>
+</li>
+</ul>
+<p><img src="http://static.zybuluo.com/WuLiangchao/2d85xmmii03syc53y8yec2il/image_1beejom04mi91t2t1j9pjh6c6a9.png" alt="ana"></p>
+<ul>
+<li><strong>Association of National Advertisers</strong><ul>
+<li>主要代表广告需求方的利益(也有媒体和代理会员)</li>
+<li>会员：AT&amp;T, P&amp;G, NBA等</li>
+</ul>
+</li>
+</ul>
+<h3 id="在线广告市场"><a href="#在线广告市场" class="headerlink" title="在线广告市场"></a>在线广告市场</h3><p>在线广告市场发展情况如下所示，主要分为了三大部分：需求方，供给方和连接两者的平台，需求方指的是需要投放广告的广告主，供给方指的是提供广告位的媒体。</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/p9l52z2n03zdneltza5a6k9d/image_1bh7sbaqo4u216vppmrfo3cm13.png" alt="在线广告市场"></p>
+<p>从媒体也就是supply端来看，其变现的手段有以下三种</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/jkow4skow4xavjm8dyt0tgot/image_1bh7sru9gvr71qtd1uufl1le3r1g.png" alt="在线广告变现手段"></p>
+<p>方式一：将广告位托管给广告网络(Ad net1)<br>方式二：将广告位对接到广告交易平台(Adx), 以实时竞价的方式变现<br>方式三：将广告位托管给SSP（supply side platform), 通过SSP可以对接多个广告网络和DSP，按照动态分配的逻辑选择变现最高的需求方。</p>
+<p>上面简单的说明了媒体方通过广告位进行变现的方式，涉及到多个概念，可以参考刘鹏的《<a href="https://book.douban.com/subject/26596778/" target="_blank" rel="external">计算广告</a>》中的第六章内容。</p>
+<h3 id="在线广告核心计算问题"><a href="#在线广告核心计算问题" class="headerlink" title="在线广告核心计算问题"></a>在线广告核心计算问题</h3><p>在线广告的<strong>核心计算问题</strong>是 ROI（Return On Investment，投资回收率）其定义如下</p>
+<blockquote>
+<p>Find the best match between a given user u, in a given context c, and a suitable ad a.$$\max\sum_{i=1}^{T} ROI(a_i, u_i, c_i)$$</p>
+</blockquote>
+<p>上面的 $T$ 表示广告共展示 $T$ 次,ROI 主要有两部分构成: <code>Investment</code> 和 <code>Return</code>，一般来说主要优化的目的在于<code>Return</code>， 其计算公式如下</p>
+<p>$$Return = \sum_{i=1}^{T} \mu(a_i, u_i,c_i)v(a_i,u_i) = \sum_{i=1}^{T} e(a_i, u_i,c_i)$$</p>
+<p>其中 </p>
+<p>$\mu(a_i, u_i,c_i)$ 表示点击率<br>$a_i, u_i,c_i$ 分别表示广告，用户和广告上下文<br>$v(a_i,u_i)$ 表示点击价值<br>$e(a_i, u_i,c_i)$ 表示 eCPM（expected CPM，预期每次展示能够带来的价值）</p>
+<p>而对上式的不同的分解对应不同的市场形态：</p>
+<ul>
+<li><strong>CPM(<a href="https://en.wikipedia.org/wiki/Cost_per_mille" target="_blank" rel="external">Cost per mille</a>)市场</strong>: 按照千次展示结算。是需求方与供应方约定好千次展示的计费。在这种方式下，<strong>点击率和点击价值都需要需求方预估。</strong></li>
+<li><strong>CPC(<a href="https://en.wikipedia.org/wiki/Pay-per-click" target="_blank" rel="external">Cost per click</a>)市场</strong>: 按照点击结算，最早产生于搜索广告。在这种方式下，<strong>点击率估计交给供给方，点击价值的估计交给需求方</strong>，并通过点击出价的方式向市场通知自己的估价。</li>
+<li><strong>CPA(<a href="https://en.wikipedia.org/wiki/Cost_per_action" target="_blank" rel="external">Cost per action</a>)/CPS(<a href="https://en.wikipedia.org/wiki/Pay_per_sale" target="_blank" rel="external">Cost per Sale</a>)/ROI市场</strong>: 按照转化行为数、销售订单数和投入产出比来结算。这三个都是按照转化付费的一些变种。在这种方式下，<strong>点击率和点击价值都需要供给方预估</strong>。</li>
+</ul>
+<p>CPA/CPS/ROI市场中需要注意广告主可能会有作弊行为： 如隐瞒订单，卖高价物品（品牌得到了展示，但是转化率低，不用向平台付费）</p>
+<p>优化 ROI 的问题可从以下两个角度来考虑，每个角度都有其重点关注的点，下面简单列出</p>
+<p><strong>从优化角度来看</strong>，主要的关注点在于</p>
+<ul>
+<li>特征提取：受众定向</li>
+<li>微观优化：CTR预测</li>
+<li>宏观优化：竞价市场机制</li>
+<li>受限优化：在线分配</li>
+<li>强化学习：探索与利用</li>
+<li>个性化重定向：推荐技术</li>
+</ul>
+<p><strong>从系统角度来看</strong>，主要的关注点在于</p>
+<ul>
+<li>候选查询：实时索引</li>
+<li>特征存储：No-sql技术</li>
+<li>离线学习：Hadoop</li>
+<li>在线学习：流计算</li>
+<li>交易市场：实时竞价</li>
+</ul>
+<p>在线广告计算的主要挑战有</p>
+<ol>
+<li><strong>大规模 (Scale)</strong>：百万量级的页面，十亿量级的用户，需要被分析处理; 高并发在线投放系统 (例: Rightmedia 每天处理百亿次广告交易); Latency 的严格要求 (例: ad exchange 要求竞价在 100ms 内返回)</li>
+<li><strong>动态性 (Dynamics)</strong>：用户的关注和购物兴趣非常快速地变化</li>
+<li><strong>丰富的查询信息 (Rich query)</strong>： 需要把用户和上下文中多样的信号一起用于检索广告候选</li>
+<li><strong>探索与发现 (Explore &amp; exploit)</strong>：用户反馈数据局限于在以往投放中出现过的 $(a, u, c)$ 组合，需要主动探索未观察到的领域，以提高模型正确性</li>
+</ol>
+<h2 id="搜索、广告与推荐"><a href="#搜索、广告与推荐" class="headerlink" title="搜索、广告与推荐"></a>搜索、广告与推荐</h2><p>搜索，广告和推荐可以说是联系紧密同时又有各自特点的三个领域。</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/kbd55ma6r0jkob3ydemrgo16/image_1bedoi0jlq2t1i4v1io719501uo82n.png" alt="比较"></p>
+<p>比起搜索，广告不需要爬虫，索引数也比较少。</p>
+<p>推荐不等于个性化，个性化是推荐的一个准则，其他准则还包括新鲜性，多样性等。</p>
+<p>广告与推荐系统：文字广告点击率高于图片广告点击率，但是推荐系统刚好相反</p>
+<p>推荐与广告的一个重要区别在于 Downstream 优化，推荐出来的物品还可顺带其他的推荐物品，优化的目的是一系列用户可能会点击的物品；而广告的推送只是要优化用户对这个广告的点击率。</p>
+<h2 id="在线广告系统结构"><a href="#在线广告系统结构" class="headerlink" title="在线广告系统结构"></a>在线广告系统结构</h2><p>下面的在线广告系统结构图，需要注意这并非实际设计图，只是概念性的结构图</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/bd7u01enuou7rnx0d35ztedy/image_1bh7suuk0sm21em8lvg1743ajr1t.png" alt="在线广告系统"></p>
+<p>从上图可以看到，整个系统可以分为四大部分</p>
+<ol>
+<li><p><strong>高并发的投送系统(Ad Server)</strong>：在线部分，根据 $u,c$ 决定出 $a$,特点是高并发</p>
+</li>
+<li><p><strong>受众定向平台</strong>：离线部分，分布式机器学习，用于预估点击率等信息，常用的是 Hadoop 平台</p>
+</li>
+<li><p><strong>数据高速公路</strong>：收集线上日志文件等供其他部分使用</p>
+</li>
+<li><p><strong>流式计算平台</strong>：重点在于实时性，比 Hadoop 要快，包括反作弊，计价，实时索引(广告的加入和删除)等任务</p>
+</li>
+</ol>
+<p>将上面的架构图各部分做更细致的划分时，可以得到如下的划分图</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/wuc51bolw5b5rpqzno8bk5jd/image_1beg937q514t51k1r2j6158uie013.png" alt="在线广告系统更细致的分类"></p>
+<ol>
+<li>Ad Serveing: 主要指 Ad Server 接受两种请求，一种来源于用户（USer），另外一种是广告交易市场发过来的（RTBS）</li>
+<li>Ad retrival：找出与页面和用户相关的广告</li>
+<li>Ad ranking：有多个广告满足要求时，根据某种指标 (如eCPM) 来排序，选出最符合要求的广告</li>
+<li>Streaming Computing：流式计算平台</li>
+<li>Data highway：把线上数据传到 Hadoop 平台或流式计算平台</li>
+<li>Session log generation: 搜集用户的浏览、搜索的行为整理成一份标准日志，提供给其他的系统</li>
+<li>Customized audience segmentation：受众的定制化，不由平台固定受众分类，而是由广告主选择具体的受众类型，因为业务的需求是各式各样的</li>
+<li>Page attribute system：爬取有广告展示的页面，用于广告的 retrieval</li>
+<li>Audience targeting：受众定向，根据用户及其浏览的上下文决定出推送哪个广告</li>
+<li>Ad management system: 供广告主投放广告的平台</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/机器学习/" rel="tag">机器学习</a>
+          
+            <a href="/tags/计算广告/" rel="tag">计算广告</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/10/遗传算法简介/" rel="next" title="遗传算法简介">
+                <i class="fa fa-chevron-left"></i> 遗传算法简介
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/25/计算广告笔记(2)--合约广告系统/" rel="prev" title="计算广告笔记(2)--合约广告系统">
+                计算广告笔记(2)--合约广告系统 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://wulc.me/files/profile.jpg"
+               alt="良超" />
+          <p class="site-author-name" itemprop="name">良超</p>
+          <p class="site-description motion-element" itemprop="description">算法工程师首先得是个工程师</p>
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">208</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">39</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/WuLC" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github-alt"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.linkedin.com/in/wuliangchao/" target="_blank" title="LinkedIn">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  LinkedIn
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是广告？"><span class="nav-number">1.</span> <span class="nav-text">什么是广告？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#广告的定义"><span class="nav-number">1.1.</span> <span class="nav-text">广告的定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#品牌广告-Brand-Awareness-与效果广告-Direct-Response"><span class="nav-number">1.2.</span> <span class="nav-text">品牌广告(Brand Awareness)与效果广告(Direct Response)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#广告的有效性模型"><span class="nav-number">2.</span> <span class="nav-text">广告的有效性模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在线广告"><span class="nav-number">3.</span> <span class="nav-text">在线广告</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#在线广告的特点"><span class="nav-number">3.1.</span> <span class="nav-text">在线广告的特点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在线广告市场"><span class="nav-number">3.2.</span> <span class="nav-text">在线广告市场</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在线广告核心计算问题"><span class="nav-number">3.3.</span> <span class="nav-text">在线广告核心计算问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#搜索、广告与推荐"><span class="nav-number">4.</span> <span class="nav-text">搜索、广告与推荐</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在线广告系统结构"><span class="nav-number">5.</span> <span class="nav-text">在线广告系统结构</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <center>
+<div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2019</span>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
+  </br>
+  <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
+</div>
+</center>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>

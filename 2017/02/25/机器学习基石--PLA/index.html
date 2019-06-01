@@ -1,0 +1,887 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="机器学习," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="本文是《机器学习基石》第二讲 Learning to Answer Yes/No 课程的笔记。主要介绍了机器学习的基本概念，以及感知机及其训练算法 PLA。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="机器学习基石--PLA">
+<meta property="og:url" content="http://wulc.github.io/2017/02/25/机器学习基石--PLA/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="本文是《机器学习基石》第二讲 Learning to Answer Yes/No 课程的笔记。主要介绍了机器学习的基本概念，以及感知机及其训练算法 PLA。">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/p5bzkie8tb546ozxk1cf4op6/image_1bchr55ih1ie1u9e8tjqi1ttv9.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/1jse2qfhdrkxjzgs1z7srtik/image_1bchsh08i1b382mv1la0qnbrd4m.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/ydtcjh2xadwg1m7agkbxh02o/image_1bchsm6t3q8812aes38a7327513.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/r4fu3f70rf0mgedcoofpkcta/image_1bci20m5k1riicdhcvefunsm1g.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/3lm43wjgmyjqv2wcrfd4rrl9/2017-03-29_231245.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/ao30d7sp8vjwilk9okm7m5a3/image_1bci2dhjhiped441fb616lk1pbi1t.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/klza3x5qwa9imnyc66b31qcl/image_1bci2ebjrhvl5tchtk3er1qej2a.png">
+<meta property="og:updated_time" content="2019-06-01T09:14:44.175Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="机器学习基石--PLA">
+<meta name="twitter:description" content="本文是《机器学习基石》第二讲 Learning to Answer Yes/No 课程的笔记。主要介绍了机器学习的基本概念，以及感知机及其训练算法 PLA。">
+<meta name="twitter:image" content="http://static.zybuluo.com/WuLiangchao/p5bzkie8tb546ozxk1cf4op6/image_1bchr55ih1ie1u9e8tjqi1ttv9.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"always"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://wulc.github.io/2017/02/25/机器学习基石--PLA/"/>
+
+
+
+
+
+  <title> 机器学习基石--PLA | 吴良超的学习笔记 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1258114456&web_id=1258114456" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">吴良超的学习笔记</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <h1 class="site-subtitle" itemprop="description"></h1>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            站内搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://wulc.github.io/2017/02/25/机器学习基石--PLA/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="良超">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="吴良超的学习笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                机器学习基石--PLA
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-25T20:08:55+08:00">
+                2017-02-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-tags"></i>
+              </span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/tags/机器学习/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文是《机器学习基石》第二讲 <code>Learning to Answer Yes/No</code> 课程的笔记。主要介绍了机器学习的基本概念，以及感知机及其训练算法 PLA。</p>
+<a id="more"></a>
+<h2 id="机器学习的基本概念"><a href="#机器学习的基本概念" class="headerlink" title="机器学习的基本概念"></a>机器学习的基本概念</h2><p>该讲以根据客户的特征来决定是否给客户发放信用卡的例子引出了机器学习要解决的问题：对于我们的问题，存在着一个未知的理想目标函数 $f$ 能够满足我们的决策需求(在该例子中就是根据给定用户的特征，输出是否给用户发放信用卡)，但是这个函数是未知的，我们只能从观测到的数据集 $D$ 中通过算法 $A$ 提取出一个近似的函数 $g$ 来逼近理想的目标函数 $f$。而当选定了算法 $A$ 后，选取 $g$ 的集合 $H$ 实际上也确定了(例如目标函数是线性或非线性的)。</p>
+<p>下图展示了上面提到的过程</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/p5bzkie8tb546ozxk1cf4op6/image_1bchr55ih1ie1u9e8tjqi1ttv9.png" alt="机器学习基本概念"></p>
+<p>从上面概括了关于机器学习中的基本过程。但是在实际中通过机器学习解决问题的过程往往是的论述可知，机器学习中首先需要确定目前的一个问题，然后根据问题提出假设并依照假设去搜集数据，然后对数据进行特征提取、转换等，接着尝试通过不同算法去建模并验证。在这门课程中往往更关心数据特征的提取以及不同算法的研究，这固然很重要，但是实际中确认问题以及搜集相应的数据也是一个非常重要的步骤，不可忽视。</p>
+<p>下面要介绍这门课程的第一个算法：</p>
+<h2 id="感知机"><a href="#感知机" class="headerlink" title="感知机"></a>感知机</h2><p>感知机是神经网络的基础，与线性回归（Linear Regression），逻辑回归（Logistics Regression）等模型也非常类似，是一种非常典型的线性模型。</p>
+<p>原始的感知机算法用于解决二分类问题，其思想如下：假设样本有 $d$ 个特征，但是每个特征的重要性不一样，因此各个特征的权重也不一样，对其进行加权后得到的总和假如大于某个阈值则认为归为其中一类，反之归为另一类。如在信用卡的例子中，通过感知机有如下的结果</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/1jse2qfhdrkxjzgs1z7srtik/image_1bchsh08i1b382mv1la0qnbrd4m.png" alt="感知机的信用卡发放问题"></p>
+<p>将上面的化为常数项，即可将得到更一般的表达形式如下</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/ydtcjh2xadwg1m7agkbxh02o/image_1bchsm6t3q8812aes38a7327513.png" alt="感知机更一般表示"></p>
+<p>上面的 $w$ 和 $x$ 均是一个列向量。</p>
+<h3 id="PLA"><a href="#PLA" class="headerlink" title="PLA"></a>PLA</h3><p>上面只是说明了感知机这一算法的基本模型，但是感知机还要通过学习才能对样本进行正确的分类，这个学习的过程就是我们下面要讲的 PLA(Perceptron Learning Algorithm)。PLA的过程如下</p>
+<p>1）随机初始化参数 $w$<br>2）利用参数 $w$ 预测每个样本点的值并与其实际的值比较，对于分类错误的样本点$(x_n, y_n)$，利用公式 $w = w + y_nx_n$ 更新参数 $w$ 的值<br>3）重复上面的过程直到所有的样本点都能够被参数 $w$ 正确预测。</p>
+<p>对于某个被预测错误的样本点，参数 $w$ 更新的过程如下所示</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/r4fu3f70rf0mgedcoofpkcta/image_1bci20m5k1riicdhcvefunsm1g.png" alt="参数w在错误点的更新"></p>
+<p>注意上面的算法的前提是所有的样本点都必须线性可分，假如样本点线性不可分，那么PLA按照上面的规则会陷入死循环中。如下是线性可分与线性不可分的例子)</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/3lm43wjgmyjqv2wcrfd4rrl9/2017-03-29_231245.png" alt="线性可分与不可分的例子"></p>
+<h3 id="收敛性"><a href="#收敛性" class="headerlink" title="收敛性"></a>收敛性</h3><p>上面提到只有当所有的样本均为线性可分时，PLA才能将所有的样本点正确分类后再停下了，但是这仅仅是定性的说明而已，并没有严格的数学正面来支撑其收敛性，下面要讲的便是通过数学证明来说明 PLA 算法的收敛性。</p>
+<p>建议中通过下面两页PPT来说明PLA的收敛性</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/ao30d7sp8vjwilk9okm7m5a3/image_1bci2dhjhiped441fb616lk1pbi1t.png" alt="PLA收敛性1"></p>
+<p>上面讲的是随着参数 $w$ 的更新，$w_f^Tw_{t+1}$ 的值越来越大，也就是两者越来越相似（衡量两个向量相似性的一种方法就是考虑他们的内积，值越大，代表两者约接近，但是这里还没对向量归一化，所以证明并不严格，但是已经说明了两者具有这个趋势，下面是更严格的过程）</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/klza3x5qwa9imnyc66b31qcl/image_1bci2ebjrhvl5tchtk3er1qej2a.png" alt="PLA收敛性2"></p>
+<p>上面似乎只是说明了经过 T 次的纠错，$w_t$ 的值会限制在一个范围内，但是并没有给出最终结论 $$\frac{w_f}{||w_f|| }\frac{w_T}{||w_T||} \ge \sqrt{T} * constant$$的证明过程，因此这里对其推导过程进行描述。(注：这里的 $w_f$ 是不变的，因此 $w_f$ 与 $w_f^T$ 是一样的)</p>
+<p>假设经过了 T 次纠错，那由第一张PPT可知<br>$$w_f^Tw_T \ge w_f^Tw_{T-1} + \min_n y_nw_f^Tx_n \ge T\min_n y_nw_f^Tx_n$$</p>
+<p>而由第二张PPT可知</p>
+<p>$$||w_T||^2 \le ||w_{T-1}||^2 + \max_n||x_n||^2 \le T\max_n||x_n||^2\<br>||w_T|| \le \sqrt{T} \max_n||x_n||$$</p>
+<p>综合上面的两条式子有</p>
+<p>$$\frac{w_f^T}{||w_f^T||}\frac{w_T}{||w_T||} \ge \frac{T\min_n y_n^Tw_f^Tx_n}{||w_f^T||\sqrt{T} \max_n||x_n||} = \sqrt{T} \frac{\min_n y_n\frac{w_f^T}{||w_f^T||}x_n}{\max_n||x_n||} = \sqrt{T} * constant$$</p>
+<p>因此上面的命题得证。至此，已经可知道犯错误的次数 T 是受到某个上限的约束的。下面会给出这个具体的上限是多少。</p>
+<p>又因为 $$1 \ge \frac{w_f^T}{||w_f^T||}\frac{w_T}{||w_T||} \ge \sqrt{T} * constant\\<br>\frac{1}{constant^2} \ge T$$</p>
+<p>即犯错的次数的上限为 $\frac{1}{constant^2} $, 假设令<br>$$ \max_n||x||^2 = R^2, \rho = \min_n y_n\frac{w_f^T}{||w_f^T||}x_n$$<br>则有<br>$$T \le \frac{R^2}{\rho^2}$$</p>
+<p>这也说明了PLA会在有限步内收敛，而这也是后面的练习题里面的答案。</p>
+<h3 id="优缺点及改进"><a href="#优缺点及改进" class="headerlink" title="优缺点及改进"></a>优缺点及改进</h3><p>PLA 的优点和缺点都非常明显，其中优点是简单，易于实现，但是缺点是假设了数据是线性可分的，然而事先并无法知道数据是否线性可分的。正如上面提到的一样，假如将PLA 用在线性不可分的数据中时，会导致PLA永远都无法对样本进行正确分类从而陷入到死循环中。</p>
+<p>为了避免上面的情况，将 PLA 的条件放宽一点，不再要求所有的样本都能正确地分开，而是要求犯错的的样本尽可能的少，即将问题变为了$$arg\min_w \sum_{n=1}^{N} 1\lbrace y_n \ne sign(w^Tx_n) \rbrace$$</p>
+<p>这个最优化问题是个 NP-hard 问题，无法求得其最优解，因此只能求尽可能接近其最优解的近似解。讲义中提出的一种求解其近似解的算法 <code>Pocket Algorithm</code>。其思想就是每次保留当前最好的 $w$, 当遇到错误的样本点对 $w$ 进行修正后，比较修正后的$w$ 与原来最好的 $w$ 在整个样本点上的总体效果再决定保留哪一个，重复迭代足够多的次数后返回当前得到的最好的 $w$。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/机器学习/" rel="tag">机器学习</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/02/18/概率论与数理统计知识整理(6)-参数估计/" rel="next" title="概率论与数理统计知识整理(6)-参数估计">
+                <i class="fa fa-chevron-left"></i> 概率论与数理统计知识整理(6)-参数估计
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/02/26/机器学习基石--机器学习的分类/" rel="prev" title="机器学习基石--机器学习的分类">
+                机器学习基石--机器学习的分类 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://wulc.me/files/profile.jpg"
+               alt="良超" />
+          <p class="site-author-name" itemprop="name">良超</p>
+          <p class="site-description motion-element" itemprop="description">算法工程师首先得是个工程师</p>
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">208</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">39</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/WuLC" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github-alt"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.linkedin.com/in/wuliangchao/" target="_blank" title="LinkedIn">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  LinkedIn
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#机器学习的基本概念"><span class="nav-number">1.</span> <span class="nav-text">机器学习的基本概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#感知机"><span class="nav-number">2.</span> <span class="nav-text">感知机</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#PLA"><span class="nav-number">2.1.</span> <span class="nav-text">PLA</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#收敛性"><span class="nav-number">2.2.</span> <span class="nav-text">收敛性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优缺点及改进"><span class="nav-number">2.3.</span> <span class="nav-text">优缺点及改进</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <center>
+<div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2019</span>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
+  </br>
+  <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
+</div>
+</center>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>

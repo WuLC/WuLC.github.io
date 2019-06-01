@@ -1,0 +1,1042 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="数学," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="最近由于课程需要去调研了一下遗传算法，本文是调研结果的总结，主要介绍遗传算法的背景、基本流程、理论基础、变种及其应用。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="遗传算法简介">
+<meta property="og:url" content="http://wulc.github.io/2017/04/10/遗传算法简介/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="最近由于课程需要去调研了一下遗传算法，本文是调研结果的总结，主要介绍遗传算法的背景、基本流程、理论基础、变种及其应用。">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/2bkr8zozmr491qd009ln8zb4/image_1bdg4f1vg1h34mb1qq18p063p9.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/dqvaoqyjasn1kauvfpg7eqrk/4.jpg">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/do2t9v2x8cgilnnwhohuhq0f/image_1bcv2juh21eff12veprb1m3pdjh9.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/vtmz0imz0268gpjbp2jhjafv/image_1bcv2m08s8vh10efqmli9s1v9bm.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/xsit73bmhtwi78y0otd2b8im/image_1bdglnnd9r1j1h1r1lsc714am5p.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/dbtqu23bu5iuednyy0m2nv2w/image_1bdgqufc4nnn1gqt1g431jm11gp1i.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/8xqs57e7j733rjvr3osc0abh/image_1bdgqvll710hjeh190011vt1r8a1v.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/3up1a09g71rk8aspwhq24crq/image_1bdgr0g2dd7mig01mki1qom12g22c.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/j6dp7ylgmiabw5klwkhxelaz/image_1bdgsa177is3q4i1rs114kvl436.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/63jd4n68k3srpbudyfu2ec6a/image_1bdgsl05t1qu513751btg2mh1v133j.png">
+<meta property="og:updated_time" content="2019-06-01T09:14:44.212Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="遗传算法简介">
+<meta name="twitter:description" content="最近由于课程需要去调研了一下遗传算法，本文是调研结果的总结，主要介绍遗传算法的背景、基本流程、理论基础、变种及其应用。">
+<meta name="twitter:image" content="http://static.zybuluo.com/WuLiangchao/2bkr8zozmr491qd009ln8zb4/image_1bdg4f1vg1h34mb1qq18p063p9.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"always"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://wulc.github.io/2017/04/10/遗传算法简介/"/>
+
+
+
+
+
+  <title> 遗传算法简介 | 吴良超的学习笔记 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1258114456&web_id=1258114456" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">吴良超的学习笔记</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <h1 class="site-subtitle" itemprop="description"></h1>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            站内搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://wulc.github.io/2017/04/10/遗传算法简介/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="良超">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="吴良超的学习笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                遗传算法简介
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-10T20:08:55+08:00">
+                2017-04-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-tags"></i>
+              </span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/tags/数学/" itemprop="url" rel="index">
+                    <span itemprop="name">数学</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近由于课程需要去调研了一下遗传算法，本文是调研结果的总结，主要介绍遗传算法的背景、基本流程、理论基础、变种及其应用。</p>
+<a id="more"></a>
+<h2 id="连续优化与组合优化"><a href="#连续优化与组合优化" class="headerlink" title="连续优化与组合优化"></a>连续优化与组合优化</h2><h3 id="连续优化"><a href="#连续优化" class="headerlink" title="连续优化"></a>连续优化</h3><p><a href="https://en.wikipedia.org/wiki/Continuous_optimization" target="_blank" rel="external">连续优化(continuous optimization)</a> 在某些教材中也被称为函数优化，其特点是变量的取值是连续的，或者说是变量的范围是实数域(绝大多数情况)。对于一个可行域，其中包含着无数个可行解，这类问题一般利用目标函数可导的性质，通过如梯度，海塞矩阵等进行求解（如常见的梯度下降法，牛顿法等）。更详细的关于连续优化的方法可参考<a href="http://wulc.me/2017/02/01/%E6%9C%80%E4%BC%98%E5%8C%96%E8%AE%A1%E7%AE%97%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/" target="_blank" rel="external">这篇文章</a></p>
+<h3 id="组合优化"><a href="#组合优化" class="headerlink" title="组合优化"></a>组合优化</h3><p>相对于连续优化的另外一种优化是<a href="https://en.wikipedia.org/wiki/Combinatorial_optimization" target="_blank" rel="external">组合优化</a>，组合优化的变量是离散的，也就是变量的空间只有有限多个的可行解。比如说经典的背包问题就是一个组合优化问题</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/2bkr8zozmr491qd009ln8zb4/image_1bdg4f1vg1h34mb1qq18p063p9.png" alt="背包问题"></p>
+<p>既然只有有限多个解，那么最直接想到的求解方法就是通过穷举这些解(exhaustive search)找到最优解，然而分析可知，穷举所需要的时间复杂度一般是指数级别的，比如说对于背包问题，有 $n$个物品的时候，共有 $n^2$ 种可能性，时间复杂度是 $O(2^n)$。这样的问题已经是一个 <a href="https://zh.wikipedia.org/zh-hans/NP%E5%9B%B0%E9%9A%BE" target="_blank" rel="external">NP-hard</a> 问题了，这里先简单介绍一下P问题，NP问题和NP-hard问题的区别。</p>
+<p>一般来说，P 问题指的是能够在多项式时间复杂度内找到解的问题，而 NP 问题指的是无法在多项式时间复杂度内找到答案的问题，但是能够在多项式时间复杂度内验证一个解是否正确的问题（如大素数的判断问题）；而 NP-hard 问题则是指那种不仅无法在多项式时间复杂度内找到答案, 甚至无法在多项式时间复杂度内验证一个解是否正确的问题（如背包问题，如果要找到最优，就必须对所有的可能进行比较，这样的时间复杂度就是指数级别了）。</p>
+<p>实际上，大多数的组合优化问题都是 NP-hard 问题，虽然存在着某些特殊问题可以用多项式时间的方法来解决，如<a href="http://wulc.me/2017/03/02/%E7%BB%B4%E7%89%B9%E6%AF%94%E7%AE%97%E6%B3%95/" target="_blank" rel="external">通过维特比算法求解 HMM 中最大概率的隐含状态转移路径</a>。但是更多的情况下组合优化问题仍然是一个 NP-hard 问题。</p>
+<p>于是为了解决这类得到最优解就需要耗时非常长的问题，人们退而求其次，去找一个接近最优解但是耗时在可接受范围内的解。进而诞生了一类方法: 元启发式方法(Metaheuristic)。</p>
+<h3 id="元启发式方法-Metaheuristic"><a href="#元启发式方法-Metaheuristic" class="headerlink" title="元启发式方法(Metaheuristic)"></a>元启发式方法(Metaheuristic)</h3><p><a href="https://en.wikipedia.org/wiki/Metaheuristic" target="_blank" rel="external">元启发式方法(Metaheuristic)</a> 是一类方法， 维基上对的定义如下</p>
+<blockquote>
+<p>a metaheuristic is a higher-level procedure or heuristic designed to find, generate, or select a heuristic (partial search algorithm) that may <strong>provide a sufficiently good solution to an optimization problem</strong></p>
+</blockquote>
+<p>元启发式方法的定义中已经说得很清楚了，这一类方法不确定能够提供最优解，但是会提供一个足够好的解，当然这个足够好好到什么程度也是与具体算法相关的，需要通过数学证明。但是这类方法能够在可接受时间内返回这个解。</p>
+<p>我们经常听到的一些算法都属于这种元启发式算法，包括：</p>
+<ul>
+<li>遗传算法(Genetic Algorithms，GA)</li>
+<li>模拟退火(Simulated Annealing，SA)</li>
+<li>蚁群算法(Ant Colony Optimization，ACO)</li>
+<li>粒子群算法(Particle Swarm Optimization，PSO)<br>……</li>
+</ul>
+<p>这一类算法都是从自然现象中得到启发的，如遗传算法就是从进化论中得到启发的，认为“物竞天择，适者生存”，一代代进化的基因是逐渐往好的方向发展的，对应到优化问题中就是逐渐收敛到比较好的解；模拟退火则是从金属加热后再冷却，金属中的分子最终有可能会到达一个内能比原来更低的位置，表示为一个更优解；蚁群算法和粒子群算法则是通过一个群体去搜索最优解，如对于非凸的优化，往往具有多个局部最优解，通过一个群体去搜索能够扩大搜索范围，从而以更大的概率收敛于全局最优解。</p>
+<p>关于元启发式方法在组合优化中的更详细的应用可这篇文献：<br><a href="http://dl.acm.org/citation.cfm?id=937505" target="_blank" rel="external">Metaheuristics in Combinatorial Optimization: Overview and Conceptual Comparison</a></p>
+<h2 id="遗传算法"><a href="#遗传算法" class="headerlink" title="遗传算法"></a>遗传算法</h2><p>从前面可知，<a href="https://en.wikipedia.org/wiki/Genetic_algorithm" target="_blank" rel="external">遗传算法</a>是元启发式方法的一种，维基上对其的定义如下:</p>
+<blockquote>
+<p>Genetic algorithms are commonly used to generate high-quality solutions to optimization and search problems by relying on bio-inspired operators such as mutation, crossover and selection。</p>
+</blockquote>
+<p>从维基的描述可知，遗传算法是收生物进化论的影响，因此遗传算法中的很多概念跟生物进化中的很多概念类似，而遗传算法主要的三个操作就是选择(selection)，交叉(crossover)和编译(mutataion).</p>
+<p>下面先介绍遗传算法中的基本概念：</p>
+<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><ul>
+<li>个体（individual） : 一个候选解</li>
+<li>种群（generation） : 一组候选解，代表某一代的所有个体</li>
+<li>染色体（chromosomes） : 候选解的染色体表示，常见的用01字符串表示</li>
+<li>适应度（fitness） : 个体的适应度，一般与优化问题中的目标函数值相关</li>
+<li>选择（selection）: 根据个体适应性从一个 generation 中选出 适应性好的进入下一代</li>
+<li>交叉（crossover） : 类似于生物中两个个体进行杂交，两个 chromosomes 进行相应的交叉</li>
+<li>变异（mutation）: chromosomes 的某一位进行突变，如从0变到1或从1变到0</li>
+</ul>
+<p>在执行遗传算法前，有两个东西必须先定义好</p>
+<ol>
+<li>可行解的表示方法，也就是常说的编码方式，上面说到了常用的有 01 编码，除此之外，根据问题的不同，还存在其他的一些编码方式</li>
+<li>适应度函数，也就是计算上面适应度的函数，这个函数一般yong就是用目标函数，如要最大化某个函数，则将这个函数作为目标函数即可，反之最小化的时候加个负号即可。</li>
+</ol>
+<p>遗传算法是一个迭代算法，在进行初始化后按照 “选择，交叉，变异” 的顺序进行迭代，当满足设定的结束条件(例如达到一定的代数)，便将得到的解作为问题的解。其流程如下所示</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/dqvaoqyjasn1kauvfpg7eqrk/4.jpg" alt="算法流程"></p>
+<h3 id="算法流程"><a href="#算法流程" class="headerlink" title="算法流程"></a>算法流程</h3><h4 id="初始化-Initialization"><a href="#初始化-Initialization" class="headerlink" title="初始化(Initialization)"></a>初始化(Initialization)</h4><p>初始化主要是<strong>确定编码方式以及初始种群的数目</strong>，初始种群的数目由人为设定然后随机产生，设定的数目如果太小，可能会一开始就限制了搜索域较小，而如果设定的数目太大，计算量会比较大。</p>
+<p>编码方式则根据问题的约束条件和希望得到的解的精度确定，后面会给出一个详细的例子说明这个问题。</p>
+<h4 id="选择-Selection"><a href="#选择-Selection" class="headerlink" title="选择(Selection)"></a>选择(Selection)</h4><p>选择模拟了生物进化中的“适者生存”，根据当代的个体的适应度按概率选出下一代，适应度越高，则被选择的概率也越大。</p>
+<p>之所以不直接将适应度最大的若干个个体作为下一代，是因为这样可能会导致算法过早陷入局部最优解。在遗传算法里面这种现象称为”早熟（premature）”。</p>
+<p>假如当代的个体总数是 $M$，而个体 $a_i$ 的适应度是 $f_i$，则个体 $a_i$被选择到下一代的概率是<br>$$p_i = \frac{f_i}{\sum_{j=1}^{M} f_j}$$</p>
+<h4 id="交叉-crossover"><a href="#交叉-crossover" class="headerlink" title="交叉(crossover)"></a>交叉(crossover)</h4><p>交叉跟生物上的杂交是一样的，只是生物中是双螺旋结构，而遗传算法中只有一条链。原始的遗传算法只会选择一个点进行交叉，如下如所示</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/do2t9v2x8cgilnnwhohuhq0f/image_1bcv2juh21eff12veprb1m3pdjh9.png" alt="Single-point crossover"></p>
+<p>而假如对遗传算法进行改进，也可以在多个点进行交叉的操作</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/vtmz0imz0268gpjbp2jhjafv/image_1bcv2m08s8vh10efqmli9s1v9bm.png" alt="Two-point crossover"></p>
+<p>交叉（<a href="https://en.wikipedia.org/wiki/Crossover_%28genetic_algorithm%29#Three_parent_crossover" target="_blank" rel="external">crossover</a>）的目的是从目前的所有解中组合出更优的解，但是尝试获得更优解的同时，也可能丢掉目前得到的最优解。而这也是传统的遗传算法无法收敛到全局最优的一个原因（详见后面的理论证明，对其进行了简单改进后可以收敛到全局最优）。</p>
+<p>交叉是按照一定的概率进行的，这个概率也需要人为设定，假如设得过大边很容易将当前的最优解破坏掉，并且容易陷入早熟(premature)，而设得过小时则很难从当前的可行解中组合出更优的解。</p>
+<h4 id="变异-mutation"><a href="#变异-mutation" class="headerlink" title="变异(mutation)"></a>变异(mutation)</h4><p>变异（<a href="https://en.wikipedia.org/wiki/Mutation_%28genetic_algorithm%29" target="_blank" rel="external">mutation</a>）跟生物中的变异也一样，随机改变染色体中的某一位，如下所示就是一个变异的示例</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/xsit73bmhtwi78y0otd2b8im/image_1bdglnnd9r1j1h1r1lsc714am5p.png" alt="mutation.jpg"></p>
+<p>变异也是按照一定的概率进行的，这个概率也需要人为设定，而且这个概率一般会设置得比较小，如果设得较大时，就变成了类似随机搜索（random search）的方法；但是如果设得太小的时候，就会造成生物中的基因漂变(genetic drift)的现象，从而导致收敛到一个局部最优。</p>
+<p>变异的主要作用是为了防止算法收敛到一个局部最优解。假如将找到最优解比作在多座山峰中找到最高的那一座，那么交叉就类似同一座山峰下的多个基因合力爬上山顶，而变异就类似于从一座山峰调到另外一座山峰，目的就是为了防止当前的山峰是一个局部最优解而将算法其作为一个全局最优解。</p>
+<h4 id="终止-termination"><a href="#终止-termination" class="headerlink" title="终止(termination)"></a>终止(termination)</h4><p>算法的终止条件由人为设定，一般是限制迭代的最大次数，或能够使用的最大的计算资源，或者是两次的解小于某个设定的阈值，下面是从维基百科中摘录的终止条件</p>
+<blockquote>
+<ul>
+<li>A solution is found that satisfies minimum criteria</li>
+<li>Fixed number of generations reached</li>
+<li>Allocated budget (computation time/money) reached</li>
+<li>The highest ranking solution’s fitness is reaching or has reached a plateau such that successive iterations no longer produce better results</li>
+<li>Manual inspection</li>
+<li>Combinations of the above</li>
+</ul>
+</blockquote>
+<h3 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h3><p>下面给出两个例子：分别是遗传算法解决背包问题和一个连续优化问题。</p>
+<h4 id="遗传算法解决背包问题"><a href="#遗传算法解决背包问题" class="headerlink" title="遗传算法解决背包问题"></a>遗传算法解决背包问题</h4><p><a href="https://zh.wikipedia.org/zh-hans/%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98" target="_blank" rel="external">背包问题</a>是一个很经典的组合优化问题，通过遗传算法可以求解，但是目前求解这类问题的最优方法是动态规划，是一个<a href="https://zh.wikipedia.org/wiki/%E4%BC%AA%E5%A4%9A%E9%A1%B9%E5%BC%8F%E6%97%B6%E9%97%B4" target="_blank" rel="external">伪多项式时间复杂度问题</a>。这里采用背包问题为例子是因为这个例子的编码方式有较好的解释。</p>
+<p>假设现在背包的容量为 $W$, 共有 15 个物品，每个物品的大小为 $w_i$, 价值为 $v_i$, 则可以得到下面的最优化问题</p>
+<p>$$max \sum_{i=1}^{15} x_iv_i\<br>s.t. \sum_{i}w_ix_i \le W\<br>x_i \in \lbrace 0,1 \rbrace$$</p>
+<p>$x_i \in \lbrace 0,1 \rbrace$ 表示是否将第 $i$ 件物品放到背包中。</p>
+<p>则通过遗传算法解决这个问题的流程如下</p>
+<p><strong>初始化</strong><br>由于有15个物品，而每个物品只有两个状态，因此用一个长度为15的01字符串表示一个解，0表示不拿该物品，1表示那该物品。随机产生10个候选解如下所示，这里要注意每个候选解必须要满足约束条件</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/dbtqu23bu5iuednyy0m2nv2w/image_1bdgqufc4nnn1gqt1g431jm11gp1i.png" alt="initialize"></p>
+<p>由于没有给出每个物品具体的价值，这里用 $V_i$ 表示第 $i$ 个候选解通过公式 $\sum_{j=1}^{15}x_jv_j$求得的总价值。</p>
+<p><strong>选择</strong></p>
+<p>由于每个个体被选择到下一代的概率与其适应度成正比，因此第 $i$ 个候选解被选择到下一代的概率为$$p_i = \frac{V_i}{\sum_{j=1}^{15}V_j}$$</p>
+<p>如下为模拟的过程，注意一个个体可能会被选择多次</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/8xqs57e7j733rjvr3osc0abh/image_1bdgqvll710hjeh190011vt1r8a1v.png" alt="selection"></p>
+<p><strong>交叉</strong></p>
+<p>对选择出来的个体重新进行编号，然后进行交叉的操作，按照设定的交叉概率选择个体进行交叉的操作，交叉的位置也是随机产生的，如下所示是设定交叉概率为 0.5 后的交叉结果</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/3up1a09g71rk8aspwhq24crq/image_1bdgr0g2dd7mig01mki1qom12g22c.png" alt="crossover"></p>
+<p><strong>变异</strong></p>
+<p>变异也是按照变异概率选择个体来进行的，被选中的个体变异的位数可以是一位也可以是多位，如下图所示是设定变异概率为0.2的编译过程</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/j6dp7ylgmiabw5klwkhxelaz/image_1bdgsa177is3q4i1rs114kvl436.png" alt="mutation"></p>
+<p><strong>终止</strong></p>
+<p>设定一个终止条件，如最大的迭代次数，当满足这个条件时边终止算法，将当前得到的最优解作为问题的最优解；没满足时便按照 “选择-&gt;交叉-&gt;编译”进行迭代。</p>
+<p>利用遗传算法求解背包问题更详细的信息可参考这篇文献：<a href="http://download.springer.com/static/pdf/710/art%253A10.1023%252FA%253A1009642405419.pdf?originUrl=http://link.springer.com/article/10.1023/A:1009642405419&amp;token2=exp=1491993908~acl=/static/pdf/710/art%25253A10.1023%25252FA%25253A1009642405419.pdf?originUrl=http%253A%252F%252Flink.springer.com%252Farticle%252F10.1023%252FA%253A1009642405419*~hmac=0a9e73167d1e4cfa3ddcd4ccea91c56da95955d24b1b138e965904173c398935" target="_blank" rel="external">A genetic algorithm for the multidimensional knapsack problem</a></p>
+<h4 id="遗传算法解决连续优化问题"><a href="#遗传算法解决连续优化问题" class="headerlink" title="遗传算法解决连续优化问题"></a>遗传算法解决连续优化问题</h4><p>该例子来源于<a href="https://www.zhihu.com/question/23293449/answer/120220974" target="_blank" rel="external">知乎</a>， 优化的问题如下所示</p>
+<p>$$\max f(x) = x + 10sin(5x) + 7cos(4x)， x \in [0,9]$$</p>
+<p>这个函数的图像如下所示</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/63jd4n68k3srpbudyfu2ec6a/image_1bdgsl05t1qu513751btg2mh1v133j.png" alt="连续优化例子"></p>
+<p>显然这已经不是一个凸函数了，通过遗传算法解决这个问题的步骤跟背包问题的一样，最主要也是最重要的区别在于编码方式的不同。</p>
+<p>由于现在可行解是实数域了，仍旧采用01编码，则要解决的问题就是如何用01串表示一个实数。假设现在希望解精确到小数点的后四位，</p>
+<p>假如设定求解的精度为小数点后4位，可以将x的解空间划分为 $(9-0)×10^4=90000$ 个等分。</p>
+<p>由于 $2^{16}&lt;90000&lt;2^{17}$，则需要17位二进制数来表示这些解。换句话说，一个解的编码就是一个17位的二进制串。</p>
+<p>一开始，这些二进制串是随机生成的。一个这样的二进制串代表一条染色体串，这里染色体串的长度为17。对于任何一条这样的染色体chromosome，如何将它复原(解码)到 [0,9] 这个区间中的数值呢？对于本问题，我们可以采用以下公式来解码：</p>
+<p><code>x = 0 + decimal(chromosome)×(9-0)/(2^17-1)</code></p>
+<p><code>decimal( )</code>: 将二进制数转化为十进制数</p>
+<p>更一般化的解码公式：</p>
+<figure class="highlight plain"><figcaption><span>x∈[lower_bound, upper_bound]</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x = lower_bound + decimal(chromosome)×(upper_bound-lower_bound)/(2^chromosome_size-1)</span><br></pre></td></tr></table></figure>
+<p><code>lower_bound</code>: 函数定义域的下限<br><code>upper_bound</code>: 函数定义域的上限<br><code>chromosome_size</code>: 染色体的长度通过上述公式，我们就可以成功地将二进制染色体串解码成[0,9]区间中的十进制实数解。</p>
+<p>后面的选择，交叉，变异的过程与上面的背包问题一样，这里不在给出，在经过 100 次迭代后，最终选出的最优个体为00011111011111011，其适应度，也就是目标函数的值为24.8554，对应的 $x$ 为7.8569,从图像来看，已经是在最优解的位置了。</p>
+<h2 id="理论基础"><a href="#理论基础" class="headerlink" title="理论基础"></a>理论基础</h2><p>上面介绍的内容仅仅是遗传算法的基本流程，但是经过这些仿生的操作能确保最终收敛吗？如果收敛的话能够收敛到全局最优还是局部最优？收敛到全局最优的概率是多少？</p>
+<p>在遗传算法刚提出来的时候为不少问题找到了一个较好的解，对于很多问题都能找到一个比较好的解，但是缺乏数学理论基础的保证，往往会让人产生上面这些问题。</p>
+<p>很多时候，实践的发展往往是超前于理论的，于是在遗传算法提出 5 年后，它的提出者便发表了模式定理(Schema Theory)来说明遗传算法中发生“优胜劣汰”的原因。而后又有人通过马氏链证明了算法的收敛性，结果是原始的遗传算法并不能收敛到全局最优，但是经过简单改进的遗传算法能够收敛到全局最优。</p>
+<h3 id="模式定理-Schema-Theory"><a href="#模式定理-Schema-Theory" class="headerlink" title="模式定理(Schema Theory)"></a>模式定理(Schema Theory)</h3><h4 id="基本概念-1"><a href="#基本概念-1" class="headerlink" title="基本概念"></a>基本概念</h4><p>问题引入： 求解方程 $F(x) = x^2$ 在 [0,31] 上的最大值，使用固定长度二进制编码对种群中的个体进行编码，在计算适应度值时会发现一个规律，当个体编码的最左边为1时，适应度普遍较大，可以记为 <code>1***1</code>，同理 <code>0****</code> 的个体适应度偏低。由此可以引入以下一些基本概念：</p>
+<p><strong>模式(Schema)</strong>：编码的字符串中具有类似特征的子集。 例如上述五位二进制字符串中，模式 <code>*111*</code> 可代表4个个体。个体和模式的一个区别就是，个体是由<code>{0，1}</code>组成的编码串，模式是由<code>{0，1，*}</code>组成，<code>*</code> 为通配符。</p>
+<p><strong>模式阶(Schema Order)</strong>：表示模式中已有明确含义的字符个数，记为o(s)，s代表模式。例如o(<em>111</em>)=3; 阶数越低，说明模式的概括性越强，所代表的编码串个体数也越多。其中阶数为零的模式概括性最强。</p>
+<p><strong>模式定义长度(Schema Defining Length)</strong>：指第一个和最后一个具有含义的字符之间的距离，其可表示该模式在今后遗传操作中被破坏的可能性，越短则越小，长度为0最难被破坏。</p>
+<p>下面就是模式定理的具体定义：</p>
+<blockquote>
+<p>适应度高于群体平均适应度的，长度较短，低阶的模式在遗传算法的迭代过程中将按指数规律增长。</p>
+</blockquote>
+<p>下面将推导经过选择，交叉和变异后如何得到上面的模式定理</p>
+<h4 id="选择"><a href="#选择" class="headerlink" title="选择"></a>选择</h4><p>假设当前是第 $t$ 代， 这一代中模式 $s$ 的个体数记为 $m(s,t)$，整个种群的数目为 $M$，个体 $a_i$ 的适应度为 $f_i$</p>
+<p>则个体 $a_i$ 被选择的概率为 $$p_i = \frac{f_i}{\sum_{j=1}^{M} f_j}$$</p>
+<p>因此经过选择后， 模式 $s$ 在下一代的数目为</p>
+<p>$$m(s, t+1) = M\frac{m(s,t) \overline {f(s)}}{\sum_{j=1}^{M} f_j} = m(s,t) \frac{\overline {f(s)}}{\overline {f}}$$</p>
+<p>其中 $\overline {f(s)}$表示模式 $s$ 中个体的平均适应度, $\overline f$表示整个种群的平均适应度，也就是 $$\overline f = \frac{\sum_{j=1}^{M} f_j}{M}$$</p>
+<p>可知只有当$\overline {f(s)} &gt; \overline f$, 模式 $s$ 中的个体才能增长, 将上面的公式做简单的变化，则有</p>
+<p>$$m(s, t+1) = m(s,t) \frac{\overline {f(s)}}{\overline {f}} = m(s,t) \frac{(1+c)\overline f }{\overline {f}} = m(s,t)(1+c) $$</p>
+<p>则从开始到第 $t+1$ 代，模式 $s$ 的个体的数目为:<br>$$m(s, t+1) = m(s, t)(1+c)^t$$</p>
+<p>可以看到当<strong>模式平均适应度高于种群是适应度时，模式中的个体会呈指数形式增长。</strong></p>
+<h4 id="交叉"><a href="#交叉" class="headerlink" title="交叉"></a>交叉</h4><p>记模式定义长度(schema defining length)为 $\delta(s)$，染色体的长度记为 $\lambda$</p>
+<p>则模式被破坏，也就是在定义长度内进行交叉的概率为 $p_d = \frac{\delta(s)}{\lambda - 1}$ </p>
+<p>因此模式存活的概率为 $p_s = 1 - p_d = 1 - \frac{\delta(s)}{\lambda - 1}$</p>
+<p>假设交叉概率为 $p_c$，则存活概率为 $p_s = 1 - p_c \frac{\delta(s)}{\lambda - 1}$</p>
+<p>在经过选择，交叉后，模式 $s$ 在下一代数目为</p>
+<p>$$m(s, t+1) = m(s,t) \frac{\overline {f(s)}}{\overline {f}}[1 - p_c \frac{\delta(s)}{\lambda - 1}]$$</p>
+<p>从这里可以看到，<strong>模式的定义长度(schema defining length) 越小，则其存活的概率越大</strong></p>
+<h4 id="变异"><a href="#变异" class="headerlink" title="变异"></a>变异</h4><p>记模式的阶(Schema Order) 为 $o(s)$，变异的概率为 $p_m$</p>
+<p>则原来的基因存活，也就是那些确定的位置都不发生变异的概率为 $$p_s = (1-p_m)^{o(s)} \approx 1 - p_mo(s)$$</p>
+<p>上式最后做了泰勒展开，因此经过选择，交叉和变异后，模式 $s$ 在下一代种群的数目为</p>
+<p>$$m(s, t+1) = m(s,t) \frac{\overline {f(s)}}{\overline {f}}[1 - p_c \frac{\delta(s)}{\lambda - 1} - p_mo(s)]$$</p>
+<p>从上式也可以看到，<strong>模式的阶越低，模式约容易存活</strong>。</p>
+<p>因此经过上面的分析，可以得到模式定理的定义</p>
+<blockquote>
+<p>适应度高于群体平均适应度的，长度较短，低阶的模式在遗传算法的迭代过程中将按指数规律增长。</p>
+</blockquote>
+<p>该定理阐明了遗传算法中发生“优胜劣汰”的原因。在遗传过程中能存活的模式都是定义长度短、阶次低、平均适应度高于群体平均适应度的优良模式。遗传算法正是利用这些优良模式逐步进化到最优解。</p>
+<h3 id="收敛性分析"><a href="#收敛性分析" class="headerlink" title="收敛性分析"></a>收敛性分析</h3><p>虽然上面的模式定理说明了遗传算法有“优胜劣汰”的趋势，但是对于其收敛性并没有给出一个证明，这篇文献 <a href="http://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=265964" target="_blank" rel="external">Convergence Analysis of Canonical Genetic Algorithms</a> 对遗传算法的收敛性进行了证明。</p>
+<p>证明利用了<strong>有限状态的时齐马氏链的遍历性和平稳分布的性质</strong>，因为遗传算法可以被描述成一个有限状态的时齐马氏链，假如种群大小为 $M$, 染色体的长度为 $\lambda$,采用01编码方式，将所有个体的染色体连起来作为一个状态，则种群的所有状态数目为 $2^{M\lambda}$。同时选择概率，变异概率和交叉概率可作为状态转移概率。</p>
+<p>由于证明的定义和引理较多，因此这里不详细描述证明过程，只给出最后的结论。</p>
+<p>证明给出的主要结论有两个：</p>
+<blockquote>
+<ol>
+<li>传统的遗传算法不能收敛到全局最优</li>
+<li>在传统的遗传算法基础上每次选择的时候保留前面所有迭代里面的最优个体，最终能收敛到全局最优。</li>
+</ol>
+</blockquote>
+<p>从证明最终给出的结论可知，传统的遗传算法并不能收敛到全局最优，证明过程指出的是收敛到全局最优的概率小于1，原因就是选择、交叉和变异中都带有一定的随机性，这种随机性导致了最优解可能会被抛弃；而改进后的遗传算法每一代都会保留着前面所有代数的最优解，因此最终会以概率1收敛到全局最优。</p>
+<h2 id="改进方案-Variants"><a href="#改进方案-Variants" class="headerlink" title="改进方案(Variants)"></a>改进方案(Variants)</h2><p>下面介绍的是对原始的遗传算法进行改进后得到的变种，改进主要有三大方向：编码方式(Chromosome representation), 精英选择(Elitism)和参数自适应（Adaptive）。</p>
+<h3 id="编码方式"><a href="#编码方式" class="headerlink" title="编码方式"></a>编码方式</h3><p>我们前面采用的均是01编码方式，但是实际上根据不同问题可以选择不同的编码方式，如格雷码（Gray Code）、浮点数编码都是可选的编码方式。</p>
+<p>二进制编码的缺点是：对于一些连续函数的优化问题，由于其随机性使得其局部搜索能力较差，如对于一些高精度的问题（如上题），当解迫近于最优解后，由于其变异后表现型变化很大，不连续，所以会远离最优解，达不到稳定。</p>
+<p>而格雷码能有效地防止这类现象，当一个染色体变异后，它原来的表现现和现在的表现型是连续的。主要优点有：</p>
+<ul>
+<li>便于提高遗传算法的局部搜索能力</li>
+<li>交叉、变异等遗传操作便于实现</li>
+<li>符合最小字符集编码原则</li>
+<li>便于利用模式定理对算法进行理论分析</li>
+</ul>
+<p>这篇文献 <a href="http://onlinelibrary.wiley.com/doi/10.1029/95WR02917/full" target="_blank" rel="external">An Improved Genetic Algorithm for Pipe Network Optimization</a> 就适用了格雷码作为其编码方式。</p>
+<p>而使用浮点数编码的原因往往是对连续函数优化时二进制编码精度不够。</p>
+<h3 id="精英选择"><a href="#精英选择" class="headerlink" title="精英选择"></a>精英选择</h3><p>精英选择实际上就是在前面收敛性证明中改进遗传算法使得其以概率1收敛到全局最优的改进方案，在这篇文献中<br><a href="http://www.ri.cmu.edu/pub_files/pub2/baluja_shumeet_1995_1/baluja_shumeet_1995_1.pdf" target="_blank" rel="external">Removing the Genetics from the Standard Genetic Algorithm</a> 对其做了详细的描述。</p>
+<h3 id="参数自适应"><a href="#参数自适应" class="headerlink" title="参数自适应"></a>参数自适应</h3><p>前面我们说到了变异的概率和交叉的概率都是人为设定的固定值，但是实际上这个概率在不同的种群下应该会有其对应的最优值。因此这篇文献 <a href="http://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=286385" target="_blank" rel="external">Adaptive probabilities of crossover and mutation in genetic algorithms</a>，将两个概率设定为下面的两个公式</p>
+<p>$$ P_c=<br>\begin{cases}<br>\frac{k_1(f_{max}-f’)}{f_{max}-f_{avg}}&amp;&amp; {f’ \geq   f_{avg}}\\<br>k_2  &amp;&amp; {f’ &lt; f_{avg}}<br>\end{cases}$$</p>
+<p>$$ P_m=<br>\begin{cases}<br>\frac{k_3(f_{max}-f’)}{f_{max}-f_{avg}}  &amp;&amp; {f’ \geq f_{avg}}\\<br>k_4 &amp;&amp; {f’ &lt; f_{avg}}<br>\end{cases}<br>$$</p>
+<p>上面的公式表明，交叉率和变异率随着个体的适应度在种群平均适应度和最大适应度之间进行线性调整。上面的公式中 $f_{max}$ 表示种群的最大适应度, $f_{avg}$ 表示种群的平均适应度, $f’$ 表示参与交叉的两个个体中较大的适应度。</p>
+<p>由上面的公式可知，当适应度越接近最大适应度时．交叉率和变异率越小，好处是降低了最优解被破坏的概率，坏处是当前的最优适应度等于最大适应度时，交叉率和变异率为零。这使得AGA在演化初期并不理想。因为在进化初期的群体中，较优个体几乎处于一种不发生变化的状态，而此时的优良个体不一定是全局最优解，这容易使演化走向局部收敛的可能性增加。</p>
+<p>因此这篇文献<a href="http://www.cqvip.com/qk/91690x/200612/21781597.html" target="_blank" rel="external">自适应遗传算法交叉变异算子的改进</a>对上面的公式进行了如下的改进</p>
+<p>$$ P_c=<br>\begin{cases}<br>p_{cmin}-\frac{（p_{cmax}-p_{cmin}）(f’-f_{avg})}{f_{max}-f_{avg}}&amp;&amp; {f’ \geq   f_{avg}}\\<br>p_{cmax}  &amp;&amp; {f’ &lt; f_{avg}}<br>\end{cases}$$</p>
+<p>$$ P_m=<br>\begin{cases}<br>p_{mmin}-\frac{（p_{mmax}-p_{mmin}）(f’-f_{avg})}{f_{max}-f_{avg}}&amp;&amp; {f’ \geq   f_{avg}}\\<br>p_{mmax}  &amp;&amp; {f’ &lt; f_{avg}}<br>\end{cases}<br>$$</p>
+<p>$p_{cmin}$, $p_{cmax}$ 分别表示交叉率取值的下限和上限；而$p_{mmin}$, $p_{mmax}$ 分别表示变异率取值的下限和上限,这样就避免了前面的概率出现0的情况。</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>这些文献在上面已经在不同部分给出其相应的链接了，这里再次统一列出</p>
+<p>Blum C, Roli A. Metaheuristics in combinatorial optimization: Overview and conceptual comparison[J]. ACM Computing Surveys (CSUR), 2003, 35(3): 268-308.</p>
+<p>Chu P C, Beasley J E. A genetic algorithm for the multidimensional knapsack problem[J]. Journal of heuristics, 1998, 4(1): 63-86.</p>
+<p>Goldberg, David .Genetic Algorithms in Search, Optimization and Machine Learning[M].MA: Addison-Wesley Professional, 1989:ISBN 978-0201157673</p>
+<p>Rudolph G. Convergence analysis of canonical genetic algorithms[J]. IEEE transactions on neural networks, 1994, 5(1): 96-101     </p>
+<p>Srinivas M, Patnaik L M. Adaptive probabilities of crossover and mutation in genetic algorithms[J]. IEEE Transactions on Systems, Man, and Cybernetics, 1994, 24(4): 656-667.</p>
+<p>Dandy G C, Simpson A R, Murphy L J. An improved genetic algorithm for pipe network optimization[J]. Water resources research, 1996, 32(2): 449-458.</p>
+<p>Baluja S, Caruana R. Removing the genetics from the standard genetic algorithm[C].Machine Learning: Proceedings of the Twelfth International Conference. 1995: 38-46.</p>
+<p>Srinivas M, Patnaik L M. Adaptive probabilities of crossover and mutation in genetic algorithms[J]. IEEE Transactions on Systems, Man, and Cybernetics, 1994, 24(4): 656-667.</p>
+<p>邝航宇, 金晶, 苏勇. 自适应遗传算法交叉变异算子的改进[J]. 计算机工程与应用, 2006, 42(12): 93-96.</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/数学/" rel="tag">数学</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/25/年轻的时候，做什么才不会浪费/" rel="next" title="年轻的时候，做什么才不会浪费">
+                <i class="fa fa-chevron-left"></i> 年轻的时候，做什么才不会浪费
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/20/计算广告笔记(1)--广告的基本知识/" rel="prev" title="计算广告笔记(1)--广告的基本知识">
+                计算广告笔记(1)--广告的基本知识 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://wulc.me/files/profile.jpg"
+               alt="良超" />
+          <p class="site-author-name" itemprop="name">良超</p>
+          <p class="site-description motion-element" itemprop="description">算法工程师首先得是个工程师</p>
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">208</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">39</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/WuLC" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github-alt"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.linkedin.com/in/wuliangchao/" target="_blank" title="LinkedIn">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  LinkedIn
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#连续优化与组合优化"><span class="nav-number">1.</span> <span class="nav-text">连续优化与组合优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#连续优化"><span class="nav-number">1.1.</span> <span class="nav-text">连续优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#组合优化"><span class="nav-number">1.2.</span> <span class="nav-text">组合优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#元启发式方法-Metaheuristic"><span class="nav-number">1.3.</span> <span class="nav-text">元启发式方法(Metaheuristic)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#遗传算法"><span class="nav-number">2.</span> <span class="nav-text">遗传算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基本概念"><span class="nav-number">2.1.</span> <span class="nav-text">基本概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#算法流程"><span class="nav-number">2.2.</span> <span class="nav-text">算法流程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#初始化-Initialization"><span class="nav-number">2.2.1.</span> <span class="nav-text">初始化(Initialization)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#选择-Selection"><span class="nav-number">2.2.2.</span> <span class="nav-text">选择(Selection)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#交叉-crossover"><span class="nav-number">2.2.3.</span> <span class="nav-text">交叉(crossover)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#变异-mutation"><span class="nav-number">2.2.4.</span> <span class="nav-text">变异(mutation)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#终止-termination"><span class="nav-number">2.2.5.</span> <span class="nav-text">终止(termination)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#例子"><span class="nav-number">2.3.</span> <span class="nav-text">例子</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#遗传算法解决背包问题"><span class="nav-number">2.3.1.</span> <span class="nav-text">遗传算法解决背包问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#遗传算法解决连续优化问题"><span class="nav-number">2.3.2.</span> <span class="nav-text">遗传算法解决连续优化问题</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#理论基础"><span class="nav-number">3.</span> <span class="nav-text">理论基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#模式定理-Schema-Theory"><span class="nav-number">3.1.</span> <span class="nav-text">模式定理(Schema Theory)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#基本概念-1"><span class="nav-number">3.1.1.</span> <span class="nav-text">基本概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#选择"><span class="nav-number">3.1.2.</span> <span class="nav-text">选择</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#交叉"><span class="nav-number">3.1.3.</span> <span class="nav-text">交叉</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#变异"><span class="nav-number">3.1.4.</span> <span class="nav-text">变异</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#收敛性分析"><span class="nav-number">3.2.</span> <span class="nav-text">收敛性分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#改进方案-Variants"><span class="nav-number">4.</span> <span class="nav-text">改进方案(Variants)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#编码方式"><span class="nav-number">4.1.</span> <span class="nav-text">编码方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#精英选择"><span class="nav-number">4.2.</span> <span class="nav-text">精英选择</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参数自适应"><span class="nav-number">4.3.</span> <span class="nav-text">参数自适应</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">5.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <center>
+<div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2019</span>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
+  </br>
+  <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
+</div>
+</center>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>

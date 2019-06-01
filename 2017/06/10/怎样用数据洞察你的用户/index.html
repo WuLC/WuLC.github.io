@@ -1,0 +1,915 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="计算广告," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="本文内容主要来源于该知乎 live，主要介绍了受众定向（用户画像）的分类和方法、具体介绍标签体系建立以及如何进行行为定向。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="怎样用数据洞察你的用户">
+<meta property="og:url" content="http://wulc.github.io/2017/06/10/怎样用数据洞察你的用户/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="本文内容主要来源于该知乎 live，主要介绍了受众定向（用户画像）的分类和方法、具体介绍标签体系建立以及如何进行行为定向。">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/z0oylzjtxdhm3n1fs3d7u24l/image_1big2mr861guqdgv1s9j1qpqttk9.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/t8lhsklvxd77ztlsv1iobxki/image_1big3052b1vspafe19832q11iajm.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/pluig4jvo0vowleb6m343h35/image_1big3f0l5ki915va17ss1ba0oum13.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/awcabennnlq8grqh4t1gmzlf/image_1bigfp0riv981j2p138p1tb31ru89.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/iicshg7rcn8xej1xp9afru4p/image_1biguif851ctjdsm5v41aq21rqr9.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/w4iua7tjfa50bu4921s4gqt9/image_1biguqfu0mjn1rboe71e031snfm.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/qi43yey5svt382ofgnjkxmf7/image_1bigvjnbjb1e1lhs1i2s1g761vfi13.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/4gplq5s2zfyyu8g0eyrvh79v/image_1bii2e03km0h1muifn416ji16i89.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/w8byig4glhgqpk0cqbonoi6l/image_1bii2qh9547r13917u91pg1136hm.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/8aazmwqly4xy9tnyk7ej17dn/image_1bii37vdnie4rjrtci1lce1ve913.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/83sdz2y3tnog1kh4zt6nxthg/image_1bii44dj0nksliuc6pqo0jeu1g.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/x82zhyevzcw8ttdihjorsd3q/image_1bii4v7su11nof3v1ndj12vsiq634.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/73j6ppdec9oongqzilhoc7ii/image_1bii4aqnn1evf16gbpjdgd5rok1t.png">
+<meta property="og:updated_time" content="2019-06-01T09:14:44.163Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="怎样用数据洞察你的用户">
+<meta name="twitter:description" content="本文内容主要来源于该知乎 live，主要介绍了受众定向（用户画像）的分类和方法、具体介绍标签体系建立以及如何进行行为定向。">
+<meta name="twitter:image" content="http://static.zybuluo.com/WuLiangchao/z0oylzjtxdhm3n1fs3d7u24l/image_1big2mr861guqdgv1s9j1qpqttk9.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"always"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://wulc.github.io/2017/06/10/怎样用数据洞察你的用户/"/>
+
+
+
+
+
+  <title> 怎样用数据洞察你的用户 | 吴良超的学习笔记 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1258114456&web_id=1258114456" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">吴良超的学习笔记</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <h1 class="site-subtitle" itemprop="description"></h1>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            站内搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://wulc.github.io/2017/06/10/怎样用数据洞察你的用户/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="良超">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="吴良超的学习笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                怎样用数据洞察你的用户
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-10T21:37:39+08:00">
+                2017-06-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-tags"></i>
+              </span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/tags/计算广告/" itemprop="url" rel="index">
+                    <span itemprop="name">计算广告</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文内容主要来源于<a href="https://www.zhihu.com/lives/778739652977770496" target="_blank" rel="external">该知乎 live</a>，主要介绍了受众定向（用户画像）的分类和方法、具体介绍标签体系建立以及如何进行行为定向。</p>
+<a id="more"></a>
+<h2 id="受众定向与用户画像"><a href="#受众定向与用户画像" class="headerlink" title="受众定向与用户画像"></a>受众定向与用户画像</h2><p>原始行为数据无序杂乱，不能直接应用于业务，因此要将用户的原始行为转化为对用户的描述，也就是受众定向（用户画像），但是这里需要注意的是<strong>不能想当然地描述用户，而是要根据需求方（如广告主）的需求来为用户打上相应标签</strong></p>
+<p>受众定向与常听到的用户画像的差别不大，均是研究如何描述用户，为用户打上标签，两者只是在着重点上有细微区别</p>
+<p>受众定向重点是可优化，也就是跟侧重于效果，而用户画像则更侧重于可解释性，然而在实际中对用户的描述往往是两者混合的，如对广告主需要可解释性强的标签，而对于模型则更侧重那些有效的标签（可解释性不一定好）</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/z0oylzjtxdhm3n1fs3d7u24l/image_1big2mr861guqdgv1s9j1qpqttk9.png" alt="受众定向与用户画像"></p>
+<h2 id="受众定向的分类"><a href="#受众定向的分类" class="headerlink" title="受众定向的分类"></a>受众定向的分类</h2><p>下面以计算广告为例阐述可受众定向需要在哪些维度上做打标签</p>
+<p>1）用户维度 $t(u)$, 描述用户的固有属性<br>2）上下文维度 $t(c)$，描述用户浏览的内容<br>3）用户-广告维度 $t(a,u)$，描述用户在某个广告主下的特有属性</p>
+<p>实际中需要为广告打上标签 $t(a)$，用于描述广告的固有属性，从而与用户匹配</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/t8lhsklvxd77ztlsv1iobxki/image_1big3052b1vspafe19832q11iajm.png" alt="受众定向方法分类"></p>
+<p>如上图所示，受众定向建立的标签一般有两种作用，而第一种作用的标签需要可解释性，第二种作用的标签则更强调其效果</p>
+<h2 id="受众定向的方法"><a href="#受众定向的方法" class="headerlink" title="受众定向的方法"></a>受众定向的方法</h2><p>同样以计算广告为例，下图展示了受众定向常用的方法，左边表示广告的生命周期，右边表示各个阶段的受众定向的方法和效果，其中越往左效果越好，具体方式的含义可参考<a href="http://wulc.me/2017/04/28/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A%E7%AC%94%E8%AE%B0%283%29--%E5%8F%97%E4%BC%97%E5%AE%9A%E5%90%91/" target="_blank" rel="external">这里</a></p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/pluig4jvo0vowleb6m343h35/image_1big3f0l5ki915va17ss1ba0oum13.png" alt="常见受众定向的方式"></p>
+<p>重定向只需要用到第一方数据<br>look-alike 需要用到第一方数据和第二方数据s<br>hyper-local 表示根据更精细的位置做定向(移动端)</p>
+<h3 id="标签体系的建立"><a href="#标签体系的建立" class="headerlink" title="标签体系的建立"></a>标签体系的建立</h3><p>上面讲述了该在那些方面建立标签体系以及建立标签体系的方法，下面要讲一个重点的内容，就是该建立怎样的标签体系</p>
+<p>如下图所示，标签体系可以分为两大类，其中一类是结构化标签，可以认为这一类的标签是一个大的树状结构；另外一类则是非结构化的，也就是根据效果和需求驱动的标签体系，关键词就是一个典型的非结构化标签体系。</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/awcabennnlq8grqh4t1gmzlf/image_1bigfp0riv981j2p138p1tb31ru89.png" alt="受众定向标签体系"></p>
+<p>这里需要注意的是，由于结构化标签结构上的完备性，往往会被大部分人采用，但是这种标签体系的效果未必就好，原因是这些<strong>结构化标签将重点放在了标签体系的完备性而往往忽略了广告主的具体需求</strong>。</p>
+<p>结构化的标签体系的一个典型例子是雅虎的 GD 系统的标签体系，这个标签体系根据主观的判断来分类标签，并没有结合广告主的具体需求，在实际的效果并不好</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/iicshg7rcn8xej1xp9afru4p/image_1biguif851ctjdsm5v41aq21rqr9.png" alt="结构化标签"></p>
+<p>下面的标签体系中虽然形式上类似于结构化标签，但是是根据各个广告主的需求来定制各个标签的，因此是非结构化的，也更实用</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/w4iua7tjfa50bu4921s4gqt9/image_1biguqfu0mjn1rboe71e031snfm.png" alt="非结构化标签"></p>
+<p><strong>非结构化标签体系的建立过程</strong>如下<br>1）确定行业<br>2）了解行业里面用户的决策流程<br>3）根据决策流程定制各个流程中的标签</p>
+<p>如对于汽车行业，一般用户购买时会先考虑预算(价格区间标签)，然后考虑车的用途（车型、大小等标签），最后考虑品牌（品牌标签）。</p>
+<p>实际中，具体的标签可通过不同的方法获取，下文要讨论的行为定向中也提供了一种获取具体标签的方法。</p>
+<h3 id="行为定向"><a href="#行为定向" class="headerlink" title="行为定向"></a>行为定向</h3><p>下面讲述受众定向中的一个重点：行为定向，就<strong>是根据用户的历史行为给用户打标签。</strong></p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/qi43yey5svt382ofgnjkxmf7/image_1bigvjnbjb1e1lhs1i2s1g761vfi13.png" alt="行为定向的定义"></p>
+<p>行为定向首先要<strong>将用户的各种行为转化为标签，同时对各种行为进行加权</strong>，如下图所示就是通过三种行为（广告点击，搜索，浏览）为用户打标签，其过程都是根据用户操作对象的具体内容提取出标签（关键词，主题等）并进行叠加。</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/4gplq5s2zfyyu8g0eyrvh79v/image_1bii2e03km0h1muifn416ji16i89.png" alt="行为定向的特征选择过程"></p>
+<p>上面采用的方法并不复杂，其中一个很重要的原因就是行为定向的实时性要求，因为用户的行为的有效期一般不长，即从关注到最终的购买所持续的时间往往并不长，其次是因为要处理的用户的量级非常大。</p>
+<p>此外，由于各种行为所反映的用户的意图不一，因此需要对不同行为进行加权，而且对于不同的标签，加权的方式还不完全一样，如下是对不同标签的不同行为加权的一种方法</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/w8byig4glhgqpk0cqbonoi6l/image_1bii2qh9547r13917u91pg1136hm.png" alt="加权方式"></p>
+<p>上面建模采用泊松分布来处理，因为<strong>泊松分布就是描述某段时间内，具体数量的事件发生的概率，如上式表示在时间 $t$ 内，用户点击广告次数为 $h$ 的概率</strong>。其中 $\lambda$ 表示用户点击广告的频繁程度，也叫频繁性参数，该值越大，表示点击越频繁。</p>
+<p><strong>$\lambda$ 可描述为各种原始行为的加权和</strong>, 其中 $w_{tn}$ 为权重系数, $x_{tn}$ 为原始行为（N种，如浏览、搜索等）的统计量，求解时通过 $h$ 的历史数量进行极大似然估计即可求出权重系数 $w_{tn}$ ，然后直接在线上使用权重系数。</p>
+<p>此外，上面式子中 $t$ 表示对不同的标签建立不同的权重体系。</p>
+<p>上图中将各类行为变为具体的标签方法有以下几种，主要思路是找到用户的行为对应的内容（一般是具体文本），然后借助 NLP 技术将内容转为标签</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/8aazmwqly4xy9tnyk7ej17dn/image_1bii37vdnie4rjrtci1lce1ve913.png" alt="行为变为标签的方法"></p>
+<p>主要方法可以分为两种<br>1）针对浏览行为、点击行为，相应的都会有具体内容，如浏览的页面的内容，点击的广告的具体内容，通过 NLP 技术对内容提取关键词或主题分布，作为标签<br>2）针对搜索行为，可分为通用搜索和垂直搜索，要解决的问题都是如何<strong>将搜索关键词变为标签</strong>。对于通用搜索，可以利用已有搜索引擎（百度，谷歌等）模拟用户搜索行为，从得到的搜索结果作为内容，从中提取标签方法可以采用与第一种相同的 NLP 技术；对于垂直搜索，可以通过淘宝、携程、汽车之家等垂直搜索引擎，直接从关键词返回的结果中提取标签，因为像这种垂直搜索引擎一般都会自定义好一套标签了，因此这里是采用了垂直网站已经分好的类。</p>
+<p>实际工程中，往往会从不同渠道获取用户不同的行为数据，将各种方式获取的日志整理在一起，称为 Session log。Session log 中一行表示一个用户的数据，这样通过 MapReduce 进行计算时，通过 map 过程即可完成某个用户的 targeting 过程，也就是下图中的局部计算。</p>
+<p>除此之外，行为定向中往往要用到用户过去一段时间的数据（7的整数倍，避免周六日带来的偏差），处理的数据是一个时间序列数据，处理的方法有以下两种：滑动窗口和时间衰减。</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/83sdz2y3tnog1kh4zt6nxthg/image_1bii44dj0nksliuc6pqo0jeu1g.png" alt="处理时间序列的行为数据"></p>
+<p>实际中一般采用时间衰减方式，因为时间衰减的方式计算的效率较高</p>
+<h3 id="场景定向"><a href="#场景定向" class="headerlink" title="场景定向"></a>场景定向</h3><p><strong>场景定向指的是判断出用户当前所处的场合和状态</strong>（地铁上、开会中、健身房等），针对的是移动设备。利用移动设备的传感器等搜集的信息，可以判断用户当前所处场景。</p>
+<p>以早餐推送为例，根据用户当前的速度可以判断出用户是否在坐地铁，根据时间判断用户是要去上班，根据用户的位置可以为用户推荐附近的早餐店，实际上这是一个真实的例子，在东京的一次肯德基推广活动中，通过移动设备行为数据的分析，活动方准确找到了那些从地铁出来准备吃早餐的人群，实时给他们送出了早餐优惠券。</p>
+<p>这里需要注意的是场景定向不是上下文定向，上下文定向针对的是媒体内容，而场景针对的是用户。</p>
+<h3 id="人口属性定向"><a href="#人口属性定向" class="headerlink" title="人口属性定向"></a>人口属性定向</h3><p><strong>人口属性定向中主要是要预测性别和年龄阶段</strong>，实际上就是分类问题</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/x82zhyevzcw8ttdihjorsd3q/image_1bii4v7su11nof3v1ndj12vsiq634.png" alt="人口属性定向"></p>
+<h2 id="受众定向的评判标准"><a href="#受众定向的评判标准" class="headerlink" title="受众定向的评判标准"></a>受众定向的评判标准</h2><p>上述的受众定向的过程其实就是依据某个用户的各种历史行为，为该用户在所有的标签上打出一个分数，然后线上设定分数阈值，大于这个阈值则判断用户是这个标签的人群。因此一般来说阈值越大，标签人群越少，但是结果也会越可信。</p>
+<p>下图展示了该如何评测受众定向的有效性，横轴表示被打上标签的人群的比例，纵轴表示被打上标签的人群对广告的点击率，一般来说，某个标签圈定的人数越少，效果越好，也就是点击率越高，违反了这一变化规律则说明受众定向不起作用。</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/73j6ppdec9oongqzilhoc7ii/image_1bii4aqnn1evf16gbpjdgd5rok1t.png" alt="受众定向评测"></p>
+<p>综上，本文主要讲了受众定向中的行为定向</p>
+<ol>
+<li>确定具体行业</li>
+<li>研究行业用户决策过程，制定用户标签体系</li>
+<li>制定标签体系不要刻意追求规整、结构化的标签体系</li>
+<li>把用户的原始行为映射到标签体系中，并求出各种行为类型的权重</li>
+<li>根据 4 可为用户在各个标签上打出一个分数，为标签设定阈值，则通过比较分数和阈值可以判断用户是否属于该标签人群</li>
+<li>通过 Reach/CTR 曲线评测定向是否有效</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/计算广告/" rel="tag">计算广告</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/05/如何用数据来挣钱/" rel="next" title="如何用数据来挣钱">
+                <i class="fa fa-chevron-left"></i> 如何用数据来挣钱
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/16/有价值的数据应该如何交易/" rel="prev" title="有价值的数据应该如何交易">
+                有价值的数据应该如何交易 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://wulc.me/files/profile.jpg"
+               alt="良超" />
+          <p class="site-author-name" itemprop="name">良超</p>
+          <p class="site-description motion-element" itemprop="description">算法工程师首先得是个工程师</p>
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">208</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">39</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/WuLC" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github-alt"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.linkedin.com/in/wuliangchao/" target="_blank" title="LinkedIn">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  LinkedIn
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#受众定向与用户画像"><span class="nav-number">1.</span> <span class="nav-text">受众定向与用户画像</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#受众定向的分类"><span class="nav-number">2.</span> <span class="nav-text">受众定向的分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#受众定向的方法"><span class="nav-number">3.</span> <span class="nav-text">受众定向的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#标签体系的建立"><span class="nav-number">3.1.</span> <span class="nav-text">标签体系的建立</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#行为定向"><span class="nav-number">3.2.</span> <span class="nav-text">行为定向</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#场景定向"><span class="nav-number">3.3.</span> <span class="nav-text">场景定向</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#人口属性定向"><span class="nav-number">3.4.</span> <span class="nav-text">人口属性定向</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#受众定向的评判标准"><span class="nav-number">4.</span> <span class="nav-text">受众定向的评判标准</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <center>
+<div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2019</span>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
+  </br>
+  <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
+</div>
+</center>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>

@@ -1,0 +1,913 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="数学," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="本文主要讲述三种离散型随机变量的分布(伯努利分布,二项分布,泊松分布)和三种连续型随机变量的分布(均匀分布,指数分布,正态分布)。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="概率论与数理统计知识整理(1)--一维随机变量的分布类型">
+<meta property="og:url" content="http://wulc.github.io/2016/10/03/概率论与数理统计知识整理(1)--一维随机变量的分布类型/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="本文主要讲述三种离散型随机变量的分布(伯努利分布,二项分布,泊松分布)和三种连续型随机变量的分布(均匀分布,指数分布,正态分布)。">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/2wlfddgx0574lr4qp9t6g82r/image_1aubvjc3aa7i1ogehtl12vn1ger13.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/f4taus6crphf97n1yh5ta80i/image_1aubr4om61a78q7m1kkp1doba8o9.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/1al2nt9ak1odj9mq0dz0bmrk/image_1aubr9bv4jl71ou9cjfh2s1mulm.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/w8931urjlq8a5jyh7iikg602/image_1auadnrfm1d6a1s11pfa24rtoh76.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/0r98hy1rhla96vlwfoc1iuf6/image_1auaeaup2fe91u3t15l1i1214il8q.png">
+<meta property="og:updated_time" content="2019-06-01T09:14:44.179Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="概率论与数理统计知识整理(1)--一维随机变量的分布类型">
+<meta name="twitter:description" content="本文主要讲述三种离散型随机变量的分布(伯努利分布,二项分布,泊松分布)和三种连续型随机变量的分布(均匀分布,指数分布,正态分布)。">
+<meta name="twitter:image" content="http://static.zybuluo.com/WuLiangchao/2wlfddgx0574lr4qp9t6g82r/image_1aubvjc3aa7i1ogehtl12vn1ger13.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"always"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://wulc.github.io/2016/10/03/概率论与数理统计知识整理(1)--一维随机变量的分布类型/"/>
+
+
+
+
+
+  <title> 概率论与数理统计知识整理(1)--一维随机变量的分布类型 | 吴良超的学习笔记 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1258114456&web_id=1258114456" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">吴良超的学习笔记</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <h1 class="site-subtitle" itemprop="description"></h1>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            站内搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://wulc.github.io/2016/10/03/概率论与数理统计知识整理(1)--一维随机变量的分布类型/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="良超">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="吴良超的学习笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                概率论与数理统计知识整理(1)--一维随机变量的分布类型
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-10-03T20:08:55+08:00">
+                2016-10-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-tags"></i>
+              </span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/tags/数学/" itemprop="url" rel="index">
+                    <span itemprop="name">数学</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文主要讲述三种离散型随机变量的分布(伯努利分布,二项分布,泊松分布)和三种连续型随机变量的分布(均匀分布,指数分布,正态分布)。</p>
+<a id="more"></a>
+<h2 id="离散型随机变量的分布"><a href="#离散型随机变量的分布" class="headerlink" title="离散型随机变量的分布"></a>离散型随机变量的分布</h2><h3 id="伯努利分布"><a href="#伯努利分布" class="headerlink" title="伯努利分布"></a>伯努利分布</h3><p>伯努利分布又名<strong>两点分布</strong>或者<strong>0-1分布</strong>，只能取两种结果，一般记为0或1。设取1的概率为 $p$，其分布规律为</p>
+<p>$P(X=k) = p^k(1-p)^{1-k}, k = 0,1 (1&lt;p&lt;1)$</p>
+<p>如果试验E只有两种结果，则称试验E为<strong>伯努利试验</strong>。如果独立的进行 $n$ 次试验E，则称为<strong>n重伯努利试验</strong>。</p>
+<h3 id="二项分布"><a href="#二项分布" class="headerlink" title="二项分布"></a>二项分布</h3><p>以 $X$ 表示 $n$ 重伯努利试验中事件 A 出现的次数，则 $X$ 为一个随机变量，令 $p$ 为事件 A 出现的概率，则事件 $X$ 服从以下分布：</p>
+<p>$P(X=k) = C_n^k p^k q^{n-k}, k = 0,1,2,…,n$</p>
+<p>其中 $q = 1-p$,则我们称 X 服从参数为 n,p 的二项分布，记为 $X$~$b(n,p)$。其概率和根据以下公式为1</p>
+<p>$\sum_{k=1}^nP(X=k) = \sum_{k=1}^nC_n^k p^k q^{n-k} = (p+q)^n = 1$</p>
+<h3 id="泊松分布"><a href="#泊松分布" class="headerlink" title="泊松分布"></a>泊松分布</h3><p><strong>随机变量 $X$ 的所有可能取值为 0,1,2,3….,且各个取值的概率为</strong></p>
+<p>$P(X=k) = \frac {\lambda^ke^{-\lambda}}{k!}, k=0,1,2….$</p>
+<p>则我们称 $X$ 服从参数为 $\lambda$ 的泊松分布，记为 $X$~$\pi(\lambda)$ 其中 $\lambda$ 为 $X$ 的期望，即 $E(X)$</p>
+<p>其分布规律通过图像直观表示为</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/2wlfddgx0574lr4qp9t6g82r/image_1aubvjc3aa7i1ogehtl12vn1ger13.png" alt=""></p>
+<p>泊松分布适合于描述<strong>单位时间内随机事件发生的次数的概率分布</strong>。如某一服务设施在一定时间内受到的服务请求的次数，电话交换机接到呼叫的次数、汽车站台的候客人数、机器出现的故障数、自然灾害发生的次数、DNA序列的变异数、放射性原子核的衰变数等等。从上面的图像也可以看出，对于给定泊松分布的强度 $\lambda$ ,其在单位时间内发生的次数的概率有一个峰值，也就是说发生的次数很多或很少的可能性都不大，且当强度越大，其最大可能发生的次数的值也越大。</p>
+<p>下面介绍<strong>用泊松分布来逼近二项分布的定理，也就是泊松定理。</strong></p>
+<blockquote>
+<p>泊松定理：设 $\lambda &gt; 0$是一个常数，$n$ 是任意正整数，设 $np = \lambda$,则对于任一非负整数 $k$，有<br>$$\lim_{n \to \infty} C_n^kp^k(1-p)^{n-k} = \frac{\lambda^ke^{-\lambda}}{k!}$$</p>
+</blockquote>
+<p>即<strong>当 $n$ 很大且 $p$ 很小的时候，我们可以使用上面公式等号右边部分来逼近左边部分，从而简化计算。</strong></p>
+<h2 id="连续型随机变量的分布"><a href="#连续型随机变量的分布" class="headerlink" title="连续型随机变量的分布"></a>连续型随机变量的分布</h2><h3 id="分布函数和概率密度函数"><a href="#分布函数和概率密度函数" class="headerlink" title="分布函数和概率密度函数"></a>分布函数和概率密度函数</h3><p>首先需要清楚，<strong>分布函数是针对随机变量的，离散或连续都可以；而概率密度函数是针对连续随机变量的</strong>。下面是这两者的定义以及联系</p>
+<p><strong>分布函数的定义</strong>如下：</p>
+<p> $X$ 是一个随机变量，$x$ 是任意实数，则 $X$ 的分布函数定义为</p>
+<p>$F(x) = P(X \le x), (-\infty&lt;x&lt;\infty)$ </p>
+<p> 则对于任意实数 $x_1,x_2(x_1 &lt; x_2)$,有</p>
+<p> $P(x_1 &lt; X \le x_2) = p(X \le x_2) - p(X \le x_1) = F(x_2) - F(x_1)$</p>
+<p>即如果我们<strong>知道了 $X$ 的分布函数，则可以知道 $X$ 落在任一区间上的概率</strong>，也就是说通过分布函数可以完整描述随机变量的统计规律特性。</p>
+<p><strong>概率密度函数定义</strong>如下：</p>
+<p>对于分布函数 $F(X)$，假如存在 $f(x)$ 使得以下公式成立：</p>
+<p>$F(x) = \int_{-\infty}^x f(t) dt$</p>
+<p>则 X 为连续型随机变量，$f(x)$为随机变量的概率密度函数。$f(x)$ 具有以下性质</p>
+<ol>
+<li><p>$f(x) \ge 0$</p>
+</li>
+<li><p>$\int_{-\infty}^{\infty} f(x) dx = 1$</p>
+</li>
+</ol>
+<p>3.对于任意实数 $x_1,x_2(x_1 &lt; x_2)$，有$$P(x_1&lt; X \le x_2) = F(x_2) - F(x_1) = \int_{x_1}^{x_2} f(x) dx$$</p>
+<p>且当 $f(x)$ 在点 $x$ 连续的时候，有</p>
+<p>$F’(x) = f(x)$</p>
+<p>通过上面这个性质可以推导出下面的约等式<br>$P(x &lt;X \le x+\Delta x) \approx f(x)\Delta x$</p>
+<p>也就是说<strong>概率密度函数在某点的值的大小一定程度上反映了随机变量落在该点附近的概率的大小</strong>。</p>
+<p>上面讲了<strong>随机变量的分布函数</strong>，下面讲一下<strong>随机变量的函数的分布函数</strong>，例如 $X$ 为一个随机变量，则 $Y = (X-1)^2$ 是随机变量 $X$ 的函数，且 $Y$ 也是一个随机变量， 因此 $Y$ 也有自己的分布律。下面是两个例子，其中一个是离散型随机变量，一个是连续型随机变量。</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/f4taus6crphf97n1yh5ta80i/image_1aubr4om61a78q7m1kkp1doba8o9.png" alt=""></p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/1al2nt9ak1odj9mq0dz0bmrk/image_1aubr9bv4jl71ou9cjfh2s1mulm.png" alt=""></p>
+<p>离散型随机变量的函数的分布律容易求，对于连续型随机变量的函数的分布律的求法一般是<strong>先按定义写出 $Y$ 的分布函数 $F(Y&lt;=y)$, 然后替换成 $F(g(X)&lt;=Y)$, 再转换成 $X$ 的分布函数和概率密度函数。</strong></p>
+<h3 id="均匀分布"><a href="#均匀分布" class="headerlink" title="均匀分布"></a>均匀分布</h3><p>若随机变量 $X$ 的概率密度函数为</p>
+<p>$$f(x) = \begin{cases}  \frac{1}{b-a} &amp;{a&lt;x&lt;b} \\ 0&amp;{其他}\end{cases}$$</p>
+<p>则称X在区间 $(a,b)$ 上服从均匀分布，记为 $X$~$U(a,b)$</p>
+<h3 id="指数分布"><a href="#指数分布" class="headerlink" title="指数分布"></a>指数分布</h3><p>若随机变量 $X$ 的概率密度函数为</p>
+<p>$$f(x) = \begin{cases}  \frac{1}{\theta}e^{-x / \theta} &amp;{x&gt;0} \\ 0&amp;{其他}\end{cases}$$</p>
+<p>则称 $X$ 服从参数为 $\theta$ 的指数分布。</p>
+<p>其图像如下所示:</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/w8931urjlq8a5jyh7iikg602/image_1auadnrfm1d6a1s11pfa24rtoh76.png" alt=""></p>
+<p>其分布函数为</p>
+<p>$$F(x) = \begin{cases}  1-e^{-x / \theta} &amp;{x&gt;0} \\ 0&amp;{其他}\end{cases}$$</p>
+<p><strong>如果说上面的泊松分布是描述某个时间段内事件发生次数的概率分布，那么指数分布描述的就是事件发生的时间间隔的概率分布</strong>。指数分布是连续的分布，反映在其实际意义上就是时间是连续的。更详细的描述可查看<a href="http://www.ruanyifeng.com/blog/2015/06/poisson-distribution.html" target="_blank" rel="external">这里</a></p>
+<p>关于指数分布的一个有趣的性质为：</p>
+<p>$P(X&gt;s+t | X&gt;s) = P(X&gt;t)$</p>
+<p>该性质也称为<strong>无记忆性</strong>，假设 $X$ 是某一原件的寿命，上面的式子表示的就是该元件在使用了 s 个小时后，至少还能使用 t 个小时的条件概率。而这一条件概率又等于该元件从刚开始使用的算起至少能使用 t 个小时的概率。也就是说原件对使用过的s个小时无记忆性，这个特性与随机过程中的平稳过程非常相似，而这个特性也是指数分布有广泛应用的重要原因。</p>
+<h3 id="正态分布"><a href="#正态分布" class="headerlink" title="正态分布"></a>正态分布</h3><p>正态分布也叫高斯分布，其概率密度函数为</p>
+<p>$$f(x) = \frac{1}{\sqrt{2\pi}\sigma}e^{-\frac{(x-\mu)^2}{2\sigma^2}}$$</p>
+<p>则称 $X$ 服从参数为 $\mu, \sigma$ 的正态分布，记为$X$~$N(\mu,\sigma^2)$，而且 $\mu, \sigma$ 分别是正态分布的期望和标准差。其图像如下所示</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/0r98hy1rhla96vlwfoc1iuf6/image_1auaeaup2fe91u3t15l1i1214il8q.png" alt=""></p>
+<p>从图像可知，当$ X = \mu $时，取值最大，也就是说随机变量落在这个值附近的概率最大，而这个值也就是正态分布的期望。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/数学/" rel="tag">数学</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/09/25/LeetCode 解题报告(402,316,321)--删除字符串k个字符使剩余字符串取最值/" rel="next" title="LeetCode 解题报告(402,316,321)--删除字符串k个字符使剩余字符串取最值">
+                <i class="fa fa-chevron-left"></i> LeetCode 解题报告(402,316,321)--删除字符串k个字符使剩余字符串取最值
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/10/08/概率论与数理统计知识整理(2)--二维随机变量的分布/" rel="prev" title="概率论与数理统计知识整理(2)--二维随机变量的分布">
+                概率论与数理统计知识整理(2)--二维随机变量的分布 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://wulc.me/files/profile.jpg"
+               alt="良超" />
+          <p class="site-author-name" itemprop="name">良超</p>
+          <p class="site-description motion-element" itemprop="description">算法工程师首先得是个工程师</p>
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">208</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">39</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/WuLC" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github-alt"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.linkedin.com/in/wuliangchao/" target="_blank" title="LinkedIn">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  LinkedIn
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#离散型随机变量的分布"><span class="nav-number">1.</span> <span class="nav-text">离散型随机变量的分布</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#伯努利分布"><span class="nav-number">1.1.</span> <span class="nav-text">伯努利分布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二项分布"><span class="nav-number">1.2.</span> <span class="nav-text">二项分布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#泊松分布"><span class="nav-number">1.3.</span> <span class="nav-text">泊松分布</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#连续型随机变量的分布"><span class="nav-number">2.</span> <span class="nav-text">连续型随机变量的分布</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#分布函数和概率密度函数"><span class="nav-number">2.1.</span> <span class="nav-text">分布函数和概率密度函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#均匀分布"><span class="nav-number">2.2.</span> <span class="nav-text">均匀分布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#指数分布"><span class="nav-number">2.3.</span> <span class="nav-text">指数分布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#正态分布"><span class="nav-number">2.4.</span> <span class="nav-text">正态分布</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <center>
+<div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2019</span>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
+  </br>
+  <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
+</div>
+</center>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>

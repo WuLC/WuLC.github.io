@@ -1,0 +1,929 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="机器学习,强化学习," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="本文主要介绍强化学习的一些基本概念：包括MDP、Bellman方程等, 并且讲述了如何从 MDP 过渡到 Reinforcement Learning。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="强化学习笔记(1)-概述">
+<meta property="og:url" content="http://wulc.github.io/2018/05/05/强化学习笔记(1)-概述/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="本文主要介绍强化学习的一些基本概念：包括MDP、Bellman方程等, 并且讲述了如何从 MDP 过渡到 Reinforcement Learning。">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/xbx9hitmw30vw2qllw840xlx/image_1ccqng08l1lvo11kge3157hfgj9.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/idjm1fk95hgmnm0vphvyw3gu/image_1cctfljjh1bv918u91j9g1fgs1ln89.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/nkpj2q4zndnw1i81pp2ozf17/image_1cctgird1rv11gljv1f72esim.png">
+<meta property="og:updated_time" content="2019-06-01T09:14:44.160Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="强化学习笔记(1)-概述">
+<meta name="twitter:description" content="本文主要介绍强化学习的一些基本概念：包括MDP、Bellman方程等, 并且讲述了如何从 MDP 过渡到 Reinforcement Learning。">
+<meta name="twitter:image" content="http://static.zybuluo.com/WuLiangchao/xbx9hitmw30vw2qllw840xlx/image_1ccqng08l1lvo11kge3157hfgj9.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"always"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://wulc.github.io/2018/05/05/强化学习笔记(1)-概述/"/>
+
+
+
+
+
+  <title> 强化学习笔记(1)-概述 | 吴良超的学习笔记 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1258114456&web_id=1258114456" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">吴良超的学习笔记</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <h1 class="site-subtitle" itemprop="description"></h1>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            站内搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://wulc.github.io/2018/05/05/强化学习笔记(1)-概述/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="良超">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="吴良超的学习笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                强化学习笔记(1)-概述
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-05-05T22:21:25+08:00">
+                2018-05-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-tags"></i>
+              </span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/tags/机器学习/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/tags/强化学习/" itemprop="url" rel="index">
+                    <span itemprop="name">强化学习</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文主要介绍强化学习的一些基本概念：包括MDP、Bellman方程等, 并且讲述了如何从 MDP 过渡到 Reinforcement Learning。</p>
+<a id="more"></a>
+<h2 id="强化学习的任务"><a href="#强化学习的任务" class="headerlink" title="强化学习的任务"></a>强化学习的任务</h2><p>这里还是放上 <a href="http://www0.cs.ucl.ac.uk/staff/D.Silver/web/Teaching.html" target="_blank" rel="external">David Silver的课程</a> 的图，可以很清楚的看到整个交互过程。这就是人与环境交互的一种模型化表示，在每个时间点，大脑 agent 会从可以选择的动作集合A中选择一个动作 $a_t$ 执行。环境则根据 agent 的动作给 agent 反馈一个 reward $r_t$，同时 agent 进入一个新的状态。</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/xbx9hitmw30vw2qllw840xlx/image_1ccqng08l1lvo11kge3157hfgj9.png" alt="RL"></p>
+<p>知道了整个过程，任务的目标就出来了，那就是要能获取尽可能多的Reward。Reward越多，就表示执行得越好。每个时间片，agent 根据当前的状态来确定下一步的动作。也就是说我们需要一个state找出一个action，使得 reward 最大，从 state 到 action 的过程就称之为一个策略Policy，一般用 $\pi$ 表示:</p>
+<p><strong>强化学习的任务就是找到一个最优的策略Policy从而使Reward最多。</strong></p>
+<p>我们一开始并不知道最优的策略是什么，因此往往从随机的策略开始，使用随机的策略进行试验，就可以得到一系列的状态,动作和反馈：</p>
+<p>$(s_1,a_1,r_1,s_2,a_2,r_2,…s_t,a_t,r_t)$</p>
+<p>这就是一系列的样本Sample。<strong>强化学习的算法就是需要根据这些样本来改进Policy，从而使得得到的样本中的Reward更好</strong>。由于这种让Reward越来越好的特性，所以这种算法就叫做强化学习Reinforcement Learning。</p>
+<h2 id="MDP（Markov-Decision-Process）"><a href="#MDP（Markov-Decision-Process）" class="headerlink" title="MDP（Markov Decision Process）"></a>MDP（Markov Decision Process）</h2><p>强化学习的问题都可以模型化为<a href="https://en.wikipedia.org/wiki/Markov_decision_process" target="_blank" rel="external">MDP</a>(马尔可夫决策过程)的问题，MDP 实际上是对环境的建模；MDP 与常见的 Markov chains 的区别是加入了action 和 rewards 的概念。</p>
+<p>因此，一个基本的 MDP 可以用一个五元组 $(S,A,P,R, \gamma)$ 表示，其中 </p>
+<ol>
+<li>$S$ 是一个有限状态集 </li>
+<li>$A$ 是一个有限动作集 </li>
+<li>$P$ 是一个状态转移概率矩阵，$P_a(s, s′)=P(s_{t+1}=s′|s_t=s, a_t=a)$ 表示在状态 $s$ 下执行动作 $a$ 后转移到状态 $s′$ 的概率</li>
+<li>$R$ 是一个奖励函数，$R_a(s, s′)$ 表示在状态 $s$ 下执行动作 $a$ 后转移到状态 $s′$ 所得到的即时回报(reward)</li>
+<li>$\gamma$ 是一个折扣因子,一般取值在 [0,1]; 用来区分当前回报和未来回报的重要性，一般会加在未来的回报前，减小未来回报的权重。</li>
+</ol>
+<p>因此，<strong>MDP 的核心问题就是找到一个策略 $\pi(s)$ 来决定在状态 $s$ 下选择哪个动作</strong>，这种情况下MDP就变成了一个 Markov chain，且此时的目标跟我们前面提到的强化学习的目标是一致的。</p>
+<h2 id="回报与价值函数"><a href="#回报与价值函数" class="headerlink" title="回报与价值函数"></a>回报与价值函数</h2><p>状态的好坏等价于对未来回报的期望。因此，引入<strong>回报(Return)</strong> 来表示某个时刻t的状态将具备的回报：</p>
+<p>$G_t = R_{t+1} + \gamma R_{t+2} + … = \sum_{k=0}^\infty\gamma^kR_{t+k+1}$</p>
+<p>上面 $R$ 是 Reward 反馈，$\gamma$ 是 discount factor（折扣因子）,跟前面 MDP 中的符号的含义一致。</p>
+<p>从上面的式子可以， <strong>除非整个过程结束，否则我们无法获取所有的 reward 来计算出每个状态的 Return</strong>，因此，再引入一个概念:<strong>价值函数(value function)</strong>,记为 $V(s)$，通过 $V(s)$ 来表示一个状态未来的潜在价值。从定义上看，value function 就是<strong>回报的期望</strong>：</p>
+<p>$V(s) = \mathbb E[G_t|S_t = s]$</p>
+<p><strong>引出价值函数，对于获取最优的策略Policy这个目标，我们就会有两种方法</strong>：</p>
+<ol>
+<li><strong>直接优化策略</strong> $\pi(a|s)$ 或者 $a = \pi(s)$ 使得回报更高</li>
+<li>通过<strong>估计 value function 来间接获得优化的策略</strong>。道理很简单，通过价值函数可以知道每一种状态的好坏，这样我们就知道该怎么选择了（如选择动作使得下一状态的潜在价值最大），而这种选择就是我们想要的策略。</li>
+</ol>
+<h2 id="Bellman方程"><a href="#Bellman方程" class="headerlink" title="Bellman方程"></a>Bellman方程</h2><p>采用上面获取最优策略的第 2 种方法时，我们需要估算 Value Function，只要能够计算出价值函数，那么最优决策也就得到了。因此，问题就变成了<strong>如何计算Value Function</strong>？</p>
+<p>根据前面 $G_t$ 和 $V(s)$ 的定义，有</p>
+<p>$$<br>\begin{align}<br>V(s) &amp; = \mathbb E[G_t|S_t = s]\\<br>    &amp; = \mathbb E[R_{t+1}+\gamma R_{t+2} + \gamma ^2R_{t+3} + …|S_t = s]\\<br>    &amp; = \mathbb E[R_{t+1}+\gamma (R_{t+2} + \gamma R_{t+3} + …)|S_t = s]\\<br>    &amp; = \mathbb E[R_{t+1}+\gamma G_{t+1}|S_t = s]\\<br>    &amp; = \mathbb E[R_{t+1}+\gamma v(S_{t+1})|S_t = s]<br>\end{align}<br>$$</p>
+<p>则有</p>
+<p>$$V(s) = \mathbb E[R_{t+1} + \gamma V(S_{t+1})|S_t = s]$$</p>
+<p>上面这个公式就是Bellman方程的基本形态。从公式上看，当前状态的价值和下一步的价值以及当前的反馈Reward有关, 其中透出的含义就是<strong>价值函数的计算可以通过迭代的方式来实现</strong>。</p>
+<h2 id="从-MDP-到-Reinforcement-Learning"><a href="#从-MDP-到-Reinforcement-Learning" class="headerlink" title="从 MDP 到 Reinforcement Learning"></a>从 MDP 到 Reinforcement Learning</h2><p>回到 MDP 问题，如果我们知道了转移概率 $P$ 和奖励函数 $R$，那么便可通过下面的方法求出最优策略 $\pi(s)$, 首先，结合上面提到的价值函数和Bellman方程有</p>
+<p>公式1：</p>
+<p>$$\pi(s):=\arg \max_a\ {\sum_{s’}P_{a}(s,s’)(R_{a}(s,s’)+\gamma V(s’))}$$</p>
+<p>公式2: </p>
+<p>$$ V(s) := \sum_{s’}P_{\pi(s)}(s,s’)(R_{\pi(s)}(s,s’) + \gamma V(s’)) $$</p>
+<p>公式 1 表示在状态 $s$ 下的采取的最优动作，公式 2 表示在状态 $s$ 下的价值，可以看到两者有依存关系</p>
+<p>而在 转移概率 $P$ 和奖励函数 $R$已知的情况下，求解 MDP 问题常见做法有 <strong>Value iteration</strong> 或 <strong>Policy iteration</strong> </p>
+<h3 id="Value-iteration"><a href="#Value-iteration" class="headerlink" title="Value iteration"></a>Value iteration</h3><p>在 Value iteration 中，策略函数 $\pi$ 没有被使用，迭代公式如下：</p>
+<p>$$V_{i+1}(s) := \max_a \sum_{s’} P_a(s,s’)(R_a(s,s’) + \gamma V_i(s’))$$</p>
+<p>下标 $i$ 表示第 $i$ 次迭代，在每轮迭代中需要计算每个状态的价值，并且直到两次迭代结果的差值小于给定的阈值才能认为是收敛。</p>
+<p>计算的出收敛的价值函数后，通过公式1就能够得出策略函数 $\pi$ 了，其迭代过程如下图所示</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/idjm1fk95hgmnm0vphvyw3gu/image_1cctfljjh1bv918u91j9g1fgs1ln89.png" alt="Value Iteration"></p>
+<h3 id="Policy-iteration"><a href="#Policy-iteration" class="headerlink" title="Policy iteration"></a>Policy iteration</h3><p>Policy iteration同时更新价值 $V$ 和策略 $\pi$, 且一般可分成两步：</p>
+<ol>
+<li>Policy Evaluation，策略评估，就是上面公式2的过程。目的是在策略固定的情况下更新Value Function 直到 value 收敛，从另一个角度来讲就是为了更好地<strong>估计基于当前策略的价值</strong></li>
+<li>Policy Improvement，策略改进，就是上面公式1的过程。就是根据更新后的 Value Function 来更新每个状态下的策略直到策略稳定</li>
+</ol>
+<p>这个方法本质上就是使用当前策略($\pi$)产生新的样本，然后使用新的样本更好的估计策略的价值($V(s)$)，然后利用策略的价值更新策略，然后不断反复。理论可以证明最终策略将收敛到最优</p>
+<p>具体的算法流程如下所示</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/nkpj2q4zndnw1i81pp2ozf17/image_1cctgird1rv11gljv1f72esim.png" alt="Policy Iteration"></p>
+<h3 id="区别与局限"><a href="#区别与局限" class="headerlink" title="区别与局限"></a>区别与局限</h3><p>问题来了，上面的 Policy Iteration 和 Value Iteration有什么区别, 为什么一个叫policy iteration，一个叫value iteration？</p>
+<p>原因其实很好理解，policy iteration 最后收敛的 value $V$ 是当前 policy 下的 value 值（也做对policy进行评估），目的是为了后面的policy improvement得到新的policy；所以是在<strong>显式地不停迭代 policy</strong>。</p>
+<p>而value iteration 最后收敛得到的 value 是当前state状态下的最优的value值。当 value 最后收敛，那么最优的policy也就得到的。虽然这个过程中 policy 在也在隐式地更新，但是<strong>一直在显式更新的是 value</strong> 的，所以叫value iteration。</p>
+<p>从上面的分析看，value iteration 较 之policy iteration更直接。不过问题也都是一样，都需要知道转移概率 $P$ 和奖励函数 $R$。</p>
+<p>但是<strong>对于 Reinforcement Learning 这一类问题，转移概率 $P$ 往往是不知道</strong>，知道转移概率 $P$ 也就称为获得了模型 Model，这种通过模型来获取最优动作的方法也就称为 <strong>Model-based</strong> 的方法。但是现实情况下，很多问题是很难得到准确的模型的，因此就有 <strong>Model-free</strong> 的方法来寻找最优的动作，像 Q-learning，Policy Gradient，Actor Critic这一类方法都是 model-free 的。</p>
+<p><strong>前面的方法问题是需要已知转移概率 $P$, 目的是为了遍历当前状态后的所有可能的状态，因此如果采用贪婪的思想，那么就不需要不遍历后面所有的状态，而是直接采取价值最大的状态动作来执行。</strong></p>
+<p>Q-learning 实际上就是采用这种思想的，Q-Learning的基本思想是根据 value iteration 得到的，但要明确一点是 value iteration 每次都对所有的Q值更新一遍，也就是所有的状态和动作。但事实上在实际情况下我们没办法遍历所有的状态，还有所有的动作，因此，我们只能得到有限的系列样本。具体的算法流程会再下一篇文章具体介绍。</p>
+<p>综上，本文主要介绍了强化学习的任务和一些概念，以及从 MDP 如何过渡到 Reinforcement，在后续的文章中会陆续介绍Q-learning 类方法，Policy gradient 类方法以及结合两者的 Actor Critic 方法。</p>
+<hr>
+<p>参考资料</p>
+<ol>
+<li><a href="https://en.wikipedia.org/wiki/Markov_decision_process" target="_blank" rel="external">Markov decision process</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/21378532?refer=intelligentunit" target="_blank" rel="external">DQN 从入门到放弃4 动态规划与Q-Learning</a></li>
+<li><a href="https://morvanzhou.github.io/tutorials/machine-learning/ML-intro/4-02-RL-methods/" target="_blank" rel="external">强化学习方法汇总</a> </li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/机器学习/" rel="tag">机器学习</a>
+          
+            <a href="/tags/强化学习/" rel="tag">强化学习</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/01/梯度裁剪及其作用/" rel="next" title="梯度裁剪及其作用">
+                <i class="fa fa-chevron-left"></i> 梯度裁剪及其作用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/09/强化学习笔记(2)-从 Q-Learning 到 DQN/" rel="prev" title="强化学习笔记(2)-从 Q-Learning 到 DQN">
+                强化学习笔记(2)-从 Q-Learning 到 DQN <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://wulc.me/files/profile.jpg"
+               alt="良超" />
+          <p class="site-author-name" itemprop="name">良超</p>
+          <p class="site-description motion-element" itemprop="description">算法工程师首先得是个工程师</p>
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">208</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">39</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/WuLC" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github-alt"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.linkedin.com/in/wuliangchao/" target="_blank" title="LinkedIn">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  LinkedIn
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#强化学习的任务"><span class="nav-number">1.</span> <span class="nav-text">强化学习的任务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MDP（Markov-Decision-Process）"><span class="nav-number">2.</span> <span class="nav-text">MDP（Markov Decision Process）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#回报与价值函数"><span class="nav-number">3.</span> <span class="nav-text">回报与价值函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Bellman方程"><span class="nav-number">4.</span> <span class="nav-text">Bellman方程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#从-MDP-到-Reinforcement-Learning"><span class="nav-number">5.</span> <span class="nav-text">从 MDP 到 Reinforcement Learning</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Value-iteration"><span class="nav-number">5.1.</span> <span class="nav-text">Value iteration</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Policy-iteration"><span class="nav-number">5.2.</span> <span class="nav-text">Policy iteration</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#区别与局限"><span class="nav-number">5.3.</span> <span class="nav-text">区别与局限</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <center>
+<div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2019</span>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
+  </br>
+  <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
+</div>
+</center>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>

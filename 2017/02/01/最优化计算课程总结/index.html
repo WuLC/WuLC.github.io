@@ -1,0 +1,1183 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="数学," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="本文主要是最优化计算这门课程的课程总结，参考的教材为《最优化计算》，主要讲述的内容是函数优化，相对于函数优化的另外一种优化是组合优化，两者的主要区别是前者的可行解是连续的，后者的可行解是离散的，或者说前者的可行解是无限的，而后者是有限的。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="最优化计算课程总结">
+<meta property="og:url" content="http://wulc.github.io/2017/02/01/最优化计算课程总结/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="本文主要是最优化计算这门课程的课程总结，参考的教材为《最优化计算》，主要讲述的内容是函数优化，相对于函数优化的另外一种优化是组合优化，两者的主要区别是前者的可行解是连续的，后者的可行解是离散的，或者说前者的可行解是无限的，而后者是有限的。">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/vnrg6toyxe12r0lqrp8y8xdw/image_1b55a6bct1je4lutpsi11781a1d9.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/j4j81yn52lwppb0y9ugyjne7/image_1b54otaeai4918ffi8k2p51v009.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/qbv0469l3nfeyq0zdplx08fo/image_1b5fmb0if1gatjc1hsq9q41bh16c.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/83nw8fh1ivrhp2xuuru2psm9/image_1b5fmv3ah1td1jqoafc1h3i1pnh6p.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/hzihaivayzgxy1xihiq51vjj/image_1b5fn6nh4pkqkcmble1e9lpga76.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/4olk355qy7jml9keyhsul9ql/image_1b5fp2b1n14s01l3ks6ql0v1fiu9.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/tkrkhk6r66iqdrz2p2dozcby/image_1b5fp3m7v15iac4nl1ro5o1thrm.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/hlmilixa8esleiqb9xejsrm6/image_1b5fp6uvg1p191fa812h388tjjm1g.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/mjdzm44bvyc7hqc23h911pr6/image_1b59bnrlg1h4710k51a9n1os91bup1g.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/04424dr7v67xt7ojy7itc3dx/image_1b59d8iqoc1pt3ti7q1lrnud31t.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/aac4pnv5svnhc5824v960ijh/image_1b59dq06e1c8h1htb14upmi1ofe2a.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/dru18k3jvyciyriz5thz1ubh/image_1b59faio2c971vrblfcr119t2n.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/viyhos04be4e3piumhjpxvsh/image_1b59g47ljve7tj11j5m1mm55nn34.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/pfd20e3g3d7y9h6euoq8d1c2/image_1b5adl8g8vfc1b701sahj6a1gst3u.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/6ise3uxjwfzprvkivivwy1z2/image_1b5ahksco5j451bsl31mcl18fs4b.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/xatxszk1micle7e7hwdo3kqd/image_1b5ahphsk1adrtr6o46fjd1er34o.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/c5hg1bgfhj3lt2gmy56zpcjb/image_1b5bvj4d8kv01hn8h9hlu6d4b55.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/8fr69a0zniypopq0sesunvic/image_1b5bvvnvq1svf15q01g4r15531qrk5i.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/b5oi83ebgyyqcebe3ka38kf3/image_1b5hkuvq4l1c1bhglhm1vovtrm24.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/xqllojh997c05xsq5waw7v8o/image_1b5c2evni1d4cnde1jgvf61vko5v.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/j4aikhzvrz68ftcz8cpbli6c/image_1b5hob0l72fu68dl2l1hun1g32u.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/lxo2n83lt8vwzpteshxzwfx2/image_1b5i1mliksbh1nks1d5a185o14643b.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/thks122wa5q7q31b42o8qez8/image_1b5m40a01f1rqtv1n8h1r01a0im.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/lyk9wo9jw4zr42mwv46mnqpg/image_1b5m43kp7qnn1mm31dd4polenv13.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/545dru3bc33qzp4tf4y21p5s/image_1b5m65o8q1don3qn14u0hp57nq1g.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/m63gm1q3eo0sygh6dt5voec4/image_1b5mc6mvkgkess9b9c1lou1tdu2a.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/ouk2vs7i2nbjsiehe1tcpu07/image_1b5mp3qbeafq14ma1865obmk7e34.png">
+<meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/zny5ofc09zv5hi4uss49cbj2/image_1b5mp5eok1thd14gl39epfk1k763h.png">
+<meta property="og:updated_time" content="2019-06-01T09:14:44.171Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="最优化计算课程总结">
+<meta name="twitter:description" content="本文主要是最优化计算这门课程的课程总结，参考的教材为《最优化计算》，主要讲述的内容是函数优化，相对于函数优化的另外一种优化是组合优化，两者的主要区别是前者的可行解是连续的，后者的可行解是离散的，或者说前者的可行解是无限的，而后者是有限的。">
+<meta name="twitter:image" content="http://static.zybuluo.com/WuLiangchao/vnrg6toyxe12r0lqrp8y8xdw/image_1b55a6bct1je4lutpsi11781a1d9.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"always"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://wulc.github.io/2017/02/01/最优化计算课程总结/"/>
+
+
+
+
+
+  <title> 最优化计算课程总结 | 吴良超的学习笔记 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1258114456&web_id=1258114456" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">吴良超的学习笔记</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <h1 class="site-subtitle" itemprop="description"></h1>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            站内搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://wulc.github.io/2017/02/01/最优化计算课程总结/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="良超">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="吴良超的学习笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                最优化计算课程总结
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-01T20:08:55+08:00">
+                2017-02-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-tags"></i>
+              </span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/tags/数学/" itemprop="url" rel="index">
+                    <span itemprop="name">数学</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文主要是最优化计算这门课程的课程总结，参考的教材为《<a href="https://book.douban.com/subject/2971114/" target="_blank" rel="external">最优化计算</a>》，主要讲述的内容是函数优化，相对于函数优化的另外一种优化是组合优化，两者的主要区别是前者的可行解是连续的，后者的可行解是离散的，或者说前者的可行解是无限的，而后者是有限的。</p>
+<a id="more"></a>
+<p>最优化要解决的问题非常直观，就是给定若干个由若干个变量组成的目标函数，然后使得变量取某一组值时目标函数值最大或最小，这时候变量的取值便称为最优解；有时候变量还有一定的约束，如要满足某些等式或不等式，这时候的约束称为有约束优化，以区别于前面的无约束优化。</p>
+<p>可以说，最优化是一门纯数学的课程，但是现实世界中，很多问题都可以通过建模然后将问题最终转化为求解一个最优化问题，比如说在机器学习中，很多算法往往有个目标函数，这个目标函数可以用与描述预测结果与实际结果的误差，这时候就要最小化这个目标函数(回归，SVM等)；而最大化的问题通过改变符号也转为最小化问题。因此，最优化在实际中有广泛应用。</p>
+<p>根据目标函数的形式、数量以及是否有约束条件可以将优化问题分为多种类型。本文主要讲述的是单目标规划，并且将单目标规划进一步分为括线性和非线性，有约束和无约束。</p>
+<p>在讲述具体的优化算法前，先介绍最优化中常用的概念。</p>
+<p>最优化的基本模型为</p>
+<p>$$<br>min\;f(x)\\<br>s.t\quad c(x) \ge 0\\<br>$$</p>
+<p>其中 $x = (x_1,x_2,x_3,…x_n)$ 是一个变量组成的向量，也就是包含了若干变量，$c(x)$则是对各个变量约束的等式和不等式。</p>
+<p>有了基本模型，下面介绍在最优化中的常用概念。</p>
+<ul>
+<li>目标函数：就是$f(x)$</li>
+<li>决策变量：目标函数$f(x)$中的所有变量</li>
+<li>约束条件：$c(x)$中包含的所有的等式和不等式</li>
+<li>可行域：约束条件在空间围成的区域</li>
+<li>可行解：可行域中的每个点都是原问题的一个可行点</li>
+<li>最优解：能够使目标函数达到最大或最小的可行解</li>
+<li>凸集：集合的一种，用于描述可行域，满足以下性质<blockquote>
+<p>令 $K$ 为集合，$\forall x_1,x_2 \in K$,若 $\alpha x_1 + (1-\alpha)x_2 \in K$,其中$\alpha \in [0,1])$,则 $K$ 为凸集</p>
+</blockquote>
+</li>
+</ul>
+<p>凸集直观的图像表示如下</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/vnrg6toyxe12r0lqrp8y8xdw/image_1b55a6bct1je4lutpsi11781a1d9.png" alt="凸集"></p>
+<h2 id="线性规划"><a href="#线性规划" class="headerlink" title="线性规划"></a>线性规划</h2><h3 id="数学模型与基本概念"><a href="#数学模型与基本概念" class="headerlink" title="数学模型与基本概念"></a>数学模型与基本概念</h3><p>线性规划就是<strong>目标函数和约束条件都是线性的</strong>最优化问题，且一般都是带约束的，线性规划的一般模型如下所示</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/j4j81yn52lwppb0y9ugyjne7/image_1b54otaeai4918ffi8k2p51v009.png" alt="线性规划模型"></p>
+<p>为了模型的一致性，通常会将以上的模型化为<strong>标准型</strong>，标准型要求<br>1）目标函数求最小值<br>2）约束条件全为等式<br>3）所有的$x$有 $x \ge 0$</p>
+<p>化为标准型中的关键点是将约束条件中的不等式变为等式<br>1）对于约束条件为 $\le$ 的情况，在 $\le$ 左边添加一个<strong>松弛变量</strong>(非负)。<br>2）对于约束条件为 $\ge$ 的情况，在 $\ge$ 左边减去一个<strong>剩余变量</strong>(非负)<br>注意：松弛变量、剩余变量在目标函数中的价值系数为0。</p>
+<p>如下为一个简单的例子</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/qbv0469l3nfeyq0zdplx08fo/image_1b5fmb0if1gatjc1hsq9q41bh16c.png" alt="化标准型"></p>
+<p>对于化为标准型的线性规划模型中约束条件的 $m × n$ 系数矩阵$A$，从$A$中取大小为$m × m$的子矩阵$B$，若$Rank(B) = m$(即B为满秩矩阵)，则称$B$为线性规划问题的一个<strong>基矩阵</strong>。取$B = (A_1,A_2,···,A_m)$ ，其中$A_j = (a_{1j},a_{2j},···,a_{mj})^T$ 则称$x_1,x_2,···,x_m$为<strong>基变量</strong>，其它为<strong>非基变量</strong>。如下所示</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/83nw8fh1ivrhp2xuuru2psm9/image_1b5fmv3ah1td1jqoafc1h3i1pnh6p.png" alt="基变量和非基变量"></p>
+<p>令所有的非基变量为0，则得到的解称为<strong>基本解</strong>，可知基本解的个数 $\le C_n^m$。但是基本解不一定满足约束条件，满足约束条件的基本解称为<strong>基本可行解</strong>，而基本可行解对应的基变量称为<strong>可行基</strong>。</p>
+<p>基本解，基本可行解，可行解，非可行解的关系如下图所示</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/hzihaivayzgxy1xihiq51vjj/image_1b5fn6nh4pkqkcmble1e9lpga76.png" alt="基本解，基本可行解，可行解，非可行解的关系"></p>
+<p>关于线性规划有三条重要定理</p>
+<blockquote>
+<p>定理1  若线性规划存在可行域，则可行域为凸集<br>定理2  线性规划的基本可行解对应于可行域的顶点<br>定理3  若线性规划有最优解，则一定存在基本可行解为最优解。</p>
+</blockquote>
+<p>上面直观解释和定理都是为了说明这个事实：<strong>如果线性规划的最优解存在，那最优解一定在可行域的顶点上。</strong>下面要介绍的单纯形法就是利用这个性质。</p>
+<h3 id="单纯形法"><a href="#单纯形法" class="headerlink" title="单纯形法"></a>单纯形法</h3><p>单纯形法是解决线性规划的经典方法。其基本思想是先从可行域的一个顶点出发，然后从当前顶点沿着可行域(可行域是一个凸多面体)的边找下一个使得目标函数更小的顶点，假如找得到就移动到更优的顶点，找不到就说明当前顶点是线性规划的最优解。</p>
+<p>因此，单纯形法的主要步骤为<br>1) 确定初始基本可行解<br>2) 判别当前基本可行解是否是最优解<br>3) 从一个基本可行解转换到相邻且改善了的基本可行解</p>
+<p>在实际运算的时候，一般通过单纯形表实现。其求解过程如下所示</p>
+<p>对于下面已经化为标准型的线性规划问题</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/4olk355qy7jml9keyhsul9ql/image_1b5fp2b1n14s01l3ks6ql0v1fiu9.png" alt="标准型"></p>
+<p>其单纯形表为</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/tkrkhk6r66iqdrz2p2dozcby/image_1b5fp3m7v15iac4nl1ro5o1thrm.png" alt="单纯形表"></p>
+<p>表中的基指的是基变量，最后一行 $\sigma_j$ 是检验数，用于检验当前的基本可行解是否为最优解。</p>
+<p>对应于单纯形表，求解步骤如下<br>（1）<strong>确定初始基本可行解</strong>。<br>也就是列出如上图所示的初始的单纯形表，将线性规划化为标准型后,通过矩阵的初等行变换,可以使系数矩阵A中包含一个单位阵，而这个单位阵对应的基变量即可作为初始基本可行解。<br>（2）<strong>判别当前基本可行解是否是最优解</strong>。<br>通过最后一行的检验数 $\sigma_j$ 判断，假如所有非基变量的检验数 $\sigma_j \ge 0$，则基变量为最优解，计算结束；假如存在$\sigma_k \lt 0$,且$A_k \le 0$,则问题为无界解，计算结束；否则转第（3）步<br>（3）<strong>从一个基本可行解转换到相邻且改善了的基本可行解</strong>。<br>这一步要确定一个入基变量和一个出基变量，入基变量就是从非基变量中选择的一个变量，然后将其变为基变量，出基变量就是从基变量中选择一个变量，然后将其变为非基变量。实际上就是将这两个变量的位置(基或非基)互换，对应于从可行域的一个顶点走到另外一个顶点。</p>
+<p><strong>入基变量的确定</strong>:从所有的检验数中找出最小的 $\sigma_k$,对应的$x_k$为入基变量。<br><strong>出基变量的确定</strong>：通过下式确定的 $l$所对应的的 $x_l$作为出基变量</p>
+<p>$$\min_{1 \le i \le m} \lbrace \frac{b_i}{a_{ik}} | a_{ik} &gt; 0 \rbrace$$</p>
+<p>上式中的 $a_{ik}$ 为入基变量对应系数举证 A 的第k列</p>
+<p>找到入基变量$x_k$和出基变量$x_l$后，用入基变量替换出基变量，通过初等行变换使得$x_k$对应系数矩阵A的一列成为原单位矩阵中$x_l$对应的那列，其他的值做相应的计算(见下图)，画出的新的单纯形表如下所示：</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/hlmilixa8esleiqb9xejsrm6/image_1b5fp6uvg1p191fa812h388tjjm1g.png" alt="新的单纯形表"></p>
+<p>（4）重复步骤（2）和（3），直到找到最优解</p>
+<p>注意除了单纯形法以外，解决线性规划还有另外一类方法：内点法。这里不详细展开，具体可以参考这篇论文 <a href="http://www.cs.toronto.edu/~robere/paper/interiorpoint.pdf" target="_blank" rel="external">Interior Point Methods and Linear Programming</a>。</p>
+<h3 id="对偶理论"><a href="#对偶理论" class="headerlink" title="对偶理论"></a>对偶理论</h3><p>在求解一个规划问题（不限于线性规划）的时候，我们常常需要知道这个问题<strong>有没有可行解</strong>（有时候约束条件很复杂，不要说最优解，找到可行解都很难），或者是估计一下<strong>目前的解离最优解还有多远</strong>（大型问题多用迭代解法，如果能大致估计当前的解的质量，就对算法什么时候运行结束有一个大致的把握，如果得到了可接受的近似解也可以提前停止），以及判断原问题的最优解是否无界（万一出现这种情况迭代就停不下来了）。</p>
+<p>而对偶问题就是回答这些问题的利器：<strong>弱对偶定理给原问题的最优解定了一个界，强对偶定理给出了原问题最优解的一个判定条件。</strong>同时，还有很多别的优良性质：例如可以化难为易（把难以求解的约束条件扔到目标函数的位置上去），如果问题的形式合适(变量少，约束多)还可以通过把约束变量和对偶变量互换来把大规模问题转换成小规模问题。实际上，很多凸优化问题都是通过解对偶问题来求解的，线性规划只是其中一个特例而已。</p>
+<p>一般地，对于原问题<br>$$min\;z =  c^Tx \quad \\<br>s.t.\,Ax \ge b(x \ge 0)\tag{1}$$</p>
+<p>其对偶问题为<br>$$max\;w =  b^Ty \quad \\<br>s.t.\,A^Ty \le c(y \ge 0)\tag{2}$$</p>
+<p>根据原问题写出其对偶问题时要注意<strong>约束条件和变量的符号变化情况</strong>，其变换规则如下</p>
+<ol>
+<li>max 问题第 i 个约束取“≥”，则min问题第 i 个变量 ≤ 0 </li>
+<li>min 问题第 i 个约束取“≤”，则max问题第 i 个变量 ≤ 0</li>
+<li>原问题第 i 个约束取等式，对偶问题第 i 个变量无约束</li>
+<li>max 问题第 j 个变量 ≤ 0 ,则min问题第j个约束取“≤”</li>
+<li>min 问题第 j 个变量 ≤ 0 ，则max问题第j个约束取“≥”</li>
+<li>原问题第j个变量无约束，对偶问题第j个约束取等式</li>
+</ol>
+<p>以上规则是具体的变换规则，实际上其变换规律就是<strong>假如原问题不符合以上的给出的(1)或(2)的标准形状，那么原问题的第 i 个不符合要求的约束，对应的对偶问题的第i个变量要 ≤ 0 ；同样假如原问题的第 i 个变量不符合要求(就是 $x_i$≤ 0)，对应的对偶问题的第i个约束要改变符号。</strong></p>
+<p>对偶定理包含了一系列的定理，其中主要有弱对偶定理，强对偶定理，最优性定理，互补松弛定理。通过这些定理可以将原来难以解决的原问题通过引入对偶理论从而得以解决，各定理的具体内容如下:</p>
+<p><strong>弱对偶定理</strong></p>
+<blockquote>
+<p>max 问题任一可行解的目标值为min问题目标值的一个下界；<br>min 问题任一可行解的目标值为max问题目标值的一个上界</p>
+</blockquote>
+<p><strong>强对偶定理</strong></p>
+<blockquote>
+<p>若原问题有最优解，那么对偶问题也有最优解，且两个问题最优解的目标函数值相等。</p>
+</blockquote>
+<p><strong>无界性</strong></p>
+<blockquote>
+<p>若原问题(对偶问题)为无界解，则对偶问题(原问题)为无可行解。</p>
+</blockquote>
+<p>需要注意的是，无界性的逆不存在。若原(对偶)问题为无可行解，对偶(原问题)问题或为无界解，或为无可行解。</p>
+<p><strong>最优性</strong></p>
+<blockquote>
+<p>若 $\overline x$ 和 $\overline y$ 分别为原问题和对偶问题的可行解，那么原问题和对偶问题都有最优解，且当 $c^T\overline x=b^T\overline y$时，$\overline x$ 和 $\overline y$分别为原问题和对偶问题的最优解。</p>
+</blockquote>
+<p><strong>互补松弛定理</strong></p>
+<blockquote>
+<p>若 $\overline x$ 和 $\overline y$ 分别为原问题和对偶问题的可行解，则它们分别是原问题和对偶问题的最优解的充要条件是$\overline x^T(A^T\overline y-c)=0$和$\overline y^T(A\overline x-b)=0$</p>
+</blockquote>
+<p>通过互补松弛定理，给出原问题(对偶问题)的最优解，便可求得其对偶问题(原问题)的最优解。</p>
+<p>对应于单纯形法有对偶单纯形法，其解法与单纯形的一样，只是找出基变量和入基变量的方法不一样。</p>
+<h3 id="灵敏度分析"><a href="#灵敏度分析" class="headerlink" title="灵敏度分析"></a>灵敏度分析</h3><p>在许多实际问题中，数据模型的数据未知，需要根据实际情况进行测量、估计和预测，因此这些<strong>数据不是十分精确，数据的略微的变化可能会引起问题解的显著变化。所谓灵敏度分析就是研究输入数据的扰动对LP最优解的影响</strong>，或者说是LP最优解对参数变化、约束条件增减、决策变量增减的Robust(稳健性)。</p>
+<p>灵敏度分析主要就是考虑问题</p>
+<p>$$min\;z =  c^Tx \quad \\<br>s.t.\,Ax \ge b(x \ge 0)\tag{1}$$</p>
+<p>中，参数 c,b,A 的变化是否会引起最优解的变化。</p>
+<p>$c$ 的变化可分为两种：$c$为非基变量的价值系数和c为基变量的价值系数<br>1.非基变量价值系数 $c_k$的变化<br>假设 $\overline{c_k} = c_k + \Delta c_k$, 则其在单纯形法中的检验数变为$\overline{\sigma_k} = \sigma_k + \Delta c_k $,只需要让$\overline{\sigma_k} \ge 0$ 即 $\sigma_k \ge -\Delta c_k $即可保证最优解不变</p>
+<p>2.基变量价值系数 $c_b$的变化<br>假设 $\overline{c_b} = c_b + \Delta c_b$, 则其在单纯形法中的检验数变为$\overline{\sigma_b} = \sigma_b - (0,0,0,..\Delta c_b,…0,0,0)B^{-1}N $,其中$(0,0,0,..\Delta c_b,…0,0,0)$为基变量的价值系数的变化量组成的向量，$B^{-1}N $为单纯形表中非基变量对应的系数列组成的矩阵，同样只需要让$\overline{\sigma_b} \ge 0$ 即可保证最优解不变.</p>
+<p>b变化的时候需要保证 $\overline{b} = B^{-1}(b+\Delta b) \ge 0$,否则需要将$\overline{b}$ 作为新的b的值代入到原来的单纯形表中，让后通过<strong>对偶单纯形法</strong>进行求解。对偶单纯形法的步骤与原始单纯形法的步骤非常相似，只是选择出基变量和入基变量的方法不同。出基变量选择为 $b_k = min\;\lbrace b_i,i=1,2,..m\rbrace$所对应的 $x_k$,入基变量选择为下面公式对应的$x_l$,</p>
+<p>$$\frac{\sigma_l}{a_{kl}} = max\;[\frac{\sigma_j}{a_{kj}}|a_{kj} \lt 0,j=1,2,…n]$$</p>
+<h2 id="非线性规划"><a href="#非线性规划" class="headerlink" title="非线性规划"></a>非线性规划</h2><h3 id="数学模型与基本概念-1"><a href="#数学模型与基本概念-1" class="headerlink" title="数学模型与基本概念"></a>数学模型与基本概念</h3><p>目标函数或约束函数至少有一个不是决策变量的线性函数。即</p>
+<p>$$<br>min f(x)\\<br>s.t\quad h_i(x) = 0(i=1,2,…,m)\\<br>\quad\quad g_j(x) \ge 0(j=1,2,…,l)\\<br>$$<br>其中，$f(x),h_i(x),g_j(x)$ 中至少有一个是非线性函数。</p>
+<h4 id="梯度与海塞矩阵"><a href="#梯度与海塞矩阵" class="headerlink" title="梯度与海塞矩阵"></a>梯度与海塞矩阵</h4><p>梯度和海塞矩阵是在非线性规划中用得较多的概念，其定义如下：</p>
+<p><strong>梯度</strong><br>可微函数$f(x)$的梯度，记为$\nabla f(x)$,它是以 $f (x)$ 对 $x$ 的偏导数为元素的n维<strong>向量</strong>,如下所示$$\nabla f(x) = (\frac{\partial f(x)}{\partial x_1},\frac{\partial f(x)}{\partial x_2},….,\frac{\partial f(x)}{\partial x_n})$$而在某一点的梯度就是将这一点的值代入到上式中，如在点$x_0$上的梯度为$$\nabla f(x_0) = (\frac{\partial f(x_0)}{\partial x_1},\frac{\partial f(x_0)}{\partial x_2},….,\frac{\partial f(x_0)}{\partial x_n})$$</p>
+<p>对于一元函数，其梯度就是其一阶导数。</p>
+<p>对于任何函数$f(x)$，假如$\overline x$是$f(x)$的局部极小点且$f(x)$在$\overline x$处可微，那么必有$\nabla f(\overline x) =0$</p>
+<p><strong>海塞矩阵</strong><br>海塞矩阵的定义与梯度类似，但是求的是二阶偏导，并且结果是一个矩阵，如下所示</p>
+<p>$$<br>\nabla^2 f(x) =<br>\begin{pmatrix}<br>\frac{\partial^2 f(x)}{\partial^2 x_1} &amp; \frac{\partial^2 f(x)}{\partial x_1\partial x_2} &amp; \cdots &amp; \frac{\partial^2 f(x)}{\partial x_1\partial x_n}\\<br>\frac{\partial^2 f(x)}{\partial x_2\partial x_1} &amp; \frac{\partial^2 f(x)}{\partial^2 x_2} &amp; \cdots &amp; \frac{\partial^2 f(x)}{\partial x_2\partial x_n}\\<br>\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\<br>\frac{\partial^2 f(x)}{\partial x_n\partial x_1}&amp; \frac{\partial^2 f(x)}{\partial x_n\partial x_2} &amp; \cdots &amp; \frac{\partial^2 f(x)}{\partial^2 x_n}\\<br>\end{pmatrix}<br>$$</p>
+<p>对于任何函数$f(x)$，假如$f(x)$在$\overline x$处有二阶连续偏导，若$\nabla f(\overline x) =0$且海塞矩阵$\nabla^2 f(\overline x)$正定，则 $\overline x$ 为<strong>严格局部最小点</strong>。</p>
+<h4 id="凸函数"><a href="#凸函数" class="headerlink" title="凸函数"></a>凸函数</h4><p>凸函数的定义如下</p>
+<blockquote>
+<p>设$f(x)$为定义在n维欧氏空间中某个凸集S上的函数，若对于任何实数$\alpha(0&lt;\alpha&lt;1)$以及S中的任意不同两点$x^{(1)}$和$x^{(2)}$，均有$$f(\alpha x^{(1)}+ (1-\alpha)x^{(2)}) \le \alpha f(x^{(1)}) + (1-\alpha)f(x^{(2)})$$则称$f(x)$为定义在凸集 S 上的凸函数。假如上面不等式中的 $\le$ 改为 $\lt$， 则称其为严格凸函数。</p>
+</blockquote>
+<p>凹函数的定义类似，只需要把上式的不等号方向改变即可。图像直观表示两者如下所示</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/mjdzm44bvyc7hqc23h911pr6/image_1b59bnrlg1h4710k51a9n1os91bup1g.png" alt="凹函数与凸函数"></p>
+<p>凸函数的一个重要的性质是其<strong>局部极小值点为全局极小值点</strong>。</p>
+<p>根据凸函数的定义来判断一个函数是否为凸函数往往比较困难，这里分别通过一阶条件和二阶条件判断凸函数。</p>
+<p><strong>一阶条件</strong></p>
+<blockquote>
+<p>设 $f(x)$ 在凸集 S上有一阶连续偏导数，则 $f(x)$ 为S上的凸函数的充要条件为：对于 任意不同两点$x^{(1)}$和$x^{(2)}$，均有$$f(x^{(2)}) \ge f(x^{(1)}) + \nabla f(x^{(1)})^T(x^{(2)} - x^{(1)})$$</p>
+</blockquote>
+<p>二阶条件</p>
+<blockquote>
+<p>设 $f(x)$  在凸集 S上有二阶连续偏导数，则$f(x)$ 为S上的凸函数的充要条件为：$f(x)$ 的海塞矩阵 $\nabla^2 f(x)$在S上处处半正定(为凹函数的充要条件为处处半负定)。<br>注意：假如海塞矩阵 $\nabla^2 f(x)$在S上处处正定，则$f(x)$为严格凸函数，但是反过来不成立。</p>
+</blockquote>
+<p>关于正定、半正定、负定的定义及判断方法如下所示</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/04424dr7v67xt7ojy7itc3dx/image_1b59d8iqoc1pt3ti7q1lrnud31t.png" alt="正定矩阵和负定矩阵"></p>
+<p>而<strong>顺序主子式</strong>的定义如下</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/aac4pnv5svnhc5824v960ijh/image_1b59dq06e1c8h1htb14upmi1ofe2a.png" alt="顺序主子式"></p>
+<p>通过海塞矩阵判断凸函数例子如下</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/dru18k3jvyciyriz5thz1ubh/image_1b59faio2c971vrblfcr119t2n.png" alt="海塞矩阵判断凸函数"></p>
+<h4 id="凸规划"><a href="#凸规划" class="headerlink" title="凸规划"></a>凸规划</h4><p>凸规划指<strong>可行域为凸集，目标函数为凸函数</strong>的规划问题。其具体形式如下</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/viyhos04be4e3piumhjpxvsh/image_1b59g47ljve7tj11j5m1mm55nn34.png" alt="凸规划模型"></p>
+<p>注意上面的$g_j(X)$为凹函数，这样围起来的可行域才为凸集。</p>
+<p>因为凸函数和凸集的性质，凸规划有一条重要的性质：<strong>凸规划的任一局部极小点为全局极小点</strong>。</p>
+<h3 id="一维搜索"><a href="#一维搜索" class="headerlink" title="一维搜索"></a>一维搜索</h3><p>一维搜索就是<strong>目标变量只有一个</strong>的时候的最优化问题，又称为单变量函数寻优法。</p>
+<p>求解这类问题一般有两种方法，一类是<strong>区间收缩法</strong>（如黄金分割法），一类是<strong>函数逼近法</strong>（如三点二次插值法、牛顿法）。下面分别介绍</p>
+<h4 id="单谷函数"><a href="#单谷函数" class="headerlink" title="单谷函数"></a>单谷函数</h4><p>定义：如果函数$f(x)$在区间 [a,b] 上只有一个极小值点, 则称$f(x)$为 [a, b] 上的单谷函数。</p>
+<p>单谷函数具有一个重要的<strong>消去性质</strong></p>
+<blockquote>
+<p>设$f(x)$是区间 [a,b] 上的一个单谷函数，$\overline x \in$  [a,b] 是其极小点， $x_1$ 和$x_2$是 [a, b] 上的任意两点，且$a&lt;x_1 &lt;x_2&lt;b$，那么比较$f(x_1)$与$f(x_2)$的值后，可得出如下结论：<br>1)若$f(x_1)≥f(x_2),\overline x\in [x_1,b]$<br>2)若$f(x_1) &lt; f(x_2),\overline x \in [a,x2]$<br>两种情况如下图所示<br><img src="http://static.zybuluo.com/WuLiangchao/pfd20e3g3d7y9h6euoq8d1c2/image_1b5adl8g8vfc1b701sahj6a1gst3u.png" alt="单谷函数消去性质"></p>
+</blockquote>
+<h4 id="外推内插法"><a href="#外推内插法" class="headerlink" title="外推内插法"></a>外推内插法</h4><p>在一维搜索中的区间收缩法中需要用到单谷区间，而寻找单谷区间的方法就是下面要介绍的外推内插法。</p>
+<p>其思路为从某个初始点出发，沿函数值下降的方向前进，直至发现函数值上升为止。而由两边高，中间低的三点，可确定极小点所在的初始区间。</p>
+<p><strong>进退算法</strong><br>1.选定初始点a 和步长h;</p>
+<p>2.计算并比较$f(a)$和$f(a+h)$；有前进和后退两种情况：<br>1)<strong>前进算法</strong>：若$f(a) \ge f(a+h)$则步长加倍，计算$f(a+3h)$。若$f(a+h) \le f(a+3h)$，$a_1=a, a_2=a+3h$, 停止运算；否则将步长加倍，并重复上述运算。<br>2)<strong>后退算法</strong>：若$f(a) \lt f(a+h)$则步长改为 $-h$，计算$f(a-h)$。若$f(a-h) \ge f(a)$，$a_1=a-h, a_2=a+h$, 停止运算；否则将步长加倍，继续后退。</p>
+<p>3.得到的满足“中间小两头大”的三点已经可以作为单谷区间，但是当这个区间太大的时候，也可以进行缩短，缩短的方法如下：</p>
+<blockquote>
+<p>假如得到的三点 $a&lt;b&lt;c$，在 $b，c$ 之间内插一点$\overline b = (b+c)/2$。这样得到四个点：$a ，b，\overline b，c$。比较这4个点的函数值，令其中函数值最小的点为 $x_2$ , $x_2$ 的左右邻点为 $x_1$ 和 $x_3$，至此得到了更小的极值点存在区间 [$x_1,x_3$]，且 $x_1、x_2、x_3$ 三点，满足“两头大中间小”的条件。依照此方法可以划出更小的单谷区间。</p>
+</blockquote>
+<h4 id="黄金分割法"><a href="#黄金分割法" class="headerlink" title="黄金分割法"></a>黄金分割法</h4><p>黄金分割法的思想是：<strong>反复使用单谷函数的消去性质，不断缩小包含极小点的搜索区间，直到满足精度为止。</strong> </p>
+<p>该方法的优点是需计算函数值，通用性强。</p>
+<h4 id="三点二次插值法"><a href="#三点二次插值法" class="headerlink" title="三点二次插值法"></a>三点二次插值法</h4><p>三点二次插值法的思想是：<strong>形式复杂的函数进行数学运算时不方便，因此找一个近似的、解析性能好、便于计算的简单函数来代替，用近似函数的极小点作为原函数极小点的近似，常用于近似的简单函数是二次函数。</strong></p>
+<p>三点二次插值多项式近似法（抛物线法）的基本原理为：设目标函数 $f(x)$ 在三点 $x_1 &lt; x_2 &lt;x_3$ 上的函数值分别为$f_1,f_2,f_3$,假设相应的二次插值多项式为$P_2(x)=c＋bx + ax^2$,令$P_2(x)$ 和 $f(x)$ 在三点上的函数值相等，进而求出$P_2(x)$中三个未知参数 $a、b、c$ 的值以及$P_2(x)$的稳定点$\overline x = -\frac{b}{2a}$。而这个方法的命名也源于其原理，通过三个点用二次函数去逼近原函数。其图像直观表示如下</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/6ise3uxjwfzprvkivivwy1z2/image_1b5ahksco5j451bsl31mcl18fs4b.png" alt="三点二次插值"></p>
+<p>需要注意的是选取的三个点要有一定的要求，若任意取这三个点，则求出的$\overline x$ 可能位于给定区间之外或误差太大，见下图</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/xatxszk1micle7e7hwdo3kqd/image_1b5ahphsk1adrtr6o46fjd1er34o.png" alt="三点二次插值不符合"></p>
+<p>因此，最初的三个点$x_1&lt;x_2&lt;x_3$ 应构成一个两边高，中间低的极小化框架。</p>
+<p>在完成一次计算后，得到近似的$\overline x$,要进行搜索区间的收缩，然后在新区间中重新构造三点组成的“极小化框架” 。<strong>构造的方法为比较$f(\overline x),f(x_2)$，以函数值较小的点为中间点，加上左右两点</strong>。</p>
+<p>最后终止准则可以采用目标函数值的相对误差或绝对误差来判断。</p>
+<h4 id="牛顿法"><a href="#牛顿法" class="headerlink" title="牛顿法"></a>牛顿法</h4><p>牛顿法是一种函数逼近法，其基本思想是<strong>在极小点附近用二阶泰勒多项式近似代替目标函数，求解二阶泰勒多项式的极小点作为目标函数的极小点</strong>。牛顿法在数值分析中是用于求解方程的根，而<strong>求解函数极值点等价于求其导函数为0时的根(假如函数可微)</strong>。</p>
+<p>将$f(x)$在点$x_k$处进行泰勒展开，取前三项有<br>$$f(x) \approx \varphi(x) = f(x_k)+f^{‘}(x_k)(x-x_k)+\frac{1}{2}f^{“}(x_k)(x-x_k)^2$$</p>
+<p>求$\varphi^{‘}(x) = 0$ 的根，可得<br>$$x_{k+1} = x_k - \frac{f^{‘}(x_k)}{f^{“}(x_k)}$$</p>
+<p>通过上面公式进行迭代直至 $|f^{‘}(x_k)| \lt \epsilon$ ($\epsilon$为很小的正数)。</p>
+<h3 id="无约束非线性规划"><a href="#无约束非线性规划" class="headerlink" title="无约束非线性规划"></a>无约束非线性规划</h3><p>前面介绍的一维搜索虽然也属于无约束非线性规划，只是仅有一个约束变量。但是由于实际问题中变量的个数往往不止一个，因此多个变量的无约束非线性规划在实际中使用更为广泛。下面主要介绍多变量无约束非线性规划的解决方法。无约束问题的最优化方大致分为两类：</p>
+<p><strong>1. 直接法</strong>：求解过程中只用到目标函数值，无须计算导数。如<strong>变量轮换(坐标轮换)，模式搜索</strong>等。<br><strong>2. 解析法</strong>：用函数的解析性（一阶、二阶导数），即在计算过程中需要计算目标函数的导数。如：<strong>梯度法、共扼梯度法、牛顿法</strong>等</p>
+<p>一般来说，解析法的收敛速率较高，直接法的可靠性较高。 </p>
+<h4 id="直接法"><a href="#直接法" class="headerlink" title="直接法"></a>直接法</h4><h5 id="坐标-变量-轮换法"><a href="#坐标-变量-轮换法" class="headerlink" title="坐标(变量)轮换法"></a>坐标(变量)轮换法</h5><p>坐标轮换法属于直接法，既可以用于无约束优化问题的求解，又可以经过适当处理用于约束优化问题求解。</p>
+<p><strong>坐标轮换法是每次搜索只允许一个变量变化，其余变量保持不变，即沿坐标方向轮流进行搜索的寻优方法。</strong>它把多变量的优化问题轮流地转化成单变量（其余变量视为常量）的优化问题，因此又称这种方法为变量轮换法。此种方法只需目标函数的数值信息而不需要目标函数的导数。</p>
+<p>如下图为只有两个变量时进行坐标轮换的搜索过程，可以看到，每一个的移动都只在一个方向上改变</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/c5hg1bgfhj3lt2gmy56zpcjb/image_1b5bvj4d8kv01hn8h9hlu6d4b55.png" alt="坐标轮换法"></p>
+<p>判断其收敛(终止)的可采用<strong>点距准则或函数值准则</strong>，当点距或函数值只差小于指定的值时则收敛。其中采用的点应该是<strong>一轮迭代的始点和终点</strong>，而不是某搜索方向的前后迭代点。</p>
+<p>其流程图如下所示<br><img src="http://static.zybuluo.com/WuLiangchao/8fr69a0zniypopq0sesunvic/image_1b5bvvnvq1svf15q01g4r15531qrk5i.png" alt="坐标轮换法流程"></p>
+<p>坐标轮换法程序简单，易于掌握。但是计算效率比较低，尤其是当优化问题的维数较高时更为严重。一般把此种方法应用于维数小于10的低维优化问题。</p>
+<h5 id="模式搜索法"><a href="#模式搜索法" class="headerlink" title="模式搜索法"></a>模式搜索法</h5><p>模式搜索法的思想是算法从初始基点开始，交替实施两种搜索:<strong>轴向搜索和模式搜索</strong>。轴向搜索一次沿着n个坐标轴方向进行，用来确定新的迭代点和有利于函数值下降的方向。模式搜索则沿着相邻两个迭代点的连线方向进行，试图使函数值下降得更快。</p>
+<p>其搜索过程与坐标轮换法类似，其中轴向搜索其实就是进行了一轮的坐标搜索，<strong>与坐标轮换法不同点在于在进行了一轮坐标搜索后会进行模式搜索</strong>。如下所示<br>模式搜索法的具体过程为<br><img src="http://static.zybuluo.com/WuLiangchao/b5oi83ebgyyqcebe3ka38kf3/image_1b5hkuvq4l1c1bhglhm1vovtrm24.png" alt="模式搜索法具体过程"></p>
+<p>通过图像直观表示如下<br><img src="http://static.zybuluo.com/WuLiangchao/xqllojh997c05xsq5waw7v8o/image_1b5c2evni1d4cnde1jgvf61vko5v.png" alt="模式搜索过程"></p>
+<h5 id="可变单纯形法"><a href="#可变单纯形法" class="headerlink" title="可变单纯形法"></a>可变单纯形法</h5><p>可变单纯形法也称可变多面体搜索法，是一种传统的处理无约束最优化问题的直接算法.</p>
+<p>首先在n欧氏空间中构造一个包含n+1个顶点的凸多面体，求出各顶点的函数值，并确定其中的最大值、次大值和最小值，然后通过反射、扩张、内缩、缩边等策略求出一个较好解，用之取代最大(差)点，从而构成新的多面体，如此多次迭代则可逼近一个性能较好的极小点。</p>
+<p>算法简单、计算量小、优化快速，且不要求函数可导，因而适用范围较广。但它对初始解依赖性较强，容易陷入局部极小点，而且优化效果随函数维数的增加明显下降。</p>
+<p>Lagarias(1998)研究了可变单纯形法求解低维函数时的收敛特性，但结论难以推广到高维问题，也即单一可变单纯形法难以保证对高维复杂函数具有较好的优化效果。</p>
+<h4 id="解析法"><a href="#解析法" class="headerlink" title="解析法"></a>解析法</h4><p>解析法是利用了函数的导数信息的一类方法，其主要思想是通过导数信息找到函数下降的方向，让后沿着这个方向往下走直到走到最小值。</p>
+<h5 id="最速下降法"><a href="#最速下降法" class="headerlink" title="最速下降法"></a>最速下降法</h5><p>最速下降法利用了<strong>函数在某点上的负梯度方向是函数在该店下降最快的方向</strong>这一结论。其迭代公式为</p>
+<p>$$x^{(k+1)} = x^{(k)} + \alpha^{(k)}d^{(k)}$$</p>
+<p>其中$d^{(k)} = - \nabla f(x^{(k)})$ 为下降方向, $\alpha^{(k)}$ 为步长，其求解方法是对$\alpha^{(k)}$进行一维搜索(因为此时$x^{(k)},d^{(k)}$已知)，即</p>
+<p>$$f(x^{(k)} + \alpha^{(k)}d^{(k)}) =min\; f(x^{(k)} + \alpha d^{(k)}) = min\;\varphi(\alpha)$$</p>
+<p>令$\varphi^{‘}(\alpha) = 0$,求出的 $\alpha$ 的值即为步长。</p>
+<p>其收敛的判断准则是梯度足够小，即其二阶范数$||\nabla f(x^{(k)})|| \lt \epsilon$</p>
+<p>在最速下降法中相邻的两个迭代点的梯度是彼此正交的。也即在梯度的迭代过程中，相邻的搜索方向相互垂直。</p>
+<p>因此最速下降法向极小点的逼近路径是锯齿形路线，越接近极小点，锯齿越细，前进速度越慢。这是因为梯度是函数的局部性质，从局部上看，在该点附近函数的下降最快，但从总体上看则走了许多弯路，因此函数值的下降并不快。其示意图如下所示</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/j4aikhzvrz68ftcz8cpbli6c/image_1b5hob0l72fu68dl2l1hun1g32u.png" alt="最速下降法示意图"></p>
+<h5 id="牛顿法-1"><a href="#牛顿法-1" class="headerlink" title="牛顿法"></a>牛顿法</h5><p>牛顿法跟最速下降法的思想是一样的，都是找一个能够使函数值下降的方向前进，只是最速下降法找的方向是负梯度方向，而牛顿法找的是牛顿方向。根据每次迭代的步长是否固定，可以将牛顿法分为原始牛顿法和阻尼牛顿法两种，实际中应用较多的是阻尼牛顿法。</p>
+<h6 id="原始牛顿法"><a href="#原始牛顿法" class="headerlink" title="原始牛顿法"></a>原始牛顿法</h6><p>原始牛顿法的思想在一维搜索中已经提到,只是一维搜索中是只有一个 $x$变量，而这里处理的是多个$x$变量，相应地用梯度和海塞矩阵代替原来的一阶导数和二阶导数。</p>
+<p>其思想就是在第 k 次迭代的迭代点 $x^{(k)}$ 邻域内，通过泰勒展开用一个二次函数去近似代替原目标函数$f(x)$，然后求出该二次函数的极小点作为对原目标函数求优的下一个迭代点，依次类推，通过多次重复迭代，使迭代点逐步逼近原目标函数的极小点。</p>
+<p>其主要步骤为</p>
+<p>设目标函数$f(x)$具有连续的一、二阶导数，在$x^{(k)}$点邻域内取$f(x)$的二次泰勒多项式作近似式，对于只有一个变量$x$时为</p>
+<p>$$f(x) \approx \varphi(x) = f(x_k)+f^{‘}(x_k)(x-x_k)+\frac{1}{2}f^{‘’}(x_k)(x-x_k)^2$$</p>
+<p>而有多个变量 $x$ 时，有</p>
+<p>$$f(x) \approx \varphi(x) = f(x^{(k)})+\nabla f(x^{(k)})^T\Delta x+\frac{1}{2}\Delta x^TH_k\Delta x$$</p>
+<p>令 $x^{(k+1)}$ 为函数的极小点,则应有 $\nabla \varphi(x^{(k+1)}) = 0$</p>
+<p>令 $ \nabla \varphi(x)= \nabla f(x^{(k)})+H_k\Delta x=0$,且 $\Delta x = x^{(k+1)}-x^{(k)}$</p>
+<p>则有 $x^{(k+1)} = x^{(k)}-H_k^{-1}\nabla f(x^{(k)})$，而 $-H_k^{-1}\nabla f(x^{(k)})$ 则为点 $x^{(k)}$ 处的牛顿方向，也就是该点的下降方向。通过该公式进行迭代直至该点的梯度收敛，即其梯度的二阶范数$||\nabla f(x^{(k)})|| \lt \epsilon$。</p>
+<p>牛顿法是具有<strong>二次收敛性</strong>的算法。若用原始牛顿法求某二次目标函数的最优解，则构造的逼近函数与原目标函数是完全相同的二次式，其等值线完全重合，故从任一点出发，一定可以一次达到目标函数的极小点。</p>
+<p>其<strong>优点</strong>是：对于二次正定函数，迭代一次即可以得到最优解，对于非二次函数，若函数二次性较强或迭代点已经进入最优点的较小邻域，则收敛速度也很快。</p>
+<p>其<strong>缺点</strong>是：由于迭代点的位置是按照极值条件确定的，并未沿函数值下降方向搜索，因此，对于非二次函数，有时会使函数值上升，即 $f(x_{k+1}) &gt; f(x_k)$，而使计算失败。</p>
+<h6 id="阻尼牛顿法"><a href="#阻尼牛顿法" class="headerlink" title="阻尼牛顿法"></a>阻尼牛顿法</h6><p>阻尼牛顿法对原始牛顿法进行了改进,每次迭代<strong>加入了步长</strong> $\alpha^{(k)}$，即将迭代公式从</p>
+<p>$x^{(k+1)} = x^{(k)}-H_k^{-1}\nabla f(x^{(k)})$</p>
+<p>变为了</p>
+<p>$x^{(k+1)} = x^{(k)}-\alpha^{(k)}H_k^{-1}\nabla f(x^{(k)})$</p>
+<p>最优步长 $\alpha^{(k)}$ 也称为阻尼因子，其求解方法也类似于最速下降中通过一维搜索得到的最优步长。</p>
+<p>其<strong>优点</strong>是：<br>由于阻尼牛顿法每次迭代都在牛顿方向进行一维搜索，<strong>避免了迭代后函数值上升的现象</strong>，从而保持了牛顿法的二次收敛性，而对初始点的选择没有苛刻的要求。</p>
+<p><strong>缺点</strong>是：<br>1）对目标函数要求苛刻，要求函数具有连续的一、二阶导数；为保证函数的稳定下降，海赛矩阵必须正定；为求逆阵要求海赛矩阵非奇异。<br>2）计算复杂且计算量大，存储量大</p>
+<h6 id="拟牛顿法-变尺度法"><a href="#拟牛顿法-变尺度法" class="headerlink" title="拟牛顿法(变尺度法)"></a>拟牛顿法(变尺度法)</h6><p>从前面介绍的最速下降法和牛顿法可知，梯度法的搜索方向只需计算函数的一阶偏导数，<strong>计算量小</strong>，当迭代点<strong>远离最优点时，函数值下降很快</strong>，但当迭代点<strong>接近最优点时收敛速度极慢</strong>。牛顿法的搜索方向不仅需要计算一阶偏导数，而且要计算二阶偏导数及其逆阵，<strong>计算量很大</strong>，但牛顿法具有二次收敛性，当<strong>迭代点接近最优点时，收敛速度很快。</strong></p>
+<p>若迭代过程先用梯度法，后用牛顿法并避开牛顿法的海赛矩阵的逆矩阵的烦琐计算，则可以得到一种较好的优化方法，这就是“拟牛顿法”产生的基本构想。为此，综合梯度法和牛顿法的优点，提出拟牛顿法。</p>
+<p>拟牛顿法的迭代公式与最速下降和阻尼牛顿法类似，</p>
+<p>$x^{(k+1)} = x^{(k)}-\alpha^{(k)}A_k\nabla f(x^{(k)})$</p>
+<p>其中$A_k$为构造的构造的 <code>n×n</code> 阶对称矩阵，拟牛顿方向即为$-A_k\nabla f(x^{(k)})$。</p>
+<blockquote>
+<p>当$A_k = I$时，上式为最速下降法的迭代公式<br>当$A_k = H_k^{-1}$时，上式为阻尼牛顿法的迭代公式</p>
+</blockquote>
+<p>拟牛顿法原来使通过DFP法构造 $A_k$，构造过程中<strong>避开了二阶导数的计算</strong>，因此收敛速度也比较快；但是DFP算法由于舍入误差和一维搜索的不精确，有可能导致$A_k$奇异，而使数值稳定性方面不够理想。所以1970年提出更稳定的算法，称为BFGS算法。这里不详细展开讨论这两种算法。</p>
+<h5 id="共轭梯度法"><a href="#共轭梯度法" class="headerlink" title="共轭梯度法"></a>共轭梯度法</h5><p>共轭梯度法的搜索方向采用<strong>梯度法基础上的共轭方向</strong>，如图所示，</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/lxo2n83lt8vwzpteshxzwfx2/image_1b5i1mliksbh1nks1d5a185o14643b.png" alt="共轭梯度法"></p>
+<p>目标函数 $f(x)$ 在迭代点 $x^{(k+1)}$ 处的负梯度为$-\nabla f(x^{(k+1)})$，该方向与<strong>前一搜索方向</strong> $S^k$ 互为正交，在此基础上构造一种具有较高收敛速度的算法，该算法的搜索方向要满足以下两个条件：</p>
+<p>1）以 $x^{(k+1)}$ 点出发的搜索方向 $S^{k+1}$ 是$-\nabla f(x^{(k+1)})$ 与 $S^k$ 的线性组合。即<br>$$ S^{k+1} = -\nabla f(x^{(k+1)}) + \beta_kS^k$$</p>
+<p>$$\beta_k = (\frac{||\nabla f(x^{(k+1)})||}{||\nabla f(x^{(k)})||})^2$$</p>
+<p>2）$[S^{k+1}]^TGS^k=0$</p>
+<p>除了计算下降方向方法不同，其迭代公式与前面的方法类似,为</p>
+<p>$x^{(k+1)} = x^{(k)}+\alpha^{(k)}S^{(k)}$</p>
+<p>收敛的判断也是判断梯度的二阶范数</p>
+<p>$||\nabla f(x^{(k+1)})|| \lt \epsilon$ 是否成立即可</p>
+<p>共轭梯度法属于解析法，其算法需求一阶导数，所用公式及算法简单，所需存储量少该方法以正定二次函数的共轭方向理论为基础，对二次型函数可以经过有限步达到极小点，所以<strong>具有二次收敛性</strong>。但是对于非二次型函数，以及在实际计算中由于计算机舍入误差的影响，虽然经过 n 次迭代，仍不能达到极小点，则通常以重置负梯度方向开始，搜索直至达到预定精度，其收敛速度也是较快的。</p>
+<h4 id="方法对比"><a href="#方法对比" class="headerlink" title="方法对比"></a>方法对比</h4><p>为了比较各种优化方法的特性，必须建立合理的评价准则。   </p>
+<p>无约束优化方法的评价准则主要包括以下几个方面</p>
+<p>1、<strong>可靠性</strong>。即在合理的精度要求下，在一定允许时间内能解出各种不同类型问题的成功率。能够解出的问题越多，则算法的可靠性越好<br>2、<strong>有效性</strong>。即算法的解题效率。它有两个衡量标准。其一是对同一题目，在相同精度和初始条件下，比较机时多少。其二是在相同精度下，计算同一题目所需要的函数的计算次数。<br>3、<strong>简便性</strong>。一方面指实现该算法的准备工作量的大小。另一方面指算法占用存储单元的数量。</p>
+<p>各个算法的性能对比如下：<br><strong>可靠性</strong>：牛顿法较差，因为它对目标函数要求太高，解题成功率较低。<br><strong>有效性</strong>：坐标变换法和梯度法的计算效率较低，因为它们从理论上不具有二次收敛性。<br><strong>简便性</strong>：牛顿法和拟牛顿法的程序编制较复杂，牛顿法还占用较多的存储单元。</p>
+<p>在选用无约束优化方法时，一方面要考虑优化方法的特点，另一方面要考虑目标函数的情况。<br>1、一般而言，对于<strong>维数较低或者很难求得导数</strong>的目标函数，使用<strong>坐标轮换法</strong>较合适。<br>2、对于<strong>二次性较强的目标函数</strong>，使用<strong>牛顿法</strong>效果好。<br>3、对于<strong>一阶偏导数易求</strong>的目标函数，使用<strong>梯度法</strong>可使程序编制简单，但精度不宜过高<br>4、综合而言，共轭梯度法和DFP法具有较好的性能。</p>
+<h3 id="约束非线性规划"><a href="#约束非线性规划" class="headerlink" title="约束非线性规划"></a>约束非线性规划</h3><p>约束条件下的非线性规划模型如下所示</p>
+<p>$$<br>min\;f(x)\\<br>s.t\quad h_i(x) = 0(i=1,2,…,m)\\<br>\quad\quad g_j(x) \ge 0(j=1,2,…,l)\\<br>$$</p>
+<p>在约束非线性规划中有几个比较重要的概念</p>
+<p><strong>起作用约束和不起作用约束</strong></p>
+<p>对于约束条件 $g_j(x) \ge 0(j=1,2,…,l)$,满足它有两种可能：其一是$g_j(x) \gt 0$, 这时, $x$ 不是处于由这一约束条件形成的可行域的边界上，因此当点不论沿什么方向稍微离开时,都不会违背这一约束条件,这样的约束就称为不起作用约束，即它<strong>对 的微小扰动不起限制作用</strong>,也就是约束中的所有等式约束均是起作用约束，包括 所有的$h(x)$ 和 $g(x)$ 中取等号的约束。注意，<strong>不起作用约束并不是无效约束</strong>！</p>
+<p><strong>有效集(积极集)</strong><br>有效集定义为不等式约束中符号为等号的那些约束条件的下标，如对于上面的带约束的非线性规划模型，其有效集为</p>
+<p>$I(x) = \lbrace j|g_j(x)=0, 1 \le j \le l \rbrace$</p>
+<h4 id="KT条件"><a href="#KT条件" class="headerlink" title="KT条件"></a>KT条件</h4><p>在不同的资料中，KT(Kuhn-Tucker) 条件也会被称为 KKT(Karush-Kuhn-Tucker)条件。原因是这个理论是 Karush(1939年) 以及 Kuhn和Tucker(1951) 先后独立发表出来的。而且是在Kuhn和Tucker发表之后才逐渐受到重视,所有很多教材都会将这一条件称为KT条件，我们这里只需要知道这KT跟KKT是一样的东西就可以了。 </p>
+<p>KT条件是非线性规划领域中最重要的理论成果之一，其重要的意义在于它是<strong>确定某点是最优点的一阶必要条件</strong>，只要是最优点就必须满足这个条件。但一般来说它不是充分条件，即满足KT条件的点并不一定是最优点。但是<strong>对于凸规划，KT条件是最优点存在的充要条件</strong>。也就是说在凸规划中通过KT条件可以找到最优解。</p>
+<p>对于非线性规划模型<br>$$<br>min\;f(x)\\<br>s.t\quad h_i(x) = 0(i=1,2,…,m)\\<br>\quad\quad g_j(x) \ge 0(j=1,2,…,l)\\<br>$$</p>
+<p>其KT条件为<br>$$<br>\nabla f(x) - \sum_{i=1}^mr_i\nabla h_i(x) - \sum_{j=1}^l\lambda_j\nabla g_j(x) = 0\\<br>\lambda_j g_j(x) = 0\quad (j=1,2,3…l)\\<br>\lambda_j \ge 0 \quad (j=1,2,3…l)\\<br>$$</p>
+<p>求解上面的KT条件组成的方程组得到的 $x$ 值就是KT点，也就是最优点(对于凸规划而言)。另外,下式</p>
+<p>$f(x) - \sum_{i=1}^mr_i h_i(x) - \sum_{j=1}^l\lambda_j g_j(x) $</p>
+<p>通常被称为上面非线性规划问题的<strong>拉格朗日函数</strong>，对应的</p>
+<p>$(r_1,r_2,…r_m)$ 和 $(\lambda_1,\lambda_2,…\lambda_l)$</p>
+<p>称为<strong>拉格朗日乘子</strong>。</p>
+<h4 id="罚函数法"><a href="#罚函数法" class="headerlink" title="罚函数法"></a>罚函数法</h4><p>罚函数法的思想是<strong>借助惩罚函数将约束问题装化为无约束问题进行求解</strong>，根据惩罚函数的不同，罚函数法又分为外点法，内点法和乘子法。</p>
+<h5 id="外点法"><a href="#外点法" class="headerlink" title="外点法"></a>外点法</h5><p>外点法可以用来解决只有等式约束、只有不等式约束或同时含有等式和不等式约束问题。</p>
+<p>先考虑只有等式约束的问题如下<br>$$<br>min\;f(x)\\<br>s.t\quad h_i(x) = 0(i=1,2,…,m)\\<br>$$</p>
+<p>则可以将上面的带约束的问题等价于下面的无约束问题</p>
+<p>$$min\;p(x,M) = f(x) + M\sum_i^m [h_i(x)]^2$$</p>
+<p>其中 M 是充分大的正数(求解时一般让其趋于无穷大),被称为罚因子，而 $p(x,M)$ 称为惩罚函数，$M\sum_i^m [h_i(x)]^2$ 为惩罚项，其作用就是当 $x$ 不满足任一等式约束 $h(x) = 0$ 时，罚项就会变得很大从而使解不能满足最小，也就是惩罚了这个解。</p>
+<p>同样对于不等式约束问题<br>$$<br>min\;f(x)\\<br>s.t\quad g_j(x) \ge 0(j=1,2,…,l)\\<br>$$</p>
+<p>构造的惩罚函数为</p>
+<p>$$p(x,M) = f(x) + M\sum_j^l [min(0, g_j(x))]^2$$</p>
+<p>其含义也是当 $x$ 满足不等式约束条件时，罚项为0，不满足是罚项就会变得很大，从而使当前的 $x$ 不忙足目标函数值最小。</p>
+<p>对于同时含有等式约束和不等式约束的规划问题，只要将上面的等式约束和不等式约束中的罚项加在一起即可构造惩罚函数：<br>$$p(x,M) = f(x) + M( \sum_i^m [h_i(x)]^2 + \sum_j^l [min(0, g_j(x))]^2)$$</p>
+<p>求解时只需要用无约束问题的求解方法求解惩罚函数的最小点即可，如下为一个求解的例子</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/thks122wa5q7q31b42o8qez8/image_1b5m40a01f1rqtv1n8h1r01a0im.png" alt="外点法求解例子"></p>
+<p>让 $M_k \rightarrow \infty$ 即可得到最优解为 $x =(2,1)^T$。 但是假如让M逐步变化，可以得到以下表格</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/lyk9wo9jw4zr42mwv46mnqpg/image_1b5m43kp7qnn1mm31dd4polenv13.png" alt="外点法渐变过程"></p>
+<p>从上面的表格可知，当 $M_k$ 从$1 \rightarrow \infty$ 过程中，<strong>罚函数的一系列无约束极小点是从可行域的外部趋近最优解的</strong>，因此，这也是外点法名称的来历。</p>
+<h5 id="内点法"><a href="#内点法" class="headerlink" title="内点法"></a>内点法</h5><p>这里讲述的内点法只考虑不等式约束的问题，对于问题</p>
+<p>$$<br>min\;f(x)\\<br>s.t\quad g_j(x) \ge 0(j=1,2,…,l)\\<br>$$</p>
+<p>其严格内点集合(又称可行域内部)定义为</p>
+<p>$H = \lbrace g_j(x) &gt; 0 |j=1,2,…,l\rbrace$</p>
+<p>内点法就是通过<strong>在严格内点集合中进行迭代</strong>得到最优解，这也是内点法这一说法的来历，需要注意的是<strong>内点法得到的最优解并不一定是全局最优解，因为内点法只是在严格内点中迭代，而全局最优解有可能落在边界上</strong>。但是对于最优解不落在边界的问题，内点法能够得到最优解，并且对于那些最优解落在边界上的问题，内点法也能够获得较好的近似解。</p>
+<p>对于上面的模型可以构造障碍函数</p>
+<p>$$p(x,r_k) = f(x) + r_k \sum_j^l \frac{1}{g_j(x)}$$</p>
+<p>或</p>
+<p>$$p(x,r_k) = f(x) - r_k \sum_j^l ln(g_j(x))$$</p>
+<p>求解障碍函数的最小值就相当于求解原来的带约束问题；障碍函数类似于外点法中的惩罚函数，其中 $r_k \sum_j^l \frac{1}{g_j(x)}$ 或 $- r_k \sum_j^l ln(g_j(x))$ 被称为障碍项，$r_k$ 称为障碍因子。</p>
+<p>障碍函数的作用是惩罚靠近可行域边界的 $x$ 点，即那些使 $g(x) = 0$ 的点，当 $x$ 靠近这些边界的时候，障碍项会变得很大，从而使得其不满足障碍函数最小。</p>
+<p>其求解的一个例子如下</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/545dru3bc33qzp4tf4y21p5s/image_1b5m65o8q1don3qn14u0hp57nq1g.png" alt="内点法求解例子"></p>
+<h5 id="乘子法"><a href="#乘子法" class="headerlink" title="乘子法"></a>乘子法</h5><p>乘子法类似于上面提到的外点法和内点法，也是通过引入<strong>乘子罚函数</strong>使约束问题变为无约束问题。但是与前面不同的地方是乘子罚函数是在罚函数的基础上增加了拉格朗日乘子项，从而称为増广拉格朗日函数。这里只讨论等式约束的情况。</p>
+<p>对于问题<br>$$<br>min\;f(x)\\<br>s.t\quad h_i(x) = 0(i=1,2,…,m)\\<br>$$</p>
+<p>定义<strong>增广拉格朗日函数(乘子罚函数)</strong>为</p>
+<p>$$\varphi (x,\lambda, M) = f(x) - \sum_{i=0}^m \lambda_i h_i(x) + \frac{M}{2} \sum_{i=1}^m [h_i(x)]^2$$</p>
+<p>其中，$\overrightarrow \lambda = (\lambda_1,\lambda_2,…\lambda_m)^T$ 为拉格朗日乘子向量。则原问题的求解转为了求解增广拉格朗日函数的极小点。</p>
+<p>乘子罚函数 $\varphi (x,\lambda, M)$ 与<a href="https://zh.wikipedia.org/wiki/%E6%8B%89%E6%A0%BC%E6%9C%97%E6%97%A5%E4%B9%98%E6%95%B0" target="_blank" rel="external">普通拉格朗日函数</a>的区别是增加了罚项 $\frac{M}{2} \sum_{i=1}^m [h_i(x)]^2$, 与罚函数的区别是增加了乘子项$ - \sum_{i=0}^m \lambda_i h_i(x)$.</p>
+<p>假如知道拉格朗日乘子 $\overrightarrow \lambda$, 再给定一个足够大的罚因子M(M不必趋于无穷大)，就可以通过极小化 $\varphi (x,\lambda, M)$ 得到问题的局部最优解。但是由于 $\overrightarrow \lambda$ 事先无法知道，所以给定一个足够大的 $M$ 和初始的估计量 $\overrightarrow {\lambda^{(1)}}$，每次通过下面的公式对  $\overrightarrow \lambda$ 进行修正。</p>
+<p>$$ \overrightarrow {\lambda^{(k+1)}} = \overrightarrow {\lambda^{(k)}} - Mh_i(x^{(k)})$$</p>
+<p>上式中的 $x^{(k)}$ 是第 k 次迭代拉格朗日乘子为 $\overrightarrow {\lambda^{(k)}}$ 时得到的极小点。通过上式进行迭代直至  $\overrightarrow \lambda$ 收敛。</p>
+<p>在乘子法中，罚因子 $M$ 不必趋于无穷大，只要足够大，就可以通过极小化乘子罚函数，得到原来约束问题的局部最优解，而这避免了罚函数法中的病态问题。实践证明，乘子法优于罚函数法,使用范围比罚函数要广。</p>
+<p>下面为一个求解的简单例子</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/m63gm1q3eo0sygh6dt5voec4/image_1b5mc6mvkgkess9b9c1lou1tdu2a.png" alt="乘子法的例子"></p>
+<p>得到上面的等式后假设 $\overrightarrow {\lambda^{(k)}}$ 的收敛值为 $\alpha$,则有 $\alpha = \frac{7}{23} \alpha + \frac{28}{23}$</p>
+<h4 id="二次规划"><a href="#二次规划" class="headerlink" title="二次规划"></a>二次规划</h4><p>二次规划是特殊的非线性规划，形式简单，既可以使用求耳机非线性规划的一般方法，又可以使用特定的解法。在实际中有广泛应用，如支持向量机（SVM）本质上就是一个二次规划问题。</p>
+<p>二次规划问题的一般模型也如下<br>$$<br>min\;f(x)\\<br>s.t\quad h_i(x) = 0(i=1,2,…,m)\\<br>\quad\quad g_j(x) \ge 0(j=1,2,…,l)\\<br>$$</p>
+<p>但是<strong>要求 $f(x)$ 是二次函数，而 $h_i(x)$ 和 $g_j(x)$ 是线性函数。</strong><br>因此可以展开写成如下的形式：</p>
+<p>$$<br>min\;f(x) = \frac{1}{2}x^TGx + r^Tx\\<br>s.t\quad A_i^Tx - b_i = 0(i=1,2,…,m)\\<br>\quad\quad\quad A_i^Tx-b_i \ge 0(i=m+1,…,m+l)\\<br>$$</p>
+<p>其中 G 为 $n × n$ 阶对称矩阵( $n$ 为未知变量个数)，$r,A_i$ 为n 位列向量，$b_i$ 为实数。<strong>若矩阵 G 为(正定)半正定矩阵，那么将问题称为严格)凸二次规划</strong>。前面提到，对于凸规划，$\overline x$ 为全局极小点的充要条件是该点满足如下的KT条件。</p>
+<p>$$<br>G\overline x + r - \sum_{i=1}^{m+l}\lambda_iA=0\\<br>\lambda_i (A_i^Tx-b_i) = 0(i=m+1,…,m+l)\\<br>\lambda_i \ge 0(i=m+1,…,m+l)<br>$$</p>
+<p>通过求解KT条件组成的方程组，能够解出二次规划的最优化问题，这只是求解非线性规划的一般方法，还有一些专门用来求解二次规划的方法，对于只含有等式约束的二次规划问题可采用消去法，而同时含有等式约束和不等式约束的解决方法是有效集法，这是更一般的解决方法，下面主要介绍有效集法的原理和过程。</p>
+<p>有效集法又称积极集法，其基本思想是<strong>通过求解有限个等式约束二次规划问题来求解一般约束下的二次规划问题。</strong>从直观上理解，不起作用的约束在解的附近不起任何作用，可以去掉不考虑，而起作用(积极)的不等式约束由于在解处等于0，故可以用等式约束来代替不等式约束。</p>
+<p>有效集方法中的有效集指的是约束中取等号的那些约束条件，对于上面的问题，定义</p>
+<p>$I(x) = \lbrace i| A_i^Tx =b_i, m+1 \le i \le m+l\rbrace $</p>
+<p>则有效集为 </p>
+<p>$E = \lbrace 1,2,…m\rbrace \bigcup I(x)$</p>
+<p>有效集方法就是将其转化为以下问题进行求解，并对得到的解进行讨论<br>$$<br>min\;f(x) = \frac{1}{2}x^TGx + r^Tx\\<br>s.t\quad A_i^Tx = b_i (i \in E)\\<br>$$</p>
+<p>其具体计算步骤如下</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/ouk2vs7i2nbjsiehe1tcpu07/image_1b5mp3qbeafq14ma1865obmk7e34.png" alt="有效集法计算步骤1"><br><img src="http://static.zybuluo.com/WuLiangchao/zny5ofc09zv5hi4uss49cbj2/image_1b5mp5eok1thd14gl39epfk1k763h.png" alt="有效集计算步骤2"></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/数学/" rel="tag">数学</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/25/《Programming Collective Intelligence》读书笔记(3)--聚类/" rel="next" title="《Programming Collective Intelligence》读书笔记(3)--聚类">
+                <i class="fa fa-chevron-left"></i> 《Programming Collective Intelligence》读书笔记(3)--聚类
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/02/18/概率论与数理统计知识整理(6)-参数估计/" rel="prev" title="概率论与数理统计知识整理(6)-参数估计">
+                概率论与数理统计知识整理(6)-参数估计 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://wulc.me/files/profile.jpg"
+               alt="良超" />
+          <p class="site-author-name" itemprop="name">良超</p>
+          <p class="site-description motion-element" itemprop="description">算法工程师首先得是个工程师</p>
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">208</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">39</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/WuLC" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github-alt"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.linkedin.com/in/wuliangchao/" target="_blank" title="LinkedIn">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  LinkedIn
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#线性规划"><span class="nav-number">1.</span> <span class="nav-text">线性规划</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数学模型与基本概念"><span class="nav-number">1.1.</span> <span class="nav-text">数学模型与基本概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#单纯形法"><span class="nav-number">1.2.</span> <span class="nav-text">单纯形法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对偶理论"><span class="nav-number">1.3.</span> <span class="nav-text">对偶理论</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#灵敏度分析"><span class="nav-number">1.4.</span> <span class="nav-text">灵敏度分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#非线性规划"><span class="nav-number">2.</span> <span class="nav-text">非线性规划</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数学模型与基本概念-1"><span class="nav-number">2.1.</span> <span class="nav-text">数学模型与基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#梯度与海塞矩阵"><span class="nav-number">2.1.1.</span> <span class="nav-text">梯度与海塞矩阵</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#凸函数"><span class="nav-number">2.1.2.</span> <span class="nav-text">凸函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#凸规划"><span class="nav-number">2.1.3.</span> <span class="nav-text">凸规划</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#一维搜索"><span class="nav-number">2.2.</span> <span class="nav-text">一维搜索</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#单谷函数"><span class="nav-number">2.2.1.</span> <span class="nav-text">单谷函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#外推内插法"><span class="nav-number">2.2.2.</span> <span class="nav-text">外推内插法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#黄金分割法"><span class="nav-number">2.2.3.</span> <span class="nav-text">黄金分割法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三点二次插值法"><span class="nav-number">2.2.4.</span> <span class="nav-text">三点二次插值法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#牛顿法"><span class="nav-number">2.2.5.</span> <span class="nav-text">牛顿法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#无约束非线性规划"><span class="nav-number">2.3.</span> <span class="nav-text">无约束非线性规划</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#直接法"><span class="nav-number">2.3.1.</span> <span class="nav-text">直接法</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#坐标-变量-轮换法"><span class="nav-number">2.3.1.1.</span> <span class="nav-text">坐标(变量)轮换法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#模式搜索法"><span class="nav-number">2.3.1.2.</span> <span class="nav-text">模式搜索法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#可变单纯形法"><span class="nav-number">2.3.1.3.</span> <span class="nav-text">可变单纯形法</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#解析法"><span class="nav-number">2.3.2.</span> <span class="nav-text">解析法</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#最速下降法"><span class="nav-number">2.3.2.1.</span> <span class="nav-text">最速下降法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#牛顿法-1"><span class="nav-number">2.3.2.2.</span> <span class="nav-text">牛顿法</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#原始牛顿法"><span class="nav-number">2.3.2.2.1.</span> <span class="nav-text">原始牛顿法</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#阻尼牛顿法"><span class="nav-number">2.3.2.2.2.</span> <span class="nav-text">阻尼牛顿法</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#拟牛顿法-变尺度法"><span class="nav-number">2.3.2.2.3.</span> <span class="nav-text">拟牛顿法(变尺度法)</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#共轭梯度法"><span class="nav-number">2.3.2.3.</span> <span class="nav-text">共轭梯度法</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#方法对比"><span class="nav-number">2.3.3.</span> <span class="nav-text">方法对比</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#约束非线性规划"><span class="nav-number">2.4.</span> <span class="nav-text">约束非线性规划</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#KT条件"><span class="nav-number">2.4.1.</span> <span class="nav-text">KT条件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#罚函数法"><span class="nav-number">2.4.2.</span> <span class="nav-text">罚函数法</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#外点法"><span class="nav-number">2.4.2.1.</span> <span class="nav-text">外点法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#内点法"><span class="nav-number">2.4.2.2.</span> <span class="nav-text">内点法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#乘子法"><span class="nav-number">2.4.2.3.</span> <span class="nav-text">乘子法</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二次规划"><span class="nav-number">2.4.3.</span> <span class="nav-text">二次规划</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <center>
+<div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2019</span>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
+  </br>
+  <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
+</div>
+</center>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>
