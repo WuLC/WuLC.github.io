@@ -70,7 +70,7 @@
 <meta property="og:description" content="《Forecasting High-Dimensional Data》 是 Yahoo! 一篇关于流量预估的论文。在合约广告中，需要提前预估某个定向下的流量情况，从而进行合理的售卖和分配。但是由于定向的组合非常多（广告主的多样的需求导致的），而工程上不允许为每个可能的定向预估其流量，因此这篇论文提出了先预估一些基本定向的流量，然后通过 correlation model 从基本定向的流量计算出各种">
 <meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/5cxiw1weweg6zvqgy1mo9jl8/image_1cstndv791jqh17tnago65f10679.png">
 <meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/grh45xoqhrhvnkw84sqr2ymk/image_1csvl3andohv1od31prus551h4l26.png">
-<meta property="og:updated_time" content="2019-06-01T09:14:44.121Z">
+<meta property="og:updated_time" content="2019-06-07T07:26:47.974Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《Forecasting High-Dimensional Data》阅读笔记">
 <meta name="twitter:description" content="《Forecasting High-Dimensional Data》 是 Yahoo! 一篇关于流量预估的论文。在合约广告中，需要提前预估某个定向下的流量情况，从而进行合理的售卖和分配。但是由于定向的组合非常多（广告主的多样的需求导致的），而工程上不允许为每个可能的定向预估其流量，因此这篇论文提出了先预估一些基本定向的流量，然后通过 correlation model 从基本定向的流量计算出各种">
@@ -394,7 +394,7 @@
 <p>$$R(Gender = male \wedge Age &lt; 30|Q_k) = R(Gender = male|Q_k) \times R(Age &lt; 30|Q_k)$$</p>
 <p>也就是只要为 $Q_k$ 每个单独的 attribute 计算其比例 $R(.| Q_k)$ 即可。具体计算方法如下</p>
 <p>令 $P_t$ 是截止到时间 $t$ 时所有的访问量，$|Q_k \wedge P_t|$ 为这些访问量中满足 $|Q_k|$ 的那些访问量，$|a_i \in (Q_k \wedge P_t)|$ 为满足 $|Q_k|$ 的那些访问量中同时满足 attribute $a_i$的，则对于 attribute，其计算公式如下</p>
-<p>$$R(a_i|Q_k) = \frac{|p \in (Q_k \wedge P_t)|}{|Q_k \wedge P_t|}$$</p>
+<p>$$R(a_i|Q_k) = \frac{|a_i \in (Q_k \wedge P_t)|}{|Q_k \wedge P_t|}$$</p>
 <h3 id="Partwise-Independence-Model-PIM"><a href="#Partwise-Independence-Model-PIM" class="headerlink" title="Partwise Independence Model (PIM)"></a>Partwise Independence Model (PIM)</h3><p>将所有的 attribute 都认为是相互独立的显然是不合理的，因为有某些 attribute 之间是相互关联的，比如说年龄和收入一般是存在关联的，因为 PIM 实际上就是将某些可能有关联的 attribute 的比例一起计算。即</p>
 <p>$$R(Gender = male \wedge Age &lt; 30 \wedge Incom &gt; 10000|Q_k) = R(Gender = male|Q_k) \times R(Age &lt; 30 \wedge Incom &gt; 10000|Q_k)$$, 而比例的计算公式也跟上面的类似</p>
 <h3 id="Sampling-based-Joint-Model-SJM"><a href="#Sampling-based-Joint-Model-SJM" class="headerlink" title="Sampling-based Joint Model(SJM)"></a>Sampling-based Joint Model(SJM)</h3><p>上面的两种方法均假设了 attribute 之间的的相互独立性，这依然会存在一定的局限性，能够完全避免独立性的假设呢？这篇文章提出的 Sampling-based Joint Model(SJM) 就避免了独立性的假设。</p>
