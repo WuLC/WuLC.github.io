@@ -70,7 +70,7 @@
 <meta property="og:description" content="《Forecasting High-Dimensional Data》 是 Yahoo! 一篇关于流量预估的论文。在合约广告中，需要提前预估某个定向下的流量情况，从而进行合理的售卖和分配。但是由于定向的组合非常多（广告主的多样的需求导致的），而工程上不允许为每个可能的定向预估其流量，因此这篇论文提出了先预估一些基本定向的流量，然后通过 correlation model 从基本定向的流量计算出各种">
 <meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/5cxiw1weweg6zvqgy1mo9jl8/image_1cstndv791jqh17tnago65f10679.png">
 <meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/grh45xoqhrhvnkw84sqr2ymk/image_1csvl3andohv1od31prus551h4l26.png">
-<meta property="og:updated_time" content="2019-06-07T07:26:47.974Z">
+<meta property="og:updated_time" content="2019-06-07T07:47:44.359Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《Forecasting High-Dimensional Data》阅读笔记">
 <meta name="twitter:description" content="《Forecasting High-Dimensional Data》 是 Yahoo! 一篇关于流量预估的论文。在合约广告中，需要提前预估某个定向下的流量情况，从而进行合理的售卖和分配。但是由于定向的组合非常多（广告主的多样的需求导致的），而工程上不允许为每个可能的定向预估其流量，因此这篇论文提出了先预估一些基本定向的流量，然后通过 correlation model 从基本定向的流量计算出各种">
@@ -372,7 +372,7 @@
         <p>《<a href="https://dl.acm.org/citation.cfm?id=1807277" target="_blank" rel="external">Forecasting High-Dimensional Data</a>》 是 Yahoo! 一篇关于流量预估的论文。在合约广告中，需要提前预估某个定向下的流量情况，从而进行合理的售卖和分配。但是由于定向的组合非常多（广告主的多样的需求导致的），而工程上不允许为每个可能的定向预估其流量，因此这篇论文提出了<strong>先预估一些基本定向的流量，然后通过 correlation model 从基本定向的流量计算出各种定向下的流量情况</strong>，具有较强的工程性，也是之前提到的文章 《<a href="http://wulc.me/2018/10/25/%E3%80%8ABudget%20Pacing%20for%20Targeted%20Online%20Advertisements%20at%20LinkedIn%E3%80%8B%20%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" target="_blank" rel="external">Budget Pacing for Targeted Online Advertisements at LinkedIn</a>》 中采用的流量预估方法。</p>
 <a id="more"></a>
 <h2 id="问题定义"><a href="#问题定义" class="headerlink" title="问题定义"></a>问题定义</h2><p>前面简单提到了文章解决的问题的背景，文章将一个最基本的定向（如性别为男）称为一个 attribute，而每个广告主的需要的流量就是若干个 attribute 的 combination，因此 combination 的数量是非常庞大的，<strong>文章要求的就是如何有效地预估所有 combination 的流量情况</strong>。</p>
-<p>一个最直观的思路就是统计出某个 combination 的历史数据，然后训练模型并进行预估。但是这个方法最致命的地方在于统计 combination 的历史数据以及模型训练所需的耗时在实际中是无法容忍的，需要数小时（文章要求需要在数百毫秒内返回某个 combination 的流量预估值）。那可以将这些放到理想来做么？答案也是不可以的，因为我们不知道哪些 combination 在未来会用到，因此所有的 combination 都需要进行预估，而这个数量过于庞大了。</p>
+<p>一个最直观的思路就是统计出某个 combination 的历史数据，然后训练模型并进行预估。但是这个方法最致命的地方在于统计 combination 的历史数据以及模型训练所需的耗时在实际中是无法容忍的，需要数小时（文章要求需要在数百毫秒内返回某个 combination 的流量预估值）。那可以将这些放到离线来做么？答案也是不可以的，因为我们不知道哪些 combination 在未来会用到，因此所有的 combination 都需要进行预估，而这个数量过于庞大了。</p>
 <h2 id="解决思路"><a href="#解决思路" class="headerlink" title="解决思路"></a>解决思路</h2><p>文章提出的解决思路是<strong>先对一小部分有代表性的 combination 进行上面的历史统计和预估操作</strong>，这里的<strong>有代表性的流量</strong>可以从统计的历史数据中得到（如访问量最多的combination 等），也可以手工选择等；然后<strong>结合文章提到的 correlation model，可以从这一小部分的 combination 中预估出所有的 combination 的流量情况</strong>。</p>
 <p>下面具体详细介绍整体的解决思路</p>
 <h2 id="系统总览"><a href="#系统总览" class="headerlink" title="系统总览"></a>系统总览</h2><p>文章提出的方法系统图如下，每个的 Historical Data Point 实际上就是一个历史 query，包含了某些 attribute 的组合，这些数据主要有两个用途</p>
@@ -403,7 +403,7 @@
 <p>整个过程思路非常简单，没有涉及到 attribute，因此也没有 attribute independent 的假设。但是关键的问题在于如何高效地算出上面的分子和分母的那些计数。论文使用的是bitmap index, 且使用了论文 <a href="https://dl.acm.org/citation.cfm?id=1132864" target="_blank" rel="external">Optimizing bitmap indices with efficient compression</a> 中提出的关于 bitmap index 的一种改进方法。</p>
 <h2 id="实验效果"><a href="#实验效果" class="headerlink" title="实验效果"></a>实验效果</h2><h3 id="数据"><a href="#数据" class="headerlink" title="数据"></a>数据</h3><p>实验采用的数据是 Yahoo！部分页面过去一年的历史访问数据，其中一半用于进行 time-series forecasting，另一半用于验证效果（按时间划分），且对于某些 combination 用了过去四年累积的数据进行 forecasting。Correlation Model 则用了过去一周的数据进行训练，且 SJM 采样得到了 20 million 的数据。</p>
 <h3 id="评估指标"><a href="#评估指标" class="headerlink" title="评估指标"></a>评估指标</h3><p>工程上的评估指标有 speed 和 space，就是时间和空间的评估。</p>
-<p>效果上的评估指标主要就是 accuracy，采用的是 absolute percent age error (APE), 假设预估值为 $F$, 真实值为 $A$, 则 APE 的定义如下</p>
+<p>效果上的评估指标主要就是 accuracy，采用的是 absolute percentage error (APE), 假设预估值为 $F$, 真实值为 $A$, 则 APE 的定义如下</p>
 <p>$$APE = \frac{|F-A|}{A}$$</p>
 <p>APE 针对的是单个 query，但是往往希望的是验证一系列 query 的效果，其指标为 Root Mean Square Error (RMSE)，定义如下, $w_q$ 表示每个 query 的权重，这个值被设为 query 在过去两年的合约中出现的次数</p>
 <p>$$RMSE = \sqrt{\frac{\sum_{q \in Q}w_qAPE^2(q)}{\sum_{q \in Q}w_q}}$$</p>
