@@ -75,7 +75,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/SmartPacingExp2.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/SmartPacingExp3.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/SmartPacingArchitecture.png">
-<meta property="og:updated_time" content="2019-11-07T02:52:52.221Z">
+<meta property="og:updated_time" content="2020-05-03T14:38:27.945Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《Smart Pacing for Effective Online Ad Campaign Optimization》阅读笔记">
 <meta name="twitter:description" content="《Smart Pacing for Effective Online Ad Campaign Optimization》是 Yahoo 在 2015 发表的一篇关于 budget pacing 的论文，与之前写过的 Budget Pacing for Targeted Online Advertisements at LinkedIn 相似，目标也是把预算均匀花完，但是除了这个目标，这篇论文还提出">
@@ -450,7 +450,7 @@
 <p>从结果来看，相比于 Budget Pacing for Targeted Online Advertisements at LinkedIn 中的方法，这篇文章调节 budget 的花费得更为平缓，同时成本的控制也更好，因为 Budget Pacing for Targeted Online Advertisements at LinkedIn 论文中的方法没有考虑成本问题。</p>
 <h2 id="工程实现"><a href="#工程实现" class="headerlink" title="工程实现"></a>工程实现</h2><p>本文的方法的工程实现架构如下图所示，架构不复杂，左边的部分通过 message queue(如 kafka) 搜集后验数据，用于更新 in-memory data source 中各层的 pacing rate；右边的 Controller 则会利用 in-memory data source 中的 pacing rate 进行 budget pacing</p>
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/SmartPacingArchitecture.png" alt="architecture"></p>
-<p>因为 pacing rate 是存储在内存中，因此会有丢失的风险，常见的做法是通过外部存储如 redis 等对其进行持久化，但是文中没有这么做，而是根据 message queue 中的日志来尽心恢复，虽然这样做减少了对外部存储的依赖，但是相信恢复的时间也会比较长，但是文章中并无提及这一点。</p>
+<p>因为 pacing rate 是存储在内存中，存在丢失问题，因此会根据 message queue 中的日志进行恢复，其原理看起来跟 redis 的 AOF 模式恢复类似。</p>
 <h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>这篇文章主要提出了两个基于Probabilistic throttling的算法用于解决 budget pacing 问题， 第一个算法仅解决了如何让预算更平缓地花完，第二个算法在第一个算法的基础上，不仅让预算平缓花完，还能保成本。文章中的方法的一个亮点在于根据 ctr 等指标将 request 分层，不同的层采用不同的 pacing rate，从而能够针对 ctr 高的 request 给予更高的 pacing rate，而这也是文章中的算法能够优化 performance 的原因。</p>
 
       
@@ -612,11 +612,11 @@
               </span>
             
               <span class="links-of-author-item">
-                <a href="mailto:liangchaowu5@gmail.com" target="_blank" title="Email">
+                <a href="mailto:liangchaowu5@gmail.com" target="_blank" title="E-mail">
                   
                     <i class="fa fa-fw fa-globe"></i>
                   
-                  Email
+                  E-mail
                 </a>
               </span>
             
