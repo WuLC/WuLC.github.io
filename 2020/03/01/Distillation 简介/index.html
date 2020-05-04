@@ -62,19 +62,19 @@
 
 
 
-<meta name="description" content="本文简单了描述机器学习中的蒸馏（distillation）技术的原理和相关 papper，包括 model distillation 和 feature distillation。顾名思义，蒸馏是对原来的模型/特征进行了压缩，其原因可能是为了减少模型的大小（model distillation）、或者某些特征只能在 training 时获取，serving 无法获取(feature distill">
+<meta name="description" content="本文简单了描述机器学习中的蒸馏（distillation）技术的原理，distillation 可简单分为 model distillation 和 feature distillation。顾名思义，蒸馏是对原来的模型/特征进行了压缩，其原因可能是为了减少模型的大小（model distillation）、或者某些特征只能在 training 时获取，serving 无法获取(feature d">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Distillation 简介">
 <meta property="og:url" content="http://wulc.github.io/2020/03/01/Distillation 简介/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
-<meta property="og:description" content="本文简单了描述机器学习中的蒸馏（distillation）技术的原理和相关 papper，包括 model distillation 和 feature distillation。顾名思义，蒸馏是对原来的模型/特征进行了压缩，其原因可能是为了减少模型的大小（model distillation）、或者某些特征只能在 training 时获取，serving 无法获取(feature distill">
+<meta property="og:description" content="本文简单了描述机器学习中的蒸馏（distillation）技术的原理，distillation 可简单分为 model distillation 和 feature distillation。顾名思义，蒸馏是对原来的模型/特征进行了压缩，其原因可能是为了减少模型的大小（model distillation）、或者某些特征只能在 training 时获取，serving 无法获取(feature d">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/ModelDistillationVSFeatureDistillation.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/DistillationTrainingAndServing.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/SynchronousTraining.png">
-<meta property="og:updated_time" content="2020-05-04T14:21:14.455Z">
+<meta property="og:updated_time" content="2020-05-04T14:24:49.172Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Distillation 简介">
-<meta name="twitter:description" content="本文简单了描述机器学习中的蒸馏（distillation）技术的原理和相关 papper，包括 model distillation 和 feature distillation。顾名思义，蒸馏是对原来的模型/特征进行了压缩，其原因可能是为了减少模型的大小（model distillation）、或者某些特征只能在 training 时获取，serving 无法获取(feature distill">
+<meta name="twitter:description" content="本文简单了描述机器学习中的蒸馏（distillation）技术的原理，distillation 可简单分为 model distillation 和 feature distillation。顾名思义，蒸馏是对原来的模型/特征进行了压缩，其原因可能是为了减少模型的大小（model distillation）、或者某些特征只能在 training 时获取，serving 无法获取(feature d">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/ModelDistillationVSFeatureDistillation.png">
 
 
@@ -359,7 +359,7 @@
       
 
       
-        <p>本文简单了描述机器学习中的蒸馏（distillation）技术的原理和相关 papper，包括 model distillation 和 feature distillation。顾名思义，蒸馏是对原来的模型/特征进行了压缩，其原因可能是为了减少模型的大小（model distillation）、或者某些特征只能在 training 时获取，serving 无法获取(feature distillation)；在实际业务中可根据具体场景灵活地应用这两类技术。</p>
+        <p>本文简单了描述机器学习中的蒸馏（distillation）技术的原理，distillation 可简单分为 model distillation 和 feature distillation。顾名思义，蒸馏是对原来的模型/特征进行了压缩，其原因可能是为了减少模型的大小（model distillation）、或者某些特征只能在 training 时获取，serving 无法获取(feature distillation)；在实际业务中可根据具体场景灵活地应用这两类技术。</p>
 <a id="more"></a>
 <h2 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h2><p>Distillation 可分为 Model Distillation 和 Feature Distillation，其思想都是在训练时同时训练两个模型：teacher 模型和 student 模型，而在 serving 时只用 student 模型。这里的假设是：<strong>teacher 模型比起 student 模型，在模型结构上更复杂(Model Distillation) ，或在特征集上更为丰富(Feature Distillation) ；因此其准确率也会比 student 模型要好。</strong></p>
 <p>如下图所示是 Model Distillation和Feature Distillation示例 （下面的图和公式基本摘自  <a href="https://arxiv.org/pdf/1907.05171.pdf" target="_blank" rel="external">Privileged Features Distillation for E-Commerce Recommendations</a>）</p>
