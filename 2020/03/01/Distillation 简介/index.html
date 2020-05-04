@@ -71,7 +71,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/ModelDistillationVSFeatureDistillation.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/DistillationTrainingAndServing.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/SynchronousTraining.png">
-<meta property="og:updated_time" content="2020-05-04T14:28:04.694Z">
+<meta property="og:updated_time" content="2020-05-04T14:31:47.935Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Distillation 简介">
 <meta name="twitter:description" content="本文简单了描述机器学习中的蒸馏（distillation）技术的原理，distillation 可简单分为 model distillation 和 feature distillation。顾名思义，蒸馏是对原来的模型/特征进行了压缩，其原因可能是为了减少模型的大小（model distillation）、或者某些特征只能在 training 时获取，serving 无法获取(feature d">
@@ -375,7 +375,7 @@
 <li>$\lambda$：平衡 $L_s$ 和 $L_d$ 的超参</li>
 </ul>
 <p>上面公式（1）是 Model Distillation 的典型做法，可以看到输入 teacher 模型和 student 模型的特征都是相同的即 $X$ ；而公式(2)描述的 Feature Distillation 则认为 teacher 模型的特征（$X^*$）比 student 模型的特征($X$) 更为丰富，</p>
-<p>$$\min_{W_s} (1-\lambda)L_s(y, f_s(X;W_s))+\lambda<em>L_d(f_t(X^\</em>;W_t),f_s(X;W_s)) \tag{2}$$</p>
+<p>$$\min_{W_s} (1-\lambda)L_s(y, f_s(X;W_s))+\lambda*L_d(f_t(X^*;W_t),f_s(X;W_s)) \tag{2}$$</p>
 <p>上面两条公式是 Distillation 的核心思想了，且在使用<strong>理论上应该首先训练好 teacher 网络，再训练 student 网络；但是在实际训练的时候，为了加快训练速度，会令 teacher 模型和 student 模型同时进行训练</strong>；因此最终的损失函数变为了如下公式(3) 形式，其中 $L_s$ 和 $L_t$ 是 logloss， 而 $L_d$ 是 cross entropy loss</p>
 <p>$$\min_{W_s, W_t} (1-\lambda)L_s(y, f_s(X;W_s)) +  \lambda<em>L_d(f_t(X^</em>;W_t),f_s(X;W_s)) \\</p>
 <ul>
