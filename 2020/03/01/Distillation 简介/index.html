@@ -71,7 +71,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/ModelDistillationVSFeatureDistillation.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/DistillationTrainingAndServing.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/SynchronousTraining.png">
-<meta property="og:updated_time" content="2020-05-05T03:05:41.662Z">
+<meta property="og:updated_time" content="2020-05-05T04:22:04.348Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Distillation 简介">
 <meta name="twitter:description" content="本文简单了描述机器学习中的蒸馏（distillation）技术的原理，distillation 可简单分为 model distillation 和 feature distillation。顾名思义，蒸馏是对原来的模型/特征进行了压缩，其原因可能是为了减少模型的大小（model distillation）、或者某些特征只能在 training 时获取，serving 无法获取(feature d">
@@ -384,7 +384,7 @@
 <p>（1）先训练 teacher 网络，再训练 student 网络，也被称为 asynchronous training<br>（2）同时训练 teacher 网络和 student 网络，也被称为 synchronous training </p>
 <p>理论上应该采用方式(1), 但是由于需要<strong>串行训练两个模型，会导致训练的时间过长</strong>, 因此才提出了方式（2）的方法；而方式 (2) 会带来训练效果不稳定的问题, 其原因是在 teacher 在训练初期，其效果往往还不好，而将其输出结果作为 label 很容易导致 student 网络学飞了</p>
 <p>因此更常用的做法在这两个之间做个权衡，<strong>基本做法就是在训练的初期，将公式(3) 中的 $\lambda$ 设为0，然后后面逐渐增大 $\lambda$ 这个值</strong></p>
-<p>上面提到的paper在这点上提出了一个更简单策略，就是在 $k$ 个 step 后才让 teacher 网络的输出作为 loss 影响 student 网络，$k$ 是一个排定的超参，因此其详细训练方式如下</p>
+<p>上面提到的paper在这点上提出了一个更简单策略，就是在 $k$ 个 step 后才让 teacher 网络的输出作为 loss 影响 student 网络，$k$ 是一个拍定的超参，因此其详细训练方式如下</p>
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/SynchronousTraining.png" alt="synchronous training"></p>
 <h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>tensorflow 提供的一个distillation 的实现 <a href="https://github.com/tensorflow/tensor2tensor/blob/master/tensor2tensor/models/distillation.py" target="_blank" rel="external">distillation.py</a>，使用见 stack-overflow 上的 <a href="https://stackoverflow.com/questions/53291939/how-do-i-use-tensor2tensors-distillation-py-to-distill-the-knowledge-from-a-tea?answertab=active#tab-top" target="_blank" rel="external">这个回答</a></p>
 <p>核心代码如下所示，注释写得已经非常清晰了，下面默认的模式是先训练好了 Teacher 网络，再训练 Student 网络，也就是上面提到的 asynchronous training 模式；但是也可以比较容易将下面的逻辑改成 synchronous training 的。</p>

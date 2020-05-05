@@ -76,7 +76,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/GP-UCB.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/GP-UCB-beta.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/GP-BUCB.png">
-<meta property="og:updated_time" content="2019-11-07T02:52:52.235Z">
+<meta property="og:updated_time" content="2020-05-05T04:21:11.398Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="超参搜索中的 Bayesian Optimization 方法">
 <meta name="twitter:description" content="机器学习中存在着众多的超参数，如 model 中的超参，optimizer 中的超参，loss function 中的各种超参等，这些超参需要使用者根据经验设定，并根据训练结果进行调整，因为这些超参的最优值跟不同任务、不同数据集相关, 没有一个非常通用的经验值。
@@ -369,7 +369,7 @@
 <p>这一步骤往往繁琐耗时，为了简化这一过程，有了 <a href="https://en.wikipedia.org/wiki/Hyperparameter_optimization" target="_blank" rel="external">Hyperparameter optimization</a> 的研究，其目的是自动搜索最优的超参。超参搜索最常见的方法是 grid search，random search，当然也有更高级的方法如基于启发式方法的 heuristic search、基于统计学的 bayesian optimization等，本文主要介绍超参搜索中的 Bayesian Optimization 方法，这是超参搜索比较常见的做法，Google 也将这部分作为一个 service 提供在 <a href="https://cloud.google.com/blog/products/gcp/hyperparameter-tuning-cloud-machine-learning-engine-using-bayesian-optimization" target="_blank" rel="external">Google Cloud</a> 上。本文主要介绍 Bayesian Optimization 中的 GPR(Gaussian Process Regression) + GP-BUCB(Gaussian Process Regression-Batch Upper Confidence Bound) 方法。</p>
 <a id="more"></a>
 <p>更准确地说， <a href="https://en.wikipedia.org/wiki/Bayesian_optimization" target="_blank" rel="external">Bayesian Optimization</a> 应该是一个算法框架，其目的是为了推断那些不能显示给出函数形式的 black-box function，而<strong>在超参搜索中，这个函数指的是将超参数 $x$ 映射至最终的收益 $y$ 的那个函数</strong>，这里的收益不一定是 loss，还可以是 loss 与评估指标的融合，如在 ctr 预估中可以将 y 定义为：$y = \alpha_1 * auc - \alpha_2 * logloss$</p>
-<p>常见的 Bayesian Optimization 方法由两部分组成，高斯过程回归(Gaussian Process Regression, GPR) 和 EE(Exploration Exploitation) trade-off, 下面分别介绍这两部分的具体过</p>
+<p>常见的 Bayesian Optimization 方法由两部分组成，高斯过程回归(Gaussian Process Regression, GPR) 和 EE(Exploration Exploitation) trade-off, 下面分别介绍这两部分的具体过程</p>
 <h2 id="高斯过程回归-GPR"><a href="#高斯过程回归-GPR" class="headerlink" title="高斯过程回归(GPR)"></a>高斯过程回归(GPR)</h2><p>首先，从名字上看，高斯过程回归是一种回归方法，而回归就是给一堆已知的 x 和 y，然后当拿出一个新 x 的时候，能够预测出对应的新y，但是<strong>不同于常见的回归方法最终预测出一个值，高斯过程回归最终预测的是新的 y 的分布</strong></p>
 <p>那高斯体现在哪里？顾名思义，Bayesian Optimization 是一种贝叶斯方法，而贝叶斯方法往往少不了先验，而在这里高斯其实是作为一种先验，即我们认为所有的 y 服从一个零均值的多维的联合高斯分布（注意这里每个 y 自己也服从一个一维高斯分布），相比于一维高斯分布，多维高斯分布将原来的均值变为了均值向量，方差变为了协方差矩阵，（可参考<a href="https://www.zhihu.com/question/36339816/answer/67043318" target="_blank" rel="external">多维高斯分布是如何由一维发展而来的？</a>了解如何从一维高斯分布推广至多维高斯分布)</p>
 <p>至于过程(process), 则是指随机过程(<a href="https://en.wikipedia.org/wiki/Stochastic_process" target="_blank" rel="external">stochastic process</a>), 这里指的是多个服从高斯分布的随机变量组成了一个随机过程，但是这里点对于我们理解 GPR 不重要。</p>
@@ -419,7 +419,7 @@
 <p>贝叶斯学派则认为每个 arm 的收益服从着特定的分布，首先会给每个 arm 一个收益的先验分布，然后通过试验获得似然并更新先验分布获得后验，然后后验作为下一次的先验；通过迭代这个过程让每个 arm 的分布更加接近真实分布，而这就是 Thomson Sampling 的思想，如果不考虑上下文，便是Beta 先验+ Bernoulli 似然；如果考虑了上下文，便是 Gaussian 先验+ Gaussian 似然n</p>
 <p>关于这一类型的 EE 问题可参考 <a href="http://wulc.me/2019/01/05/EE%28Exploitation%20Exploration%29%20%E9%97%AE%E9%A2%98%E6%A6%82%E8%BF%B0/" target="_blank" rel="external">EE 问题概述</a></p>
 <p>而在超参搜索的 EE 问题中，问题就没那么复杂了，只要超参选定了，那么只要用这组超参进行模型的训练或 AB 实验，其收益是确定的(在其他实验条件基本确定下)</p>
-<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>本文主要介绍了超参搜索中的 Bayesian Optimization 中常用的 GPR+GP-UCB 组合。GPR 是一种贝叶斯回归方法，能够回归出 y 的分布而不是一个具体的值，其使用也不限于 Bayesian Optimization 中；而 GP-UCB 与冷启动新广告中的 UCB 等 bandit 算法也不完全相同，主要原因是在超参搜索中的一组超参(arm)的收益 通过一次试验便能够确定了，而一个新广告（arm)的收益在一次试验中并无法完全确定，其方法的区别可参考 EE tradeoff 部分。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>本文主要介绍了超参搜索中的 Bayesian Optimization 中常用的 GPR+GP-UCB 组合。GPR 是一种贝叶斯回归方法，能够回归出 y 的分布而不是一个具体的值，其使用也不限于 Bayesian Optimization 中；而 GP-UCB 与冷启动新广告中的 UCB 等 bandit 算法也不完全相同，主要原因是在超参搜索中的一组超参(arm)的收益 通过一次试验便能够确定了，而一个新广告（arm)的收益在一次试验中并无法完全确定，其方法的区别可参考 EE tradeoff 部分。</p>
 
       
     </div>
@@ -616,7 +616,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#高斯过程回归-GPR"><span class="nav-number">1.</span> <span class="nav-text">高斯过程回归(GPR)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#EE-tradeoff"><span class="nav-number">2.</span> <span class="nav-text">EE tradeoff</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#小结"><span class="nav-number">2.1.</span> <span class="nav-text">小结</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#高斯过程回归-GPR"><span class="nav-number">1.</span> <span class="nav-text">高斯过程回归(GPR)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#EE-tradeoff"><span class="nav-number">2.</span> <span class="nav-text">EE tradeoff</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">3.</span> <span class="nav-text">小结</span></a></li></ol></div>
             
 
           </div>
