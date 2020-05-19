@@ -75,7 +75,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/EM_algorithm.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/gradient_formula.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/DelayFeedBackExp.jpg">
-<meta property="og:updated_time" content="2020-05-19T02:31:18.076Z">
+<meta property="og:updated_time" content="2020-05-19T02:31:57.896Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Modeling Delayed Feedback in Display Advertising 阅读笔记">
 <meta name="twitter:description" content="在计算广告中，转化是有延迟的，即在点击发生后过一段时间用户可能才会发生转化，且往往转化漏斗越深，延迟的时间越长；因此在训练 cvr/deepcvr 模型时，会有两种情况出现（1）过早把样本送入模型，把最终会转化但是还没回传 label 的事件当做负例，导致模型低估（2）过晚把样本送入模型，即让所有样本都等待一个足够长的时间才送入模型，导致模型没能及时更新
@@ -444,7 +444,7 @@
 </ul>
 <p>$$p_0=1-p(x_i) + p(x_i) * \exp(-\lambda(x_i)e_i) $$ </p>
 <p>可以看到，这里 $p_0 + p_1 \ne 1$, 跟我们常见的建模方式不一样</p>
-<h2 id="问题求解"><a href="#问题求解" class="headerlink" title="问题求解"></a>问题求解</h2><p>上面的问题的解法的基本原理是 MLE(极大似然估计)，但是根据是否显式地写出变量 $C$ 的条件概率有两种解法，第一种是将 $C$ 当做隐变量，通过 EM 算法求加；<strong>第二种没有直接写出隐变量 $C$ 的概率密度函数，而是直接写出样本集的 likelihood，因为从上面的问题建模中已经基于当前观察到的 $y_i$ 写出对应的似然函数了。</strong></p>
+<h2 id="问题求解"><a href="#问题求解" class="headerlink" title="问题求解"></a>问题求解</h2><p>上面的问题的解法的基本原理是 MLE(极大似然估计)，但是根据是否显式地写出变量 $C$ 的条件概率有两种解法，第一种是将 $C$ 当做隐变量，通过 EM 算法求解；<strong>第二种没有直接写出隐变量 $C$ 的概率密度函数，而是直接写出样本集的 likelihood，因为从上面的问题建模中已经基于当前观察到的 $y_i$ 写出对应的似然函数了。</strong></p>
 <h3 id="EM-算法"><a href="#EM-算法" class="headerlink" title="EM 算法"></a>EM 算法</h3><p>关于 EM 算法的推导，CS229 的讲义 <a href="http://cs229.stanford.edu/notes/cs229-notes8.pdf" target="_blank" rel="external">EM algorithm</a> 里讲得比较详细了，证明的基本流程就是</p>
 <ol>
 <li>在似然函数中通过全概率公式引入隐变量</li>
