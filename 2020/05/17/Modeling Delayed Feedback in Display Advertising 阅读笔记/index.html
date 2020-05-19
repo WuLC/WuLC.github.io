@@ -65,7 +65,7 @@
 <meta name="description" content="在计算广告中，转化是有延迟的，即在点击发生后过一段时间用户可能才会发生转化，且往往转化漏斗越深，延迟的时间越长；因此在训练 cvr/deepcvr 模型时，会有两种情况出现（1）过早把样本送入模型，把最终会转化但是还没回传 label 的事件当做负例，导致模型低估（2）过晚把样本送入模型，即让所有样本都等待一个足够长的时间才送入模型，导致模型没能及时更新
 因此在建模时需要对转化的回传延时进行建模，">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Modeling Delayed Feedback in Display Advertising 阅读笔记">
+<meta property="og:title" content="《Modeling Delayed Feedback in Display Advertising》 阅读笔记">
 <meta property="og:url" content="http://wulc.github.io/2020/05/17/Modeling Delayed Feedback in Display Advertising 阅读笔记/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
 <meta property="og:description" content="在计算广告中，转化是有延迟的，即在点击发生后过一段时间用户可能才会发生转化，且往往转化漏斗越深，延迟的时间越长；因此在训练 cvr/deepcvr 模型时，会有两种情况出现（1）过早把样本送入模型，把最终会转化但是还没回传 label 的事件当做负例，导致模型低估（2）过晚把样本送入模型，即让所有样本都等待一个足够长的时间才送入模型，导致模型没能及时更新
@@ -75,9 +75,9 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/EM_algorithm.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/gradient_formula.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/DelayFeedBackExp.jpg">
-<meta property="og:updated_time" content="2020-05-19T02:31:57.896Z">
+<meta property="og:updated_time" content="2020-05-19T13:12:27.093Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Modeling Delayed Feedback in Display Advertising 阅读笔记">
+<meta name="twitter:title" content="《Modeling Delayed Feedback in Display Advertising》 阅读笔记">
 <meta name="twitter:description" content="在计算广告中，转化是有延迟的，即在点击发生后过一段时间用户可能才会发生转化，且往往转化漏斗越深，延迟的时间越长；因此在训练 cvr/deepcvr 模型时，会有两种情况出现（1）过早把样本送入模型，把最终会转化但是还没回传 label 的事件当做负例，导致模型低估（2）过晚把样本送入模型，即让所有样本都等待一个足够长的时间才送入模型，导致模型没能及时更新
 因此在建模时需要对转化的回传延时进行建模，">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/WhyNeedModelDelay.jpg">
@@ -114,7 +114,7 @@
 
 
 
-  <title> Modeling Delayed Feedback in Display Advertising 阅读笔记 | 吴良超的学习笔记 </title>
+  <title> 《Modeling Delayed Feedback in Display Advertising》 阅读笔记 | 吴良超的学习笔记 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -290,7 +290,7 @@
             
             
               
-                Modeling Delayed Feedback in Display Advertising 阅读笔记
+                《Modeling Delayed Feedback in Display Advertising》 阅读笔记
               
             
           </h2>
@@ -376,7 +376,7 @@
 
       
         <p>在计算广告中，转化是有延迟的，即在点击发生后过一段时间用户可能才会发生转化，且往往转化漏斗越深，延迟的时间越长；因此在训练 cvr/deepcvr 模型时，会有两种情况出现（1）过早把样本送入模型，把最终会转化但是还没回传 label 的事件当做负例，导致模型低估（2）过晚把样本送入模型，即让所有样本都等待一个足够长的时间才送入模型，导致模型没能及时更新</p>
-<p>因此在建模时需要对转化的回传延时进行建模，这篇 paper <a href="http://olivier.chapelle.cc/pub/delayedConv.pdf" target="_blank" rel="external">Modeling Delayed Feedback in Display Advertising</a> 是 <a href="https://www.criteo.com/" target="_blank" rel="external">criteo</a> 针对这个问题提供的一个解决方法，主要思想就是<strong>对于还未观察到 conversion 的样本，不直接将其当做负样本，而是当前考虑 click 已发生的时间长短给模型不同大小的 gradient</strong>；paper 里称在 criteo 的真实的数据上验证了该方法的有效性。此外，文章从问题的建模到求解的思路不错，值得一看。</p>
+<p>因此在建模时需要对转化的回传延时进行建模，这篇 paper 《<a href="http://olivier.chapelle.cc/pub/delayedConv.pdf" target="_blank" rel="external">Modeling Delayed Feedback in Display Advertising</a>》是 <a href="https://www.criteo.com/" target="_blank" rel="external">criteo</a> 针对这个问题提供的一个解决方法，主要思想就是<strong>对于还未观察到 conversion 的样本，不直接将其当做负样本，而是当前考虑 click 已发生的时间长短给模型不同大小的 gradient</strong>；paper 里称在 criteo 的真实的数据上验证了该方法的有效性。此外，文章从问题的建模到求解的思路不错，值得一看。</p>
 <a id="more"></a>
 <h2 id="为什么要对延迟建模"><a href="#为什么要对延迟建模" class="headerlink" title="为什么要对延迟建模"></a>为什么要对延迟建模</h2><p>与转化的回传紧密相关的一个话题就是归因（attribution），即将转化归到哪一个 click 上，paper 中用了常用的 last-click 归因，归因窗口固定在 30 天内，即在点击后30天以内回传的转化才认为是有效的。</p>
 <p>对回传延迟建模往往要先分析延迟的分布，且对于不同的广告主、行业等，这个值的差异往往还是比较大的，在paper中统计结果如下图一所示，结果显示约35%的转化会在一小时内回传，50% 会在24小时内回传。</p>
