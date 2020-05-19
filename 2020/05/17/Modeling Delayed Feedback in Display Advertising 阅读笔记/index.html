@@ -49,8 +49,6 @@
 
 
 
-  
-
 
   <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
 
@@ -77,7 +75,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/EM_algorithm.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/gradient_formula.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/DelayFeedBackExp.jpg">
-<meta property="og:updated_time" content="2020-05-19T01:33:51.373Z">
+<meta property="og:updated_time" content="2020-05-19T01:58:24.873Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Modeling Delayed Feedback in Display Advertising 阅读笔记">
 <meta name="twitter:description" content="在计算广告中，转化是有延迟的，即在点击发生后过一段时间用户可能才会发生转化，且往往转化漏斗越深，延迟的时间越长；因此在训练 cvr/deepcvr 模型时，会有两种情况出现（1）过早把样本送入模型，把最终会转化但是还没回传 label 的事件当做负例，导致模型低估（2）过晚把样本送入模型，即让所有样本都等待一个足够长的时间才送入模型，导致模型没能及时更新
@@ -408,7 +406,7 @@
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/ExpProbDenFunc.jpg" alt="exp prob density"></p>
 <p>此外，指数分布用来建模两个事件发生的时间间隔，而泊松分布则用来建模某段时间里事件发生的次数，详细的讲解可参考知乎上的这个回答 <a href="https://www.zhihu.com/question/24796044/answer/673838656" target="_blank" rel="external">指数分布公式的含义是什么？</a></p>
 <p>有了公式(1)和公式(2) 后，我们就可以推导在考虑回传延迟下 pvr 预估问题了；下面可<strong>分两种情况写出样本的似然：即已观察到 conversion 的样本和未观察到 conversion 的样本</strong></p>
-<h3 id="已观察到-conversion-的样本的似然"><a href="#已观察到-conversion-的样本的似然" class="headerlink" title="已观察到 conversion 的样本的似然"></a>已观察到 conversion 的样本的似然</h3><p>，即当前观察到 conversion 的概率可写成</p>
+<h3 id="已观察到-conversion-的样本的似然"><a href="#已观察到-conversion-的样本的似然" class="headerlink" title="已观察到 conversion 的样本的似然"></a>已观察到 conversion 的样本的似然</h3><p>即当前观察到 conversion 的概率可写成</p>
 <p>$$<br>\begin{split}<br>p_1&amp;=p(Y=1, D=d_i|X = x_i, E=e_i) \\<br>&amp;= p(Y=1,D=d_i|X = x_i) \\<br>&amp;= p(C=1,D=d_i|X = x_i) \\<br>&amp;= p(D=d_i|X=x_i, C=1)*p(C=1|X=x_i)<br>\end{split}<br>$$</p>
 <p>上面的推导的三步主要利用了以下三点</p>
 <ul>
@@ -422,7 +420,11 @@
 <p>$$<br>\begin{split}<br>p_0&amp;=p(Y=0|X = x_i, E=e_i) \\<br>&amp;=p(Y=0|C=0, X = x_i, E=e_i)p(C=0|X=x_i) +\\<br>&amp;p(Y=0|C=1, X = x_i, E=e_i)p(C=1|X=x_i) \\<br>&amp;= p(C=0|X=x_i) + p(Y=0|C=1, X = x_i, E=e_i)p(C=1|X=x_i)<br>\end{split}<br>$$</p>
 <p>上面的推导的两步主要利用了以下两点</p>
 <ul>
-<li>全概率公式：$p(a)=\sum_{b_i}p(ab_i)$, 加上条件概率有 $p(a|c)=\sum_{b_i}p(ab_i|c)=\sum_{b_i}p(a|b_i, c)p(b_i|c)$</li>
+<li>全概率公式 + 条件概率<ul>
+<li>$p(a|c)=\sum_{b_i}</li>
+<li>p(ab_i|c)=\sum_{b_i}p(a|b_i, c)p(b_i|c)$</li>
+</ul>
+</li>
 <li>$p(Y=0|C=0, X = x_i, E=e_i)=1$</li>
 </ul>
 <p>则上面的推导关键点在于求出条件概率 $p(Y=0|C=1, X = x_i, E=e_i)$, 该条件概率的含义是<strong>当前未观察到 conversion 的样本最终会转化的概率，换种描述就是最终的延时$D$大于当前已过去时间$E$的概率</strong>，即可表示成如下公式</p>
@@ -459,13 +461,13 @@
 <p>计算出 $w_i=p(C=1|X=x_i, Y=y_i)$ 后，$p(C=0|X=x_i, Y=y_i) = 1-w_i$</p>
 <p><strong>M-step</strong></p>
 <p>M step 最大化的似然函数根据$Y$ 和 $C$ 的值可分为四项，分别对应与上图中 M-step 中的两层 $\sum$ 嵌套，且在 $Y=1$ 的情况下 $C=0$ 的概率为0，最终M-step 的似然函数如下所示</p>
-<p>$$<br>\begin{split}<br>L&amp;=\sum_{i,y_i=1}w_i <em> \log p(Y=1,D=d_i|X=x_i,E=e_i) + \\<br>&amp;\sum_{i,y_i=0}[ w_i </em> \log p(Y=0,C=1|X=x_i,E=e_i) + \\<br>&amp;(1-w_i) * \log p(Y=0,C=0|X=x_i,E=e_i)]<br>\end{split}<br>$$</p>
+<p>$$<br>\begin{split}<br>L&amp;=\sum_{i,y_i=1}w_i * \log p(Y=1,D=d_i|X=x_i,E=e_i) + \\<br>&amp;\sum_{i,y_i=0}[ w_i * \log p(Y=0,C=1|X=x_i,E=e_i) + \\<br>&amp;(1-w_i) * \log p(Y=0,C=0|X=x_i,E=e_i)]<br>\end{split}<br>$$</p>
 <p>且由前面可知，$w_i$ 取值为</p>
-<p>$$ w_i=\left{<br>\begin{aligned}<br>&amp;1 &amp; &amp;y_i =1 \\<br>&amp;p(x_i) * \exp(-\lambda(x_i)e_i) &amp; &amp;y_i =0<br>\end{aligned}<br>\right.<br>$$</p>
+<p>$$<br>w_i = \begin{cases}<br>1 &amp; &amp;y_i =1 \\<br>p(x_i) * \exp(-\lambda(x_i)e_i) &amp; &amp;y_i =0<br>\end{cases}<br>$$</p>
 <p>因此，利用公式(3)和公式(4)的推导，导入上式最终化简得到结果为</p>
-<p>$$<br>\begin{split}<br>L&amp;=\sum_{i}w_i \log p(x_i) + (1-w_i) \log(1-p(x_i)) \<br>&amp;+\sum_{i} \log(\lambda(x_i))y_i - \lambda(x_i)t_iw_i<br>\end{split}\tag{5}<br>$$</p>
+<p>$$<br>\begin{split}<br>L&amp;=\sum_{i}w_i \log p(x_i) + (1-w_i) \log(1-p(x_i)) \\<br>&amp;+\sum_{i} \log(\lambda(x_i))y_i - \lambda(x_i)t_iw_i<br>\end{split}\tag{5}<br>$$</p>
 <p>除了 $w_i$ 的值要根据 $y_i$ 的值变化外，公式 (5) 中的 $t_i$ 也需要根据 $y_i$ 的值变化，即如下所示</p>
-<p>$$ t_i=\left{<br>\begin{aligned}<br>&amp;e_i &amp;y_i =1 \\<br>&amp;d_i &amp;y_i =0<br>\end{aligned}<br>\right.<br>$$</p>
+<p>$$<br>t_i = \begin{cases}<br>e_i &amp;y_i =1 \\<br>d_i &amp;y_i =0<br>\end{cases}<br>$$</p>
 <p>至此，可通过公式(5)对 $p$ 和 $\lambda$ 进行 MLE 了，且从公式(5)中可看到，<strong>对 $p$ 执行的优化是一个 weighted logistics regression 的过程，而对 $\lambda$ 执行的优化构成则是一个 exponential regression</strong></p>
 <h3 id="Joint-Optimization"><a href="#Joint-Optimization" class="headerlink" title="Joint Optimization"></a>Joint Optimization</h3><p>在上面的问题建模中，基于当前观察到的 $y_i$ 已经能写出样本对应的似然函数了，因此虽然问题中包含隐变量 $C$, 但是不一定要显示的将 $C$ 的条件概率写出来（<strong>当无法写出样本对应的似然函数了需要这一步，这个时候就一定要通过 EM 算法求解了</strong>）</p>
 <p>根据MLE，求解的问题可表示成如下形式</p>
