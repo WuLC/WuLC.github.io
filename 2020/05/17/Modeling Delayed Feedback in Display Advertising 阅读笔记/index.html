@@ -75,7 +75,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/EM_algorithm.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/gradient_formula.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/DelayFeedBackExp.jpg">
-<meta property="og:updated_time" content="2020-05-19T02:18:28.694Z">
+<meta property="og:updated_time" content="2020-05-19T02:31:18.076Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Modeling Delayed Feedback in Display Advertising 阅读笔记">
 <meta name="twitter:description" content="在计算广告中，转化是有延迟的，即在点击发生后过一段时间用户可能才会发生转化，且往往转化漏斗越深，延迟的时间越长；因此在训练 cvr/deepcvr 模型时，会有两种情况出现（1）过早把样本送入模型，把最终会转化但是还没回传 label 的事件当做负例，导致模型低估（2）过晚把样本送入模型，即让所有样本都等待一个足够长的时间才送入模型，导致模型没能及时更新
@@ -425,7 +425,7 @@
 <p>上面的推导的两步主要利用了以下两点</p>
 <ul>
 <li>全概率公式 + 条件概率<ul>
-<li>$p(a|c)=\sum_{b_i}$</li>
+<li>$p(a|c)=\sum_{b_i}p(ab_i)$</li>
 <li>$p(ab_i|c)=\sum_{b_i}p(a|b_i, c)p(b_i|c)$</li>
 </ul>
 </li>
