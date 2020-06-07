@@ -79,7 +79,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/Denorms.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/float_sheru.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/byteStore.jpg">
-<meta property="og:updated_time" content="2020-06-06T11:12:29.791Z">
+<meta property="og:updated_time" content="2020-06-07T00:30:07.200Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="程序的表示、转换与链接-week2">
 <meta name="twitter:description" content="本文的内容主要是 程序的表示、转换与链接 这门课第二周的内容，主要介绍了浮点数和整数在机器内如何编码和存储(大端和小端)的，了解这些细节后，能够更好地理解代码中进行数值计算和比较时出现的违反直觉的结果，同时也能避免出现这样的问题。">
@@ -391,7 +391,7 @@
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/FloatPoint.jpg" alt="floatpoint"></p>
 <p>而在通用的 <strong>IEEE754 标准下，定点小数 M 是一个值在 1-2 之间的数</strong>；比如说对于十进制的 12.0，写成二进制是 1100.0，相当于 $1.1×2^3$，则可以得出s=0，M=1.1，R=2，E=3；而对于十进制的-12.0，相当于-1.1×2^3吗，则 s=1，M=1.1，R=2，E=3，因此 IEEE745 的标准跟上面的很类似，具体如下</p>
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/IEEE745.jpg" alt="IEEE754"></p>
-<p>如下是一个通过 IEEE754 标准来存储和解析浮点数的两个简单的例子</p>
+<p>如下是通过 IEEE754 标准来存储和解析浮点数的两个简单的例子</p>
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/IEEE754_example.jpg" alt="机器数-&gt;真值"></p>
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/IEEE754_example1.jpg" alt="真值-&gt;机器数"></p>
 <p>上面的 IEEE754 标准中，阶码是全 0 和全 1 表示的是特殊值，而这可以分为以下几种情况</p>
@@ -421,7 +421,7 @@
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/Denorms.jpg" alt="denoms"></p>
 <p>从上面的描述中可知，<strong>并非每个浮点数都可以用 01 精确表示</strong>，对于那些无法找到精确表示的浮点数，只能进行舍入来进行近似,如下图所示是一个例子</p>
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/float_sheru.jpg" alt="float sheru"></p>
-<h2 id="大端与小端"><a href="#大端与小端" class="headerlink" title="大端与小端"></a>大端与小端</h2><p>大端与小端其实就是数据的字节在地址中是如何排列的：MSB 所在的地址是数的地址，LSB 所在的地址是数的地址</p>
+<h2 id="大端与小端"><a href="#大端与小端" class="headerlink" title="大端与小端"></a>大端与小端</h2><p>大端与小端其实就是数据的字节在地址中是如何排列的：大端指的是 MSB 所在的地址是数的地址，小端指的是 LSB 所在的地址是数的地址</p>
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/byteStore.jpg" alt=""></p>
 <h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>week2 的内容很多细节，但是比较重点的就是整数和浮点数是如何在计算中表示和存储的，其中整数都是以补码来表示的，同时要注意同一个补码会根据上下文被解析成 signed 或 unsigned，而这会导致一些违反直觉的情况出现；而浮点数通过科学计数法写成了三个主要部分：正负号、尾数和指数，并在计算机中分三段分别存储这些数，解决了无法直接表示小数点的问题，单精度和双精度的表示凡是是一致的，只是各个段的长度不一，需要注意的是，并非每个浮点数（这个集合是无穷大）都可以用 01 精确表示，对于那些无法找到精确表示的浮点数，只能进行舍入来进行近似，因此在浮点数进行比较时要慎重使用 <code>==</code> </p>
 
