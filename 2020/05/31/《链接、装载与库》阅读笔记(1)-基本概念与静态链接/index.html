@@ -62,12 +62,12 @@
 
 
 
-<meta name="description" content="一直对以 C/C++ 为代表的的编译型语言的编译、运行的原理了解不多，最近正好看到这本由国人写的书 链接、装载与库，书名已经比较言简意赅的介绍了书里相关内容，而且写得挺通俗的，值得一看。这里是书里第一、二部分内容的一些笔记，由于笔者只摘录笔者一些不太了解的内容，因此总体内容可能不是非常成体系，建议读原书。">
+<meta name="description" content="一直对以 C/C++ 为代表的的编译型语言的编译、运行的原理了解不多，最近正好看到这本由国人写的书 链接、装载与库，书名已经比较言简意赅的介绍了书里相关内容，而且写得挺通俗的，值得一看。这里是书里第一、二部分内容的一些笔记，由于笔者只摘录一些不太了解的内容，因此总体内容可能不是非常成体系，建议读原书。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="《链接、装载与库》 阅读笔记(1)-基本概念与静态链接">
 <meta property="og:url" content="http://wulc.github.io/2020/05/31/《链接、装载与库》阅读笔记(1)-基本概念与静态链接/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
-<meta property="og:description" content="一直对以 C/C++ 为代表的的编译型语言的编译、运行的原理了解不多，最近正好看到这本由国人写的书 链接、装载与库，书名已经比较言简意赅的介绍了书里相关内容，而且写得挺通俗的，值得一看。这里是书里第一、二部分内容的一些笔记，由于笔者只摘录笔者一些不太了解的内容，因此总体内容可能不是非常成体系，建议读原书。">
+<meta property="og:description" content="一直对以 C/C++ 为代表的的编译型语言的编译、运行的原理了解不多，最近正好看到这本由国人写的书 链接、装载与库，书名已经比较言简意赅的介绍了书里相关内容，而且写得挺通俗的，值得一看。这里是书里第一、二部分内容的一些笔记，由于笔者只摘录一些不太了解的内容，因此总体内容可能不是非常成体系，建议读原书。">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/objdump_result.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/ObjectFile.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/SourceCode.jpg">
@@ -78,10 +78,10 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/RelocationTable.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/charTable.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/staticLibrary.jpg">
-<meta property="og:updated_time" content="2020-06-10T01:51:25.841Z">
+<meta property="og:updated_time" content="2020-06-10T05:39:54.662Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《链接、装载与库》 阅读笔记(1)-基本概念与静态链接">
-<meta name="twitter:description" content="一直对以 C/C++ 为代表的的编译型语言的编译、运行的原理了解不多，最近正好看到这本由国人写的书 链接、装载与库，书名已经比较言简意赅的介绍了书里相关内容，而且写得挺通俗的，值得一看。这里是书里第一、二部分内容的一些笔记，由于笔者只摘录笔者一些不太了解的内容，因此总体内容可能不是非常成体系，建议读原书。">
+<meta name="twitter:description" content="一直对以 C/C++ 为代表的的编译型语言的编译、运行的原理了解不多，最近正好看到这本由国人写的书 链接、装载与库，书名已经比较言简意赅的介绍了书里相关内容，而且写得挺通俗的，值得一看。这里是书里第一、二部分内容的一些笔记，由于笔者只摘录一些不太了解的内容，因此总体内容可能不是非常成体系，建议读原书。">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/objdump_result.jpg">
 
 
@@ -377,17 +377,16 @@
       
 
       
-        <p>一直对以 C/C++ 为代表的的编译型语言的编译、运行的原理了解不多，最近正好看到这本由国人写的书 <a href="https://book.douban.com/subject/3652388/" target="_blank" rel="external">链接、装载与库</a>，书名已经比较言简意赅的介绍了书里相关内容，而且写得挺通俗的，值得一看。这里是书里第一、二部分内容的一些笔记，由于笔者只摘录笔者一些不太了解的内容，因此总体内容可能不是非常成体系，建议读原书。</p>
+        <p>一直对以 C/C++ 为代表的的编译型语言的编译、运行的原理了解不多，最近正好看到这本由国人写的书 <a href="https://book.douban.com/subject/3652388/" target="_blank" rel="external">链接、装载与库</a>，书名已经比较言简意赅的介绍了书里相关内容，而且写得挺通俗的，值得一看。这里是书里第一、二部分内容的一些笔记，由于笔者只摘录一些不太了解的内容，因此总体内容可能不是非常成体系，建议读原书。</p>
 <a id="more"></a>
 <h2 id="操作系统基本概念"><a href="#操作系统基本概念" class="headerlink" title="操作系统基本概念"></a>操作系统基本概念</h2><p>这部分主要讲了一些与操作系统相关的基本概念，了解这些基本概念是了解书中后面内容的基础</p>
 <ul>
-<li><p>增加中间层解决问题</p>
-<ul>
-<li>避免直接访问磁盘，增加中间层: 文件系统</li>
-<li><p>磁盘以扇区作为基本单位，一个文件会被存储在多个扇区上，文件系统保存了这些数据结构</p>
+<li>增加中间层解决问题<ul>
+<li>避免直接访问磁盘，增加中间层: 文件系统<ul>
+<li>磁盘以扇区作为基本单位，一个文件会被存储在多个扇区上，文件系统保存了这些数据结构</li>
+</ul>
 </li>
-<li><p>避免直接访问物理地址的方法，增加中间层：虚拟地址</p>
-<ul>
+<li>避免直接访问物理地址的方法，增加中间层：虚拟地址<ul>
 <li>操作系统保留了从物理地址到虚拟地址的映射(MMU)</li>
 <li>segmentation：把一段物理地址映射到一段虚拟地址，解决了物理地址不隔离的问题</li>
 <li>paging：将物理/虚拟地址切成小块(page)再分配，避免程序占据了整块连续物理地址; 某些小块可能当前用不着，先存到磁盘中，需要用的时候再取出来，这就是虚拟内存</li>
@@ -425,16 +424,17 @@
 </li>
 </ul>
 <h2 id="编译与链接概述"><a href="#编译与链接概述" class="headerlink" title="编译与链接概述"></a>编译与链接概述</h2><ul>
-<li><p>编译的过程</p>
-<ol>
+<li>编译的过程(预编译-&gt;编译-&gt;汇编-&gt;链接)<ul>
 <li>预编译（生成 <code>.i</code> 文件）：主要是处理 <code>#</code> 开头的语句，如进行宏展开、将被 include 的文件插入到对应的地方（递归执行）</li>
 <li>编译（生成 <code>.s</code> 文件）：将代码编译成汇编代码，包括词法分析、语法分析、语义分析和生成汇编代码的优化；虽然不同语言都可通过 gcc 来统一编译，但是 gcc 对于对于不同的语言调用了不同的编译程序（如c是cc1，c++是cclplus，java是jc1）</li>
 <li>汇编（生成<code>.o</code>文件）：将汇编代码逐条转换成机器指令（有查找表）</li>
 <li>链接（生成可执行文件）：静态链接与动态链接</li>
-</ol>
+</ul>
 </li>
-<li><p>词法分析：将源码分割成一系列的token，利用 lex，编译器开发者只需要定义词法规则</p>
-</li>
+</ul>
+<p>其中编译这个步骤常常涉及到以下几个过程</p>
+<ul>
+<li>词法分析：将源码分割成一系列的token，利用 lex，编译器开发者只需要定义词法规则</li>
 <li>语法分析：生成语法树，利用 yacc，编译器开发者只需要定义语法规则</li>
 <li>语义分析：确定语句是否合法（编译器只能分析静态语义），为语法树中的每个节点标记出其类型</li>
 </ul>
@@ -455,7 +455,7 @@
 </li>
 </ul>
 <h2 id="目标文件的格式"><a href="#目标文件的格式" class="headerlink" title="目标文件的格式"></a>目标文件的格式</h2><ul>
-<li>目标文件就是源代码编译后但是未进行链接的那些中间文件（windows 的 <code>.obj</code> 和 linux 下的<code>.o</code>, 它跟可执行文件的内容基本一样，所以两类文件使用同一种格式存储（windows 下的 PE-COFF 和 Linux 下的 ELF）</li>
+<li>目标文件就是源代码编译后但是未进行链接的那些中间文件（windows 的 <code>.obj</code> 和 linux 下的 <code>.o</code>, 它跟可执行文件的内容基本一样，所以两类文件使用同一种格式存储（windows 下的 PE-COFF 和 Linux 下的 ELF）</li>
 <li><strong>除了目标文件,动态库(windows 的 <code>.dll</code> 和 linux 下的<code>.so</code>)和静态库(windows 的 <code>.lib</code> 和 linux 下的<code>.a</code>)</strong>都是按照可执行文件格式存储</li>
 <li>ELF 文件格式可归为如下四类（linux下可通过file格式来显示文件格式）</li>
 </ul>
