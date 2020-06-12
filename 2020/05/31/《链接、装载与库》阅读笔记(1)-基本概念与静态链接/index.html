@@ -78,7 +78,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/RelocationTable.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/charTable.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/staticLibrary.jpg">
-<meta property="og:updated_time" content="2020-06-11T01:30:41.360Z">
+<meta property="og:updated_time" content="2020-06-12T13:34:02.976Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《链接、装载与库》 阅读笔记(1)-基本概念与静态链接">
 <meta name="twitter:description" content="一直对以 C/C++ 为代表的的编译型语言的编译、运行的原理了解不多，最近正好看到这本由国人写的书 链接、装载与库，书名已经比较言简意赅的介绍了书里相关内容，而且写得挺通俗的，值得一看。这里是书里第一、二部分内容的一些笔记，由于笔者只摘录一些不太了解的内容，因此总体内容可能不是非常成体系，建议读原书。">
@@ -438,10 +438,19 @@
 </ul>
 <p>编译器的前端和后端</p>
 <ul>
+<li>前端：生成与机器无关的中间代码（即前面的词法和语法分析步骤）<ul>
 <li>前端：生成与机器无关的中间代码（即前面的词法和语法分析步骤）    </li>
+</ul>
+</li>
+<li>前端：生成与机器无关的中间代码（即前面的词法和语法分析步骤）<ul>
+<li>前端：生成与机器无关的中间代码（即前面的词法和语法分析步骤）    </li>
+</ul>
+</li>
+<li>前端：生成与机器无关的中间代码（即前面的词法和语法分析步骤）</li>
 <li>后端：将中间代码转换成目标机器代码</li>
 <li>跨平台编译器，使用同一个前端和不同后端</li>
 </ul>
+<p>关于编译器的架构可参考这篇文章：<a href="https://zhuanlan.zhihu.com/p/102250532" target="_blank" rel="external">LLVM概述——基础架构</a></p>
 <p>链接基本概念</p>
 <ul>
 <li>处理各模块间的相互引用（如引用了其他模块的函数，需要在运行时知道这个函数的地址）</li>
@@ -565,7 +574,7 @@
 <p>通过 <code>ar</code> 可以看到一个静态库中有哪些目标文件</p>
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/staticLibrary.jpg" alt="library"></p>
 <p>值得注意的是，<strong>静态库里的一个目标文件只包含一个函数</strong>，这是是为了是的在链接过程中只链接那些使用到的函数对应的目标文件，如果很多函数都放在同一个目标文件中，会导致很多没用的函数都被遗弃链接进了输出结果中。</p>
-<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>综上，本文主要介绍了操作系统的一些基本概念、目标文件的基本格式以及静态链接的基本过程，主要关注一下几个方面</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>综上，本文主要介绍了操作系统的一些基本概念，以及静态链接的基本过程，主要关注一下几个方面</p>
 <ul>
 <li>目标文件由各种段组成，基本可分为代码段和数据段两大类</li>
 <li>目标文件被链接成最终的可执行文件时，输入的目标文件中的各个段是如何被合并到输出文件中的</li>
