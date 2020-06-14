@@ -1,0 +1,937 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="C++,计算机系统," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="本文是链接、装载与库中关于可执行文件装载的过程，主要描述了进程在被装载时虚拟空间是如何分布的，物理内存空间与虚拟地址空间是如何映射的，同时描述了 Linux 系统下装载一个可执行文件的基本过程。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《链接、装载与库》 阅读笔记(2)-可执行文件的装载">
+<meta property="og:url" content="http://wulc.github.io/2020/06/13/《链接、装载与库》 阅读笔记(2)-可执行文件的装载/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="本文是链接、装载与库中关于可执行文件装载的过程，主要描述了进程在被装载时虚拟空间是如何分布的，物理内存空间与虚拟地址空间是如何映射的，同时描述了 Linux 系统下装载一个可执行文件的基本过程。">
+<meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/pageLoad.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/virtualaddressspace.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/pageFault.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/mergeELFsegment.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/segmentVSsection.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/readelfSection.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/readelfSegment.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/programHeader.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/proc.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/StackInitialize.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/executable2virtualspace.jpg">
+<meta property="og:updated_time" content="2020-06-14T05:50:53.523Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="《链接、装载与库》 阅读笔记(2)-可执行文件的装载">
+<meta name="twitter:description" content="本文是链接、装载与库中关于可执行文件装载的过程，主要描述了进程在被装载时虚拟空间是如何分布的，物理内存空间与虚拟地址空间是如何映射的，同时描述了 Linux 系统下装载一个可执行文件的基本过程。">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/pageLoad.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"always"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://wulc.github.io/2020/06/13/《链接、装载与库》 阅读笔记(2)-可执行文件的装载/"/>
+
+
+
+
+
+  <title> 《链接、装载与库》 阅读笔记(2)-可执行文件的装载 | 吴良超的学习笔记 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1258114456&web_id=1258114456" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">吴良超的学习笔记</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <h1 class="site-subtitle" itemprop="description"></h1>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            站内搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://wulc.github.io/2020/06/13/《链接、装载与库》 阅读笔记(2)-可执行文件的装载/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="良超">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="吴良超的学习笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                《链接、装载与库》 阅读笔记(2)-可执行文件的装载
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+  
+          
+
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-13T21:37:39+08:00">
+                2020-06-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-tags"></i>
+              </span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/tags/C/" itemprop="url" rel="index">
+                    <span itemprop="name">C++</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/tags/计算机系统/" itemprop="url" rel="index">
+                    <span itemprop="name">计算机系统</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文是<a href="https://book.douban.com/subject/3652388/" target="_blank" rel="external">链接、装载与库</a>中关于可执行文件装载的过程，主要描述了进程在被装载时虚拟空间是如何分布的，物理内存空间与虚拟地址空间是如何映射的，同时描述了 Linux 系统下装载一个可执行文件的基本过程。</p>
+<a id="more"></a>
+<h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>可执行文件只有被装载到内存后才能被 CPU 执行，因为<strong>程序执行时所需要的指令和数据必须在内存中才能正常运行</strong>，这部分细节涉及到 CPU 的内部组成架构，具体可参考文章 <a href="http://wulc.me/2020/05/30/%E7%A8%8B%E5%BA%8F%E7%9A%84%E8%A1%A8%E7%A4%BA%E3%80%81%E8%BD%AC%E6%8D%A2%E4%B8%8E%E9%93%BE%E6%8E%A5-week1/" target="_blank" rel="external">程序的表示、转换与链接-week1</a> 中 现代计算机的模型结构和工作原理部分</p>
+<p>而在每个程序被运行起来后都有自己独立的虚拟地址空间(Virtual Address Space), 这个<strong>虚拟地址空间大小由计算机的硬件平台决定(CPU 的位数)</strong>，如 32 位的 CPU 上寻址空间是 0-2^32-1(4GB)</p>
+<p>但实际上这 4GB 的虚拟空间并不能全部被程序使用，因为操作系统会占掉一部分内存。<strong>如果进程访问了未经允许的地址，在 Linux 下会出现 segment fault 的错误</strong></p>
+<p>在程序装入内存过程中，往往会出现<strong>某个程序需要的内存比当前物理内存大得多的情况</strong>，这种情况下就需要动态装载了，<strong>动态装载的基本原理：程序运行时是有局部性的，因此可以将程序最常用的部分放在内存中，不常用的放在磁盘中</strong></p>
+<p>目前常用的方法是页映射(paging), 就是把内存切成小块（page）再分配，当有新的空间申请时，按照一定算法驱逐已分配内存的空间（如 FIFO、LUR）,如下图所示</p>
+<p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/pageLoad.jpg" alt="pageload"></p>
+<h2 id="从操作系统看可执行文件的装载"><a href="#从操作系统看可执行文件的装载" class="headerlink" title="从操作系统看可执行文件的装载"></a>从操作系统看可执行文件的装载</h2><p>从操作系统的角度来看，一个进程最关键的特征是它拥有独立的虚拟地址空间，这使得该进程能跟其他进程区分开来</p>
+<p>从操作系统角度来看，<strong>创建一个进程，然后装载相应的可执行文件并执行，在有虚拟存储的情况下，需要做三件事</strong></p>
+<ol>
+<li>创建一个独立的虚拟地址空间</li>
+<li>读取可执行文件头，建立虚拟空间与可执行文件的映射关系</li>
+<li>将 CPU 的指令寄存器设置成可执行文件的入口地址，启动运行</li>
+</ol>
+<p>宏观来说，步骤 1 相当于是建立虚拟地址空间到物理地址空间的映射关系，步骤 2 则是建立虚拟地址空间到可执行文件的映射关系，步骤 3 则是跳转指至可执行文件的入口（保存在 ELF 文件头中）然后开始执行。</p>
+<p>步骤 2 是传统意义上“装载”的过程最重要的一步，因为步骤 1 只分配了一个页目录，具体的映射交给了步骤 2，而<strong>当程序执行发生页错误的时候，操作系统会从物理内存中分配一个物理页，然后将该“缺页”从磁盘读取到内存中，再设置缺页的虚拟页和物理页的映射关系</strong></p>
+<p>因此，操作系统捕获到页错误的时候，需要知道程序当前所需要的页在可执行文件中的偏移位置，这就是虚拟空间与可执行文件的映射关系，这种关系会保存在一个数据结构中，<strong>在 Linux 中会保存在进程中，记录每个段对应的虚拟地址范围和所在可执行文件的位置，称为VMA(Virtual Memory Area)</strong></p>
+<p>如下图所示，在进程创建后，进程内部会有一个 <code>.text</code> 段的 VMA ，属性为只读，在虚拟空间的地址为 0x08048000-0x08049000，这个大小就是32 位 IntelIA32 的一个页的大小，哪怕 <code>.text</code> 的数据没这么多也会占用掉一个页的大小</p>
+<p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/virtualaddressspace.jpg" alt="virtual addr"></p>
+<p>那上面提到的页错误（PageFault）指的是什么呢？其实在<strong>做完上面三个步骤后，只是建立了映射关系，可执行文件还没被装载到内存中执行</strong>。以上图为例，在进程开始执行时，会发现入口地址对应的页 0x08048000-0x08049000 是个空页面，进而触发一个页错误，CPU 把控制权交给操作系统，操作系统查询进程的 VMA，计算出相应页面在可执行文件中的位置，进而在物理内存中分配一个物理页，将进程中改虚拟页与物理页简历映射关系，再把控制权交给进程。如下图所示</p>
+<p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/pageFault.jpg" alt="pageFault"></p>
+<h2 id="进程虚拟空间分布"><a href="#进程虚拟空间分布" class="headerlink" title="进程虚拟空间分布"></a>进程虚拟空间分布</h2><h3 id="section-与-segment"><a href="#section-与-segment" class="headerlink" title="section 与 segment"></a>section 与 segment</h3><p>对于前面提到的可执行文件中的每个段，假如都要在物理内存中分别分配一个 页，这样会导致页面内部碎片情况严重，同时浪费内存，因为一个段的大小可能会远小于一个页的大小</p>
+<p>解决这个问题的方法是<strong>将相同权限的段合并到一起当做一个段处理，称为 segment</strong>，如下图所示是将两个 <code>.text</code> 段合并成一个，从而使得原来需要分配三个页的物理内存变成只需要分配两个页</p>
+<p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/mergeELFsegment.jpg" alt="mergeSection"></p>
+<p>在最开始讨论 ELF 文件时也有段的概念，为了与这里的段区分开，在英文中 ELF 文件中原始的“段”被称为 section，虚拟空间地址后被称为 segment，实际上，这是看待 ELF 文件的两个视角，如下图所示，左边的 section 会被合并成右边的 segment</p>
+<p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/segmentVSsection.jpg" alt="segmentVSsection"></p>
+<p>因此<strong>最终分配物理内存时是以 segment 来映射</strong>的，通过<code>readelf -S</code>可看到 elf 文件的 section，通过 <code>readelf -l</code> 则可看到 elf 文件的 segment, 如下图是一个简单例子，有 20+的 section，但是只有 5 个 segment，且 segment 中只有类型为 LOAD 的两个段才需要被映射到物理内存中</p>
+<p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/readelfSection.jpg" alt="section memory"></p>
+<p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/readelfSegment.jpg" alt="segment memory"></p>
+<p><strong>类似 section 有段表，ELF 可执行文件中也有 一个专门的数据结构叫程序头表（program header table），用来保存 segment 的信息，值得注意的是，因为 ELF 目标文件不需要被装载，所以没有程序表头</strong></p>
+<p>程序表头的结构体即各个字段的含义如下图所示</p>
+<p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/programHeader.jpg" alt="programHeader"></p>
+<h3 id="堆与栈"><a href="#堆与栈" class="headerlink" title="堆与栈"></a>堆与栈</h3><p>因为进程在运行过程中需要用到堆和栈，而<strong>堆和栈在虚拟空间中的表现也是以 VMA 形式存在的</strong>，在 Linux 下，可通过查看 <code>/proc</code> 来查看进程的虚拟空间分布，如下图所示</p>
+<p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/proc.jpg" alt="proc"></p>
+<p>上面结果中主要关注的是几列表示的含义如下：第一列是 VMA 的地址范围，第二列是 VMA 的权限(p表示COW,copy on write), 第三列是 VMA 对应的 segment 在映像文件中的偏移，最后一列是映像文件的路径</p>
+<h3 id="进程栈初始化"><a href="#进程栈初始化" class="headerlink" title="进程栈初始化"></a>进程栈初始化</h3><p>在进程刚启动的时候，需要知道一些进程运行的环境，如系统环境变量和进程的运行参数；因此<strong>操作系统在进程启动前会将这些信息提前保存到进程的虚拟空间的栈中</strong>（即 VMA 中的 stack VMA）</p>
+<p>假设系统中有两个环境变量: <code>HOME=/home/usr</code> 和 <code>PATH=/usr/bin</code>, 如下图运行命令 <code>prog 1234</code> 后，进程的栈分布如下图所示</p>
+<p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/StackInitialize.jpg" alt="stackInitialize"></p>
+<p>栈顶的 esp 寄存器指向的位置是初始化后的堆栈地址，前面四个字节表示的是命令行参数的格式，这里所谓 2 (即 prog 和 123)，然后就是指向这两个参数的指针，后面跟着一个 0，紧着是指向两个环境变量的字符串的指针（即 <code>HOME</code> 和 <code>PATH</code> 这两个环境变量）</p>
+<p><strong>在进程启动后，程序的库部分会把堆栈的初始化信息中的参数信息传给 <code>main()</code> 函数，也就是熟知的 main()函数的两个 argc 和 argv 两个参数</strong>，分别对应于命令行<strong>参数数量</strong>和命令行参数字符串<strong>指针数组</strong>。</p>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>通过上面的例子可知，<strong>进程中的虚拟地址空间可理解为操作系统给进程空间划分出一个个的 VMA 来管理进程的虚拟空间，基本原则是将属性相同、有相同映像文件的映射成同一个 VMA</strong>，一个进程基本可映射成以下几个 VMA（segment）</p>
+<ul>
+<li>代码 VMA，权限只读、可执行；有映像文件(即 elf 文件)</li>
+<li>数据 VMA，权限可读写、可执行；有映像文件</li>
+<li>堆 VMA，权限可读写、可执行；无映像文件，可向上拓展</li>
+<li>栈 VMA，权限可读写、不可执行；无映像文件，可向下拓展</li>
+</ul>
+<p>因此，一个进程的虚拟地址空间如下图所示</p>
+<p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/executable2virtualspace.jpg" alt="executable2virtualaddress"></p>
+<h2 id="Linux-内核装载-ELF-可执行文件过程"><a href="#Linux-内核装载-ELF-可执行文件过程" class="headerlink" title="Linux 内核装载 ELF 可执行文件过程"></a>Linux 内核装载 ELF 可执行文件过程</h2><p>下面会简单介绍在 Linux 系统的 bash 下输入一个命令执行某个 ELF 程序时，Linux 系统是怎么装载这个 ELF 文件并执行它的。</p>
+<p>在用户层面，主要有三个步骤</p>
+<ol>
+<li>bash 进程会调用 <code>fork()</code> 系统调用来创建一个新的进程</li>
+<li>新的进程调用 <code>execve()</code> 系统调用来执行指定的 ELF 文件</li>
+<li>bash 进程返回并等待前面启动的进程结束，然后用户再输入新的命令（可以用 <code>&amp;</code> 让程序在后台运行）</li>
+</ol>
+<p><code>execve()</code>函数定义如下, 其三个参数分别表示可执行文件名、执行参数和环境变量，其中执行参数和环境变量对应于前面提到的进程栈的初始化中存储的相关内容</p>
+<p><code>int execve(cosnt char* filename, char *const argv[], char *const envp[]);</code></p>
+<p><code>execve()</code> 在找到可执行文件后，首先会读取文件前 128 个字节，其目的是为了判断文件的格式，因为 Linux 执行的可执行文件不知 ELF 一种，还有 Java、以及以 <code>#!</code> 开始的脚本程序等</p>
+<p><strong>每种可执行文件<br>的格式的开头几个字节都是很特殊的</strong>，尤其是开头的四个字节（被称为 magic number），通过 magic number 可判断文件的格式和类型，如 ELF 文件前四个字节是 0x7F、’e’、’l’、’f’；而 Java 可执行文件格式头 4 个字节为 ‘c’、’a’、’f’、’e’；如果是 shell、python、perl 这类解释型的语言，第一行往往是 <code>#!/bin/bash</code>、 <code>#!/usr/bin/python</code>、 <code>#!/user/bin/perl</code></p>
+<p><code>execve()</code> 读取了 128 个字节的文件头部后，会调用 <code>search_binary_handle()</code> 去搜索和匹配合适的可执行文件装载处理过程，不同类型的可执行文件格式都有相应的装载处理过程，如 elf 可执行的装载处理过程叫 <code>load_elf_binary()</code>, 装载可执行脚本程序的处理过程叫 <code>load_scrip()</code> , 这里主要描述<strong><code>load_elf_binary()</code>的基本过程</strong></p>
+<ol>
+<li>检查 elf 可执行文件的有效性，比如说 magic number，program header 中 segment 的数量</li>
+<li>寻找动态链接的 .interp 段，设置动态链接的路径（后面会有一篇文章专门描述动态链接）</li>
+<li>根据 elf 可执行文件的 program header 描述，对 elf 文件进行映射，比如代码、数据、只读数据等</li>
+<li>初始化 elf 进程环境</li>
+<li>将系统调用的返回地址改成 elf 文件可执行文件的入口点，这个<strong>入口点取决于程序的链接方式</strong>，如对于静态链接的 ELF 文件，这个入口就是 ELF 文件的文件头中 <code>e_entry</code> 所指的地址;对于动态链接的 ELF 文件，这个入口就是动态链接器</li>
+</ol>
+<p>当 <code>load_elf_binary()</code> 执行完后，第五步会<strong>令 EIP 寄存器直接跳转到 ELF 程序的入口地址，于是程序就开始执行，ELF 可执行文件装载完成。</strong></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这一章主要描述了程序运行时是如何使用内存空间的，即程序如何被装载到内存中（页映射模式）；然后详细介绍了进程虚拟地址空间的分布，即操作系统如何为程序的代码、数据、堆和栈在进程中分配虚拟地址空间(VMA), 最后介绍了 Linux 系统下是如何装载 ELF 可执行文件的，且这一章中描述的都是在都是静态链接，即只有一个可执行文件，后面会描述动态链接，即一个可执行文件会被拆成若干个模块。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/C/" rel="tag">C++</a>
+          
+            <a href="/tags/计算机系统/" rel="tag">计算机系统</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/06/06/程序的表示、转换与链接-week2/" rel="next" title="程序的表示、转换与链接-week2">
+                <i class="fa fa-chevron-left"></i> 程序的表示、转换与链接-week2
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://wulc.me/files/profile.jpg"
+               alt="良超" />
+          <p class="site-author-name" itemprop="name">良超</p>
+          <p class="site-description motion-element" itemprop="description">算法工程师首先得是个工程师</p>
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">216</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">40</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/WuLC" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github-alt"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:liangchaowu5@gmail.com" target="_blank" title="E-mail">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  E-mail
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基本概念"><span class="nav-number">1.</span> <span class="nav-text">基本概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#从操作系统看可执行文件的装载"><span class="nav-number">2.</span> <span class="nav-text">从操作系统看可执行文件的装载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进程虚拟空间分布"><span class="nav-number">3.</span> <span class="nav-text">进程虚拟空间分布</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#section-与-segment"><span class="nav-number">3.1.</span> <span class="nav-text">section 与 segment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#堆与栈"><span class="nav-number">3.2.</span> <span class="nav-text">堆与栈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#进程栈初始化"><span class="nav-number">3.3.</span> <span class="nav-text">进程栈初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小结"><span class="nav-number">3.4.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux-内核装载-ELF-可执行文件过程"><span class="nav-number">4.</span> <span class="nav-text">Linux 内核装载 ELF 可执行文件过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <center>
+<div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2020</span>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
+  </br>
+  <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
+</div>
+</center>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>
