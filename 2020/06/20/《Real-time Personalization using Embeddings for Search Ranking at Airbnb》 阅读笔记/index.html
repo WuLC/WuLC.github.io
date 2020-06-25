@@ -79,7 +79,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/EmbeddingEvaluation.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/AirbnbFeatureList.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/featureImportance.jpg">
-<meta property="og:updated_time" content="2020-06-25T01:14:10.815Z">
+<meta property="og:updated_time" content="2020-06-25T01:51:42.971Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《Real-time Personalization using Embeddings for Search Ranking at Airbnb》 阅读笔记">
 <meta name="twitter:description" content="Real-time Personalization using Embeddings for Search Ranking at Airbnb 是 KDD 2018 的 best paper, 整篇文章读下来，初看好像只是套了 word2vec 来生成 user embedding 和 item embedding；但是细读下来，会发现其中有不少细节值得考究，这种风格跟 youtube 在 201">
@@ -382,11 +382,11 @@
 <a id="more"></a>
 <p>Airbnb 的这项工作的业务背景是：用户在其租房 app 上搜索时，需要返回一个 list 的推荐结果,在 paper 中提到了 Airbnb 用的是业界比较主流的 Learning To Rank 技术，关于 LTR 的技术细节可参考微软的 <a href="https://www.microsoft.com/en-us/research/uploads/prod/2016/02/MSR-TR-2010-82.pdf" target="_blank" rel="external">From RankNet to LambdaRank to LambdaMART: An Overview</a>，Airbnb 用的也是 pairwise 模式下的 LambdaRank，而这篇 paper 主要描述的是如何通过 word2vec 的方式生成 user embedding 和 item embedding 作为 feature 供排序模型使用（文章中也将 item 称为 listing，所以后文中这两个词的含义是一样的）。</p>
 <p>这篇文章的主要亮点如下</p>
-<p><strong>1. 将正反馈（用户最终下单，作为 global context）和负反馈（商家拒接接单，作为额外的一个data set）的信号加入到 skip-gram 中进行训练</strong><br><strong>2. 做 negative sampling 时，考虑到具体业务不在全集上做负采样</strong><br><strong>3. 同一个 uid 的样本较为稀疏，因此 user embedding 从 uid 粒度变为 user type 粒度，避免样本过于稀疏 embedding 学习不充分</strong></p>
+<p><strong>1. 将正反馈（用户最终下单，作为 global context）和负反馈（商家拒接接单，作为额外的一个data set）的信号加入到 skip-gram 中进行训练</strong><br><strong>2. 做 negative sampling 时，考虑到具体业务不仅仅在全集上做负采样</strong><br><strong>3. 同一个 uid 的样本较为稀疏，因此 user embedding 从 uid 粒度变为 user type 粒度，避免样本过于稀疏 embedding 学习不充分</strong></p>
 <p>这 3 点其实都是作者在考虑到具体业务场景下，所做出的改进，也是笔者认为这篇paper最值得学习的地方：<strong>不要盲目地套算法，而是要充分考虑到当前具体业务然后做出相应的适配和改进</strong></p>
 <h2 id="离线训练"><a href="#离线训练" class="headerlink" title="离线训练"></a>离线训练</h2><p>paper 中的离线训练可分为两大部分：short-term interest 和 long-term interest</p>
 <p>对于短期(short-term)兴趣, <strong>利用了 800 billion 个 click session 来训练了 listing embedding</strong></p>
-<p>对于长期(long-term)兴趣，<strong>利用了 50 million 个用户的 booked listings 来训练 user type embedding 和 listing type embedding</strong>，且由于 user type embedding 和 listing type embedding 都处于同一个向量空间，因此除了 embedding 可作为排序模型的特征，user type embedding 和 listing type embedding 的內积 score 也可以作为排序模型的特征</p>
+<p>对于长期(long-term)兴趣，<strong>利用了 50 million 个用户的 booked listings 来训练 user type embedding 和 listing type embedding</strong></p>
 <p>具体的训练方法基本就是 word2vec 中的 skip-gram，下面会分别描述这两部分的具体训练细节</p>
 <h3 id="listing-embedding"><a href="#listing-embedding" class="headerlink" title="listing embedding"></a>listing embedding</h3><p>在 short-term insterest 中只生成 item embedding，训练的样本就是 click session（类比 nlp 中的一个 sentence），在 paper 中共的定义就是用户一系列的点击事件；在构建这个训练数据集时，核心就是<strong>如何定义session 的长度</strong>，在paper中定义<strong>当用户的两次点击超过 30 分钟时，那这两次点击应该属于两个 session</strong>。</p>
 <p>假设总体训练集为 $S$, 每个 session 为 $s=(l_1,l_2…l_M) \in S$, 则通过 word2vec 中的 skip-gram 可写出 loss 如下</p>
@@ -400,10 +400,7 @@
 <p>上式中要求解的参数 $\theta$ 就是 每个 item 的 embedding $v_l$，基本就是原始 word2vec 中的 skip-gram 算法了，下面文章中的几个点可以认为是作者根据业务对 word2vec 的一些改动，也是非常值得借鉴的</p>
 <p><strong>(1)利用监督信号作为 global context</strong> </p>
 <p>在 airbnb 的业务中，上面的 session 实际上可分为两大类，分别是最终有下单的 session 和没有下单的 session，paper 中分别称其为 booked session 和 exploratory sessions，这两个实际上都是监督信号，而在 paper 中<strong>只使用了第一个监督信号</strong>，则公式(3）可写成如下形式</p>
-<p>$$ \arg\max_{\theta} \sum_{(l,c) \in D_p} \log\frac{1}{1+e^{-v_{c}^{‘}v_l}} + \sum_{(l,c) \in D_p} \log\frac{1}{1+e^{v_{c}^{‘}v_l}} \\</p>
-<ul>
-<li>\log \frac{1}{1+e^{v_{l_b}^{‘}v_l}}\tag{4}$$</li>
-</ul>
+<p>$$ \arg\max_{\theta} \sum_{(l,c) \in D_p} \log\frac{1}{1+e^{-v_{c}^{‘}v_l}} + \sum_{(l,c) \in D_p} \log\frac{1}{1+e^{v_{c}^{‘}v_l}} + \\<br>\log \frac{1}{1+e^{v_{l_b}^{‘}v_l}}\tag{4}$$</p>
 <p>公式（4）中的 $v_{l_b}$ 表示的是被下单的 item $l_b$ 的 embedding，下图则是更直观地显示了这个监督信号是如何起作用的, 可以看到，<strong>每个 centeral listing/item 更新时都会与 booked listing/item 一起算一次概率，因此称这个 listing 为 global context</strong>，其效果相当于加强用户在购买前点击的所有 item 和最终下单的 item 的联系</p>
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/global_context.jpg" alt="global context"></p>
 <p><strong>(2)控制 negative sampling 的采样空间</strong></p>
@@ -431,10 +428,7 @@
 <p><strong>相比于前面在训练 listing embedding 在做 negative sampling 对同一个 market 中的 item做额外的负采样，但是这里并没有做，原因是这里的 booked session 中对应的 item 已经是包含了不同 market 的，因此没必要做额外的处理</strong></p>
 <p>此外，airbnb 的这个业务背景中也有商家的反馈数据，即可能会存在<strong>某些用户下单但是商家不接单的情况（可能的原因是用户信息不完整、评分低等）</strong>，这些负反馈信息对于 user_type embedding 的学习是有好处的，对于这些负反馈信号，airbnb 是按照如下方法加入到模型中的</p>
 <p>对于每个 central item，训练的数据除了上面的做 negative sampling 得到的 $D_{book}$ 和 $D_{neg}$，还定义了一个 $D_{rej}$, 其中包含了 user 历史上被拒绝的 pair $(u_t, l_t)$,<br>则当前的 central item 是 user（listing 同理） 时， loss 可写成如下形式，</p>
-<p>$$ \arg\max_{\theta} \sum_{(u_t,c) \in D_{book}} \log\frac{1}{1+e^{-v_{c}^{‘}v_{u_t}}} + \sum_{(u_t,c) \in D_{neg}} \log\frac{1}{1+e^{v_{c}^{‘}v_{u_t}}} \</p>
-<ul>
-<li>\sum_{(u_t,l_t) \in D_{neg}} \log\frac{1}{1+e^{v_{l_t}v_{u_t}}} \tag{7}$$</li>
-</ul>
+<p>$$ \arg\max_{\theta} \sum_{(u_t,c) \in D_{book}} \log\frac{1}{1+e^{-v_{c}^{‘}v_{u_t}}} + \sum_{(u_t,c) \in D_{neg}} \log\frac{1}{1+e^{v_{c}^{‘}v_{u_t}}} + \\<br>\sum_{(u_t,l_t) \in D_{neg}} \log\frac{1}{1+e^{v_{l_t}v_{u_t}}} \tag{7}$$</p>
 <p>则加入了这个监督信号后的 skip gram 则如下图所示</p>
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/reject_signal_skip_gram.jpg" alt="reject skip-gram"></p>
 <h3 id="训练细节"><a href="#训练细节" class="headerlink" title="训练细节"></a>训练细节</h3><p>上面讲的只是大致的训练过程，但是其中的一些训练细节也是非常重要的，尤其是这种有具体业务背景的工作, paper 中只讲了训练 listing embedding 的一些细节</p>
