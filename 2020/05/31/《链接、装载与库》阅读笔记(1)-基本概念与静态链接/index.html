@@ -62,12 +62,12 @@
 
 
 
-<meta name="description" content="一直对以 C/C++ 为代表的的编译型语言的编译、运行的原理了解不多，最近正好看到这本由国人写的书 链接、装载与库，书名已经比较言简意赅的介绍了书里相关内容，而且写得挺通俗的，值得一看。这里是书里第一、二部分内容的一些笔记，由于笔者只摘录一些不太了解的内容，因此总体内容可能不是非常成体系，建议读原书。">
+<meta name="description" content="一直对以 C/C++ 为代表的的编译型语言的编译、运行的原理了解不多，最近正好看到这本由国人写的书 链接、装载与库，书名已经比较言简意赅的介绍了书里相关内容，而且写得挺通俗的，值得一看。这里是书里第一、二部分内容的一些笔记，主要讲了操作系统的一些基本概念，编译生成的目标文件格式和静态链接的过程；由于笔者只摘录一些不太了解的内容，因此总体内容可能不是非常成体系，建议读原书。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="《链接、装载与库》 阅读笔记(1)-基本概念与静态链接">
 <meta property="og:url" content="http://wulc.github.io/2020/05/31/《链接、装载与库》阅读笔记(1)-基本概念与静态链接/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
-<meta property="og:description" content="一直对以 C/C++ 为代表的的编译型语言的编译、运行的原理了解不多，最近正好看到这本由国人写的书 链接、装载与库，书名已经比较言简意赅的介绍了书里相关内容，而且写得挺通俗的，值得一看。这里是书里第一、二部分内容的一些笔记，由于笔者只摘录一些不太了解的内容，因此总体内容可能不是非常成体系，建议读原书。">
+<meta property="og:description" content="一直对以 C/C++ 为代表的的编译型语言的编译、运行的原理了解不多，最近正好看到这本由国人写的书 链接、装载与库，书名已经比较言简意赅的介绍了书里相关内容，而且写得挺通俗的，值得一看。这里是书里第一、二部分内容的一些笔记，主要讲了操作系统的一些基本概念，编译生成的目标文件格式和静态链接的过程；由于笔者只摘录一些不太了解的内容，因此总体内容可能不是非常成体系，建议读原书。">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/objdump_result.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/ObjectFile.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/SourceCode.jpg">
@@ -78,10 +78,10 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/RelocationTable.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/charTable.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/staticLibrary.jpg">
-<meta property="og:updated_time" content="2020-06-14T07:13:48.256Z">
+<meta property="og:updated_time" content="2020-06-26T06:48:39.191Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《链接、装载与库》 阅读笔记(1)-基本概念与静态链接">
-<meta name="twitter:description" content="一直对以 C/C++ 为代表的的编译型语言的编译、运行的原理了解不多，最近正好看到这本由国人写的书 链接、装载与库，书名已经比较言简意赅的介绍了书里相关内容，而且写得挺通俗的，值得一看。这里是书里第一、二部分内容的一些笔记，由于笔者只摘录一些不太了解的内容，因此总体内容可能不是非常成体系，建议读原书。">
+<meta name="twitter:description" content="一直对以 C/C++ 为代表的的编译型语言的编译、运行的原理了解不多，最近正好看到这本由国人写的书 链接、装载与库，书名已经比较言简意赅的介绍了书里相关内容，而且写得挺通俗的，值得一看。这里是书里第一、二部分内容的一些笔记，主要讲了操作系统的一些基本概念，编译生成的目标文件格式和静态链接的过程；由于笔者只摘录一些不太了解的内容，因此总体内容可能不是非常成体系，建议读原书。">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/objdump_result.jpg">
 
 
@@ -377,7 +377,7 @@
       
 
       
-        <p>一直对以 C/C++ 为代表的的编译型语言的编译、运行的原理了解不多，最近正好看到这本由国人写的书 <a href="https://book.douban.com/subject/3652388/" target="_blank" rel="external">链接、装载与库</a>，书名已经比较言简意赅的介绍了书里相关内容，而且写得挺通俗的，值得一看。这里是书里第一、二部分内容的一些笔记，由于笔者只摘录一些不太了解的内容，因此总体内容可能不是非常成体系，建议读原书。</p>
+        <p>一直对以 C/C++ 为代表的的编译型语言的编译、运行的原理了解不多，最近正好看到这本由国人写的书 <a href="https://book.douban.com/subject/3652388/" target="_blank" rel="external">链接、装载与库</a>，书名已经比较言简意赅的介绍了书里相关内容，而且写得挺通俗的，值得一看。这里是书里第一、二部分内容的一些笔记，主要讲了操作系统的一些基本概念，编译生成的目标文件格式和静态链接的过程；由于笔者只摘录一些不太了解的内容，因此总体内容可能不是非常成体系，建议读原书。</p>
 <a id="more"></a>
 <h2 id="操作系统基本概念"><a href="#操作系统基本概念" class="headerlink" title="操作系统基本概念"></a>操作系统基本概念</h2><p>这部分主要讲了一些与操作系统相关的基本概念，了解这些基本概念是了解书中后面内容的基础</p>
 <ul>
