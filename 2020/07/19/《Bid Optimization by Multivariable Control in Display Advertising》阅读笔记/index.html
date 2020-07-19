@@ -1,0 +1,965 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="数学,计算广告," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="推荐与广告可以说是很多互联网公司的两个重要业务，其中推荐是为了 DAU 的增长，或者说流量的增长，而广告则是利用这些流量进行变现。两者的要解决的问题也很相似，都是在每条流量到来的时候，要从一个庞大的候选集中选出 topk 个候选返回，基本都采用 召回+精排 的架构，中间还可能插入粗排，本质上都是在效果与工程之间做 trade-off。
+如果说两者技术上最大的 diff，笔者认为是出价，因为在广告场">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《Bid Optimization by Multivariable Control in Display Advertising》阅读笔记">
+<meta property="og:url" content="http://wulc.github.io/2020/07/19/《Bid Optimization by Multivariable Control in Display Advertising》阅读笔记/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="推荐与广告可以说是很多互联网公司的两个重要业务，其中推荐是为了 DAU 的增长，或者说流量的增长，而广告则是利用这些流量进行变现。两者的要解决的问题也很相似，都是在每条流量到来的时候，要从一个庞大的候选集中选出 topk 个候选返回，基本都采用 召回+精排 的架构，中间还可能插入粗排，本质上都是在效果与工程之间做 trade-off。
+如果说两者技术上最大的 diff，笔者认为是出价，因为在广告场">
+<meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/bid_optimization_LP1.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/bid_optimization_dual_problem_LP2.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/bidding_optimization_Complementary_Slackness.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/bid_optimization_classify_situation.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/bid_optimization_cbid.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/bid_optimization_cbid_graph.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/bid_optimization_pid_controller.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/bid_optimization_controll_qfixed.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/bid_optimization_controll_pfixed.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/bid_optimization_independent_pid.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/bid_optimization_multivar_control.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/bid_optimization_related_pid.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/bid_optimization_weighted_pid_err.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/bid_optimization_performance.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/bid_optimization_evaluation_result.jpg">
+<meta property="og:updated_time" content="2020-07-19T14:15:52.607Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="《Bid Optimization by Multivariable Control in Display Advertising》阅读笔记">
+<meta name="twitter:description" content="推荐与广告可以说是很多互联网公司的两个重要业务，其中推荐是为了 DAU 的增长，或者说流量的增长，而广告则是利用这些流量进行变现。两者的要解决的问题也很相似，都是在每条流量到来的时候，要从一个庞大的候选集中选出 topk 个候选返回，基本都采用 召回+精排 的架构，中间还可能插入粗排，本质上都是在效果与工程之间做 trade-off。
+如果说两者技术上最大的 diff，笔者认为是出价，因为在广告场">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/bid_optimization_LP1.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"always"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://wulc.github.io/2020/07/19/《Bid Optimization by Multivariable Control in Display Advertising》阅读笔记/"/>
+
+
+
+
+
+  <title> 《Bid Optimization by Multivariable Control in Display Advertising》阅读笔记 | 吴良超的学习笔记 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1258114456&web_id=1258114456" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">吴良超的学习笔记</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <h1 class="site-subtitle" itemprop="description"></h1>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            站内搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://wulc.github.io/2020/07/19/《Bid Optimization by Multivariable Control in Display Advertising》阅读笔记/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="良超">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="吴良超的学习笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                《Bid Optimization by Multivariable Control in Display Advertising》阅读笔记
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+  
+          
+
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-07-19T21:37:39+08:00">
+                2020-07-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-tags"></i>
+              </span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/tags/数学/" itemprop="url" rel="index">
+                    <span itemprop="name">数学</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/tags/计算广告/" itemprop="url" rel="index">
+                    <span itemprop="name">计算广告</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>推荐与广告可以说是很多互联网公司的两个重要业务，其中推荐是为了 DAU 的增长，或者说流量的增长，而广告则是利用这些流量进行变现。两者的要解决的问题也很相似，都是在每条流量到来的时候，要从一个庞大的候选集中选出 topk 个候选返回，基本都采用 召回+精排 的架构，中间还可能插入粗排，本质上都是在效果与工程之间做 trade-off。</p>
+<p>如果说两者技术上最大的 diff，笔者认为是出价，因为在广告场景中引入了广告主(advertiser)这一角色，因此我们除了考虑用户体验，还需要满足金主爸爸们的诉求（如跑量、成本等），才能带来持续的收入增长，而金主爸爸们表达其诉求的最直接的手段就是出价，其含义就是愿意为每个 click/convert 付出多少钱(truthful telling)。这带出来的就是 bidding 这一研究领域，关于这个领域在 <a href="https://github.com/wnzhang/rtb-papers" target="_blank" rel="external">rtb-papers</a> 中有很多相关的 paper。</p>
+<p>本文主要讲的是 2019 KDD 阿里的 <a href="https://arxiv.org/abs/1905.10928" target="_blank" rel="external">Bid Optimization by Multivariable Control in Display Advertising</a>，这篇 paper 解决了出价的两个的核心问题：<strong>出价公式和调价策略</strong>，从最优的出价公式的推导到出价控制器的构建，文章的总体的建模思路非常值得学习，整个推导的 paradigm 能够推广到更一般的出价场景, 实践性也较强，推荐读原文。</p>
+<a id="more"></a>
+<p><strong>出价从技术上可认为主要由两大部分组成：出价公式和控制器</strong>，比如说常见的 cpc 出价公式是 bid * ctr, 最常见的控制器则是 <a href="https://en.wikipedia.org/wiki/PID_controller#:~:text=A%20proportional%E2%80%93integral%E2%80%93derivative%20controller,applications%20requiring%20continuously%20modulated%20control." target="_blank" rel="external">PID</a>。出价公式我们能比较好理解，那为什么要控制器来调价而不是按照广告主给的出价来投呢？笔者认为主要有以下两个原因</p>
+<p>(1) <strong>为了满足广告主的各种诉求</strong>；如需要匀速投放时，即在一天内均匀地花完预算，这样就需要通过控制器来控制运算花费曲线趋势与大盘流量曲线的趋势保持一致；如需要保成本时，需要通过控制器在成本高了时压价,  低了时提价；需要跑量同时允许在成本有略微上涨时，可以在成本可控的情况下更激进一点出出价<br>(2) <strong>ctr/cvr 的预估不是完全准确的</strong>；常见的 ctr/cvr 高估时，容易导致超成本，因为这时候计算出来的 ecpm = bid×ctr×cvr 也相当于是高估了；其根本原因是在 ctr/cvr 预估中没有一个绝对的 ground truth, 我们能拿到的是点击/转化与否，但是要预估的则是点击/转化的概率</p>
+<p>前面提到，paper 中主要讲了两部分内容，最优出价公式的推导和控制器，下面描述的内容也会主要从这两方面进行描述</p>
+<h2 id="最优出价公式"><a href="#最优出价公式" class="headerlink" title="最优出价公式"></a>最优出价公式</h2><p>paper 中要解决的场景是在保住点击成本和预算时，最大化广告主的在所有参竞价值(value)，因此这个优化问题可写成如下形式</p>
+<p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/bid_optimization_LP1.jpg" alt="LP1"></p>
+<p>上式中的各个符号含义如下</p>
+<ul>
+<li>$N$, 广告计划的总的可参竞次数(opportunities)</li>
+<li>$x_i$, 第 i 次竞价获胜的概率  </li>
+<li>$wp_i$, 第 i 次竞价的 winning price，即 bid price 要大于等于这个值才能获胜</li>
+<li>$B$, 计划的总预算</li>
+<li>$C$, 计划设置的点击成本</li>
+</ul>
+<p>值得注意的是，我们<strong>不需要直接求解出上面的最优化问题的解，而只是需要求出取值为最优时的的解形式，然后作为最优出价公式</strong>，也就是说我们并不关心上面的 $x_i$ 的最优解取值，而关心的是其他变量满足什么样的形式时，$x_i$ 的解是最优的</p>
+<h3 id="paper-原始推导"><a href="#paper-原始推导" class="headerlink" title="paper 原始推导"></a>paper 原始推导</h3><p>paper 通过最优化中的对偶理论将上面的原问题(primal problem)转为对偶问题(dual problem)，如下图所示；对偶理论的详细描述可参考 <a href="http://wulc.me/2017/02/01/%E6%9C%80%E4%BC%98%E5%8C%96%E8%AE%A1%E7%AE%97%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/" target="_blank" rel="external">最优化计算课程总结</a> 中<strong>对偶理论</strong>这一节内容或 <a href="https://sites.math.washington.edu/~burke/crs/407/notes/section4.pdf" target="_blank" rel="external">Duality Theory</a> 这个讲义</p>
+<p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/bid_optimization_dual_problem_LP2.jpg" alt="LP2"></p>
+<p>上图中的 $p,q,r$ 都是对偶问题中变量，对应于原问题中的三类约束：预算，成本和对 $x$ 的范围的约束，根据互补松弛定理(Complementary Slackness) ，可得到下面两个式子, 互补松弛定理的详细描述同样可参考上面的两个链接</p>
+<p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/bidding_optimization_Complementary_Slackness.jpg" alt="Complementary Slackness"></p>
+<p>上面的公式中 $x_i^{<em>}$ 和 $r_i^{</em>}$ 分别表示原问题和对偶问题的最优解，后面带 <code>*</code> 上标的符号均表示最优解，至此为止，上面都是基于最优化理论推导出来的一些公式，但是<strong>接下来这一步就有点跳了</strong>，paper 中直接令最优出价公式为</p>
+<p>$$bid^{<em>} = \frac{1}{p^</em>+q^<em>} × CTR_{i} × CVR_{i} + \frac{q^</em>}{p^<em>+q^</em>} × C × CTR_{i}\tag{6}$$</p>
+<p>则上面那些公式中表示给广告主带来的价值 $v_i$ 可写成 $v_i = bid_i - wp_i$, 将公式（6）代入这个式子，再将 $v_i$ 代入上图中的公式(8)，可得到下面的公式（10）及其分类讨论的结果</p>
+<p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/bid_optimization_classify_situation.jpg" alt="分类讨论结果"></p>
+<p>上面的两个分类讨论的结果实际上表明了<strong>无论最优解 $x^*$ 是赢得这次竞价($x=1$)还是输掉这次竞价($x=0$)，按照公式(6)进行出价时，总能保证解是最优的</strong></p>
+<h3 id="另一种推导思路"><a href="#另一种推导思路" class="headerlink" title="另一种推导思路"></a>另一种推导思路</h3><p>之所以说上面最后的推导有点跳，是因为公式(6)所表示的那一坨<strong>最优出价公式是怎么给出来的？</strong>随便拍脑袋似乎不太可能，paper 中并没有针对这一点详细描述，笔者在这里尝试提供另一个求解的思路，就是利用拉格朗日对偶来推导出最优出价公式，关于这部分内容可参考 <a href="http://wulc.me/2017/05/20/%E5%87%B8%E4%BC%98%E5%8C%96%E6%80%BB%E7%BB%93/" target="_blank" rel="external">凸优化总结</a> 中的拉格朗日对偶部分</p>
+<p>对于原问题即上图中的 LP1， 可写出其増广拉格朗日函数为(暂时忽略 $x$ 的值的约束)</p>
+<p>$$L(x,p,q) = \sum_{i=1\dots N}x_iCTR_iCVR_i + p(\sum_{i=1\dots N}x_iwp_i-B) + q(\sum_{i=1\dots N}x_i(wp_i-CTR_iC))$$</p>
+<p>上式中的 $p&gt;=0,q&gt;=0$，则原问题可写成如下形式, 详细推导过程可参考上面的凸优化总结的链接</p>
+<p>$$\max_{p, q}\min_{x_i}L(x,p,q)$$</p>
+<p>如果是要求出这个问题的解，还需要转为拉格朗日对偶问题，通过 SMO 等算法进行求解，但是我们这里不需要确切的解，而是只需要最优解的表达式，因此可令 $\frac{\partial{L(x,p,q)}}{\partial{x}}=0$, 求解可得</p>
+<p>$$wp_i = \frac{1}{p+q} × CTR_{i} × CVR_{i} + \frac{q}{p+q} × C × CTR_{i}$$</p>
+<p>可以看到，<strong>winning price $wp_i$ 推导出来的形式跟上面给的公式(6) 中的最优出价公式的形式是一样的</strong>！！！</p>
+<p>但是上面的推导中的仍有一些问题，上面求解的是最优的 $wp_i$，bid 这个变量没有显示地出现在增广拉格朗日函数中，但是可近似认为两者是相等的；其次是，<strong>$x_i$ 本身的约束(即取值在 0~1 之间)没有显式的考虑进增广拉格朗日函数中</strong>，针对这一点，笔者的理解是在解决最优化问题时可以忽略某个条件，然后在求解出来之后基于这个条件做分类讨论，而这一部分实际上就是原始 paper 在推导出公式(10)后做的分类讨论。</p>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>综合考虑上面两部分的推导，可以得到最优的出价公式如上面公式(6)所示，公式中的 $p$ 和 $q$ 是两个超参，是对偶问题中需要求解的变量，<strong>如果需要求解，意味着需要拿到参竞的所有后验数据，但是实际中在参竞时就需要通过这些参数给出参竞的 bid，这似乎就成了一个先有鸡还是先有蛋的问题了</strong>，后面会通过控制器描述如何解决这一问题，具体思想就是不直接求解原始的最优化问题，而是通过近似的方式来逐渐逼近最优解</p>
+<p>回到公式(6)的最优出价公式，如果将其写成 <code>c\_bid * ctr</code> 的形式，有如下公式</p>
+<p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/bid_optimization_cbid.jpg" alt="click bid"></p>
+<p>如果更直观的画出来如下图所示, 从图中可知，哪怕 CVR 为 0 时，bid 也不一定为 0，这跟常见的 ecpm = bid<em>ctr</em>cvr 不太一样，这可理解为一些 cvr 低但是 ctr 高的流量也是可以拿的；此外，c_bid 的直线会过两个定点： (-qC, 0) 和 (pC, C), 后面在控制器中会详细描述这两个点的具体含义。</p>
+<p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/bid_optimization_cbid_graph.jpg" alt="bid\_optimization\_cbid\_graph"></p>
+<h2 id="调价策略"><a href="#调价策略" class="headerlink" title="调价策略"></a>调价策略</h2><p>前面提到，最优出价公式中的 $p$ 和 $q$ 的最优解求解需要拿到参竞后的后验数据，但是 bid 是要在参竞的时候就给出来，因此这就成了一个先有鸡还是先有蛋的问题。针对这个问题，最直观的一个想法是，我们<strong>可不可以用历史数据来求出最优的 $p$ 和 $q$, 然后应用到下一时刻的出价中？</strong> paper 中也提到了这一点，答案是 no，因为这个方法假设了参竞流量的分布是基本不变的，但是竞价环境是一个受多个因素影响的动态变化环境(包括参竞流量、ctr、cvr 等)，即历史的最优不会是未来的最优。在实际的实践中，笔者的实践经验的确是这样的。</p>
+<p>由于竞价环境是实时变化的，因此需要动态调价，在调价策略中，需要先明确两个点：<strong>调控的目标和调控的变量</strong>。以最经典的 PID 控制器为例，如下图所示，调控的目标是 $r(t)$ 与 $y(t)$ 尽可能接近，调控的变量是 $x(t)$。</p>
+<p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/bid_optimization_pid_controller.jpg" alt="pid"></p>
+<p>每次调整变量时，需要通过公式(13)计算出当前的 error，然后通过公式(14)计算出控制型号 $u(t)$（其中 $k_p$、$k_i$、$k_d$ 是三个拍定的超参），最后利用 $u(t)$ 通过公式(15) 的调控公式(actuator model) $\phi(x(0), u(t))$ 得到最终调整后的值</p>
+<p>PID 对于单变量的控制可以说是比较常用和有效的方法，但是我们的上面提到的问题是一个多变量控制问题，其中<strong>控制变量是 $p$ 和 $q$，控制目标是控制好预算花费并保点击成本</strong>; 对于这个问题，一个很直观的想法就是通过双 PID 分别进行独立调控，但是这些<strong>控制变量之间往往不是相互独立的，因此双 PID 不是最优的</strong>, 后面会详细描述这一点。</p>
+<h3 id="参数分析"><a href="#参数分析" class="headerlink" title="参数分析"></a>参数分析</h3><p>下面首先会分析控制变量$p$ 和 $q$ 分别影响哪些控制目标</p>
+<p>如下图 4 是固定 $q$，改变 $p$ 时, <code>c\_bid</code> 的变化，其中虚线表示改变前的出价，实线表示改变后的出价；从图中可知</p>
+<ul>
+<li>出价的直线始终通过 (-qC, 0) 这个点</li>
+<li><strong>随着 $p$ 的减小，出价的直线的斜率逐渐增大，表示出价更高</strong>，同时消耗的 budget 也会更多;而随着 $p$ 增大导致的结果则是刚好相反</li>
+<li><strong>当 $p$ 取最小值即 0 时，表示没有 budget 的限制</strong>，出价公式退化为 $C×CTR+\frac{1}{q}CTR×CVR$, 公式第一项可以认为是只按照点击出价来保点击成本 $C$，第二项则是为了达到  $\max v=CTR×CVR$的目标</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/bid_optimization_controll_qfixed.jpg" alt="q fixed"></p>
+<p>同理可画出下图 5 中固定 $p$，改变 $q$ 时, <code>c\_bid</code> 的变化; 从图中可知</p>
+<ul>
+<li>出价的直线始终通过 (pC, C) 这个点</li>
+<li><strong>随着 $q$ 的减小，出价的直线的斜率逐渐增大，表示对于 CVR 比 p<em>C 更高的流量出价更高，CVR 比 p</em>C 更低的流量出价更低</strong>, 而随着 $q$ 增大导致的结果则是刚好相反</li>
+<li><strong>当 $q$ 取最小值即 0 时，表示没有点击成本的限制</strong>，此时的出价公式退化为 $\frac{1}{p}CTR×CVR$，代表出价成本的符号 $C$ 没有出现的出价公式中，总体表示要达到 $\max v=CTR×CVR$的目标，同时通过 $q$ 来控制预算</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/bid_optimization_controll_pfixed.jpg" alt="p fixed"></p>
+<h3 id="控制器"><a href="#控制器" class="headerlink" title="控制器"></a>控制器</h3><p>通过上面的分析可知，参数 $p$ 是被用来控制预算的使用，而参数 $q$ 则是被用来控制点击成本；其实这与我们上面推导最优出价公式时对应的约束条件是一致的。</p>
+<p>因此，一种最简单的策略是用两个独立的 PID 来分别调控变量 $p$ 和 $q$，调控的目标则是预算和点击成本。如下图所示</p>
+<p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/bid_optimization_independent_pid.jpg" alt="independent pid"></p>
+<p>但是我们前面也提到，这两者并不是完全独立的，比如说为了保点击成本进行提价或降价也会影响到预算的使用，反之亦然。因此两个完全独立的 PID 并不是最优的选择, 而是在控制中要考虑两个变量相互的影响</p>
+<p><a href="https://en.wikipedia.org/wiki/Model_predictive_control" target="_blank" rel="external">Model Predict Control</a>(MPC)中有关于这类问题的研究，但是 paper 中并不直接采用这个方法，因为 paper 中认为 “<strong>modelling the highly non-linear RTB environment is costly and even impratical</strong>“； 而是通过一个线性模型去拟合。笔者认为其可行的原因是调控往往会分为多个时间片，然后在每个时间片内进行调控，<strong>而在每个时间片内用直线去拟合，理论上只要把时间切得足够小，最终总体也能拟合出非线性的曲线</strong>。</p>
+<p>主要的建模思想是<strong>通过两个 linear regression model 直接建模变量 $p、q$ 和目标 cost、CPC 的关系</strong>(即原文的model the bidding environment with respect to cost and CPC）具体的做法如下</p>
+<p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/bid_optimization_multivar_control.jpg" alt="multi-var control"></p>
+<p>上图中的公式(16)里的 $X$ 和 $b$ 分别表示 2×2 的矩阵和 2×1 的矩阵，如果展开后其实就是两个 linear regression model</p>
+<p>进一步地，公式(17)表示的是给定需要控制的目标 $\Delta cost$ 和 $\Delta CPC$（调价是分时间片进行调控的，在每次调控前都可以根据当前累积消耗和成本等后验数据，进而进行计算当前时间片需要调控得到的 $\Delta cost$ 和 $\Delta CPC$），可以对 p 和 q 分别进行 $\Delta p$ 和 $\Delta q$ 的调控达到目标，笔者这里有个疑问，<strong>为什么这里的 b 可以被约去</strong>，</p>
+<p>虽然 paper 中没有直接提到，但是<strong>笔者认为其实到了公式(17)已经可以进行调控了，只是调控的方式跟 paper 中不太一样</strong>，这里简单描述一下。首先需要获取公式(17)中 $X$，而 $X$ 中的参数其实是可通过训练数据获取，训练的数据集<strong>从当前时间往前的若干个个时间片内的 ($\Delta p$, $\Delta q$, $\Delta p$, $\Delta q$)</strong>，然后$X$就可以通过常规的训练方式获取；这样在每个时间片调价时，只需要计算好的 $X$ 和下一时间片的调控目标：$\Delta cost$ 、 $\Delta CPC$ ，便能通过 grid search 得到最优的 $\Delta q$ 和 $\Delta p$。</p>
+<p>公式 (18) 是在公式(17)基础上乘上矩阵 $X$ 的逆便得到；公式 (19) 则是 paper 中提出的调控方式：首先通过上面的 PID 调控公式(14)可以将公式(18)中的$\Delta cost$ 、 $\Delta CPC$ 变为 $u_{p}(t)$、$u_{q}(t)$; 同时只用两个变量 $\alpha$ 和 $\beta$ 来近似矩阵 $X$ 的逆（理论上应该有 4 个的），并认为 $p$、$q$ 的 control signal(通过公式 (14) 获取) $u’_{p}(t)$、$u’_{q}(t)$是$u_{p}(t)$、$u_{q}(t)$ 的线性组合；paper 称这样做的好处是 <strong>makes the controller more robust and stable against the changing environment</strong>, paper 中称 $\alpha$ 和 $\beta$ 是从训练集中获取的(详见下面的实验效果环节)</p>
+<p>因此，根据公式(19), 总体的调控系统变为</p>
+<p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/bid_optimization_related_pid.jpg" alt="related pid"></p>
+<h2 id="实验设置与效果评估"><a href="#实验设置与效果评估" class="headerlink" title="实验设置与效果评估"></a>实验设置与效果评估</h2><h3 id="基本设置"><a href="#基本设置" class="headerlink" title="基本设置"></a>基本设置</h3><p>paper 中并没有进行在线实验，而是通过离线方式进行评估</p>
+<p>采用的数据集是 taobao 40 个计划总共 20M 条 bid log，每条 bid log 的关键信息是$wp_i、 CTR、CVR$；同时根据时间划分了训练集和测试集</p>
+<p>评估指标主要有两个</p>
+<ul>
+<li>$CPC_{ratio}$: 表示保住点击成本的计划的比例</li>
+<li>$Value_{ratio}$：表示按最优出价公式重新投放时，每个计划获取的value与其理论最优的比值($\le 1$)</li>
+</ul>
+<h3 id="实现细节"><a href="#实现细节" class="headerlink" title="实现细节"></a>实现细节</h3><p>除此之外，paper 中通过 PID 计算 control signal 时，会<strong>对 err 进行加权</strong>，而传统的 PID 中所有的 err 的权值都是一样的，其加权方法如下公式(21)所示，而前一章提到的 $u_{q}(t)$ 计算方式如公式(22)所示</p>
+<p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/bid_optimization_weighted_pid_err.jpg" alt="weighted\_pid\_err"></p>
+<p>除了对 err 进行加权，上面的公式（20）也很有意思，就是每次通过 control signal 调整目标zhi值$x$ 时，<strong>不是基于上一次的值$x(t)$，而是基于最开始的值 $x(0)$</strong></p>
+<p>此外，<strong>调价的频率是每小时调整一次，PID 中涉及的超参($k_p、 k_i、 k_d$)以及公式(19)中的 $\alpha$ 和 $\beta$ 都是在训练集中通过 grid serach 找到的</strong></p>
+<p>因此，总体的实验步骤如下</p>
+<p>(1) 基于训练数据集<strong>计算出最优的 $p$ 、$q$ 作为其初始值</strong><br>(2) 在测试数据集上用上面的最优出价公式和调价策略进行模拟竞价<br>(3）当计划的 budget 消耗完或者所有的日志回放完成则终止</p>
+<h3 id="效果对比"><a href="#效果对比" class="headerlink" title="效果对比"></a>效果对比</h3><p>实验效果如下图所示，其中图 8 是 budget 消耗的情况，图 9 是成本情况，同时左边的图是实时指标，右边的图是累积指标；从图中可知，budget 消耗的幅度无论是实时还是累积都拟合得比较好，而点击成本虽然在实时上由波动，但是累积的成本是比较稳定的。</p>
+<p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/bid_optimization_performance.jpg" alt="performance"></p>
+<p>除此之外，paper 还与其他的一些方法进行了比较，结果如下图所示，其中 I-PID 和 M-PID 是本文提出的方法，分别表示 PID 是否相互独立的，从结果可知，采用了 paper 中的出价公式且考虑控制变量的关系的调价方式的效果是最好的，也印证了我们前面提到的<strong>两个完全独立的 PID 并不是最优的选择, 而是在控制中要考虑两个变量相互的影响</strong></p>
+<p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/bid_optimization_evaluation_result.jpg" alt="evaluation result"></p>
+<h2 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h2><p>综上，这篇 paper 首先将要求解的方法建模成一个最优化的问题，然后通过对偶理论求解出这个最优化问题的最优解的形式，而不是它的解；接着描述了多变量调控系统中，一种考虑控制变量间相互关系的调控策略，并通过实验结果证明这种策略的效果要优于只通过两个独立的 PID 分别调控的效果；唯一美中不足的是没有做在线实验，毕竟离线实验的环境变基本就定下来了，不像线上变化那么剧烈；但是 paper 中的总体建模思路还是非常值得学习的，可以作为一个 paradigm 推广到更一般的出价场景。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/数学/" rel="tag">数学</a>
+          
+            <a href="/tags/计算广告/" rel="tag">计算广告</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/06/20/《Real-time Personalization using Embeddings for Search Ranking at Airbnb》 阅读笔记/" rel="next" title="《Real-time Personalization using Embeddings for Search Ranking at Airbnb》 阅读笔记">
+                <i class="fa fa-chevron-left"></i> 《Real-time Personalization using Embeddings for Search Ranking at Airbnb》 阅读笔记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://wulc.me/files/profile.jpg"
+               alt="良超" />
+          <p class="site-author-name" itemprop="name">良超</p>
+          <p class="site-description motion-element" itemprop="description">工程师要把合适的技术放在合适的位置|算法工程师首先得是个工程师</p>
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">219</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">41</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/WuLC" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github-alt"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:liangchaowu5@gmail.com" target="_blank" title="E-mail">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  E-mail
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#最优出价公式"><span class="nav-number">1.</span> <span class="nav-text">最优出价公式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#paper-原始推导"><span class="nav-number">1.1.</span> <span class="nav-text">paper 原始推导</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#另一种推导思路"><span class="nav-number">1.2.</span> <span class="nav-text">另一种推导思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小结"><span class="nav-number">1.3.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#调价策略"><span class="nav-number">2.</span> <span class="nav-text">调价策略</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#参数分析"><span class="nav-number">2.1.</span> <span class="nav-text">参数分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#控制器"><span class="nav-number">2.2.</span> <span class="nav-text">控制器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验设置与效果评估"><span class="nav-number">3.</span> <span class="nav-text">实验设置与效果评估</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基本设置"><span class="nav-number">3.1.</span> <span class="nav-text">基本设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现细节"><span class="nav-number">3.2.</span> <span class="nav-text">实现细节</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#效果对比"><span class="nav-number">3.3.</span> <span class="nav-text">效果对比</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结-1"><span class="nav-number">4.</span> <span class="nav-text">小结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <center>
+<div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2020</span>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
+  </br>
+  <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
+</div>
+</center>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>
