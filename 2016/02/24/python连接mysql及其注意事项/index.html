@@ -6,19 +6,19 @@
 
 
 <html class="theme-next mist use-motion" lang="zh-Hans">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
 
 
 
-  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
 
 
 
@@ -31,7 +31,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
 
 
 
@@ -39,23 +39,23 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
-
-
-  <meta name="keywords" content="python,数据库," />
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
+  <meta name="keywords" content="python,数据库,">
 
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
 
 
 
@@ -63,11 +63,13 @@
 
 
 <meta name="description" content="本文主要讲述利用 python 连接数据库的过程和部分注意事项。文章不会涉及到连接的原理，只是简单介绍连接的步骤，以及 mysql 不同的引擎连接的过程的细微区别。">
+<meta name="keywords" content="python,数据库">
 <meta property="og:type" content="article">
 <meta property="og:title" content="python连接mysql及其注意事项">
 <meta property="og:url" content="http://wulc.github.io/2016/02/24/python连接mysql及其注意事项/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
 <meta property="og:description" content="本文主要讲述利用 python 连接数据库的过程和部分注意事项。文章不会涉及到连接的原理，只是简单介绍连接的步骤，以及 mysql 不同的引擎连接的过程的细微区别。">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2019-06-01T09:14:44.113Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="python连接mysql及其注意事项">
@@ -99,7 +101,7 @@
 
 
 
-  <link rel="canonical" href="http://wulc.github.io/2016/02/24/python连接mysql及其注意事项/"/>
+  <link rel="canonical" href="http://wulc.github.io/2016/02/24/python连接mysql及其注意事项/">
 
 
 
@@ -140,7 +142,7 @@
   
 
   <div class="custom-logo-site-title">
-    <a href="/"  class="brand" rel="start">
+    <a href="/" class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <span class="site-title">吴良超的学习笔记</span>
       <span class="logo-line-after"><i></i></span>
@@ -169,7 +171,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
             
             首页
           </a>
@@ -179,7 +181,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
             
             标签
           </a>
@@ -189,7 +191,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
             
             归档
           </a>
@@ -199,7 +201,7 @@
         <li class="menu-item menu-item-about">
           <a href="/about" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
             
             关于
           </a>
@@ -212,7 +214,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
             
             站内搜索
           </a>
@@ -261,14 +263,14 @@
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="良超">
-    <meta itemprop="description" content="">
+    <meta itemprop="description" content>
     <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
   </span>
 
   <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
     <meta itemprop="name" content="吴良超的学习笔记">
     <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src>
     </span>
   </span>
 
@@ -311,7 +313,7 @@
 
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -366,30 +368,44 @@
       
 
       
-        <p>本文主要讲述利用 python 连接数据库的过程和部分注意事项。文章不会涉及到连接的原理，只是简单介绍连接的步骤，以及 mysql 不同的引擎连接的过程的细微区别。<br><a id="more"></a></p>
+        <p>本文主要讲述利用 python 连接数据库的过程和部分注意事项。文章不会涉及到连接的原理，只是简单介绍连接的步骤，以及 mysql 不同的引擎连接的过程的细微区别。</p>
+<a id="more"></a>
+
 <p>基本上任何语言与数据库进行交互都需要引入外部的数据库驱动，在 python 操作mysql数据库中常用的就是<code>MySQLdb</code>这个驱动，后面也会以这个为例子进行讲解。</p>
 <p>数据库的最常见的操作就是“增删查改”，实现这几个功能需要对应的SQL语句。而通过程序连接数据库实际上就是获得与数据库的连接，通过这个连接执行SQL命令，得到返回结果（如果有返回结果的话）。</p>
 <p>因此，通过 python 操作 mysql 的步骤可以概括为下面3个步骤：<br><strong>1.获得连接<br>2.获取游标<br>3.通过游标执行SQL语句，获取返回结果（如果有）</strong></p>
-<h2 id="获得连接"><a href="#获得连接" class="headerlink" title=" 获得连接"></a><strong> 获得连接</strong></h2><p>获得连接的代码如下<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> MySQLdb</span><br><span class="line"></span><br><span class="line">HOST = XXXX</span><br><span class="line">PORT = XXXX</span><br><span class="line">USER = XXXX</span><br><span class="line">PASSWD = XXXX</span><br><span class="line">DB = XXXX</span><br><span class="line">CHARSET = XXXX</span><br><span class="line"></span><br><span class="line">conn = MySQLdb.connect(host=HOST,port=PORT,user=USER,passwd=PASSWD,db=DB,charset=CHARSET)</span><br></pre></td></tr></table></figure></p>
+<h2 id="获得连接"><a href="#获得连接" class="headerlink" title="** 获得连接**"></a>** 获得连接**</h2><p>获得连接的代码如下</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> MySQLdb</span><br><span class="line"></span><br><span class="line">HOST = XXXX</span><br><span class="line">PORT = XXXX</span><br><span class="line">USER = XXXX</span><br><span class="line">PASSWD = XXXX</span><br><span class="line">DB = XXXX</span><br><span class="line">CHARSET = XXXX</span><br><span class="line"></span><br><span class="line">conn = MySQLdb.connect(host=HOST,port=PORT,user=USER,passwd=PASSWD,db=DB,charset=CHARSET)</span><br></pre></td></tr></table></figure>
+
 <p>一开始声明的几个常量表示要连接到哪台机器的哪个数据库以及采用的编码，<strong>注意除了PORT为整数类型，其余都为字符类型。</strong></p>
 <p>假如在某个工程中有多个地方需要操作数据库，可以将这个写成一个函数。如下所示：</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">connectDB</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        conn = MySQLdb.connect(passwd=PASSWD, host=HOST, user=USER, port=PORT, db=DB, charset=<span class="string">'utf8'</span>)</span><br><span class="line">        <span class="keyword">return</span> conn</span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
 <p>可通过返回值是不是0判断是否建立了正常连接。</p>
 <h2 id="获取游标"><a href="#获取游标" class="headerlink" title="获取游标"></a><strong>获取游标</strong></h2><p>获得连接后，我们希望做的就是执行我们的 SQL 语句，但是在MySQLdb中，conn并不能执行此操作。<strong>需要通过游标（cursor）来执行命令并保存执行的结果，而游标可通过第一步得到的连接获取</strong>。代码如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cursor = conn.cursor()</span><br></pre></td></tr></table></figure>
+
 <h2 id="执行SQL语句，获得返回结果"><a href="#执行SQL语句，获得返回结果" class="headerlink" title="执行SQL语句，获得返回结果"></a><strong>执行SQL语句，获得返回结果</strong></h2><p>可以通过<code>cursor.execute(SQL)</code>来执行SQL语句，通过<code>cursor.fetchall()</code>获取返回的结果（针对select语句）<br>这里获取返回结果针对的是查询（select）语句。</p>
-<p><strong>查询</strong>的代码代码如下<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">SQL = <span class="string">"select * from table"</span></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    cursor.execute(SQL)</span><br><span class="line">    resultSet = cursor.fetchall()</span><br><span class="line">    <span class="keyword">for</span> row <span class="keyword">in</span> resultSet:</span><br><span class="line">       <span class="keyword">for</span> i <span class="keyword">in</span> row:</span><br><span class="line">           <span class="keyword">print</span> i</span><br><span class="line"><span class="keyword">except</span>:</span><br><span class="line">    <span class="keyword">print</span> <span class="string">'error while querying'</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span> </span><br><span class="line"><span class="keyword">finally</span>:</span><br></pre></td></tr></table></figure></p>
+<p><strong>查询</strong>的代码代码如下</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">SQL = <span class="string">"select * from table"</span></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    cursor.execute(SQL)</span><br><span class="line">    resultSet = cursor.fetchall()</span><br><span class="line">    <span class="keyword">for</span> row <span class="keyword">in</span> resultSet:</span><br><span class="line">       <span class="keyword">for</span> i <span class="keyword">in</span> row:</span><br><span class="line">           <span class="keyword">print</span> i</span><br><span class="line"><span class="keyword">except</span>:</span><br><span class="line">    <span class="keyword">print</span> <span class="string">'error while querying'</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span> </span><br><span class="line"><span class="keyword">finally</span>:</span><br></pre></td></tr></table></figure>
+
 <p>执行的SQL语句返回的结果集可以认为是一个嵌套的两级列表，数据库中每一条记录是一级列表中的一个元素。</p>
-<p><strong>插入新纪录</strong>的代码如下：<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">SQL = <span class="string">'insert into table(field) values(%s) '</span> %record</span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    cursor.execute(SQL)</span><br><span class="line"><span class="keyword">except</span>:</span><br><span class="line">    <span class="keyword">print</span> <span class="string">'error while querying'</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span></span><br></pre></td></tr></table></figure></p>
+<p><strong>插入新纪录</strong>的代码如下：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">SQL = <span class="string">'insert into table(field) values(%s) '</span> %record</span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    cursor.execute(SQL)</span><br><span class="line"><span class="keyword">except</span>:</span><br><span class="line">    <span class="keyword">print</span> <span class="string">'error while querying'</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
 <p>另外删除和更新的代码也类似，只是SQL语句不同而已。</p>
 <p><strong>这里需要注意的一点就是上面的代码有可能执行成功，但是数据库中不会更新记录。</strong></p>
-<p>原因是mysql的引擎问题，<strong>假如mysql的引擎是MyISAM，那么上面的代码就没问题，但是假如mysql的引擎是InnoDB，那么上面的插入新纪录的代码将不会执行成功。</strong>因为InnoDB的是支持事务处理的，执行更新的操作会在mysql事先分配的缓存中进行，只有提交后，修改才能生效。提交的操作也很简单,就是在cursor.execute()后加上这句：<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conn.commit()</span><br></pre></td></tr></table></figure></p>
-<p>关于这个问题，<a href="http://mysql-python.sourceforge.net/MySQLdb.html" target="_blank" rel="external">MySQLdb官网说明</a>如下：</p>
+<p>原因是mysql的引擎问题，<strong>假如mysql的引擎是MyISAM，那么上面的代码就没问题，但是假如mysql的引擎是InnoDB，那么上面的插入新纪录的代码将不会执行成功。</strong>因为InnoDB的是支持事务处理的，执行更新的操作会在mysql事先分配的缓存中进行，只有提交后，修改才能生效。提交的操作也很简单,就是在cursor.execute()后加上这句：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conn.commit()</span><br></pre></td></tr></table></figure>
+
+<p>关于这个问题，<a href="http://mysql-python.sourceforge.net/MySQLdb.html" target="_blank" rel="noopener">MySQLdb官网说明</a>如下：</p>
 <blockquote>
 <p>commit()<br>If the database and the tables support transactions, this commits the current transaction; otherwise this method successfully does nothing.<br>rollback()<br>If the database and tables support transactions, this rolls back (cancels) the current transaction; otherwise a NotSupportedError is raised.</p>
 </blockquote>
 <p>从说明中可以看到，commit()函数对于支持事务的引擎生效，对于不支持事务的引擎也不会报错，所以<strong>建议在代码中均使用</strong>。除了commit()函数外，对于支持事务的引擎还有一个rollback()函数用于执行失败后的回滚，但是这个只能在支持事务的引擎上使用。</p>
-<p>最后，上个完整的代码<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># encoding:utf-8</span></span><br><span class="line"><span class="comment"># 将数据文件的数据导入到mysql数据库中</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> MySQLdb</span><br><span class="line"><span class="keyword">import</span> ReadDirFiles</span><br><span class="line"></span><br><span class="line">HOST = XXXX</span><br><span class="line">PORT = XXXX</span><br><span class="line">USER = XXXX</span><br><span class="line">PASSWD = XXXX</span><br><span class="line">DB = XXXX</span><br><span class="line">CHARSET = XXXX</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">connectDB</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        conn = MySQLdb.connect(host=HOST, user=USER, passwd=PASSWD, port=PORT, db=DB, charset=<span class="string">'utf8'</span>)</span><br><span class="line">        <span class="keyword">return</span> conn</span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        <span class="keyword">print</span> <span class="string">'error connecting the database'</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">importData</span><span class="params">()</span>:</span></span><br><span class="line">    conn = connectDB()</span><br><span class="line">    <span class="keyword">if</span> conn == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    cursor = conn.cursor()</span><br><span class="line">    SQL = <span class="string">'insert into `ad_log` values("%s","%s","%s","%s","%s","%s","%s","%s","%s","%s","%s","%s","%s","%s","%s","%s","%s","%s") '</span> %tuple</span><br><span class="line">    <span class="comment"># print SQL # 检查SQL语句是否正确</span></span><br><span class="line">    <span class="comment"># 下面的代码是一个事务</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        cursor.execute(SQL)</span><br><span class="line">        conn.commit()  </span><br><span class="line">        <span class="keyword">print</span> <span class="string">'successfully insert the record'</span></span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        conn.rollback() <span class="comment">#引擎不支持事务时会报错</span></span><br><span class="line">    <span class="keyword">finally</span>:</span><br><span class="line">        cursor.close()</span><br><span class="line">        conn.close()</span><br></pre></td></tr></table></figure></p>
+<p>最后，上个完整的代码</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># encoding:utf-8</span></span><br><span class="line"><span class="comment"># 将数据文件的数据导入到mysql数据库中</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> MySQLdb</span><br><span class="line"><span class="keyword">import</span> ReadDirFiles</span><br><span class="line"></span><br><span class="line">HOST = XXXX</span><br><span class="line">PORT = XXXX</span><br><span class="line">USER = XXXX</span><br><span class="line">PASSWD = XXXX</span><br><span class="line">DB = XXXX</span><br><span class="line">CHARSET = XXXX</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">connectDB</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        conn = MySQLdb.connect(host=HOST, user=USER, passwd=PASSWD, port=PORT, db=DB, charset=<span class="string">'utf8'</span>)</span><br><span class="line">        <span class="keyword">return</span> conn</span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        <span class="keyword">print</span> <span class="string">'error connecting the database'</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">importData</span><span class="params">()</span>:</span></span><br><span class="line">    conn = connectDB()</span><br><span class="line">    <span class="keyword">if</span> conn == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    cursor = conn.cursor()</span><br><span class="line">    SQL = <span class="string">'insert into `ad_log` values("%s","%s","%s","%s","%s","%s","%s","%s","%s","%s","%s","%s","%s","%s","%s","%s","%s","%s") '</span> %tuple</span><br><span class="line">    <span class="comment"># print SQL # 检查SQL语句是否正确</span></span><br><span class="line">    <span class="comment"># 下面的代码是一个事务</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        cursor.execute(SQL)</span><br><span class="line">        conn.commit()  </span><br><span class="line">        <span class="keyword">print</span> <span class="string">'successfully insert the record'</span></span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        conn.rollback() <span class="comment">#引擎不支持事务时会报错</span></span><br><span class="line">    <span class="keyword">finally</span>:</span><br><span class="line">        cursor.close()</span><br><span class="line">        conn.close()</span><br></pre></td></tr></table></figure>
+
 
       
     </div>
@@ -484,7 +500,7 @@
 
       
         <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
             文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
@@ -495,9 +511,7 @@
 
       <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image"
-               src="http://wulc.me/files/profile.jpg"
-               alt="良超" />
+          <img class="site-author-image" itemprop="image" src="http://wulc.me/files/profile.jpg" alt="良超">
           <p class="site-author-name" itemprop="name">良超</p>
           <p class="site-description motion-element" itemprop="description">工程师要把合适的技术放在合适的位置|算法工程师首先得是个工程师</p>
         </div>
@@ -579,7 +593,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#获得连接"><span class="nav-number">1.</span> <span class="nav-text"> 获得连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取游标"><span class="nav-number">2.</span> <span class="nav-text">获取游标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#执行SQL语句，获得返回结果"><span class="nav-number">3.</span> <span class="nav-text">执行SQL语句，获得返回结果</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#获得连接"><span class="nav-number">1.</span> <span class="nav-text">** 获得连接**</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取游标"><span class="nav-number">2.</span> <span class="nav-text">获取游标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#执行SQL语句，获得返回结果"><span class="nav-number">3.</span> <span class="nav-text">执行SQL语句，获得返回结果</span></a></li></ol></div>
             
 
           </div>
@@ -598,12 +612,12 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <center>
-<div class="copyright" >
+<div class="copyright">
   
   &copy;  2015 - 
   <span itemprop="copyrightYear">2020</span>
-  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
-  </br>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a>
+  <br>
   <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
 </div>
 </center>

@@ -6,19 +6,19 @@
 
 
 <html class="theme-next mist use-motion" lang="zh-Hans">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
 
 
 
-  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
 
 
 
@@ -31,7 +31,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
 
 
 
@@ -39,23 +39,23 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
-
-
-  <meta name="keywords" content="程序的表示、转换与链接," />
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
+  <meta name="keywords" content="程序的表示、转换与链接,">
 
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
 
 
 
@@ -63,11 +63,13 @@
 
 
 <meta name="description" content="本文是 程序的表示、转换与链接 中第 5&amp;amp;6 周的内容，主要介绍了程序和指令的关系，目标文件的基本格式，并详细地介绍了 IA-32 体系下的指令系统，包括各种指令的类型、指令执行的基本流程，通过以上内容可以对计算机内部如何执行程序有一个感性的认识。">
+<meta name="keywords" content="程序的表示、转换与链接">
 <meta property="og:type" content="article">
-<meta property="og:title" content="程序的表示、转换与链接-week5&6">
+<meta property="og:title" content="程序的表示、转换与链接-week5&amp;6">
 <meta property="og:url" content="http://wulc.github.io/2020/06/14/程序的表示、转换与链接-week5&6/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
 <meta property="og:description" content="本文是 程序的表示、转换与链接 中第 5&amp;amp;6 周的内容，主要介绍了程序和指令的关系，目标文件的基本格式，并详细地介绍了 IA-32 体系下的指令系统，包括各种指令的类型、指令执行的基本流程，通过以上内容可以对计算机内部如何执行程序有一个感性的认识。">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/instructionAndData.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/compile.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/ObjectFileCompare.jpg">
@@ -88,7 +90,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/flag_register.jpg">
 <meta property="og:updated_time" content="2020-07-18T10:07:52.760Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="程序的表示、转换与链接-week5&6">
+<meta name="twitter:title" content="程序的表示、转换与链接-week5&amp;6">
 <meta name="twitter:description" content="本文是 程序的表示、转换与链接 中第 5&amp;amp;6 周的内容，主要介绍了程序和指令的关系，目标文件的基本格式，并详细地介绍了 IA-32 体系下的指令系统，包括各种指令的类型、指令执行的基本流程，通过以上内容可以对计算机内部如何执行程序有一个感性的认识。">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/instructionAndData.jpg">
 
@@ -118,7 +120,7 @@
 
 
 
-  <link rel="canonical" href="http://wulc.github.io/2020/06/14/程序的表示、转换与链接-week5&6/"/>
+  <link rel="canonical" href="http://wulc.github.io/2020/06/14/程序的表示、转换与链接-week5&6/">
 
 
 
@@ -159,7 +161,7 @@
   
 
   <div class="custom-logo-site-title">
-    <a href="/"  class="brand" rel="start">
+    <a href="/" class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <span class="site-title">吴良超的学习笔记</span>
       <span class="logo-line-after"><i></i></span>
@@ -188,7 +190,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
             
             首页
           </a>
@@ -198,7 +200,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
             
             标签
           </a>
@@ -208,7 +210,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
             
             归档
           </a>
@@ -218,7 +220,7 @@
         <li class="menu-item menu-item-about">
           <a href="/about" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
             
             关于
           </a>
@@ -231,7 +233,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
             
             站内搜索
           </a>
@@ -280,14 +282,14 @@
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="良超">
-    <meta itemprop="description" content="">
+    <meta itemprop="description" content>
     <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
   </span>
 
   <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
     <meta itemprop="name" content="吴良超的学习笔记">
     <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src>
     </span>
   </span>
 
@@ -330,7 +332,7 @@
 
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -374,11 +376,12 @@
       
 
       
-        <p>本文是 <a href="https://www.coursera.org/learn/jisuanji-xitong/home/welcome" target="_blank" rel="external">程序的表示、转换与链接</a> 中第 5&amp;6 周的内容，主要介绍了程序和指令的关系，目标文件的基本格式，并详细地介绍了 IA-32 体系下的指令系统，包括各种指令的类型、指令执行的基本流程，通过以上内容可以对计算机内部如何执行程序有一个感性的认识。</p>
+        <p>本文是 <a href="https://www.coursera.org/learn/jisuanji-xitong/home/welcome" target="_blank" rel="noopener">程序的表示、转换与链接</a> 中第 5&amp;6 周的内容，主要介绍了程序和指令的关系，目标文件的基本格式，并详细地介绍了 IA-32 体系下的指令系统，包括各种指令的类型、指令执行的基本流程，通过以上内容可以对计算机内部如何执行程序有一个感性的认识。</p>
 <a id="more"></a>
+
 <p>目前所用的主流计算机基本上都是基于 intel 架构的，因此本文主要基于 IA-32 指令系统介绍 </p>
 <h2 id="程序与指令"><a href="#程序与指令" class="headerlink" title="程序与指令"></a>程序与指令</h2><p>在介绍IA-32指令系统之前，需要了解如何将高级语言程序转换为用机器指令表示的机器代码</p>
-<p><a href="http://wulc.me/2020/05/30/%E7%A8%8B%E5%BA%8F%E7%9A%84%E8%A1%A8%E7%A4%BA%E3%80%81%E8%BD%AC%E6%8D%A2%E4%B8%8E%E9%93%BE%E6%8E%A5-week1/" target="_blank" rel="external">程序的表示、转换与链接-week1</a> 中介绍了计算机的硬件基本组成，基于这个硬件上面 采用的是一种<strong>存储程序的工作方式</strong>：即所有要通过计算机完成的任务事先要编写成程序,然后将程序装入到存储器里面，一旦要执行这个程序，计算机就可以把 程序当中的指令一条一条取到这个CPU里面自动的来完成</p>
+<p><a href="http://wulc.me/2020/05/30/%E7%A8%8B%E5%BA%8F%E7%9A%84%E8%A1%A8%E7%A4%BA%E3%80%81%E8%BD%AC%E6%8D%A2%E4%B8%8E%E9%93%BE%E6%8E%A5-week1/" target="_blank" rel="noopener">程序的表示、转换与链接-week1</a> 中介绍了计算机的硬件基本组成，基于这个硬件上面 采用的是一种<strong>存储程序的工作方式</strong>：即所有要通过计算机完成的任务事先要编写成程序,然后将程序装入到存储器里面，一旦要执行这个程序，计算机就可以把 程序当中的指令一条一条取到这个CPU里面自动的来完成</p>
 <p>从计算机的执行角度来看，程序可认为是由指令和数据组成的，它们都是存放在存储器里面的， 指令和数据都是用二进制的01进行编码的，<strong>在指令执行过程当中，指令和数据从存储器要取到CPU，然后存放在CPU的寄存器里面</strong>，两者的关系如下图所示</p>
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/instructionAndData.jpg" alt="instructionAndData"></p>
 <p>上面说的指令指的是机器指令，在一些其他地方往往也能看到<strong>微指令与伪指令</strong>的概念，三者简单对比如下</p>
@@ -388,11 +391,11 @@
 <li>伪指令：<strong>软件范畴</strong>，由若干个机器指令构成的一个指令序列</li>
 </ul>
 <p>机器指令和汇编指令是一一对应的，由硬件决定</p>
-<h2 id="目标代码"><a href="#目标代码" class="headerlink" title="目标代码"></a>目标代码</h2><p>这一小节的内容基本在 <a href="http://wulc.me/2020/05/31/%E3%80%8A%E9%93%BE%E6%8E%A5%E3%80%81%E8%A3%85%E8%BD%BD%E4%B8%8E%E5%BA%93%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0%281%29-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E4%B8%8E%E9%9D%99%E6%80%81%E9%93%BE%E6%8E%A5/" target="_blank" rel="external">《链接、装载与库》 阅读笔记(1)-基本概念与静态链接</a> 有描述，因此这里只做简单的记录，下图描述了编译的过程，即如何从源文件生成目标文件</p>
+<h2 id="目标代码"><a href="#目标代码" class="headerlink" title="目标代码"></a>目标代码</h2><p>这一小节的内容基本在 <a href="http://wulc.me/2020/05/31/%E3%80%8A%E9%93%BE%E6%8E%A5%E3%80%81%E8%A3%85%E8%BD%BD%E4%B8%8E%E5%BA%93%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0%281%29-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E4%B8%8E%E9%9D%99%E6%80%81%E9%93%BE%E6%8E%A5/" target="_blank" rel="noopener">《链接、装载与库》 阅读笔记(1)-基本概念与静态链接</a> 有描述，因此这里只做简单的记录，下图描述了编译的过程，即如何从源文件生成目标文件</p>
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/compile.jpg" alt="compile"></p>
 <p>上图中的 <code>.c</code> 表示 C 语言的源文件、<code>.i</code> 表示预编译文件、<code>.s</code> 表示汇编文件、<code>.o</code> 表示目标文件(也叫可重定位目标文件)</p>
 <p>从上图可知，原始的汇编文件中的指令与反汇编得到的汇编指令在形式上有一点差别，主要体现在<br>(1) 编译得到的汇编指令的助记符当中都带长度后缀, 而反汇编的都没有<br>(2) 编译得到的汇编指令用的是十进制，反汇编用的则是十六进制</p>
-<p>此外的 <strong>test.o 里面的起始地址总是从零开始，因为它还没有链接，还没生成可执行文件，所以它的地址是不确定的</strong>，需要被链接生成可执行目标文件，链接的过程也可参考上面的<a href="http://wulc.me/2020/05/31/%E3%80%8A%E9%93%BE%E6%8E%A5%E3%80%81%E8%A3%85%E8%BD%BD%E4%B8%8E%E5%BA%93%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0%281%29-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E4%B8%8E%E9%9D%99%E6%80%81%E9%93%BE%E6%8E%A5/" target="_blank" rel="external">文章</a>，从下图中可知，可执行目标文件中的地址不再是从 0 开始的, 而是一个确切的地址</p>
+<p>此外的 <strong>test.o 里面的起始地址总是从零开始，因为它还没有链接，还没生成可执行文件，所以它的地址是不确定的</strong>，需要被链接生成可执行目标文件，链接的过程也可参考上面的<a href="http://wulc.me/2020/05/31/%E3%80%8A%E9%93%BE%E6%8E%A5%E3%80%81%E8%A3%85%E8%BD%BD%E4%B8%8E%E5%BA%93%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0%281%29-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E4%B8%8E%E9%9D%99%E6%80%81%E9%93%BE%E6%8E%A5/" target="_blank" rel="noopener">文章</a>，从下图中可知，可执行目标文件中的地址不再是从 0 开始的, 而是一个确切的地址</p>
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/ObjectFileCompare.jpg" alt="objectFilesCompared"></p>
 <p>这个确切的地址是什么地址呢？实际上是一个虚拟地址，它是在一个虚拟地址空间里面的，其实就是进程的虚拟地址空间，如下图所示</p>
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/object_file_mapping.jpg" alt="object file mapping"></p>
@@ -571,7 +574,7 @@
 
       
         <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
             文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
@@ -582,9 +585,7 @@
 
       <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image"
-               src="http://wulc.me/files/profile.jpg"
-               alt="良超" />
+          <img class="site-author-image" itemprop="image" src="http://wulc.me/files/profile.jpg" alt="良超">
           <p class="site-author-name" itemprop="name">良超</p>
           <p class="site-description motion-element" itemprop="description">工程师要把合适的技术放在合适的位置|算法工程师首先得是个工程师</p>
         </div>
@@ -685,12 +686,12 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <center>
-<div class="copyright" >
+<div class="copyright">
   
   &copy;  2015 - 
   <span itemprop="copyrightYear">2020</span>
-  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
-  </br>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a>
+  <br>
   <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
 </div>
 </center>

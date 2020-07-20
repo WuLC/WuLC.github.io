@@ -6,19 +6,19 @@
 
 
 <html class="theme-next mist use-motion" lang="zh-Hans">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
 
 
 
-  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
 
 
 
@@ -31,7 +31,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
 
 
 
@@ -39,23 +39,23 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
-
-
-  <meta name="keywords" content="机器学习,强化学习," />
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
+  <meta name="keywords" content="机器学习,强化学习,">
 
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
 
 
 
@@ -63,11 +63,13 @@
 
 
 <meta name="description" content="在之前的文章 强化学习笔记(2)-从 Q-Learning 到 DQN 中，我们已经知道 Q-Learning 系列方法是基于 value 的方法， 也就是通过计算每一个状态动作的价值，然后选择价值最大的动作执行。这是一种间接的做法，那有没有更直接的做法呢？有！那就是直接更新策略。本文要介绍的 Policy Gradient 就是这类 policy-based 的方法， 除此之外，还会介绍结合了">
+<meta name="keywords" content="机器学习,强化学习">
 <meta property="og:type" content="article">
 <meta property="og:title" content="强化学习笔记(3)- 从 Policy Gradient 到 A3C">
 <meta property="og:url" content="http://wulc.github.io/2018/05/11/强化学习笔记(3)- 从 Policy Gradient 到 A3C/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
 <meta property="og:description" content="在之前的文章 强化学习笔记(2)-从 Q-Learning 到 DQN 中，我们已经知道 Q-Learning 系列方法是基于 value 的方法， 也就是通过计算每一个状态动作的价值，然后选择价值最大的动作执行。这是一种间接的做法，那有没有更直接的做法呢？有！那就是直接更新策略。本文要介绍的 Policy Gradient 就是这类 policy-based 的方法， 除此之外，还会介绍结合了">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/adtn80nqd59v2g7j7xmh783r/image_1cd6euujcj611hh21ih71fa38mlm.png">
 <meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/id05nxxh7u9g3ik2h9ga9ctn/image_1cd4k6vg5g78tcq1dg6gasrss9.png">
 <meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/6b1twe8d889oa17qf7rx8hoz/image_1cd6dk9spft51pi59smheenb89.png">
@@ -107,7 +109,7 @@
 
 
 
-  <link rel="canonical" href="http://wulc.github.io/2018/05/11/强化学习笔记(3)- 从 Policy Gradient 到 A3C/"/>
+  <link rel="canonical" href="http://wulc.github.io/2018/05/11/强化学习笔记(3)- 从 Policy Gradient 到 A3C/">
 
 
 
@@ -148,7 +150,7 @@
   
 
   <div class="custom-logo-site-title">
-    <a href="/"  class="brand" rel="start">
+    <a href="/" class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <span class="site-title">吴良超的学习笔记</span>
       <span class="logo-line-after"><i></i></span>
@@ -177,7 +179,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
             
             首页
           </a>
@@ -187,7 +189,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
             
             标签
           </a>
@@ -197,7 +199,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
             
             归档
           </a>
@@ -207,7 +209,7 @@
         <li class="menu-item menu-item-about">
           <a href="/about" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
             
             关于
           </a>
@@ -220,7 +222,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
             
             站内搜索
           </a>
@@ -269,14 +271,14 @@
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="良超">
-    <meta itemprop="description" content="">
+    <meta itemprop="description" content>
     <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
   </span>
 
   <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
     <meta itemprop="name" content="吴良超的学习笔记">
     <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src>
     </span>
   </span>
 
@@ -319,7 +321,7 @@
 
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -374,8 +376,9 @@
       
 
       
-        <p>在之前的文章 <a href="http://wulc.me/2018/05/09/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%282%29-%E4%BB%8E%20Q-Learning%20%E5%88%B0%20DQN/" target="_blank" rel="external">强化学习笔记(2)-从 Q-Learning</a> 到 DQN 中，我们已经知道 Q-Learning 系列方法是基于 value 的方法， 也就是通过计算每一个状态动作的价值，然后选择价值最大的动作执行。这是一种间接的做法，那有没有更直接的做法呢？有！那就是<strong>直接更新策略</strong>。本文要介绍的 Policy Gradient 就是这类 policy-based 的方法， 除此之外，还会介绍结合了 policy-based 和 value-based 的 Actor-Critic 方法，以及在 Actor-Critic 基础上的 DDPG、A3C方法。</p>
+        <p>在之前的文章 <a href="http://wulc.me/2018/05/09/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%282%29-%E4%BB%8E%20Q-Learning%20%E5%88%B0%20DQN/" target="_blank" rel="noopener">强化学习笔记(2)-从 Q-Learning</a> 到 DQN 中，我们已经知道 Q-Learning 系列方法是基于 value 的方法， 也就是通过计算每一个状态动作的价值，然后选择价值最大的动作执行。这是一种间接的做法，那有没有更直接的做法呢？有！那就是<strong>直接更新策略</strong>。本文要介绍的 Policy Gradient 就是这类 policy-based 的方法， 除此之外，还会介绍结合了 policy-based 和 value-based 的 Actor-Critic 方法，以及在 Actor-Critic 基础上的 DDPG、A3C方法。</p>
 <a id="more"></a>
+
 <h2 id="Policy-Gradient"><a href="#Policy-Gradient" class="headerlink" title="Policy Gradient"></a>Policy Gradient</h2><h3 id="基本思想"><a href="#基本思想" class="headerlink" title="基本思想"></a>基本思想</h3><p>Policy Gradient 就是通过更新 Policy Network 来直接更新策略的。那什么是 Policy Network？实际上就是一个神经网络，<strong>输入是状态，输出直接就是动作（不是Q值）</strong>，且一般输出有两种方式：一种是概率的方式，即输出某一个动作的概率；另一种是确定性的方式，即输出具体的某一个动作。</p>
 <p>如果要更新 Policy Network 策略网络，或者说要使用梯度下降的方法来更新网络，需要有一个目标函数，对于所有强化学习的任务来说，其实目标都是使所有带衰减 reward 的累加期望最大。即如下式所示</p>
 <p>$L(\theta) = \mathbb E(r_1+\gamma r_2 + \gamma^2 r_3 + …|\pi(,\theta))$</p>
@@ -386,41 +389,41 @@
 <p>假设这个评价指标是 $f(s,a)$, 我们的 Policy Network 输出的 $\pi(a|s,\theta)$ 是概率, 那么可以通过极大似然估计的方法来优化这个目标。比如说我们可以构造如下目标函数</p>
 <p>$L(\theta) = \sum log\pi(a|s,\theta)f(s,a)$</p>
 <p>比如说，对于某局游戏，假如最终赢了，那么认为这局游戏中每一步都是好的，如果输了，那么认为都是不好的。好的 $f(s,a)$ 就是1，不好的就是-1，然后极大化上面的目标函数即可。</p>
-<p>实际上，除了极大化上面的目标函数，还可以直接对 $f(s,a)$ 进行极大化，如这篇博文 <a href="https://blog.csdn.net/jinzhuojun/article/details/72851548" target="_blank" rel="external">Deep Reinforcement Learning: Pong from Pixels</a> 中直接最大化 $f(x)$ 也就是 $f(s, a)$ 的期望，可以看到，最后的结果跟上面的目标函数是一致的。</p>
+<p>实际上，除了极大化上面的目标函数，还可以直接对 $f(s,a)$ 进行极大化，如这篇博文 <a href="https://blog.csdn.net/jinzhuojun/article/details/72851548" target="_blank" rel="noopener">Deep Reinforcement Learning: Pong from Pixels</a> 中直接最大化 $f(x)$ 也就是 $f(s, a)$ 的期望，可以看到，最后的结果跟上面的目标函数是一致的。</p>
 <p><img src="http://static.zybuluo.com/WuLiangchao/adtn80nqd59v2g7j7xmh783r/image_1cd6euujcj611hh21ih71fa38mlm.png" alt="max f(s,a)"></p>
-<h3 id="评判指标的选择"><a href="#评判指标的选择" class="headerlink" title="评判指标的选择"></a>评判指标的选择</h3><p>从上面的推导也可知道，在 Policy Gradient 中，<strong>如何确定评价指标 $f(s,a)$ 是关键。</strong> 上面提到了一种简单地根据回合的输赢来判断这个回合中的每一步到底是好是坏。但是其实我们更加希望的是每走一步就能够获取到这一步的具体评价，因此出现了很多其他的直接给出某个时刻的评估的评价方式。如这篇论文 <a href="https://arxiv.org/abs/1506.02438" target="_blank" rel="external">High-dimensional continuous control using generalized advantage estimation</a>  里就对比了若干种评价指标。</p>
+<h3 id="评判指标的选择"><a href="#评判指标的选择" class="headerlink" title="评判指标的选择"></a>评判指标的选择</h3><p>从上面的推导也可知道，在 Policy Gradient 中，<strong>如何确定评价指标 $f(s,a)$ 是关键。</strong> 上面提到了一种简单地根据回合的输赢来判断这个回合中的每一步到底是好是坏。但是其实我们更加希望的是每走一步就能够获取到这一步的具体评价，因此出现了很多其他的直接给出某个时刻的评估的评价方式。如这篇论文 <a href="https://arxiv.org/abs/1506.02438" target="_blank" rel="noopener">High-dimensional continuous control using generalized advantage estimation</a>  里就对比了若干种评价指标。</p>
 <p><img src="http://static.zybuluo.com/WuLiangchao/id05nxxh7u9g3ik2h9ga9ctn/image_1cd4k6vg5g78tcq1dg6gasrss9.png" alt="select judge function"></p>
 <p>上面公式（1）中的 $\Psi_t$ 就是 t 时刻的评价指标。从上图可以看到我们可以使用reward，使用 Q、A 或者 TD 来作为动作的评价指标。那这些方法的区别在哪里？</p>
-<p>根据这篇文章 <a href="https://zhuanlan.zhihu.com/p/26882898" target="_blank" rel="external">DRL之Policy Gradient, Deterministic Policy Gradient与Actor-Critic</a>, 本质的区别在于 variance 和 bias 的问题</p>
+<p>根据这篇文章 <a href="https://zhuanlan.zhihu.com/p/26882898" target="_blank" rel="noopener">DRL之Policy Gradient, Deterministic Policy Gradient与Actor-Critic</a>, 本质的区别在于 variance 和 bias 的问题</p>
 <blockquote>
 <p>用reward来作为动作的评价是最直接的，采用上图第3种做法reward-baseline是很常见的一种做法。这样做bias比较低，但是variance很大，也就是reward值太不稳定，会导致训练不会。</p>
 <p>那么采用Q值会怎样呢？Q值是对reward的期望值，使用Q值variance比较小，bias比较大。一般我们会选择使用A，Advantage。A=Q-V，是一个动作相对当前状态的价值。本质上V可以看做是baseline。对于上图第3种做法，也可以直接用V来作为baseline。但是还是一样的问题，A的variance比较大。为了平衡variance和bias的问题，使用TD会是比较好的做法，既兼顾了实际值reward，又使用了估计值V。在TD中，TD(lambda)平衡不同长度的TD值，会是比较好的做法。</p>
 <p>在实际使用中，需要根据具体的问题选择不同的方法。有的问题reward很容易得到，有的问题reward非常稀疏。reward越稀疏，也就越需要采用估计值。</p>
 </blockquote>
 <p><strong>以上就是 Policy Gradient 的核心思想，通过 policy network 输出的 softmax 概率 和获取的reward(通过评估指标获取)构造目标函数，然后对 policy network 进行更新。从而避免了原来的 reward 和 policy network 之间是不可微的问题。也因为Policy Gradient的这个特点，目前的很多传统监督学习的问题因为输出都是softmax的离散形式，都可以改造成Policy Gradient的方法来实现，调节得当效果会在监督学习的基础上进一步提升。</strong></p>
-<h2 id="Actor-Critic"><a href="#Actor-Critic" class="headerlink" title="Actor-Critic"></a>Actor-Critic</h2><p>上面提到的多种评估指标其实已经涵盖了 Actor-Critic 的思想，原始的 Policy Gradient 往往采用的回合更新，也就是要到一轮结束后才能进行更新。如某盘游戏，假如最后的结果是胜利了，那么可以认为其中的每一步都是好的，反之则认为其中的每一步都是不好的。其更新过程如下，图片摘自 <a href="http://202.38.196.91/cache/5/03/www0.cs.ucl.ac.uk/878f680a35c2cc35e046a7fd7f9c9fb8/pg.pdf" target="_blank" rel="external">David Silver 的 Policy Gradient 课件</a> ，这种方法也叫 Monte-Carlo Policy Gradient</p>
+<h2 id="Actor-Critic"><a href="#Actor-Critic" class="headerlink" title="Actor-Critic"></a>Actor-Critic</h2><p>上面提到的多种评估指标其实已经涵盖了 Actor-Critic 的思想，原始的 Policy Gradient 往往采用的回合更新，也就是要到一轮结束后才能进行更新。如某盘游戏，假如最后的结果是胜利了，那么可以认为其中的每一步都是好的，反之则认为其中的每一步都是不好的。其更新过程如下，图片摘自 <a href="http://202.38.196.91/cache/5/03/www0.cs.ucl.ac.uk/878f680a35c2cc35e046a7fd7f9c9fb8/pg.pdf" target="_blank" rel="noopener">David Silver 的 Policy Gradient 课件</a> ，这种方法也叫 Monte-Carlo Policy Gradient</p>
 <p><img src="http://static.zybuluo.com/WuLiangchao/6b1twe8d889oa17qf7rx8hoz/image_1cd6dk9spft51pi59smheenb89.png" alt="Policy Gradient Update"></p>
 <p>图中的 $\log \pi_{\theta}(s_t, a_t)$ 是 policy network 输出的概率，$v_t$ 是当前这一局的结果。这是 policy gradient 最基本的更新形式。但是这个方法显然是有问题的，最后的结果好久并不能说明其中每一步都好。因此一个很直观的想法就是能不能抛弃回合更新的做法，而采用单步更新？Actor-Critic 干的就是这个事情。</p>
 <p>要采用单步更新，意味着我们需要为每一步都即时做出评估。Actor-Critic 中的 Critic 负责的就是评估这部分工作，而 Actor 则是负责选择出要执行的动作。这就是 Actor-Critic 的思想。从上面论文中提出的各种评价指标可知，看到 Critic 的输出有多种形式，可以采用 Q值、V值 或 TD 等。</p>
-<p>因此 Actor-Critic 的思想就是从 Critic 评判模块(采用深度神经网络居多)得到对动作的好坏评价，然后反馈给 Actor(采用深度神经网络居多) 让 Actor 更新自己的策略。从具体的训练细节来说，Actor 和 Critic 分别采用不同的目标函数进行更新， 如可参考这里的代码 <a href="https://morvanzhou.github.io/tutorials/machine-learning/reinforcement-learning/6-1-actor-critic/" target="_blank" rel="external">Actor-Critic (Tensorflow)</a>，下面要说的 DDPG 也是这么做的。</p>
+<p>因此 Actor-Critic 的思想就是从 Critic 评判模块(采用深度神经网络居多)得到对动作的好坏评价，然后反馈给 Actor(采用深度神经网络居多) 让 Actor 更新自己的策略。从具体的训练细节来说，Actor 和 Critic 分别采用不同的目标函数进行更新， 如可参考这里的代码 <a href="https://morvanzhou.github.io/tutorials/machine-learning/reinforcement-learning/6-1-actor-critic/" target="_blank" rel="noopener">Actor-Critic (Tensorflow)</a>，下面要说的 DDPG 也是这么做的。</p>
 <h2 id="Deep-Deterministic-Policy-Gradient-DDPG"><a href="#Deep-Deterministic-Policy-Gradient-DDPG" class="headerlink" title="Deep Deterministic Policy Gradient(DDPG)"></a>Deep Deterministic Policy Gradient(DDPG)</h2><p>上面提到的的 Policy Gradient 处理问题其实还是局限在动作个数是离散和有限的情况，但是对于某些输出的值是连续的问题，上面的方法就不管用了，比如说自动驾驶控制的速度，机器人控制移动的幅度等。</p>
-<p>最开始这篇论文 <a href="http://proceedings.mlr.press/v32/silver14.pdf" target="_blank" rel="external">Deterministic Policy Gradient Algorithms</a> 提出了输出连续动作值的 DPG(Deterministic Policy Gradient) ; 然后 论文 <a href="https://arxiv.org/abs/1509.02971" target="_blank" rel="external">Continuous control with deep reinforcement learning</a> 基于 DPG 做了改进，提出了 DDPG(Deep Deterministic Policy Gradient)。</p>
-<p>这里 DPG 不详细展开说了，简而言之，主要就是证明了 deterministic policy gradient不仅存在，而且是model-free形式且是action-value function的梯度。因此 policy 不仅仅可以通过 概率分布表示，也就将动作空间推到了无限大的。具体的理论课参考这篇文章 <a href="https://blog.csdn.net/jinzhuojun/article/details/72851548" target="_blank" rel="external">深度增强学习（DRL）漫谈 - 从AC（Actor-Critic）到A3C（Asynchronous Advantage Actor-Critic）</a></p>
+<p>最开始这篇论文 <a href="http://proceedings.mlr.press/v32/silver14.pdf" target="_blank" rel="noopener">Deterministic Policy Gradient Algorithms</a> 提出了输出连续动作值的 DPG(Deterministic Policy Gradient) ; 然后 论文 <a href="https://arxiv.org/abs/1509.02971" target="_blank" rel="noopener">Continuous control with deep reinforcement learning</a> 基于 DPG 做了改进，提出了 DDPG(Deep Deterministic Policy Gradient)。</p>
+<p>这里 DPG 不详细展开说了，简而言之，主要就是证明了 deterministic policy gradient不仅存在，而且是model-free形式且是action-value function的梯度。因此 policy 不仅仅可以通过 概率分布表示，也就将动作空间推到了无限大的。具体的理论课参考这篇文章 <a href="https://blog.csdn.net/jinzhuojun/article/details/72851548" target="_blank" rel="noopener">深度增强学习（DRL）漫谈 - 从AC（Actor-Critic）到A3C（Asynchronous Advantage Actor-Critic）</a></p>
 <p>DDPG 相对于 DPG 的核心改进是引入了 Deep Learning，采用深度神经网络作为 DPG 中的策略函数 $μ$ 和 $Q$ 函数的模拟，即 Actor 网络和 Critic 网络；然后使用深度学习的方法来训练上述神经网络。两者的关系类似于 DQN 和 Q-learning 的关系。</p>
 <p>DDPG 的网络结构为 Actor 网络 + Critic 网络，对于状态 $s$, 先通过 Actor 网络获取 action $a$, 这里的 $a$ 是一个向量；然后将 $a$ 输入 Critic 网络，输出的是 Q 值，目标函数就是极大化 Q 值，但是更新的方法两者又有一些区别。论文中显示 DDPG 算法流程如下</p>
 <p><img src="http://static.zybuluo.com/WuLiangchao/qtjxxy4lnim9csq2w5r9dcuq/image_1cd5bb8ke1d9b1e1d1qcq1ta410f9m.png" alt="DDPG"></p>
 <p>从算法的流程可知，Actor 网络和 Critic 网络是分开训练的，但是两者的输入输出存在联系，Actor 网络输出的 action 是 Critic 网络的输入，同时 Critic 网络的输出会被用到 Actor 网路进行反向传播。</p>
-<p>原始论文没有给出两个网路的具体示意图，这里给出一张<a href="https://blog.csdn.net/jinzhuojun/article/details/72851548" target="_blank" rel="external">这篇文章</a>画的示意图，可以看到，Critic 跟之前提到的 DQN 有点类似，但是这里的输入是 state + action，输出是一个 Q 值而不是各个动作的 Q 值。</p>
+<p>原始论文没有给出两个网路的具体示意图，这里给出一张<a href="https://blog.csdn.net/jinzhuojun/article/details/72851548" target="_blank" rel="noopener">这篇文章</a>画的示意图，可以看到，Critic 跟之前提到的 DQN 有点类似，但是这里的输入是 state + action，输出是一个 Q 值而不是各个动作的 Q 值。</p>
 <p><img src="http://static.zybuluo.com/WuLiangchao/qvvzgt4ehvn6qm9kv2sngqpv/image_1cd6k6nr7c9mqcc1bthhs4ibs13.png" alt="network visulization"></p>
 <p>由于在 DDPG 中，我们不再用单一的概率值表示某个动作，而是用向量表示某个动作，由于向量空间可以被认为是无限的，因此也能够跟无限的动作空间对应起来。</p>
-<h2 id="Asynchronous-Advantage-Actor-Critic-A3C"><a href="#Asynchronous-Advantage-Actor-Critic-A3C" class="headerlink" title="Asynchronous Advantage Actor-Critic(A3C)"></a>Asynchronous Advantage Actor-Critic(A3C)</h2><p>在提出 DDPG 后，DeepMind 在这个基础上提出了效果更好的 Asynchronous Advantage Actor-Critic（A3C），详见论文 <a href="https://arxiv.org/pdf/1602.01783.pdf" target="_blank" rel="external">Asynchronous Methods for Deep Reinforcement Learning</a></p>
+<h2 id="Asynchronous-Advantage-Actor-Critic-A3C"><a href="#Asynchronous-Advantage-Actor-Critic-A3C" class="headerlink" title="Asynchronous Advantage Actor-Critic(A3C)"></a>Asynchronous Advantage Actor-Critic(A3C)</h2><p>在提出 DDPG 后，DeepMind 在这个基础上提出了效果更好的 Asynchronous Advantage Actor-Critic（A3C），详见论文 <a href="https://arxiv.org/pdf/1602.01783.pdf" target="_blank" rel="noopener">Asynchronous Methods for Deep Reinforcement Learning</a></p>
 <p>A3C 算法和DDPG类似，通过 DNN 拟合 policy function 和 value function的估计。但是<strong>不同点</strong>在于</p>
 <ol>
 <li>A3C 中有多个 agent 对网络进行 asynchronous update，这样带来了样本间的相关性较低的好处，因此 A3C 中也没有采用 Experience Replay 的机制；这样 A3C 便支持 online 的训练模式了</li>
 <li>A3C 有两个输出，其中一个 softmax output 作为 policy $\pi(a_t|s_t;\theta)$，而另一个linear output为 value function $V(s_t;\theta_v)$</li>
 <li>A3C 中的Policy network 的评估指标采用的是上面比较了多种评估指标的论文中提到的 Advantage Function(即A值) 而不是 DDPG 中单纯的 Q 值。</li>
 </ol>
-<p>整体的结构如下所示，图片摘自<a href="https://blog.csdn.net/jinzhuojun/article/details/72851548" target="_blank" rel="external">这篇文章</a>。</p>
+<p>整体的结构如下所示，图片摘自<a href="https://blog.csdn.net/jinzhuojun/article/details/72851548" target="_blank" rel="noopener">这篇文章</a>。</p>
 <p><img src="http://static.zybuluo.com/WuLiangchao/xnio3z42k4hkvwj7tg7o48xo/image_1cd746v6om9cmoh1nul1io01fg19.png" alt="A3C"></p>
 <p>从上面的如可知，输出包含两部分，value network 的部分可以用来作为连续动作值的输出，而 policy network 可以作为离散动作值的概率输出，因此能够同时解决前面提到的两类问题。</p>
 <p>两个网络的更新公式如下</p>
@@ -430,10 +433,10 @@
 <hr>
 <p>参考</p>
 <ol>
-<li><a href="https://zhuanlan.zhihu.com/p/21725498" target="_blank" rel="external">深度增强学习之Policy Gradient方法1</a></li>
-<li><a href="http://karpathy.github.io/2016/05/31/rl/" target="_blank" rel="external">Deep Reinforcement Learning: Pong from Pixels</a></li>
-<li><a href="https://blog.csdn.net/jinzhuojun/article/details/72851548" target="_blank" rel="external">深度增强学习（DRL）漫谈 - 从AC（Actor-Critic）到A3C（Asynchronous Advantage Actor-Critic）</a></li>
-<li><a href="https://zhuanlan.zhihu.com/p/25239682" target="_blank" rel="external">深度强化学习（Deep Reinforcement Learning）入门：RL base &amp; DQN-DDPG-A3C introduction</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/21725498" target="_blank" rel="noopener">深度增强学习之Policy Gradient方法1</a></li>
+<li><a href="http://karpathy.github.io/2016/05/31/rl/" target="_blank" rel="noopener">Deep Reinforcement Learning: Pong from Pixels</a></li>
+<li><a href="https://blog.csdn.net/jinzhuojun/article/details/72851548" target="_blank" rel="noopener">深度增强学习（DRL）漫谈 - 从AC（Actor-Critic）到A3C（Asynchronous Advantage Actor-Critic）</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/25239682" target="_blank" rel="noopener">深度强化学习（Deep Reinforcement Learning）入门：RL base &amp; DQN-DDPG-A3C introduction</a></li>
 </ol>
 
       
@@ -529,7 +532,7 @@
 
       
         <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
             文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
@@ -540,9 +543,7 @@
 
       <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image"
-               src="http://wulc.me/files/profile.jpg"
-               alt="良超" />
+          <img class="site-author-image" itemprop="image" src="http://wulc.me/files/profile.jpg" alt="良超">
           <p class="site-author-name" itemprop="name">良超</p>
           <p class="site-description motion-element" itemprop="description">工程师要把合适的技术放在合适的位置|算法工程师首先得是个工程师</p>
         </div>
@@ -643,12 +644,12 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <center>
-<div class="copyright" >
+<div class="copyright">
   
   &copy;  2015 - 
   <span itemprop="copyrightYear">2020</span>
-  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
-  </br>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a>
+  <br>
   <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
 </div>
 </center>

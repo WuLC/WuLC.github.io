@@ -6,19 +6,19 @@
 
 
 <html class="theme-next mist use-motion" lang="zh-Hans">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
 
 
 
-  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
 
 
 
@@ -31,7 +31,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
 
 
 
@@ -39,23 +39,23 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
-
-
-  <meta name="keywords" content="机器学习,深度学习," />
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
+  <meta name="keywords" content="机器学习,深度学习,">
 
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
 
 
 
@@ -63,11 +63,13 @@
 
 
 <meta name="description" content="本文主要介绍了如何通过 Keras 实现 LRCN 模型，模型出自论文 Long-term Recurrent Convolutional Networks for Visual Recognition and Description，最近需要用这个模型做个实验，在网上搜到的实现代码不多，因此这里记录一下，以供参考。">
+<meta name="keywords" content="机器学习,深度学习">
 <meta property="og:type" content="article">
 <meta property="og:title" content="通过 Keras 实现 LRCN 模型">
 <meta property="og:url" content="http://wulc.github.io/2018/04/18/通过 Keras 实现 LRCN 模型/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
 <meta property="og:description" content="本文主要介绍了如何通过 Keras 实现 LRCN 模型，模型出自论文 Long-term Recurrent Convolutional Networks for Visual Recognition and Description，最近需要用这个模型做个实验，在网上搜到的实现代码不多，因此这里记录一下，以供参考。">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/fx06dccsjdrjygw9qmh7jt3i/image_1cbhou3v21gao17kv1ls215vdk90p.png">
 <meta property="og:updated_time" content="2019-06-01T09:14:44.206Z">
 <meta name="twitter:card" content="summary">
@@ -101,7 +103,7 @@
 
 
 
-  <link rel="canonical" href="http://wulc.github.io/2018/04/18/通过 Keras 实现 LRCN 模型/"/>
+  <link rel="canonical" href="http://wulc.github.io/2018/04/18/通过 Keras 实现 LRCN 模型/">
 
 
 
@@ -142,7 +144,7 @@
   
 
   <div class="custom-logo-site-title">
-    <a href="/"  class="brand" rel="start">
+    <a href="/" class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <span class="site-title">吴良超的学习笔记</span>
       <span class="logo-line-after"><i></i></span>
@@ -171,7 +173,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
             
             首页
           </a>
@@ -181,7 +183,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
             
             标签
           </a>
@@ -191,7 +193,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
             
             归档
           </a>
@@ -201,7 +203,7 @@
         <li class="menu-item menu-item-about">
           <a href="/about" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
             
             关于
           </a>
@@ -214,7 +216,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
             
             站内搜索
           </a>
@@ -263,14 +265,14 @@
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="良超">
-    <meta itemprop="description" content="">
+    <meta itemprop="description" content>
     <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
   </span>
 
   <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
     <meta itemprop="name" content="吴良超的学习笔记">
     <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src>
     </span>
   </span>
 
@@ -313,7 +315,7 @@
 
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -368,26 +370,33 @@
       
 
       
-        <p>本文主要介绍了如何通过 Keras 实现 LRCN 模型，模型出自论文 <a href="https://arxiv.org/abs/1411.4389" target="_blank" rel="external">Long-term Recurrent Convolutional Networks for Visual Recognition and Description</a>，最近需要用这个模型做个实验，在网上搜到的实现代码不多，因此这里记录一下，以供参考。</p>
+        <p>本文主要介绍了如何通过 Keras 实现 LRCN 模型，模型出自论文 <a href="https://arxiv.org/abs/1411.4389" target="_blank" rel="noopener">Long-term Recurrent Convolutional Networks for Visual Recognition and Description</a>，最近需要用这个模型做个实验，在网上搜到的实现代码不多，因此这里记录一下，以供参考。</p>
 <a id="more"></a>
+
 <p>这里的 LRCN 模型的结构如下图所示，<br>输入是 image sequence，然后通过 CNN 提取每帧图像的特征，作为 LSTM 的输入，LSTM可以为每帧预测一个 label，也可在只在最后预测一个 label 作为整个 sequence 的 label。这种想法非常自然，也是 video/image sequence 中的一个 base model。</p>
 <p><img src="http://static.zybuluo.com/WuLiangchao/fx06dccsjdrjygw9qmh7jt3i/image_1cbhou3v21gao17kv1ls215vdk90p.png" alt="CNN_LSTM"></p>
 <p>下面首先讲述如何在 Keras 中构建这个模型，然后讲述数据加载的两种模式：分别对应于不定长的输入序列和固定长度的输入序列。</p>
 <h2 id="构建模型"><a href="#构建模型" class="headerlink" title="构建模型"></a>构建模型</h2><p>在具体的实现中，对于训练数据集不大的情况下， CNN 部分一般可采用预训练的模型，然后选择是否对其进行 FineTunning，这里我采用的是在 ImageNet 上预训练的 VGG16，并且对 VGG16 最上面的5层进行 FineTunning， 其他层的参数不变。</p>
-<p>另外，对于输入的每帧图像，通过 CNN 抽取出的 feature map 的 大小为(7,7,512)，而 LSTM 的输入的 size 是 <code>(batch_size, timesteps, input_dim)</code>，因此需要将 (7,7,512) 转为一个一维的 vector，这里我采用最简单的 <code>Flatten()</code> 方法。实际上，在这里可以采用更加灵活的转换，如这篇论文 <a href="https://arxiv.org/abs/1606.08572" target="_blank" rel="external">Diversified Visual Attention Networks for Fine-Grained Object Classification</a> 就提出了一种 attention 机制处理这些feature map。</p>
+<p>另外，对于输入的每帧图像，通过 CNN 抽取出的 feature map 的 大小为(7,7,512)，而 LSTM 的输入的 size 是 <code>(batch_size, timesteps, input_dim)</code>，因此需要将 (7,7,512) 转为一个一维的 vector，这里我采用最简单的 <code>Flatten()</code> 方法。实际上，在这里可以采用更加灵活的转换，如这篇论文 <a href="https://arxiv.org/abs/1606.08572" target="_blank" rel="noopener">Diversified Visual Attention Networks for Fine-Grained Object Classification</a> 就提出了一种 attention 机制处理这些feature map。</p>
 <p>(7,7,512) 直接 Flatten 后的大小为 25088，直接输入 LSTM 的话比较大，因此这里还加了一个 2048 的全连接层，这样输入 LSTM 的 <code>input_dim</code> 的大小就是 2048.</p>
-<p>LRCN 模型中的关键点在于为每个 LSTM 的 step 前连上 CNN 网络部分，在 Keras 中可通过 <a href="https://keras.io/layers/wrappers/#timedistributed" target="_blank" rel="external">TimeDistributed</a> 层来实现，同时如果需要长度不固定的输入序列时，对应的 sequence length的参数要设为 None，在下面的代码中 <code>input_shape</code> 设为了 <code>(None, 224, 224, 3)</code>, None 便是输入序列长度不固定，而 （224, 224, 3）则是预训练 VGG 固定的输入大小。</p>
+<p>LRCN 模型中的关键点在于为每个 LSTM 的 step 前连上 CNN 网络部分，在 Keras 中可通过 <a href="https://keras.io/layers/wrappers/#timedistributed" target="_blank" rel="noopener">TimeDistributed</a> 层来实现，同时如果需要长度不固定的输入序列时，对应的 sequence length的参数要设为 None，在下面的代码中 <code>input_shape</code> 设为了 <code>(None, 224, 224, 3)</code>, None 便是输入序列长度不固定，而 （224, 224, 3）则是预训练 VGG 固定的输入大小。</p>
 <p>构建模型的 keras 代码如下，这里为了加快训练速度，将 LSTM 替换成了 GRU</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> keras.applications.vgg16 <span class="keyword">import</span> VGG16</span><br><span class="line"><span class="keyword">from</span> keras.models <span class="keyword">import</span> Sequential, Model</span><br><span class="line"><span class="keyword">from</span> keras.layers <span class="keyword">import</span> Input, TimeDistributed, Flatten, GRU, Dense, Dropout</span><br><span class="line"><span class="keyword">from</span> keras <span class="keyword">import</span> optimizers</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">build_model</span><span class="params">()</span>:</span></span><br><span class="line">    pretrained_cnn = VGG16(weights=<span class="string">'imagenet'</span>, include_top=<span class="keyword">False</span>)</span><br><span class="line">    <span class="comment"># pretrained_cnn.trainable = False</span></span><br><span class="line">    <span class="keyword">for</span> layer <span class="keyword">in</span> pretrained_cnn.layers[:<span class="number">-5</span>]:</span><br><span class="line">        layer.trainable = <span class="keyword">False</span></span><br><span class="line">    <span class="comment"># input shape required by pretrained_cnn</span></span><br><span class="line">    input = Input(shape = (<span class="number">224</span>, <span class="number">224</span>, <span class="number">3</span>)) </span><br><span class="line">    x = pretrained_cnn(input)</span><br><span class="line">    x = Flatten()(x)</span><br><span class="line">    x = Dense(<span class="number">2048</span>)(x)</span><br><span class="line">    x = Dropout(<span class="number">0.5</span>)(x)</span><br><span class="line">    pretrained_cnn = Model(inputs = input, output = x)</span><br><span class="line"></span><br><span class="line">    input_shape = (<span class="keyword">None</span>, <span class="number">224</span>, <span class="number">224</span>, <span class="number">3</span>) <span class="comment"># (seq_len, width, height, channel)</span></span><br><span class="line">    model = Sequential()</span><br><span class="line">    model.add(TimeDistributed(pretrained_cnn, input_shape=input_shape))</span><br><span class="line">    model.add(GRU(<span class="number">1024</span>, kernel_initializer=<span class="string">'orthogonal'</span>, bias_initializer=<span class="string">'ones'</span>, dropout=<span class="number">0.5</span>, recurrent_dropout=<span class="number">0.5</span>))</span><br><span class="line">    model.add(Dense(categories, activation = <span class="string">'softmax'</span>))</span><br><span class="line"></span><br><span class="line">    model.compile(loss=<span class="string">'categorical_crossentropy'</span>,</span><br><span class="line">                optimizer = optimizers.SGD(lr=<span class="number">0.01</span>, momentum=<span class="number">0.9</span>, clipnorm=<span class="number">1.</span>, clipvalue=<span class="number">0.5</span>),</span><br><span class="line">                metrics=[<span class="string">'accuracy'</span>])</span><br><span class="line">    <span class="keyword">return</span> model</span><br></pre></td></tr></table></figure>
-<p>上面 LSTM 的参数初始化参考了知乎上这个答案：<a href="https://www.zhihu.com/question/57828011/answer/155275958" target="_blank" rel="external">你在训练RNN的时候有哪些特殊的trick？</a>，主要就是 initializer 的方式选择、drop-out 和 graddient clipping的设置。在我的实验中也证实了 graddient clipping 的设置会直接影响到最终的进度，而且影响比较大。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> keras.applications.vgg16 <span class="keyword">import</span> VGG16</span><br><span class="line"><span class="keyword">from</span> keras.models <span class="keyword">import</span> Sequential, Model</span><br><span class="line"><span class="keyword">from</span> keras.layers <span class="keyword">import</span> Input, TimeDistributed, Flatten, GRU, Dense, Dropout</span><br><span class="line"><span class="keyword">from</span> keras <span class="keyword">import</span> optimizers</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">build_model</span><span class="params">()</span>:</span></span><br><span class="line">    pretrained_cnn = VGG16(weights=<span class="string">'imagenet'</span>, include_top=<span class="literal">False</span>)</span><br><span class="line">    <span class="comment"># pretrained_cnn.trainable = False</span></span><br><span class="line">    <span class="keyword">for</span> layer <span class="keyword">in</span> pretrained_cnn.layers[:<span class="number">-5</span>]:</span><br><span class="line">        layer.trainable = <span class="literal">False</span></span><br><span class="line">    <span class="comment"># input shape required by pretrained_cnn</span></span><br><span class="line">    input = Input(shape = (<span class="number">224</span>, <span class="number">224</span>, <span class="number">3</span>)) </span><br><span class="line">    x = pretrained_cnn(input)</span><br><span class="line">    x = Flatten()(x)</span><br><span class="line">    x = Dense(<span class="number">2048</span>)(x)</span><br><span class="line">    x = Dropout(<span class="number">0.5</span>)(x)</span><br><span class="line">    pretrained_cnn = Model(inputs = input, output = x)</span><br><span class="line"></span><br><span class="line">    input_shape = (<span class="literal">None</span>, <span class="number">224</span>, <span class="number">224</span>, <span class="number">3</span>) <span class="comment"># (seq_len, width, height, channel)</span></span><br><span class="line">    model = Sequential()</span><br><span class="line">    model.add(TimeDistributed(pretrained_cnn, input_shape=input_shape))</span><br><span class="line">    model.add(GRU(<span class="number">1024</span>, kernel_initializer=<span class="string">'orthogonal'</span>, bias_initializer=<span class="string">'ones'</span>, dropout=<span class="number">0.5</span>, recurrent_dropout=<span class="number">0.5</span>))</span><br><span class="line">    model.add(Dense(categories, activation = <span class="string">'softmax'</span>))</span><br><span class="line"></span><br><span class="line">    model.compile(loss=<span class="string">'categorical_crossentropy'</span>,</span><br><span class="line">                optimizer = optimizers.SGD(lr=<span class="number">0.01</span>, momentum=<span class="number">0.9</span>, clipnorm=<span class="number">1.</span>, clipvalue=<span class="number">0.5</span>),</span><br><span class="line">                metrics=[<span class="string">'accuracy'</span>])</span><br><span class="line">    <span class="keyword">return</span> model</span><br></pre></td></tr></table></figure>
+
+<p>上面 LSTM 的参数初始化参考了知乎上这个答案：<a href="https://www.zhihu.com/question/57828011/answer/155275958" target="_blank" rel="noopener">你在训练RNN的时候有哪些特殊的trick？</a>，主要就是 initializer 的方式选择、drop-out 和 graddient clipping的设置。在我的实验中也证实了 graddient clipping 的设置会直接影响到最终的进度，而且影响比较大。</p>
 <h2 id="数据加载"><a href="#数据加载" class="headerlink" title="数据加载"></a>数据加载</h2><p>由于 RNN 本身的结构特点，使得其可接受变长的输入，而且往往原始的 img sequence 数据也会符合这一特点，因此这里就有两种数据加载的方式，第一种是对原始数据不做处理, 每个样本的长度不一定相同；第二种是从各个样本中抽取出固定的长度。</p>
 <p><strong>但是这两种加载方式的输入的数据的 shape 都遵循着下面的模式<br><code>(batch_size, sequence_length, width, height, channel)</code></strong></p>
-<p>对于第一种加载方式，根据 <a href="https://github.com/keras-team/keras/issues/40" target="_blank" rel="external">这个 issue</a>，有两种处理方法</p>
-<p>1) Zero-padding<br>2) Batches of size 1</p>
+<p>对于第一种加载方式，根据 <a href="https://github.com/keras-team/keras/issues/40" target="_blank" rel="noopener">这个 issue</a>，有两种处理方法</p>
+<ol>
+<li>Zero-padding</li>
+<li>Batches of size 1</li>
+</ol>
 <p>这里采用的是第二种处理方法，也就是将 batch_size 设置为1， 即每次只用一个样本更新模型。因为第二种处理方法要事先设定一个固定长度(可以是最长序列长度或其他方式获取的长度)，而且padding会让原来较短的序列变得更长，消耗的内存会有所增加。</p>
 <p>而对于第二种加载方式，给定固定的长度，需要尽可能“均匀”地从原始序列中抽出固定长度的序列，即帧与帧之间的间隔尽可能相等。但是这个可能会取决于具体的数据集和任务，在我的数据集上这样做是比较合理的。</p>
 <p>两种加载方式的比较如下：<br>1）存储数据的方式不一样，固定长度的加载方式由于每个样本的 shape 一样，因此可以直接 concatenate 成一个大的 ndarray，然后在训练时的 <code>batch_size</code> 可设置成任意值；但是对于变长的加载方式，只能每次取一个样本, 然后要通过 <code>np.expand_dims(imgs, axis=0)</code> 的方式为样本添加 <code>batch_size</code> 这个维度（前一种方式不用，因为concatenate 后会自动生成这个维度），然后训练模型同时将 <code>batch_size</code> 和 epoch 设为1。<br>2）训练速度和效果有差别。首先是 <code>batch_size</code> 的不同使得训练速度上固定长度的方式比变长方式要快，这个比较好理解。<br>其次，由于 <code>batch_size</code> 也是一个影响 RNN 性能的重要参数，因此也会影响收敛性和效果。在我的实验中，<code>batch_size</code> 设置大于 1 时效果更好。 </p>
-<p>两种加载方式实现代码如下，加载的是一个样本的数据， <code>img_dir</code> 目录中包含了一个样本的所有 image sequence，且根据文件名排序后的序列是根据时间序列的。<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> deque</span><br><span class="line"><span class="keyword">from</span> keras.preprocessing <span class="keyword">import</span> image</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">load_sample</span><span class="params">(img_dir, categories = <span class="number">7</span>, fixed_seq_len = None)</span>:</span></span><br><span class="line">    label = int(img_dir.split(<span class="string">'/'</span>)[<span class="number">-2</span>].split(<span class="string">'_'</span>)[<span class="number">0</span>]) - <span class="number">1</span> <span class="comment"># extract label from name of sample</span></span><br><span class="line">    img_names = sorted(os.listdir(img_dir))</span><br><span class="line">    imgs = []</span><br><span class="line">    <span class="keyword">if</span> fixed_seq_len: <span class="comment"># extract certain length of sequence</span></span><br><span class="line">        block_len = round(len(img_names)/fixed_seq_len)</span><br><span class="line">        idx = len(img_names) - <span class="number">1</span></span><br><span class="line">        tmp = deque()</span><br><span class="line">        <span class="keyword">for</span> _ <span class="keyword">in</span> range(fixed_seq_len):</span><br><span class="line">            tmp.appendleft(img_names[idx])</span><br><span class="line">            idx = max(idx-block_len, <span class="number">0</span>)</span><br><span class="line">        img_names = tmp</span><br><span class="line">    <span class="keyword">for</span> img_name <span class="keyword">in</span> img_names:</span><br><span class="line">        img_path = img_dir + img_name</span><br><span class="line">        img = image.load_img(img_path, target_size=(<span class="number">224</span>, <span class="number">224</span>))</span><br><span class="line">        x = image.img_to_array(img)</span><br><span class="line">        imgs.append(x)</span><br><span class="line">    imgs = np.array(imgs)</span><br><span class="line">    label = np_utils.to_categorical(label, num_classes=categories)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> fixed_seq_len: <span class="comment"># add dimension for batch_size</span></span><br><span class="line">        <span class="comment">#（seq_len, width, height, channel）-&gt; (batch_size, seq_len, width, height, channel)</span></span><br><span class="line">        imgs = np.expand_dims(imgs, axis=<span class="number">0</span>) </span><br><span class="line">        label = label.reshape(<span class="number">-1</span>, categories)</span><br><span class="line">    <span class="keyword">return</span> imgs, label</span><br></pre></td></tr></table></figure></p>
+<p>两种加载方式实现代码如下，加载的是一个样本的数据， <code>img_dir</code> 目录中包含了一个样本的所有 image sequence，且根据文件名排序后的序列是根据时间序列的。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> deque</span><br><span class="line"><span class="keyword">from</span> keras.preprocessing <span class="keyword">import</span> image</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">load_sample</span><span class="params">(img_dir, categories = <span class="number">7</span>, fixed_seq_len = None)</span>:</span></span><br><span class="line">    label = int(img_dir.split(<span class="string">'/'</span>)[<span class="number">-2</span>].split(<span class="string">'_'</span>)[<span class="number">0</span>]) - <span class="number">1</span> <span class="comment"># extract label from name of sample</span></span><br><span class="line">    img_names = sorted(os.listdir(img_dir))</span><br><span class="line">    imgs = []</span><br><span class="line">    <span class="keyword">if</span> fixed_seq_len: <span class="comment"># extract certain length of sequence</span></span><br><span class="line">        block_len = round(len(img_names)/fixed_seq_len)</span><br><span class="line">        idx = len(img_names) - <span class="number">1</span></span><br><span class="line">        tmp = deque()</span><br><span class="line">        <span class="keyword">for</span> _ <span class="keyword">in</span> range(fixed_seq_len):</span><br><span class="line">            tmp.appendleft(img_names[idx])</span><br><span class="line">            idx = max(idx-block_len, <span class="number">0</span>)</span><br><span class="line">        img_names = tmp</span><br><span class="line">    <span class="keyword">for</span> img_name <span class="keyword">in</span> img_names:</span><br><span class="line">        img_path = img_dir + img_name</span><br><span class="line">        img = image.load_img(img_path, target_size=(<span class="number">224</span>, <span class="number">224</span>))</span><br><span class="line">        x = image.img_to_array(img)</span><br><span class="line">        imgs.append(x)</span><br><span class="line">    imgs = np.array(imgs)</span><br><span class="line">    label = np_utils.to_categorical(label, num_classes=categories)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> fixed_seq_len: <span class="comment"># add dimension for batch_size</span></span><br><span class="line">        <span class="comment">#（seq_len, width, height, channel）-&gt; (batch_size, seq_len, width, height, channel)</span></span><br><span class="line">        imgs = np.expand_dims(imgs, axis=<span class="number">0</span>) </span><br><span class="line">        label = label.reshape(<span class="number">-1</span>, categories)</span><br><span class="line">    <span class="keyword">return</span> imgs, label</span><br></pre></td></tr></table></figure>
+
 <p>最后，在设计网络结构的时候，可通过逐层测试输出的大小来判断每一层是够达到了预期输出的效果，在 keras 中直接通过 <code>model.predict(input)</code> 即可获得当前 model 最后一层的输出。</p>
 <p>另外，Keras 虽然能够比较快速地通过其提供的各层 layer 搭建出模型，但是如果要对模型进行更细致的设计的时候， Keras 就不是那么好做了，这时候就要上 tensorflow/pytorch/mxnet 这一类更加灵活的框架了。  </p>
 
@@ -484,7 +493,7 @@
 
       
         <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
             文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
@@ -495,9 +504,7 @@
 
       <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image"
-               src="http://wulc.me/files/profile.jpg"
-               alt="良超" />
+          <img class="site-author-image" itemprop="image" src="http://wulc.me/files/profile.jpg" alt="良超">
           <p class="site-author-name" itemprop="name">良超</p>
           <p class="site-description motion-element" itemprop="description">工程师要把合适的技术放在合适的位置|算法工程师首先得是个工程师</p>
         </div>
@@ -598,12 +605,12 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <center>
-<div class="copyright" >
+<div class="copyright">
   
   &copy;  2015 - 
   <span itemprop="copyrightYear">2020</span>
-  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
-  </br>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a>
+  <br>
   <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
 </div>
 </center>

@@ -6,19 +6,19 @@
 
 
 <html class="theme-next mist use-motion" lang="zh-Hans">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
 
 
 
-  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
 
 
 
@@ -31,7 +31,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
 
 
 
@@ -39,23 +39,23 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
-
-
-  <meta name="keywords" content="Linux," />
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
+  <meta name="keywords" content="Linux,">
 
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
 
 
 
@@ -63,11 +63,13 @@
 
 
 <meta name="description" content="最近将服务器内的数据迁移到移动硬盘上做备份时，发现Centos 6.5识别不了NTFS文件系统的移动硬盘，google了一下才发现原因是Linux内核不支持NTFS。重新编译内核是一种方法，但是也可以采用安装一个软件来解决，本文就是讲述如何安装这个软件以及在Linux挂载NTFS文件系统的移动硬盘。">
+<meta name="keywords" content="Linux">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Linux挂载NTFS文件系统">
 <meta property="og:url" content="http://wulc.github.io/2015/11/30/Linux挂载NTFS文件系统/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
 <meta property="og:description" content="最近将服务器内的数据迁移到移动硬盘上做备份时，发现Centos 6.5识别不了NTFS文件系统的移动硬盘，google了一下才发现原因是Linux内核不支持NTFS。重新编译内核是一种方法，但是也可以采用安装一个软件来解决，本文就是讲述如何安装这个软件以及在Linux挂载NTFS文件系统的移动硬盘。">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2019-06-01T09:14:44.074Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux挂载NTFS文件系统">
@@ -99,7 +101,7 @@
 
 
 
-  <link rel="canonical" href="http://wulc.github.io/2015/11/30/Linux挂载NTFS文件系统/"/>
+  <link rel="canonical" href="http://wulc.github.io/2015/11/30/Linux挂载NTFS文件系统/">
 
 
 
@@ -140,7 +142,7 @@
   
 
   <div class="custom-logo-site-title">
-    <a href="/"  class="brand" rel="start">
+    <a href="/" class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <span class="site-title">吴良超的学习笔记</span>
       <span class="logo-line-after"><i></i></span>
@@ -169,7 +171,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
             
             首页
           </a>
@@ -179,7 +181,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
             
             标签
           </a>
@@ -189,7 +191,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
             
             归档
           </a>
@@ -199,7 +201,7 @@
         <li class="menu-item menu-item-about">
           <a href="/about" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
             
             关于
           </a>
@@ -212,7 +214,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
             
             站内搜索
           </a>
@@ -261,14 +263,14 @@
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="良超">
-    <meta itemprop="description" content="">
+    <meta itemprop="description" content>
     <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
   </span>
 
   <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
     <meta itemprop="name" content="吴良超的学习笔记">
     <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src>
     </span>
   </span>
 
@@ -311,7 +313,7 @@
 
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -357,14 +359,19 @@
       
         <p>最近将服务器内的数据迁移到移动硬盘上做备份时，发现Centos 6.5识别不了NTFS文件系统的移动硬盘，google了一下才发现原因是Linux内核不支持NTFS。重新编译内核是一种方法，但是也可以采用安装一个软件来解决，本文就是讲述如何安装这个软件以及在Linux挂载NTFS文件系统的移动硬盘。</p>
 <a id="more"></a>
-<p>这个软件就是NTFS-3G。NTFS-3g是一个开源软件，它支持在Linux下面读写NTFS格式的分区。更多信息可参考NTFS-3G官网：<a href="http://www.ntfs-3g.org" target="_blank" rel="external">http://www.ntfs-3g.org</a></p>
+
+<p>这个软件就是NTFS-3G。NTFS-3g是一个开源软件，它支持在Linux下面读写NTFS格式的分区。更多信息可参考NTFS-3G官网：<a href="http://www.ntfs-3g.org/" target="_blank" rel="noopener">http://www.ntfs-3g.org</a></p>
 <h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>安装方式有两种：</p>
 <h3 id="yum源安装"><a href="#yum源安装" class="headerlink" title="yum源安装"></a>yum源安装</h3><p>　　如果配置的yum源有ntfs-3g这个包，那么可以通过<code>yum install ntfs-3g</code>来直接安装，如果配置的yum源没有这个包，可以参照下一种安装方式</p>
-<h3 id="编译安装"><a href="#编译安装" class="headerlink" title="编译安装"></a>编译安装</h3><pre><code>下载地址为：http://www.tuxera.com/community/open-source-ntfs-3g/,也可通过wget下载，安装过程如下
-</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># wget https://tuxera.com/opensource/ntfs-3g_ntfsprogs-2015.3.14.tgz</span><br><span class="line"># tar -zxvf ntfs-3g_ntfsprogs-2015.3.14.tgz</span><br><span class="line"># cd ntfs-3g_ntfsprogs-2015.3.14</span><br><span class="line"># ./configure</span><br><span class="line"># make </span><br><span class="line"># make install</span><br></pre></td></tr></table></figure>
-<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>###　获取NFTS设备名称<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#fdisk -l | grep -i ntfs</span><br><span class="line"> /dev/sdb1    1     10443  83883366   7  HPFS/NTFS</span><br></pre></td></tr></table></figure></p>
+<h3 id="编译安装"><a href="#编译安装" class="headerlink" title="编译安装"></a>编译安装</h3><pre><code>下载地址为：http://www.tuxera.com/community/open-source-ntfs-3g/,也可通过wget下载，安装过程如下</code></pre>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># wget https://tuxera.com/opensource/ntfs-3g_ntfsprogs-2015.3.14.tgz</span><br><span class="line"># tar -zxvf ntfs-3g_ntfsprogs-2015.3.14.tgz</span><br><span class="line"># cd ntfs-3g_ntfsprogs-2015.3.14</span><br><span class="line"># ./configure</span><br><span class="line"># make </span><br><span class="line"># make install</span><br></pre></td></tr></table></figure>
+
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>###　获取NFTS设备名称</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#fdisk -l | grep -i ntfs</span><br><span class="line"> /dev/sdb1    1     10443  83883366   7  HPFS/NTFS</span><br></pre></td></tr></table></figure>
+
 <p>可知设备名为<code>/dev/sdb1</code></p>
 <h3 id="建立挂载点并挂载"><a href="#建立挂载点并挂载" class="headerlink" title="建立挂载点并挂载"></a>建立挂载点并挂载</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># mkdir /mnt/ntfs</span><br><span class="line"># mount -t ntfs-3g /dev/sda1 /mnt/ntfs</span><br></pre></td></tr></table></figure>
+
 <p>这样访问<code>/mnt/ntfs</code>目录便可往硬盘进行读写了。</p>
 
       
@@ -458,7 +465,7 @@
 
       
         <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
             文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
@@ -469,9 +476,7 @@
 
       <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image"
-               src="http://wulc.me/files/profile.jpg"
-               alt="良超" />
+          <img class="site-author-image" itemprop="image" src="http://wulc.me/files/profile.jpg" alt="良超">
           <p class="site-author-name" itemprop="name">良超</p>
           <p class="site-description motion-element" itemprop="description">工程师要把合适的技术放在合适的位置|算法工程师首先得是个工程师</p>
         </div>
@@ -572,12 +577,12 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <center>
-<div class="copyright" >
+<div class="copyright">
   
   &copy;  2015 - 
   <span itemprop="copyrightYear">2020</span>
-  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
-  </br>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a>
+  <br>
   <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
 </div>
 </center>

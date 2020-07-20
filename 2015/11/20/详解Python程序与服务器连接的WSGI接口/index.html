@@ -6,19 +6,19 @@
 
 
 <html class="theme-next mist use-motion" lang="zh-Hans">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
 
 
 
-  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
 
 
 
@@ -31,7 +31,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
 
 
 
@@ -39,48 +39,44 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
-
-
-  <meta name="keywords" content="python,web,转载," />
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
-
-
-
-
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+  <meta name="keywords" content="python,web,转载,">
 
 
 
 
 
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 
-<meta name="description" content="文章为转载，原文见这里，侵删
-这篇文章主要介绍了Python程序与服务器连接的WSGI接口,是Python网络编程学习当中的重要内容,需要的朋友可以参考下
-了解了HTTP协议和HTML文档，我们其实就明白了一个Web应用的本质就是：　　1.浏览器发送一个HTTP请求;2.服务器收到请求，生成一个HTML文档;3.服务器把HTML文档作为HTTP响应的Body发送给浏览器;4.浏览器收到HTTP响应">
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
+
+
+
+
+
+
+<meta name="description" content="文章为转载，原文见这里，侵删 这篇文章主要介绍了Python程序与服务器连接的WSGI接口,是Python网络编程学习当中的重要内容,需要的朋友可以参考下 了解了HTTP协议和HTML文档，我们其实就明白了一个Web应用的本质就是：　　1.浏览器发送一个HTTP请求;2.服务器收到请求，生成一个HTML文档;3.服务器把HTML文档作为HTTP响应的Body发送给浏览器;4.浏览器收到HTTP响应">
+<meta name="keywords" content="python,web,转载">
 <meta property="og:type" content="article">
 <meta property="og:title" content="详解Python程序与服务器连接的WSGI接口">
 <meta property="og:url" content="http://wulc.github.io/2015/11/20/详解Python程序与服务器连接的WSGI接口/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
-<meta property="og:description" content="文章为转载，原文见这里，侵删
-这篇文章主要介绍了Python程序与服务器连接的WSGI接口,是Python网络编程学习当中的重要内容,需要的朋友可以参考下
-了解了HTTP协议和HTML文档，我们其实就明白了一个Web应用的本质就是：　　1.浏览器发送一个HTTP请求;2.服务器收到请求，生成一个HTML文档;3.服务器把HTML文档作为HTTP响应的Body发送给浏览器;4.浏览器收到HTTP响应">
+<meta property="og:description" content="文章为转载，原文见这里，侵删 这篇文章主要介绍了Python程序与服务器连接的WSGI接口,是Python网络编程学习当中的重要内容,需要的朋友可以参考下 了解了HTTP协议和HTML文档，我们其实就明白了一个Web应用的本质就是：　　1.浏览器发送一个HTTP请求;2.服务器收到请求，生成一个HTML文档;3.服务器把HTML文档作为HTTP响应的Body发送给浏览器;4.浏览器收到HTTP响应">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/yf02ozh6fbxlc11m5bqmu0nv/2016-01-09_102745.png">
 <meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/w47bkjxaemedkgskxvhlf45f/2016-01-09_103107.png">
 <meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/z5gni3jx6n9m5g7w6l7r2q9i/2016-01-09_103748.png">
-<meta property="og:updated_time" content="2019-06-01T09:14:44.205Z">
+<meta property="og:updated_time" content="2020-07-20T01:01:11.871Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="详解Python程序与服务器连接的WSGI接口">
-<meta name="twitter:description" content="文章为转载，原文见这里，侵删
-这篇文章主要介绍了Python程序与服务器连接的WSGI接口,是Python网络编程学习当中的重要内容,需要的朋友可以参考下
-了解了HTTP协议和HTML文档，我们其实就明白了一个Web应用的本质就是：　　1.浏览器发送一个HTTP请求;2.服务器收到请求，生成一个HTML文档;3.服务器把HTML文档作为HTTP响应的Body发送给浏览器;4.浏览器收到HTTP响应">
+<meta name="twitter:description" content="文章为转载，原文见这里，侵删 这篇文章主要介绍了Python程序与服务器连接的WSGI接口,是Python网络编程学习当中的重要内容,需要的朋友可以参考下 了解了HTTP协议和HTML文档，我们其实就明白了一个Web应用的本质就是：　　1.浏览器发送一个HTTP请求;2.服务器收到请求，生成一个HTML文档;3.服务器把HTML文档作为HTTP响应的Body发送给浏览器;4.浏览器收到HTTP响应">
 <meta name="twitter:image" content="http://static.zybuluo.com/WuLiangchao/yf02ozh6fbxlc11m5bqmu0nv/2016-01-09_102745.png">
 
 
@@ -109,7 +105,7 @@
 
 
 
-  <link rel="canonical" href="http://wulc.github.io/2015/11/20/详解Python程序与服务器连接的WSGI接口/"/>
+  <link rel="canonical" href="http://wulc.github.io/2015/11/20/详解Python程序与服务器连接的WSGI接口/">
 
 
 
@@ -150,7 +146,7 @@
   
 
   <div class="custom-logo-site-title">
-    <a href="/"  class="brand" rel="start">
+    <a href="/" class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <span class="site-title">吴良超的学习笔记</span>
       <span class="logo-line-after"><i></i></span>
@@ -179,7 +175,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
             
             首页
           </a>
@@ -189,7 +185,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
             
             标签
           </a>
@@ -199,7 +195,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
             
             归档
           </a>
@@ -209,7 +205,7 @@
         <li class="menu-item menu-item-about">
           <a href="/about" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
             
             关于
           </a>
@@ -222,7 +218,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
             
             站内搜索
           </a>
@@ -271,14 +267,14 @@
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="良超">
-    <meta itemprop="description" content="">
+    <meta itemprop="description" content>
     <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
   </span>
 
   <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
     <meta itemprop="name" content="吴良超的学习笔记">
     <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src>
     </span>
   </span>
 
@@ -321,7 +317,7 @@
 
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -387,10 +383,15 @@
       
 
       
-        <p>文章为转载，原文见<a href="http://www.jb51.net/article/65195.htm" target="_blank" rel="external">这里</a>，侵删</p>
+        <p>文章为转载，原文见<a href="http://www.jb51.net/article/65195.htm" target="_blank" rel="noopener">这里</a>，侵删</p>
 <p>这篇文章主要介绍了Python程序与服务器连接的WSGI接口,是Python网络编程学习当中的重要内容,需要的朋友可以参考下</p>
 <p>了解了HTTP协议和HTML文档，我们其实就明白了一个Web应用的本质就是：<br>　　<br>1.浏览器发送一个HTTP请求;<br>2.服务器收到请求，生成一个HTML文档;<br>3.服务器把HTML文档作为HTTP响应的Body发送给浏览器;<br>4.浏览器收到HTTP响应，从HTTP Body取出HTML文档并显示。</p>
-<a id="more"></a>　<br>　<br>所以，最简单的Web应用就是先把HTML用文件保存好，用一个现成的HTTP服务器软件，接收用户请求，从文件中读取HTML，返回。Apache、Nginx、Lighttpd等这些常见的静态服务器就是干这件事情的。<br><br>如果要动态生成HTML，就需要把上述步骤自己来实现。不过，接受HTTP请求、解析HTTP请求、发送HTTP响应都是苦力活，如果我们自己来写这些底层代码，还没开始写动态HTML呢，就得花个把月去读HTTP规范。<strong>正确的做法是底层代码由专门的服务器软件实现，我们用Python专注于生成HTML文档。</strong>因为我们不希望接触到TCP连接、HTTP原始请求和响应格式，所以，<strong>需要一个统一的接口，让我们专心用Python编写Web业务</strong>。<br><br>这个接口就是WSGI：Web Server Gateway Interface。<strong>WSGI接口定义非常简单，它只要求Web开发者实现一个函数，就可以响应HTTP请求。</strong>我们来看一个最简单的Web版本的“Hello, web!”：<br><br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">application</span><span class="params">(environ, start_response)</span>:</span></span><br><span class="line">    start_response(<span class="string">'200 OK'</span>, [(<span class="string">'Content-Type'</span>, <span class="string">'text/html'</span>)])</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'&lt;h1&gt;Hello, web!&lt;/h1&gt;'</span></span><br></pre></td></tr></table></figure>
+<a id="more"></a>　
+<p>　<br>所以，最简单的Web应用就是先把HTML用文件保存好，用一个现成的HTTP服务器软件，接收用户请求，从文件中读取HTML，返回。Apache、Nginx、Lighttpd等这些常见的静态服务器就是干这件事情的。</p>
+<p>如果要动态生成HTML，就需要把上述步骤自己来实现。不过，接受HTTP请求、解析HTTP请求、发送HTTP响应都是苦力活，如果我们自己来写这些底层代码，还没开始写动态HTML呢，就得花个把月去读HTTP规范。<strong>正确的做法是底层代码由专门的服务器软件实现，我们用Python专注于生成HTML文档。</strong>因为我们不希望接触到TCP连接、HTTP原始请求和响应格式，所以，<strong>需要一个统一的接口，让我们专心用Python编写Web业务</strong>。</p>
+<p>这个接口就是WSGI：Web Server Gateway Interface。<strong>WSGI接口定义非常简单，它只要求Web开发者实现一个函数，就可以响应HTTP请求。</strong>我们来看一个最简单的Web版本的“Hello, web!”：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">application</span><span class="params">(environ, start_response)</span>:</span></span><br><span class="line">    start_response(<span class="string">'200 OK'</span>, [(<span class="string">'Content-Type'</span>, <span class="string">'text/html'</span>)])</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'&lt;h1&gt;Hello, web!&lt;/h1&gt;'</span></span><br></pre></td></tr></table></figure>
+
 <p>上面的application()函数就是符合WSGI标准的一个HTTP处理函数，它接收两个参数：</p>
 <ul>
 <li><code>environ</code>：一个包含所有<strong>HTTP请求信息</strong>的dict对象;</li>
@@ -403,11 +404,13 @@
 <p>好消息是Python内置了一个WSGI服务器，这个模块叫wsgiref，它是用纯Python编写的WSGI服务器的参考实现。所谓“参考实现”是指该实现完全符合WSGI标准，但是不考虑任何运行效率，仅供开发和测试使用。</p>
 <p>我们先编写hello.py，实现Web应用程序的WSGI处理函数：</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#hello.py</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">application</span><span class="params">(environ, start_response)</span>:</span></span><br><span class="line">    start_response(<span class="string">'200 OK'</span>, [(<span class="string">'Content-Type'</span>, <span class="string">'text/html'</span>)])</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'&lt;h1&gt;Hello, web!&lt;/h1&gt;'</span></span><br></pre></td></tr></table></figure>
+
 <p>然后，再编写一个server.py，负责启动WSGI服务器，加载application()函数：</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># server.py</span></span><br><span class="line"><span class="comment"># 从wsgiref模块导入:</span></span><br><span class="line"><span class="keyword">from</span> wsgiref.simple_server <span class="keyword">import</span> make_server</span><br><span class="line"><span class="comment"># 导入我们自己编写的application函数:</span></span><br><span class="line"><span class="keyword">from</span> hello <span class="keyword">import</span> application</span><br><span class="line"> </span><br><span class="line"><span class="comment"># 创建一个服务器，IP地址为空，端口是8000，处理函数是application:</span></span><br><span class="line">httpd = make_server(<span class="string">''</span>, <span class="number">8000</span>, application)</span><br><span class="line"><span class="keyword">print</span> <span class="string">"Serving HTTP on port 8000..."</span></span><br><span class="line"> <span class="comment"># 开始监听HTTP请求:</span></span><br><span class="line">httpd.serve_forever()</span><br></pre></td></tr></table></figure>
+
 <p>确保以上两个文件在同一个目录下，然后在命令行输入<code>python server.py</code>来启动WSGI服务</p>
 <p><img src="http://static.zybuluo.com/WuLiangchao/yf02ozh6fbxlc11m5bqmu0nv/2016-01-09_102745.png" alt="启动server"></p>
-<p>启动成功后，打开浏览器，输入<a href="http://localhost:8000/，就可以看到结果了" target="_blank" rel="external">http://localhost:8000/，就可以看到结果了</a></p>
+<p>启动成功后，打开浏览器，输入 <code>http://localhost:8000/</code>，就可以看到结果了</p>
 <p><img src="http://static.zybuluo.com/WuLiangchao/w47bkjxaemedkgskxvhlf45f/2016-01-09_103107.png" alt="浏览器观察"></p>
 <p>再看看刚刚打开的cmd窗口，会输出请求的如下所示</p>
 <p><img src="http://static.zybuluo.com/WuLiangchao/z5gni3jx6n9m5g7w6l7r2q9i/2016-01-09_103748.png" alt="请求情况"></p>
@@ -512,9 +515,7 @@
 
       <section class="site-overview sidebar-panel sidebar-panel-active">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image"
-               src="http://wulc.me/files/profile.jpg"
-               alt="良超" />
+          <img class="site-author-image" itemprop="image" src="http://wulc.me/files/profile.jpg" alt="良超">
           <p class="site-author-name" itemprop="name">良超</p>
           <p class="site-description motion-element" itemprop="description">工程师要把合适的技术放在合适的位置|算法工程师首先得是个工程师</p>
         </div>
@@ -599,12 +600,12 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <center>
-<div class="copyright" >
+<div class="copyright">
   
   &copy;  2015 - 
   <span itemprop="copyrightYear">2020</span>
-  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
-  </br>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a>
+  <br>
   <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
 </div>
 </center>

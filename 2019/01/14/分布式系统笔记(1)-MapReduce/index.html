@@ -6,19 +6,19 @@
 
 
 <html class="theme-next mist use-motion" lang="zh-Hans">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
 
 
 
-  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
 
 
 
@@ -31,7 +31,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
 
 
 
@@ -39,23 +39,23 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
-
-
-  <meta name="keywords" content="分布式," />
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
+  <meta name="keywords" content="分布式,">
 
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
 
 
 
@@ -63,11 +63,13 @@
 
 
 <meta name="description" content="一直都想系统性地学习一下分布式系统的一些理论，所以打算开个坑学习一下 MIT 的课程 6.824: Distributed Systems 。本文主要是 LEC 1 中的内容，简单介绍了分布式系统的几个核心问题，以及经典的分布式计算框架-MapReduce, 虽然这是耳熟能详的一个框架（或者说是编程范式）了，但是其设计思想至今还是非常值得参考的。">
+<meta name="keywords" content="分布式">
 <meta property="og:type" content="article">
 <meta property="og:title" content="分布式系统笔记(1)-MapReduce">
 <meta property="og:url" content="http://wulc.github.io/2019/01/14/分布式系统笔记(1)-MapReduce/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
 <meta property="og:description" content="一直都想系统性地学习一下分布式系统的一些理论，所以打算开个坑学习一下 MIT 的课程 6.824: Distributed Systems 。本文主要是 LEC 1 中的内容，简单介绍了分布式系统的几个核心问题，以及经典的分布式计算框架-MapReduce, 虽然这是耳熟能详的一个框架（或者说是编程范式）了，但是其设计思想至今还是非常值得参考的。">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/tjvvwogwocm7eqpu1ju2jl3m/image_1d17mcpgj1l74h1p88g19t4bvu9.png">
 <meta property="og:updated_time" content="2019-06-01T09:14:44.146Z">
 <meta name="twitter:card" content="summary">
@@ -101,7 +103,7 @@
 
 
 
-  <link rel="canonical" href="http://wulc.github.io/2019/01/14/分布式系统笔记(1)-MapReduce/"/>
+  <link rel="canonical" href="http://wulc.github.io/2019/01/14/分布式系统笔记(1)-MapReduce/">
 
 
 
@@ -142,7 +144,7 @@
   
 
   <div class="custom-logo-site-title">
-    <a href="/"  class="brand" rel="start">
+    <a href="/" class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <span class="site-title">吴良超的学习笔记</span>
       <span class="logo-line-after"><i></i></span>
@@ -171,7 +173,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
             
             首页
           </a>
@@ -181,7 +183,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
             
             标签
           </a>
@@ -191,7 +193,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
             
             归档
           </a>
@@ -201,7 +203,7 @@
         <li class="menu-item menu-item-about">
           <a href="/about" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
             
             关于
           </a>
@@ -214,7 +216,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
             
             站内搜索
           </a>
@@ -263,14 +265,14 @@
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="良超">
-    <meta itemprop="description" content="">
+    <meta itemprop="description" content>
     <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
   </span>
 
   <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
     <meta itemprop="name" content="吴良超的学习笔记">
     <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src>
     </span>
   </span>
 
@@ -313,7 +315,7 @@
 
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -357,19 +359,21 @@
       
 
       
-        <p>一直都想系统性地学习一下分布式系统的一些理论，所以打算开个坑学习一下 MIT 的课程 <a href="https://pdos.csail.mit.edu/6.824/" target="_blank" rel="external">6.824: Distributed Systems</a> 。本文主要是 LEC 1 中的内容，简单介绍了分布式系统的几个核心问题，以及经典的分布式计算框架-MapReduce, 虽然这是耳熟能详的一个框架（或者说是编程范式）了，但是其设计思想至今还是非常值得参考的。</p>
+        <p>一直都想系统性地学习一下分布式系统的一些理论，所以打算开个坑学习一下 MIT 的课程 <a href="https://pdos.csail.mit.edu/6.824/" target="_blank" rel="noopener">6.824: Distributed Systems</a> 。本文主要是 LEC 1 中的内容，简单介绍了分布式系统的几个核心问题，以及经典的分布式计算框架-MapReduce, 虽然这是耳熟能详的一个框架（或者说是编程范式）了，但是其设计思想至今还是非常值得参考的。</p>
 <a id="more"></a>
+
 <h2 id="分布式系统概述"><a href="#分布式系统概述" class="headerlink" title="分布式系统概述"></a>分布式系统概述</h2><p>简单来说，分布式的目的就是通过多台机器进行协作来提供一台机器所无法提供的运算能力和存储能力。除了通过增加机器来拓展运算能力和存储能力的伸缩性，分布式会额外带来机器隔离后的安全性、多份数据副本的错误容忍性等。</p>
 <p><strong>性能(performance)，一致性(consistency), 容错(fault tolerance) 是分布式系统中比较关注的问题。</strong></p>
 <p>如何让总体的运算能力随着机器数量的增长而线性增长？这是 performance 所关心的，各台机器的负载差别大吗(load balance)? 网络能承受得住随着机器数量增加而增加的通信吗(共享资源的瓶颈)?所有的代码都能够被并行化吗？</p>
 <p>如何让多台机器上的同一份数据副本被多个进程读写后仍然保持一致？这是 consistency 所关心的，这个过程需要考虑的问题就太多了，因此也产生了很多一致性协议(Paxos, Raft等)专门处理这个问题。比如说当 client 或 server 在写数据的不同阶段时宕机该怎么办？网络的抖动导致了 server的假死(脑裂)怎么办？<strong>性能(performance)与一致性(consistency)总是相悖的</strong>，也就是说强一致性往往会导致比较慢的系统，高性能的系统通常会以牺牲强一致性为代价，需要根据具体场景进行 trade-off。</p>
 <p>如何让不可避免的宕机不影响总体的服务？这是 fault tolerance 所关心的，在一台机器宕掉后，其执行过的 tasks 该怎么办？其他与这台机器发生过的 communication 的机器的依赖性该怎么解决？</p>
 <p>可以说任意的分布式系统都会涉及到这三个问题，只是会各有侧重；目前常见的分布式系统从功能上可分为分布式计算框架(MPI, MapReduce, Spark等)、分布式文件系统(GFS, HDFS等)、分布式调度系统(Mesos, Yarn等)。</p>
-<h2 id="MapReduce"><a href="#MapReduce" class="headerlink" title="MapReduce"></a>MapReduce</h2><p>很久之前写过一篇关于 MapReduce 使用的文章：<a href="http://wulc.me/2018/02/24/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%284%29-Implement%20Your%20MapReduce/" target="_blank" rel="external">分布式机器学习(4)-Implement Your MapReduce</a>，这里则主要是根据 MapReduce 论文着重讲述 MapReduce 的一些原理。</p>
-<p>下图是从 MapReduce 的论文 <a href="https://static.googleusercontent.com/media/research.google.com/zh-CN//archive/mapreduce-osdi04.pdf" target="_blank" rel="external">MapReduce: Simplified Data Processing on Large Clusters</a> 中摘取的</p>
+<h2 id="MapReduce"><a href="#MapReduce" class="headerlink" title="MapReduce"></a>MapReduce</h2><p>很久之前写过一篇关于 MapReduce 使用的文章：<a href="http://wulc.me/2018/02/24/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%284%29-Implement%20Your%20MapReduce/" target="_blank" rel="noopener">分布式机器学习(4)-Implement Your MapReduce</a>，这里则主要是根据 MapReduce 论文着重讲述 MapReduce 的一些原理。</p>
+<p>下图是从 MapReduce 的论文 <a href="https://static.googleusercontent.com/media/research.google.com/zh-CN//archive/mapreduce-osdi04.pdf" target="_blank" rel="noopener">MapReduce: Simplified Data Processing on Large Clusters</a> 中摘取的</p>
 <p><img src="http://static.zybuluo.com/WuLiangchao/tjvvwogwocm7eqpu1ju2jl3m/image_1d17mcpgj1l74h1p88g19t4bvu9.png" alt="Excutation"></p>
 <p>通常 MapReduce 被人所了解的是上图中 (3)(4)(5)(6) 的过程，也就是输入文件被分成 M 个小文件，每个小文件分别在 Map phase 被 Map 函数处理后输出一系列的（key,valu) 对，然后对 key 进行哈希取模找到除了这个 key 的 reducer worker，reduce worker 在 Reduce phase 会对通过 reduce 函数处理相同的key，两个函数的输入输出如下所示</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Map: (k1,v1) → list(k2,v2)</span><br><span class="line">Reduce: (k2,list(v2)) → list(v2)</span><br></pre></td></tr></table></figure>
+
 <p>这个过程理解起来很简单，框架使用起来也不麻烦，这是因为 MapReduce 框架隐藏了上图中通过 master 追踪各个 task 是否顺利完成、以及如何进行 fault tolerance，而这也是论文最值得关注的点之一。</p>
 <h3 id="Execution-Overview"><a href="#Execution-Overview" class="headerlink" title="Execution Overview"></a>Execution Overview</h3><p>上面讲的 MapReduce 过程可以说是一个编程范式，下面主要根据原始论文讲述整体的执行流程，各个步骤的编号跟上图保持一致</p>
 <p>(1) User Program 中的 MapReduce 库会将输入分成 M 个小文件（通常是 16MB 到 64MB），然后 fork 出多个子进程<br>(2) 子进程中有一个作为 master，其他作为 worker。假设有 M 个 map task 和 R 个 reduce task（<strong>M 和 R 都远大于机器数量</strong>），master 会分配挑选处于 idle 的 worker 分配 task<br>(3) 被分配了 map task 的 worker 读入对应的输入文件，从输入文件中解析出 key/value pairs，并将每个 pair 输入用户自定义的 Map 函数，Map 函数输出的 intermediate key/value pairs 被缓存在内存中<br>(4) <strong>缓存在内存中的 intermediate key/value pairs 会被周期性地写入 map worker 本地的磁盘</strong>，根据 key 的不同分别写入到 R 个本地文件中，然后<strong>这些文件在本地的路径会传输给 master，从而 master 可以告知 reducer worker 到哪里读取数据</strong><br>(5) <strong>直到所有的 Map 过程完成，Reduce 过程才能开始</strong>；当 reduce worker 被 master 告知要读取的文件的位置时，会通过 RPC 从 map worker 的磁盘读取这些数据；reduce worker 读取完所有的 intermediate key/value pairs 后会针对 key 进行排序**，从而让所有相同的 key 汇聚在一块<br>(6) reduce worker 遍历排序后的 pairs，并将每个独立的 key 及其对应的 value 集合传输给 Reduce 函数，Reduce 函数则会将输出添加至最终的文件中。</p>
@@ -488,7 +492,7 @@
 
       
         <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
             文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
@@ -499,9 +503,7 @@
 
       <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image"
-               src="http://wulc.me/files/profile.jpg"
-               alt="良超" />
+          <img class="site-author-image" itemprop="image" src="http://wulc.me/files/profile.jpg" alt="良超">
           <p class="site-author-name" itemprop="name">良超</p>
           <p class="site-description motion-element" itemprop="description">工程师要把合适的技术放在合适的位置|算法工程师首先得是个工程师</p>
         </div>
@@ -602,12 +604,12 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <center>
-<div class="copyright" >
+<div class="copyright">
   
   &copy;  2015 - 
   <span itemprop="copyrightYear">2020</span>
-  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
-  </br>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a>
+  <br>
   <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
 </div>
 </center>

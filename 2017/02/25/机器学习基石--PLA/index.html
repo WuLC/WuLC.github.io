@@ -6,19 +6,19 @@
 
 
 <html class="theme-next mist use-motion" lang="zh-Hans">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
 
 
 
-  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
 
 
 
@@ -31,7 +31,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
 
 
 
@@ -39,23 +39,23 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
-
-
-  <meta name="keywords" content="机器学习," />
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
+  <meta name="keywords" content="机器学习,">
 
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
 
 
 
@@ -63,11 +63,13 @@
 
 
 <meta name="description" content="本文是《机器学习基石》第二讲 Learning to Answer Yes/No 课程的笔记。主要介绍了机器学习的基本概念，以及感知机及其训练算法 PLA。">
+<meta name="keywords" content="机器学习">
 <meta property="og:type" content="article">
 <meta property="og:title" content="机器学习基石--PLA">
 <meta property="og:url" content="http://wulc.github.io/2017/02/25/机器学习基石--PLA/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
 <meta property="og:description" content="本文是《机器学习基石》第二讲 Learning to Answer Yes/No 课程的笔记。主要介绍了机器学习的基本概念，以及感知机及其训练算法 PLA。">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/p5bzkie8tb546ozxk1cf4op6/image_1bchr55ih1ie1u9e8tjqi1ttv9.png">
 <meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/1jse2qfhdrkxjzgs1z7srtik/image_1bchsh08i1b382mv1la0qnbrd4m.png">
 <meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/ydtcjh2xadwg1m7agkbxh02o/image_1bchsm6t3q8812aes38a7327513.png">
@@ -107,7 +109,7 @@
 
 
 
-  <link rel="canonical" href="http://wulc.github.io/2017/02/25/机器学习基石--PLA/"/>
+  <link rel="canonical" href="http://wulc.github.io/2017/02/25/机器学习基石--PLA/">
 
 
 
@@ -148,7 +150,7 @@
   
 
   <div class="custom-logo-site-title">
-    <a href="/"  class="brand" rel="start">
+    <a href="/" class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <span class="site-title">吴良超的学习笔记</span>
       <span class="logo-line-after"><i></i></span>
@@ -177,7 +179,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
             
             首页
           </a>
@@ -187,7 +189,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
             
             标签
           </a>
@@ -197,7 +199,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
             
             归档
           </a>
@@ -207,7 +209,7 @@
         <li class="menu-item menu-item-about">
           <a href="/about" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
             
             关于
           </a>
@@ -220,7 +222,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
             
             站内搜索
           </a>
@@ -269,14 +271,14 @@
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="良超">
-    <meta itemprop="description" content="">
+    <meta itemprop="description" content>
     <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
   </span>
 
   <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
     <meta itemprop="name" content="吴良超的学习笔记">
     <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src>
     </span>
   </span>
 
@@ -319,7 +321,7 @@
 
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -365,6 +367,7 @@
       
         <p>本文是《机器学习基石》第二讲 <code>Learning to Answer Yes/No</code> 课程的笔记。主要介绍了机器学习的基本概念，以及感知机及其训练算法 PLA。</p>
 <a id="more"></a>
+
 <h2 id="机器学习的基本概念"><a href="#机器学习的基本概念" class="headerlink" title="机器学习的基本概念"></a>机器学习的基本概念</h2><p>该讲以根据客户的特征来决定是否给客户发放信用卡的例子引出了机器学习要解决的问题：对于我们的问题，存在着一个未知的理想目标函数 $f$ 能够满足我们的决策需求(在该例子中就是根据给定用户的特征，输出是否给用户发放信用卡)，但是这个函数是未知的，我们只能从观测到的数据集 $D$ 中通过算法 $A$ 提取出一个近似的函数 $g$ 来逼近理想的目标函数 $f$。而当选定了算法 $A$ 后，选取 $g$ 的集合 $H$ 实际上也确定了(例如目标函数是线性或非线性的)。</p>
 <p>下图展示了上面提到的过程</p>
 <p><img src="http://static.zybuluo.com/WuLiangchao/p5bzkie8tb546ozxk1cf4op6/image_1bchr55ih1ie1u9e8tjqi1ttv9.png" alt="机器学习基本概念"></p>
@@ -394,7 +397,7 @@
 <p>综合上面的两条式子有</p>
 <p>$$\frac{w_f^T}{||w_f^T||}\frac{w_T}{||w_T||} \ge \frac{T\min_n y_n^Tw_f^Tx_n}{||w_f^T||\sqrt{T} \max_n||x_n||} = \sqrt{T} \frac{\min_n y_n\frac{w_f^T}{||w_f^T||}x_n}{\max_n||x_n||} = \sqrt{T} * constant$$</p>
 <p>因此上面的命题得证。至此，已经可知道犯错误的次数 T 是受到某个上限的约束的。下面会给出这个具体的上限是多少。</p>
-<p>又因为 $$1 \ge \frac{w_f^T}{||w_f^T||}\frac{w_T}{||w_T||} \ge \sqrt{T} * constant\\<br>\frac{1}{constant^2} \ge T$$</p>
+<p>又因为 $$1 \ge \frac{w_f^T}{||w_f^T||}\frac{w_T}{||w_T||} \ge \sqrt{T} * constant\<br>\frac{1}{constant^2} \ge T$$</p>
 <p>即犯错的次数的上限为 $\frac{1}{constant^2} $, 假设令<br>$$ \max_n||x||^2 = R^2, \rho = \min_n y_n\frac{w_f^T}{||w_f^T||}x_n$$<br>则有<br>$$T \le \frac{R^2}{\rho^2}$$</p>
 <p>这也说明了PLA会在有限步内收敛，而这也是后面的练习题里面的答案。</p>
 <h3 id="优缺点及改进"><a href="#优缺点及改进" class="headerlink" title="优缺点及改进"></a>优缺点及改进</h3><p>PLA 的优点和缺点都非常明显，其中优点是简单，易于实现，但是缺点是假设了数据是线性可分的，然而事先并无法知道数据是否线性可分的。正如上面提到的一样，假如将PLA 用在线性不可分的数据中时，会导致PLA永远都无法对样本进行正确分类从而陷入到死循环中。</p>
@@ -492,7 +495,7 @@
 
       
         <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
             文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
@@ -503,9 +506,7 @@
 
       <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image"
-               src="http://wulc.me/files/profile.jpg"
-               alt="良超" />
+          <img class="site-author-image" itemprop="image" src="http://wulc.me/files/profile.jpg" alt="良超">
           <p class="site-author-name" itemprop="name">良超</p>
           <p class="site-description motion-element" itemprop="description">工程师要把合适的技术放在合适的位置|算法工程师首先得是个工程师</p>
         </div>
@@ -606,12 +607,12 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <center>
-<div class="copyright" >
+<div class="copyright">
   
   &copy;  2015 - 
   <span itemprop="copyrightYear">2020</span>
-  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
-  </br>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a>
+  <br>
   <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
 </div>
 </center>

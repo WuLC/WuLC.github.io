@@ -6,19 +6,19 @@
 
 
 <html class="theme-next mist use-motion" lang="zh-Hans">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
 
 
 
-  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
 
 
 
@@ -31,7 +31,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
 
 
 
@@ -39,23 +39,23 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
-
-
-  <meta name="keywords" content="动态规划,NLP," />
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
+  <meta name="keywords" content="动态规划,NLP,">
 
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
 
 
 
@@ -63,11 +63,13 @@
 
 
 <meta name="description" content="维特比算法（Viterbi algorithm）是在一个用途非常广的算法，本科学通信的时候已经听过这个算法，最近在看 HMM（Hidden Markov model） 的时候也看到了这个算法。于是决定研究一下这个算法的原理及其具体实现，如果了解动态规划的同学应该很容易了解维特比算法，因为维特比算法的核心就是动态规划。">
+<meta name="keywords" content="动态规划,NLP">
 <meta property="og:type" content="article">
 <meta property="og:title" content="维特比算法">
 <meta property="og:url" content="http://wulc.github.io/2017/03/02/维特比算法/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
 <meta property="og:description" content="维特比算法（Viterbi algorithm）是在一个用途非常广的算法，本科学通信的时候已经听过这个算法，最近在看 HMM（Hidden Markov model） 的时候也看到了这个算法。于是决定研究一下这个算法的原理及其具体实现，如果了解动态规划的同学应该很容易了解维特比算法，因为维特比算法的核心就是动态规划。">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/cb1gsk5ut49yxc704pl825ok/image_1bcm8p9sv1jgsn7pgdigu7im.png">
 <meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/ftcq48xow3h143fbks5uaf7l/image_1bcm8uuhtr41apimam1sml1t4613.png">
 <meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/1rj8s19ivpx0mkqqtixmm9r4/image_1bcn1c6fd1hcbiq49ch1no21bsv9.png">
@@ -103,7 +105,7 @@
 
 
 
-  <link rel="canonical" href="http://wulc.github.io/2017/03/02/维特比算法/"/>
+  <link rel="canonical" href="http://wulc.github.io/2017/03/02/维特比算法/">
 
 
 
@@ -144,7 +146,7 @@
   
 
   <div class="custom-logo-site-title">
-    <a href="/"  class="brand" rel="start">
+    <a href="/" class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <span class="site-title">吴良超的学习笔记</span>
       <span class="logo-line-after"><i></i></span>
@@ -173,7 +175,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
             
             首页
           </a>
@@ -183,7 +185,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
             
             标签
           </a>
@@ -193,7 +195,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
             
             归档
           </a>
@@ -203,7 +205,7 @@
         <li class="menu-item menu-item-about">
           <a href="/about" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
             
             关于
           </a>
@@ -216,7 +218,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
             
             站内搜索
           </a>
@@ -265,14 +267,14 @@
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="良超">
-    <meta itemprop="description" content="">
+    <meta itemprop="description" content>
     <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
   </span>
 
   <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
     <meta itemprop="name" content="吴良超的学习笔记">
     <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src>
     </span>
   </span>
 
@@ -315,7 +317,7 @@
 
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -370,15 +372,18 @@
       
 
       
-        <p>维特比算法（Viterbi algorithm）是在一个用途非常广的算法，本科学通信的时候已经听过这个算法，最近在看 <a href="https://en.wikipedia.org/wiki/Hidden_Markov_model" target="_blank" rel="external">HMM</a>（Hidden Markov model） 的时候也看到了这个算法。于是决定研究一下这个算法的原理及其具体实现，如果了解动态规划的同学应该很容易了解维特比算法，因为维特比算法的核心就是动态规划。</p>
+        <p>维特比算法（Viterbi algorithm）是在一个用途非常广的算法，本科学通信的时候已经听过这个算法，最近在看 <a href="https://en.wikipedia.org/wiki/Hidden_Markov_model" target="_blank" rel="noopener">HMM</a>（Hidden Markov model） 的时候也看到了这个算法。于是决定研究一下这个算法的原理及其具体实现，如果了解动态规划的同学应该很容易了解维特比算法，因为维特比算法的核心就是动态规划。</p>
 <a id="more"></a>
+
 <p>对于 HMM 而言，其中一个重要的任务就是要找出最有可能产生其观测序列的隐含序列。一般来说，HMM问题可由下面五个元素描述</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">观测序列（observations）：实际观测到的现象序列</span><br><span class="line">隐含状态（states）：所有的可能的隐含状态</span><br><span class="line">初始概率（start_probability）：每个隐含状态的初始概率</span><br><span class="line">转移概率（transition_probability）：从一个隐含状态转移到另一个隐含状态的概率</span><br><span class="line">发射概率（emission_probability）：某种隐含状态产生某种观测现象的概率</span><br></pre></td></tr></table></figure>
-<p>下面以<a href="https://zh.wikipedia.org/wiki/%E7%BB%B4%E7%89%B9%E6%AF%94%E7%AE%97%E6%B3%95" target="_blank" rel="external">维基百科</a>上的具体例子来说明</p>
+
+<p>下面以<a href="https://zh.wikipedia.org/wiki/%E7%BB%B4%E7%89%B9%E6%AF%94%E7%AE%97%E6%B3%95" target="_blank" rel="noopener">维基百科</a>上的具体例子来说明</p>
 <blockquote>
 <p>想象一个乡村诊所。村民有着非常理想化的特性，要么健康要么发烧。他们只有问诊所的医生的才能知道是否发烧。 聪明的医生通过询问病人的感觉诊断他们是否发烧。村民只回答他们感觉正常、头晕或冷。<br>假设一个病人每天来到诊所并告诉医生他的感觉。医生相信病人的健康状况如同一个离散马尔可夫链。病人的状态有两种“健康”和“发烧”，但医生不能直接观察到，这意味着状态对他是“隐含”的。每天病人会告诉医生自己有以下几种由他的健康状态决定的感觉的一种：正常、冷或头晕。这些是观察结果。 整个系统为一个隐马尔可夫模型(HMM)。<br>医生知道村民的总体健康状况，还知道发烧和没发烧的病人通常会抱怨什么症状。 换句话说，医生知道隐马尔可夫模型的参数。则这些上面提到的五个元素表示如下</p>
 </blockquote>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">states = (<span class="string">'Healthy'</span>, <span class="string">'Fever'</span>)</span><br><span class="line"> </span><br><span class="line">observations = (<span class="string">'normal'</span>, <span class="string">'cold'</span>, <span class="string">'dizzy'</span>)</span><br><span class="line"> </span><br><span class="line">start_probability = &#123;<span class="string">'Healthy'</span>: <span class="number">0.6</span>, <span class="string">'Fever'</span>: <span class="number">0.4</span>&#125;</span><br><span class="line"> </span><br><span class="line">transition_probability = &#123;</span><br><span class="line">   <span class="string">'Healthy'</span> : &#123;<span class="string">'Healthy'</span>: <span class="number">0.7</span>, <span class="string">'Fever'</span>: <span class="number">0.3</span>&#125;,</span><br><span class="line">   <span class="string">'Fever'</span> : &#123;<span class="string">'Healthy'</span>: <span class="number">0.4</span>, <span class="string">'Fever'</span>: <span class="number">0.6</span>&#125;,</span><br><span class="line">   &#125;</span><br><span class="line"> </span><br><span class="line">emission_probability = &#123;</span><br><span class="line">   <span class="string">'Healthy'</span> : &#123;<span class="string">'normal'</span>: <span class="number">0.5</span>, <span class="string">'cold'</span>: <span class="number">0.4</span>, <span class="string">'dizzy'</span>: <span class="number">0.1</span>&#125;,</span><br><span class="line">   <span class="string">'Fever'</span> : &#123;<span class="string">'normal'</span>: <span class="number">0.1</span>, <span class="string">'cold'</span>: <span class="number">0.3</span>, <span class="string">'dizzy'</span>: <span class="number">0.6</span>&#125;,</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
 <p>其对应的状态转移图如下所示</p>
 <p><img src="http://static.zybuluo.com/WuLiangchao/cb1gsk5ut49yxc704pl825ok/image_1bcm8p9sv1jgsn7pgdigu7im.png" alt="状态转移图"></p>
 <p>现在的问题是假设病人连续三天看医生，医生发现第一天他感觉正常，第二天感觉冷，第三天感觉头晕。 于是医生产生了一个问题：怎样的健康状态序列最能够解释这些观察结果。维特比算法解答了这个问题。</p>
@@ -386,8 +391,9 @@
 <p>为了从时间复杂度方面进行比较，现在将问题一般化：假设观测序列的长度为 m，隐含状态个数为 n。则有下面的隐含状态转移图（下图为了便于表示，将只画出n = 3 的图）。</p>
 <p><img src="http://static.zybuluo.com/WuLiangchao/ftcq48xow3h143fbks5uaf7l/image_1bcm8uuhtr41apimam1sml1t4613.png" alt="Viterbi 算法的状态图"></p>
 <p>假如采用穷举法，穷举出所有可能的状态序列再比较他们的概率值，则时间复杂度是 $O(n^m)$, 显然这样的时间复杂度是无法接受的，而通过维特比算法能把时间复杂度降到 $O(m*n^2)$</p>
-<p>从动态规划的问题去考虑这个问题，根据上图的定义，<strong>记 <code>last_state</code> 为上一个观测现象对应的各个隐含状态的概率，<code>curr_state</code> 为现在的观测现象对应的各个隐含状态的概率。则求解<code>curr_state</code>实际上只依赖于<code>last_state</code></strong>。而他们的依赖关系可通过下面的 python 代码表示出来</p>
+<p>从动态规划的问题去考虑这个问题，根据上图的定义，**记 <code>last_state</code> 为上一个观测现象对应的各个隐含状态的概率，<code>curr_state</code> 为现在的观测现象对应的各个隐含状态的概率。则求解<code>curr_state</code>实际上只依赖于<code>last_state</code>**。而他们的依赖关系可通过下面的 python 代码表示出来</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> cs <span class="keyword">in</span> states:</span><br><span class="line">    curr_state[cs] = max(last_state[ls] * </span><br><span class="line">                         transition_probability[ls][cs] *             </span><br><span class="line">                         emission_probability[cs][observation] </span><br><span class="line">                         <span class="keyword">for</span> ls <span class="keyword">in</span> states)</span><br></pre></td></tr></table></figure>
+
 <p>计算过程利用了转移概率 <code>transition_probability</code> 和发射概率 <code>emission_probability</code>，选出那个最有可能产生当前状态 <code>cs</code> 的上一状态 <code>ls</code>。</p>
 <p>除了上面的计算，同时<strong>要为每个隐含状态维护一个路径 <code>path</code>， <code>path[s]</code> 表示到达状态 <code>s</code> 前的最优状态序列。通过前面的计算选出那个最有可能产生当前状态 <code>cs</code> 的上一状态 <code>ls</code>后，往<code>path[cs]</code> 中插入 <code>ls</code> 。则依照这种方法遍历完所有的观测序列后，只需要选择 <code>curr_state</code> 中概率值最大的那个 <code>state</code> 作为最终的隐含状态，同时从 path 中取出 <code>path[state]</code> 作为该最终隐含状态前面的状态序列。</strong></p>
 <p>从上面的分析可知，观测序列只需要遍历一遍，时间复杂度为 $O(m)$，而每次要计算当前各个状态最可能的前一状态，时间复杂度为 $O(n^2)$,因此总体的时间复杂度为 $O(m*n^2)$.</p>
@@ -396,9 +402,9 @@
 <p>需要注意的是维特比算法适用于多步骤多选择的最优问题，类似于下面的网络，《数学之美》中将其叫做“篱笆网络(Lattice)”。每一步都有多个选择，并且保留了前面一步各个选择的最优解，通过回溯的方法找到最优选择路径。</p>
 <p><img src="http://static.zybuluo.com/WuLiangchao/1rj8s19ivpx0mkqqtixmm9r4/image_1bcn1c6fd1hcbiq49ch1no21bsv9.png" alt="篱笆网络"></p>
 <p>这里要强调的是 viterbi 算法可以用于解决 HMM 问题，但是也可以用于解决其他符合上面描述的问题。</p>
-<p>最后，上文中的完整的代码见<a href="https://github.com/WuLC/MachineLearningAlgorithm/blob/master/python/Viterbi.py" target="_blank" rel="external">这里</a></p>
+<p>最后，上文中的完整的代码见<a href="https://github.com/WuLC/MachineLearningAlgorithm/blob/master/python/Viterbi.py" target="_blank" rel="noopener">这里</a></p>
 <hr>
-<p>参考：<br><a href="https://zh.wikipedia.org/wiki/%E7%BB%B4%E7%89%B9%E6%AF%94%E7%AE%97%E6%B3%95" target="_blank" rel="external">维特比算法</a></p>
+<p>参考：<br><a href="https://zh.wikipedia.org/wiki/%E7%BB%B4%E7%89%B9%E6%AF%94%E7%AE%97%E6%B3%95" target="_blank" rel="noopener">维特比算法</a></p>
 
       
     </div>
@@ -495,9 +501,7 @@
 
       <section class="site-overview sidebar-panel sidebar-panel-active">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image"
-               src="http://wulc.me/files/profile.jpg"
-               alt="良超" />
+          <img class="site-author-image" itemprop="image" src="http://wulc.me/files/profile.jpg" alt="良超">
           <p class="site-author-name" itemprop="name">良超</p>
           <p class="site-description motion-element" itemprop="description">工程师要把合适的技术放在合适的位置|算法工程师首先得是个工程师</p>
         </div>
@@ -582,12 +586,12 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <center>
-<div class="copyright" >
+<div class="copyright">
   
   &copy;  2015 - 
   <span itemprop="copyrightYear">2020</span>
-  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
-  </br>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a>
+  <br>
   <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
 </div>
 </center>

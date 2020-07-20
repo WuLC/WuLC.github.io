@@ -6,19 +6,19 @@
 
 
 <html class="theme-next mist use-motion" lang="zh-Hans">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
 
 
 
-  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
 
 
 
@@ -31,7 +31,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
 
 
 
@@ -39,23 +39,23 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
-
-
-  <meta name="keywords" content="机器学习," />
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
+  <meta name="keywords" content="机器学习,">
 
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
 
 
 
@@ -63,11 +63,13 @@
 
 
 <meta name="description" content="本文转载自 http://www.cnblogs.com/jasonfreak/p/5448385.html ,在某些部分会拓展补充一些内容，全文主要讲述有关特征工程中通常使用的方法以及在sklearn中的相关实现。">
+<meta name="keywords" content="机器学习">
 <meta property="og:type" content="article">
 <meta property="og:title" content="使用sklearn做单机特征工程">
 <meta property="og:url" content="http://wulc.github.io/2017/01/03/使用sklearn做单机特征工程/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
 <meta property="og:description" content="本文转载自 http://www.cnblogs.com/jasonfreak/p/5448385.html ,在某些部分会拓展补充一些内容，全文主要讲述有关特征工程中通常使用的方法以及在sklearn中的相关实现。">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/3zsyzetv4uq7qgx5kqhyqt0n/image_1b99tlsf81c6n5iicv3otetoa9.png">
 <meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/6cg1pzelvwun052udzikgyp5/image_1b99vqj1v1cffks1m321n8k1lalm.png">
 <meta property="og:updated_time" content="2019-06-01T09:14:44.134Z">
@@ -102,7 +104,7 @@
 
 
 
-  <link rel="canonical" href="http://wulc.github.io/2017/01/03/使用sklearn做单机特征工程/"/>
+  <link rel="canonical" href="http://wulc.github.io/2017/01/03/使用sklearn做单机特征工程/">
 
 
 
@@ -143,7 +145,7 @@
   
 
   <div class="custom-logo-site-title">
-    <a href="/"  class="brand" rel="start">
+    <a href="/" class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <span class="site-title">吴良超的学习笔记</span>
       <span class="logo-line-after"><i></i></span>
@@ -172,7 +174,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
             
             首页
           </a>
@@ -182,7 +184,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
             
             标签
           </a>
@@ -192,7 +194,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
             
             归档
           </a>
@@ -202,7 +204,7 @@
         <li class="menu-item menu-item-about">
           <a href="/about" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
             
             关于
           </a>
@@ -215,7 +217,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
             
             站内搜索
           </a>
@@ -264,14 +266,14 @@
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="良超">
-    <meta itemprop="description" content="">
+    <meta itemprop="description" content>
     <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
   </span>
 
   <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
     <meta itemprop="name" content="吴良超的学习笔记">
     <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src>
     </span>
   </span>
 
@@ -314,7 +316,7 @@
 
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -358,12 +360,15 @@
       
 
       
-        <p>本文转载自 <a href="http://www.cnblogs.com/jasonfreak/p/5448385.html" target="_blank" rel="external">http://www.cnblogs.com/jasonfreak/p/5448385.html</a> ,在某些部分会拓展补充一些内容，全文主要讲述有关特征工程中通常使用的方法以及在sklearn中的相关实现。</p>
+        <p>本文转载自 <a href="http://www.cnblogs.com/jasonfreak/p/5448385.html" target="_blank" rel="noopener">http://www.cnblogs.com/jasonfreak/p/5448385.html</a> ,在某些部分会拓展补充一些内容，全文主要讲述有关特征工程中通常使用的方法以及在sklearn中的相关实现。</p>
 <a id="more"></a>
+
 <h2 id="特征工程是什么"><a href="#特征工程是什么" class="headerlink" title="特征工程是什么"></a><strong>特征工程是什么</strong></h2><p>有这么一句话在业界广泛流传：<strong>数据和特征决定了机器学习的上限，而模型和算法只是逼近这个上限而已。</strong>那特征工程到底是什么呢？顾名思义，其本质是一项工程活动，目的是最大限度地从原始数据中提取特征以供算法和模型使用。通过总结和归纳，人们认为特征工程包括以下方面：</p>
 <p><img src="http://static.zybuluo.com/WuLiangchao/3zsyzetv4uq7qgx5kqhyqt0n/image_1b99tlsf81c6n5iicv3otetoa9.png" alt="特征工程思维导图"></p>
 <p>特征处理是特征工程的核心部分，sklearn提供了较为完整的特征处理方法，包括数据预处理，特征选择，降维等。首次接触到sklearn，通常会被其丰富且方便的算法模型库吸引，但是这里介绍的特征处理库也十分强大！</p>
-<p>本文中使用sklearn中的<a href="http://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_iris.html#sklearn.datasets.load_iris" target="_blank" rel="external">IRIS（鸢尾花）数据集</a>来对特征处理功能进行说明。IRIS数据集由Fisher在1936年整理，包含4个特征（Sepal.Length（花萼长度）、Sepal.Width（花萼宽度）、Petal.Length（花瓣长度）、Petal.Width（花瓣宽度）），特征值都为正浮点数，单位为厘米。目标值为鸢尾花的分类（Iris Setosa（山鸢尾）、Iris Versicolour（杂色鸢尾），Iris Virginica（维吉尼亚鸢尾））。导入IRIS数据集的代码如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> load_iris</span><br><span class="line"></span><br><span class="line"><span class="comment">#导入IRIS数据集</span></span><br><span class="line">iris = load_iris()</span><br><span class="line"></span><br><span class="line"><span class="comment">#特征矩阵</span></span><br><span class="line">iris.data</span><br><span class="line"></span><br><span class="line"><span class="comment">#目标向量</span></span><br><span class="line">iris.target</span><br></pre></td></tr></table></figure></p>
+<p>本文中使用sklearn中的<a href="http://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_iris.html#sklearn.datasets.load_iris" target="_blank" rel="noopener">IRIS（鸢尾花）数据集</a>来对特征处理功能进行说明。IRIS数据集由Fisher在1936年整理，包含4个特征（Sepal.Length（花萼长度）、Sepal.Width（花萼宽度）、Petal.Length（花瓣长度）、Petal.Width（花瓣宽度）），特征值都为正浮点数，单位为厘米。目标值为鸢尾花的分类（Iris Setosa（山鸢尾）、Iris Versicolour（杂色鸢尾），Iris Virginica（维吉尼亚鸢尾））。导入IRIS数据集的代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> load_iris</span><br><span class="line"></span><br><span class="line"><span class="comment">#导入IRIS数据集</span></span><br><span class="line">iris = load_iris()</span><br><span class="line"></span><br><span class="line"><span class="comment">#特征矩阵</span></span><br><span class="line">iris.data</span><br><span class="line"></span><br><span class="line"><span class="comment">#目标向量</span></span><br><span class="line">iris.target</span><br></pre></td></tr></table></figure>
+
 <h2 id="数据预处理"><a href="#数据预处理" class="headerlink" title="数据预处理"></a><strong>数据预处理</strong></h2><p>通过特征提取，我们能得到未经处理的特征，这时的特征可能有以下问题：</p>
 <ul>
 <li>不属于同一量纲：即特征的规格不一样，不能够放在一起比较。<strong>无量纲化</strong>可以解决这一问题。</li>
@@ -379,7 +384,8 @@
 <h4 id="标准化"><a href="#标准化" class="headerlink" title="标准化"></a><strong>标准化</strong></h4><p>0均值标准化需要计算特征的均值和标准差，公式表达为：$$x’ = \frac{x - \mu}{\sigma}$$<br>公式中的 $\mu$ 为原始数据的期望， $\sigma$为原始数据的标准差。</p>
 <p>使用 <code>preproccessing</code> 库的 <code>StandardScaler</code> 类对数据进行标准化的代码如下：</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> StandardScaler</span><br><span class="line"></span><br><span class="line"><span class="comment">#标准化，返回值为标准化后的数据</span></span><br><span class="line">StandardScaler().fit_transform(iris.data)</span><br></pre></td></tr></table></figure>
-<p>标准化的原理比较复杂，它表示的是原始值与均值之间差多少个标准差，是一个相对值，所以也有去除量纲的功效。同时，它还带来两个附加的好处：均值为0，标准差为1。关于这两个属性的具体好处参考 <a href="http://www.zhaokv.com/2016/01/normalization-and-standardization.html" target="_blank" rel="external">http://www.zhaokv.com/2016/01/normalization-and-standardization.html</a> 如下</p>
+
+<p>标准化的原理比较复杂，它表示的是原始值与均值之间差多少个标准差，是一个相对值，所以也有去除量纲的功效。同时，它还带来两个附加的好处：均值为0，标准差为1。关于这两个属性的具体好处参考 <a href="http://www.zhaokv.com/2016/01/normalization-and-standardization.html" target="_blank" rel="noopener">http://www.zhaokv.com/2016/01/normalization-and-standardization.html</a> 如下</p>
 <blockquote>
 <p>均值为0有什么好处呢？它可以使数据以0为中心左右分布（这不是废话嘛），而数据以0为中心左右分布会带来很多便利。比如在去中心化的数据上做SVD分解等价于在原始数据上做PCA；机器学习中很多函数如Sigmoid、Tanh、Softmax等都以0为中心左右分布（不一定对称）。</p>
 <p>标准差为1有什么好处呢？这个更复杂一些。对于$x_i, x_{i’}$两点间距离，往往表示为<br>$$D(x_i,x_{i’})=\sum\limits_{j=1}^pw_j\cdot d_j(x_{ij},x_{i’j})(\sum\limits_{j=1}^pw_j=1)$$<br>其中 $d_j(x_{ij},x_{i’j})$是属性 $j$ 两个点之间的距离, $w_j$ 是该属性间距离在总距离中的权重<br>注意设 $w_j=1,\forall j$并不能实现每个属性对最后的结果贡献度相同。对于给定的数据集，所有点对间距离的平均值是个定值，即<br>$$\bar{D}=\frac{1}{N^2}\sum\limits_{i=1}^N\sum\limits_{i’=1}^ND(x_i,x_{i’})=\sum\limits_{j=1}^pw_j\cdot \bar{d}_j$$<br>是个常数，其中 $\bar{d}_j=\frac{1}{N^2}\sum\limits_{i=1}^N\sum\limits_{i’=1}^Nd_j(x_{ij}, x_{x’j})$, 可见第 $j$ 个变量对最终整体平均距离的影响是 $w_j\cdot \bar{d}_j$,所以设 $w_j\sim 1/\bar{d}_j$ 可以使所有属性对全体数据集平均距离的贡献相同。现在设 $d_j$ 为欧氏距离的平方，它是最常用的距离衡量方法之一，则有$$\bar{d_j}=\frac{1}{N^2}\sum\limits_{i=1}^N\sum\limits_{i’=1}^N(x_{ij}-x_{i’j})^2=2\cdot var_j$$其中 $var_j$ 是 $Var(X_j)$ 样本估计，也就是说每个变量的重要程度正比于这个变量在这个数据集上的方差<strong>。如果我们让每一维变量的标准差都为1（即方差都为1），每维变量在计算距离的时候重要程度相同。</strong></p>
@@ -387,22 +393,28 @@
 <p>因此在分类、聚类算法中，需要使用距离来度量相似性的时候、或者使用PCA技术进行降维的时候，往往采用标准化方法。</p>
 <h4 id="归一化"><a href="#归一化" class="headerlink" title="归一化"></a><strong>归一化</strong></h4><p>区间缩放法的思路有多种，常见的一种为利用两个最值进行缩放，公式表达为：$$x’ = \frac{x - Min}{Max - Min}$$ 使用 <code>preproccessing</code> 库的 <code>MinMaxScaler</code> 类对数据进行区间缩放的代码如下：</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> MinMaxScaler</span><br><span class="line"></span><br><span class="line"><span class="comment">#区间缩放，返回值为缩放到[0, 1]区间的数据</span></span><br><span class="line">MinMaxScaler().fit_transform(iris.data)</span><br></pre></td></tr></table></figure>
+
 <p>归一化的依据非常简单，不同变量往往量纲不同，归一化可以消除量纲对最终结果的影响，使不同变量具有可比性。比如两个人体重差10KG，身高差0.02M，在衡量两个人的差别时体重的差距会把身高的差距完全掩盖，归一化之后就不会有这样的问题。</p>
 <p>除此之外，<strong>归一化后能够加快梯度下降求最优解的速度</strong>，如下图所示，蓝色的圈圈图代表的是两个特征的等高线。其中左图两个特征 $X1$ 和 $X2$ 的区间相差非常大，$X1$ 区间是[0,2000]，$X2$区间是[1,5]，其所形成的等高线非常尖。当使用梯度下降法寻求最优解时，很有可能走“之字型”路线（垂直等高线走），从而导致需要迭代很多次才能收敛；而右图对两个原始特征进行了归一化，其对应的等高线显得很圆，在梯度下降进行求解时能较快的收敛。<strong>因此如果机器学习模型使用梯度下降法求最优解时，归一化往往非常有必要，否则很难收敛甚至不能收敛。</strong></p>
 <p><img src="http://static.zybuluo.com/WuLiangchao/6cg1pzelvwun052udzikgyp5/image_1b99vqj1v1cffks1m321n8k1lalm.png" alt="归一化对收敛的影响"></p>
 <p>因此。在涉及到计算点与点之间的距离时，使用归一化或标准化都会对最后的结果有所提升，甚至会有质的区别。那在归一化与标准化之间应该如何选择呢？根据上面论述我们看到，<strong>如果把所有维度的变量一视同仁，在最后计算距离中发挥相同的作用应该选择标准化，如果想保留原始数据中由标准差所反映的潜在权重关系应该选择归一化。另外，标准化更适合现代嘈杂大数据场景。</strong></p>
 <h3 id="对定量特征二值化"><a href="#对定量特征二值化" class="headerlink" title="对定量特征二值化"></a><strong>对定量特征二值化</strong></h3><p>定量特征二值化的核心在于设定一个阈值，大于阈值的赋值为1，小于等于阈值的赋值为0。使用 <code>preproccessing</code> 库的 <code>Binarizer</code> 类对数据进行二值化的代码如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> Binarizer</span><br><span class="line"></span><br><span class="line"><span class="comment">#二值化，阈值设置为3，返回值为二值化后的数据</span></span><br><span class="line">Binarizer(threshold=<span class="number">3</span>).fit_transform(iris.data)</span><br></pre></td></tr></table></figure>
+
 <h3 id="对定性特征哑编码"><a href="#对定性特征哑编码" class="headerlink" title="对定性特征哑编码"></a><strong>对定性特征哑编码</strong></h3><p>由于IRIS数据集的特征皆为定量特征，故使用其目标值进行哑编码（实际上是不需要的）。使用 <code>preproccessing</code> 库的 <code>OneHotEncoder</code> 类对数据进行哑编码的代码如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> OneHotEncoder</span><br><span class="line"></span><br><span class="line"><span class="comment">#哑编码，对IRIS数据集的目标值，返回值为哑编码后的数据</span></span><br><span class="line">OneHotEncoder().fit_transform(iris.target.reshape((<span class="number">-1</span>,<span class="number">1</span>)))</span><br></pre></td></tr></table></figure>
+
 <h3 id="缺失值计算"><a href="#缺失值计算" class="headerlink" title="缺失值计算"></a><strong>缺失值计算</strong></h3><p>由于IRIS数据集没有缺失值，故对数据集新增一个样本，4个特征均赋值为NaN，表示数据缺失。使用 <code>preproccessing</code> 库的 <code>Imputer</code> 类对数据进行缺失值计算的代码如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> numpy <span class="keyword">import</span> vstack, array, nan</span><br><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> Imputer</span><br><span class="line"></span><br><span class="line"><span class="comment">#缺失值计算，返回值为计算缺失值后的数据</span></span><br><span class="line"><span class="comment">#参数missing_value为缺失值的表示形式，默认为NaN</span></span><br><span class="line"><span class="comment">#参数strategy为缺失值填充方式，默认为mean（均值）</span></span><br><span class="line">Imputer().fit_transform(vstack((array([nan, nan, nan, nan]), iris.data)))</span><br></pre></td></tr></table></figure>
+
 <h3 id="数据变换"><a href="#数据变换" class="headerlink" title="数据变换"></a><strong>数据变换</strong></h3><p>数据变换就是通过组合或变换方式将原来的特征转换为新的特征，常见的数据变换有基于多项式的、基于指数函数的、基于对数函数的。</p>
 <p>例如，输入的一个二维特征为 $[a, b]$,则度为2的多项式特征为 $ [1, a, b, a^2, ab, b^2]$</p>
 <p>使用 <code>preproccessing</code> 库的 <code>PolynomialFeatures</code> 类对数据进行多项式转换的代码如下：</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> PolynomialFeatures</span><br><span class="line"></span><br><span class="line"><span class="comment">#多项式转换</span></span><br><span class="line"><span class="comment">#参数degree为度，默认值为2</span></span><br><span class="line">PolynomialFeatures().fit_transform(iris.data)</span><br></pre></td></tr></table></figure>
+
 <p>基于单变元函数的数据变换可以使用一个统一的方式完成，使用 <code>preproccessing</code> 库的 <code>FunctionTransformer</code> 对数据进行对数函数转换的代码如下：</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> numpy <span class="keyword">import</span> log1p</span><br><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> FunctionTransformer</span><br><span class="line"></span><br><span class="line"><span class="comment">#自定义转换函数为对数函数的数据变换</span></span><br><span class="line"><span class="comment">#第一个参数是单变元函数</span></span><br><span class="line">FunctionTransformer(log1p).fit_transform(iris.data)</span><br></pre></td></tr></table></figure>
+
 <h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a><strong>小结</strong></h3><table>
 <thead>
 <tr>
@@ -411,8 +423,7 @@
 <th>说明</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>StandardScaler</td>
 <td>无量纲化</td>
 <td>标准化，基于特征矩阵的列，将特征值转换至服从标准正态分布</td>
@@ -452,8 +463,7 @@
 <td>自定义单元数据转换</td>
 <td>使用单变元的函数来转换数据</td>
 </tr>
-</tbody>
-</table>
+</tbody></table>
 <h2 id="特征选择"><a href="#特征选择" class="headerlink" title="特征选择"></a><strong>特征选择</strong></h2><p>当数据预处理完成后，我们需要选择有意义的特征输入机器学习的算法和模型进行训练。通常来说，从两个方面考虑来选择特征：</p>
 <ul>
 <li><strong>特征是否发散</strong>：如果一个特征不发散，例如方差接近于0，也就是说样本在这个特征上基本上没有差异，这个特征对于样本的区分并没有什么用。</li>
@@ -466,23 +476,34 @@
 <li><strong>Embedded：嵌入法</strong>，先使用某些机器学习的算法和模型进行训练，得到各个特征的权值系数，根据系数从大到小选择特征。类似于Filter方法，但是是通过训练来确定特征的优劣。</li>
 </ul>
 <p>我们使用sklearn中的feature_selection库来进行特征选择。</p>
-<h3 id="Filter"><a href="#Filter" class="headerlink" title="Filter"></a><strong>Filter</strong></h3><h4 id="方差选择法"><a href="#方差选择法" class="headerlink" title="方差选择法"></a><strong>方差选择法</strong></h4><p>使用方差选择法，先要计算各个特征的方差，然后根据阈值，选择方差大于阈值的特征。使用 <code>feature_selection</code> 库的 <code>VarianceThreshold</code> 类来选择特征的代码如下：<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.feature_selection <span class="keyword">import</span> VarianceThreshold</span><br><span class="line"></span><br><span class="line"><span class="comment">#方差选择法，返回值为特征选择后的数据</span></span><br><span class="line"><span class="comment">#参数threshold为方差的阈值</span></span><br><span class="line">VarianceThreshold(threshold=<span class="number">3</span>).fit_transform(iris.data)</span><br></pre></td></tr></table></figure></p>
+<h3 id="Filter"><a href="#Filter" class="headerlink" title="Filter"></a><strong>Filter</strong></h3><h4 id="方差选择法"><a href="#方差选择法" class="headerlink" title="方差选择法"></a><strong>方差选择法</strong></h4><p>使用方差选择法，先要计算各个特征的方差，然后根据阈值，选择方差大于阈值的特征。使用 <code>feature_selection</code> 库的 <code>VarianceThreshold</code> 类来选择特征的代码如下：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.feature_selection <span class="keyword">import</span> VarianceThreshold</span><br><span class="line"></span><br><span class="line"><span class="comment">#方差选择法，返回值为特征选择后的数据</span></span><br><span class="line"><span class="comment">#参数threshold为方差的阈值</span></span><br><span class="line">VarianceThreshold(threshold=<span class="number">3</span>).fit_transform(iris.data)</span><br></pre></td></tr></table></figure>
+
 <h4 id="相关系数法"><a href="#相关系数法" class="headerlink" title="相关系数法"></a><strong>相关系数法</strong></h4><p>使用相关系数法，先要计算各个特征对目标值的相关系数以及相关系数的P值。用 <code>feature_selection</code> 库的 <code>SelectKBest</code> 类结合相关系数来选择特征的代码如下：</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.feature_selection <span class="keyword">import</span> SelectKBest</span><br><span class="line"><span class="keyword">from</span> scipy.stats <span class="keyword">import</span> pearsonr</span><br><span class="line"></span><br><span class="line"><span class="comment">#选择K个最好的特征，返回选择特征后的数据</span></span><br><span class="line"><span class="comment">#第一个参数为计算评估特征是否好的函数，该函数输入特征矩阵和目标向量，输出二元组（评分，P值）的数组，数组第i项为第i个特征的评分和P值。在此定义为计算相关系数</span></span><br><span class="line"><span class="comment">#参数k为选择的特征个数</span></span><br><span class="line">SelectKBest(<span class="keyword">lambda</span> X, Y: array(map(<span class="keyword">lambda</span> x:pearsonr(x, Y), X.T)).T, k=<span class="number">2</span>).fit_transform(iris.data, iris.target)</span><br></pre></td></tr></table></figure>
-<h4 id="卡方检验"><a href="#卡方检验" class="headerlink" title="卡方检验"></a><strong>卡方检验</strong></h4><p>经典的卡方检验是<strong>检验定性自变量对定性因变量的相关性</strong>。具体的意义可参考这篇文章<a href="http://guoze.me/2015/09/07/chi-square/" target="_blank" rel="external">卡方检验原理及应用</a>。用 <code>feature_selection</code> 库的 <code>SelectKBest</code> 类结合卡方检验来选择特征的代码如下</p>
+
+<h4 id="卡方检验"><a href="#卡方检验" class="headerlink" title="卡方检验"></a><strong>卡方检验</strong></h4><p>经典的卡方检验是<strong>检验定性自变量对定性因变量的相关性</strong>。具体的意义可参考这篇文章<a href="http://guoze.me/2015/09/07/chi-square/" target="_blank" rel="noopener">卡方检验原理及应用</a>。用 <code>feature_selection</code> 库的 <code>SelectKBest</code> 类结合卡方检验来选择特征的代码如下</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.feature_selection <span class="keyword">import</span> SelectKBest</span><br><span class="line"><span class="keyword">from</span> sklearn.feature_selection <span class="keyword">import</span> chi2</span><br><span class="line"></span><br><span class="line"><span class="comment">#选择K个最好的特征，返回选择特征后的数据</span></span><br><span class="line">SelectKBest(chi2, k=<span class="number">2</span>).fit_transform(iris.data, iris.target)</span><br></pre></td></tr></table></figure>
+
 <h4 id="互信息法"><a href="#互信息法" class="headerlink" title="互信息法"></a><strong>互信息法</strong></h4><p>经典的互信息也是变量间相互依赖性的量度，互信息计算公式如下：<br>$$I(X,Y) = \sum_{x \in X}\sum_{y \in Y}p(x,y)log\frac{p(x,y)}{p(x)p(y)}$$<br>为了处理定量数据，最大信息系数法被提出，使用 <code>feature_selection</code> 库的 <code>SelectKBest</code> 类结合最大信息系数法来选择特征的代码如下：</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.feature_selection <span class="keyword">import</span> SelectKBest</span><br><span class="line"><span class="keyword">from</span> minepy <span class="keyword">import</span> MINE</span><br><span class="line"></span><br><span class="line"><span class="comment">#由于MINE的设计不是函数式的，定义mic方法将其为函数式的，返回一个二元组，二元组的第2项设置成固定的P值0.5</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">mic</span><span class="params">(x, y)</span>:</span></span><br><span class="line">    m = MINE()</span><br><span class="line">    m.compute_score(x, y)</span><br><span class="line">    <span class="keyword">return</span> (m.mic(), <span class="number">0.5</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#选择K个最好的特征，返回特征选择后的数据</span></span><br><span class="line">SelectKBest(<span class="keyword">lambda</span> X, Y: array(map(<span class="keyword">lambda</span> x:mic(x, Y), X.T)).T, k=<span class="number">2</span>).fit_transform(iris.data, iris.target)</span><br></pre></td></tr></table></figure>
-<h3 id="Wrapper"><a href="#Wrapper" class="headerlink" title="Wrapper"></a><strong>Wrapper</strong></h3><h4 id="递归特征消除法"><a href="#递归特征消除法" class="headerlink" title="递归特征消除法"></a><strong>递归特征消除法</strong></h4><p>递归消除特征法使用一个基模型来进行多轮训练，每轮训练后，消除若干权值系数的特征，再基于新的特征集进行下一轮训练。使用feature_selection库的RFE类来选择特征的代码如下：<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.feature_selection <span class="keyword">import</span> RFE</span><br><span class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LogisticRegression</span><br><span class="line"></span><br><span class="line"><span class="comment">#递归特征消除法，返回特征选择后的数据</span></span><br><span class="line"><span class="comment">#参数estimator为基模型</span></span><br><span class="line"><span class="comment">#参数n_features_to_select为选择的特征个数</span></span><br><span class="line">RFE(estimator=LogisticRegression(), n_features_to_select=<span class="number">2</span>).fit_transform(iris.data, iris.target)</span><br></pre></td></tr></table></figure></p>
+
+<h3 id="Wrapper"><a href="#Wrapper" class="headerlink" title="Wrapper"></a><strong>Wrapper</strong></h3><h4 id="递归特征消除法"><a href="#递归特征消除法" class="headerlink" title="递归特征消除法"></a><strong>递归特征消除法</strong></h4><p>递归消除特征法使用一个基模型来进行多轮训练，每轮训练后，消除若干权值系数的特征，再基于新的特征集进行下一轮训练。使用feature_selection库的RFE类来选择特征的代码如下：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.feature_selection <span class="keyword">import</span> RFE</span><br><span class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LogisticRegression</span><br><span class="line"></span><br><span class="line"><span class="comment">#递归特征消除法，返回特征选择后的数据</span></span><br><span class="line"><span class="comment">#参数estimator为基模型</span></span><br><span class="line"><span class="comment">#参数n_features_to_select为选择的特征个数</span></span><br><span class="line">RFE(estimator=LogisticRegression(), n_features_to_select=<span class="number">2</span>).fit_transform(iris.data, iris.target)</span><br></pre></td></tr></table></figure>
+
 <hr>
 <h3 id="Embedded"><a href="#Embedded" class="headerlink" title="Embedded"></a><strong>Embedded</strong></h3><h4 id="基于惩罚项的特征选择法"><a href="#基于惩罚项的特征选择法" class="headerlink" title="基于惩罚项的特征选择法"></a><strong>基于惩罚项的特征选择法</strong></h4><p>使用带惩罚项的基模型，除了筛选出特征外，同时也进行了降维。使用<code>feature_selection</code>库的<code>SelectFromModel</code>类结合带L1惩罚项的逻辑回归模型，来选择特征的代码如下</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.feature_selection <span class="keyword">import</span> SelectFromModel</span><br><span class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LogisticRegression</span><br><span class="line"></span><br><span class="line"><span class="comment">#带L1惩罚项的逻辑回归作为基模型的特征选择</span></span><br><span class="line">SelectFromModel(LogisticRegression(penalty=<span class="string">"l1"</span>, C=<span class="number">0.1</span>)).fit_transform(iris.data, iris.target)</span><br></pre></td></tr></table></figure>
+
 <p>L1惩罚项降维的原理在于保留多个对目标值具有同等相关性的特征中的一个，所以没选到的特征不代表不重要。故，可结合L2惩罚项来优化。具体操作为：若一个特征在L1中的权值为1，选择在L2中权值差别不大且在L1中权值为0的特征构成同类集合，将这一集合中的特征平分L1中的权值，故需要构建一个新的逻辑回归模型：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LogisticRegression</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LR</span><span class="params">(LogisticRegression)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, threshold=<span class="number">0.01</span>, dual=False, tol=<span class="number">1e-4</span>, C=<span class="number">1.0</span>,</span><br><span class="line">                 fit_intercept=True, intercept_scaling=<span class="number">1</span>, class_weight=None,</span><br><span class="line">                 random_state=None, solver=<span class="string">'liblinear'</span>, max_iter=<span class="number">100</span>,</span><br><span class="line">                 multi_class=<span class="string">'ovr'</span>, verbose=<span class="number">0</span>, warm_start=False, n_jobs=<span class="number">1</span>)</span>:</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">#权值相近的阈值</span></span><br><span class="line">        self.threshold = threshold</span><br><span class="line">        LogisticRegression.__init__(self, penalty=<span class="string">'l1'</span>, dual=dual, tol=tol, C=C,</span><br><span class="line">                 fit_intercept=fit_intercept, intercept_scaling=intercept_scaling, class_weight=class_weight,</span><br><span class="line">                 random_state=random_state, solver=solver, max_iter=max_iter,</span><br><span class="line">                 multi_class=multi_class, verbose=verbose, warm_start=warm_start, n_jobs=n_jobs)</span><br><span class="line">        <span class="comment">#使用同样的参数创建L2逻辑回归</span></span><br><span class="line">        self.l2 = LogisticRegression(penalty=<span class="string">'l2'</span>, dual=dual, tol=tol, C=C, fit_intercept=fit_intercept, intercept_scaling=intercept_scaling, class_weight = class_weight, random_state=random_state, solver=solver, max_iter=max_iter, multi_class=multi_class, verbose=verbose, warm_start=warm_start, n_jobs=n_jobs)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">fit</span><span class="params">(self, X, y, sample_weight=None)</span>:</span></span><br><span class="line">        <span class="comment">#训练L1逻辑回归</span></span><br><span class="line">        super(LR, self).fit(X, y, sample_weight=sample_weight)</span><br><span class="line">        self.coef_old_ = self.coef_.copy()</span><br><span class="line">        <span class="comment">#训练L2逻辑回归</span></span><br><span class="line">        self.l2.fit(X, y, sample_weight=sample_weight)</span><br><span class="line"></span><br><span class="line">        cntOfRow, cntOfCol = self.coef_.shape</span><br><span class="line">        <span class="comment">#权值系数矩阵的行数对应目标值的种类数目</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(cntOfRow):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(cntOfCol):</span><br><span class="line">                coef = self.coef_[i][j]</span><br><span class="line">                <span class="comment">#L1逻辑回归的权值系数不为0</span></span><br><span class="line">                <span class="keyword">if</span> coef != <span class="number">0</span>:</span><br><span class="line">                    idx = [j]</span><br><span class="line">                    <span class="comment">#对应在L2逻辑回归中的权值系数</span></span><br><span class="line">                    coef1 = self.l2.coef_[i][j]</span><br><span class="line">                    <span class="keyword">for</span> k <span class="keyword">in</span> range(cntOfCol):</span><br><span class="line">                        coef2 = self.l2.coef_[i][k]</span><br><span class="line">                        <span class="comment">#在L2逻辑回归中，权值系数之差小于设定的阈值，且在L1中对应的权值为0</span></span><br><span class="line">                        <span class="keyword">if</span> abs(coef1-coef2) &lt; self.threshold <span class="keyword">and</span> j != k <span class="keyword">and</span> self.coef_[i][k] == <span class="number">0</span>:</span><br><span class="line">                            idx.append(k)</span><br><span class="line">                    <span class="comment">#计算这一类特征的权值系数均值</span></span><br><span class="line">                    mean = coef / len(idx)</span><br><span class="line">                    self.coef_[i][idx] = mean</span><br><span class="line">        <span class="keyword">return</span> self</span><br></pre></td></tr></table></figure>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LogisticRegression</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LR</span><span class="params">(LogisticRegression)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, threshold=<span class="number">0.01</span>, dual=False, tol=<span class="number">1e-4</span>, C=<span class="number">1.0</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">                 fit_intercept=True, intercept_scaling=<span class="number">1</span>, class_weight=None,</span></span></span><br><span class="line"><span class="function"><span class="params">                 random_state=None, solver=<span class="string">'liblinear'</span>, max_iter=<span class="number">100</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">                 multi_class=<span class="string">'ovr'</span>, verbose=<span class="number">0</span>, warm_start=False, n_jobs=<span class="number">1</span>)</span>:</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">#权值相近的阈值</span></span><br><span class="line">        self.threshold = threshold</span><br><span class="line">        LogisticRegression.__init__(self, penalty=<span class="string">'l1'</span>, dual=dual, tol=tol, C=C,</span><br><span class="line">                 fit_intercept=fit_intercept, intercept_scaling=intercept_scaling, class_weight=class_weight,</span><br><span class="line">                 random_state=random_state, solver=solver, max_iter=max_iter,</span><br><span class="line">                 multi_class=multi_class, verbose=verbose, warm_start=warm_start, n_jobs=n_jobs)</span><br><span class="line">        <span class="comment">#使用同样的参数创建L2逻辑回归</span></span><br><span class="line">        self.l2 = LogisticRegression(penalty=<span class="string">'l2'</span>, dual=dual, tol=tol, C=C, fit_intercept=fit_intercept, intercept_scaling=intercept_scaling, class_weight = class_weight, random_state=random_state, solver=solver, max_iter=max_iter, multi_class=multi_class, verbose=verbose, warm_start=warm_start, n_jobs=n_jobs)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">fit</span><span class="params">(self, X, y, sample_weight=None)</span>:</span></span><br><span class="line">        <span class="comment">#训练L1逻辑回归</span></span><br><span class="line">        super(LR, self).fit(X, y, sample_weight=sample_weight)</span><br><span class="line">        self.coef_old_ = self.coef_.copy()</span><br><span class="line">        <span class="comment">#训练L2逻辑回归</span></span><br><span class="line">        self.l2.fit(X, y, sample_weight=sample_weight)</span><br><span class="line"></span><br><span class="line">        cntOfRow, cntOfCol = self.coef_.shape</span><br><span class="line">        <span class="comment">#权值系数矩阵的行数对应目标值的种类数目</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(cntOfRow):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(cntOfCol):</span><br><span class="line">                coef = self.coef_[i][j]</span><br><span class="line">                <span class="comment">#L1逻辑回归的权值系数不为0</span></span><br><span class="line">                <span class="keyword">if</span> coef != <span class="number">0</span>:</span><br><span class="line">                    idx = [j]</span><br><span class="line">                    <span class="comment">#对应在L2逻辑回归中的权值系数</span></span><br><span class="line">                    coef1 = self.l2.coef_[i][j]</span><br><span class="line">                    <span class="keyword">for</span> k <span class="keyword">in</span> range(cntOfCol):</span><br><span class="line">                        coef2 = self.l2.coef_[i][k]</span><br><span class="line">                        <span class="comment">#在L2逻辑回归中，权值系数之差小于设定的阈值，且在L1中对应的权值为0</span></span><br><span class="line">                        <span class="keyword">if</span> abs(coef1-coef2) &lt; self.threshold <span class="keyword">and</span> j != k <span class="keyword">and</span> self.coef_[i][k] == <span class="number">0</span>:</span><br><span class="line">                            idx.append(k)</span><br><span class="line">                    <span class="comment">#计算这一类特征的权值系数均值</span></span><br><span class="line">                    mean = coef / len(idx)</span><br><span class="line">                    self.coef_[i][idx] = mean</span><br><span class="line">        <span class="keyword">return</span> self</span><br></pre></td></tr></table></figure>
+
 <p>使用<code>feature_selection</code>库的<code>SelectFromModel</code>类结合带L1以及L2惩罚项的逻辑回归模型，来选择特征的代码如下：</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.feature_selection <span class="keyword">import</span> SelectFromModel</span><br><span class="line"></span><br><span class="line"><span class="comment">#带L1和L2惩罚项的逻辑回归作为基模型的特征选择</span></span><br><span class="line"><span class="comment">#参数threshold为权值系数之差的阈值</span></span><br><span class="line">SelectFromModel(LR(threshold=<span class="number">0.5</span>, C=<span class="number">0.1</span>)).fit_transform(iris.data, iris.target)</span><br></pre></td></tr></table></figure>
+
 <h4 id="基于树模型的特征选择法"><a href="#基于树模型的特征选择法" class="headerlink" title="基于树模型的特征选择法"></a><strong>基于树模型的特征选择法</strong></h4><p>树模型中GBDT也可用来作为基模型进行特征选择，使用 <code>feature_selection</code> 库的 <code>SelectFromModel</code> 类结合 GBDT 模型，来选择特征的代码如下：</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.feature_selection <span class="keyword">import</span> SelectFromModel</span><br><span class="line"><span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> GradientBoostingClassifier</span><br><span class="line"></span><br><span class="line"><span class="comment">#GBDT作为基模型的特征选择</span></span><br><span class="line">SelectFromModel(GradientBoostingClassifier()).fit_transform(iris.data, iris.target)</span><br></pre></td></tr></table></figure>
+
 <h4 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a><strong>小结</strong></h4><table>
 <thead>
 <tr>
@@ -491,8 +512,7 @@
 <th>说明</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>VarianceThreshold</td>
 <td>Filter</td>
 <td>方差选择法</td>
@@ -512,11 +532,14 @@
 <td>Embedded</td>
 <td>训练基模型，选择权值系数较高的特征</td>
 </tr>
-</tbody>
-</table>
+</tbody></table>
 <h2 id="降维"><a href="#降维" class="headerlink" title="降维"></a><strong>降维</strong></h2><p>当特征选择完成后，可以直接训练模型了，但是可能由于特征矩阵过大，导致计算量大，训练时间长的问题，因此降低特征矩阵维度也是必不可少的。常见的降维方法除了以上提到的基于L1惩罚项的模型以外，另外还有主成分分析法（PCA）和线性判别分析（LDA），线性判别分析本身也是一个分类模型。<strong>PCA和LDA有很多的相似点，其本质是要将原始的样本映射到维度更低的样本空间中，但是PCA和LDA的映射目标不一样：PCA是为了让映射后的样本具有最大的发散性；而LDA是为了让映射后的样本有最好的分类性能。所以说PCA是一种无监督的降维方法，而LDA是一种有监督的降维方法。</strong></p>
-<h3 id="主成分分析法（PCA）"><a href="#主成分分析法（PCA）" class="headerlink" title="主成分分析法（PCA）"></a><strong>主成分分析法（PCA）</strong></h3><p>使用 <code>decomposition</code> 库的PCA类选择特征的代码如下：<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.decomposition <span class="keyword">import</span> PCA</span><br><span class="line"></span><br><span class="line"><span class="comment">#主成分分析法，返回降维后的数据</span></span><br><span class="line"><span class="comment">#参数n_components为主成分数目</span></span><br><span class="line">PCA(n_components=<span class="number">2</span>).fit_transform(iris.data)</span><br></pre></td></tr></table></figure></p>
-<h3 id="线性判别分析法（LDA）"><a href="#线性判别分析法（LDA）" class="headerlink" title="线性判别分析法（LDA）"></a><strong>线性判别分析法（LDA）</strong></h3><p>使用lda库的LDA类选择特征的代码如下：<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.lda <span class="keyword">import</span> LDA</span><br><span class="line"></span><br><span class="line"><span class="comment">#线性判别分析法，返回降维后的数据</span></span><br><span class="line"><span class="comment">#参数n_components为降维后的维数</span></span><br><span class="line">LDA(n_components=<span class="number">2</span>).fit_transform(iris.data, iris.target)</span><br></pre></td></tr></table></figure></p>
+<h3 id="主成分分析法（PCA）"><a href="#主成分分析法（PCA）" class="headerlink" title="主成分分析法（PCA）"></a><strong>主成分分析法（PCA）</strong></h3><p>使用 <code>decomposition</code> 库的PCA类选择特征的代码如下：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.decomposition <span class="keyword">import</span> PCA</span><br><span class="line"></span><br><span class="line"><span class="comment">#主成分分析法，返回降维后的数据</span></span><br><span class="line"><span class="comment">#参数n_components为主成分数目</span></span><br><span class="line">PCA(n_components=<span class="number">2</span>).fit_transform(iris.data)</span><br></pre></td></tr></table></figure>
+
+<h3 id="线性判别分析法（LDA）"><a href="#线性判别分析法（LDA）" class="headerlink" title="线性判别分析法（LDA）"></a><strong>线性判别分析法（LDA）</strong></h3><p>使用lda库的LDA类选择特征的代码如下：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.lda <span class="keyword">import</span> LDA</span><br><span class="line"></span><br><span class="line"><span class="comment">#线性判别分析法，返回降维后的数据</span></span><br><span class="line"><span class="comment">#参数n_components为降维后的维数</span></span><br><span class="line">LDA(n_components=<span class="number">2</span>).fit_transform(iris.data, iris.target)</span><br></pre></td></tr></table></figure>
+
 <h3 id="小结-2"><a href="#小结-2" class="headerlink" title="小结"></a>小结</h3><table>
 <thead>
 <tr>
@@ -525,8 +548,7 @@
 <th>说明</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>decomposition</td>
 <td>PCA</td>
 <td>主成分分析法</td>
@@ -536,11 +558,10 @@
 <td>LDA</td>
 <td>线性判别分析法</td>
 </tr>
-</tbody>
-</table>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>再让我们回归一下本文开始的特征工程的思维导图，我们可以使用sklearn完成几乎所有特征处理的工作，而且不管是数据预处理，还是特征选择，抑或降维，它们都是通过某个类的方法<code>fit_transform</code>完成的，<code>fit_transform</code>要不只带一个参数：特征矩阵，要不带两个参数：特征矩阵加目标向量。这些难道都是巧合吗？还是故意设计成这样？方法<code>fit_transform</code>中有fit这一单词，它和训练模型的fit方法有关联吗？接下来，在《<a href="http://www.cnblogs.com/jasonfreak/p/5448462.html" target="_blank" rel="external">使用sklearn优雅地进行数据挖掘</a>》中将会阐述其中的奥妙！</p>
+</tbody></table>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>再让我们回归一下本文开始的特征工程的思维导图，我们可以使用sklearn完成几乎所有特征处理的工作，而且不管是数据预处理，还是特征选择，抑或降维，它们都是通过某个类的方法<code>fit_transform</code>完成的，<code>fit_transform</code>要不只带一个参数：特征矩阵，要不带两个参数：特征矩阵加目标向量。这些难道都是巧合吗？还是故意设计成这样？方法<code>fit_transform</code>中有fit这一单词，它和训练模型的fit方法有关联吗？接下来，在《<a href="http://www.cnblogs.com/jasonfreak/p/5448462.html" target="_blank" rel="noopener">使用sklearn优雅地进行数据挖掘</a>》中将会阐述其中的奥妙！</p>
 <hr>
-<p>参考：<br><a href="http://www.zhaokv.com/2016/01/normalization-and-standardization.html" target="_blank" rel="external">归一化与标准化</a><br><a href="https://uqer.io/community/share/56c3e9c6228e5b0fe6b17d95" target="_blank" rel="external">研究｜数据预处理｜归一化 （标准化）</a></p>
+<p>参考：<br><a href="http://www.zhaokv.com/2016/01/normalization-and-standardization.html" target="_blank" rel="noopener">归一化与标准化</a><br><a href="https://uqer.io/community/share/56c3e9c6228e5b0fe6b17d95" target="_blank" rel="noopener">研究｜数据预处理｜归一化 （标准化）</a></p>
 
       
     </div>
@@ -633,7 +654,7 @@
 
       
         <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
             文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
@@ -644,9 +665,7 @@
 
       <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image"
-               src="http://wulc.me/files/profile.jpg"
-               alt="良超" />
+          <img class="site-author-image" itemprop="image" src="http://wulc.me/files/profile.jpg" alt="良超">
           <p class="site-author-name" itemprop="name">良超</p>
           <p class="site-description motion-element" itemprop="description">工程师要把合适的技术放在合适的位置|算法工程师首先得是个工程师</p>
         </div>
@@ -747,12 +766,12 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <center>
-<div class="copyright" >
+<div class="copyright">
   
   &copy;  2015 - 
   <span itemprop="copyrightYear">2020</span>
-  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
-  </br>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a>
+  <br>
   <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
 </div>
 </center>
