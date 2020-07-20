@@ -85,7 +85,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/bid_optimization_weighted_pid_err.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/bid_optimization_performance.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/bid_optimization_evaluation_result.jpg">
-<meta property="og:updated_time" content="2020-07-19T14:15:52.607Z">
+<meta property="og:updated_time" content="2020-07-20T00:27:02.112Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《Bid Optimization by Multivariable Control in Display Advertising》阅读笔记">
 <meta name="twitter:description" content="推荐与广告可以说是很多互联网公司的两个重要业务，其中推荐是为了 DAU 的增长，或者说流量的增长，而广告则是利用这些流量进行变现。两者的要解决的问题也很相似，都是在每条流量到来的时候，要从一个庞大的候选集中选出 topk 个候选返回，基本都采用 召回+精排 的架构，中间还可能插入粗排，本质上都是在效果与工程之间做 trade-off。
@@ -408,7 +408,7 @@
 <p>上图中的 $p,q,r$ 都是对偶问题中变量，对应于原问题中的三类约束：预算，成本和对 $x$ 的范围的约束，根据互补松弛定理(Complementary Slackness) ，可得到下面两个式子, 互补松弛定理的详细描述同样可参考上面的两个链接</p>
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/bidding_optimization_Complementary_Slackness.jpg" alt="Complementary Slackness"></p>
 <p>上面的公式中 $x_i^{<em>}$ 和 $r_i^{</em>}$ 分别表示原问题和对偶问题的最优解，后面带 <code>*</code> 上标的符号均表示最优解，至此为止，上面都是基于最优化理论推导出来的一些公式，但是<strong>接下来这一步就有点跳了</strong>，paper 中直接令最优出价公式为</p>
-<p>$$bid^{<em>} = \frac{1}{p^</em>+q^<em>} × CTR_{i} × CVR_{i} + \frac{q^</em>}{p^<em>+q^</em>} × C × CTR_{i}\tag{6}$$</p>
+<p>$$bid^{*} = \frac{1}{p^*+q^*} × CTR_i × CVR_i + \frac{q^*}{p^*+q^*} × C × CTR_{i}\tag{6}$$</p>
 <p>则上面那些公式中表示给广告主带来的价值 $v_i$ 可写成 $v_i = bid_i - wp_i$, 将公式（6）代入这个式子，再将 $v_i$ 代入上图中的公式(8)，可得到下面的公式（10）及其分类讨论的结果</p>
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/bid_optimization_classify_situation.jpg" alt="分类讨论结果"></p>
 <p>上面的两个分类讨论的结果实际上表明了<strong>无论最优解 $x^*$ 是赢得这次竞价($x=1$)还是输掉这次竞价($x=0$)，按照公式(6)进行出价时，总能保证解是最优的</strong></p>
@@ -422,7 +422,7 @@
 <p>可以看到，<strong>winning price $wp_i$ 推导出来的形式跟上面给的公式(6) 中的最优出价公式的形式是一样的</strong>！！！</p>
 <p>但是上面的推导中的仍有一些问题，上面求解的是最优的 $wp_i$，bid 这个变量没有显示地出现在增广拉格朗日函数中，但是可近似认为两者是相等的；其次是，<strong>$x_i$ 本身的约束(即取值在 0~1 之间)没有显式的考虑进增广拉格朗日函数中</strong>，针对这一点，笔者的理解是在解决最优化问题时可以忽略某个条件，然后在求解出来之后基于这个条件做分类讨论，而这一部分实际上就是原始 paper 在推导出公式(10)后做的分类讨论。</p>
 <h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>综合考虑上面两部分的推导，可以得到最优的出价公式如上面公式(6)所示，公式中的 $p$ 和 $q$ 是两个超参，是对偶问题中需要求解的变量，<strong>如果需要求解，意味着需要拿到参竞的所有后验数据，但是实际中在参竞时就需要通过这些参数给出参竞的 bid，这似乎就成了一个先有鸡还是先有蛋的问题了</strong>，后面会通过控制器描述如何解决这一问题，具体思想就是不直接求解原始的最优化问题，而是通过近似的方式来逐渐逼近最优解</p>
-<p>回到公式(6)的最优出价公式，如果将其写成 <code>c\_bid * ctr</code> 的形式，有如下公式</p>
+<p>回到公式(6)的最优出价公式，如果将其写成 <code>c_bid * ctr</code> 的形式，有如下公式</p>
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/bid_optimization_cbid.jpg" alt="click bid"></p>
 <p>如果更直观的画出来如下图所示, 从图中可知，哪怕 CVR 为 0 时，bid 也不一定为 0，这跟常见的 ecpm = bid<em>ctr</em>cvr 不太一样，这可理解为一些 cvr 低但是 ctr 高的流量也是可以拿的；此外，c_bid 的直线会过两个定点： (-qC, 0) 和 (pC, C), 后面在控制器中会详细描述这两个点的具体含义。</p>
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/bid_optimization_cbid_graph.jpg" alt="bid\_optimization\_cbid\_graph"></p>
@@ -432,7 +432,7 @@
 <p>每次调整变量时，需要通过公式(13)计算出当前的 error，然后通过公式(14)计算出控制型号 $u(t)$（其中 $k_p$、$k_i$、$k_d$ 是三个拍定的超参），最后利用 $u(t)$ 通过公式(15) 的调控公式(actuator model) $\phi(x(0), u(t))$ 得到最终调整后的值</p>
 <p>PID 对于单变量的控制可以说是比较常用和有效的方法，但是我们的上面提到的问题是一个多变量控制问题，其中<strong>控制变量是 $p$ 和 $q$，控制目标是控制好预算花费并保点击成本</strong>; 对于这个问题，一个很直观的想法就是通过双 PID 分别进行独立调控，但是这些<strong>控制变量之间往往不是相互独立的，因此双 PID 不是最优的</strong>, 后面会详细描述这一点。</p>
 <h3 id="参数分析"><a href="#参数分析" class="headerlink" title="参数分析"></a>参数分析</h3><p>下面首先会分析控制变量$p$ 和 $q$ 分别影响哪些控制目标</p>
-<p>如下图 4 是固定 $q$，改变 $p$ 时, <code>c\_bid</code> 的变化，其中虚线表示改变前的出价，实线表示改变后的出价；从图中可知</p>
+<p>如下图 4 是固定 $q$，改变 $p$ 时, <code>c_bid</code> 的变化，其中虚线表示改变前的出价，实线表示改变后的出价；从图中可知</p>
 <ul>
 <li>出价的直线始终通过 (-qC, 0) 这个点</li>
 <li><strong>随着 $p$ 的减小，出价的直线的斜率逐渐增大，表示出价更高</strong>，同时消耗的 budget 也会更多;而随着 $p$ 增大导致的结果则是刚好相反</li>
@@ -476,7 +476,7 @@
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/bid_optimization_performance.jpg" alt="performance"></p>
 <p>除此之外，paper 还与其他的一些方法进行了比较，结果如下图所示，其中 I-PID 和 M-PID 是本文提出的方法，分别表示 PID 是否相互独立的，从结果可知，采用了 paper 中的出价公式且考虑控制变量的关系的调价方式的效果是最好的，也印证了我们前面提到的<strong>两个完全独立的 PID 并不是最优的选择, 而是在控制中要考虑两个变量相互的影响</strong></p>
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/bid_optimization_evaluation_result.jpg" alt="evaluation result"></p>
-<h2 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h2><p>综上，这篇 paper 首先将要求解的方法建模成一个最优化的问题，然后通过对偶理论求解出这个最优化问题的最优解的形式，而不是它的解；接着描述了多变量调控系统中，一种考虑控制变量间相互关系的调控策略，并通过实验结果证明这种策略的效果要优于只通过两个独立的 PID 分别调控的效果；唯一美中不足的是没有做在线实验，毕竟离线实验的环境变基本就定下来了，不像线上变化那么剧烈；但是 paper 中的总体建模思路还是非常值得学习的，可以作为一个 paradigm 推广到更一般的出价场景。</p>
+<h2 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h2><p>综上，这篇 paper 首先将要求解的方法建模成一个最优化的问题，然后通过对偶理论求解出这个最优化问题的最优解的形式，而不是它的解；接着描述了多变量调控系统中一种考虑控制变量间相互关系的调控策略，并通过实验结果证明这种策略的效果要优于只通过两个独立的 PID 分别调控的效果；美中不足的是没有做在线实验，毕竟离线实验的环境变基本就定下来了，重新进行竞价也不会改变这个环境，不像线上变化那么剧烈；但是 paper 中的总体建模思路还是非常值得学习的，可以作为一个 paradigm 推广到更一般的出价场景。</p>
 
       
     </div>
