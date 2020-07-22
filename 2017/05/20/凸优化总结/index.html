@@ -78,7 +78,7 @@
 <meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/cz31xv8iwvmnq7e15t8tokk3/image_1bgiiehmc19eb1j631gejubdc191t.png">
 <meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/6a4swr0b88hktwgjarqapshg/image_1bgiiioee1oir157n1ij714db14982a.png">
 <meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/0zmk660ifcvm1y4vo3m5sy1z/image_1bgiinl7i1ejimgncpdp0v13b62n.png">
-<meta property="og:updated_time" content="2020-07-22T02:22:27.408Z">
+<meta property="og:updated_time" content="2020-07-22T02:31:47.654Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="凸优化总结">
 <meta name="twitter:description" content="之前曾写过一篇最优化课程总结， 涉及到的内容较多也较细。而在最优化中，凸优化是最为常见而又最为重要的，因为凸优化有一个良好的性质：局部最优是全局最优，这个性质使得我们不需要去证明解是否会收敛到全局最优，或者如何避免局部最优。因此凸优化有广泛应用，在优化问题不是凸的时候，往往也会尝试将其变为凸问题便于求解。本文着重讲凸优化，算是对之前写的文章的一个拓展和补充。 本文主要讲述下面内容，凸优化的概念以及">
@@ -562,7 +562,7 @@
 <p>将其表示为ADMM的形式如下</p>
 <p>$$\min_{x_1,..x_B,x} \sum_{i=1}^B f_i(x_i)\<br>s.t. x_i = x,~~i=1,..B$$</p>
 <p>则ADMM的迭代规则如下</p>
-<p>$$\begin{align*}<br>&amp;x_i^{(k)} = argmin_{x_i} f_i(x_i)+\frac{\rho}{2}||x_i-x^{(k-1)}+w_i^{(k-1)}||<del>(i=1,..B)\\<br>&amp;x^{(k)} = \frac{1}{B} \sum_{i=1}^B (x_i^{(k)} + w_i^{(k-1)})\\<br>&amp;w_i^{(k)} = w_i^{(k-1)} + x_i^{(k)} - x^{(k)}</del>(i=1,..B)<br>\end{align*}<br>$$</p>
+<p>$$\begin{align*}<br>&amp;x_i^{(k)} = argmin_{x_i} f_i(x_i)+\frac{\rho}{2}||x_i-x^{(k-1)}+w_i^{(k-1)}||<del>(i=1,..B)\<br>&amp;x^{(k)} = \frac{1}{B} \sum_{i=1}^B (x_i^{(k)} + w_i^{(k-1)})\<br>&amp;w_i^{(k)} = w_i^{(k-1)} + x_i^{(k)} - x^{(k)}</del>(i=1,..B)<br>\end{align*}<br>$$</p>
 
       
     </div>
