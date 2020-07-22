@@ -6,19 +6,19 @@
 
 
 <html class="theme-next mist use-motion" lang="zh-Hans">
-<head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform">
-<meta http-equiv="Cache-Control" content="no-siteapp">
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
 
 
-  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
 
 
 
@@ -31,7 +31,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
 
 
 
@@ -39,23 +39,23 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
-
-
-  <meta name="keywords" content="机器学习,分布式,">
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
+  <meta name="keywords" content="机器学习,分布式," />
 
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
+
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
 
 
 
@@ -63,13 +63,11 @@
 
 
 <meta name="description" content="提到 MapReduce，很自然想到的是 Hadoop MapReduce ，但是 MapReduce 只是一个编程范式，而 Hadoop MapReduce 则是这个编程范式的一个比较出名的实现。实际上，可以通过多种方式实现 MapReduce，本文要介绍的就是如何在 Linux 的 bash 下实现一个 MapReduce 程序，并且分别实现了单机版本和多机器版本。原视频见这里，需要自备梯子。">
-<meta name="keywords" content="机器学习,分布式">
 <meta property="og:type" content="article">
 <meta property="og:title" content="分布式机器学习(4)-Implement Your MapReduce">
 <meta property="og:url" content="http://wulc.github.io/2018/02/24/分布式机器学习(4)-Implement Your MapReduce/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
 <meta property="og:description" content="提到 MapReduce，很自然想到的是 Hadoop MapReduce ，但是 MapReduce 只是一个编程范式，而 Hadoop MapReduce 则是这个编程范式的一个比较出名的实现。实际上，可以通过多种方式实现 MapReduce，本文要介绍的就是如何在 Linux 的 bash 下实现一个 MapReduce 程序，并且分别实现了单机版本和多机器版本。原视频见这里，需要自备梯子。">
-<meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2019-06-01T09:14:44.145Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="分布式机器学习(4)-Implement Your MapReduce">
@@ -101,7 +99,7 @@
 
 
 
-  <link rel="canonical" href="http://wulc.github.io/2018/02/24/分布式机器学习(4)-Implement Your MapReduce/">
+  <link rel="canonical" href="http://wulc.github.io/2018/02/24/分布式机器学习(4)-Implement Your MapReduce/"/>
 
 
 
@@ -142,7 +140,7 @@
   
 
   <div class="custom-logo-site-title">
-    <a href="/" class="brand" rel="start">
+    <a href="/"  class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <span class="site-title">吴良超的学习笔记</span>
       <span class="logo-line-after"><i></i></span>
@@ -171,7 +169,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
             首页
           </a>
@@ -181,7 +179,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
             
             标签
           </a>
@@ -191,7 +189,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
             归档
           </a>
@@ -201,7 +199,7 @@
         <li class="menu-item menu-item-about">
           <a href="/about" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
             
             关于
           </a>
@@ -214,7 +212,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
             
             站内搜索
           </a>
@@ -263,14 +261,14 @@
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="良超">
-    <meta itemprop="description" content>
+    <meta itemprop="description" content="">
     <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
   </span>
 
   <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
     <meta itemprop="name" content="吴良超的学习笔记">
     <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src>
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
     </span>
   </span>
 
@@ -313,7 +311,7 @@
 
 
           
-            <span class="post-category">
+            <span class="post-category" >
             
               <span class="post-meta-divider">|</span>
             
@@ -368,18 +366,16 @@
       
 
       
-        <p>提到 MapReduce，很自然想到的是 Hadoop MapReduce ，但是 MapReduce 只是一个编程范式，而 Hadoop MapReduce 则是这个编程范式的一个比较出名的实现。实际上，可以通过多种方式实现 MapReduce，本文要介绍的就是如何在 Linux 的 bash 下实现一个 MapReduce 程序，并且分别实现了单机版本和多机器版本。原视频见<a href="https://www.youtube.com/watch?v=kZuJA5B2FtU&index=4&list=PLFze15KrfxbH2rGxJqcpFAgKp-iZv5uW0" target="_blank" rel="noopener">这里</a>，需要自备梯子。</p>
+        <p>提到 MapReduce，很自然想到的是 Hadoop MapReduce ，但是 MapReduce 只是一个编程范式，而 Hadoop MapReduce 则是这个编程范式的一个比较出名的实现。实际上，可以通过多种方式实现 MapReduce，本文要介绍的就是如何在 Linux 的 bash 下实现一个 MapReduce 程序，并且分别实现了单机版本和多机器版本。原视频见<a href="https://www.youtube.com/watch?v=kZuJA5B2FtU&amp;index=4&amp;list=PLFze15KrfxbH2rGxJqcpFAgKp-iZv5uW0" target="_blank" rel="external">这里</a>，需要自备梯子。</p>
 <a id="more"></a>
-
 <p>下面以 MapReduce 中的经典例子 WordCount 为例进行讲述, 先实现单机版本，再实现多机版本</p>
 <h2 id="单机版-MapReduce"><a href="#单机版-MapReduce" class="headerlink" title="单机版 MapReduce"></a>单机版 MapReduce</h2><p>下面是在 bash 下通过 MapReduce 范式实现的单机版本的 WordCount 程序</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">text=$(cat &lt;&lt;EOF</span><br><span class="line">This is my Cup</span><br><span class="line">It is not your cup</span><br><span class="line">My cup is white</span><br><span class="line">Your cup is blue</span><br><span class="line">EOF</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$text</span>\</span><br><span class="line">| awk <span class="string">'&#123;for (i=0; i&lt;=NF; i++) print $i, 1&#125;'</span> \</span><br><span class="line">| sort \</span><br><span class="line">| awk <span class="string">'&#123;if ($1 != prev) &#123;print prev, c; c=0; prev=$1&#125; c+=$2&#125;'</span></span><br></pre></td></tr></table></figure>
-
 <p>上面的 bash 脚本有几个需要了解的语法细节</p>
 <p><code>cat &lt;&lt;EOF</code> 命令在 bash 中主要用于处理与实时多行string相关的任务，实时指的是多行string要在命令执行的时候输入（遇到 EOF 结束），这个命令一般可用于以下几个任务</p>
 <p><strong>1. 将变量的值赋为多行 string</strong><br><strong>2. 将多行 string 写入文件</strong><br><strong>3. 将多行 string 传入管道命令</strong></p>
-<p>上面的代码中就是将多行的 string赋值给变量 text，这三个任务的例子可参考<a href="https://stackoverflow.com/questions/2500436/how-does-cat-eof-work-in-bash" target="_blank" rel="noopener">这里</a></p>
-<p><a href="https://en.wikipedia.org/wiki/AWK" target="_blank" rel="noopener">awk</a> 是一门语言，也是 Linux 下一个常用工具，用于处理文本相关的数据，尤其是表格类的数据。awk 会逐行处理文本直至遍历完整个输入流（可以是标准输入流，也可以是文件流，上面的代码是标准输入流），每一行默认根据空格或tab分割文本为若干的 fields，从下标 1 开始，<code>$1</code> 表示第一个 field 的值，其他同理；NF 则是 awk 中特殊变量，表示这一行共有几个 field。 awk 对每行的操作是包含在 <code>{}</code> 中的命令。</p>
+<p>上面的代码中就是将多行的 string赋值给变量 text，这三个任务的例子可参考<a href="https://stackoverflow.com/questions/2500436/how-does-cat-eof-work-in-bash" target="_blank" rel="external">这里</a></p>
+<p><a href="https://en.wikipedia.org/wiki/AWK" target="_blank" rel="external">awk</a> 是一门语言，也是 Linux 下一个常用工具，用于处理文本相关的数据，尤其是表格类的数据。awk 会逐行处理文本直至遍历完整个输入流（可以是标准输入流，也可以是文件流，上面的代码是标准输入流），每一行默认根据空格或tab分割文本为若干的 fields，从下标 1 开始，<code>$1</code> 表示第一个 field 的值，其他同理；NF 则是 awk 中特殊变量，表示这一行共有几个 field。 awk 对每行的操作是包含在 <code>{}</code> 中的命令。</p>
 <p>因此，上面的代码中第一个 awk 实现了 map 过程，sort 实现了 shuffling 的过程，而第二个 awk 实现了 reduce 过程。</p>
 <h2 id="多机器版本-MapReduce"><a href="#多机器版本-MapReduce" class="headerlink" title="多机器版本 MapReduce"></a>多机器版本 MapReduce</h2><p>上面是一个单机版本的 MapReduce，然而 MapReduce 在多台机器上更能显示其威力。多机器版本的 MapReduce 首先要考虑的是不同机器间的通信问题，这里采用的是 ssh 通信方式。</p>
 <p>ssh 除了可以开一个远程机器的 shell 外，还可以通过命令直接在远程机器起一个进程来运行指定程序。如运行下面的代码会在本地机器上显示 <code>hello world</code></p>
@@ -388,10 +384,8 @@
 <p>这种分布式通信的模式在各个分布式系统中（yarn，mesos，k8s）都非常常见，每个节点都要有一个 deamon 与其他节点进行通信并进行资源管理，在这里 sshd 就相当于 daemon，只是没有资源管理功能，但是基本原理是一样的。</p>
 <p>因此，利用这种方式，可将map过程放到其他机器上，如下代码所示就是将 <code>awk &#39;{for (i=0; i&lt;=NF; i++) print $i, 1}&#39;</code> 这段程序放到了 192.168.1.10 这台机器上执行。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">text=$(cat &lt;&lt;EOF</span><br><span class="line">This is my Cup</span><br><span class="line">It is not your cup</span><br><span class="line">My cup is white</span><br><span class="line">Your cup is blue</span><br><span class="line">EOF</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$text</span>\</span><br><span class="line">| ssh 192.168.1.10 <span class="string">'awk '</span>&#123;<span class="keyword">for</span> (i=0; i&lt;=NF; i++) <span class="built_in">print</span> <span class="variable">$i</span>, 1&#125;<span class="string">''</span> \</span><br><span class="line">| sort \</span><br><span class="line">| awk <span class="string">'&#123;if ($1 != prev) &#123;print prev, c; c=0; prev=$1&#125; c+=$2&#125;'</span></span><br></pre></td></tr></table></figure>
-
 <p>因此可将 map 过程放到其他机器上执行，并将结果存储在其他机器上，因为<strong>默认一台机器无法存储所有的数据</strong>，而输入的数据也是分布在各台机器上，这个过程具体代码如下所示</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Map = <span class="string">'&#123;for (i=0; i&lt;=NF; i++) print $i, 1&#125;'</span></span><br><span class="line"></span><br><span class="line">ssh worker1 <span class="string">'awk $Map /input*.txt &gt; /tmp/o1 &amp;&amp; echo worker1 ok'</span></span><br><span class="line">ssh worker2 <span class="string">'awk $Map /input*.txt &gt; /tmp/o1 &amp;&amp; echo worker2 ok'</span></span><br><span class="line">ssh worker3 <span class="string">'awk $Map /input*.txt &gt; /tmp/o1 &amp;&amp; echo worker3 ok'</span></span><br></pre></td></tr></table></figure>
-
 <p>上面的代码分别令三个 worker 处理它们本地的文件并将处理后的文件存储在本地，在处理完后返回消息。注意 <code>awk $Map /input*.txt &gt; /tmp/o1 &amp;&amp; echo worker1 ok</code> 需要用分号括起来，表示整条命令都在远程机器执行。</p>
 <p>上面通过 ssh 启动远程程序时，一般会配置密钥访问，从而避免每次都要输入密码。</p>
 <p>除了 map 过程，shuffling 过程也需要分布式执行，原因是数据无法容纳在一台机器上。之前shuffling 操作是对所有的数据进行 sort 操作，现在这种方案显然行不通，实际上 shuffling 的一个目的是将相同的 key 交给相同的worker进行处理。因此可以采取下面的方法进行分布式 shuffling</p>
@@ -403,9 +397,9 @@
 <li><p>某个 worker 的可能会被比其他的要慢很多，可能原因 load balance 问题，也就是分到这个 worker 的 record 数量太多，可以对这些 record 进行进一步的切分，但是要保证同一个 key 需要被同一个 reduce worker 处理。</p>
 </li>
 </ol>
-<p>Github 上有个 <a href="https://github.com/erikfrey/bashreduce.git" target="_blank" rel="noopener">bashreduce</a> 的项目就是在 bash 上实现了 MapReduce，思路与我们前面讲的差不多，只是还考虑了很多其他细节。</p>
-<p>作者本人也实现了一个 C++ 版本的 <a href="https://github.com/wangkuiyi/mapreduce-lite" target="_blank" rel="noopener">mapreduce-lite</a>，没有考虑存储问题，速度较快，感兴趣可参考。</p>
-<p>另外，Hadoop 项目中也有 <a href="https://hadoop.apache.org/docs/r1.2.1/streaming.html" target="_blank" rel="noopener">Hadoop Streaming</a>，允许用于用其他语言实现 MapReduce 操作，只要指定好 mapper 和 reducer 即可。</p>
+<p>Github 上有个 <a href="https://github.com/erikfrey/bashreduce.git" target="_blank" rel="external">bashreduce</a> 的项目就是在 bash 上实现了 MapReduce，思路与我们前面讲的差不多，只是还考虑了很多其他细节。</p>
+<p>作者本人也实现了一个 C++ 版本的 <a href="https://github.com/wangkuiyi/mapreduce-lite" target="_blank" rel="external">mapreduce-lite</a>，没有考虑存储问题，速度较快，感兴趣可参考。</p>
+<p>另外，Hadoop 项目中也有 <a href="https://hadoop.apache.org/docs/r1.2.1/streaming.html" target="_blank" rel="external">Hadoop Streaming</a>，允许用于用其他语言实现 MapReduce 操作，只要指定好 mapper 和 reducer 即可。</p>
 
       
     </div>
@@ -500,7 +494,7 @@
 
       
         <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
             文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
@@ -511,7 +505,9 @@
 
       <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image" src="http://wulc.me/files/profile.jpg" alt="良超">
+          <img class="site-author-image" itemprop="image"
+               src="http://wulc.me/files/profile.jpg"
+               alt="良超" />
           <p class="site-author-name" itemprop="name">良超</p>
           <p class="site-description motion-element" itemprop="description">工程师要把合适的技术放在合适的位置|算法工程师首先得是个工程师</p>
         </div>
@@ -520,7 +516,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">219</span>
+                <span class="site-state-item-count">218</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -612,12 +608,12 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <center>
-<div class="copyright">
+<div class="copyright" >
   
   &copy;  2015 - 
   <span itemprop="copyrightYear">2020</span>
-  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a>
-  <br>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
+  </br>
   <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
 </div>
 </center>

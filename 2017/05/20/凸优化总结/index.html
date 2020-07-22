@@ -6,19 +6,19 @@
 
 
 <html class="theme-next mist use-motion" lang="zh-Hans">
-<head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform">
-<meta http-equiv="Cache-Control" content="no-siteapp">
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
 
 
-  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
 
 
 
@@ -31,7 +31,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
 
 
 
@@ -39,37 +39,37 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
-
-
-  <meta name="keywords" content="数学,">
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
-
-
-
-
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
+  <meta name="keywords" content="数学," />
 
 
 
 
 
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
 
-<meta name="description" content="之前曾写过一篇最优化课程总结， 涉及到的内容较多也较细。而在最优化中，凸优化是最为常见而又最为重要的，因为凸优化有一个良好的性质：局部最优是全局最优，这个性质使得我们不需要去证明解是否会收敛到全局最优，或者如何避免局部最优。因此凸优化有广泛应用，在优化问题不是凸的时候，往往也会尝试将其变为凸问题便于求解。本文着重讲凸优化，算是对之前写的文章的一个拓展和补充。 本文主要讲述下面内容，凸优化的概念以及">
-<meta name="keywords" content="数学">
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="之前曾写过一篇最优化课程总结， 涉及到的内容较多也较细。而在最优化中，凸优化是最为常见而又最为重要的，因为凸优化有一个良好的性质：局部最优是全局最优，这个性质使得我们不需要去证明解是否会收敛到全局最优，或者如何避免局部最优。因此凸优化有广泛应用，在优化问题不是凸的时候，往往也会尝试将其变为凸问题便于求解。本文着重讲凸优化，算是对之前写的文章的一个拓展和补充。
+本文主要讲述下面内容，凸优化的概念以及">
 <meta property="og:type" content="article">
 <meta property="og:title" content="凸优化总结">
 <meta property="og:url" content="http://wulc.github.io/2017/05/20/凸优化总结/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
-<meta property="og:description" content="之前曾写过一篇最优化课程总结， 涉及到的内容较多也较细。而在最优化中，凸优化是最为常见而又最为重要的，因为凸优化有一个良好的性质：局部最优是全局最优，这个性质使得我们不需要去证明解是否会收敛到全局最优，或者如何避免局部最优。因此凸优化有广泛应用，在优化问题不是凸的时候，往往也会尝试将其变为凸问题便于求解。本文着重讲凸优化，算是对之前写的文章的一个拓展和补充。 本文主要讲述下面内容，凸优化的概念以及">
-<meta property="og:locale" content="zh-Hans">
+<meta property="og:description" content="之前曾写过一篇最优化课程总结， 涉及到的内容较多也较细。而在最优化中，凸优化是最为常见而又最为重要的，因为凸优化有一个良好的性质：局部最优是全局最优，这个性质使得我们不需要去证明解是否会收敛到全局最优，或者如何避免局部最优。因此凸优化有广泛应用，在优化问题不是凸的时候，往往也会尝试将其变为凸问题便于求解。本文着重讲凸优化，算是对之前写的文章的一个拓展和补充。
+本文主要讲述下面内容，凸优化的概念以及">
 <meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/lp79qxqog11jlwzn5h5rz43v/image_1bgff3run1u5f8ivpt6tb19it9.png">
 <meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/cm2in2nvs6jvmj74fh3xyfig/image_1bgfffffmlao1ka2l241maffrm.png">
 <meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/mhmbxi6ktuh7emo2cyga4g43/image_1bgfgj5e31lhe1ti15q81t5fig613.png">
@@ -78,10 +78,11 @@
 <meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/cz31xv8iwvmnq7e15t8tokk3/image_1bgiiehmc19eb1j631gejubdc191t.png">
 <meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/6a4swr0b88hktwgjarqapshg/image_1bgiiioee1oir157n1ij714db14982a.png">
 <meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/0zmk660ifcvm1y4vo3m5sy1z/image_1bgiinl7i1ejimgncpdp0v13b62n.png">
-<meta property="og:updated_time" content="2020-07-22T02:31:47.654Z">
+<meta property="og:updated_time" content="2020-07-22T02:38:52.475Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="凸优化总结">
-<meta name="twitter:description" content="之前曾写过一篇最优化课程总结， 涉及到的内容较多也较细。而在最优化中，凸优化是最为常见而又最为重要的，因为凸优化有一个良好的性质：局部最优是全局最优，这个性质使得我们不需要去证明解是否会收敛到全局最优，或者如何避免局部最优。因此凸优化有广泛应用，在优化问题不是凸的时候，往往也会尝试将其变为凸问题便于求解。本文着重讲凸优化，算是对之前写的文章的一个拓展和补充。 本文主要讲述下面内容，凸优化的概念以及">
+<meta name="twitter:description" content="之前曾写过一篇最优化课程总结， 涉及到的内容较多也较细。而在最优化中，凸优化是最为常见而又最为重要的，因为凸优化有一个良好的性质：局部最优是全局最优，这个性质使得我们不需要去证明解是否会收敛到全局最优，或者如何避免局部最优。因此凸优化有广泛应用，在优化问题不是凸的时候，往往也会尝试将其变为凸问题便于求解。本文着重讲凸优化，算是对之前写的文章的一个拓展和补充。
+本文主要讲述下面内容，凸优化的概念以及">
 <meta name="twitter:image" content="http://static.zybuluo.com/WuLiangchao/lp79qxqog11jlwzn5h5rz43v/image_1bgff3run1u5f8ivpt6tb19it9.png">
 
 
@@ -110,7 +111,7 @@
 
 
 
-  <link rel="canonical" href="http://wulc.github.io/2017/05/20/凸优化总结/">
+  <link rel="canonical" href="http://wulc.github.io/2017/05/20/凸优化总结/"/>
 
 
 
@@ -151,7 +152,7 @@
   
 
   <div class="custom-logo-site-title">
-    <a href="/" class="brand" rel="start">
+    <a href="/"  class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <span class="site-title">吴良超的学习笔记</span>
       <span class="logo-line-after"><i></i></span>
@@ -180,7 +181,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
             首页
           </a>
@@ -190,7 +191,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
             
             标签
           </a>
@@ -200,7 +201,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
             归档
           </a>
@@ -210,7 +211,7 @@
         <li class="menu-item menu-item-about">
           <a href="/about" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
             
             关于
           </a>
@@ -223,7 +224,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
             
             站内搜索
           </a>
@@ -272,14 +273,14 @@
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="良超">
-    <meta itemprop="description" content>
+    <meta itemprop="description" content="">
     <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
   </span>
 
   <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
     <meta itemprop="name" content="吴良超的学习笔记">
     <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src>
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
     </span>
   </span>
 
@@ -322,7 +323,7 @@
 
 
           
-            <span class="post-category">
+            <span class="post-category" >
             
               <span class="post-meta-divider">|</span>
             
@@ -366,10 +367,9 @@
       
 
       
-        <p>之前曾写过一篇<a href="http://wulc.me/2017/02/01/%E6%9C%80%E4%BC%98%E5%8C%96%E8%AE%A1%E7%AE%97%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/" target="_blank" rel="noopener">最优化课程总结</a>， 涉及到的内容较多也较细。而在最优化中，凸优化是最为常见而又最为重要的，因为凸优化有一个良好的性质：<strong>局部最优是全局最优</strong>，这个性质使得我们不需要去证明解是否会收敛到全局最优，或者如何避免局部最优。因此凸优化有广泛应用，在优化问题不是凸的时候，往往也会尝试将其变为凸问题便于求解。本文着重讲凸优化，算是对之前写的文章的一个拓展和补充。</p>
+        <p>之前曾写过一篇<a href="http://wulc.me/2017/02/01/%E6%9C%80%E4%BC%98%E5%8C%96%E8%AE%A1%E7%AE%97%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/" target="_blank" rel="external">最优化课程总结</a>， 涉及到的内容较多也较细。而在最优化中，凸优化是最为常见而又最为重要的，因为凸优化有一个良好的性质：<strong>局部最优是全局最优</strong>，这个性质使得我们不需要去证明解是否会收敛到全局最优，或者如何避免局部最优。因此凸优化有广泛应用，在优化问题不是凸的时候，往往也会尝试将其变为凸问题便于求解。本文着重讲凸优化，算是对之前写的文章的一个拓展和补充。</p>
 <p>本文主要讲述下面内容，凸优化的概念以及凸优化中的三类常见解法：<strong>梯度类方法，对偶方法和ADMM方法</strong>。</p>
 <a id="more"></a>
-
 <h2 id="凸集，凸函数与凸优化"><a href="#凸集，凸函数与凸优化" class="headerlink" title="凸集，凸函数与凸优化"></a>凸集，凸函数与凸优化</h2><h3 id="凸集"><a href="#凸集" class="headerlink" title="凸集"></a>凸集</h3><p>凸集的定义非常清楚</p>
 <blockquote>
 <p>对于集合 $K$ ，$\forall x_1,x_2 \in K$,若 $\alpha x_1 + (1-\alpha)x_2 \in K$,其中$\alpha \in [0,1])$,则 $K$ 为凸集</p>
@@ -409,7 +409,7 @@
 <ol>
 <li><strong>一阶特性（First-order characterization）</strong>： $$f(y) \ge f(x) + \nabla f(x)(y - x)$$</li>
 <li><strong>二阶特性（Second-order characterization）</strong>： $$\nabla^2f(x) \succeq 0$$这里的 $\succeq 0$ 表示 Hessian 矩阵是半正定的。</li>
-<li><strong>Jensen不等式（<a href="https://en.wikipedia.org/wiki/Jensen%27s_inequality" target="_blank" rel="noopener">Jensen’s inequality</a>）</strong>：$$f(E(x)) \le E(f(x))$$这里的 $E$ 表示的是期望，这是从凸函数拓展到概率论的一个推论，这里不详细展开。</li>
+<li><strong>Jensen不等式（<a href="https://en.wikipedia.org/wiki/Jensen%27s_inequality" target="_blank" rel="external">Jensen’s inequality</a>）</strong>：$$f(E(x)) \le E(f(x))$$这里的 $E$ 表示的是期望，这是从凸函数拓展到概率论的一个推论，这里不详细展开。</li>
 <li><strong>sublevel sets</strong>，即集合 $\lbrace x:f(x) \le t\rbrace$ 是一个凸集</li>
 </ol>
 <p>其中，<strong>一阶特性或二阶特性是一个函数为凸函数的充要条件，通常用来证明一个函数是凸函数。</strong></p>
@@ -418,7 +418,7 @@
 <li>仿射函数( Affine function ): $a^Tx + b$</li>
 <li>二次函数( quadratic function),注意这里的 $Q$ 必须为半正定矩阵: $\frac{1}{2}x^TQx + b^Tx+c(Q \succeq 0)$</li>
 <li>最小平方误差( Least squares loss ): $||y-Ax||_2^2$ (总是凸的，因为 $A^TA$ 总是半正定的)</li>
-<li>示性函数（Indicator function）：$$I_C(X) = \begin{cases} 0&amp;x \in C\<br>\infty &amp; x \notin C\end{cases}$$</li>
+<li>示性函数（Indicator function）：$$I_C(X) = \begin{cases} 0&amp;x \in C\\<br>\infty &amp; x \notin C\end{cases}$$</li>
 <li>max function: $f(x) = max \lbrace x_1,…x_n \rbrace$</li>
 <li>范数（Norm）：范数分为向量范数和矩阵范数，任意范数均为凸的，各种范数的定义如下</li>
 </ul>
@@ -431,15 +431,15 @@
 <p>核(nuclear)范数: $||X||_{tr} = \sum_{i=1}^{r}\sigma_i(X)$ , ($\sigma_i(X)$是矩阵分解后的奇异值,核范数即为矩阵所有奇异值之和)<br>谱（spectral）范数：$||X||_{op} = max_{i=1,…r}\sigma_i(X)$, 即为最大的奇异值</p>
 </blockquote>
 <h3 id="凸优化"><a href="#凸优化" class="headerlink" title="凸优化"></a>凸优化</h3><p>对于下面的优化问题</p>
-<p>$$<br>\begin{align*}<br>&amp;\min_x\quad f(x)\<br>&amp;\begin{array}\<br>s.t.&amp;g_i(x) \le 0,<del>i=1,\ldots,m\<br>&amp;h_j(x)=0,</del>j=1,\ldots,r<br>\end{array}<br>\end{align*}<br>$$</p>
+<p>$$<br>\begin{align*}<br>&amp;\min_x\quad f(x)\\<br>&amp;\begin{array}\\<br>s.t.&amp;g_i(x) \le 0,~i=1,\ldots,m\\<br>&amp;h_j(x)=0,~j=1,\ldots,r<br>\end{array}<br>\end{align*}<br>$$</p>
 <p>当 $f(x), g_i(x)$ 均为凸函数， 而$h_j(x)$ 为仿射函数（affine function）时，该优化称为凸优化,注意上面的 $\min$ 以及约束条件的符号均要符合规定。</p>
 <p>凸优化也可以解释为目标函数 $f(x)$ 为凸函数而起约束围成的可行域为一个凸集。</p>
 <p>常见的一些凸优化问题有：<strong>线性规划（linear programs），二次规划（quadratic programs），半正定规划（semidefinite programs）</strong>，且 $LP \in QP \in SDP$, 即后者是包含前者的关系。</p>
 <p>线性规划问题一般原型如下($c$为向量，$D,A$为矩阵)</p>
-<p>$$<br>\begin{align*}<br>&amp;\min_x\quad c^Tx\<br>&amp;\begin{array}\<br>s.t.&amp;Dx \le d\<br>&amp;Ax=b<br>\end{array}<br>\end{align*}<br>$$</p>
+<p>$$<br>\begin{align*}<br>&amp;\min_x\quad c^Tx\\<br>&amp;\begin{array}\\<br>s.t.&amp;Dx \le d\\<br>&amp;Ax=b<br>\end{array}<br>\end{align*}<br>$$</p>
 <p>二次规划问题一般原型如下（要求矩阵 $Q$ 半正定）</p>
-<p>$$<br>\begin{align*}<br>&amp;\min_x\quad \frac{1}{2}x^TQx+c^Tx\<br>&amp;\begin{array}\<br>s.t.&amp;Dx \le d\<br>&amp;Ax=b<br>\end{array}<br>\end{align*}<br>$$</p>
-<p>而半正定规划问题一般原型如下($X$ 在这里表示矩阵)<br>$$<br>\begin{align*}<br>&amp;\min_X\quad CX\<br>&amp;\begin{array}\<br>s.t.&amp;A_iX \le b_i, i=1,…m\<br>&amp;X \succeq 0<br>\end{array}<br>\end{align*}<br>$$</p>
+<p>$$<br>\begin{align*}<br>&amp;\min_x\quad \frac{1}{2}x^TQx+c^Tx\\<br>&amp;\begin{array}\\<br>s.t.&amp;Dx \le d\\<br>&amp;Ax=b<br>\end{array}<br>\end{align*}<br>$$</p>
+<p>而半正定规划问题一般原型如下($X$ 在这里表示矩阵)<br>$$<br>\begin{align*}<br>&amp;\min_X\quad CX\\<br>&amp;\begin{array}\\<br>s.t.&amp;A_iX \le b_i, i=1,…m\\<br>&amp;X \succeq 0<br>\end{array}<br>\end{align*}<br>$$</p>
 <h2 id="梯度类方法"><a href="#梯度类方法" class="headerlink" title="梯度类方法"></a>梯度类方法</h2><p>梯度类方法是无约束优化中非常常用的方法，其依据的最根本的事实就是梯度的负方向是函数值下降最快的方向。但是常用的 <code>gradient descent</code> 必须要求函数的连续可导，而对于某些连续不可导的问题（如lasso  regression），<code>gradient descent</code> 无能为力，这是需要用到<code>subgradient descent</code>和<code>proximal gradient descent</code>.</p>
 <h3 id="gradient-descent"><a href="#gradient-descent" class="headerlink" title="gradient descent"></a>gradient descent</h3><p>梯度下降法的迭代公式为 $$x^{(k)} = x^{(k-1)} - t_k\nabla f(x^{(k-1)} )$$</p>
 <p>上式中上标 $(k)$ 表示第 $k$ 次迭代, 而 $t_k$表示步长，$\nabla f(x^{(k-1)} )$表示在点 $x^{(k-1)}$ 的梯度。</p>
@@ -460,38 +460,38 @@
 <p>加入将上面的 $\nabla^T f(x)$ 换成 $g^T$ 且不等式恒成立，则  $g$ 被称为 subgradient，当函数可微时，$\nabla f(x) = g$ ，但是若函数不可微，subgradient 不一定存在，下面是几个特殊函数的subgradient例子。</p>
 <p>对于函数 $f(x) = |x|$,其图像如下</p>
 <p><img src="http://static.zybuluo.com/WuLiangchao/e8mkxz323dnq2elgygyy8bax/image_1bgii8g37ine1569fr97gd12881g.png" alt="sub1"></p>
-<p>其subgradient为 $$g = \begin{cases}sign(x) &amp;x \neq 0\<br>[-1,1] &amp; x=0\end{cases}$$</p>
+<p>其subgradient为 $$g = \begin{cases}sign(x) &amp;x \neq 0\\<br>[-1,1] &amp; x=0\end{cases}$$</p>
 <p>对于函数 $f(x) = ||x||_2$,其图像如下</p>
 <p><img src="http://static.zybuluo.com/WuLiangchao/cz31xv8iwvmnq7e15t8tokk3/image_1bgiiehmc19eb1j631gejubdc191t.png" alt="sub2"></p>
-<p>其subgradient为 $$g = \begin{cases} x/||x||_2&amp;x \neq 0\<br>\lbrace z: ||z||_2 \le 1\rbrace &amp; x=0\end{cases}$$</p>
+<p>其subgradient为 $$g = \begin{cases} x/||x||_2&amp;x \neq 0\\<br>\lbrace z: ||z||_2 \le 1\rbrace &amp; x=0\end{cases}$$</p>
 <p>对于函数 $f(x) = ||x||_1$,其图像如下</p>
 <p><img src="http://static.zybuluo.com/WuLiangchao/6a4swr0b88hktwgjarqapshg/image_1bgiiioee1oir157n1ij714db14982a.png" alt="sub3"></p>
-<p>其subgradient为 $$g = \begin{cases} sign(x_i) &amp;x_i \neq 0\<br>[-1,1] &amp; x_i=0\end{cases}$$</p>
+<p>其subgradient为 $$g = \begin{cases} sign(x_i) &amp;x_i \neq 0\\<br>[-1,1] &amp; x_i=0\end{cases}$$</p>
 <p>对于两个相交的函数 $f(x) = \max \lbrace f(x_1), f(x_2)\rbrace$,设其函数图像如下</p>
 <p><img src="http://static.zybuluo.com/WuLiangchao/0zmk660ifcvm1y4vo3m5sy1z/image_1bgiinl7i1ejimgncpdp0v13b62n.png" alt="sub4"></p>
-<p>则其subgradient为$$g = \begin{cases} \nabla f(x_1) &amp;f(x_1) &gt; f(x_2) \<br>\nabla f(x_2) &amp;f(x_1) &lt; f(x_2) \<br>[\min \lbrace \nabla f(x_1),\nabla f(x_2)\rbrace, \max \lbrace \nabla f(x_1), \nabla f(x_2)\rbrace] &amp;f(x_1) = f(x_2)\end{cases} $$</p>
+<p>则其subgradient为$$g = \begin{cases} \nabla f(x_1) &amp;f(x_1) &gt; f(x_2) \\<br>\nabla f(x_2) &amp;f(x_1) &lt; f(x_2) \\<br>[\min \lbrace \nabla f(x_1),\nabla f(x_2)\rbrace, \max \lbrace \nabla f(x_1), \nabla f(x_2)\rbrace] &amp;f(x_1) = f(x_2)\end{cases} $$</p>
 <p>而 subgradient descent 与 gradient descent 的不同地方就是当函数不可微的时候，将 gradient descent 中更新公式中的 gradient 换成 subgradient。下面看一个经典的 <code>lasso regression</code> 问题。</p>
 <p>$$\min_{\beta \in \mathbb {R}^n} \frac{1}{2} ||y-\beta||_2^2 + \lambda ||\beta||_1~~(\lambda \ge 0)$$</p>
 <p>对目标函数求导并令其为0，其中 $||\beta||_1$ 项不可导，用前面提到的subgradient代替，则有以下等式</p>
-<p>$$\begin{cases} y_i - \beta_i = \lambda sign(\beta_i) &amp;\beta_i \neq 0\<br>|y_i - \beta_i| \le \lambda &amp;\beta_i = 0<br>\end{cases}$$</p>
+<p>$$\begin{cases} y_i - \beta_i = \lambda sign(\beta_i) &amp;\beta_i \neq 0\\<br>|y_i - \beta_i| \le \lambda &amp;\beta_i = 0<br>\end{cases}$$</p>
 <p>则解可表示成</p>
-<p>$$\beta_i = \begin{cases} y_i - \lambda &amp; y_i &gt; \lambda\<br>0 &amp;-\lambda \le y_i \le \lambda \<br>y_i + \lambda &amp; y_i &lt; -\lambda\end{cases}$$</p>
+<p>$$\beta_i = \begin{cases} y_i - \lambda &amp; y_i &gt; \lambda\\<br>0 &amp;-\lambda \le y_i \le \lambda \\<br>y_i + \lambda &amp; y_i &lt; -\lambda\end{cases}$$</p>
 <p>上面实际上是简化了的 <code>lasso regression</code>， 因为更一般的lasso 问题表示如下</p>
 <p>$$\min_{\beta \in \mathbb {R}^n} \frac{1}{2} ||y-X\beta||_2^2 + \lambda ||\beta||_1~~(\lambda \ge 0)$$</p>
 <p>这时如果采用上面的解法，那么会得到</p>
-<p>$$\begin{cases} X_i^T(y - X\beta) = \lambda sign(\beta_i) &amp;\beta_i \neq 0\<br>|X_i^T(y - X\beta)| \le \lambda &amp;\beta_i = 0<br>\end{cases}$$</p>
+<p>$$\begin{cases} X_i^T(y - X\beta) = \lambda sign(\beta_i) &amp;\beta_i \neq 0\\<br>|X_i^T(y - X\beta)| \le \lambda &amp;\beta_i = 0<br>\end{cases}$$</p>
 <p>上式并没有为这个 lasso 问题提供一个明确的解，这个问题可以通过下面要提到的 proximal gradient 进行求解，但是上面的式子一定程度上解释了<code>L1 regularization</code>的导致的参数的稀疏性的特点，从上面的表达式可知，只有当 $X_i^T(y - X\beta) = \lambda sign(\beta_i)$ 时，对应的 $\beta_i$ 才不为0，而其他大多数的情况下 $\beta_i$ 为0.</p>
 <h3 id="proximal-gradient-descent"><a href="#proximal-gradient-descent" class="headerlink" title="proximal gradient descent"></a>proximal gradient descent</h3><p>proximal gradient descent 也可以说是 subgradient 的升级版，<strong>proximal 通过对原问题的拆分并利用 proximal mapping，能够解决 subgradient descent 无法解决的问题（如上面的一般化 lasso 问题）。</strong></p>
 <p>一般来说，这类方法将目标函数描述成以下形式</p>
 <p>$$f(X) = g(x) + h(x)$$</p>
 <p>上面的 $g(x)$ 是凸且可微的， 而 $h(x)$ 也是凸的，但是不一定可微。则 proximal gradient descent 的迭代公式为</p>
-<p>$$x^{(k)} = x^{(k-1)} - t_kG_{t_k}(x^{(k-1)})\<br>G_{t}(x) = \frac{x - prox_{th}(x-t\nabla g(x))}{t}\<br>prox_{th}(x) = argmin_{z\in \mathbb {R}^n} \frac{1}{2t}||x-z||_2^2+h(z)$$</p>
+<p>$$x^{(k)} = x^{(k-1)} - t_kG_{t_k}(x^{(k-1)})\\<br>G_{t}(x) = \frac{x - prox_{th}(x-t\nabla g(x))}{t}\\<br>prox_{th}(x) = argmin_{z\in \mathbb {R}^n} \frac{1}{2t}||x-z||_2^2+h(z)$$</p>
 <p>上面 $prox_{th}(x)$ 表示对函数 $h$ proximal mapping。这里仅给出结论，证明过程略，接下来以上面没有解决的一般化的 lasso 问题为例讲述这种方法的应用。</p>
 <p>$$\min_{\beta \in \mathbb {R}^n} \frac{1}{2} ||y-X\beta||_2^2 + \lambda ||\beta||_1~~(\lambda \ge 0)$$</p>
 <p>记 $g(\beta) = \frac{1}{2} ||y-X\beta||_2^2, h(\beta) = \lambda ||\beta||_1$</p>
 <p>则有<br>$$prox_{th}(\beta) = argmin_{z \in \mathbb {R}^n} \frac{1}{2t}||\beta - z||_2^2+h(z) $$</p>
 <p>这个问题通过前面的 subgradient 方法已经解出来，结果为</p>
-<p>$$z_i = \begin{cases} y_i - \lambda t &amp; y_i &gt; \lambda t\<br>0 &amp;-\lambda t \le y_i \le \lambda t\<br>y_i + \lambda t &amp; y_i &lt; -\lambda t\end{cases}$$</p>
+<p>$$z_i = \begin{cases} y_i - \lambda t &amp; y_i &gt; \lambda t\\<br>0 &amp;-\lambda t \le y_i \le \lambda t\\<br>y_i + \lambda t &amp; y_i &lt; -\lambda t\end{cases}$$</p>
 <p>将上面的解记为 $S_{\lambda t}(y)$, 同时 $\nabla g(\beta) = - X^T(y-X\beta)$</p>
 <p>代取上面列出的 proximal gradient descent 列出的迭代公式，则 $\beta$ 的迭代公式如下</p>
 <p>$$\beta^{(k)} = S_{\lambda t}(\beta^{(k-1)} + t_kX^T(y-X\beta^{(k-1)}))$$</p>
@@ -500,24 +500,24 @@
 <h2 id="对偶方法与KKT条件"><a href="#对偶方法与KKT条件" class="headerlink" title="对偶方法与KKT条件"></a>对偶方法与KKT条件</h2><p>对偶理论在最优化中非常重要，其中具有代表性的两条定理是弱对偶定理和强对偶定理，<strong>弱对偶定理告诉了我们最优化的目标的上界( max 问题)或下界(min 问题)，而强对偶定理告诉了当 KKT 条件满足的时候，可以通过对偶问题的解推出原问题的解。</strong></p>
 <p>弱对偶条件总是成立，而强对偶需要在 <code>Slater&#39;s condition</code> 成立时才成立，该条件描述如下</p>
 <p>对于优化问题</p>
-<p>$$<br>\begin{align*}<br>&amp;\min_x\quad f(x)\<br>&amp;\begin{array}\<br>s.t.&amp;g_i(x) \le 0,<del>i=1,\ldots,m\<br>&amp;h_j(x)=0,</del>j=1,\ldots,r<br>\end{array}<br>\end{align*}<br>$$</p>
+<p>$$<br>\begin{align*}<br>&amp;\min_x\quad f(x)\\<br>&amp;\begin{array}\\<br>s.t.&amp;g_i(x) \le 0,~i=1,\ldots,m\\<br>&amp;h_j(x)=0,~j=1,\ldots,r<br>\end{array}<br>\end{align*}<br>$$</p>
 <p>假如存在可行解 $x’$ 使得 $g_i(x’) &lt; 0(i=1,…m)$, 即不等式约束严格成立（注意同时等式约束也要成立，否则就不是可行解了），那么称<code>Slater&#39;s condition</code> 成立，同时强对偶也成立。</p>
 <h3 id="线性规划对偶"><a href="#线性规划对偶" class="headerlink" title="线性规划对偶"></a>线性规划对偶</h3><p>对于形如下面的线性规划问题</p>
-<p>$$<br>\begin{align*}<br>&amp;\min_x\quad c^Tx\<br>&amp;\begin{array}\<br>s.t.&amp;Ax = b\<br>&amp;Gx \le h<br>\end{array}<br>\end{align*}<br>$$</p>
+<p>$$<br>\begin{align*}<br>&amp;\min_x\quad c^Tx\\<br>&amp;\begin{array}\\<br>s.t.&amp;Ax = b\\<br>&amp;Gx \le h<br>\end{array}<br>\end{align*}<br>$$</p>
 <p>其对偶问题为</p>
-<p>$$<br>\begin{align*}<br>&amp;\min_{u,v}\quad -b^Tu - h^Tv\<br>&amp;\begin{array}\<br>s.t.&amp;-A^Tu - G^Tv = c\<br>&amp; v \ge 0<br>\end{array}<br>\end{align*}<br>$$</p>
+<p>$$<br>\begin{align*}<br>&amp;\min_{u,v}\quad -b^Tu - h^Tv\\<br>&amp;\begin{array}\\<br>s.t.&amp;-A^Tu - G^Tv = c\\<br>&amp; v \ge 0<br>\end{array}<br>\end{align*}<br>$$</p>
 <p>对于 LP 问题，其对偶的特殊性在于只要存在原问题存在可行解，那么 <code>Slater&#39;s condition</code> 一定成立，因此强对偶也成立.</p>
 <p>LP 对偶问题的一个经典的例子是最大流(max flow)问题和最小割(min cut)问题.</p>
 <h3 id="拉格朗日对偶"><a href="#拉格朗日对偶" class="headerlink" title="拉格朗日对偶"></a>拉格朗日对偶</h3><p>对于更一般的非 LP 问题的对偶问题，需要用到拉格朗日对偶理论得到，并称该问题为拉格朗日对偶问题。</p>
-<p>这个方法可以说是对求解等式约束的<a href="https://zh.wikipedia.org/wiki/%E6%8B%89%E6%A0%BC%E6%9C%97%E6%97%A5%E4%B9%98%E6%95%B0" target="_blank" rel="noopener">拉格朗日乘子法</a>的一个推广。</p>
+<p>这个方法可以说是对求解等式约束的<a href="https://zh.wikipedia.org/wiki/%E6%8B%89%E6%A0%BC%E6%9C%97%E6%97%A5%E4%B9%98%E6%95%B0" target="_blank" rel="external">拉格朗日乘子法</a>的一个推广。</p>
 <p>对于下面的优化问题</p>
-<p>$$<br>\begin{align*}<br>&amp;\min_x\quad f(x)\<br>&amp;\begin{array}\<br>s.t.&amp;g_i(x) \le 0,<del>i=1,\ldots,m\<br>&amp;h_j(x)=0,</del>j=1,\ldots,r<br>\end{array}<br>\end{align*}<br>$$</p>
+<p>$$<br>\begin{align*}<br>&amp;\min_x\quad f(x)\\<br>&amp;\begin{array}\\<br>s.t.&amp;g_i(x) \le 0,~i=1,\ldots,m\\<br>&amp;h_j(x)=0,~j=1,\ldots,r<br>\end{array}<br>\end{align*}<br>$$</p>
 <p>其増广拉格朗日函数为</p>
 <p>$$L(x,u,v) = f(x) + \sum_{i=1}^m u_ig_i(x) + \sum_{j=1}^r v_jh_j(x)~~(u_i \ge 0)$$</p>
 <p>则原问题的拉格朗日对偶函数为</p>
 <p>$$ g(u,v) = \min_x L(x,u,v)$$</p>
 <p>且原问题的对偶问题为</p>
-<p>$$<br>\begin{align*}<br>&amp;\max_{u,v}\quad g(u,v)\<br>&amp;\begin{array}\<br>s.t.&amp;u_i \ge 0,~i=1,\ldots,m<br>\end{array}<br>\end{align*}<br>$$</p>
+<p>$$<br>\begin{align*}<br>&amp;\max_{u,v}\quad g(u,v)\\<br>&amp;\begin{array}\\<br>s.t.&amp;u_i \ge 0,~i=1,\ldots,m<br>\end{array}<br>\end{align*}<br>$$</p>
 <p>上面得到对偶问题的简单推导流程如下：</p>
 <p>首先原问题的目标函数<strong>加上约束</strong>可以表示为 </p>
 <p>$$f(x) = \max_{u,v} L(x,u,v)$$ </p>
@@ -530,11 +530,11 @@
 <h3 id="KKT-条件"><a href="#KKT-条件" class="headerlink" title="KKT 条件"></a>KKT 条件</h3><p>KKT 条件是非线性规划领域中最重要的理论成果之一，是确定某点是最优点的一阶必要条件，只要是最优点就一定满足这个条件，但是一般来说不是充分条件，因此满足这个点的不一定是最优点。但<strong>对于凸优化而言，KKT条件是最优点的充要条件</strong>。</p>
 <p>同样地</p>
 <p>对于下面的优化问题</p>
-<p>$$<br>\begin{align*}<br>&amp;\min_x\quad f(x)\<br>&amp;\begin{array}\<br>s.t.&amp;g_i(x) \le 0,<del>i=1,\ldots,m\<br>&amp;h_j(x)=0,</del>j=1,\ldots,r<br>\end{array}<br>\end{align*}<br>$$</p>
+<p>$$<br>\begin{align*}<br>&amp;\min_x\quad f(x)\\<br>&amp;\begin{array}\\<br>s.t.&amp;g_i(x) \le 0,~i=1,\ldots,m\\<br>&amp;h_j(x)=0,~j=1,\ldots,r<br>\end{array}<br>\end{align*}<br>$$</p>
 <p>其増广拉格朗日函数为</p>
 <p>$$L(x,u,v) = f(x) + \sum_{i=1}^m u_ig_i(x) + \sum_{j=1}^r v_jh_j(x)~~(u_i \ge 0)$$</p>
 <p>则 KKT 条件为</p>
-<p>$$\begin{cases} \nabla_x L(x,u,v) = 0\<br>u_ig(x) = 0\<br>u_i \ge 0\<br>g_i(x) \le 0, h_j(x)=0<br>\end{cases}$$</p>
+<p>$$\begin{cases} \nabla_x L(x,u,v) = 0\\<br>u_ig(x) = 0\\<br>u_i \ge 0\\<br>g_i(x) \le 0, h_j(x)=0<br>\end{cases}$$</p>
 <p>因此其实只要能够求解出上面的联立方程组，得到的解就是最优解（对于凸优化而言，非凸的问题一般用KKT来验证最优解）。</p>
 <p>但是上面的方程组往往很难求解，一些特殊情况下解是有限的，可以分类讨论；但是更一般的情况下可能的解是无限的，因此无法求解。这里要结合上面的拉格朗日对偶问题得到的解进行求解。</p>
 <p>求解之前，首先要知道下面的定理</p>
@@ -542,27 +542,27 @@
 <p>假如一个问题满足强对偶，那么 $x’,u’,v’$ 是原问题和对偶问题的最优解 $\longleftrightarrow$ $x’,u’,v’$ 满足KKT条件。</p>
 </blockquote>
 <p>因此通过对偶问题求得 $u’,v’$ 后，带入上面的 KKT 条件即可求出 $x’$ 。</p>
-<p>svm 是利用拉格朗日对偶和KKT条件进行求解的经典问题，这里不详细展开，有兴趣的可以参考 <a href="http://open.163.com/special/opencourse/machinelearning.html" target="_blank" rel="noopener">Andrew Ng 公开课</a>中关于 svm 的那章或<a href="http://www.cnblogs.com/jerrylead/archive/2011/03/13/1982684.html" target="_blank" rel="noopener">这篇文章</a>。</p>
-<h2 id="ADMM"><a href="#ADMM" class="headerlink" title="ADMM"></a>ADMM</h2><p>ADMM(Alternating Direction Method of Multipliers) 是解决带约束的凸优化问题的一种迭代解法，当初提出这个算法最主要的目的是为了在分布式环境(Hadoop, MPI 等)中迭代求解这个问题，关于这方面的资料可参考<a href="http://stanford.edu/~boyd/admm.html" target="_blank" rel="noopener">这里</a> </p>
+<p>svm 是利用拉格朗日对偶和KKT条件进行求解的经典问题，这里不详细展开，有兴趣的可以参考 <a href="http://open.163.com/special/opencourse/machinelearning.html" target="_blank" rel="external">Andrew Ng 公开课</a>中关于 svm 的那章或<a href="http://www.cnblogs.com/jerrylead/archive/2011/03/13/1982684.html" target="_blank" rel="external">这篇文章</a>。</p>
+<h2 id="ADMM"><a href="#ADMM" class="headerlink" title="ADMM"></a>ADMM</h2><p>ADMM(Alternating Direction Method of Multipliers) 是解决带约束的凸优化问题的一种迭代解法，当初提出这个算法最主要的目的是为了在分布式环境(Hadoop, MPI 等)中迭代求解这个问题，关于这方面的资料可参考<a href="http://stanford.edu/~boyd/admm.html" target="_blank" rel="external">这里</a> </p>
 <p>ADMM 将要解决的问题描述成以下形式</p>
-<p>$$<br>\begin{align*}<br>&amp;\min_x\quad f_1(x_1) + f_2(x_2)\<br>&amp;\begin{array}\<br>s.t.&amp; A_1x_1+A_2x_2 = b<br>\end{array}<br>\end{align*}<br>$$</p>
+<p>$$<br>\begin{align*}<br>&amp;\min_x\quad f_1(x_1) + f_2(x_2)\\<br>&amp;\begin{array}\\<br>s.t.&amp; A_1x_1+A_2x_2 = b<br>\end{array}<br>\end{align*}<br>$$</p>
 <p>这里省略证明过程，直接给出 ADMM 的迭代公式</p>
-<p>$$\begin{align*}<br>&amp;x_1^{(k)} = argmin_{x_1} f_1(x_1) + \frac{\rho}{2}||A_1x_1+A_2x_2^{(k-1)} - b + w^{(k-1)}||_2^2\<br>&amp;x_2^{(k)} = argmin_{x_2} f_2(x_2) + \frac{\rho}{2}||A_1x_1^{(k)} + A_2x_2 - b + w^{(k-1)}||_2^2\<br>&amp;w^{(k)} = w^{(k-1)} + A_1x_1^{(k)} + A_2x_2^{(k)} - b<br>\end{align*}<br>$$</p>
-<p>上式中的 $\rho$ 是事先选择的参数，可以选择定值，选择定值的时候会遇到跟梯度下降固定步长的类似问题，因此也可以根据每次迭代情况改变 $\rho$ 的值，具体可参考<a href="http://stanford.edu/~boyd/papers/pdf/admm_distr_stats.pdf" target="_blank" rel="noopener">这篇文献</a>。</p>
+<p>$$\begin{align*}<br>&amp;x_1^{(k)} = argmin_{x_1} f_1(x_1) + \frac{\rho}{2}||A_1x_1+A_2x_2^{(k-1)} - b + w^{(k-1)}||_2^2\\<br>&amp;x_2^{(k)} = argmin_{x_2} f_2(x_2) + \frac{\rho}{2}||A_1x_1^{(k)} + A_2x_2 - b + w^{(k-1)}||_2^2\\<br>&amp;w^{(k)} = w^{(k-1)} + A_1x_1^{(k)} + A_2x_2^{(k)} - b<br>\end{align*}<br>$$</p>
+<p>上式中的 $\rho$ 是事先选择的参数，可以选择定值，选择定值的时候会遇到跟梯度下降固定步长的类似问题，因此也可以根据每次迭代情况改变 $\rho$ 的值，具体可参考<a href="http://stanford.edu/~boyd/papers/pdf/admm_distr_stats.pdf" target="_blank" rel="external">这篇文献</a>。</p>
 <p>实际中，<strong>难点在于把一个问题变为 ADMM 求解的形式</strong>，即上面列出的优化问题的形式。下面给出一个例子说明这个问题，这个例子是一个更一般的 lasso regression 问题，称为 <code>fused lasso regression</code>.</p>
 <p>$$\min_{\beta \in \mathbb {R}^n} \frac{1}{2} ||y-X\beta||_2^2 + \lambda ||D\beta||_1~~(\lambda \ge 0)$$</p>
 <p>一般的 lasso regression 问题中 $D = I$.下面用 ADMM 的形式表示上面的问题</p>
-<p>$$\min_{\beta \in \mathbb {R}^n，\alpha \in \mathbb {R}^n} \frac{1}{2} ||y-X\beta||_2^2 + \lambda ||\alpha||_1~~(\lambda \ge 0)\<br>s.t. D\beta - \alpha = 0$$</p>
+<p>$$\min_{\beta \in \mathbb {R}^n，\alpha \in \mathbb {R}^n} \frac{1}{2} ||y-X\beta||_2^2 + \lambda ||\alpha||_1~~(\lambda \ge 0)\\<br>s.t. D\beta - \alpha = 0$$</p>
 <p>将这个问题映射到上面的优化问题的模式有</p>
-<p>$$\frac{1}{2} ||y-X\beta||_2^2\rightarrow f_1(x1) \<br>\lambda ||\alpha||_1 \rightarrow f_2(x_2)\<br>D\beta - \alpha = 0 \rightarrow A_1x_1+A_2x_2 = b$$</p>
+<p>$$\frac{1}{2} ||y-X\beta||_2^2\rightarrow f_1(x1) \\<br>\lambda ||\alpha||_1 \rightarrow f_2(x_2)\\<br>D\beta - \alpha = 0 \rightarrow A_1x_1+A_2x_2 = b$$</p>
 <p>则根据上面的迭代公式计算（对问题变量求导且令结果为0）可得到下面的迭代公式</p>
-<p>$$\begin{align*}<br>&amp;\beta^{(k)} = (X^TX+\rho D^TD)^{-1}(X^Ty+\rho D^T(\alpha^{(k-1)}-w^{(k-1)})\<br>&amp;\alpha^{(k)} = S_{\lambda/\rho}(D\beta^{(k)}+w^{(k-1)})\<br>&amp;w^{(k)} = w^{(k-1)} + D\beta^{(k)} - \alpha^{(k)}<br>\end{align*}<br>$$</p>
+<p>$$\begin{align*}<br>&amp;\beta^{(k)} = (X^TX+\rho D^TD)^{-1}(X^Ty+\rho D^T(\alpha^{(k-1)}-w^{(k-1)})\\<br>&amp;\alpha^{(k)} = S_{\lambda/\rho}(D\beta^{(k)}+w^{(k-1)})\\<br>&amp;w^{(k)} = w^{(k-1)} + D\beta^{(k)} - \alpha^{(k)}<br>\end{align*}<br>$$</p>
 <p>而对于无约束的优化也可以通过 ADMM 求解，例如对于下面的问题</p>
 <p>$$\min_x \sum_{i=1}^B f_i(x)$$</p>
 <p>将其表示为ADMM的形式如下</p>
-<p>$$\min_{x_1,..x_B,x} \sum_{i=1}^B f_i(x_i)\<br>s.t. x_i = x,~~i=1,..B$$</p>
+<p>$$\min_{x_1,..x_B,x} \sum_{i=1}^B f_i(x_i)\\<br>s.t. x_i = x,~~i=1,..B$$</p>
 <p>则ADMM的迭代规则如下</p>
-<p>$$\begin{align*}<br>&amp;x_i^{(k)} = argmin_{x_i} f_i(x_i)+\frac{\rho}{2}||x_i-x^{(k-1)}+w_i^{(k-1)}||<del>(i=1,..B)\<br>&amp;x^{(k)} = \frac{1}{B} \sum_{i=1}^B (x_i^{(k)} + w_i^{(k-1)})\<br>&amp;w_i^{(k)} = w_i^{(k-1)} + x_i^{(k)} - x^{(k)}</del>(i=1,..B)<br>\end{align*}<br>$$</p>
+<p>$$\begin{align*}<br>&amp;x_i^{(k)} = argmin_{x_i} f_i(x_i)+\frac{\rho}{2}||x_i-x^{(k-1)}+w_i^{(k-1)}||~(i=1,..B)\\<br>&amp;x^{(k)} = \frac{1}{B} \sum_{i=1}^B (x_i^{(k)} + w_i^{(k-1)})\\<br>&amp;w_i^{(k)} = w_i^{(k-1)} + x_i^{(k)} - x^{(k)}~(i=1,..B)<br>\end{align*}<br>$$</p>
 
       
     </div>
@@ -655,7 +655,7 @@
 
       
         <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
             文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
@@ -666,7 +666,9 @@
 
       <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image" src="http://wulc.me/files/profile.jpg" alt="良超">
+          <img class="site-author-image" itemprop="image"
+               src="http://wulc.me/files/profile.jpg"
+               alt="良超" />
           <p class="site-author-name" itemprop="name">良超</p>
           <p class="site-description motion-element" itemprop="description">工程师要把合适的技术放在合适的位置|算法工程师首先得是个工程师</p>
         </div>
@@ -675,7 +677,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">219</span>
+                <span class="site-state-item-count">218</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -767,12 +769,12 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <center>
-<div class="copyright">
+<div class="copyright" >
   
   &copy;  2015 - 
   <span itemprop="copyrightYear">2020</span>
-  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a>
-  <br>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
+  </br>
   <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
 </div>
 </center>

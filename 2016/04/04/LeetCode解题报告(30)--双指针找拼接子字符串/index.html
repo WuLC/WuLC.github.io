@@ -6,19 +6,19 @@
 
 
 <html class="theme-next mist use-motion" lang="zh-Hans">
-<head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform">
-<meta http-equiv="Cache-Control" content="no-siteapp">
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
 
 
-  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
 
 
 
@@ -31,7 +31,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
 
 
 
@@ -39,41 +39,45 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
-
-
-  <meta name="keywords" content="python,双指针,">
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
-
-
-
-
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
+  <meta name="keywords" content="python,双指针," />
 
 
 
 
 
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
 
-<meta name="description" content="原题如下：  You are given a string, s, and a list of words, words, that are all of the same length. Find all starting indices of substring(s) in s that is a concatenation of each word in words exactly once">
-<meta name="keywords" content="python,双指针">
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="原题如下：
+
+You are given a string, s, and a list of words, words, that are all of the same length. Find all starting indices of substring(s) in s that is a concatenation of each word in words exactly once">
 <meta property="og:type" content="article">
 <meta property="og:title" content="LeetCode解题报告(30)--双指针找拼接子字符串">
 <meta property="og:url" content="http://wulc.github.io/2016/04/04/LeetCode解题报告(30)--双指针找拼接子字符串/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
-<meta property="og:description" content="原题如下：  You are given a string, s, and a list of words, words, that are all of the same length. Find all starting indices of substring(s) in s that is a concatenation of each word in words exactly once">
-<meta property="og:locale" content="zh-Hans">
+<meta property="og:description" content="原题如下：
+
+You are given a string, s, and a list of words, words, that are all of the same length. Find all starting indices of substring(s) in s that is a concatenation of each word in words exactly once">
 <meta property="og:updated_time" content="2019-06-01T09:14:44.053Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="LeetCode解题报告(30)--双指针找拼接子字符串">
-<meta name="twitter:description" content="原题如下：  You are given a string, s, and a list of words, words, that are all of the same length. Find all starting indices of substring(s) in s that is a concatenation of each word in words exactly once">
+<meta name="twitter:description" content="原题如下：
+
+You are given a string, s, and a list of words, words, that are all of the same length. Find all starting indices of substring(s) in s that is a concatenation of each word in words exactly once">
 
 
 
@@ -101,7 +105,7 @@
 
 
 
-  <link rel="canonical" href="http://wulc.github.io/2016/04/04/LeetCode解题报告(30)--双指针找拼接子字符串/">
+  <link rel="canonical" href="http://wulc.github.io/2016/04/04/LeetCode解题报告(30)--双指针找拼接子字符串/"/>
 
 
 
@@ -142,7 +146,7 @@
   
 
   <div class="custom-logo-site-title">
-    <a href="/" class="brand" rel="start">
+    <a href="/"  class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <span class="site-title">吴良超的学习笔记</span>
       <span class="logo-line-after"><i></i></span>
@@ -171,7 +175,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
             首页
           </a>
@@ -181,7 +185,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
             
             标签
           </a>
@@ -191,7 +195,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
             归档
           </a>
@@ -201,7 +205,7 @@
         <li class="menu-item menu-item-about">
           <a href="/about" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
             
             关于
           </a>
@@ -214,7 +218,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
             
             站内搜索
           </a>
@@ -263,14 +267,14 @@
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="良超">
-    <meta itemprop="description" content>
+    <meta itemprop="description" content="">
     <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
   </span>
 
   <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
     <meta itemprop="name" content="吴良超的学习笔记">
     <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src>
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
     </span>
   </span>
 
@@ -313,7 +317,7 @@
 
 
           
-            <span class="post-category">
+            <span class="post-category" >
             
               <span class="post-meta-divider">|</span>
             
@@ -368,28 +372,20 @@
       
 
       
-        <p><a href="https://leetcode.com/problems/substring-with-concatenation-of-all-words/" target="_blank" rel="noopener">原题</a>如下：</p>
+        <p><a href="https://leetcode.com/problems/substring-with-concatenation-of-all-words/" target="_blank" rel="external">原题</a>如下：</p>
 <blockquote>
-<p>You are given a string, s, and a list of words, words, that are all of the same length. Find all starting indices of substring(s) in s that is a concatenation of each word in words exactly once and without any intervening characters.</p>
-</blockquote>
-<a id="more"></a>
-<blockquote>
-<p>For example, given:<br>s: “barfoothefoobarman”<br>words: [“foo”, “bar”]</p>
-</blockquote>
-<blockquote>
+<p>You are given a string, s, and a list of words, words, that are all of the same length. Find all starting indices of substring(s) in s that is a concatenation of each word in words exactly once and without any intervening characters.<br><a id="more"></a><br>For example, given:<br>s: “barfoothefoobarman”<br>words: [“foo”, “bar”]</p>
 <p>You should return the indices: [0,9].<br>(order does not matter).</p>
 </blockquote>
 <p>题目不难理解，实现也不难，关键是<strong>时间复杂度的控制</strong>。下面会讲述两种方法，第一种方法时间复杂度$O((n-k)*k)$,其中n为s的长度，k为所有的words拼接起来后的长度，这种方法提交时在TLE和AC间徘徊（即偶尔AC，偶尔TLE）。第二种方法时间复杂度为O(n)，提交的时候能够AC。</p>
 <h2 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h2><h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p>设wordLen为给出的words列表中每个词的长度，wordNum为给出的words列表的长度，n为给出的s的长度。</p>
 <p>那么可以<strong>从头开始遍历s直到n-wordLen*wordNum+1，每次遍历用一个字典存储遍历中遇到的属于words的词语，并检查两者对应的词语的数量关系。遇到不属于words的词语或者字典中的某一词语的数量大于words中该词语的数量则跳出执行下一次的遍历</strong></p>
 <p>这种方法的时间复杂度$O((n-k)*k)$，n为s的长度。提交时偶尔TLE，偶尔AC，AC时显示的时间是876ms。</p>
-<h3 id="实现代码："><a href="#实现代码：" class="headerlink" title="实现代码："></a>实现代码：</h3><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">findSubstring</span><span class="params">(self, s, words)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        :type s: str</span></span><br><span class="line"><span class="string">        :type words: List[str]</span></span><br><span class="line"><span class="string">        :rtype: List[int]</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        <span class="comment"># 注意words中的词可能会重复</span></span><br><span class="line">        wordDict = &#123;&#125;</span><br><span class="line">        <span class="keyword">for</span> word <span class="keyword">in</span> words:</span><br><span class="line">            <span class="keyword">if</span> word <span class="keyword">in</span> wordDict:</span><br><span class="line">                wordDict[word] += <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                wordDict[word] = <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        wordLen = len(words[<span class="number">0</span>])</span><br><span class="line">        result = []</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(len(s)-wordLen*wordNum+<span class="number">1</span>):</span><br><span class="line">            tmp = s[i:i+wordLen]</span><br><span class="line">            tmpDict = &#123;&#125; <span class="comment"># 存储words的临时list</span></span><br><span class="line">            <span class="keyword">if</span> tmp <span class="keyword">in</span> words:                </span><br><span class="line">                head = i</span><br><span class="line">                <span class="keyword">while</span> tmp <span class="keyword">in</span> words <span class="keyword">and</span> i &lt; len(s)-wordLen+<span class="number">1</span>:            </span><br><span class="line">                    <span class="keyword">if</span> tmp <span class="keyword">in</span> tmpDict:</span><br><span class="line">                        tmpDict[tmp] += <span class="number">1</span></span><br><span class="line">                    <span class="keyword">else</span>:</span><br><span class="line">                        tmpDict[tmp] = <span class="number">1</span></span><br><span class="line">                    </span><br><span class="line">                    <span class="keyword">if</span> tmpDict[tmp] &gt; wordDict[tmp]:</span><br><span class="line">                        tmpDict[tmp] -= <span class="number">1</span></span><br><span class="line">                        <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">                    i += wordLen</span><br><span class="line">                    tmp = s[i:i+wordLen]</span><br><span class="line">                <span class="keyword">if</span> tmpDict == wordDict:</span><br><span class="line">                    result.append(head)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">continue</span>         </span><br><span class="line">        <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
-
-<h2 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h2><h3 id="思路-1"><a href="#思路-1" class="headerlink" title="思路"></a>思路</h3><p>这种方法参考了<a href="https://leetcode.com/discuss/20151/an-o-n-solution-with-detailed-explanation.html" target="_blank" rel="noopener">这里</a>,主要思想是<strong>利用了双指针围着当前符合words（包括数量和种类）中的连续子字符串，同时计算围着的子字符串中word的数量。</strong></p>
+<h3 id="实现代码："><a href="#实现代码：" class="headerlink" title="实现代码："></a>实现代码：</h3><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">findSubstring</span><span class="params">(self, s, words)</span>:</span></span><br><span class="line">        <span class="string">"""</span><br><span class="line">        :type s: str</span><br><span class="line">        :type words: List[str]</span><br><span class="line">        :rtype: List[int]</span><br><span class="line">        """</span></span><br><span class="line">        <span class="comment"># 注意words中的词可能会重复</span></span><br><span class="line">        wordDict = &#123;&#125;</span><br><span class="line">        <span class="keyword">for</span> word <span class="keyword">in</span> words:</span><br><span class="line">            <span class="keyword">if</span> word <span class="keyword">in</span> wordDict:</span><br><span class="line">                wordDict[word] += <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                wordDict[word] = <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        wordLen = len(words[<span class="number">0</span>])</span><br><span class="line">        result = []</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(len(s)-wordLen*wordNum+<span class="number">1</span>):</span><br><span class="line">            tmp = s[i:i+wordLen]</span><br><span class="line">            tmpDict = &#123;&#125; <span class="comment"># 存储words的临时list</span></span><br><span class="line">            <span class="keyword">if</span> tmp <span class="keyword">in</span> words:                </span><br><span class="line">                head = i</span><br><span class="line">                <span class="keyword">while</span> tmp <span class="keyword">in</span> words <span class="keyword">and</span> i &lt; len(s)-wordLen+<span class="number">1</span>:            </span><br><span class="line">                    <span class="keyword">if</span> tmp <span class="keyword">in</span> tmpDict:</span><br><span class="line">                        tmpDict[tmp] += <span class="number">1</span></span><br><span class="line">                    <span class="keyword">else</span>:</span><br><span class="line">                        tmpDict[tmp] = <span class="number">1</span></span><br><span class="line">                    </span><br><span class="line">                    <span class="keyword">if</span> tmpDict[tmp] &gt; wordDict[tmp]:</span><br><span class="line">                        tmpDict[tmp] -= <span class="number">1</span></span><br><span class="line">                        <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">                    i += wordLen</span><br><span class="line">                    tmp = s[i:i+wordLen]</span><br><span class="line">                <span class="keyword">if</span> tmpDict == wordDict:</span><br><span class="line">                    result.append(head)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">continue</span>         </span><br><span class="line">        <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
+<h2 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h2><h3 id="思路-1"><a href="#思路-1" class="headerlink" title="思路"></a>思路</h3><p>这种方法参考了<a href="https://leetcode.com/discuss/20151/an-o-n-solution-with-detailed-explanation.html" target="_blank" rel="external">这里</a>,主要思想是<strong>利用了双指针围着当前符合words（包括数量和种类）中的连续子字符串，同时计算围着的子字符串中word的数量。</strong></p>
 <p>巧妙的地方在于双指针当前包围的子字符串中如果含有某个word的数量大于words中这个word的数量时，移动左指针直到把这个word的数量减少。</p>
 <p>这种方法的时间复杂度为O(n),提交时AC的时间约100ms</p>
-<h3 id="实现代码"><a href="#实现代码" class="headerlink" title="实现代码"></a>实现代码</h3><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">findSubstring</span><span class="params">(self, s, words)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        :type s: str</span></span><br><span class="line"><span class="string">        :type words: List[str]</span></span><br><span class="line"><span class="string">        :rtype: List[int]</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        <span class="comment"># 注意words中的词可能会重复</span></span><br><span class="line">        wordDict = &#123;&#125;</span><br><span class="line">        <span class="keyword">for</span> word <span class="keyword">in</span> words:</span><br><span class="line">            <span class="keyword">if</span> word <span class="keyword">in</span> wordDict:</span><br><span class="line">                wordDict[word] += <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                wordDict[word] = <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        wordLen = len(words[<span class="number">0</span>])</span><br><span class="line">        wordNum = len(words)</span><br><span class="line">        wordSet = set(words)</span><br><span class="line">        sLen = len(s)</span><br><span class="line">        result = []</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(wordLen): </span><br><span class="line">            left = i</span><br><span class="line">            tmpDict = &#123;&#125;</span><br><span class="line">            count = <span class="number">0</span></span><br><span class="line">            j=i</span><br><span class="line">            <span class="keyword">while</span> j &lt; sLen-wordLen+<span class="number">1</span>: </span><br><span class="line">                tmp = s[j:j+wordLen]</span><br><span class="line">                j += wordLen</span><br><span class="line">                <span class="keyword">if</span> tmp <span class="keyword">in</span> wordSet:</span><br><span class="line">                    <span class="keyword">if</span> tmp <span class="keyword">in</span> tmpDict:</span><br><span class="line">                        tmpDict[tmp]+=<span class="number">1</span></span><br><span class="line">                    <span class="keyword">else</span>:</span><br><span class="line">                        tmpDict[tmp]=<span class="number">1</span></span><br><span class="line">                    </span><br><span class="line">                    <span class="keyword">if</span> tmpDict[tmp]&lt;=wordDict[tmp]:</span><br><span class="line">                        count+=<span class="number">1</span></span><br><span class="line">                    <span class="keyword">else</span>:</span><br><span class="line">                        <span class="comment"># 某个词的数量比wordDict中规定的要多了，往右移动左指针</span></span><br><span class="line">                        <span class="keyword">while</span> tmpDict[tmp] &gt; wordDict[tmp]:</span><br><span class="line">                            t = s[left:left+wordLen]</span><br><span class="line">                            left += wordLen</span><br><span class="line">                            tmpDict[t] -= <span class="number">1</span></span><br><span class="line">                            <span class="keyword">if</span> tmpDict[t] &lt; wordDict[t]:</span><br><span class="line">                                count -= <span class="number">1</span></span><br><span class="line">                    <span class="comment"># 仅去掉最左边的一个word，再往右找</span></span><br><span class="line">                    <span class="keyword">if</span> count == wordNum:</span><br><span class="line">                        result.append(left)</span><br><span class="line">                        t = s[left:left+wordLen]</span><br><span class="line">                        tmpDict[t] -= <span class="number">1</span></span><br><span class="line">                        left += wordLen</span><br><span class="line">                        count -= <span class="number">1</span>  </span><br><span class="line">                <span class="comment"># 当前的词不在wordDict                        </span></span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    tmpDict = &#123;&#125;</span><br><span class="line">                    count = <span class="number">0</span> </span><br><span class="line">                    left = j</span><br><span class="line">        <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
-
+<h3 id="实现代码"><a href="#实现代码" class="headerlink" title="实现代码"></a>实现代码</h3><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">findSubstring</span><span class="params">(self, s, words)</span>:</span></span><br><span class="line">        <span class="string">"""</span><br><span class="line">        :type s: str</span><br><span class="line">        :type words: List[str]</span><br><span class="line">        :rtype: List[int]</span><br><span class="line">        """</span></span><br><span class="line">        <span class="comment"># 注意words中的词可能会重复</span></span><br><span class="line">        wordDict = &#123;&#125;</span><br><span class="line">        <span class="keyword">for</span> word <span class="keyword">in</span> words:</span><br><span class="line">            <span class="keyword">if</span> word <span class="keyword">in</span> wordDict:</span><br><span class="line">                wordDict[word] += <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                wordDict[word] = <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        wordLen = len(words[<span class="number">0</span>])</span><br><span class="line">        wordNum = len(words)</span><br><span class="line">        wordSet = set(words)</span><br><span class="line">        sLen = len(s)</span><br><span class="line">        result = []</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(wordLen): </span><br><span class="line">            left = i</span><br><span class="line">            tmpDict = &#123;&#125;</span><br><span class="line">            count = <span class="number">0</span></span><br><span class="line">            j=i</span><br><span class="line">            <span class="keyword">while</span> j &lt; sLen-wordLen+<span class="number">1</span>: </span><br><span class="line">                tmp = s[j:j+wordLen]</span><br><span class="line">                j += wordLen</span><br><span class="line">                <span class="keyword">if</span> tmp <span class="keyword">in</span> wordSet:</span><br><span class="line">                    <span class="keyword">if</span> tmp <span class="keyword">in</span> tmpDict:</span><br><span class="line">                        tmpDict[tmp]+=<span class="number">1</span></span><br><span class="line">                    <span class="keyword">else</span>:</span><br><span class="line">                        tmpDict[tmp]=<span class="number">1</span></span><br><span class="line">                    </span><br><span class="line">                    <span class="keyword">if</span> tmpDict[tmp]&lt;=wordDict[tmp]:</span><br><span class="line">                        count+=<span class="number">1</span></span><br><span class="line">                    <span class="keyword">else</span>:</span><br><span class="line">                        <span class="comment"># 某个词的数量比wordDict中规定的要多了，往右移动左指针</span></span><br><span class="line">                        <span class="keyword">while</span> tmpDict[tmp] &gt; wordDict[tmp]:</span><br><span class="line">                            t = s[left:left+wordLen]</span><br><span class="line">                            left += wordLen</span><br><span class="line">                            tmpDict[t] -= <span class="number">1</span></span><br><span class="line">                            <span class="keyword">if</span> tmpDict[t] &lt; wordDict[t]:</span><br><span class="line">                                count -= <span class="number">1</span></span><br><span class="line">                    <span class="comment"># 仅去掉最左边的一个word，再往右找</span></span><br><span class="line">                    <span class="keyword">if</span> count == wordNum:</span><br><span class="line">                        result.append(left)</span><br><span class="line">                        t = s[left:left+wordLen]</span><br><span class="line">                        tmpDict[t] -= <span class="number">1</span></span><br><span class="line">                        left += wordLen</span><br><span class="line">                        count -= <span class="number">1</span>  </span><br><span class="line">                <span class="comment"># 当前的词不在wordDict                        </span></span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    tmpDict = &#123;&#125;</span><br><span class="line">                    count = <span class="number">0</span> </span><br><span class="line">                    left = j</span><br><span class="line">        <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -484,7 +480,7 @@
 
       
         <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
             文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
@@ -495,7 +491,9 @@
 
       <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image" src="http://wulc.me/files/profile.jpg" alt="良超">
+          <img class="site-author-image" itemprop="image"
+               src="http://wulc.me/files/profile.jpg"
+               alt="良超" />
           <p class="site-author-name" itemprop="name">良超</p>
           <p class="site-description motion-element" itemprop="description">工程师要把合适的技术放在合适的位置|算法工程师首先得是个工程师</p>
         </div>
@@ -504,7 +502,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">219</span>
+                <span class="site-state-item-count">218</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -596,12 +594,12 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <center>
-<div class="copyright">
+<div class="copyright" >
   
   &copy;  2015 - 
   <span itemprop="copyrightYear">2020</span>
-  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a>
-  <br>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
+  </br>
   <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
 </div>
 </center>

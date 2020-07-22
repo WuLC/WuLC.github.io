@@ -6,19 +6,19 @@
 
 
 <html class="theme-next mist use-motion" lang="zh-Hans">
-<head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform">
-<meta http-equiv="Cache-Control" content="no-siteapp">
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
 
 
-  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
 
 
 
@@ -31,7 +31,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
 
 
 
@@ -39,23 +39,23 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
-
-
-  <meta name="keywords" content="python,树,分治法,">
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
+  <meta name="keywords" content="python,树,分治法," />
 
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
+
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
 
 
 
@@ -63,13 +63,11 @@
 
 
 <meta name="description" content="本文主要从LeetCode两道题出发讲解如何从树的周游结果来重构树。这两道题分别是105. Construct Binary Tree from Preorder and Inorder Traversal和106. Construct Binary Tree from Inorder and Postorder Traversal">
-<meta name="keywords" content="python,树,分治法">
 <meta property="og:type" content="article">
 <meta property="og:title" content="LeetCode解题报告(105. 106)--树的重构">
 <meta property="og:url" content="http://wulc.github.io/2016/07/20/LeetCode解题报告(105. 106)--树的重构/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
 <meta property="og:description" content="本文主要从LeetCode两道题出发讲解如何从树的周游结果来重构树。这两道题分别是105. Construct Binary Tree from Preorder and Inorder Traversal和106. Construct Binary Tree from Inorder and Postorder Traversal">
-<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/b4978gwc1gd78c5ezr48un4t/image_1aog9uofj196u1tu21t941e0esv39.png">
 <meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/unyd4efjynofyq7t9sz215q9/image_1aogafogj1n5c1rpgqe21co539m.png">
 <meta property="og:updated_time" content="2019-06-01T09:14:44.045Z">
@@ -104,7 +102,7 @@
 
 
 
-  <link rel="canonical" href="http://wulc.github.io/2016/07/20/LeetCode解题报告(105. 106)--树的重构/">
+  <link rel="canonical" href="http://wulc.github.io/2016/07/20/LeetCode解题报告(105. 106)--树的重构/"/>
 
 
 
@@ -145,7 +143,7 @@
   
 
   <div class="custom-logo-site-title">
-    <a href="/" class="brand" rel="start">
+    <a href="/"  class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <span class="site-title">吴良超的学习笔记</span>
       <span class="logo-line-after"><i></i></span>
@@ -174,7 +172,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
             首页
           </a>
@@ -184,7 +182,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
             
             标签
           </a>
@@ -194,7 +192,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
             归档
           </a>
@@ -204,7 +202,7 @@
         <li class="menu-item menu-item-about">
           <a href="/about" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
             
             关于
           </a>
@@ -217,7 +215,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
             
             站内搜索
           </a>
@@ -266,14 +264,14 @@
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="良超">
-    <meta itemprop="description" content>
+    <meta itemprop="description" content="">
     <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
   </span>
 
   <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
     <meta itemprop="name" content="吴良超的学习笔记">
     <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src>
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
     </span>
   </span>
 
@@ -316,7 +314,7 @@
 
 
           
-            <span class="post-category">
+            <span class="post-category" >
             
               <span class="post-meta-divider">|</span>
             
@@ -382,22 +380,18 @@
       
 
       
-        <p>本文主要从LeetCode两道题出发讲解如何从树的周游结果来重构树。这两道题分别是<a href="https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/" target="_blank" rel="noopener">105. Construct Binary Tree from Preorder and Inorder Traversal</a>和<br><a href="https://leetcode.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/" target="_blank" rel="noopener">106. Construct Binary Tree from Inorder and Postorder Traversal</a></p>
+        <p>本文主要从LeetCode两道题出发讲解如何从树的周游结果来重构树。这两道题分别是<a href="https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/" target="_blank" rel="external">105. Construct Binary Tree from Preorder and Inorder Traversal</a>和<br><a href="https://leetcode.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/" target="_blank" rel="external">106. Construct Binary Tree from Inorder and Postorder Traversal</a></p>
 <a id="more"></a>
-
-<p><a href="https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/" target="_blank" rel="noopener">105. Construct Binary Tree from Preorder and Inorder Traversal</a>要求从树的前序周游和中序周游的结果重构树。由两种周游的遍历顺序可知，两种周游方式得到的结果的结构如下</p>
-<p><img src="http://static.zybuluo.com/WuLiangchao/b4978gwc1gd78c5ezr48un4t/image_1aog9uofj196u1tu21t941e0esv39.png"></p>
+<p><a href="https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/" target="_blank" rel="external">105. Construct Binary Tree from Preorder and Inorder Traversal</a>要求从树的前序周游和中序周游的结果重构树。由两种周游的遍历顺序可知，两种周游方式得到的结果的结构如下</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/b4978gwc1gd78c5ezr48un4t/image_1aog9uofj196u1tu21t941e0esv39.png" alt=""></p>
 <p>其中<code>left_tree</code>是<code>root</code>的左子树， <code>right_tree</code>是<code>root</code>的右子树。</p>
 <p>因此<strong>通过树的根节点root以及左子树的最后一个节点，可以从两个周游结果中分别找到左子树的两种周游结果和右子树的两种周游结果。然后将问题转化为原问题的子问题，通过递归解决即可。</strong></p>
 <p>python实现的代码如下所示,需要注意的是下面的代码通过下标指出子树的范围，而不是通过slice，也就是preorder[i:j]的方式来将子树范围切出来，因为slice会在内存开辟新的空间，递归时会开辟大量空间而导致MLE错误：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">buildTree</span><span class="params">(self, preorder, inorder)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        :type preorder: List[int]</span></span><br><span class="line"><span class="string">        :type inorder: List[int]</span></span><br><span class="line"><span class="string">        :rtype: TreeNode</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        <span class="keyword">return</span> self.helper(preorder, <span class="number">0</span>, len(preorder)<span class="number">-1</span>, inorder, <span class="number">0</span>, len(inorder)<span class="number">-1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">helper</span><span class="params">(self, preorder, pleft, pright, inorder, ileft, iright)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> pleft &gt; pright:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">        <span class="keyword">if</span> pleft == pright:</span><br><span class="line">            <span class="keyword">return</span> TreeNode(preorder[pleft])</span><br><span class="line">        inx = inorder.index(preorder[pleft])</span><br><span class="line">        left_len = inx - ileft</span><br><span class="line">        root = TreeNode(preorder[pleft])</span><br><span class="line">        root.left = self.helper(preorder, pleft + <span class="number">1</span>, pleft + left_len, inorder, ileft, inx<span class="number">-1</span>)</span><br><span class="line">        root.right = self.helper(preorder, pleft + left_len + <span class="number">1</span>, pright, inorder, inx+<span class="number">1</span>, right)</span><br><span class="line">        <span class="keyword">return</span> root</span><br></pre></td></tr></table></figure>
-
-<p><a href="https://leetcode.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/" target="_blank" rel="noopener">106. Construct Binary Tree from Inorder and Postorder Traversal</a>的结题思路与上面一致。两种周游结果的结构如下：</p>
-<p><img src="http://static.zybuluo.com/WuLiangchao/unyd4efjynofyq7t9sz215q9/image_1aogafogj1n5c1rpgqe21co539m.png"></p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">buildTree</span><span class="params">(self, preorder, inorder)</span>:</span></span><br><span class="line">        <span class="string">"""</span><br><span class="line">        :type preorder: List[int]</span><br><span class="line">        :type inorder: List[int]</span><br><span class="line">        :rtype: TreeNode</span><br><span class="line">        """</span></span><br><span class="line">        <span class="keyword">return</span> self.helper(preorder, <span class="number">0</span>, len(preorder)<span class="number">-1</span>, inorder, <span class="number">0</span>, len(inorder)<span class="number">-1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">helper</span><span class="params">(self, preorder, pleft, pright, inorder, ileft, iright)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> pleft &gt; pright:</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">None</span></span><br><span class="line">        <span class="keyword">if</span> pleft == pright:</span><br><span class="line">            <span class="keyword">return</span> TreeNode(preorder[pleft])</span><br><span class="line">        inx = inorder.index(preorder[pleft])</span><br><span class="line">        left_len = inx - ileft</span><br><span class="line">        root = TreeNode(preorder[pleft])</span><br><span class="line">        root.left = self.helper(preorder, pleft + <span class="number">1</span>, pleft + left_len, inorder, ileft, inx<span class="number">-1</span>)</span><br><span class="line">        root.right = self.helper(preorder, pleft + left_len + <span class="number">1</span>, pright, inorder, inx+<span class="number">1</span>, right)</span><br><span class="line">        <span class="keyword">return</span> root</span><br></pre></td></tr></table></figure>
+<p><a href="https://leetcode.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/" target="_blank" rel="external">106. Construct Binary Tree from Inorder and Postorder Traversal</a>的结题思路与上面一致。两种周游结果的结构如下：</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/unyd4efjynofyq7t9sz215q9/image_1aogafogj1n5c1rpgqe21co539m.png" alt=""></p>
 <p>同样可以通过树的根节点root以及左子树的最后一个节点，分别找到两棵子树的两种周游结果，进而将问题转化为原来问题的子问题，通过递归解决。</p>
-<p>python实现代码如下所示</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">buildTree</span><span class="params">(self, inorder, postorder)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        :type inorder: List[int]</span></span><br><span class="line"><span class="string">        :type postorder: List[int]</span></span><br><span class="line"><span class="string">        :rtype: TreeNode</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        <span class="keyword">return</span> self.helper(inorder, <span class="number">0</span>, len(inorder)<span class="number">-1</span>, postorder, <span class="number">0</span>, len(postorder)<span class="number">-1</span>)</span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">helper</span><span class="params">(self, inorder, ileft, iright, postorder, pleft, pright)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> ileft &gt; iright: <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">        <span class="keyword">if</span> ileft == iright: <span class="keyword">return</span> TreeNode(inorder[ileft])</span><br><span class="line">        inx = inorder.index(postorder[pright])</span><br><span class="line">        left_len = inx - ileft</span><br><span class="line">        root = TreeNode(postorder[pright])</span><br><span class="line">        root.left = self.helper(inorder, ileft, inx<span class="number">-1</span>, postorder, pleft, pleft+left_len<span class="number">-1</span>) </span><br><span class="line">        root.right = self.helper(inorder, inx+<span class="number">1</span>, iright, postorder, pleft+left_len, pright<span class="number">-1</span>)</span><br><span class="line">        <span class="keyword">return</span> root</span><br></pre></td></tr></table></figure>
-
+<p>python实现代码如下所示<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">buildTree</span><span class="params">(self, inorder, postorder)</span>:</span></span><br><span class="line">        <span class="string">"""</span><br><span class="line">        :type inorder: List[int]</span><br><span class="line">        :type postorder: List[int]</span><br><span class="line">        :rtype: TreeNode</span><br><span class="line">        """</span></span><br><span class="line">        <span class="keyword">return</span> self.helper(inorder, <span class="number">0</span>, len(inorder)<span class="number">-1</span>, postorder, <span class="number">0</span>, len(postorder)<span class="number">-1</span>)</span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">helper</span><span class="params">(self, inorder, ileft, iright, postorder, pleft, pright)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> ileft &gt; iright: <span class="keyword">return</span> <span class="keyword">None</span></span><br><span class="line">        <span class="keyword">if</span> ileft == iright: <span class="keyword">return</span> TreeNode(inorder[ileft])</span><br><span class="line">        inx = inorder.index(postorder[pright])</span><br><span class="line">        left_len = inx - ileft</span><br><span class="line">        root = TreeNode(postorder[pright])</span><br><span class="line">        root.left = self.helper(inorder, ileft, inx<span class="number">-1</span>, postorder, pleft, pleft+left_len<span class="number">-1</span>) </span><br><span class="line">        root.right = self.helper(inorder, inx+<span class="number">1</span>, iright, postorder, pleft+left_len, pright<span class="number">-1</span>)</span><br><span class="line">        <span class="keyword">return</span> root</span><br></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -496,7 +490,9 @@
 
       <section class="site-overview sidebar-panel sidebar-panel-active">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image" src="http://wulc.me/files/profile.jpg" alt="良超">
+          <img class="site-author-image" itemprop="image"
+               src="http://wulc.me/files/profile.jpg"
+               alt="良超" />
           <p class="site-author-name" itemprop="name">良超</p>
           <p class="site-description motion-element" itemprop="description">工程师要把合适的技术放在合适的位置|算法工程师首先得是个工程师</p>
         </div>
@@ -505,7 +501,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">219</span>
+                <span class="site-state-item-count">218</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -581,12 +577,12 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <center>
-<div class="copyright">
+<div class="copyright" >
   
   &copy;  2015 - 
   <span itemprop="copyrightYear">2020</span>
-  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a>
-  <br>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
+  </br>
   <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
 </div>
 </center>

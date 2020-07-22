@@ -6,19 +6,19 @@
 
 
 <html class="theme-next mist use-motion" lang="zh-Hans">
-<head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform">
-<meta http-equiv="Cache-Control" content="no-siteapp">
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
 
 
-  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
 
 
 
@@ -31,7 +31,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
 
 
 
@@ -39,43 +39,44 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
-
-
-  <meta name="keywords" content="机器学习,集体智慧编程,">
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
-
-
-
-
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
+  <meta name="keywords" content="机器学习,集体智慧编程," />
 
 
 
 
 
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
 
-<meta name="description" content="《Programming Collective Intelligence》（中文名为《集体智慧编程》），是一本关于数据挖掘的书籍，每一章都会通过一个实际的例子来讲述某个机器学习算法，同时会涉及到数据的采集和处理等，是一本实践性很强的书籍。 本文是关于本书的第二章 Making Recommendations 的前半部分。主要讲述了寻找用户相似性和物品相似性的方法，并在这个基础上讲述如何为用户推荐物">
-<meta name="keywords" content="机器学习,集体智慧编程">
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="《Programming Collective Intelligence》（中文名为《集体智慧编程》），是一本关于数据挖掘的书籍，每一章都会通过一个实际的例子来讲述某个机器学习算法，同时会涉及到数据的采集和处理等，是一本实践性很强的书籍。
+本文是关于本书的第二章 Making Recommendations 的前半部分。主要讲述了寻找用户相似性和物品相似性的方法，并在这个基础上讲述如何为用户推荐物">
 <meta property="og:type" content="article">
 <meta property="og:title" content="《Programming Collective Intelligence》读书笔记(2)--协同过滤">
 <meta property="og:url" content="http://wulc.github.io/2016/02/22/《Programming Collective Intelligence》读书笔记(2)--协同过滤/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
-<meta property="og:description" content="《Programming Collective Intelligence》（中文名为《集体智慧编程》），是一本关于数据挖掘的书籍，每一章都会通过一个实际的例子来讲述某个机器学习算法，同时会涉及到数据的采集和处理等，是一本实践性很强的书籍。 本文是关于本书的第二章 Making Recommendations 的前半部分。主要讲述了寻找用户相似性和物品相似性的方法，并在这个基础上讲述如何为用户推荐物">
-<meta property="og:locale" content="zh-Hans">
+<meta property="og:description" content="《Programming Collective Intelligence》（中文名为《集体智慧编程》），是一本关于数据挖掘的书籍，每一章都会通过一个实际的例子来讲述某个机器学习算法，同时会涉及到数据的采集和处理等，是一本实践性很强的书籍。
+本文是关于本书的第二章 Making Recommendations 的前半部分。主要讲述了寻找用户相似性和物品相似性的方法，并在这个基础上讲述如何为用户推荐物">
 <meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/koa7uy7a7xsmrccuy9xtc90g/pearson-2-small.png">
 <meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/kuu71xe2970do1jf69y2e8yh/2016-03-01_220750.png">
 <meta property="og:updated_time" content="2019-06-01T09:14:44.123Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《Programming Collective Intelligence》读书笔记(2)--协同过滤">
-<meta name="twitter:description" content="《Programming Collective Intelligence》（中文名为《集体智慧编程》），是一本关于数据挖掘的书籍，每一章都会通过一个实际的例子来讲述某个机器学习算法，同时会涉及到数据的采集和处理等，是一本实践性很强的书籍。 本文是关于本书的第二章 Making Recommendations 的前半部分。主要讲述了寻找用户相似性和物品相似性的方法，并在这个基础上讲述如何为用户推荐物">
+<meta name="twitter:description" content="《Programming Collective Intelligence》（中文名为《集体智慧编程》），是一本关于数据挖掘的书籍，每一章都会通过一个实际的例子来讲述某个机器学习算法，同时会涉及到数据的采集和处理等，是一本实践性很强的书籍。
+本文是关于本书的第二章 Making Recommendations 的前半部分。主要讲述了寻找用户相似性和物品相似性的方法，并在这个基础上讲述如何为用户推荐物">
 <meta name="twitter:image" content="http://static.zybuluo.com/WuLiangchao/koa7uy7a7xsmrccuy9xtc90g/pearson-2-small.png">
 
 
@@ -104,7 +105,7 @@
 
 
 
-  <link rel="canonical" href="http://wulc.github.io/2016/02/22/《Programming Collective Intelligence》读书笔记(2)--协同过滤/">
+  <link rel="canonical" href="http://wulc.github.io/2016/02/22/《Programming Collective Intelligence》读书笔记(2)--协同过滤/"/>
 
 
 
@@ -145,7 +146,7 @@
   
 
   <div class="custom-logo-site-title">
-    <a href="/" class="brand" rel="start">
+    <a href="/"  class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <span class="site-title">吴良超的学习笔记</span>
       <span class="logo-line-after"><i></i></span>
@@ -174,7 +175,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
             首页
           </a>
@@ -184,7 +185,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
             
             标签
           </a>
@@ -194,7 +195,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
             归档
           </a>
@@ -204,7 +205,7 @@
         <li class="menu-item menu-item-about">
           <a href="/about" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
             
             关于
           </a>
@@ -217,7 +218,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
             
             站内搜索
           </a>
@@ -266,14 +267,14 @@
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="良超">
-    <meta itemprop="description" content>
+    <meta itemprop="description" content="">
     <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
   </span>
 
   <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
     <meta itemprop="name" content="吴良超的学习笔记">
     <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src>
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
     </span>
   </span>
 
@@ -316,7 +317,7 @@
 
 
           
-            <span class="post-category">
+            <span class="post-category" >
             
               <span class="post-meta-divider">|</span>
             
@@ -374,16 +375,11 @@
         <p>《Programming Collective Intelligence》（中文名为《集体智慧编程》），是一本关于数据挖掘的书籍，每一章都会通过一个实际的例子来讲述某个机器学习算法，同时会涉及到数据的采集和处理等，是一本实践性很强的书籍。</p>
 <p><strong>本文是关于本书的第二章 Making Recommendations 的前半部分。主要讲述了寻找用户相似性和物品相似性的方法，并在这个基础上讲述如何为用户推荐物品。</strong></p>
 <a id="more"></a>
-
 <p>推荐这个功能在很多网站或软件都有实现，如淘宝，当当，网易云音乐等。实现推荐的算法也许有很多。本文主要讲的是<strong>协同过滤</strong>。</p>
 <p>下面分为这几部分来讲述：<br><strong>1.寻找用户相似性的几种方法<br>2.基于用户相似性为用户推荐物品<br>3.寻找物品相似性的方法</strong></p>
-<p>在讲述之前假定一下的数据集：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 电影评分数据集,用于后面的的测试</span></span><br><span class="line"><span class="comment"># critics 字典里面每一项是一个用户对若干部电影的评分</span></span><br><span class="line">critics=&#123;<span class="string">'Lisa Rose'</span>: &#123;<span class="string">'Lady in the Water'</span>: <span class="number">2.5</span>, <span class="string">'Snakes on a Plane'</span>: <span class="number">3.5</span>,<span class="string">'Just My Luck'</span>: <span class="number">3.0</span>, <span class="string">'Superman Returns'</span>: <span class="number">3.5</span>, <span class="string">'You, Me and Dupree'</span>: <span class="number">2.5</span>,<span class="string">'The Night Listener'</span>: <span class="number">3.0</span>&#125;,</span><br><span class="line"><span class="string">'Gene Seymour'</span>: &#123;<span class="string">'Lady in the Water'</span>: <span class="number">3.0</span>, <span class="string">'Snakes on a Plane'</span>: <span class="number">3.5</span>,<span class="string">'Just My Luck'</span>: <span class="number">1.5</span>, <span class="string">'Superman Returns'</span>: <span class="number">5.0</span>, <span class="string">'The Night Listener'</span>: <span class="number">3.0</span>,<span class="string">'You, Me and Dupree'</span>: <span class="number">3.5</span>&#125;,</span><br><span class="line"><span class="string">'Michael Phillips'</span>: &#123;<span class="string">'Lady in the Water'</span>: <span class="number">2.5</span>, <span class="string">'Snakes on a Plane'</span>: <span class="number">3.0</span>,<span class="string">'Superman Returns'</span>: <span class="number">3.5</span>, <span class="string">'The Night Listener'</span>: <span class="number">4.0</span>&#125;,</span><br><span class="line"><span class="string">'Claudia Puig'</span>: &#123;<span class="string">'Snakes on a Plane'</span>: <span class="number">3.5</span>, <span class="string">'Just My Luck'</span>: <span class="number">3.0</span>,</span><br><span class="line"> <span class="string">'The Night Listener'</span>: <span class="number">4.5</span>, <span class="string">'Superman Returns'</span>: <span class="number">4.0</span>,<span class="string">'You, Me and Dupree'</span>: <span class="number">2.5</span>&#125;,</span><br><span class="line"><span class="string">'Mick LaSalle'</span>: &#123;<span class="string">'Lady in the Water'</span>: <span class="number">3.0</span>, <span class="string">'Snakes on a Plane'</span>: <span class="number">4.0</span>,<span class="string">'Just My Luck'</span>: <span class="number">2.0</span>, <span class="string">'Superman Returns'</span>: <span class="number">3.0</span>, <span class="string">'The Night Listener'</span>: <span class="number">3.0</span>,<span class="string">'You, Me and Dupree'</span>: <span class="number">2.0</span>&#125;,</span><br><span class="line"><span class="string">'Jack Matthews'</span>: &#123;<span class="string">'Lady in the Water'</span>: <span class="number">3.0</span>, <span class="string">'Snakes on a Plane'</span>: <span class="number">4.0</span>,<span class="string">'The Night Listener'</span>: <span class="number">3.0</span>, <span class="string">'Superman Returns'</span>: <span class="number">5.0</span>, <span class="string">'You, Me and Dupree'</span>: <span class="number">3.5</span>&#125;,</span><br><span class="line"><span class="string">'Toby'</span>: &#123;<span class="string">'Snakes on a Plane'</span>: <span class="number">4.5</span>, <span class="string">'You, Me and Dupree'</span>: <span class="number">1.0</span>,<span class="string">'Superman Returns'</span>: <span class="number">4.0</span>&#125;&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="寻找用户相似性的几种方法"><a href="#寻找用户相似性的几种方法" class="headerlink" title="寻找用户相似性的几种方法"></a><strong>寻找用户相似性的几种方法</strong></h2><h3 id="欧几里得距离"><a href="#欧几里得距离" class="headerlink" title="欧几里得距离"></a>欧几里得距离</h3><p>基于上面的数据集，最容易想到的第一种方法就是衡量他们所评的<strong>分数的距离</strong>。这个怎么理解呢？比如说A对两部电影的评分是1和2，B对两部电影的评分书3和4。那么他们评分的距离就是$\sqrt{(1-3)^2+(2-4)^2 }$。如果有多部电影则以此类推。这<strong>相当与把一个用户所有评分用多维空间中的一个点来表示，用户间的相似性用点间的距离来衡量，距离越小，相似度越高。</strong>原文称这种距离为欧几里得距离分数（Euclidean Distance score）。<br>通过python实现也很简单：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 通过欧几里得距离找用户相似性，为了使返回数值越大，表示相似性越高，对得出的距离取倒数即可，范围为（0,1）</span></span><br><span class="line"><span class="keyword">import</span> math</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">similarUserWithEuclidean</span><span class="params">(scores,user1,user2)</span>:</span></span><br><span class="line">    commom = [movie <span class="keyword">for</span> movie <span class="keyword">in</span> scores[user1] <span class="keyword">if</span> movie <span class="keyword">in</span> scores[user2]]</span><br><span class="line">    <span class="keyword">if</span> len(commom) == <span class="number">0</span>:  <span class="comment">#没有相同喜爱的电影</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    total = sum([math.pow(scores[user1][movie] - scores[user2][movie], <span class="number">2</span>) <span class="keyword">for</span> movie <span class="keyword">in</span> commom])</span><br><span class="line">    similarity=math.sqrt(total)</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>/(total+<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
-
-<p>上面实现的方法虽然简单，但是存在着**分数膨胀(grade inflation)**的问题,比如说A和B两个人的评判标准不一样，A比较苛刻，给三部电影打的分数是1、2、1，但是B要求不会那么高，给两部电影打分为4、5、4，如果用第一种方法那他们在二维空间中的距离将会比较大，从而被判为无相似性。那么他们真的是没有相似性吗？</p>
+<p>在讲述之前假定一下的数据集：<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 电影评分数据集,用于后面的的测试</span></span><br><span class="line"><span class="comment"># critics 字典里面每一项是一个用户对若干部电影的评分</span></span><br><span class="line">critics=&#123;<span class="string">'Lisa Rose'</span>: &#123;<span class="string">'Lady in the Water'</span>: <span class="number">2.5</span>, <span class="string">'Snakes on a Plane'</span>: <span class="number">3.5</span>,<span class="string">'Just My Luck'</span>: <span class="number">3.0</span>, <span class="string">'Superman Returns'</span>: <span class="number">3.5</span>, <span class="string">'You, Me and Dupree'</span>: <span class="number">2.5</span>,<span class="string">'The Night Listener'</span>: <span class="number">3.0</span>&#125;,</span><br><span class="line"><span class="string">'Gene Seymour'</span>: &#123;<span class="string">'Lady in the Water'</span>: <span class="number">3.0</span>, <span class="string">'Snakes on a Plane'</span>: <span class="number">3.5</span>,<span class="string">'Just My Luck'</span>: <span class="number">1.5</span>, <span class="string">'Superman Returns'</span>: <span class="number">5.0</span>, <span class="string">'The Night Listener'</span>: <span class="number">3.0</span>,<span class="string">'You, Me and Dupree'</span>: <span class="number">3.5</span>&#125;,</span><br><span class="line"><span class="string">'Michael Phillips'</span>: &#123;<span class="string">'Lady in the Water'</span>: <span class="number">2.5</span>, <span class="string">'Snakes on a Plane'</span>: <span class="number">3.0</span>,<span class="string">'Superman Returns'</span>: <span class="number">3.5</span>, <span class="string">'The Night Listener'</span>: <span class="number">4.0</span>&#125;,</span><br><span class="line"><span class="string">'Claudia Puig'</span>: &#123;<span class="string">'Snakes on a Plane'</span>: <span class="number">3.5</span>, <span class="string">'Just My Luck'</span>: <span class="number">3.0</span>,</span><br><span class="line"> <span class="string">'The Night Listener'</span>: <span class="number">4.5</span>, <span class="string">'Superman Returns'</span>: <span class="number">4.0</span>,<span class="string">'You, Me and Dupree'</span>: <span class="number">2.5</span>&#125;,</span><br><span class="line"><span class="string">'Mick LaSalle'</span>: &#123;<span class="string">'Lady in the Water'</span>: <span class="number">3.0</span>, <span class="string">'Snakes on a Plane'</span>: <span class="number">4.0</span>,<span class="string">'Just My Luck'</span>: <span class="number">2.0</span>, <span class="string">'Superman Returns'</span>: <span class="number">3.0</span>, <span class="string">'The Night Listener'</span>: <span class="number">3.0</span>,<span class="string">'You, Me and Dupree'</span>: <span class="number">2.0</span>&#125;,</span><br><span class="line"><span class="string">'Jack Matthews'</span>: &#123;<span class="string">'Lady in the Water'</span>: <span class="number">3.0</span>, <span class="string">'Snakes on a Plane'</span>: <span class="number">4.0</span>,<span class="string">'The Night Listener'</span>: <span class="number">3.0</span>, <span class="string">'Superman Returns'</span>: <span class="number">5.0</span>, <span class="string">'You, Me and Dupree'</span>: <span class="number">3.5</span>&#125;,</span><br><span class="line"><span class="string">'Toby'</span>: &#123;<span class="string">'Snakes on a Plane'</span>: <span class="number">4.5</span>, <span class="string">'You, Me and Dupree'</span>: <span class="number">1.0</span>,<span class="string">'Superman Returns'</span>: <span class="number">4.0</span>&#125;&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="寻找用户相似性的几种方法"><a href="#寻找用户相似性的几种方法" class="headerlink" title="寻找用户相似性的几种方法"></a><strong>寻找用户相似性的几种方法</strong></h2><h3 id="欧几里得距离"><a href="#欧几里得距离" class="headerlink" title="欧几里得距离"></a>欧几里得距离</h3><p>基于上面的数据集，最容易想到的第一种方法就是衡量他们所评的<strong>分数的距离</strong>。这个怎么理解呢？比如说A对两部电影的评分是1和2，B对两部电影的评分书3和4。那么他们评分的距离就是$\sqrt{(1-3)^2+(2-4)^2 }$。如果有多部电影则以此类推。这<strong>相当与把一个用户所有评分用多维空间中的一个点来表示，用户间的相似性用点间的距离来衡量，距离越小，相似度越高。</strong>原文称这种距离为欧几里得距离分数（Euclidean Distance score）。<br>通过python实现也很简单：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 通过欧几里得距离找用户相似性，为了使返回数值越大，表示相似性越高，对得出的距离取倒数即可，范围为（0,1）</span></span><br><span class="line"><span class="keyword">import</span> math</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">similarUserWithEuclidean</span><span class="params">(scores,user1,user2)</span>:</span></span><br><span class="line">    commom = [movie <span class="keyword">for</span> movie <span class="keyword">in</span> scores[user1] <span class="keyword">if</span> movie <span class="keyword">in</span> scores[user2]]</span><br><span class="line">    <span class="keyword">if</span> len(commom) == <span class="number">0</span>:  <span class="comment">#没有相同喜爱的电影</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    total = sum([math.pow(scores[user1][movie] - scores[user2][movie], <span class="number">2</span>) <span class="keyword">for</span> movie <span class="keyword">in</span> commom])</span><br><span class="line">    similarity=math.sqrt(total)</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>/(total+<span class="number">1</span>)</span><br></pre></td></tr></table></figure></p>
+<p>上面实现的方法虽然简单，但是存在着<strong>分数膨胀(grade inflation)</strong>的问题,比如说A和B两个人的评判标准不一样，A比较苛刻，给三部电影打的分数是1、2、1，但是B要求不会那么高，给两部电影打分为4、5、4，如果用第一种方法那他们在二维空间中的距离将会比较大，从而被判为无相似性。那么他们真的是没有相似性吗？</p>
 <p>虽然他们在分数值上存在区别，但是<strong>两个人在每部电影的评分差上保持一致性，也可认为他们是相似用户。</strong>因为在对于好和不好的标准上每个人都会有自己的度量，也许对于A来说2就算是好的了，但是对于B来说好的标准是5。假如对于多部电影两者的评分趋势一致，那么可认为两者的品味也是差不多的，可以认为他们有相似性。通过<strong>皮尔逊相关系数（Pearson Correlation Coefficient）</strong>可以实现上面的功能。</p>
 <h3 id="皮尔逊相关系数"><a href="#皮尔逊相关系数" class="headerlink" title="皮尔逊相关系数"></a>皮尔逊相关系数</h3><p>皮尔逊相关系数取值范围为[-1,1],数值为正表示正相关，且越大表示相关性越强；数值为负则为负相关，越小则负相关性越强。计算公式如下：</p>
 <p> $$sim = \frac{\sum_{c \in I_{ij}}(R_{i,c} - \overline{R_i})(R_{j,c} - \overline{R_j})}{\sqrt{\sum_{c \in I_{ij}} (R_{i,c} - \overline{R_i})^2} \sqrt{\sum_{c \in I_{ij}} (R_{j,c} - \overline{R_j})^2} }$$</p>
@@ -395,7 +391,8 @@
 <th>含义</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>$I_{ij}$</td>
 <td>用户 $i$ 和用户 $j$ 的公共评分集，也就是两者都有评分的物品的集合</td>
 </tr>
@@ -415,35 +412,36 @@
 <td>$\overline {R_j}$</td>
 <td>用户 $j$ 对 $I_{ij}$ 中物品评分的均值</td>
 </tr>
-</tbody></table>
-<p>皮尔逊系数的公式初看有点长，但是如果对概率论了解的同学可知，对于变量 $X$ 和 $Y$ ，上面的皮尔逊系数的表达式其实就是$$\frac{X和Y的协方差}{X的标准差*Y的标准差}$$，而这就是概率论中对相关系数的定义。<strong>实际上概率论中的相关系数就是皮尔逊提出的这个皮尔逊相关系数率</strong>(这里需要注意的是，对于不同测量尺度的变数，有不同的相关系数可用，而我们接触到的概率论教材里，大多是都是讲皮尔逊相关系数，实际上还有<a href="https://zh.wikipedia.org/wiki/%E7%9B%B8%E5%85%B3" target="_blank" rel="noopener">其他的相关系数</a>)。</p>
+</tbody>
+</table>
+<p>皮尔逊系数的公式初看有点长，但是如果对概率论了解的同学可知，对于变量 $X$ 和 $Y$ ，上面的皮尔逊系数的表达式其实就是$$\frac{X和Y的协方差}{X的标准差*Y的标准差}$$，而这就是概率论中对相关系数的定义。<strong>实际上概率论中的相关系数就是皮尔逊提出的这个皮尔逊相关系数率</strong>(这里需要注意的是，对于不同测量尺度的变数，有不同的相关系数可用，而我们接触到的概率论教材里，大多是都是讲皮尔逊相关系数，实际上还有<a href="https://zh.wikipedia.org/wiki/%E7%9B%B8%E5%85%B3" target="_blank" rel="external">其他的相关系数</a>)。</p>
 <p>用图像直观表示皮尔逊相关系数如下所示，假设r为互相关系数：</p>
-<p><img src="http://static.zybuluo.com/WuLiangchao/koa7uy7a7xsmrccuy9xtc90g/pearson-2-small.png"></p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/koa7uy7a7xsmrccuy9xtc90g/pearson-2-small.png" alt=""></p>
 <p>且一般认为r值范围和相关性的对应关系如下，0表示两者无关：</p>
 <table>
 <thead>
 <tr>
-<th align="center">相关性强弱</th>
-<th align="center">对应的r值</th>
+<th style="text-align:center">相关性强弱</th>
+<th style="text-align:center">对应的r值</th>
 </tr>
 </thead>
-<tbody><tr>
-<td align="center">High correlation</td>
-<td align="center">0.5<del>1.0 or -0.5</del> -1.0</td>
+<tbody>
+<tr>
+<td style="text-align:center">High correlation</td>
+<td style="text-align:center">0.5~1.0 or -0.5~ -1.0</td>
 </tr>
 <tr>
-<td align="center">Medium correlation</td>
-<td align="center">0.3 ~ 0.5 or -0.3~ -0.5</td>
+<td style="text-align:center">Medium correlation</td>
+<td style="text-align:center">0.3 ~ 0.5 or -0.3~ -0.5</td>
 </tr>
 <tr>
-<td align="center">Low correlation</td>
-<td align="center">0.1<del>0.3 or -0.1</del> -0.3</td>
+<td style="text-align:center">Low correlation</td>
+<td style="text-align:center">0.1~0.3 or -0.1~ -0.3</td>
 </tr>
-</tbody></table>
-<p>关于皮尔逊系数更详细的资料可参考该链接：<a href="http://www.statisticshowto.com/what-is-the-pearson-correlation-coefficient" target="_blank" rel="noopener">http://www.statisticshowto.com/what-is-the-pearson-correlation-coefficient</a></p>
-<p>实现该功能的代码如下：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 通过 Pearson Correlation Coefficient 计算两个用户的相似性,数值绝对值越大相关性，正负表示正相关或负相关</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">similarUserWithPearson</span><span class="params">(scores,user1,user2)</span>:</span></span><br><span class="line">    commom = [movie <span class="keyword">for</span> movie <span class="keyword">in</span> scores[user1] <span class="keyword">if</span> movie <span class="keyword">in</span> scores[user2]]</span><br><span class="line">    <span class="keyword">if</span> len(commom) == <span class="number">0</span>:  <span class="comment">#no common item of the two users</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    average1 = float(sum(scores[user1][movie] <span class="keyword">for</span> movie <span class="keyword">in</span> scores[user1]))/len(scores[user1])</span><br><span class="line">    average2 = float(sum(scores[user2][movie] <span class="keyword">for</span> movie <span class="keyword">in</span> scores[user2]))/len(scores[user2])</span><br><span class="line">    <span class="comment"># denominator</span></span><br><span class="line">    multiply_sum = sum( (scores[user1][movie]-average1) * (scores[user2][movie]-average2) <span class="keyword">for</span> movie <span class="keyword">in</span> commom )</span><br><span class="line">    <span class="comment"># member</span></span><br><span class="line">    pow_sum_1 = sum( math.pow(scores[user1][movie]-average1, <span class="number">2</span>) <span class="keyword">for</span> movie <span class="keyword">in</span> commom )</span><br><span class="line">    pow_sum_2 = sum( math.pow(scores[user2][movie]-average2, <span class="number">2</span>) <span class="keyword">for</span> movie <span class="keyword">in</span> commom )</span><br><span class="line">    </span><br><span class="line">    modified_cosine_similarity = float(multiply_sum)/math.sqrt(pow_sum_1*pow_sum_2)</span><br><span class="line">    <span class="keyword">return</span> modified_cosine_similarity</span><br></pre></td></tr></table></figure>
-
+</tbody>
+</table>
+<p>关于皮尔逊系数更详细的资料可参考该链接：<a href="http://www.statisticshowto.com/what-is-the-pearson-correlation-coefficient" target="_blank" rel="external">http://www.statisticshowto.com/what-is-the-pearson-correlation-coefficient</a></p>
+<p>实现该功能的代码如下：<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 通过 Pearson Correlation Coefficient 计算两个用户的相似性,数值绝对值越大相关性，正负表示正相关或负相关</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">similarUserWithPearson</span><span class="params">(scores,user1,user2)</span>:</span></span><br><span class="line">    commom = [movie <span class="keyword">for</span> movie <span class="keyword">in</span> scores[user1] <span class="keyword">if</span> movie <span class="keyword">in</span> scores[user2]]</span><br><span class="line">    <span class="keyword">if</span> len(commom) == <span class="number">0</span>:  <span class="comment">#no common item of the two users</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    average1 = float(sum(scores[user1][movie] <span class="keyword">for</span> movie <span class="keyword">in</span> scores[user1]))/len(scores[user1])</span><br><span class="line">    average2 = float(sum(scores[user2][movie] <span class="keyword">for</span> movie <span class="keyword">in</span> scores[user2]))/len(scores[user2])</span><br><span class="line">    <span class="comment"># denominator</span></span><br><span class="line">    multiply_sum = sum( (scores[user1][movie]-average1) * (scores[user2][movie]-average2) <span class="keyword">for</span> movie <span class="keyword">in</span> commom )</span><br><span class="line">    <span class="comment"># member</span></span><br><span class="line">    pow_sum_1 = sum( math.pow(scores[user1][movie]-average1, <span class="number">2</span>) <span class="keyword">for</span> movie <span class="keyword">in</span> commom )</span><br><span class="line">    pow_sum_2 = sum( math.pow(scores[user2][movie]-average2, <span class="number">2</span>) <span class="keyword">for</span> movie <span class="keyword">in</span> commom )</span><br><span class="line">    </span><br><span class="line">    modified_cosine_similarity = float(multiply_sum)/math.sqrt(pow_sum_1*pow_sum_2)</span><br><span class="line">    <span class="keyword">return</span> modified_cosine_similarity</span><br></pre></td></tr></table></figure></p>
 <p>上面两种方法是书中提到的，并且计算皮尔逊相关系数的方法与原书有区别，但是结果是一样的。只是原书上对公式进行了进一步的简化。除此之外，还有一类比较常用的方法是<strong>通过余弦相似性（Cosine Similarity）判断用户相似性</strong>。原理也是<strong>用空间中的一个多维向量表示用户对所有电影的评分，用户间的相似性可以通过向量间的夹角表示，取值范围也是（-1,1）。但是因为这种方法也存在上面提到的分数膨胀(grade inflation)，在此基础上提出了修正的余弦相似度（Adjusted Cosine Similarity）</strong>。</p>
 <h3 id="修正的余弦相似性"><a href="#修正的余弦相似性" class="headerlink" title="修正的余弦相似性"></a>修正的余弦相似性</h3><p>修正的余弦相似度跟上面提到的皮尔逊系数很相似，包括计算公式，区别在于<strong>皮尔逊系数是依据双方共同评分项进行计算，而修正的余弦相似度则对所有项都进行运算</strong>。比如说一部电影A有评分，B没有评分，那么计算皮尔逊系数时就不能采用这不电影作为计算的数据集，但是计算修正的余弦相似性则可以利用这个数据。</p>
 <p>修正的余弦相似性的计算公式如下</p>
@@ -456,7 +454,8 @@
 <th>含义</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>$I_{ij}$</td>
 <td>用户 $i$ 和用户 $j$ 的公共评分集，也就是均被两者评分的物品的集合</td>
 </tr>
@@ -484,35 +483,28 @@
 <td>$\overline {R_j}$</td>
 <td>用户 $j$ 所有评分的均值</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>这条公式跟上面的皮尔逊相关系数很相似，皮尔逊相关系数的公式如下：</p>
 <p> $$sim = \frac{\sum_{c \in I_{ij}}(R_{i,c} - \overline{R_i})(R_{j,c} - \overline{R_j})}{\sqrt{\sum_{c \in I_{ij}} (R_{i,c} - \overline{R_i})^2} \sqrt{\sum_{c \in I_{ij}} (R_{j,c} - \overline{R_j})^2} }$$</p>
 <p><strong>两者的区别在于分母上，皮尔逊系数的分母采用的评分集是两个用户的共同评分集（就是两个用户都对这个物品有评价），而修正的余弦系数则采用两个用户各自的评分集。</strong></p>
 <p>采用修正的余弦系数的实现代码如下：</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">user_similarity_on_modified_cosine</span><span class="params">(scores, user1, user2)</span>:</span></span><br><span class="line">    commom = [movie <span class="keyword">for</span> movie <span class="keyword">in</span> scores[user1] <span class="keyword">if</span> movie <span class="keyword">in</span> scores[user2]]</span><br><span class="line">    <span class="keyword">if</span> len(commom) == <span class="number">0</span>:  <span class="comment">#no common item of the two users</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    average1 = float(sum(scores[user1][movie] <span class="keyword">for</span> movie <span class="keyword">in</span> scores[user1]))/len(scores[user1])</span><br><span class="line">    average2 = float(sum(scores[user2][movie] <span class="keyword">for</span> movie <span class="keyword">in</span> scores[user2]))/len(scores[user2])</span><br><span class="line">    <span class="comment"># denominator</span></span><br><span class="line">    multiply_sum = sum( (scores[user1][movie]-average1) * (scores[user2][movie]-average2) <span class="keyword">for</span> movie <span class="keyword">in</span> commom )</span><br><span class="line">    <span class="comment"># member</span></span><br><span class="line">    pow_sum_1 = sum( math.pow(scores[user1][movie]-average1, <span class="number">2</span>) <span class="keyword">for</span> movie <span class="keyword">in</span> scores[user1] )</span><br><span class="line">    pow_sum_2 = sum( math.pow(scores[user2][movie]-average2, <span class="number">2</span>) <span class="keyword">for</span> movie <span class="keyword">in</span> scores[user2] )</span><br><span class="line">    </span><br><span class="line">    modified_cosine_similarity = float(multiply_sum)/math.sqrt(pow_sum_1*pow_sum_2)</span><br><span class="line">    <span class="keyword">return</span> modified_cosine_similarity</span><br></pre></td></tr></table></figure>
-
-<h3 id="计算最相似的前n个用户"><a href="#计算最相似的前n个用户" class="headerlink" title="计算最相似的前n个用户"></a>计算最相似的前n个用户</h3><p>通过上面任意一种方法找出用户相似度后，可以根据相似度的大小排序，找出前n个最相似的用户，实现代码如下：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">findSimilarUsers</span><span class="params">(scores,user,similarFunction = similarUserWithPearson)</span>:</span></span><br><span class="line">    similarUser = [(similarFunction(critics, user, otherUser), otherUser) <span class="keyword">for</span> otherUser <span class="keyword">in</span> scores <span class="keyword">if</span> otherUser!=user]</span><br><span class="line">    <span class="comment"># 使用了dict会将含有kv对的列表封装成一个字典,无法利用列表自带的排序函数sort</span></span><br><span class="line">    <span class="comment"># similarDict = dict([(similarFunction(user,otherUser),otherUser) for otherUser in scores if otherUser!=user])</span></span><br><span class="line">    similarUser.sort()</span><br><span class="line">    similarUser.reverse()</span><br><span class="line">    <span class="comment">#也可将上面两行改成:similarUser.sort(reverse = True)</span></span><br><span class="line">    <span class="keyword">return</span> similarUser <span class="comment"># 返回相似度从高到低排序的一个列表</span></span><br></pre></td></tr></table></figure>
-
+<h3 id="计算最相似的前n个用户"><a href="#计算最相似的前n个用户" class="headerlink" title="计算最相似的前n个用户"></a>计算最相似的前n个用户</h3><p>通过上面任意一种方法找出用户相似度后，可以根据相似度的大小排序，找出前n个最相似的用户，实现代码如下：<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">findSimilarUsers</span><span class="params">(scores,user,similarFunction = similarUserWithPearson)</span>:</span></span><br><span class="line">    similarUser = [(similarFunction(critics, user, otherUser), otherUser) <span class="keyword">for</span> otherUser <span class="keyword">in</span> scores <span class="keyword">if</span> otherUser!=user]</span><br><span class="line">    <span class="comment"># 使用了dict会将含有kv对的列表封装成一个字典,无法利用列表自带的排序函数sort</span></span><br><span class="line">    <span class="comment"># similarDict = dict([(similarFunction(user,otherUser),otherUser) for otherUser in scores if otherUser!=user])</span></span><br><span class="line">    similarUser.sort()</span><br><span class="line">    similarUser.reverse()</span><br><span class="line">    <span class="comment">#也可将上面两行改成:similarUser.sort(reverse = True)</span></span><br><span class="line">    <span class="keyword">return</span> similarUser <span class="comment"># 返回相似度从高到低排序的一个列表</span></span><br></pre></td></tr></table></figure></p>
 <h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>传统的计算相似度的方法就是上面提到的三种：<strong>余弦相似度、修正的余弦相似度和相关相似性（也就是计算皮尔逊系数）</strong>。下面是分别采用上面三种方法为测试数据集中的用户<code>Lisa Rose</code>找到前6个最相似用户的结果。完整的代码见文末</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"># 欧几里得距离，第一个值是分数，第二个值是具体的用户</span><br><span class="line">(0.4444444444444444, &apos;Michael Phillips&apos;)</span><br><span class="line">(0.3333333333333333, &apos;Mick LaSalle&apos;)</span><br><span class="line">(0.2857142857142857, &apos;Claudia Puig&apos;)</span><br><span class="line">(0.2222222222222222, &apos;Toby&apos;)</span><br><span class="line">(0.21052631578947367, &apos;Jack Matthews&apos;)</span><br><span class="line">(0.14814814814814814, &apos;Gene Seymour&apos;)</span><br><span class="line"></span><br><span class="line"># 皮尔逊系数，第一个值是分数，第二个值是具体的用户</span><br><span class="line">(0.9345507010964664, &apos;Toby&apos;)</span><br><span class="line">(0.747017880833996, &apos;Jack Matthews&apos;)</span><br><span class="line">(0.5940885257860046, &apos;Mick LaSalle&apos;)</span><br><span class="line">(0.5477225575051661, &apos;Claudia Puig&apos;)</span><br><span class="line">(0.39605901719066977, &apos;Gene Seymour&apos;)</span><br><span class="line">(0.3872983346207417, &apos;Michael Phillips&apos;)</span><br><span class="line"></span><br><span class="line"># 修正的余弦相似度，第一个值是分数，第二个值是具体的用户</span><br><span class="line">(0.8093446482740976, &apos;Toby&apos;)</span><br><span class="line">(0.747017880833996, &apos;Jack Matthews&apos;)</span><br><span class="line">(0.5940885257860046, &apos;Mick LaSalle&apos;)</span><br><span class="line">(0.4743416490252569, &apos;Claudia Puig&apos;)</span><br><span class="line">(0.39605901719066977, &apos;Gene Seymour&apos;)</span><br><span class="line">(0.33541019662496846, &apos;Michael Phillips&apos;)</span><br></pre></td></tr></table></figure>
-
 <p>从结果可以看到，<strong>修正的余弦相似度和皮尔逊系数大小虽然不一样，但是预测的整体用户相似度分布一致。</strong></p>
 <h2 id="为用户推荐物品"><a href="#为用户推荐物品" class="headerlink" title="为用户推荐物品"></a><strong>为用户推荐物品</strong></h2><p>经过第一步找出相似用户后，可以直接对相似用户之间进行物品推荐，如A和B相似，且B有部分喜欢的电影A没看过，就可以为A推荐这部分电影。</p>
 <p><strong>为了使得推荐结果更具有代表性，需要考虑多几位相似用户，同时也是为了有更多可推荐的选择</strong>，因为可能B看过而A没看过的电影也不多。</p>
 <p>实现思路如下：为A找出了若干位相似用户，每个用户都有一个相似度系数（就是上面的皮尔森系数），找出他们看过而A没看过电影集合T。将每个用户的相似度乘上用户对集合T中某部电影的评分便可作为这部电影的得分，得分越高，代表推荐性越强。这乍一看还比较合理。但是一分析也存在一个问题，就是假如一部电影实际上都符合这一批用户的，但是看过的人很少，其他一些不太符合的电影因为看过的人多而的得分高。这就导致了误判。怎么解决呢？</p>
 <p><strong>这里需要引入一个因子来调和这种不平衡性，使得结果能够合理，既然这种不平衡是由于评分的人数不同而引起的，那么就可以从这里着手。将上面相加得到的总分除以对这部电影有评分的所有用户的相似性。</strong></p>
 <p>例如下图就是为上面Toby推荐的结果：</p>
-<p><img src="http://static.zybuluo.com/WuLiangchao/kuu71xe2970do1jf69y2e8yh/2016-03-01_220750.png"></p>
-<p>实现的代码如下：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 给用户推荐物品，物品的评分采用与其他用户的相似度乘上其他用户的实际评分</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">recommendItem</span><span class="params">(scores,user)</span>:</span></span><br><span class="line">    userSimilarity = findSimilarUsers(scores, user)</span><br><span class="line">    swapUserSimilarity = &#123;v:k <span class="keyword">for</span> k, v <span class="keyword">in</span> userSimilarity&#125; <span class="comment"># 交换键值，将存储kv对的列表转换为字典，交换后为无序</span></span><br><span class="line">    allMovies = []</span><br><span class="line">    <span class="keyword">for</span> (k,v) <span class="keyword">in</span> critics.items():</span><br><span class="line">        <span class="keyword">for</span> movie <span class="keyword">in</span> v:</span><br><span class="line">            <span class="keyword">if</span> movie <span class="keyword">not</span> <span class="keyword">in</span> allMovies:</span><br><span class="line">                allMovies.append(movie)</span><br><span class="line">    itemScore = []</span><br><span class="line">    <span class="keyword">for</span> movie <span class="keyword">in</span> allMovies:</span><br><span class="line">        scoreSum = <span class="number">0</span></span><br><span class="line">        similaritySum = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> similarity, otherUser <span class="keyword">in</span> userSimilarity:</span><br><span class="line">            <span class="keyword">if</span> critics[otherUser].has_key(movie):</span><br><span class="line">                scoreSum += critics[otherUser][movie] * similarity</span><br><span class="line">                similaritySum += swapUserSimilarity[otherUser]</span><br><span class="line">        itemScore.append((scoreSum/similaritySum, movie))</span><br><span class="line"></span><br><span class="line">    itemScore.sort(reverse=<span class="literal">True</span>)</span><br><span class="line">    recommend_movies = [] <span class="comment"># 为user推荐的电影</span></span><br><span class="line">    <span class="keyword">print</span> <span class="string">'all movies ranking:'</span></span><br><span class="line">    <span class="keyword">for</span> i,j <span class="keyword">in</span> itemScore:</span><br><span class="line">        <span class="keyword">print</span> i,j</span><br><span class="line">        <span class="keyword">if</span> j <span class="keyword">not</span> <span class="keyword">in</span> critics[user]:</span><br><span class="line">            recommend_movies.append(j)</span><br><span class="line">    <span class="keyword">print</span> <span class="string">'recommended movies for %s:%s'</span> %(user, recommend_movies)</span><br></pre></td></tr></table></figure>
-
+<p><img src="http://static.zybuluo.com/WuLiangchao/kuu71xe2970do1jf69y2e8yh/2016-03-01_220750.png" alt=""></p>
+<p>实现的代码如下：<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 给用户推荐物品，物品的评分采用与其他用户的相似度乘上其他用户的实际评分</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">recommendItem</span><span class="params">(scores,user)</span>:</span></span><br><span class="line">    userSimilarity = findSimilarUsers(scores, user)</span><br><span class="line">    swapUserSimilarity = &#123;v:k <span class="keyword">for</span> k, v <span class="keyword">in</span> userSimilarity&#125; <span class="comment"># 交换键值，将存储kv对的列表转换为字典，交换后为无序</span></span><br><span class="line">    allMovies = []</span><br><span class="line">    <span class="keyword">for</span> (k,v) <span class="keyword">in</span> critics.items():</span><br><span class="line">        <span class="keyword">for</span> movie <span class="keyword">in</span> v:</span><br><span class="line">            <span class="keyword">if</span> movie <span class="keyword">not</span> <span class="keyword">in</span> allMovies:</span><br><span class="line">                allMovies.append(movie)</span><br><span class="line">    itemScore = []</span><br><span class="line">    <span class="keyword">for</span> movie <span class="keyword">in</span> allMovies:</span><br><span class="line">        scoreSum = <span class="number">0</span></span><br><span class="line">        similaritySum = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> similarity, otherUser <span class="keyword">in</span> userSimilarity:</span><br><span class="line">            <span class="keyword">if</span> critics[otherUser].has_key(movie):</span><br><span class="line">                scoreSum += critics[otherUser][movie] * similarity</span><br><span class="line">                similaritySum += swapUserSimilarity[otherUser]</span><br><span class="line">        itemScore.append((scoreSum/similaritySum, movie))</span><br><span class="line"></span><br><span class="line">    itemScore.sort(reverse=<span class="keyword">True</span>)</span><br><span class="line">    recommend_movies = [] <span class="comment"># 为user推荐的电影</span></span><br><span class="line">    <span class="keyword">print</span> <span class="string">'all movies ranking:'</span></span><br><span class="line">    <span class="keyword">for</span> i,j <span class="keyword">in</span> itemScore:</span><br><span class="line">        <span class="keyword">print</span> i,j</span><br><span class="line">        <span class="keyword">if</span> j <span class="keyword">not</span> <span class="keyword">in</span> critics[user]:</span><br><span class="line">            recommend_movies.append(j)</span><br><span class="line">    <span class="keyword">print</span> <span class="string">'recommended movies for %s:%s'</span> %(user, recommend_movies)</span><br></pre></td></tr></table></figure></p>
 <h2 id="寻找物品间的相似性"><a href="#寻找物品间的相似性" class="headerlink" title="寻找物品间的相似性"></a><strong>寻找物品间的相似性</strong></h2><p>上面的推荐方法是通过寻找相似用户进行推荐，是一种“A喜欢这个物品，跟他相似的B也可能喜欢这件物品”思想；除此之外，还有一种思想就是“A喜欢物品1，也可能喜欢相似的物品2”。在这里判断1和2的相似性就成了关键，也就是如何寻找物品间的相似性。</p>
-<p>乍一看会没有思路，但是实际上很简单，只需要对原始数据做个简单的转换。上面一开始给出的数据集是一个用户对多部电影的评价，现在把换成同一部电影不同用户的评价即可.</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">将</span><br><span class="line"><span class="string">'Lisa Rose'</span>: &#123;<span class="string">'Lady in the Water'</span>: <span class="number">2.5</span>, <span class="string">'Snakes on a Plane'</span>: <span class="number">3.5</span>&#125;,</span><br><span class="line"><span class="string">'Gene Seymour'</span>: &#123;<span class="string">'Lady in the Water'</span>: <span class="number">3.0</span>, <span class="string">'Snakes on a Plane'</span>: <span class="number">3.5</span>&#125;&#125;</span><br><span class="line">转换为</span><br><span class="line">&#123;<span class="string">'Lady in the Water'</span>:&#123;<span class="string">'Lisa Rose'</span>:<span class="number">2.5</span>,<span class="string">'Gene Seymour'</span>:<span class="number">3.0</span>&#125;,</span><br><span class="line"><span class="string">'Snakes on a Plane'</span>:&#123;<span class="string">'Lisa Rose'</span>:<span class="number">3.5</span>,<span class="string">'Gene Seymour'</span>:<span class="number">3.5</span>&#125;&#125; etc..</span><br></pre></td></tr></table></figure>
-
+<p>乍一看会没有思路，但是实际上很简单，只需要对原始数据做个简单的转换。上面一开始给出的数据集是一个用户对多部电影的评价，现在把换成同一部电影不同用户的评价即可.<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">将</span><br><span class="line"><span class="string">'Lisa Rose'</span>: &#123;<span class="string">'Lady in the Water'</span>: <span class="number">2.5</span>, <span class="string">'Snakes on a Plane'</span>: <span class="number">3.5</span>&#125;,</span><br><span class="line"><span class="string">'Gene Seymour'</span>: &#123;<span class="string">'Lady in the Water'</span>: <span class="number">3.0</span>, <span class="string">'Snakes on a Plane'</span>: <span class="number">3.5</span>&#125;&#125;</span><br><span class="line">转换为</span><br><span class="line">&#123;<span class="string">'Lady in the Water'</span>:&#123;<span class="string">'Lisa Rose'</span>:<span class="number">2.5</span>,<span class="string">'Gene Seymour'</span>:<span class="number">3.0</span>&#125;,</span><br><span class="line"><span class="string">'Snakes on a Plane'</span>:&#123;<span class="string">'Lisa Rose'</span>:<span class="number">3.5</span>,<span class="string">'Gene Seymour'</span>:<span class="number">3.5</span>&#125;&#125; etc..</span><br></pre></td></tr></table></figure></p>
 <p>这样上面求用户相似性的方法是不是同样可以用来求物品间的相似性了？这种基于物品相似性的方法称为基于物品的协同过滤，而上面基于用户相似性的方法则称为基于用户的协同过滤。</p>
-<p>文中完整代码见<a href="https://github.com/WuLC/MachineLearningAlgorithm/blob/master/python/CollaborativeFiltering.py" target="_blank" rel="noopener">这里</a></p>
+<p>文中完整代码见<a href="https://github.com/WuLC/MachineLearningAlgorithm/blob/master/python/CollaborativeFiltering.py" target="_blank" rel="external">这里</a></p>
 <p>文章为笔者总结，如有错误，烦请指出</p>
 
       
@@ -608,7 +600,7 @@
 
       
         <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
             文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
@@ -619,7 +611,9 @@
 
       <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image" src="http://wulc.me/files/profile.jpg" alt="良超">
+          <img class="site-author-image" itemprop="image"
+               src="http://wulc.me/files/profile.jpg"
+               alt="良超" />
           <p class="site-author-name" itemprop="name">良超</p>
           <p class="site-description motion-element" itemprop="description">工程师要把合适的技术放在合适的位置|算法工程师首先得是个工程师</p>
         </div>
@@ -628,7 +622,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">219</span>
+                <span class="site-state-item-count">218</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -720,12 +714,12 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <center>
-<div class="copyright">
+<div class="copyright" >
   
   &copy;  2015 - 
   <span itemprop="copyrightYear">2020</span>
-  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a>
-  <br>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
+  </br>
   <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
 </div>
 </center>

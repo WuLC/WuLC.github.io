@@ -6,19 +6,19 @@
 
 
 <html class="theme-next mist use-motion" lang="zh-Hans">
-<head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform">
-<meta http-equiv="Cache-Control" content="no-siteapp">
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
 
 
-  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
 
 
 
@@ -31,7 +31,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
 
 
 
@@ -39,23 +39,23 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
-
-
-  <meta name="keywords" content="C++,链接、装载与库,">
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
+  <meta name="keywords" content="C++,链接、装载与库," />
 
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
+
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
 
 
 
@@ -63,13 +63,11 @@
 
 
 <meta name="description" content="本文是链接、装载与库中关于可执行文件装载的过程，主要描述了进程在被装载时虚拟空间是如何分布的，物理内存空间与虚拟地址空间是如何映射的，同时描述了 Linux 系统下装载一个可执行文件的基本过程。">
-<meta name="keywords" content="C++,链接、装载与库">
 <meta property="og:type" content="article">
 <meta property="og:title" content="《链接、装载与库》 阅读笔记(2)-可执行文件的装载">
 <meta property="og:url" content="http://wulc.github.io/2020/06/13/《链接、装载与库》 阅读笔记(2)-可执行文件的装载/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
 <meta property="og:description" content="本文是链接、装载与库中关于可执行文件装载的过程，主要描述了进程在被装载时虚拟空间是如何分布的，物理内存空间与虚拟地址空间是如何映射的，同时描述了 Linux 系统下装载一个可执行文件的基本过程。">
-<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/pageLoad.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/virtualaddressspace.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/pageFault.jpg">
@@ -113,7 +111,7 @@
 
 
 
-  <link rel="canonical" href="http://wulc.github.io/2020/06/13/《链接、装载与库》 阅读笔记(2)-可执行文件的装载/">
+  <link rel="canonical" href="http://wulc.github.io/2020/06/13/《链接、装载与库》 阅读笔记(2)-可执行文件的装载/"/>
 
 
 
@@ -154,7 +152,7 @@
   
 
   <div class="custom-logo-site-title">
-    <a href="/" class="brand" rel="start">
+    <a href="/"  class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <span class="site-title">吴良超的学习笔记</span>
       <span class="logo-line-after"><i></i></span>
@@ -183,7 +181,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
             首页
           </a>
@@ -193,7 +191,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
             
             标签
           </a>
@@ -203,7 +201,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
             归档
           </a>
@@ -213,7 +211,7 @@
         <li class="menu-item menu-item-about">
           <a href="/about" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
             
             关于
           </a>
@@ -226,7 +224,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
             
             站内搜索
           </a>
@@ -275,14 +273,14 @@
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="良超">
-    <meta itemprop="description" content>
+    <meta itemprop="description" content="">
     <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
   </span>
 
   <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
     <meta itemprop="name" content="吴良超的学习笔记">
     <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src>
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
     </span>
   </span>
 
@@ -325,7 +323,7 @@
 
 
           
-            <span class="post-category">
+            <span class="post-category" >
             
               <span class="post-meta-divider">|</span>
             
@@ -380,11 +378,10 @@
       
 
       
-        <p>本文是<a href="https://book.douban.com/subject/3652388/" target="_blank" rel="noopener">链接、装载与库</a>中关于可执行文件装载的过程，主要描述了进程在被装载时虚拟空间是如何分布的，物理内存空间与虚拟地址空间是如何映射的，同时描述了 Linux 系统下装载一个可执行文件的基本过程。</p>
+        <p>本文是<a href="https://book.douban.com/subject/3652388/" target="_blank" rel="external">链接、装载与库</a>中关于可执行文件装载的过程，主要描述了进程在被装载时虚拟空间是如何分布的，物理内存空间与虚拟地址空间是如何映射的，同时描述了 Linux 系统下装载一个可执行文件的基本过程。</p>
 <a id="more"></a>
-
-<h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>可执行文件只有被装载到内存后才能被 CPU 执行，因为<strong>程序执行时所需要的指令和数据必须在内存中才能正常运行</strong>，这部分细节涉及到 CPU 的内部组成架构，具体可参考文章 <a href="http://wulc.me/2020/05/30/%E7%A8%8B%E5%BA%8F%E7%9A%84%E8%A1%A8%E7%A4%BA%E3%80%81%E8%BD%AC%E6%8D%A2%E4%B8%8E%E9%93%BE%E6%8E%A5-week1/" target="_blank" rel="noopener">程序的表示、转换与链接-week1</a> 中 现代计算机的模型结构和工作原理部分</p>
-<p>而在每个程序被运行起来后都有自己独立的虚拟地址空间(Virtual Address Space), 这个**虚拟地址空间大小由计算机的硬件平台决定(CPU 的位数)**，如 32 位的 CPU 上寻址空间是 0-2^32-1(4GB)</p>
+<h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>可执行文件只有被装载到内存后才能被 CPU 执行，因为<strong>程序执行时所需要的指令和数据必须在内存中才能正常运行</strong>，这部分细节涉及到 CPU 的内部组成架构，具体可参考文章 <a href="http://wulc.me/2020/05/30/%E7%A8%8B%E5%BA%8F%E7%9A%84%E8%A1%A8%E7%A4%BA%E3%80%81%E8%BD%AC%E6%8D%A2%E4%B8%8E%E9%93%BE%E6%8E%A5-week1/" target="_blank" rel="external">程序的表示、转换与链接-week1</a> 中 现代计算机的模型结构和工作原理部分</p>
+<p>而在每个程序被运行起来后都有自己独立的虚拟地址空间(Virtual Address Space), 这个<strong>虚拟地址空间大小由计算机的硬件平台决定(CPU 的位数)</strong>，如 32 位的 CPU 上寻址空间是 0-2^32-1(4GB)</p>
 <p>但实际上这 4GB 的虚拟空间并不能全部被程序使用，因为操作系统会占掉一部分内存。<strong>如果进程访问了未经允许的地址，在 Linux 下会出现 segment fault 的错误</strong></p>
 <p>在程序装入内存过程中，往往会出现<strong>某个程序需要的内存比当前物理内存大得多的情况</strong>，这种情况下就需要动态装载了，<strong>动态装载的基本原理：程序运行时是有局部性的，因此可以将程序最常用的部分放在内存中，不常用的放在磁盘中</strong></p>
 <p>目前常用的方法是页映射(paging), 就是把内存切成小块（page）再分配，当有新的空间申请时，按照一定算法驱逐已分配内存的空间（如 FIFO、LUR）,如下图所示</p>
@@ -442,7 +439,7 @@
 <p><code>int execve(cosnt char* filename, char *const argv[], char *const envp[]);</code></p>
 <p><code>execve()</code> 在找到可执行文件后，首先会读取文件前 128 个字节，其目的是为了判断文件的格式，因为 Linux 执行的可执行文件不知 ELF 一种，还有 Java、以及以 <code>#!</code> 开始的脚本程序等</p>
 <p><strong>每种可执行文件<br>的格式的开头几个字节都是很特殊的</strong>，尤其是开头的四个字节（被称为 magic number），通过 magic number 可判断文件的格式和类型，如 ELF 文件前四个字节是 0x7F、’e’、’l’、’f’；而 Java 可执行文件格式头 4 个字节为 ‘c’、’a’、’f’、’e’；如果是 shell、python、perl 这类解释型的语言，第一行往往是 <code>#!/bin/bash</code>、 <code>#!/usr/bin/python</code>、 <code>#!/user/bin/perl</code></p>
-<p><code>execve()</code> 读取了 128 个字节的文件头部后，会调用 <code>search_binary_handle()</code> 去搜索和匹配合适的可执行文件装载处理过程，不同类型的可执行文件格式都有相应的装载处理过程，如 elf 可执行的装载处理过程叫 <code>load_elf_binary()</code>, 装载可执行脚本程序的处理过程叫 <code>load_scrip()</code> , 这里主要描述**<code>load_elf_binary()</code>的基本过程**</p>
+<p><code>execve()</code> 读取了 128 个字节的文件头部后，会调用 <code>search_binary_handle()</code> 去搜索和匹配合适的可执行文件装载处理过程，不同类型的可执行文件格式都有相应的装载处理过程，如 elf 可执行的装载处理过程叫 <code>load_elf_binary()</code>, 装载可执行脚本程序的处理过程叫 <code>load_scrip()</code> , 这里主要描述<strong><code>load_elf_binary()</code>的基本过程</strong></p>
 <ol>
 <li>检查 elf 可执行文件的有效性，比如说 magic number，program header 中 segment 的数量</li>
 <li>寻找动态链接的 .interp 段，设置动态链接的路径（后面会有一篇文章专门描述动态链接）</li>
@@ -546,7 +543,7 @@
 
       
         <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
             文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
@@ -557,7 +554,9 @@
 
       <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image" src="http://wulc.me/files/profile.jpg" alt="良超">
+          <img class="site-author-image" itemprop="image"
+               src="http://wulc.me/files/profile.jpg"
+               alt="良超" />
           <p class="site-author-name" itemprop="name">良超</p>
           <p class="site-description motion-element" itemprop="description">工程师要把合适的技术放在合适的位置|算法工程师首先得是个工程师</p>
         </div>
@@ -566,7 +565,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">219</span>
+                <span class="site-state-item-count">218</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -658,12 +657,12 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <center>
-<div class="copyright">
+<div class="copyright" >
   
   &copy;  2015 - 
   <span itemprop="copyrightYear">2020</span>
-  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a>
-  <br>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
+  </br>
   <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
 </div>
 </center>

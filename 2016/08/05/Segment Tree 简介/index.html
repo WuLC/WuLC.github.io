@@ -6,19 +6,19 @@
 
 
 <html class="theme-next mist use-motion" lang="zh-Hans">
-<head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform">
-<meta http-equiv="Cache-Control" content="no-siteapp">
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
 
 
-  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
 
 
 
@@ -31,7 +31,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
 
 
 
@@ -39,23 +39,23 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
-
-
-  <meta name="keywords" content="python,树,">
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
+  <meta name="keywords" content="python,树," />
 
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
+
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
 
 
 
@@ -63,13 +63,11 @@
 
 
 <meta name="description" content="简介本文主要通过实际例子介绍segment tree这种数据结构及其应用。以LeetCode上的一道题目 307. Range Sum Query - Mutable 为例说明。">
-<meta name="keywords" content="python,树">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Segment Tree 简介">
 <meta property="og:url" content="http://wulc.github.io/2016/08/05/Segment Tree 简介/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
 <meta property="og:description" content="简介本文主要通过实际例子介绍segment tree这种数据结构及其应用。以LeetCode上的一道题目 307. Range Sum Query - Mutable 为例说明。">
-<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/5b8h8udutsnxggzzrqdkzf5h/image_1aq9tfpv116lq1o751cb45a5cjkg.png">
 <meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/1i094tw61ydrar5a9yi4qzt6/image_1aq9ubbr119e88cf1coe1j9v172jt.png">
 <meta property="og:updated_time" content="2019-06-01T09:14:44.087Z">
@@ -104,7 +102,7 @@
 
 
 
-  <link rel="canonical" href="http://wulc.github.io/2016/08/05/Segment Tree 简介/">
+  <link rel="canonical" href="http://wulc.github.io/2016/08/05/Segment Tree 简介/"/>
 
 
 
@@ -145,7 +143,7 @@
   
 
   <div class="custom-logo-site-title">
-    <a href="/" class="brand" rel="start">
+    <a href="/"  class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <span class="site-title">吴良超的学习笔记</span>
       <span class="logo-line-after"><i></i></span>
@@ -174,7 +172,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
             首页
           </a>
@@ -184,7 +182,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
             
             标签
           </a>
@@ -194,7 +192,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
             归档
           </a>
@@ -204,7 +202,7 @@
         <li class="menu-item menu-item-about">
           <a href="/about" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
             
             关于
           </a>
@@ -217,7 +215,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
             
             站内搜索
           </a>
@@ -266,14 +264,14 @@
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="良超">
-    <meta itemprop="description" content>
+    <meta itemprop="description" content="">
     <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
   </span>
 
   <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
     <meta itemprop="name" content="吴良超的学习笔记">
     <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src>
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
     </span>
   </span>
 
@@ -316,7 +314,7 @@
 
 
           
-            <span class="post-category">
+            <span class="post-category" >
             
               <span class="post-meta-divider">|</span>
             
@@ -371,28 +369,24 @@
       
 
       
-        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>本文主要通过实际例子介绍<code>segment tree</code>这种数据结构及其应用。以LeetCode上的一道题目 <a href="https://leetcode.com/problems/range-sum-query-mutable/" target="_blank" rel="noopener">307. Range Sum Query - Mutable</a> 为例说明。</p>
+        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>本文主要通过实际例子介绍<code>segment tree</code>这种数据结构及其应用。以LeetCode上的一道题目 <a href="https://leetcode.com/problems/range-sum-query-mutable/" target="_blank" rel="external">307. Range Sum Query - Mutable</a> 为例说明。</p>
 <a id="more"></a>
-<p>这道题目<a href="https://leetcode.com/problems/range-sum-query-mutable/" target="_blank" rel="noopener">307. Range Sum Query - Mutable</a>要求求数组的区间和，但是有个额外条件，就是<strong>会进行多次数组区间求和以及数组元素的更新的操作。</strong></p>
-<p>从正常的思路出发，每次求和的时间复杂度为$O(n)$， 更新数组元素的时间复杂度为$O(1)$, 因此总体的时间复杂度为 $O(n)$。而参考 <a href="https://leetcode.com/problems/range-sum-query-immutable/" target="_blank" rel="noopener">303. Range Sum Query - Immutable</a> 可以实现求和的时间复杂度为$O(1)$, 但更新数组元素的时间复杂度为$O(n)$，所以总体的时间复杂度也是 $O(n)$。</p>
+<p>这道题目<a href="https://leetcode.com/problems/range-sum-query-mutable/" target="_blank" rel="external">307. Range Sum Query - Mutable</a>要求求数组的区间和，但是有个额外条件，就是<strong>会进行多次数组区间求和以及数组元素的更新的操作。</strong></p>
+<p>从正常的思路出发，每次求和的时间复杂度为$O(n)$， 更新数组元素的时间复杂度为$O(1)$, 因此总体的时间复杂度为 $O(n)$。而参考 <a href="https://leetcode.com/problems/range-sum-query-immutable/" target="_blank" rel="external">303. Range Sum Query - Immutable</a> 可以实现求和的时间复杂度为$O(1)$, 但更新数组元素的时间复杂度为$O(n)$，所以总体的时间复杂度也是 $O(n)$。</p>
 <p><strong>上面两种方法的总体时间复杂度均为$O(n)$, 但是通过我们下面要介绍的Segment Tree，能够将求和以及更新数组元素操作的时间复杂度均变为</strong> $O(log_2n)$。</p>
 <p>Segment Tree是一棵二叉树，其特点为<strong>叶子节点个数与数组的长度相同 从左到右依次为数组中下标从小到大的元素的值，父节点的值为其左右的叶子节点的值的和</strong>。如下图是一个简单的例子</p>
-<p><img src="http://static.zybuluo.com/WuLiangchao/5b8h8udutsnxggzzrqdkzf5h/image_1aq9tfpv116lq1o751cb45a5cjkg.png"></p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/5b8h8udutsnxggzzrqdkzf5h/image_1aq9tfpv116lq1o751cb45a5cjkg.png" alt=""></p>
 <p>因此可以看到每个非叶子节点的值均是代表了数组某个区间的和。下面分别讲述如何构造这棵树，更新某个元素的值以及对特定区间求和。</p>
 <h2 id="建树"><a href="#建树" class="headerlink" title="建树"></a>建树</h2><p>虽然逻辑上是一棵二叉树，但是实际存储时可以通过数组来实现，通过父子节点的下标的数值关系可以访问父节点的子节点。然后需要求出数组的大小，<strong>因为这是一棵满二叉树（full binary tree，具体定义见下），而且数组下标必须是连续的，因此需要的最大空间</strong>为${\displaystyle \sum _{k=0}^{m}2^k}$,其中m为二叉树的高度(从0开始计算，如上图的高度为3)。</p>
-<p><img src="http://static.zybuluo.com/WuLiangchao/1i094tw61ydrar5a9yi4qzt6/image_1aq9ubbr119e88cf1coe1j9v172jt.png"></p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/1i094tw61ydrar5a9yi4qzt6/image_1aq9ubbr119e88cf1coe1j9v172jt.png" alt=""></p>
 <p>具体实现则通过递归，每次记录当前的节点的下标以及表示的数组的范围，如下为建树的python代码,其中<code>seg_tree</code>为建立的segment tree，<code>nums</code>为原数组，<code>curr</code> 为segmen tree中当前节点的下标，<code>start、end</code> 为以 <code>curr</code> 包含的 <code>nums</code> 数组的下标范围。</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">build_tree</span><span class="params">(start, end, curr)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> start &gt; end: <span class="keyword">return</span> </span><br><span class="line">        <span class="keyword">if</span> start == end:</span><br><span class="line">            seg_tree[curr] = nums[start]</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            mid = start + (end - start)/<span class="number">2</span></span><br><span class="line">            seg_tree[curr] = build_tree(start, mid, curr*<span class="number">2</span>+<span class="number">1</span>) + build_tree(mid+<span class="number">1</span>, end, curr*<span class="number">2</span>+<span class="number">2</span>)</span><br><span class="line">        <span class="keyword">return</span> seg_tree[curr]</span><br></pre></td></tr></table></figure>
-
 <h2 id="更新元素"><a href="#更新元素" class="headerlink" title="更新元素"></a>更新元素</h2><p>更新元素需要更新两个地方，一是原数组对应的下标的值，另外一个是包含了这个元素的segment tree中的节点的值。具体也是通过递归实现，下面是更新segment tree中所有包含原数组下标为 <code>idx</code> 的元素的节点的值的python代码， diff是下标为<code>idx</code>的新值与旧值之差。可见时间复杂度为$O(log_2n)$,n为原数组元素的个数。</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">update_sum</span><span class="params">( start, end, idx, curr, diff)</span>:</span></span><br><span class="line">        seg_tree[curr] += diff</span><br><span class="line">        <span class="keyword">if</span> start == end: <span class="keyword">return</span></span><br><span class="line">        mid = start + (end - start)/<span class="number">2</span></span><br><span class="line">        <span class="keyword">if</span> start &lt;= idx &lt;= mid:</span><br><span class="line">            update_sum(start, mid, idx, curr*<span class="number">2</span>+<span class="number">1</span>, diff)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            update_sum(mid+<span class="number">1</span>, end, idx, curr*<span class="number">2</span>+<span class="number">2</span>, diff)</span><br></pre></td></tr></table></figure>
-
 <h2 id="求区间和"><a href="#求区间和" class="headerlink" title="求区间和"></a>求区间和</h2><p>求区间和也是通过递归实现，关键在于根据当前节点表示的范围以及需要求的区间的范围的关系进行求和。下面是实现的求区间<code>[qstart, qend]</code>的和的python代码。可见时间复杂度为$O(log_2n)$,n为原数组元素的个数。</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_sum</span><span class="params">(start, end, qstart, qend, curr)</span>:</span></span><br><span class="line">        mid = start + (end - start)/<span class="number">2</span></span><br><span class="line">        <span class="keyword">if</span> qstart &gt; end <span class="keyword">or</span> qend &lt; start:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        <span class="keyword">elif</span> start &gt;= qstart <span class="keyword">and</span> end &lt;= qend:</span><br><span class="line">            <span class="keyword">return</span> seg_tree[curr]</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> get_sum(start, mid, qstart, qend, curr*<span class="number">2</span>+<span class="number">1</span>) + get_sum(mid+<span class="number">1</span>, end, qstart, qend, curr*<span class="number">2</span>+<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
-
-<h2 id="实际例子"><a href="#实际例子" class="headerlink" title="实际例子"></a>实际例子</h2><p>下面结合上面讲述的三个步骤以及LeetCode上的题目<a href="https://leetcode.com/problems/range-sum-query-mutable/" target="_blank" rel="noopener">307. Range Sum Query - Mutable</a> 给出完整的AC代码入下:</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">NumArray</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, nums)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        initialize your data structure here.</span></span><br><span class="line"><span class="string">        :type nums: List[int]</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        n = len(nums)</span><br><span class="line">        <span class="keyword">if</span> n == <span class="number">0</span>: <span class="keyword">return</span></span><br><span class="line">        max_size = <span class="number">2</span> * pow(<span class="number">2</span>, int(math.ceil(math.log(n, <span class="number">2</span>)))) - <span class="number">1</span></span><br><span class="line">        self.seg_tree = [<span class="number">0</span> <span class="keyword">for</span> i <span class="keyword">in</span> xrange(max_size)]</span><br><span class="line">        self.nums = nums[:]</span><br><span class="line">        self.build_tree(<span class="number">0</span>, n<span class="number">-1</span>, <span class="number">0</span>)</span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">build_tree</span><span class="params">(self, start, end, curr)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> start &gt; end: <span class="keyword">return</span> <span class="comment"># empty list</span></span><br><span class="line">        <span class="keyword">if</span> start == end:</span><br><span class="line">            self.seg_tree[curr] = self.nums[start]</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            mid = start + (end - start)/<span class="number">2</span></span><br><span class="line">            self.seg_tree[curr] = self.build_tree(start, mid, curr*<span class="number">2</span>+<span class="number">1</span>) + self.build_tree(mid+<span class="number">1</span>, end, curr*<span class="number">2</span>+<span class="number">2</span>)</span><br><span class="line">        <span class="keyword">return</span> self.seg_tree[curr]        </span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">update</span><span class="params">(self, i, val)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        :type i: int</span></span><br><span class="line"><span class="string">        :type val: int</span></span><br><span class="line"><span class="string">        :rtype: int</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        diff = val - self.nums[i]</span><br><span class="line">        self.nums[i] = val</span><br><span class="line">        self.update_sum(<span class="number">0</span>, len(self.nums)<span class="number">-1</span>, i, <span class="number">0</span>, diff)</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">update_sum</span><span class="params">(self, start, end, idx, curr, diff)</span>:</span></span><br><span class="line">        self.seg_tree[curr] += diff</span><br><span class="line">        <span class="keyword">if</span> start == end: <span class="keyword">return</span></span><br><span class="line">        mid = start + (end - start)/<span class="number">2</span></span><br><span class="line">        <span class="keyword">if</span> start &lt;= idx &lt;= mid:</span><br><span class="line">            self.update_sum(start, mid, idx, curr*<span class="number">2</span>+<span class="number">1</span>, diff)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.update_sum(mid+<span class="number">1</span>, end, idx, curr*<span class="number">2</span>+<span class="number">2</span>, diff)</span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">sumRange</span><span class="params">(self, i, j)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        sum of elements nums[i..j], inclusive.</span></span><br><span class="line"><span class="string">        :type i: int</span></span><br><span class="line"><span class="string">        :type j: int</span></span><br><span class="line"><span class="string">        :rtype: int</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        <span class="keyword">return</span> self.get_sum(<span class="number">0</span>, len(self.nums)<span class="number">-1</span>, i, j, <span class="number">0</span>)</span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_sum</span><span class="params">(self, start, end, qstart, qend, curr)</span>:</span></span><br><span class="line">        mid = start + (end - start)/<span class="number">2</span></span><br><span class="line">        <span class="keyword">if</span> qstart &gt; end <span class="keyword">or</span> qend &lt; start:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        <span class="keyword">elif</span> start &gt;= qstart <span class="keyword">and</span> end &lt;= qend:</span><br><span class="line">            <span class="keyword">return</span> self.seg_tree[curr]</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> self.get_sum(start, mid, qstart, qend, curr*<span class="number">2</span>+<span class="number">1</span>) + self.get_sum(mid+<span class="number">1</span>, end, qstart, qend, curr*<span class="number">2</span>+<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
-
+<h2 id="实际例子"><a href="#实际例子" class="headerlink" title="实际例子"></a>实际例子</h2><p>下面结合上面讲述的三个步骤以及LeetCode上的题目<a href="https://leetcode.com/problems/range-sum-query-mutable/" target="_blank" rel="external">307. Range Sum Query - Mutable</a> 给出完整的AC代码入下:</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">NumArray</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, nums)</span>:</span></span><br><span class="line">        <span class="string">"""</span><br><span class="line">        initialize your data structure here.</span><br><span class="line">        :type nums: List[int]</span><br><span class="line">        """</span></span><br><span class="line">        n = len(nums)</span><br><span class="line">        <span class="keyword">if</span> n == <span class="number">0</span>: <span class="keyword">return</span></span><br><span class="line">        max_size = <span class="number">2</span> * pow(<span class="number">2</span>, int(math.ceil(math.log(n, <span class="number">2</span>)))) - <span class="number">1</span></span><br><span class="line">        self.seg_tree = [<span class="number">0</span> <span class="keyword">for</span> i <span class="keyword">in</span> xrange(max_size)]</span><br><span class="line">        self.nums = nums[:]</span><br><span class="line">        self.build_tree(<span class="number">0</span>, n<span class="number">-1</span>, <span class="number">0</span>)</span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">build_tree</span><span class="params">(self, start, end, curr)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> start &gt; end: <span class="keyword">return</span> <span class="comment"># empty list</span></span><br><span class="line">        <span class="keyword">if</span> start == end:</span><br><span class="line">            self.seg_tree[curr] = self.nums[start]</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            mid = start + (end - start)/<span class="number">2</span></span><br><span class="line">            self.seg_tree[curr] = self.build_tree(start, mid, curr*<span class="number">2</span>+<span class="number">1</span>) + self.build_tree(mid+<span class="number">1</span>, end, curr*<span class="number">2</span>+<span class="number">2</span>)</span><br><span class="line">        <span class="keyword">return</span> self.seg_tree[curr]        </span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">update</span><span class="params">(self, i, val)</span>:</span></span><br><span class="line">        <span class="string">"""</span><br><span class="line">        :type i: int</span><br><span class="line">        :type val: int</span><br><span class="line">        :rtype: int</span><br><span class="line">        """</span></span><br><span class="line">        diff = val - self.nums[i]</span><br><span class="line">        self.nums[i] = val</span><br><span class="line">        self.update_sum(<span class="number">0</span>, len(self.nums)<span class="number">-1</span>, i, <span class="number">0</span>, diff)</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">update_sum</span><span class="params">(self, start, end, idx, curr, diff)</span>:</span></span><br><span class="line">        self.seg_tree[curr] += diff</span><br><span class="line">        <span class="keyword">if</span> start == end: <span class="keyword">return</span></span><br><span class="line">        mid = start + (end - start)/<span class="number">2</span></span><br><span class="line">        <span class="keyword">if</span> start &lt;= idx &lt;= mid:</span><br><span class="line">            self.update_sum(start, mid, idx, curr*<span class="number">2</span>+<span class="number">1</span>, diff)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.update_sum(mid+<span class="number">1</span>, end, idx, curr*<span class="number">2</span>+<span class="number">2</span>, diff)</span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">sumRange</span><span class="params">(self, i, j)</span>:</span></span><br><span class="line">        <span class="string">"""</span><br><span class="line">        sum of elements nums[i..j], inclusive.</span><br><span class="line">        :type i: int</span><br><span class="line">        :type j: int</span><br><span class="line">        :rtype: int</span><br><span class="line">        """</span></span><br><span class="line">        <span class="keyword">return</span> self.get_sum(<span class="number">0</span>, len(self.nums)<span class="number">-1</span>, i, j, <span class="number">0</span>)</span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_sum</span><span class="params">(self, start, end, qstart, qend, curr)</span>:</span></span><br><span class="line">        mid = start + (end - start)/<span class="number">2</span></span><br><span class="line">        <span class="keyword">if</span> qstart &gt; end <span class="keyword">or</span> qend &lt; start:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        <span class="keyword">elif</span> start &gt;= qstart <span class="keyword">and</span> end &lt;= qend:</span><br><span class="line">            <span class="keyword">return</span> self.seg_tree[curr]</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> self.get_sum(start, mid, qstart, qend, curr*<span class="number">2</span>+<span class="number">1</span>) + self.get_sum(mid+<span class="number">1</span>, end, qstart, qend, curr*<span class="number">2</span>+<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -487,7 +481,7 @@
 
       
         <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
             文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
@@ -498,7 +492,9 @@
 
       <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image" src="http://wulc.me/files/profile.jpg" alt="良超">
+          <img class="site-author-image" itemprop="image"
+               src="http://wulc.me/files/profile.jpg"
+               alt="良超" />
           <p class="site-author-name" itemprop="name">良超</p>
           <p class="site-description motion-element" itemprop="description">工程师要把合适的技术放在合适的位置|算法工程师首先得是个工程师</p>
         </div>
@@ -507,7 +503,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">219</span>
+                <span class="site-state-item-count">218</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -599,12 +595,12 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <center>
-<div class="copyright">
+<div class="copyright" >
   
   &copy;  2015 - 
   <span itemprop="copyrightYear">2020</span>
-  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a>
-  <br>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
+  </br>
   <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
 </div>
 </center>

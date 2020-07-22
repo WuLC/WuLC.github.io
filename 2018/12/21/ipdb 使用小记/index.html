@@ -6,19 +6,19 @@
 
 
 <html class="theme-next mist use-motion" lang="zh-Hans">
-<head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform">
-<meta http-equiv="Cache-Control" content="no-siteapp">
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
 
 
-  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
 
 
 
@@ -31,7 +31,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
 
 
 
@@ -39,23 +39,23 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
-
-
-  <meta name="keywords" content="python,工具使用,">
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
+  <meta name="keywords" content="python,工具使用," />
 
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
+
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
 
 
 
@@ -63,13 +63,11 @@
 
 
 <meta name="description" content="最近在魔改 loss function，涉及到很多矩阵运算，而矩阵运算中维度的对齐免不了要多次的调试；沿袭着之前的 print 大法弄了一段时间后，不仅代码凌乱不堪，而且心累：每次 import tensorflow as tf 都要十几秒，然后 print 完之后想进一步看其他变量的信息，又要重新执行一遍。后来找到了 ipdb 这个好用的工具，才发现自己过去调试程序的方法是多么的低效和 naiv">
-<meta name="keywords" content="python,工具使用">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ipdb 使用小记">
 <meta property="og:url" content="http://wulc.github.io/2018/12/21/ipdb 使用小记/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
 <meta property="og:description" content="最近在魔改 loss function，涉及到很多矩阵运算，而矩阵运算中维度的对齐免不了要多次的调试；沿袭着之前的 print 大法弄了一段时间后，不仅代码凌乱不堪，而且心累：每次 import tensorflow as tf 都要十几秒，然后 print 完之后想进一步看其他变量的信息，又要重新执行一遍。后来找到了 ipdb 这个好用的工具，才发现自己过去调试程序的方法是多么的低效和 naiv">
-<meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2019-06-01T09:14:44.095Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ipdb 使用小记">
@@ -101,7 +99,7 @@
 
 
 
-  <link rel="canonical" href="http://wulc.github.io/2018/12/21/ipdb 使用小记/">
+  <link rel="canonical" href="http://wulc.github.io/2018/12/21/ipdb 使用小记/"/>
 
 
 
@@ -142,7 +140,7 @@
   
 
   <div class="custom-logo-site-title">
-    <a href="/" class="brand" rel="start">
+    <a href="/"  class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <span class="site-title">吴良超的学习笔记</span>
       <span class="logo-line-after"><i></i></span>
@@ -171,7 +169,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
             首页
           </a>
@@ -181,7 +179,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
             
             标签
           </a>
@@ -191,7 +189,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
             归档
           </a>
@@ -201,7 +199,7 @@
         <li class="menu-item menu-item-about">
           <a href="/about" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
             
             关于
           </a>
@@ -214,7 +212,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
             
             站内搜索
           </a>
@@ -263,14 +261,14 @@
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="良超">
-    <meta itemprop="description" content>
+    <meta itemprop="description" content="">
     <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
   </span>
 
   <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
     <meta itemprop="name" content="吴良超的学习笔记">
     <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src>
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
     </span>
   </span>
 
@@ -313,7 +311,7 @@
 
 
           
-            <span class="post-category">
+            <span class="post-category" >
             
               <span class="post-meta-divider">|</span>
             
@@ -368,14 +366,12 @@
       
 
       
-        <p>最近在魔改 loss function，涉及到很多矩阵运算，而矩阵运算中维度的对齐免不了要多次的调试；沿袭着之前的 print 大法弄了一段时间后，不仅代码凌乱不堪，而且心累：每次 <code>import tensorflow as tf</code> 都要十几秒，然后 print 完之后想进一步看其他变量的信息，又要重新执行一遍。后来找到了 <a href="https://pypi.org/project/ipdb/" target="_blank" rel="noopener">ipdb</a> 这个好用的工具，才发现自己过去调试程序的方法是多么的低效和 naive。</p>
+        <p>最近在魔改 loss function，涉及到很多矩阵运算，而矩阵运算中维度的对齐免不了要多次的调试；沿袭着之前的 print 大法弄了一段时间后，不仅代码凌乱不堪，而且心累：每次 <code>import tensorflow as tf</code> 都要十几秒，然后 print 完之后想进一步看其他变量的信息，又要重新执行一遍。后来找到了 <a href="https://pypi.org/project/ipdb/" target="_blank" rel="external">ipdb</a> 这个好用的工具，才发现自己过去调试程序的方法是多么的低效和 naive。</p>
 <a id="more"></a>
-
-<p>python 提供了一个默认的 debugger：<a href="https://docs.python.org/3.5/library/pdb.html" target="_blank" rel="noopener">pdb</a>，而 ipdb 则是 pdb 的增强版，提供了补全、语法高亮等功能，类似于 ipython 与 python 默认的交互终端的关系，通过 <code>pip install ipdb</code> 即可安装 ipdb。</p>
+<p>python 提供了一个默认的 debugger：<a href="https://docs.python.org/3.5/library/pdb.html" target="_blank" rel="external">pdb</a>，而 ipdb 则是 pdb 的增强版，提供了补全、语法高亮等功能，类似于 ipython 与 python 默认的交互终端的关系，通过 <code>pip install ipdb</code> 即可安装 ipdb。</p>
 <h2 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h2><p>ipdb 的使用方法一般有两种：<strong>集成到源代码或通过命令交互</strong>。</p>
 <p>集成到源代码可以直接在代码指定位置插入断点。如下所示：</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> ipdb</span><br><span class="line">var1 = <span class="number">23</span></span><br><span class="line">ipdb.set_trace()</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-
 <p>上面的代码会在执行完 <code>var1 = 23</code> 这条语句之后停止，展开 ipython 环境，之后就可以自由地调试了。</p>
 <p>上面的方式虽然简单，但是存在着两个较为比较明显的问题：</p>
 <ol>
@@ -386,7 +382,6 @@
 <p><code>python -m ipdb code.py</code></p>
 <p>接着就是通过一些常用的命令来进行 debug了，如上面插入断点的样例代码就可以通过以下命令达到同样效果：</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$python -m ipdb code.py</span><br><span class="line">ipdb&gt; b <span class="number">3</span></span><br><span class="line">Breakpoint <span class="number">1</span> at /test.py:<span class="number">3</span></span><br><span class="line">ipdb&gt; c</span><br></pre></td></tr></table></figure>
-
 <p>上面的命令 <code>b 3</code> 表示在第三行设置一个断点，然后通过命令 <code>c</code> 一直执行至断点处，接着就会展开 ipython 环境进行调试了。（<code>b</code> 和 <code>c</code> 分别代表了 break 和 continue，可以用整条命令，也可以只用首字母）</p>
 <h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><p>上面的设置断点和一直执行至断点是比较常见的用法，除此之外，还有其他一些常用命令。</p>
 <h3 id="帮助"><a href="#帮助" class="headerlink" title="帮助"></a>帮助</h3><p>通过命令 <code>h</code> 可以列出所有命令，后面跟上具体的命令如 <code>h command</code> 则可以显示出这条命令的具体作用，非常有用，依靠这条命令能够节省不少 google 的次数。</p>
@@ -404,7 +399,7 @@
 <h3 id="忽略某段代码"><a href="#忽略某段代码" class="headerlink" title="忽略某段代码"></a>忽略某段代码</h3><p>使用 <code>j line_number</code> 可以忽略某段代码，下一步直接从 line_number 开始执行。</p>
 <h3 id="查看源码"><a href="#查看源码" class="headerlink" title="查看源码"></a>查看源码</h3><p>通过命令 <code>l</code> 或 <code>ll</code> 可查看源码， <code>ll</code> 是查看整个源码文件， <code>l</code> 可指定需要查看的行数，默认是当前往后 11 行，也可指定具体的范围，如 <code>l 2,5</code> 是查看第 2-5 行的源码。</p>
 <h3 id="重启或退出-debugger"><a href="#重启或退出-debugger" class="headerlink" title="重启或退出 debugger"></a>重启或退出 debugger</h3><p>上面已经提到了重启 debugger 可通过 <code>restart</code> 或 <code>run</code> 命令，需要注意的是，<strong>重启 debugger 后断点、debugger 的设置等是会保留的。</strong>如果要一个全新的 debugger，可通过命令 <code>q</code>、<code>quit</code> 或 <code>exit</code> 退出 debugger 后进入。</p>
-<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>以上就是 ipdb 的一些基本用法, 除此之外，更多的用法可参考 <a href="https://docs.python.org/3.5/library/pdb.html" target="_blank" rel="noopener">pdb 的官方文档</a>，ipdb 的命令跟 pdb 是一样的。另外，gdb 也是一个类似的命令行 debugger，只是一般用来调试 C/C++ 而已，使用的方法类似，甚至很多命令的名称更 pdb 都一样，具体可参考 <a href="http://wiki.ubuntu.org.cn/%E7%94%A8GDB%E8%B0%83%E8%AF%95%E7%A8%8B%E5%BA%8F" target="_blank" rel="noopener">用GDB调试程序</a>。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>以上就是 ipdb 的一些基本用法, 除此之外，更多的用法可参考 <a href="https://docs.python.org/3.5/library/pdb.html" target="_blank" rel="external">pdb 的官方文档</a>，ipdb 的命令跟 pdb 是一样的。另外，gdb 也是一个类似的命令行 debugger，只是一般用来调试 C/C++ 而已，使用的方法类似，甚至很多命令的名称更 pdb 都一样，具体可参考 <a href="http://wiki.ubuntu.org.cn/%E7%94%A8GDB%E8%B0%83%E8%AF%95%E7%A8%8B%E5%BA%8F" target="_blank" rel="external">用GDB调试程序</a>。</p>
 
       
     </div>
@@ -499,7 +494,7 @@
 
       
         <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
             文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
@@ -510,7 +505,9 @@
 
       <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image" src="http://wulc.me/files/profile.jpg" alt="良超">
+          <img class="site-author-image" itemprop="image"
+               src="http://wulc.me/files/profile.jpg"
+               alt="良超" />
           <p class="site-author-name" itemprop="name">良超</p>
           <p class="site-description motion-element" itemprop="description">工程师要把合适的技术放在合适的位置|算法工程师首先得是个工程师</p>
         </div>
@@ -519,7 +516,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">219</span>
+                <span class="site-state-item-count">218</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -611,12 +608,12 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <center>
-<div class="copyright">
+<div class="copyright" >
   
   &copy;  2015 - 
   <span itemprop="copyrightYear">2020</span>
-  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a>
-  <br>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
+  </br>
   <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
 </div>
 </center>

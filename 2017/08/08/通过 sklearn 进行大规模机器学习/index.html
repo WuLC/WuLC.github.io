@@ -6,19 +6,19 @@
 
 
 <html class="theme-next mist use-motion" lang="zh-Hans">
-<head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform">
-<meta http-equiv="Cache-Control" content="no-siteapp">
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
 
 
-  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
 
 
 
@@ -31,7 +31,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
 
 
 
@@ -39,23 +39,23 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
-
-
-  <meta name="keywords" content="机器学习,">
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
+  <meta name="keywords" content="机器学习," />
 
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
+
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
 
 
 
@@ -63,13 +63,11 @@
 
 
 <meta name="description" content="sklearn 是 python 中一个非常著名的机器学习库，但是一般都是在单机上使用而不支持分布式计算，因此往往跟大规模的机器学习扯不上关系。这里通过 sklearn 进行的大规模机器学习指的也不是分布式机器学习，而是指当数据量比内存要大时怎么通过 sklearn 进行机器学习，更准确来说是 out-of-core learning， 这里涉及到的一个核心思想是将数据转化为流式输入，然后通过 S">
-<meta name="keywords" content="机器学习">
 <meta property="og:type" content="article">
 <meta property="og:title" content="通过 sklearn 进行大规模机器学习">
 <meta property="og:url" content="http://wulc.github.io/2017/08/08/通过 sklearn 进行大规模机器学习/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
 <meta property="og:description" content="sklearn 是 python 中一个非常著名的机器学习库，但是一般都是在单机上使用而不支持分布式计算，因此往往跟大规模的机器学习扯不上关系。这里通过 sklearn 进行的大规模机器学习指的也不是分布式机器学习，而是指当数据量比内存要大时怎么通过 sklearn 进行机器学习，更准确来说是 out-of-core learning， 这里涉及到的一个核心思想是将数据转化为流式输入，然后通过 S">
-<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/f0rtyrrwk3uxl4seqh4dpgrm/image_1botg5pjo18qluja1gjrl46sc29.png">
 <meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/vylv1bty2k7ob40201f4spox/image_1botg6tsg18e04d0vpvcip6q0m.png">
 <meta property="og:updated_time" content="2019-06-01T09:14:44.208Z">
@@ -104,7 +102,7 @@
 
 
 
-  <link rel="canonical" href="http://wulc.github.io/2017/08/08/通过 sklearn 进行大规模机器学习/">
+  <link rel="canonical" href="http://wulc.github.io/2017/08/08/通过 sklearn 进行大规模机器学习/"/>
 
 
 
@@ -145,7 +143,7 @@
   
 
   <div class="custom-logo-site-title">
-    <a href="/" class="brand" rel="start">
+    <a href="/"  class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <span class="site-title">吴良超的学习笔记</span>
       <span class="logo-line-after"><i></i></span>
@@ -174,7 +172,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
             首页
           </a>
@@ -184,7 +182,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
             
             标签
           </a>
@@ -194,7 +192,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
             归档
           </a>
@@ -204,7 +202,7 @@
         <li class="menu-item menu-item-about">
           <a href="/about" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
             
             关于
           </a>
@@ -217,7 +215,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
             
             站内搜索
           </a>
@@ -266,14 +264,14 @@
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="良超">
-    <meta itemprop="description" content>
+    <meta itemprop="description" content="">
     <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
   </span>
 
   <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
     <meta itemprop="name" content="吴良超的学习笔记">
     <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src>
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
     </span>
   </span>
 
@@ -316,7 +314,7 @@
 
 
           
-            <span class="post-category">
+            <span class="post-category" >
             
               <span class="post-meta-divider">|</span>
             
@@ -362,7 +360,6 @@
       
         <p>sklearn 是 python 中一个非常著名的机器学习库，但是一般都是在单机上使用而不支持分布式计算，因此往往跟大规模的机器学习扯不上关系。这里通过 sklearn 进行的大规模机器学习指的也不是分布式机器学习，而是指<strong>当数据量比内存要大时怎么通过 sklearn 进行机器学习，更准确来说是 out-of-core learning</strong>， 这里涉及到的一个核心思想是<strong>将数据转化为流式输入，然后通过 SGD 更新模型的参数，</strong>当然其中还涉及到一些其他的细节和trick，下面会详细描述。</p>
 <a id="more"></a>
-
 <h2 id="out-of-core-learning"><a href="#out-of-core-learning" class="headerlink" title="out-of-core learning"></a>out-of-core learning</h2><p>上面的问题也称为 out-of-core learning， 指的是机器的内存无法容纳训练的数据集， 但是硬盘可容纳这些数据，这种情况在数据集较大的时候比较常见，一般有两种解决方法：<strong>sampling 与 mini-batch learning</strong>。</p>
 <p>第一种方法是 sampling（采样），采样 可以针对样本数目或样本特征，能够减少样本的数量或者feature的数目，两者均能减小整个数据集所占内存，但是采样无可避免地会丢失掉原来数据集中的一些信息（当数据没有冗余的时候），这会导致 variance inflation 问题，也就是进行若干次采样，每次训练得出的模型之间差异都比较大。用 bias-variance 来解释就是出现了high variance，原因是每次采样得到的数据中都有随机噪声，而模型拟合了这些没有规律的噪声，从而导致了每次得到的模型都不一样。</p>
 <p><strong>解决采样带来的 high-variance 问题，可以通过训练多个采样模型，然后将其进行集成，采用这种思路典型的方法有 bagging。</strong></p>
@@ -370,53 +367,40 @@
 <p>通过 SGD 进行训练时，需要流式（streaming）读取训练样本，同时注意的是要将样本的顺序随机打乱,以消除样本顺序带来的信息，如先用正样本训练，再用负样本训练，模型会偏向于将样本预测为负。下面主要讲述如何将磁盘上的数据流式化并送入到模型中进行训练。</p>
 <h2 id="流式读取数据"><a href="#流式读取数据" class="headerlink" title="流式读取数据"></a>流式读取数据</h2><h3 id="文件读取"><a href="#文件读取" class="headerlink" title="文件读取"></a>文件读取</h3><p>这里读取的数据的格式是每行存储一个样本。最简单的方法就是通过 python 读取文件的 <code>readline</code> 方法实现</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> open(source_file, <span class="string">'rb'</span>) <span class="keyword">as</span> f:</span><br><span class="line">    line = f.readline()</span><br><span class="line">    <span class="keyword">while</span> line:</span><br><span class="line">        <span class="comment"># data processing</span></span><br><span class="line">        <span class="comment"># training</span></span><br><span class="line">        line = f.readline()</span><br></pre></td></tr></table></figure>
-
-<p>而往往训练文件都是 csv 格式的，此时需要丢弃第一行，同时可通过 <code>csv</code> 模块进行读取，下面以这个数据文件为例说明：<a href="https://archive.ics.uci.edu/ml/machine-learning-databases/00275/Bike-Sharing-Dataset.zip" target="_blank" rel="noopener">https://archive.ics.uci.edu/ml/machine-learning-databases/00275/Bike-Sharing-Dataset.zip</a></p>
+<p>而往往训练文件都是 csv 格式的，此时需要丢弃第一行，同时可通过 <code>csv</code> 模块进行读取，下面以这个数据文件为例说明：<a href="https://archive.ics.uci.edu/ml/machine-learning-databases/00275/Bike-Sharing-Dataset.zip" target="_blank" rel="external">https://archive.ics.uci.edu/ml/machine-learning-databases/00275/Bike-Sharing-Dataset.zip</a></p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">SEP = <span class="string">','</span> </span><br><span class="line"><span class="keyword">with</span> open(source_file, <span class="string">'rb'</span>) <span class="keyword">as</span> f:</span><br><span class="line">    iterator = csv.reader(f, delimiter = SEP)</span><br><span class="line">    <span class="keyword">for</span> n, row <span class="keyword">in</span> enumerate(iterator):</span><br><span class="line">        <span class="keyword">if</span> n == <span class="number">0</span>:</span><br><span class="line">            header = row</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># data processing</span></span><br><span class="line">            <span class="comment"># training</span></span><br><span class="line">            <span class="keyword">pass</span></span><br><span class="line">    <span class="keyword">print</span> (<span class="string">'Total rows: %i'</span> % (n+<span class="number">1</span>))</span><br><span class="line">    <span class="keyword">print</span> (<span class="string">'Header: %s'</span> % <span class="string">', '</span>.join(header))</span><br><span class="line">    <span class="keyword">print</span> (<span class="string">'Sample values: %s'</span> % <span class="string">', '</span>.join(row))</span><br></pre></td></tr></table></figure>
-
 <p>输出为</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Total rows: 17380</span><br><span class="line">Header: instant, dteday, season, yr, mnth, hr, holiday, weekday, workingday, weathersit, temp, atemp, hum, windspeed, casual, registered, cnt</span><br><span class="line">Sample values: 17379, 2012-12-31, 1, 1, 12, 23, 0, 1, 1, 1, 0.26, 0.2727, 0.65, 0.1343, 12, 37, 49</span><br></pre></td></tr></table></figure>
-
 <p>在上面的例子中，每个样本是就是一个 row（list 类型），样本的 feature 只能通过 <code>row[index]</code> 方式获取，假如要通过 <code>header</code> 中的名称获取， 可以修改上面获取 <code>iterator</code> 的代码，用 <code>csv.DictReader(f, delimiter = SEP)</code> 来获取 <code>iterator</code>，此时得到的 <code>row</code> 会是一个 dictionary，key 为 <code>header</code> 中的列名，value 为对应的值; 对应的代码为</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> open(source_file, <span class="string">'rb'</span>) <span class="keyword">as</span> R:</span><br><span class="line">    iterator = csv.DictReader(R, delimiter=SEP)</span><br><span class="line">    <span class="keyword">for</span> n, row <span class="keyword">in</span> enumerate(iterator):</span><br><span class="line">        <span class="comment"># data processing</span></span><br><span class="line">        <span class="comment"># training</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    <span class="keyword">print</span> (<span class="string">'Total rows: %i'</span> % (n+<span class="number">1</span>))</span><br><span class="line">    <span class="keyword">print</span> (<span class="string">'Sample values: %s'</span> % row)</span><br></pre></td></tr></table></figure>
-
 <p>输出为</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Total rows: 17379</span><br><span class="line">Sample values: &#123;&apos;mnth&apos;: &apos;12&apos;, &apos;cnt&apos;: &apos;49&apos;, &apos;holiday&apos;: &apos;0&apos;, &apos;instant&apos;: &apos;17379&apos;, &apos;temp&apos;: &apos;0.26&apos;, &apos;dteday&apos;: &apos;2012-12-31&apos;, &apos;hr&apos;: &apos;23&apos;, &apos;season&apos;: &apos;1&apos;, &apos;registered&apos;: &apos;37&apos;, &apos;windspeed&apos;: &apos;0.1343&apos;, &apos;atemp&apos;: &apos;0.2727&apos;, &apos;workingday&apos;: &apos;1&apos;, &apos;weathersit&apos;: &apos;1&apos;, &apos;weekday&apos;: &apos;1&apos;, &apos;hum&apos;: &apos;0.65&apos;, &apos;yr&apos;: &apos;1&apos;, &apos;casual&apos;: &apos;12&apos;&#125;</span><br></pre></td></tr></table></figure>
-
 <p>除了通过 <code>csv</code> 模块进行读取，还可以通过 <code>pandas</code> 模块进行读取，pandas 模块可以说是处理 csv 文件的神器，<code>csv</code> 每次只能读取一条数据，而 <code>pandas</code> 可以指定每次读取的数据的数目，如下所示</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line">CHUNK_SIZE = <span class="number">1000</span></span><br><span class="line"><span class="keyword">with</span> open(source_file, <span class="string">'rb'</span>) <span class="keyword">as</span> R:</span><br><span class="line">    iterator = pd.read_csv(R, chunksize=CHUNK_SIZE) </span><br><span class="line">    <span class="keyword">for</span> n, data_chunk <span class="keyword">in</span> enumerate(iterator):</span><br><span class="line">        <span class="keyword">print</span> (<span class="string">'Size of uploaded chunk: %i instances, %i features'</span> % (data_chunk.shape))</span><br><span class="line">        <span class="comment"># data processing</span></span><br><span class="line">        <span class="comment"># training</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    <span class="keyword">print</span> (<span class="string">'Sample values: \n%s'</span> % str(data_chunk.iloc[<span class="number">0</span>]))</span><br></pre></td></tr></table></figure>
-
-<p>对应的输出为</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">Size of uploaded chunk: 1000 instances, 17 features</span><br><span class="line">Size of uploaded chunk: 1000 instances, 17 features</span><br><span class="line">Size of uploaded chunk: 1000 instances, 17 features</span><br><span class="line">Size of uploaded chunk: 1000 instances, 17 features</span><br><span class="line">Size of uploaded chunk: 1000 instances, 17 features</span><br><span class="line">Size of uploaded chunk: 1000 instances, 17 features</span><br><span class="line">Size of uploaded chunk: 1000 instances, 17 features</span><br><span class="line">Size of uploaded chunk: 1000 instances, 17 features</span><br><span class="line">Size of uploaded chunk: 1000 instances, 17 features</span><br><span class="line">Size of uploaded chunk: 1000 instances, 17 features</span><br><span class="line">Size of uploaded chunk: 1000 instances, 17 features</span><br><span class="line">Size of uploaded chunk: 1000 instances, 17 features</span><br><span class="line">Size of uploaded chunk: 1000 instances, 17 features</span><br><span class="line">Size of uploaded chunk: 1000 instances, 17 features</span><br><span class="line">Size of uploaded chunk: 1000 instances, 17 features</span><br><span class="line">Size of uploaded chunk: 1000 instances, 17 features</span><br><span class="line">Size of uploaded chunk: 1000 instances, 17 features</span><br><span class="line">Size of uploaded chunk: 379 instances, 17 features</span><br><span class="line">Sample values: </span><br><span class="line">instant            17001</span><br><span class="line">dteday        2012-12-16</span><br><span class="line">season                 4</span><br><span class="line">yr                     1</span><br><span class="line">mnth                  12</span><br><span class="line">hr                     3</span><br><span class="line">holiday                0</span><br><span class="line">weekday                0</span><br><span class="line">workingday             0</span><br><span class="line">weathersit             2</span><br><span class="line">temp                0.34</span><br><span class="line">atemp             0.3333</span><br><span class="line">hum                 0.87</span><br><span class="line">windspeed          0.194</span><br><span class="line">casual                 1</span><br><span class="line">registered            37</span><br><span class="line">cnt                   38</span><br><span class="line">Name: 17000, dtype: object</span><br></pre></td></tr></table></figure>
-
-<h3 id="数据库读取"><a href="#数据库读取" class="headerlink" title="数据库读取"></a>数据库读取</h3><p>上面的是直接从文件中读取的数据，但是数据也可能存在数据库中，因为通过数据库不经能够有效进行增删查改等操作，而且通过 <a href="https://en.wikipedia.org/wiki/Database_normalization" target="_blank" rel="noopener">Database Normalization</a> 能够在不丢失信息的基础上减少数据冗余性。</p>
+<p>对应的输出为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">Size of uploaded chunk: 1000 instances, 17 features</span><br><span class="line">Size of uploaded chunk: 1000 instances, 17 features</span><br><span class="line">Size of uploaded chunk: 1000 instances, 17 features</span><br><span class="line">Size of uploaded chunk: 1000 instances, 17 features</span><br><span class="line">Size of uploaded chunk: 1000 instances, 17 features</span><br><span class="line">Size of uploaded chunk: 1000 instances, 17 features</span><br><span class="line">Size of uploaded chunk: 1000 instances, 17 features</span><br><span class="line">Size of uploaded chunk: 1000 instances, 17 features</span><br><span class="line">Size of uploaded chunk: 1000 instances, 17 features</span><br><span class="line">Size of uploaded chunk: 1000 instances, 17 features</span><br><span class="line">Size of uploaded chunk: 1000 instances, 17 features</span><br><span class="line">Size of uploaded chunk: 1000 instances, 17 features</span><br><span class="line">Size of uploaded chunk: 1000 instances, 17 features</span><br><span class="line">Size of uploaded chunk: 1000 instances, 17 features</span><br><span class="line">Size of uploaded chunk: 1000 instances, 17 features</span><br><span class="line">Size of uploaded chunk: 1000 instances, 17 features</span><br><span class="line">Size of uploaded chunk: 1000 instances, 17 features</span><br><span class="line">Size of uploaded chunk: 379 instances, 17 features</span><br><span class="line">Sample values: </span><br><span class="line">instant            17001</span><br><span class="line">dteday        2012-12-16</span><br><span class="line">season                 4</span><br><span class="line">yr                     1</span><br><span class="line">mnth                  12</span><br><span class="line">hr                     3</span><br><span class="line">holiday                0</span><br><span class="line">weekday                0</span><br><span class="line">workingday             0</span><br><span class="line">weathersit             2</span><br><span class="line">temp                0.34</span><br><span class="line">atemp             0.3333</span><br><span class="line">hum                 0.87</span><br><span class="line">windspeed          0.194</span><br><span class="line">casual                 1</span><br><span class="line">registered            37</span><br><span class="line">cnt                   38</span><br><span class="line">Name: 17000, dtype: object</span><br></pre></td></tr></table></figure></p>
+<h3 id="数据库读取"><a href="#数据库读取" class="headerlink" title="数据库读取"></a>数据库读取</h3><p>上面的是直接从文件中读取的数据，但是数据也可能存在数据库中，因为通过数据库不经能够有效进行增删查改等操作，而且通过 <a href="https://en.wikipedia.org/wiki/Database_normalization" target="_blank" rel="external">Database Normalization</a> 能够在不丢失信息的基础上减少数据冗余性。</p>
 <p>假设上面的数据已经存储在 <code>SQLite</code> 数据库中，则流式读取的方法如下</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sqlite3</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"></span><br><span class="line">DB_NAME = <span class="string">'bikesharing.sqlite'</span></span><br><span class="line">CHUNK_SIZE = <span class="number">2500</span></span><br><span class="line"></span><br><span class="line">conn = sqlite3.connect(DB_NAME)</span><br><span class="line">conn.text_factory = str  <span class="comment"># allows utf-8 data to be stored     </span></span><br><span class="line">sql = <span class="string">"SELECT H.*, D.cnt AS day_cnt FROM hour AS H INNER JOIN day as D ON (H.dteday = D.dteday)"</span></span><br><span class="line">DB_stream = pd.io.sql.read_sql(sql, conn, chunksize=CHUNK_SIZE)</span><br><span class="line"><span class="keyword">for</span> j,data_chunk <span class="keyword">in</span> enumerate(DB_stream):</span><br><span class="line">    <span class="keyword">print</span> (<span class="string">'Chunk %i -'</span> % (j+<span class="number">1</span>)),</span><br><span class="line">    <span class="keyword">print</span> (<span class="string">'Size of uploaded chunk: %i istances, %i features'</span> % (data_chunk.shape))</span><br><span class="line">    <span class="comment"># data processing</span></span><br><span class="line">    <span class="comment"># training</span></span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
-
 <p>输出为</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Chunk 1 - Size of uploaded chunk: 2500 istances, 18 features</span><br><span class="line">Chunk 2 - Size of uploaded chunk: 2500 istances, 18 features</span><br><span class="line">Chunk 3 - Size of uploaded chunk: 2500 istances, 18 features</span><br><span class="line">Chunk 4 - Size of uploaded chunk: 2500 istances, 18 features</span><br><span class="line">Chunk 5 - Size of uploaded chunk: 2500 istances, 18 features</span><br><span class="line">Chunk 6 - Size of uploaded chunk: 2500 istances, 18 features</span><br><span class="line">Chunk 7 - Size of uploaded chunk: 2379 istances, 18 features</span><br></pre></td></tr></table></figure>
-
 <h3 id="样本的读取顺序"><a href="#样本的读取顺序" class="headerlink" title="样本的读取顺序"></a>样本的读取顺序</h3><p>上面简单提到了通过 SGD 训练模型的时候，需要注意样本的顺序必须要是随机打乱的。</p>
 <p><strong>假如给定一批样本，然后用整批的样本来更新，那么就不存在样本的读取顺序问题；但是由于像 SGD 这种 online learning 的训练模式，越是后面才读取的样本，模型一般会拟合得更好，因为这是模型最近看到了这些样本且针对这些样本进行了调整。</strong></p>
 <p>这样的特性有其好处，如处理时间序列的数据时，由于对最近时间的数据拟合得更好，因此不会受到时间太久远的数据的影响，但是在更多的情况下，这种由样本顺序带来的是有弊无益的，如上面提到的先用全部的正样本训练，再用全部的负样本训练。因此有必要对数据先进行 shuffle ，然后再通过 SGD 来进行训练。</p>
 <p>假如内存能够容纳这些数据， 那么所有的数据可以在内存中进行一次 shuffle；假如无法容纳，则可以将整个大的数据文件分为若干个小的文件，分别进行 shuffle ，然后再拼接起来，拼接时也不按照原来的顺序，而是进行 shuffle 后再拼接， 下面是这两种 shuffle 方法的实现代码。</p>
 <p>在内存中进行 shuffle 之前可以通过 <code>zlib</code> 对样本先进行压缩，从而让内存可以容纳更多的样本，实现代码如下</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> zlib</span><br><span class="line"><span class="keyword">from</span> random <span class="keyword">import</span> shuffle</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">ram_shuffle</span><span class="params">(filename_in, filename_out, header=True)</span>:</span></span><br><span class="line">    <span class="keyword">with</span> open(filename_in, <span class="string">'rb'</span>) <span class="keyword">as</span> f:</span><br><span class="line">        zlines = [zlib.compress(line, <span class="number">9</span>) <span class="keyword">for</span> line <span class="keyword">in</span> f]</span><br><span class="line">        <span class="keyword">if</span> header:</span><br><span class="line">            first_row = zlines.pop(<span class="number">0</span>)</span><br><span class="line">    shuffle(zlines)</span><br><span class="line">    <span class="keyword">with</span> open(filename_out, <span class="string">'wb'</span>) <span class="keyword">as</span> f:</span><br><span class="line">        <span class="keyword">if</span> header:</span><br><span class="line">            f.write(zlib.decompress(first_row))</span><br><span class="line">        <span class="keyword">for</span> zline <span class="keyword">in</span> zlines:</span><br><span class="line">            f.write(zlib.decompress(zline))</span><br></pre></td></tr></table></figure>
-
 <p>基于磁盘的 shuffle 方法首先将整个文件划分为若干个小文件，然后再进行 shuffle， 为了能够实现整个数据集更彻底的 shuffle ，可以将上面的过程重复几遍，同时每次都改变划分的文件的大小，实现的代码如下</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> random <span class="keyword">import</span> shuffle</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">disk_shuffle</span><span class="params">(filename_in, filename_out, header=True, iterations = <span class="number">3</span>, CHUNK_SIZE = <span class="number">2500</span>, SEP=<span class="string">','</span>)</span>:</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(iterations):</span><br><span class="line">        <span class="keyword">with</span> open(filename_in, <span class="string">'rb'</span>) <span class="keyword">as</span> R:</span><br><span class="line">            iterator = pd.read_csv(R, chunksize=CHUNK_SIZE) </span><br><span class="line">            <span class="keyword">for</span> n, df <span class="keyword">in</span> enumerate(iterator):</span><br><span class="line">                <span class="keyword">if</span> n==<span class="number">0</span> <span class="keyword">and</span> header:</span><br><span class="line">                    header_cols =SEP.join(df.columns)+<span class="string">'\n'</span></span><br><span class="line">                df.iloc[np.random.permutation(len(df))].to_csv(str(n)+<span class="string">'_chunk.csv'</span>, index=<span class="literal">False</span>, header=<span class="literal">False</span>, sep=SEP)</span><br><span class="line">        ordering = list(range(<span class="number">0</span>,n+<span class="number">1</span>))</span><br><span class="line">        shuffle(ordering)</span><br><span class="line">        <span class="keyword">with</span> open(filename_out, <span class="string">'wb'</span>) <span class="keyword">as</span> W:</span><br><span class="line">            <span class="keyword">if</span> header:</span><br><span class="line">                W.write(header_cols)</span><br><span class="line">            <span class="keyword">for</span> f <span class="keyword">in</span> ordering:</span><br><span class="line">                <span class="keyword">with</span> open(str(f)+<span class="string">'_chunk.csv'</span>, <span class="string">'r'</span>) <span class="keyword">as</span> R:</span><br><span class="line">                    <span class="keyword">for</span> line <span class="keyword">in</span> R:</span><br><span class="line">                        W.write(line)</span><br><span class="line">                os.remove(str(f)+<span class="string">'_chunk.csv'</span>)</span><br><span class="line">        filename_in = filename_out</span><br><span class="line">        CHUNK_SIZE = int(CHUNK_SIZE / <span class="number">2</span>)</span><br></pre></td></tr></table></figure>
-
-<h2 id="sklearn-中的-SGD"><a href="#sklearn-中的-SGD" class="headerlink" title="sklearn 中的 SGD"></a>sklearn 中的 SGD</h2><p>通过前面的步骤可以将数据以流式输入，下面接着就是要通过 SGD 进行训练，在 sklearn 中，  <code>sklearn.linear_model.SGDClassifier</code> 和 <code>sklearn.linear_model.SGDRegressor</code> 均是通过 SGD 实现，只是一个用于分类，一个用于回归。下面以 <code>sklearn.linear_model.SGDClassifier</code> 为例进行简单说明，更详细的内容可参考其<a href="http://scikit-learn.org/stable/modules/generated/sklearn.linear_model.SGDClassifier.html" target="_blank" rel="noopener">官方文档</a>。这里仅对其几个参数和方法进行简单的讲解。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> random <span class="keyword">import</span> shuffle</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">disk_shuffle</span><span class="params">(filename_in, filename_out, header=True, iterations = <span class="number">3</span>, CHUNK_SIZE = <span class="number">2500</span>, SEP=<span class="string">','</span>)</span>:</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(iterations):</span><br><span class="line">        <span class="keyword">with</span> open(filename_in, <span class="string">'rb'</span>) <span class="keyword">as</span> R:</span><br><span class="line">            iterator = pd.read_csv(R, chunksize=CHUNK_SIZE) </span><br><span class="line">            <span class="keyword">for</span> n, df <span class="keyword">in</span> enumerate(iterator):</span><br><span class="line">                <span class="keyword">if</span> n==<span class="number">0</span> <span class="keyword">and</span> header:</span><br><span class="line">                    header_cols =SEP.join(df.columns)+<span class="string">'\n'</span></span><br><span class="line">                df.iloc[np.random.permutation(len(df))].to_csv(str(n)+<span class="string">'_chunk.csv'</span>, index=<span class="keyword">False</span>, header=<span class="keyword">False</span>, sep=SEP)</span><br><span class="line">        ordering = list(range(<span class="number">0</span>,n+<span class="number">1</span>))</span><br><span class="line">        shuffle(ordering)</span><br><span class="line">        <span class="keyword">with</span> open(filename_out, <span class="string">'wb'</span>) <span class="keyword">as</span> W:</span><br><span class="line">            <span class="keyword">if</span> header:</span><br><span class="line">                W.write(header_cols)</span><br><span class="line">            <span class="keyword">for</span> f <span class="keyword">in</span> ordering:</span><br><span class="line">                <span class="keyword">with</span> open(str(f)+<span class="string">'_chunk.csv'</span>, <span class="string">'r'</span>) <span class="keyword">as</span> R:</span><br><span class="line">                    <span class="keyword">for</span> line <span class="keyword">in</span> R:</span><br><span class="line">                        W.write(line)</span><br><span class="line">                os.remove(str(f)+<span class="string">'_chunk.csv'</span>)</span><br><span class="line">        filename_in = filename_out</span><br><span class="line">        CHUNK_SIZE = int(CHUNK_SIZE / <span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="sklearn-中的-SGD"><a href="#sklearn-中的-SGD" class="headerlink" title="sklearn 中的 SGD"></a>sklearn 中的 SGD</h2><p>通过前面的步骤可以将数据以流式输入，下面接着就是要通过 SGD 进行训练，在 sklearn 中，  <code>sklearn.linear_model.SGDClassifier</code> 和 <code>sklearn.linear_model.SGDRegressor</code> 均是通过 SGD 实现，只是一个用于分类，一个用于回归。下面以 <code>sklearn.linear_model.SGDClassifier</code> 为例进行简单说明，更详细的内容可参考其<a href="http://scikit-learn.org/stable/modules/generated/sklearn.linear_model.SGDClassifier.html" target="_blank" rel="external">官方文档</a>。这里仅对其几个参数和方法进行简单的讲解。</p>
 <p>需要注意的参数有：</p>
 <ul>
 <li><code>loss</code> : 表示具体的分类器，可选的值为 <strong>hinge、log、modified_huber、squared_hinge、perceptron</strong>；如 hinge 表示 SVM 分类器，log 表示logistics regression等</li>
 <li><code>penalty</code>：正则项，用于防止过拟合(默认为 L2 正则项)</li>
-<li><code>learning_rate </code>: 表示选择哪种学习速率方案，共有三种：<strong>constant、optimal、invscaling</strong>，各种详细含义可参考官方文档</li>
+<li><code>learning_rate</code>: 表示选择哪种学习速率方案，共有三种：<strong>constant、optimal、invscaling</strong>，各种详细含义可参考官方文档</li>
 </ul>
 <p>需要注意的方法主要就是 <code>partial_fit(X, y, classes)</code>, <code>X</code> 和 <code>y</code> 是每次流式输入的数据，而 <code>classes</code> 则是具体的分类数目, 若 <code>classes</code> 数目大于2，则会根据 <code>one-vs-rest</code> 规则训练多个分类器。</p>
 <p>需要注意的是 <code>partial_fit</code> 只会对数据遍历一次，需要自己显式指定遍历的次数，如下是使用 sklearn 中的 <code>SGDClassfier</code> 的一个简单例子。</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> linear_model</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"></span><br><span class="line">CHUNK_SIZE = <span class="number">1000</span></span><br><span class="line">n_iter = <span class="number">10</span>  <span class="comment"># number of iteration over the whole dataset</span></span><br><span class="line">n_class = <span class="number">7</span></span><br><span class="line"></span><br><span class="line">model = linear_model.SGDClassifier(loss = <span class="string">'hinge'</span>, penalty =<span class="string">'l1'</span>,)</span><br><span class="line"><span class="keyword">for</span> _ <span class="keyword">in</span> range(n_iter): </span><br><span class="line">    <span class="keyword">with</span> open(source_file, <span class="string">'rb'</span>) <span class="keyword">as</span> R:</span><br><span class="line">        iterator = pd.read_csv(R, chunksize=CHUNK_SIZE) </span><br><span class="line">        <span class="keyword">for</span> n, data_chunk <span class="keyword">in</span> enumerate(iterator):</span><br><span class="line">            model.partial_fit(data_chunk.x, data_chunk.y, classes = np.array(range(<span class="number">0</span>, n_class)))</span><br></pre></td></tr></table></figure>
-
 <h2 id="流式数据中的特征工程"><a href="#流式数据中的特征工程" class="headerlink" title="流式数据中的特征工程"></a>流式数据中的特征工程</h2><h3 id="feature-scaling"><a href="#feature-scaling" class="headerlink" title="feature scaling"></a>feature scaling</h3><p>对于 SGD 算法，特征的 scaling 会影响其优化过程，也就是只有将特征标准化（均值为0，方差为1）或归一化（处于 [0,1] 内）才能加快算法收敛的速度，但是由于数据不能一次读入内存，如果需要标准化或归一化，需要对数据遍历 2 次，第一次遍历是为了求特征的均值和方差（标准化需要）或最大最小值（归一化需要），第二次遍历便可以用上面的均值、方差、最大值，最小值等值进行标准化。</p>
 <p>由于数据是流式输入的，求解均值、最大值、最小值都没有什么问题，但是求解方差的公式为( $\mu$ 为均值）</p>
 <p>$$\sigma^2 = \frac{1}{n} \sum_x(x-\mu)^2$$</p>
@@ -425,24 +409,17 @@
 <p>$$\sigma’^2 = \frac{1}{n} \sum_x(x^2 - 2x\mu’ + \mu’^2) = \frac{1}{n} \sum_x(x^2) - \frac{1}{n}(2n\mu’^2 - n\mu’^2) = \frac{1}{n} \sum_x(x^2) - \mu’^2$$</p>
 <p>通过这个公式，可以遍历一次便求出任意个样本的方差，下面通过这个公式求解均值和方差随着样本数量变化而变化的情况，并比较进行 shuffle 前后两者在均值和方差上的区别。</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># calculate the running mean,standard deviation, and range reporting the final result</span></span><br><span class="line"><span class="keyword">import</span> os, csv</span><br><span class="line">raw_source = <span class="string">'bikesharing/hour.csv'</span> <span class="comment"># unshuffle</span></span><br><span class="line">shuffle_source = <span class="string">'bikesharing/shuffled_hour.csv'</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">running_statistic</span><span class="params">(source)</span>:</span></span><br><span class="line">    SEP=<span class="string">','</span></span><br><span class="line">    running_mean = list()</span><br><span class="line">    running_std = list()</span><br><span class="line">    <span class="keyword">with</span> open(local_path+<span class="string">'/'</span>+source, <span class="string">'rb'</span>) <span class="keyword">as</span> R:</span><br><span class="line">        iterator = csv.DictReader(R, delimiter=SEP)</span><br><span class="line">        x = <span class="number">0.0</span></span><br><span class="line">        x_squared = <span class="number">0.0</span></span><br><span class="line">        <span class="keyword">for</span> n, row <span class="keyword">in</span> enumerate(iterator):</span><br><span class="line">            temp = float(row[<span class="string">'temp'</span>])</span><br><span class="line">            <span class="keyword">if</span> n == <span class="number">0</span>:</span><br><span class="line">                max_x, min_x = temp, temp</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                max_x, min_x = max(temp, max_x),min(temp, min_x)</span><br><span class="line">            x += temp</span><br><span class="line">            x_squared += temp**<span class="number">2</span></span><br><span class="line">            running_mean.append(x / (n+<span class="number">1</span>))</span><br><span class="line">            running_std.append(((x_squared - (x**<span class="number">2</span>)/(n+<span class="number">1</span>))/(n+<span class="number">1</span>))**<span class="number">0.5</span>)</span><br><span class="line">            <span class="comment"># DATA PROCESSING placeholder</span></span><br><span class="line">            <span class="comment"># MACHINE LEARNING placeholder</span></span><br><span class="line">            <span class="keyword">pass</span></span><br><span class="line">        <span class="keyword">print</span> (<span class="string">'Total rows: %i'</span> % (n+<span class="number">1</span>))</span><br><span class="line">        <span class="keyword">print</span> (<span class="string">'Feature \'temp\': mean=%0.3f, max=%0.3f, min=%0.3f,sd=%0.3f'</span> \</span><br><span class="line">               % (running_mean[<span class="number">-1</span>], max_x, min_x, running_std[<span class="number">-1</span>]))</span><br><span class="line">        <span class="keyword">return</span> running_mean, running_std</span><br><span class="line"><span class="keyword">print</span> <span class="string">'===========raw data file==========='</span></span><br><span class="line">raw_running_mean, raw_running_std = running_statistic(raw_source)</span><br><span class="line"><span class="keyword">print</span> <span class="string">'===========shuffle data file==========='</span></span><br><span class="line">shuffle_running_mean, shuffle_running_std = running_statistic(shuffle_source)</span><br></pre></td></tr></table></figure>
-
-<p>输出如下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">===========raw data file===========</span><br><span class="line">Total rows: 17379</span><br><span class="line">Feature &apos;temp&apos;: mean=0.497, max=1.000, min=0.020,sd=0.193</span><br><span class="line">===========shuffle data file===========</span><br><span class="line">Total rows: 17379</span><br><span class="line">Feature &apos;temp&apos;: mean=0.497, max=1.000, min=0.020,sd=0.193</span><br></pre></td></tr></table></figure>
-
+<p>输出如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">===========raw data file===========</span><br><span class="line">Total rows: 17379</span><br><span class="line">Feature &apos;temp&apos;: mean=0.497, max=1.000, min=0.020,sd=0.193</span><br><span class="line">===========shuffle data file===========</span><br><span class="line">Total rows: 17379</span><br><span class="line">Feature &apos;temp&apos;: mean=0.497, max=1.000, min=0.020,sd=0.193</span><br></pre></td></tr></table></figure></p>
 <p>两者的统计数据一致，符合要求，下面再看看两者的均值和方差随着时间如何变化，也就是将上面得到的 <code>running_mean</code> 和 <code>running_std</code> 进行可视化</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># plot how such stats changed as data was streamed from disk</span></span><br><span class="line"><span class="comment"># get an idea about how many instances are required before getting a stable mean and standard deviation estimate</span></span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line">%matplotlib inline</span><br><span class="line"><span class="keyword">for</span> mean, std <span class="keyword">in</span> ((raw_running_mean, raw_running_std), (shuffle_running_mean, shuffle_running_std)):</span><br><span class="line">    plt.plot(mean,<span class="string">'r-'</span>, label=<span class="string">'mean'</span>)</span><br><span class="line">    plt.plot(std,<span class="string">'b-'</span>, label=<span class="string">'standard deviation'</span>)</span><br><span class="line">    plt.ylim(<span class="number">0.0</span>,<span class="number">0.6</span>)</span><br><span class="line">    plt.xlabel(<span class="string">'Number of training examples'</span>)</span><br><span class="line">    plt.ylabel(<span class="string">'Value'</span>) </span><br><span class="line">    plt.legend(loc=<span class="string">'lower right'</span>, numpoints= <span class="number">1</span>)</span><br><span class="line">    plt.show()</span><br><span class="line"><span class="comment"># The difference in the two charts reminds us of the importance of randomizing the order of the observations.</span></span><br></pre></td></tr></table></figure>
-
 <p>得到的结果如下</p>
 <p>原始的文件<br><img src="http://static.zybuluo.com/WuLiangchao/f0rtyrrwk3uxl4seqh4dpgrm/image_1botg5pjo18qluja1gjrl46sc29.png" alt="unshuffle"></p>
 <p>shuffle 后的文件<br><img src="http://static.zybuluo.com/WuLiangchao/vylv1bty2k7ob40201f4spox/image_1botg6tsg18e04d0vpvcip6q0m.png" alt="shuffle"></p>
 <p>可以看到，经过 shuffle 后的数据的均值和方差很快就达到了稳定的状态，可以让 SGD 算法更快地收敛，这也从另一个角度验证了 shuffle 的必要性。</p>
 <h3 id="hasing-trick"><a href="#hasing-trick" class="headerlink" title="hasing trick"></a>hasing trick</h3><p>对于 categorial feature， 往往要对其进行 one-hot 编码，但是进行 one-hot 编码需要知道这个 feature 所有可能的取值的数量，对于流式输入的数据，可以先遍历一遍数据得到 categorial feature 所有可能取值的数目。除此之外，还可以利用接下来要讲的 hashing trick 对categorical feature 进行 one-hot 编码，这种方法对只能遍历一遍的数据有效。</p>
 <p>hahsing trick 利用了 hash 函数，通过hash后取模，将样本的值映射到预先定义好的固定长度的槽列中的某个槽中，这种方法需要对 categorical feature 的所有可能取值有大概的估计，而且可能会出现冲突的情况，但是如果对categorical feature 的所有可能取值有较准确的估计时，冲突的概率会比较低。下面是利用 sklearn 中的 <code>HashingVectorizer</code> 进行这种编码的一个例子</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.feature_extraction.text <span class="keyword">import</span> HashingVectorizer</span><br><span class="line">h = HashingVectorizer(n_features=<span class="number">1000</span>, binary=<span class="literal">True</span>, norm=<span class="literal">None</span>)</span><br><span class="line">sparse_vector = h.transform([<span class="string">'A simple toy example will make clear how it works.'</span>])</span><br><span class="line">print(sparse_vector)</span><br></pre></td></tr></table></figure>
-
-<p>输出如下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">(0, 61)	1.0</span><br><span class="line">(0, 271)	1.0</span><br><span class="line">(0, 287)	1.0</span><br><span class="line">(0, 452)	1.0</span><br><span class="line">(0, 462)	1.0</span><br><span class="line">(0, 539)	1.0</span><br><span class="line">(0, 605)	1.0</span><br><span class="line">(0, 726)	1.0</span><br><span class="line">(0, 918)	1.0</span><br></pre></td></tr></table></figure>
-
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.feature_extraction.text <span class="keyword">import</span> HashingVectorizer</span><br><span class="line">h = HashingVectorizer(n_features=<span class="number">1000</span>, binary=<span class="keyword">True</span>, norm=<span class="keyword">None</span>)</span><br><span class="line">sparse_vector = h.transform([<span class="string">'A simple toy example will make clear how it works.'</span>])</span><br><span class="line">print(sparse_vector)</span><br></pre></td></tr></table></figure>
+<p>输出如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">(0, 61)	1.0</span><br><span class="line">(0, 271)	1.0</span><br><span class="line">(0, 287)	1.0</span><br><span class="line">(0, 452)	1.0</span><br><span class="line">(0, 462)	1.0</span><br><span class="line">(0, 539)	1.0</span><br><span class="line">(0, 605)	1.0</span><br><span class="line">(0, 726)	1.0</span><br><span class="line">(0, 918)	1.0</span><br></pre></td></tr></table></figure></p>
 <p>这里定义的槽列的长度为1000，即假设字典中的单词数目为 1000， 然后将文本映射到这个槽列中，1 表示有这个单词，0表示没有。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文主要介绍了如何进行 out-of-core learning，主要思想就是将数据以流式方式读入，然后通过 SGD 算法进行更新，在读入数据之前，首先需要对数据进行 shuffle 操作，消除数据本来的顺序信息等，同时可以让样本的特征的方差和均值更快达到稳定状态。</p>
 
@@ -537,7 +514,7 @@
 
       
         <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
             文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
@@ -548,7 +525,9 @@
 
       <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image" src="http://wulc.me/files/profile.jpg" alt="良超">
+          <img class="site-author-image" itemprop="image"
+               src="http://wulc.me/files/profile.jpg"
+               alt="良超" />
           <p class="site-author-name" itemprop="name">良超</p>
           <p class="site-description motion-element" itemprop="description">工程师要把合适的技术放在合适的位置|算法工程师首先得是个工程师</p>
         </div>
@@ -557,7 +536,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">219</span>
+                <span class="site-state-item-count">218</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -649,12 +628,12 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <center>
-<div class="copyright">
+<div class="copyright" >
   
   &copy;  2015 - 
   <span itemprop="copyrightYear">2020</span>
-  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a>
-  <br>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
+  </br>
   <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
 </div>
 </center>

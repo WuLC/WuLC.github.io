@@ -6,19 +6,19 @@
 
 
 <html class="theme-next mist use-motion" lang="zh-Hans">
-<head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform">
-<meta http-equiv="Cache-Control" content="no-siteapp">
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
 
 
-  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
 
 
 
@@ -31,7 +31,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
 
 
 
@@ -39,23 +39,23 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
-
-
-  <meta name="keywords" content="机器学习,">
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
+  <meta name="keywords" content="机器学习," />
 
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
+
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
 
 
 
@@ -63,13 +63,11 @@
 
 
 <meta name="description" content="本文简单了描述机器学习中的蒸馏（distillation）技术的原理，distillation 可简单分为 model distillation 和 feature distillation。顾名思义，蒸馏是对原来的模型/特征进行了压缩，其原因可能是为了减少模型的大小（model distillation）、或者某些特征只能在 training 时获取，serving 无法获取(feature d">
-<meta name="keywords" content="机器学习">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Distillation 简介">
 <meta property="og:url" content="http://wulc.github.io/2020/03/01/Distillation 简介/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
 <meta property="og:description" content="本文简单了描述机器学习中的蒸馏（distillation）技术的原理，distillation 可简单分为 model distillation 和 feature distillation。顾名思义，蒸馏是对原来的模型/特征进行了压缩，其原因可能是为了减少模型的大小（model distillation）、或者某些特征只能在 training 时获取，serving 无法获取(feature d">
-<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/ModelDistillationVSFeatureDistillation.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/DistillationTrainingAndServing.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/SynchronousTraining.png">
@@ -105,7 +103,7 @@
 
 
 
-  <link rel="canonical" href="http://wulc.github.io/2020/03/01/Distillation 简介/">
+  <link rel="canonical" href="http://wulc.github.io/2020/03/01/Distillation 简介/"/>
 
 
 
@@ -146,7 +144,7 @@
   
 
   <div class="custom-logo-site-title">
-    <a href="/" class="brand" rel="start">
+    <a href="/"  class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <span class="site-title">吴良超的学习笔记</span>
       <span class="logo-line-after"><i></i></span>
@@ -175,7 +173,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
             首页
           </a>
@@ -185,7 +183,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
             
             标签
           </a>
@@ -195,7 +193,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
             归档
           </a>
@@ -205,7 +203,7 @@
         <li class="menu-item menu-item-about">
           <a href="/about" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
             
             关于
           </a>
@@ -218,7 +216,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
             
             站内搜索
           </a>
@@ -267,14 +265,14 @@
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="良超">
-    <meta itemprop="description" content>
+    <meta itemprop="description" content="">
     <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
   </span>
 
   <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
     <meta itemprop="name" content="吴良超的学习笔记">
     <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src>
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
     </span>
   </span>
 
@@ -317,7 +315,7 @@
 
 
           
-            <span class="post-category">
+            <span class="post-category" >
             
               <span class="post-meta-divider">|</span>
             
@@ -363,9 +361,8 @@
       
         <p>本文简单了描述机器学习中的蒸馏（distillation）技术的原理，distillation 可简单分为 model distillation 和 feature distillation。顾名思义，蒸馏是对原来的模型/特征进行了压缩，其原因可能是为了减少模型的大小（model distillation）、或者某些特征只能在 training 时获取，serving 无法获取(feature distillation)；在实际业务中可根据具体场景灵活地应用这两类技术。</p>
 <a id="more"></a>
-
 <h2 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h2><p>Distillation 可分为 Model Distillation 和 Feature Distillation，其思想都是在训练时同时训练两个模型：teacher 模型和 student 模型，而在 serving 时只用 student 模型。这里的假设是：<strong>teacher 模型比起 student 模型，在模型结构上更复杂(Model Distillation) ，或在特征集上更为丰富(Feature Distillation) ；因此其准确率也会比 student 模型要好。</strong></p>
-<p>如下图所示是 Model Distillation和Feature Distillation示例 （下面的图和公式基本摘自  <a href="https://arxiv.org/pdf/1907.05171.pdf" target="_blank" rel="noopener">Privileged Features Distillation for E-Commerce Recommendations</a>）</p>
+<p>如下图所示是 Model Distillation和Feature Distillation示例 （下面的图和公式基本摘自  <a href="https://arxiv.org/pdf/1907.05171.pdf" target="_blank" rel="external">Privileged Features Distillation for E-Commerce Recommendations</a>）</p>
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/ModelDistillationVSFeatureDistillation.png" alt="MD vs FD"></p>
 <p>那如何利用 teacher 模型指导 student 模型学得更好？<strong>基本的做法是将 teacher 模型的输出作为 soft label(相对于作为 ground truth 的 hard label）, 为 student 模型添加额外的 loss 项</strong>；如下公式 (1) 所示</p>
 <p>$$\min_{W_s} (1-\lambda)L_s(y, f_s(X;W_s))+\lambda*L_d(f_t(X;W_t),f_s(X;W_s)) \tag{1}$$</p>
@@ -389,10 +386,9 @@
 <p>因此更常用的做法在这两个之间做个权衡，<strong>基本做法就是在训练的初期，将公式(3) 中的 $\lambda$ 设为0，然后后面逐渐增大 $\lambda$ 这个值</strong></p>
 <p>上面提到的paper在这点上提出了一个更简单策略，就是在 $k$ 个 step 后才让 teacher 网络的输出作为 loss 影响 student 网络，$k$ 是一个拍定的超参，因此其详细训练方式如下</p>
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/SynchronousTraining.png" alt="synchronous training"></p>
-<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>tensorflow 提供的一个distillation 的实现 <a href="https://github.com/tensorflow/tensor2tensor/blob/master/tensor2tensor/models/distillation.py" target="_blank" rel="noopener">distillation.py</a>，使用见 stack-overflow 上的 <a href="https://stackoverflow.com/questions/53291939/how-do-i-use-tensor2tensors-distillation-py-to-distill-the-knowledge-from-a-tea?answertab=active#tab-top" target="_blank" rel="noopener">这个回答</a></p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>tensorflow 提供的一个distillation 的实现 <a href="https://github.com/tensorflow/tensor2tensor/blob/master/tensor2tensor/models/distillation.py" target="_blank" rel="external">distillation.py</a>，使用见 stack-overflow 上的 <a href="https://stackoverflow.com/questions/53291939/how-do-i-use-tensor2tensors-distillation-py-to-distill-the-knowledge-from-a-tea?answertab=active#tab-top" target="_blank" rel="external">这个回答</a></p>
 <p>核心代码如下所示，注释写得已经非常清晰了，下面默认的模式是先训练好了 Teacher 网络，再训练 Student 网络，也就是上面提到的 asynchronous training 模式；但是也可以比较容易将下面的逻辑改成 synchronous training 的。</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### Teacher Network</span></span><br><span class="line"><span class="keyword">with</span> tf.variable_scope(<span class="string">"teacher"</span>):</span><br><span class="line">  teacher_outputs = self.teacher_model.body(features)</span><br><span class="line">  tf.logging.info(<span class="string">"teacher output shape: %s"</span> % teacher_outputs.get_shape())</span><br><span class="line">  teacher_outputs = tf.reduce_mean(teacher_outputs, axis=[<span class="number">1</span>, <span class="number">2</span>])</span><br><span class="line">  teacher_logits = tf.layers.dense(teacher_outputs, hp.num_classes)</span><br><span class="line"></span><br><span class="line">  teacher_task_xent = tf.nn.softmax_cross_entropy_with_logits_v2(</span><br><span class="line">      labels=one_hot_targets, logits=teacher_logits)</span><br><span class="line">  outputs = teacher_logits</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> is_distill:</span><br><span class="line">  <span class="comment"># Load teacher weights</span></span><br><span class="line">  tf.train.init_from_checkpoint(hp.teacher_dir, &#123;<span class="string">"teacher/"</span>: <span class="string">"teacher/"</span>&#125;)</span><br><span class="line">  <span class="comment"># Do not train the teacher</span></span><br><span class="line">  trainable_vars = tf.get_collection_ref(tf.GraphKeys.TRAINABLE_VARIABLES)</span><br><span class="line">  <span class="keyword">del</span> trainable_vars[:]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">### Student Network</span></span><br><span class="line"><span class="keyword">if</span> is_distill:</span><br><span class="line">  <span class="keyword">with</span> tf.variable_scope(<span class="string">"student"</span>):</span><br><span class="line">    student_outputs = self.student_model.body(features)</span><br><span class="line">    tf.logging.info(</span><br><span class="line">        <span class="string">"student output shape: %s"</span> % student_outputs.get_shape())</span><br><span class="line">    student_outputs = tf.reduce_mean(student_outputs, axis=[<span class="number">1</span>, <span class="number">2</span>])</span><br><span class="line">    student_logits = tf.layers.dense(student_outputs, hp.num_classes)</span><br><span class="line"></span><br><span class="line">    student_task_xent = tf.nn.softmax_cross_entropy_with_logits_v2(</span><br><span class="line">        labels=one_hot_targets, logits=student_logits)</span><br><span class="line">    teacher_targets = tf.nn.softmax(teacher_logits / hp.distill_temperature)</span><br><span class="line">    student_distill_xent = tf.nn.softmax_cross_entropy_with_logits_v2(</span><br><span class="line">        labels=tf.stop_gradient(teacher_targets),</span><br><span class="line">        logits=student_logits / hp.distill_temperature)</span><br><span class="line">    <span class="comment"># scale soft target obj. to match hard target obj. scale</span></span><br><span class="line">    student_distill_xent *= hp.distill_temperature**<span class="number">2</span></span><br><span class="line"></span><br><span class="line">    outputs = student_logits</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Summaries</span></span><br><span class="line">    tf.summary.scalar(<span class="string">"distill_xent"</span>, student_distill_xent)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> is_distill:</span><br><span class="line">  phase_loss = teacher_task_xent</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">  phase_loss = hp.task_balance * student_task_xent</span><br><span class="line">  phase_loss += (<span class="number">1</span> - hp.task_balance) * student_distill_xent</span><br><span class="line"></span><br><span class="line">losses = &#123;<span class="string">"training"</span>: phase_loss&#125;</span><br><span class="line">outputs = tf.reshape(outputs, [<span class="number">-1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, outputs.shape[<span class="number">1</span>]])</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> outputs, losses</span><br></pre></td></tr></table></figure>
-
 
       
     </div>
@@ -485,7 +481,7 @@
 
       
         <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
             文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
@@ -496,7 +492,9 @@
 
       <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image" src="http://wulc.me/files/profile.jpg" alt="良超">
+          <img class="site-author-image" itemprop="image"
+               src="http://wulc.me/files/profile.jpg"
+               alt="良超" />
           <p class="site-author-name" itemprop="name">良超</p>
           <p class="site-description motion-element" itemprop="description">工程师要把合适的技术放在合适的位置|算法工程师首先得是个工程师</p>
         </div>
@@ -505,7 +503,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">219</span>
+                <span class="site-state-item-count">218</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -597,12 +595,12 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <center>
-<div class="copyright">
+<div class="copyright" >
   
   &copy;  2015 - 
   <span itemprop="copyrightYear">2020</span>
-  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a>
-  <br>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
+  </br>
   <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
 </div>
 </center>

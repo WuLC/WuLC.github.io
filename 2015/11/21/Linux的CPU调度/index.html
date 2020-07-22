@@ -6,19 +6,19 @@
 
 
 <html class="theme-next mist use-motion" lang="zh-Hans">
-<head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform">
-<meta http-equiv="Cache-Control" content="no-siteapp">
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
 
 
-  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
 
 
 
@@ -31,7 +31,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
 
 
 
@@ -39,41 +39,45 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
-
-
-  <meta name="keywords" content="操作系统,Linux,">
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
-
-
-
-
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
+  <meta name="keywords" content="操作系统,Linux," />
 
 
 
 
 
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
 
-<meta name="description" content="内核版本与CPU调度算法早期 Linux 版本中的调度算法非常简单易懂：在每次进程切换时，内核扫描可运行进程的链表，计算进程的优先权，然后选择“最佳”进程来运行。这个算法的主要缺点是选择“最佳”进程所要消耗的时间与可运行的进程数量相关，因此，这个算法的开销太大，在运行数千个进程的高端系统中，要消耗太多的时间。 Linux 2.6 的调度算法就复杂多了。通过设计，该算法较好地解决了与可运行进程数量的">
-<meta name="keywords" content="操作系统,Linux">
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="内核版本与CPU调度算法早期 Linux 版本中的调度算法非常简单易懂：在每次进程切换时，内核扫描可运行进程的链表，计算进程的优先权，然后选择“最佳”进程来运行。这个算法的主要缺点是选择“最佳”进程所要消耗的时间与可运行的进程数量相关，因此，这个算法的开销太大，在运行数千个进程的高端系统中，要消耗太多的时间。
+Linux 2.6 的调度算法就复杂多了。通过设计，该算法较好地解决了与可运行进程数量的">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Linux的CPU调度">
 <meta property="og:url" content="http://wulc.github.io/2015/11/21/Linux的CPU调度/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
-<meta property="og:description" content="内核版本与CPU调度算法早期 Linux 版本中的调度算法非常简单易懂：在每次进程切换时，内核扫描可运行进程的链表，计算进程的优先权，然后选择“最佳”进程来运行。这个算法的主要缺点是选择“最佳”进程所要消耗的时间与可运行的进程数量相关，因此，这个算法的开销太大，在运行数千个进程的高端系统中，要消耗太多的时间。 Linux 2.6 的调度算法就复杂多了。通过设计，该算法较好地解决了与可运行进程数量的">
-<meta property="og:locale" content="zh-Hans">
+<meta property="og:description" content="内核版本与CPU调度算法早期 Linux 版本中的调度算法非常简单易懂：在每次进程切换时，内核扫描可运行进程的链表，计算进程的优先权，然后选择“最佳”进程来运行。这个算法的主要缺点是选择“最佳”进程所要消耗的时间与可运行的进程数量相关，因此，这个算法的开销太大，在运行数千个进程的高端系统中，要消耗太多的时间。
+Linux 2.6 的调度算法就复杂多了。通过设计，该算法较好地解决了与可运行进程数量的">
+<meta property="og:image" content="http://7xp5pe.com1.z0.glb.clouddn.com/2015/12/15/d26a3eab-a2f3-11e5-9531-e55c4553df92.png">
+<meta property="og:image" content="http://7xp5pe.com1.z0.glb.clouddn.com/imagepriority.png">
 <meta property="og:updated_time" content="2019-06-01T09:14:44.074Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux的CPU调度">
-<meta name="twitter:description" content="内核版本与CPU调度算法早期 Linux 版本中的调度算法非常简单易懂：在每次进程切换时，内核扫描可运行进程的链表，计算进程的优先权，然后选择“最佳”进程来运行。这个算法的主要缺点是选择“最佳”进程所要消耗的时间与可运行的进程数量相关，因此，这个算法的开销太大，在运行数千个进程的高端系统中，要消耗太多的时间。 Linux 2.6 的调度算法就复杂多了。通过设计，该算法较好地解决了与可运行进程数量的">
+<meta name="twitter:description" content="内核版本与CPU调度算法早期 Linux 版本中的调度算法非常简单易懂：在每次进程切换时，内核扫描可运行进程的链表，计算进程的优先权，然后选择“最佳”进程来运行。这个算法的主要缺点是选择“最佳”进程所要消耗的时间与可运行的进程数量相关，因此，这个算法的开销太大，在运行数千个进程的高端系统中，要消耗太多的时间。
+Linux 2.6 的调度算法就复杂多了。通过设计，该算法较好地解决了与可运行进程数量的">
+<meta name="twitter:image" content="http://7xp5pe.com1.z0.glb.clouddn.com/2015/12/15/d26a3eab-a2f3-11e5-9531-e55c4553df92.png">
 
 
 
@@ -101,7 +105,7 @@
 
 
 
-  <link rel="canonical" href="http://wulc.github.io/2015/11/21/Linux的CPU调度/">
+  <link rel="canonical" href="http://wulc.github.io/2015/11/21/Linux的CPU调度/"/>
 
 
 
@@ -142,7 +146,7 @@
   
 
   <div class="custom-logo-site-title">
-    <a href="/" class="brand" rel="start">
+    <a href="/"  class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <span class="site-title">吴良超的学习笔记</span>
       <span class="logo-line-after"><i></i></span>
@@ -171,7 +175,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
             首页
           </a>
@@ -181,7 +185,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
             
             标签
           </a>
@@ -191,7 +195,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
             归档
           </a>
@@ -201,7 +205,7 @@
         <li class="menu-item menu-item-about">
           <a href="/about" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
             
             关于
           </a>
@@ -214,7 +218,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
             
             站内搜索
           </a>
@@ -263,14 +267,14 @@
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="良超">
-    <meta itemprop="description" content>
+    <meta itemprop="description" content="">
     <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
   </span>
 
   <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
     <meta itemprop="name" content="吴良超的学习笔记">
     <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src>
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
     </span>
   </span>
 
@@ -313,7 +317,7 @@
 
 
           
-            <span class="post-category">
+            <span class="post-category" >
             
               <span class="post-meta-divider">|</span>
             
@@ -371,7 +375,6 @@
         <h2 id="内核版本与CPU调度算法"><a href="#内核版本与CPU调度算法" class="headerlink" title="内核版本与CPU调度算法"></a>内核版本与CPU调度算法</h2><p>早期 Linux 版本中的调度算法非常简单易懂：<strong>在每次进程切换时，内核扫描可运行进程的链表，计算进程的优先权，然后选择“最佳”进程来运行</strong>。这个算法的主要缺点是选择“最佳”进程所要消耗的时间与可运行的进程数量相关，因此，这个算法的开销太大，在运行数千个进程的高端系统中，要消耗太多的时间。</p>
 <p>Linux 2.6 的调度算法就复杂多了。通过设计，该算法较好地解决了与可运行进程数量的比例关系，因为它<strong>在固定的时间内（时间复杂度O(1)）选中要运行的进程</strong>。它也很好地处理了与处理器数量的比例关系，因为<strong>每个 CPU 都拥有自己的可运行进程队列</strong>。而且，新算法较好地解决了区分交互式进程和批处理进程的问题。因此，在高负载的系统中，用户感到在 Linux2.6 中交互应用的响应速度比早期的 Linux 版本要快。</p>
 <a id="more"></a>
-
 <h2 id="调度方式"><a href="#调度方式" class="headerlink" title="调度方式"></a>调度方式</h2><p>内核2.6版本有5种调度方式，分别是</p>
 <ul>
 <li>SCHED_FIFO</li>
@@ -389,7 +392,8 @@
 <th>静态优先级进程(实时进程)</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>优先级</td>
 <td>低</td>
 <td>高</td>
@@ -414,12 +418,14 @@
 <td>大于0</td>
 <td>RT或负值</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p> 由此可知，<strong>top命令显示的pr值越小，优先级越高</strong></p>
 <h2 id="chrt工具"><a href="#chrt工具" class="headerlink" title="chrt工具"></a>chrt工具</h2><p>通过chrt（change real time）工具可以改变<strong>实时进程优先级</strong>和<strong>所有进程的调度方式</strong>，其可调整的内容如下所示：</p>
-<p>![][1]</p>
+<p><img src="http://7xp5pe.com1.z0.glb.clouddn.com/2015/12/15/d26a3eab-a2f3-11e5-9531-e55c4553df92.png" alt=""></p>
 <p>用top显示出的pr值与进程实际优先级的关系</p>
-<p>![][2]<br>　　<br>[1]:<a href="http://7xp5pe.com1.z0.glb.clouddn.com/2015/12/15/d26a3eab-a2f3-11e5-9531-e55c4553df92.png" target="_blank" rel="noopener">http://7xp5pe.com1.z0.glb.clouddn.com/2015/12/15/d26a3eab-a2f3-11e5-9531-e55c4553df92.png</a><br>[2]:<a href="http://7xp5pe.com1.z0.glb.clouddn.com/imagepriority.png" target="_blank" rel="noopener">http://7xp5pe.com1.z0.glb.clouddn.com/imagepriority.png</a></p>
+<p><img src="http://7xp5pe.com1.z0.glb.clouddn.com/imagepriority.png" alt="">
+　　</p>
 
       
     </div>
@@ -514,7 +520,7 @@
 
       
         <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
             文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
@@ -525,7 +531,9 @@
 
       <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image" src="http://wulc.me/files/profile.jpg" alt="良超">
+          <img class="site-author-image" itemprop="image"
+               src="http://wulc.me/files/profile.jpg"
+               alt="良超" />
           <p class="site-author-name" itemprop="name">良超</p>
           <p class="site-description motion-element" itemprop="description">工程师要把合适的技术放在合适的位置|算法工程师首先得是个工程师</p>
         </div>
@@ -534,7 +542,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">219</span>
+                <span class="site-state-item-count">218</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -626,12 +634,12 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <center>
-<div class="copyright">
+<div class="copyright" >
   
   &copy;  2015 - 
   <span itemprop="copyrightYear">2020</span>
-  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a>
-  <br>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
+  </br>
   <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
 </div>
 </center>

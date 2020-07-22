@@ -6,19 +6,19 @@
 
 
 <html class="theme-next mist use-motion" lang="zh-Hans">
-<head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform">
-<meta http-equiv="Cache-Control" content="no-siteapp">
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
 
 
-  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
 
 
 
@@ -31,7 +31,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
 
 
 
@@ -39,41 +39,45 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
-
-
-  <meta name="keywords" content="python,动态规划,栈,">
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
-
-
-
-
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
+  <meta name="keywords" content="python,动态规划,栈," />
 
 
 
 
 
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
 
-<meta name="description" content="原题如下：  Given a string containing just the characters ‘(‘ and ‘)’, find the length of the longest valid (well-formed) parentheses substring.">
-<meta name="keywords" content="python,动态规划,栈">
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="原题如下：
+
+Given a string containing just the characters ‘(‘ and ‘)’, find the length of the longest valid (well-formed) parentheses substring.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="LeetCode解题报告(32)--最长合法的子括号串">
 <meta property="og:url" content="http://wulc.github.io/2016/04/06/LeetCode解题报告(32)--最长合法的子括号串/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
-<meta property="og:description" content="原题如下：  Given a string containing just the characters ‘(‘ and ‘)’, find the length of the longest valid (well-formed) parentheses substring.">
-<meta property="og:locale" content="zh-Hans">
+<meta property="og:description" content="原题如下：
+
+Given a string containing just the characters ‘(‘ and ‘)’, find the length of the longest valid (well-formed) parentheses substring.">
 <meta property="og:updated_time" content="2019-06-01T09:14:44.056Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="LeetCode解题报告(32)--最长合法的子括号串">
-<meta name="twitter:description" content="原题如下：  Given a string containing just the characters ‘(‘ and ‘)’, find the length of the longest valid (well-formed) parentheses substring.">
+<meta name="twitter:description" content="原题如下：
+
+Given a string containing just the characters ‘(‘ and ‘)’, find the length of the longest valid (well-formed) parentheses substring.">
 
 
 
@@ -101,7 +105,7 @@
 
 
 
-  <link rel="canonical" href="http://wulc.github.io/2016/04/06/LeetCode解题报告(32)--最长合法的子括号串/">
+  <link rel="canonical" href="http://wulc.github.io/2016/04/06/LeetCode解题报告(32)--最长合法的子括号串/"/>
 
 
 
@@ -142,7 +146,7 @@
   
 
   <div class="custom-logo-site-title">
-    <a href="/" class="brand" rel="start">
+    <a href="/"  class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <span class="site-title">吴良超的学习笔记</span>
       <span class="logo-line-after"><i></i></span>
@@ -171,7 +175,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
             首页
           </a>
@@ -181,7 +185,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
             
             标签
           </a>
@@ -191,7 +195,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
             归档
           </a>
@@ -201,7 +205,7 @@
         <li class="menu-item menu-item-about">
           <a href="/about" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
             
             关于
           </a>
@@ -214,7 +218,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
             
             站内搜索
           </a>
@@ -263,14 +267,14 @@
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="良超">
-    <meta itemprop="description" content>
+    <meta itemprop="description" content="">
     <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
   </span>
 
   <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
     <meta itemprop="name" content="吴良超的学习笔记">
     <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src>
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
     </span>
   </span>
 
@@ -313,7 +317,7 @@
 
 
           
-            <span class="post-category">
+            <span class="post-category" >
             
               <span class="post-meta-divider">|</span>
             
@@ -379,24 +383,16 @@
       
 
       
-        <p><a href="https://leetcode.com/problems/longest-valid-parentheses/" target="_blank" rel="noopener">原题</a>如下：</p>
+        <p><a href="https://leetcode.com/problems/longest-valid-parentheses/" target="_blank" rel="external">原题</a>如下：</p>
 <blockquote>
-<p>Given a string containing just the characters ‘(‘ and ‘)’, find the length of the longest valid (well-formed) parentheses substring.</p>
-</blockquote>
-<a id="more"></a>
-<blockquote>
-<p>For “(()”, the longest valid parentheses substring is “()”, which has length = 2.</p>
-</blockquote>
-<blockquote>
+<p>Given a string containing just the characters ‘(‘ and ‘)’, find the length of the longest valid (well-formed) parentheses substring.<br><a id="more"></a><br>For “(()”, the longest valid parentheses substring is “()”, which has length = 2.</p>
 <p>Another example is “)()())”, where the longest valid parentheses substring is “()()”, which has length = 4.</p>
 </blockquote>
 <p>题目的要求从给出的包含括号的string中找到最长的合法string。</p>
 <p>最暴力的方法就是从长到短遍历string中的所有可能的subString，再判断subString是否合法，这种方法的时间复杂度是$O(n^3)$，提交时TLE。</p>
 <p><strong>两种比较巧妙的方法的方法的时间复杂度都是O(n)，一种是动态规划，一种是利用栈存储不合法的括号的位置。</strong></p>
 <p>下面分别列出这三种方法</p>
-<h2 id="方法一，暴力枚举，时间复杂度-O-n-3"><a href="#方法一，暴力枚举，时间复杂度-O-n-3" class="headerlink" title="方法一，暴力枚举，时间复杂度$O(n^3)$"></a>方法一，暴力枚举，时间复杂度$O(n^3)$</h2><p>虽然容易理解，答案也正确，但是提交超时</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">longestValidParentheses</span><span class="params">(self, s)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        :type s: str</span></span><br><span class="line"><span class="string">        :rtype: int</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        <span class="keyword">if</span> len(s)&lt;<span class="number">2</span>:</span><br><span class="line">           <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        left = <span class="number">0</span></span><br><span class="line">        right = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(len(s)):</span><br><span class="line">            <span class="keyword">if</span> s[i] == <span class="string">'('</span>:</span><br><span class="line">                left+=<span class="number">1</span></span><br><span class="line">            <span class="keyword">elif</span> s[i] == <span class="string">')'</span>:</span><br><span class="line">                right+=<span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        m = min(left,right)</span><br><span class="line">        </span><br><span class="line">        cut = len(s)<span class="number">-2</span>*m <span class="comment"># 从长到短遍历</span></span><br><span class="line">        <span class="keyword">while</span> cut&lt;=len(s)<span class="number">-2</span>:</span><br><span class="line">            subLen = len(s) - cut</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> range(cut+<span class="number">1</span>):</span><br><span class="line">                subStr = s[i:i+subLen]</span><br><span class="line">                <span class="keyword">if</span> subStr[<span class="number">0</span>] == <span class="string">')'</span>:</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                <span class="keyword">if</span> self.isValid(subStr):</span><br><span class="line">                    <span class="keyword">return</span> subLen</span><br><span class="line">            cut +=<span class="number">2</span>        </span><br><span class="line">    <span class="comment"># 判断子字符串是否有效        </span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">isValid</span><span class="params">(self,s)</span>:</span></span><br><span class="line">        stack = []</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(len(s)):</span><br><span class="line">            <span class="keyword">if</span> s[i] == <span class="string">'('</span>:</span><br><span class="line">                stack.append(<span class="string">'('</span>)</span><br><span class="line">            <span class="keyword">elif</span> s[i] == <span class="string">')'</span>:</span><br><span class="line">                <span class="keyword">if</span> len(stack)&gt;<span class="number">0</span>:</span><br><span class="line">                    stack.pop(len(stack)<span class="number">-1</span>)</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    <span class="keyword">break</span></span><br><span class="line">            </span><br><span class="line">        <span class="keyword">if</span> len(stack)==<span class="number">0</span> <span class="keyword">and</span> i==len(s)<span class="number">-1</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br></pre></td></tr></table></figure>
-
+<h2 id="方法一，暴力枚举，时间复杂度-O-n-3"><a href="#方法一，暴力枚举，时间复杂度-O-n-3" class="headerlink" title="方法一，暴力枚举，时间复杂度$O(n^3)$"></a>方法一，暴力枚举，时间复杂度$O(n^3)$</h2><p>虽然容易理解，答案也正确，但是提交超时<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">longestValidParentheses</span><span class="params">(self, s)</span>:</span></span><br><span class="line">        <span class="string">"""</span><br><span class="line">        :type s: str</span><br><span class="line">        :rtype: int</span><br><span class="line">        """</span></span><br><span class="line">        <span class="keyword">if</span> len(s)&lt;<span class="number">2</span>:</span><br><span class="line">           <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        left = <span class="number">0</span></span><br><span class="line">        right = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(len(s)):</span><br><span class="line">            <span class="keyword">if</span> s[i] == <span class="string">'('</span>:</span><br><span class="line">                left+=<span class="number">1</span></span><br><span class="line">            <span class="keyword">elif</span> s[i] == <span class="string">')'</span>:</span><br><span class="line">                right+=<span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        m = min(left,right)</span><br><span class="line">        </span><br><span class="line">        cut = len(s)<span class="number">-2</span>*m <span class="comment"># 从长到短遍历</span></span><br><span class="line">        <span class="keyword">while</span> cut&lt;=len(s)<span class="number">-2</span>:</span><br><span class="line">            subLen = len(s) - cut</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> range(cut+<span class="number">1</span>):</span><br><span class="line">                subStr = s[i:i+subLen]</span><br><span class="line">                <span class="keyword">if</span> subStr[<span class="number">0</span>] == <span class="string">')'</span>:</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                <span class="keyword">if</span> self.isValid(subStr):</span><br><span class="line">                    <span class="keyword">return</span> subLen</span><br><span class="line">            cut +=<span class="number">2</span>        </span><br><span class="line">    <span class="comment"># 判断子字符串是否有效        </span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">isValid</span><span class="params">(self,s)</span>:</span></span><br><span class="line">        stack = []</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(len(s)):</span><br><span class="line">            <span class="keyword">if</span> s[i] == <span class="string">'('</span>:</span><br><span class="line">                stack.append(<span class="string">'('</span>)</span><br><span class="line">            <span class="keyword">elif</span> s[i] == <span class="string">')'</span>:</span><br><span class="line">                <span class="keyword">if</span> len(stack)&gt;<span class="number">0</span>:</span><br><span class="line">                    stack.pop(len(stack)<span class="number">-1</span>)</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    <span class="keyword">break</span></span><br><span class="line">            </span><br><span class="line">        <span class="keyword">if</span> len(stack)==<span class="number">0</span> <span class="keyword">and</span> i==len(s)<span class="number">-1</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">True</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">False</span></span><br></pre></td></tr></table></figure></p>
 <h2 id="方法二，动态规划，时间复杂度-O-n"><a href="#方法二，动态规划，时间复杂度-O-n" class="headerlink" title="方法二，动态规划，时间复杂度$O(n)$"></a>方法二，动态规划，时间复杂度$O(n)$</h2><p>DP会先建立一个longest列表，其中<strong>longest[i] 代表以 s[i] 结尾的最长合法串的长度</strong>。这样便有了以下判断条件：</p>
 <ul>
 <li>假如 <code>s[i]=(</code> ，那么longest[i]=0</li>
@@ -404,16 +400,12 @@
 <li>假如 <code>s[i]=) &amp;&amp; s[i-1]=) &amp;&amp; s[i-longest[i-1]-1]==(</code> ,那么longest[i]=longest[i-longest[i-1]-2]+longest[i-1]+2</li>
 <li>假如上面情况都不符合那么，longest[i] = 0</li>
 </ul>
-<p>实现代码如下,提交时能够AC：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">longestValidParentheses</span><span class="params">(self, s)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        :type s: str</span></span><br><span class="line"><span class="string">        :rtype: int</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        longest = []</span><br><span class="line">        longest.append(<span class="number">0</span>)</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>,len(s)):</span><br><span class="line">            <span class="keyword">if</span> s[i] == <span class="string">'('</span>:</span><br><span class="line">                longest.append(<span class="number">0</span>)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">if</span> i<span class="number">-1</span>&gt;=<span class="number">0</span> <span class="keyword">and</span> s[i<span class="number">-1</span>]==<span class="string">'('</span>:</span><br><span class="line">                    longest.append(longest[i<span class="number">-2</span>]+<span class="number">2</span>)</span><br><span class="line">                <span class="keyword">elif</span> i<span class="number">-1</span>&gt;=<span class="number">0</span> <span class="keyword">and</span> s[i<span class="number">-1</span>]==<span class="string">')'</span> <span class="keyword">and</span> i-longest[i<span class="number">-1</span>]<span class="number">-1</span> &gt;=<span class="number">0</span> <span class="keyword">and</span> s[i-longest[i<span class="number">-1</span>]<span class="number">-1</span>]==<span class="string">'('</span>:</span><br><span class="line">                    tmp = longest[i-longest[i<span class="number">-1</span>]<span class="number">-2</span>] <span class="keyword">if</span> i-longest[i<span class="number">-1</span>]<span class="number">-2</span>&gt;=<span class="number">0</span> <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line">                    longest.append(longest[i<span class="number">-1</span>]+<span class="number">2</span>+tmp)</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    longest.append(<span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> max(longest)</span><br></pre></td></tr></table></figure>
-
+<p>实现代码如下,提交时能够AC：<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">longestValidParentheses</span><span class="params">(self, s)</span>:</span></span><br><span class="line">        <span class="string">"""</span><br><span class="line">        :type s: str</span><br><span class="line">        :rtype: int</span><br><span class="line">        """</span></span><br><span class="line">        longest = []</span><br><span class="line">        longest.append(<span class="number">0</span>)</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>,len(s)):</span><br><span class="line">            <span class="keyword">if</span> s[i] == <span class="string">'('</span>:</span><br><span class="line">                longest.append(<span class="number">0</span>)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">if</span> i<span class="number">-1</span>&gt;=<span class="number">0</span> <span class="keyword">and</span> s[i<span class="number">-1</span>]==<span class="string">'('</span>:</span><br><span class="line">                    longest.append(longest[i<span class="number">-2</span>]+<span class="number">2</span>)</span><br><span class="line">                <span class="keyword">elif</span> i<span class="number">-1</span>&gt;=<span class="number">0</span> <span class="keyword">and</span> s[i<span class="number">-1</span>]==<span class="string">')'</span> <span class="keyword">and</span> i-longest[i<span class="number">-1</span>]<span class="number">-1</span> &gt;=<span class="number">0</span> <span class="keyword">and</span> s[i-longest[i<span class="number">-1</span>]<span class="number">-1</span>]==<span class="string">'('</span>:</span><br><span class="line">                    tmp = longest[i-longest[i<span class="number">-1</span>]<span class="number">-2</span>] <span class="keyword">if</span> i-longest[i<span class="number">-1</span>]<span class="number">-2</span>&gt;=<span class="number">0</span> <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line">                    longest.append(longest[i<span class="number">-1</span>]+<span class="number">2</span>+tmp)</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    longest.append(<span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> max(longest)</span><br></pre></td></tr></table></figure></p>
 <h2 id="方法三，通过栈存储不合法的括号位置，时间复杂度-O-n"><a href="#方法三，通过栈存储不合法的括号位置，时间复杂度-O-n" class="headerlink" title="方法三，通过栈存储不合法的括号位置，时间复杂度$O(n)$"></a>方法三，通过栈存储不合法的括号位置，时间复杂度$O(n)$</h2><p>这种方法通过栈来存储不合法的括号的<strong>位置</strong>。</p>
 <p>具体流程是先遍历字符串s，遇到左括号就将位置其入栈，遇到右括号就检查栈顶是否有左括号号，有的话就弹出这个左括号，否则将右括号的位置入栈。最后得到的栈中的元素就是原来str中不合法的括号的位置，那么栈中相邻位置的元素的差值就是一个合法的括号串的长度，找到其中最大值即可。</p>
 <p>需要注意的是最后遍历栈找最长合法串时需要在最左边和最右边分别加上<code>-1</code>和<code>len(s)</code>(s就是原字符串的长度)，目的是为了当原字符串最左边或最右边的括号均为合法时能够被计算长度。</p>
-<p>实现代码如下：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">longestValidParentheses</span><span class="params">(self, s)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        :type s: str</span></span><br><span class="line"><span class="string">        :rtype: int</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        maxLen = <span class="number">0</span></span><br><span class="line">        stack=[]</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(len(s)):</span><br><span class="line">            <span class="keyword">if</span> s[i] == <span class="string">')'</span> <span class="keyword">and</span> len(stack)&gt;<span class="number">0</span> <span class="keyword">and</span> s[stack[<span class="number">-1</span>]]==<span class="string">'('</span>:</span><br><span class="line">                stack.pop(len(stack)<span class="number">-1</span>)</span><br><span class="line">                maxLen = <span class="number">2</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                stack.append(i)</span><br><span class="line">        </span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 全匹配        </span></span><br><span class="line">        <span class="keyword">if</span> len(stack) == <span class="number">0</span>: </span><br><span class="line">            <span class="keyword">return</span> len(s)</span><br><span class="line">        <span class="comment"># 不在不匹配的要在头尾插入元素来计算头或尾匹配的括号</span></span><br><span class="line">        stack.append(len(s))</span><br><span class="line">        stack.insert(<span class="number">0</span>,<span class="number">-1</span>)</span><br><span class="line">        j = len(stack)<span class="number">-1</span></span><br><span class="line">        <span class="keyword">while</span> j&gt;<span class="number">0</span>:</span><br><span class="line">            maxLen = max(maxLen,stack[j]-stack[j<span class="number">-1</span>]<span class="number">-1</span>)</span><br><span class="line">            j -= <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> maxLen</span><br></pre></td></tr></table></figure>
-
-<p>参考：<br>【1】<a href="https://leetcode.com/discuss/7609/my-o-n-solution-using-a-stack" target="_blank" rel="noopener">https://leetcode.com/discuss/7609/my-o-n-solution-using-a-stack</a><br>【2】<a href="https://leetcode.com/discuss/8092/my-dp-o-n-solution-without-using-stack" target="_blank" rel="noopener">https://leetcode.com/discuss/8092/my-dp-o-n-solution-without-using-stack</a></p>
+<p>实现代码如下：<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">longestValidParentheses</span><span class="params">(self, s)</span>:</span></span><br><span class="line">        <span class="string">"""</span><br><span class="line">        :type s: str</span><br><span class="line">        :rtype: int</span><br><span class="line">        """</span></span><br><span class="line">        maxLen = <span class="number">0</span></span><br><span class="line">        stack=[]</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(len(s)):</span><br><span class="line">            <span class="keyword">if</span> s[i] == <span class="string">')'</span> <span class="keyword">and</span> len(stack)&gt;<span class="number">0</span> <span class="keyword">and</span> s[stack[<span class="number">-1</span>]]==<span class="string">'('</span>:</span><br><span class="line">                stack.pop(len(stack)<span class="number">-1</span>)</span><br><span class="line">                maxLen = <span class="number">2</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                stack.append(i)</span><br><span class="line">        </span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 全匹配        </span></span><br><span class="line">        <span class="keyword">if</span> len(stack) == <span class="number">0</span>: </span><br><span class="line">            <span class="keyword">return</span> len(s)</span><br><span class="line">        <span class="comment"># 不在不匹配的要在头尾插入元素来计算头或尾匹配的括号</span></span><br><span class="line">        stack.append(len(s))</span><br><span class="line">        stack.insert(<span class="number">0</span>,<span class="number">-1</span>)</span><br><span class="line">        j = len(stack)<span class="number">-1</span></span><br><span class="line">        <span class="keyword">while</span> j&gt;<span class="number">0</span>:</span><br><span class="line">            maxLen = max(maxLen,stack[j]-stack[j<span class="number">-1</span>]<span class="number">-1</span>)</span><br><span class="line">            j -= <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> maxLen</span><br></pre></td></tr></table></figure></p>
+<p>参考：<br>【1】<a href="https://leetcode.com/discuss/7609/my-o-n-solution-using-a-stack" target="_blank" rel="external">https://leetcode.com/discuss/7609/my-o-n-solution-using-a-stack</a><br>【2】<a href="https://leetcode.com/discuss/8092/my-dp-o-n-solution-without-using-stack" target="_blank" rel="external">https://leetcode.com/discuss/8092/my-dp-o-n-solution-without-using-stack</a></p>
 
       
     </div>
@@ -510,7 +502,7 @@
 
       
         <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
             文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
@@ -521,7 +513,9 @@
 
       <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image" src="http://wulc.me/files/profile.jpg" alt="良超">
+          <img class="site-author-image" itemprop="image"
+               src="http://wulc.me/files/profile.jpg"
+               alt="良超" />
           <p class="site-author-name" itemprop="name">良超</p>
           <p class="site-description motion-element" itemprop="description">工程师要把合适的技术放在合适的位置|算法工程师首先得是个工程师</p>
         </div>
@@ -530,7 +524,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">219</span>
+                <span class="site-state-item-count">218</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -622,12 +616,12 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <center>
-<div class="copyright">
+<div class="copyright" >
   
   &copy;  2015 - 
   <span itemprop="copyrightYear">2020</span>
-  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a>
-  <br>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
+  </br>
   <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
 </div>
 </center>

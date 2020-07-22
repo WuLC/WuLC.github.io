@@ -6,19 +6,19 @@
 
 
 <html class="theme-next mist use-motion" lang="zh-Hans">
-<head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform">
-<meta http-equiv="Cache-Control" content="no-siteapp">
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
 
 
-  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
 
 
 
@@ -31,7 +31,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
 
 
 
@@ -39,23 +39,23 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
-
-
-  <meta name="keywords" content="分布式,">
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
+  <meta name="keywords" content="分布式," />
 
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
+
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
 
 
 
@@ -63,13 +63,11 @@
 
 
 <meta name="description" content="本系列文章是学习课程 6.824: Distributed Systems 时的一些学习笔记，整个课程的相关材料已整理至 DistributedSystemInGo。本文是 LEC3 的内容，介绍了分布式文件系统 GFS，GFS 为 MapReduce 提供了存储，同样是出自 Google，同样是年代久远，但是其中的一些设计思想同样值得我们参考。">
-<meta name="keywords" content="分布式">
 <meta property="og:type" content="article">
 <meta property="og:title" content="分布式系统笔记(3)-GFS">
 <meta property="og:url" content="http://wulc.github.io/2019/01/20/分布式系统笔记(3)-GFS/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
 <meta property="og:description" content="本系列文章是学习课程 6.824: Distributed Systems 时的一些学习笔记，整个课程的相关材料已整理至 DistributedSystemInGo。本文是 LEC3 的内容，介绍了分布式文件系统 GFS，GFS 为 MapReduce 提供了存储，同样是出自 Google，同样是年代久远，但是其中的一些设计思想同样值得我们参考。">
-<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/GFS_Architecture.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/gfs_write_operation.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/gfs_consistent_state.png">
@@ -109,7 +107,7 @@
 
 
 
-  <link rel="canonical" href="http://wulc.github.io/2019/01/20/分布式系统笔记(3)-GFS/">
+  <link rel="canonical" href="http://wulc.github.io/2019/01/20/分布式系统笔记(3)-GFS/"/>
 
 
 
@@ -150,7 +148,7 @@
   
 
   <div class="custom-logo-site-title">
-    <a href="/" class="brand" rel="start">
+    <a href="/"  class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <span class="site-title">吴良超的学习笔记</span>
       <span class="logo-line-after"><i></i></span>
@@ -179,7 +177,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
             首页
           </a>
@@ -189,7 +187,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
             
             标签
           </a>
@@ -199,7 +197,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
             归档
           </a>
@@ -209,7 +207,7 @@
         <li class="menu-item menu-item-about">
           <a href="/about" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
             
             关于
           </a>
@@ -222,7 +220,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
             
             站内搜索
           </a>
@@ -271,14 +269,14 @@
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="良超">
-    <meta itemprop="description" content>
+    <meta itemprop="description" content="">
     <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
   </span>
 
   <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
     <meta itemprop="name" content="吴良超的学习笔记">
     <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src>
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
     </span>
   </span>
 
@@ -321,7 +319,7 @@
 
 
           
-            <span class="post-category">
+            <span class="post-category" >
             
               <span class="post-meta-divider">|</span>
             
@@ -365,9 +363,8 @@
       
 
       
-        <p>本系列文章是学习课程 <a href="https://pdos.csail.mit.edu/6.824/" target="_blank" rel="noopener">6.824: Distributed Systems</a> 时的一些学习笔记，整个课程的相关材料已整理至 <a href="https://github.com/WuLC/DistributedSystemInGo" target="_blank" rel="noopener">DistributedSystemInGo</a>。本文是 LEC3 的内容，介绍了分布式文件系统 GFS，GFS 为 MapReduce 提供了存储，同样是出自 Google，同样是年代久远，但是其中的一些设计思想同样值得我们参考。</p>
+        <p>本系列文章是学习课程 <a href="https://pdos.csail.mit.edu/6.824/" target="_blank" rel="external">6.824: Distributed Systems</a> 时的一些学习笔记，整个课程的相关材料已整理至 <a href="https://github.com/WuLC/DistributedSystemInGo" target="_blank" rel="external">DistributedSystemInGo</a>。本文是 LEC3 的内容，介绍了分布式文件系统 GFS，GFS 为 MapReduce 提供了存储，同样是出自 Google，同样是年代久远，但是其中的一些设计思想同样值得我们参考。</p>
 <a id="more"></a>
-
 <h2 id="设计理念"><a href="#设计理念" class="headerlink" title="设计理念"></a>设计理念</h2><p>GFS 的设计理念也可以理解为其适用场景</p>
 <ul>
 <li>整个分布式系统是由普通的商用机器构成的，因此<strong>故障会比较频繁</strong></li>
@@ -413,7 +410,7 @@
 <p>首先是 write 的过程，为了让同一个 chunk 多个副本数据保持一致， <strong>master 将存储 chunk 的其中一个 chunkserver 作为 primary，其他是 secondary，primary 用于确定数据写入这个 chunk 的顺序，secondary 则复制 primary 的写入顺序即可</strong>，下图是一个写操作的流程</p>
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/gfs_write_operation.png" alt="gfs_write"></p>
 <p>各个步骤的具体操作如下</p>
-<p>(1) client 询问 master 要写入的 chunk 所对应的 primary 和 secondary 位置（如果这时没有 primary，master就会指定一个<br>(2) master 返回相关信息(chunk locatioin，chunk version 等)，client会把信息存入cache，以后就不再重复询问 master 以节省开销，直到该 primary 的身份失效<br>(3) 客户端把数据发给所有 replicas (包括 primary 和 secondary)，replicas 们会把数据暂存在 LRU buffer cache 中，但是<strong>此时还并没有真的写入磁盘</strong><br>(4) 当所有 replica 都确认收到数据后，client 发写入指令给 primary；**primary 会给这个指令定一个序列号(当同时收到多个 client 的请求时，在 primary 这里确定顺序)**，primary 依序列号修改本地的数据<br>(5) primary 把写入指令和序列号发给 secondary，secondary都依同样序列号修改自己的数据<br>(6) 当 primary 收到 secondary 的回复时，返回成功信息给客户端<br>(7) 如果有 secondary 失败了，primary 会返回失败信息给客户端。此时数据就是不一致的。客户端会发起重试。</p>
+<p>(1) client 询问 master 要写入的 chunk 所对应的 primary 和 secondary 位置（如果这时没有 primary，master就会指定一个<br>(2) master 返回相关信息(chunk locatioin，chunk version 等)，client会把信息存入cache，以后就不再重复询问 master 以节省开销，直到该 primary 的身份失效<br>(3) 客户端把数据发给所有 replicas (包括 primary 和 secondary)，replicas 们会把数据暂存在 LRU buffer cache 中，但是<strong>此时还并没有真的写入磁盘</strong><br>(4) 当所有 replica 都确认收到数据后，client 发写入指令给 primary；<strong>primary 会给这个指令定一个序列号(当同时收到多个 client 的请求时，在 primary 这里确定顺序)</strong>，primary 依序列号修改本地的数据<br>(5) primary 把写入指令和序列号发给 secondary，secondary都依同样序列号修改自己的数据<br>(6) 当 primary 收到 secondary 的回复时，返回成功信息给客户端<br>(7) 如果有 secondary 失败了，primary 会返回失败信息给客户端。此时数据就是不一致的。客户端会发起重试。</p>
 <p>另外一个写操作是 record append，其过程与上面相似，但是在这里 <strong>client 不会指定 offset，而是只提供数据，GFS 会把数据 append 进去后再返回 offset 给 client</strong>。</p>
 <p>record append 还在 primary 添加了以下逻辑：</p>
 <ul>
@@ -432,7 +429,7 @@
 <li><p><strong>snapshot</strong></p>
 <ul>
 <li>snapshot是对系统当前状态进行的一次拍照。用户可以在任意时刻回滚到快照的状态</li>
-<li>采用 <strong>COW</strong>(<a href="https://en.wikipedia.org/wiki/Copy-on-write" target="_blank" rel="noopener">copy-on-wirte</a>) 机制实现 snapshot，即如果被 snapshot 的文件有更新操作时，就将文件的要被更新的chunk复制一份，然后对复制的chunk进行更新，而原来的chunk作为快照数据被保留，以后要恢复到该快照时，直接将该chunk读出即可</li>
+<li>采用 <strong>COW</strong>(<a href="https://en.wikipedia.org/wiki/Copy-on-write" target="_blank" rel="external">copy-on-wirte</a>) 机制实现 snapshot，即如果被 snapshot 的文件有更新操作时，就将文件的要被更新的chunk复制一份，然后对复制的chunk进行更新，而原来的chunk作为快照数据被保留，以后要恢复到该快照时，直接将该chunk读出即可</li>
 <li>当GFS的Master节点收到Snapshot请求时，其处理逻辑如下</li>
 </ul>
 </li>
@@ -461,7 +458,7 @@
 <li>inconsistent：多副本数据不一致 </li>
 <li>undefined：数据未定义</li>
 </ul>
-<p>下面分别以几个案例介绍上面的状态，这部分内容主要摘自<a href="https://zhuanlan.zhihu.com/p/28155582" target="_blank" rel="noopener">这里</a></p>
+<p>下面分别以几个案例介绍上面的状态，这部分内容主要摘自<a href="https://zhuanlan.zhihu.com/p/28155582" target="_blank" rel="external">这里</a></p>
 <p><strong>serial write</strong></p>
 <p>当 client 串行更新时时，客户端自己知道写入文件范围以及写入数据内容，且本次写入在数据服务器的多副本上均执行成功。因此，本次写结果对于客户端来说就是明确的，且多副本上数据一致，故而结果是 <strong>defined</strong>。如下图：</p>
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/gfs_defined_write.png" alt="gfs-defined"></p>
@@ -479,13 +476,13 @@
 <p>假设上面的append经历了一次重试，那可能实际chunk的布局如下</p>
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/gfs_inconsistent_append.png" alt="inconsistent append"></p>
 <p>由于第一次写失败（错误可能发生在任意一个副本），导致了多副本之间从50至80的数据可能不一致。但接下来重试成功，从80至110之间的数据一致，因此，其状态是 <strong>interspersed with inconsistent</strong>。</p>
-<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>本文主要介绍了 GFS 的适用场景、系统架构、读写过程以及 一致性的保证，GFS 可以说是为 MapReduce 量身定做的文件系统: 大文件、文件写入后基本不修改、更着重吞吐量等，也<a href="https://zhuanlan.zhihu.com/p/36752400" target="_blank" rel="noopener">有人说</a>认为 GFS 也就没有 MapReduce 了，其实与其说 MapReduce 多么牛，不如说是GFS牛，因为 MapReduce 模型早就是数据库领域几十年前玩剩下的了, 但是只有 Google 做出了那种廉价高效的分布式系，主要是因为 Google 的下层的支持系统也就是 GFS 做得好。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>本文主要介绍了 GFS 的适用场景、系统架构、读写过程以及 一致性的保证，GFS 可以说是为 MapReduce 量身定做的文件系统: 大文件、文件写入后基本不修改、更着重吞吐量等，也<a href="https://zhuanlan.zhihu.com/p/36752400" target="_blank" rel="external">有人说</a>认为 GFS 也就没有 MapReduce 了，其实与其说 MapReduce 多么牛，不如说是GFS牛，因为 MapReduce 模型早就是数据库领域几十年前玩剩下的了, 但是只有 Google 做出了那种廉价高效的分布式系，主要是因为 Google 的下层的支持系统也就是 GFS 做得好。</p>
 <hr>
 <p>参考 </p>
 <ul>
-<li><a href="https://storage.googleapis.com/pub-tools-public-publication-data/pdf/035fc972c796d33122033a0614bc94cff1527999.pdf" target="_blank" rel="noopener">The Google File System</a></li>
-<li><a href="https://zhuanlan.zhihu.com/p/28155582" target="_blank" rel="noopener">Google File System</a></li>
-<li><a href="https://zhuanlan.zhihu.com/p/36752400" target="_blank" rel="noopener">Paper Reading: GFS</a></li>
+<li><a href="https://storage.googleapis.com/pub-tools-public-publication-data/pdf/035fc972c796d33122033a0614bc94cff1527999.pdf" target="_blank" rel="external">The Google File System</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/28155582" target="_blank" rel="external">Google File System</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/36752400" target="_blank" rel="external">Paper Reading: GFS</a></li>
 </ul>
 
       
@@ -579,7 +576,7 @@
 
       
         <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
             文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
@@ -590,7 +587,9 @@
 
       <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image" src="http://wulc.me/files/profile.jpg" alt="良超">
+          <img class="site-author-image" itemprop="image"
+               src="http://wulc.me/files/profile.jpg"
+               alt="良超" />
           <p class="site-author-name" itemprop="name">良超</p>
           <p class="site-description motion-element" itemprop="description">工程师要把合适的技术放在合适的位置|算法工程师首先得是个工程师</p>
         </div>
@@ -599,7 +598,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">219</span>
+                <span class="site-state-item-count">218</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -691,12 +690,12 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <center>
-<div class="copyright">
+<div class="copyright" >
   
   &copy;  2015 - 
   <span itemprop="copyrightYear">2020</span>
-  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a>
-  <br>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
+  </br>
   <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
 </div>
 </center>

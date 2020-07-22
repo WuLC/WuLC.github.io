@@ -6,19 +6,19 @@
 
 
 <html class="theme-next mist use-motion" lang="zh-Hans">
-<head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform">
-<meta http-equiv="Cache-Control" content="no-siteapp">
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
 
 
-  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
 
 
 
@@ -31,7 +31,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
 
 
 
@@ -39,23 +39,23 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
-
-
-  <meta name="keywords" content="机器学习,深度学习,">
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
+  <meta name="keywords" content="机器学习,深度学习," />
 
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
+
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
 
 
 
@@ -63,13 +63,11 @@
 
 
 <meta name="description" content="在深度学习中训练网络时，往往会出现训练数据过于庞大从而无法全部加载到内存中的情况，这里讲述的就是如何分批训练一个庞大的数据集，下面会以Keras 中的训练为例进行讲述。">
-<meta name="keywords" content="机器学习,深度学习">
 <meta property="og:type" content="article">
 <meta property="og:title" content="分批训练过大的数据集">
 <meta property="og:url" content="http://wulc.github.io/2017/11/18/分批训练过大的数据集/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
 <meta property="og:description" content="在深度学习中训练网络时，往往会出现训练数据过于庞大从而无法全部加载到内存中的情况，这里讲述的就是如何分批训练一个庞大的数据集，下面会以Keras 中的训练为例进行讲述。">
-<meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2019-06-01T09:14:44.149Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="分批训练过大的数据集">
@@ -101,7 +99,7 @@
 
 
 
-  <link rel="canonical" href="http://wulc.github.io/2017/11/18/分批训练过大的数据集/">
+  <link rel="canonical" href="http://wulc.github.io/2017/11/18/分批训练过大的数据集/"/>
 
 
 
@@ -142,7 +140,7 @@
   
 
   <div class="custom-logo-site-title">
-    <a href="/" class="brand" rel="start">
+    <a href="/"  class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <span class="site-title">吴良超的学习笔记</span>
       <span class="logo-line-after"><i></i></span>
@@ -171,7 +169,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
             首页
           </a>
@@ -181,7 +179,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
             
             标签
           </a>
@@ -191,7 +189,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
             归档
           </a>
@@ -201,7 +199,7 @@
         <li class="menu-item menu-item-about">
           <a href="/about" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
             
             关于
           </a>
@@ -214,7 +212,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
             
             站内搜索
           </a>
@@ -263,14 +261,14 @@
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="良超">
-    <meta itemprop="description" content>
+    <meta itemprop="description" content="">
     <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
   </span>
 
   <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
     <meta itemprop="name" content="吴良超的学习笔记">
     <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src>
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
     </span>
   </span>
 
@@ -313,7 +311,7 @@
 
 
           
-            <span class="post-category">
+            <span class="post-category" >
             
               <span class="post-meta-divider">|</span>
             
@@ -370,16 +368,13 @@
       
         <p>在深度学习中训练网络时，往往会出现训练数据过于庞大从而无法全部加载到内存中的情况，这里讲述的就是如何分批训练一个庞大的数据集，下面会以Keras 中的训练为例进行讲述。</p>
 <a id="more"></a>
-
 <p>分批处理的思路就是先将那个较大的数据处理成若干个较小的数据文件（如共1000000 条记录，处理成 1000 个小文件，每个小文件 1000 条记录），然后依次读取各个小的数据文件到内存中进行训练，这里的利用了 python 的 generator 特性来依次读取各个文件的内容。</p>
 <p>如下代码所示,就是每次读取 <code>num_files</code> 个文件并合并成 <code>X_train</code> 和 <code>Y_train</code> 并返回，直到整个目录下的文件都被遍历一遍。</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">train_batch_generator</span><span class="params">(train_data_dir = <span class="string">'./processed_data/train/'</span>, num_files = <span class="number">1</span>)</span>:</span></span><br><span class="line">    files = sorted(os.listdir(train_data_dir))</span><br><span class="line">    count = num_files</span><br><span class="line">    embeddings, labels = [], []</span><br><span class="line">    <span class="keyword">for</span> file <span class="keyword">in</span> files:</span><br><span class="line">        print(<span class="string">'Reading file &#123;0&#125;...........'</span>.format(file))</span><br><span class="line">        gc.collect()</span><br><span class="line">        <span class="keyword">with</span> open(train_data_dir + file, <span class="string">'rb'</span>) <span class="keyword">as</span> rf:</span><br><span class="line">            data = pickle.load(rf)</span><br><span class="line">        embeddings.append(data[<span class="string">'embedding'</span>])</span><br><span class="line">        labels.append(data[<span class="string">'label'</span>])</span><br><span class="line">        count -= <span class="number">1</span></span><br><span class="line">        <span class="keyword">if</span> count == <span class="number">0</span>: </span><br><span class="line">            X_train, Y_train = np.concatenate(embeddings), np.concatenate(labels)</span><br><span class="line">            gc.collect()</span><br><span class="line">            count = num_files</span><br><span class="line">            embeddings, labels = [], []</span><br><span class="line">            <span class="keyword">yield</span> (X_train, Y_train)</span><br></pre></td></tr></table></figure>
-
 <p>这样读取文件对应的训练方法如下（以Keras中的模型训练为例进行说明）</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">NUM_EPOCHS = <span class="number">10</span></span><br><span class="line">BATCH_SIZE = <span class="number">32</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(NUM_EPOCHS):</span><br><span class="line">    print(<span class="string">'################&#123;0&#125; epochs#############'</span>.format(i+<span class="number">1</span>))</span><br><span class="line">    <span class="keyword">for</span> x_train, y_train <span class="keyword">in</span> train_batch_generator(num_files = <span class="number">3</span>):</span><br><span class="line">        print(x_train.shape, y_train.shape)</span><br><span class="line">        gc.collect()</span><br><span class="line">        model.fit(x_train, y_train, batch_size = BATCH_SIZE, epochs = <span class="number">100</span>, validation_data = (x_test, y_test))</span><br></pre></td></tr></table></figure>
-
 <p>另一种方法不需要将大文件分成若干个小文件，而是直接打开整个大文件逐行读取，然后读取了一定数目的行后通过 <code>yield</code> 返回, 这种方法的一个问题就是训练过程中必须要保持整个文件为打开状态，此时如果发生系统故障等异常可能会损坏文件，而将大文件分为若干的小文件则能够很大程度上避免这个问题。</p>
-<p>这种方法的另外一个问题就是不能对训练样本进行的 shuffle，由于这深度神经网络的训练都是基于 SGD 模式的，因此需要对其训练样本进行 shuffle，具体可参考<a href="https://www.quora.com/Does-the-order-of-training-data-matter-when-training-neural-networks" target="_blank" rel="noopener">这个问题</a>。但是当训练样本很大时，显然无法读取整个文件后在内存进行 shuffle，但是如果将大文件分成小文件后，可在系统内存能够承受的范围内对几个小文件进行shuffle(如相邻的三个小文件)，虽然这种shuffle是一种局部的shuffle，但是可以通过改变进行shuffle的小文件的间隔并进行多次的shuffle（如间隔分别从0递增），从而近似全局的shuffle。</p>
+<p>这种方法的另外一个问题就是不能对训练样本进行的 shuffle，由于这深度神经网络的训练都是基于 SGD 模式的，因此需要对其训练样本进行 shuffle，具体可参考<a href="https://www.quora.com/Does-the-order-of-training-data-matter-when-training-neural-networks" target="_blank" rel="external">这个问题</a>。但是当训练样本很大时，显然无法读取整个文件后在内存进行 shuffle，但是如果将大文件分成小文件后，可在系统内存能够承受的范围内对几个小文件进行shuffle(如相邻的三个小文件)，虽然这种shuffle是一种局部的shuffle，但是可以通过改变进行shuffle的小文件的间隔并进行多次的shuffle（如间隔分别从0递增），从而近似全局的shuffle。</p>
 
       
     </div>
@@ -476,7 +471,9 @@
 
       <section class="site-overview sidebar-panel sidebar-panel-active">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image" src="http://wulc.me/files/profile.jpg" alt="良超">
+          <img class="site-author-image" itemprop="image"
+               src="http://wulc.me/files/profile.jpg"
+               alt="良超" />
           <p class="site-author-name" itemprop="name">良超</p>
           <p class="site-description motion-element" itemprop="description">工程师要把合适的技术放在合适的位置|算法工程师首先得是个工程师</p>
         </div>
@@ -485,7 +482,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">219</span>
+                <span class="site-state-item-count">218</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -561,12 +558,12 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <center>
-<div class="copyright">
+<div class="copyright" >
   
   &copy;  2015 - 
   <span itemprop="copyrightYear">2020</span>
-  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a>
-  <br>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
+  </br>
   <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
 </div>
 </center>

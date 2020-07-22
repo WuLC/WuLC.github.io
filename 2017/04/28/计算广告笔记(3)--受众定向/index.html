@@ -6,19 +6,19 @@
 
 
 <html class="theme-next mist use-motion" lang="zh-Hans">
-<head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform">
-<meta http-equiv="Cache-Control" content="no-siteapp">
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
 
 
-  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
 
 
 
@@ -31,7 +31,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
 
 
 
@@ -39,37 +39,39 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
-
-
-  <meta name="keywords" content="机器学习,计算广告,">
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
-
-
-
-
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
+  <meta name="keywords" content="机器学习,计算广告," />
 
 
 
 
 
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
 
-<meta name="description" content="这一讲主要介绍了受众定向的概念和若干种定向的方法。 受众定向概念受众定向是目前广告系统的核心部分，要做的就是根据人群划分进行广告售卖和优化。 受众定向可以认为是为 AUC（Ad，User，Context）打标签的过程，上下文标签可以认为是即时受众标签，如下所示是AUC上的标签类别">
-<meta name="keywords" content="机器学习,计算广告">
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="这一讲主要介绍了受众定向的概念和若干种定向的方法。
+受众定向概念受众定向是目前广告系统的核心部分，要做的就是根据人群划分进行广告售卖和优化。
+受众定向可以认为是为 AUC（Ad，User，Context）打标签的过程，上下文标签可以认为是即时受众标签，如下所示是AUC上的标签类别">
 <meta property="og:type" content="article">
 <meta property="og:title" content="计算广告笔记(3)--受众定向">
 <meta property="og:url" content="http://wulc.github.io/2017/04/28/计算广告笔记(3)--受众定向/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
-<meta property="og:description" content="这一讲主要介绍了受众定向的概念和若干种定向的方法。 受众定向概念受众定向是目前广告系统的核心部分，要做的就是根据人群划分进行广告售卖和优化。 受众定向可以认为是为 AUC（Ad，User，Context）打标签的过程，上下文标签可以认为是即时受众标签，如下所示是AUC上的标签类别">
-<meta property="og:locale" content="zh-Hans">
+<meta property="og:description" content="这一讲主要介绍了受众定向的概念和若干种定向的方法。
+受众定向概念受众定向是目前广告系统的核心部分，要做的就是根据人群划分进行广告售卖和优化。
+受众定向可以认为是为 AUC（Ad，User，Context）打标签的过程，上下文标签可以认为是即时受众标签，如下所示是AUC上的标签类别">
 <meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/oeuckcc9zz78ooe0aa7nw4iu/image_1bemrnn561kk85bhka521jii9.png">
 <meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/00v9yd7c7buy3vupe1l98tg4/image_1bi17ii0n2qr1s3169rersvho1t.png">
 <meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/dzh8nxfhswr4zfz1f9jnf8fn/image_1bi0joe626h46ri1vhc137216o9m.png">
@@ -87,7 +89,9 @@
 <meta property="og:updated_time" content="2019-06-01T09:14:44.194Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="计算广告笔记(3)--受众定向">
-<meta name="twitter:description" content="这一讲主要介绍了受众定向的概念和若干种定向的方法。 受众定向概念受众定向是目前广告系统的核心部分，要做的就是根据人群划分进行广告售卖和优化。 受众定向可以认为是为 AUC（Ad，User，Context）打标签的过程，上下文标签可以认为是即时受众标签，如下所示是AUC上的标签类别">
+<meta name="twitter:description" content="这一讲主要介绍了受众定向的概念和若干种定向的方法。
+受众定向概念受众定向是目前广告系统的核心部分，要做的就是根据人群划分进行广告售卖和优化。
+受众定向可以认为是为 AUC（Ad，User，Context）打标签的过程，上下文标签可以认为是即时受众标签，如下所示是AUC上的标签类别">
 <meta name="twitter:image" content="http://static.zybuluo.com/WuLiangchao/oeuckcc9zz78ooe0aa7nw4iu/image_1bemrnn561kk85bhka521jii9.png">
 
 
@@ -116,7 +120,7 @@
 
 
 
-  <link rel="canonical" href="http://wulc.github.io/2017/04/28/计算广告笔记(3)--受众定向/">
+  <link rel="canonical" href="http://wulc.github.io/2017/04/28/计算广告笔记(3)--受众定向/"/>
 
 
 
@@ -157,7 +161,7 @@
   
 
   <div class="custom-logo-site-title">
-    <a href="/" class="brand" rel="start">
+    <a href="/"  class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <span class="site-title">吴良超的学习笔记</span>
       <span class="logo-line-after"><i></i></span>
@@ -186,7 +190,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
             首页
           </a>
@@ -196,7 +200,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
             
             标签
           </a>
@@ -206,7 +210,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
             归档
           </a>
@@ -216,7 +220,7 @@
         <li class="menu-item menu-item-about">
           <a href="/about" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
             
             关于
           </a>
@@ -229,7 +233,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
             
             站内搜索
           </a>
@@ -278,14 +282,14 @@
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="良超">
-    <meta itemprop="description" content>
+    <meta itemprop="description" content="">
     <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
   </span>
 
   <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
     <meta itemprop="name" content="吴良超的学习笔记">
     <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src>
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
     </span>
   </span>
 
@@ -328,7 +332,7 @@
 
 
           
-            <span class="post-category">
+            <span class="post-category" >
             
               <span class="post-meta-divider">|</span>
             
@@ -387,7 +391,6 @@
 <h2 id="受众定向概念"><a href="#受众定向概念" class="headerlink" title="受众定向概念"></a>受众定向概念</h2><p>受众定向是目前广告系统的核心部分，要做的就是根据人群划分进行广告售卖和优化。</p>
 <p>受众定向可以认为是为 AUC（Ad，User，Context）打标签的过程，上下文标签可以认为是即时受众标签，如下所示是AUC上的标签类别</p>
 <a id="more"></a>
-
 <p><img src="http://static.zybuluo.com/WuLiangchao/oeuckcc9zz78ooe0aa7nw4iu/image_1bemrnn561kk85bhka521jii9.png" alt="AUC上的标签系统"></p>
 <p>标签的两大主要作用</p>
 <ol>
@@ -488,7 +491,7 @@
 <p>$$ \phi _k \sim Dir(\beta),~k=1,2…K $$</p>
 <p>$\phi_k$ 表示第 $k$ 个主题下的词语分布，而 $\phi_{k,j}（j=1,2…V）$ 表示第 $k$ 个主题中包含第 $j$ 个词的概率，$V$ 为语料库的词表的大小</p>
 <p>确认先验分布后，文档中的主题分布以及主题下的词语分布均服从多项式分布，与 PLSA 相同，求解 LDA 得思路是先求解出其最终的联合概率分布，然后通过 Gibbs Sampling 收敛到该概率。</p>
-<h3 id="经验贝叶斯-Empirical-Bayes"><a href="#经验贝叶斯-Empirical-Bayes" class="headerlink" title="经验贝叶斯(Empirical Bayes)"></a>经验贝叶斯(<a href="https://en.wikipedia.org/wiki/Empirical_Bayes_method" target="_blank" rel="noopener">Empirical Bayes</a>)</h3><p>如下图模型, 如何确定hyperparameter $\eta$?</p>
+<h3 id="经验贝叶斯-Empirical-Bayes"><a href="#经验贝叶斯-Empirical-Bayes" class="headerlink" title="经验贝叶斯(Empirical Bayes)"></a>经验贝叶斯(<a href="https://en.wikipedia.org/wiki/Empirical_Bayes_method" target="_blank" rel="external">Empirical Bayes</a>)</h3><p>如下图模型, 如何确定hyperparameter $\eta$?</p>
 <p><img src="http://static.zybuluo.com/WuLiangchao/klf0ms0ko87n13qx8fhemfzh/image_1bep1f616m1h1k4e1jtl1tp61jrn13.png" alt="经验贝叶斯"></p>
 <p>用 Empirical Bayes 估计的解为：$$\widehat \eta = arg \max_{\eta} \int \prod_{k=1}^{K}p(D_k|\theta_k)p(\theta_k|\eta)d\theta_k$$</p>
 <p>当 $p(x|\theta)$ 为指数族分布，$p(\theta|\eta)$ 为其共轭先验时，可用EM求解, 其中E-step为Bayesian inference过程, 由 $\eta^{old}$ 得到后验参数 $\widetilde \eta_k^{old}$ , 而M-step为:$$(\theta, ln[g(\theta)])_{\eta^{new}} = \frac{1}{K}\sum_{k=1}^{K}(\theta, ln(g(\theta)))_{\widetilde \eta_k^{old}}$$</p>
@@ -684,7 +687,7 @@
 
       
         <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
             文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
@@ -695,7 +698,9 @@
 
       <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image" src="http://wulc.me/files/profile.jpg" alt="良超">
+          <img class="site-author-image" itemprop="image"
+               src="http://wulc.me/files/profile.jpg"
+               alt="良超" />
           <p class="site-author-name" itemprop="name">良超</p>
           <p class="site-description motion-element" itemprop="description">工程师要把合适的技术放在合适的位置|算法工程师首先得是个工程师</p>
         </div>
@@ -704,7 +709,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">219</span>
+                <span class="site-state-item-count">218</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -796,12 +801,12 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <center>
-<div class="copyright">
+<div class="copyright" >
   
   &copy;  2015 - 
   <span itemprop="copyrightYear">2020</span>
-  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a>
-  <br>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
+  </br>
   <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
 </div>
 </center>

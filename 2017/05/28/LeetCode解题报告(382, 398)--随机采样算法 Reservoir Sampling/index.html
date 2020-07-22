@@ -6,19 +6,19 @@
 
 
 <html class="theme-next mist use-motion" lang="zh-Hans">
-<head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform">
-<meta http-equiv="Cache-Control" content="no-siteapp">
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
 
 
-  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
 
 
 
@@ -31,7 +31,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
 
 
 
@@ -39,23 +39,23 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
-
-
-  <meta name="keywords" content="python,Reservoir Sampling,">
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
+  <meta name="keywords" content="python,Reservoir Sampling," />
 
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
+
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
 
 
 
@@ -63,13 +63,11 @@
 
 
 <meta name="description" content="Reservoir sampling 是一个随机采样算法，简单来说就是从 $n$ 个 items 中随机选择 $k$ 个items，并且每个 item 被选择的概率应该都一样。这个算法的优点在于时空复杂度都不高，其中时间复杂度为 $O(n)$, 空间复杂度为 $O(1)$。下面介绍该算法的过程，并且以 leetcode 上的两道题目为例讲解。">
-<meta name="keywords" content="python,Reservoir Sampling">
 <meta property="og:type" content="article">
 <meta property="og:title" content="LeetCode解题报告(382, 398)--随机采样算法 Reservoir Sampling">
 <meta property="og:url" content="http://wulc.github.io/2017/05/28/LeetCode解题报告(382, 398)--随机采样算法 Reservoir Sampling/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
 <meta property="og:description" content="Reservoir sampling 是一个随机采样算法，简单来说就是从 $n$ 个 items 中随机选择 $k$ 个items，并且每个 item 被选择的概率应该都一样。这个算法的优点在于时空复杂度都不高，其中时间复杂度为 $O(n)$, 空间复杂度为 $O(1)$。下面介绍该算法的过程，并且以 leetcode 上的两道题目为例讲解。">
-<meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2019-06-01T09:14:44.058Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="LeetCode解题报告(382, 398)--随机采样算法 Reservoir Sampling">
@@ -101,7 +99,7 @@
 
 
 
-  <link rel="canonical" href="http://wulc.github.io/2017/05/28/LeetCode解题报告(382, 398)--随机采样算法 Reservoir Sampling/">
+  <link rel="canonical" href="http://wulc.github.io/2017/05/28/LeetCode解题报告(382, 398)--随机采样算法 Reservoir Sampling/"/>
 
 
 
@@ -142,7 +140,7 @@
   
 
   <div class="custom-logo-site-title">
-    <a href="/" class="brand" rel="start">
+    <a href="/"  class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <span class="site-title">吴良超的学习笔记</span>
       <span class="logo-line-after"><i></i></span>
@@ -171,7 +169,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
             首页
           </a>
@@ -181,7 +179,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
             
             标签
           </a>
@@ -191,7 +189,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
             归档
           </a>
@@ -201,7 +199,7 @@
         <li class="menu-item menu-item-about">
           <a href="/about" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
             
             关于
           </a>
@@ -214,7 +212,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
             
             站内搜索
           </a>
@@ -263,14 +261,14 @@
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="良超">
-    <meta itemprop="description" content>
+    <meta itemprop="description" content="">
     <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
   </span>
 
   <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
     <meta itemprop="name" content="吴良超的学习笔记">
     <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src>
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
     </span>
   </span>
 
@@ -313,7 +311,7 @@
 
 
           
-            <span class="post-category">
+            <span class="post-category" >
             
               <span class="post-meta-divider">|</span>
             
@@ -368,9 +366,8 @@
       
 
       
-        <p><a href="https://en.wikipedia.org/wiki/Reservoir_sampling" target="_blank" rel="noopener">Reservoir sampling</a> 是一个随机采样算法，简单来说就是从 $n$ 个 items 中随机选择 $k$ 个items，并且每个 item 被选择的概率应该都一样。<strong>这个算法的优点在于时空复杂度都不高，其中时间复杂度为 $O(n)$, 空间复杂度为 $O(1)$。</strong>下面介绍该算法的过程，并且以 leetcode 上的两道题目为例讲解。</p>
+        <p><a href="https://en.wikipedia.org/wiki/Reservoir_sampling" target="_blank" rel="external">Reservoir sampling</a> 是一个随机采样算法，简单来说就是从 $n$ 个 items 中随机选择 $k$ 个items，并且每个 item 被选择的概率应该都一样。<strong>这个算法的优点在于时空复杂度都不高，其中时间复杂度为 $O(n)$, 空间复杂度为 $O(1)$。</strong>下面介绍该算法的过程，并且以 leetcode 上的两道题目为例讲解。</p>
 <a id="more"></a>
-
 <p>假设现在要从 $n$ 个数里面随机选择一个数，那么通过 Reservoir sampling 选择的流程如下</p>
 <ol>
 <li>记最终选择的数为 result </li>
@@ -391,22 +388,15 @@
 <li>遍历完数组后得到的 result 即为产生的 $k$ 个随机样本</li>
 </ol>
 <p>下面通过数学归纳法证明通过上面的算法过程最终每个数被选择的概率为 $k/n$</p>
-<ol>
-<li>$i = 1$ 时，选择第 $k+1$ 个数的概率为 $\frac{k}{k+1}$，而在 result 中 $k$ 个数里面的一个(记为 $x$) 能够保留下来的概率为是 <strong>$x$ 原来在 result中且这一次没有被替换的概率</strong>，而这一次没有被替换掉又可分为两种情况，一种是根本没有选择到第 $k+i$ 个数，一种是选择了第 $k+i$ 个数，但是替换 $k$ 个数中的一个时没有替换掉 $x$。公式表示为 </li>
-</ol>
+<p>1) $i = 1$ 时，选择第 $k+1$ 个数的概率为 $\frac{k}{k+1}$，而在 result 中 $k$ 个数里面的一个(记为 $x$) 能够保留下来的概率为是 <strong>$x$ 原来在 result中且这一次没有被替换的概率</strong>，而这一次没有被替换掉又可分为两种情况，一种是根本没有选择到第 $k+i$ 个数，一种是选择了第 $k+i$ 个数，但是替换 $k$ 个数中的一个时没有替换掉 $x$。公式表示为 </p>
 <p>$$p( x 上一次在 result 中) * p( x 没有被替换掉) = 1 *（\frac{k}{k+1} * (1-\frac{1}{k}) + (1 - \frac{k}{k+1})）= \frac{k}{k+1}$$</p>
 <p>即每个数被选择的概率为 $\frac{k}{k+1}$</p>
-<ol start="2">
-<li><p>因此当 $i = m$ 时，每个数被选择的概率为 $k/(k+m)$</p>
-</li>
-<li><p>则当 $i = m+1$ 时，选择第 $k+m+1$ 个数的概率为 $\frac{k}{k+m+1}$, 在 result 中 $k$ 个数里面的一个(记为 $x$) 能够保留下来的概率为: </p>
-</li>
-</ol>
+<p>2) 因此当 $i = m$ 时，每个数被选择的概率为 $k/(k+m)$</p>
+<p>3) 则当 $i = m+1$ 时，选择第 $k+m+1$ 个数的概率为 $\frac{k}{k+m+1}$, 在 result 中 $k$ 个数里面的一个(记为 $x$) 能够保留下来的概率为: </p>
 <p>$$p( x 上一次在 result 中) * p( x 没有被替换掉) = \frac{k}{k+m} *（\frac{k}{k+m+1} * (1- \frac{1}{k}) + (1 - \frac{k}{k+m+1})）= \frac{k}{k+m+1}$$</p>
 <p>从上可知，遍历到第 $i$ 个数的时候，前 $k+i$ 每个数被选择的概率为 $k/(k+i)$,则遍历完 $n$ 个数后，每个数被选择的概率为 $k/n$</p>
-<p>LeetCode 上的题目 <a href="https://leetcode.com/problems/linked-list-random-node/#/descriptionn.wikipedia.org/wiki/Reservoir_sampling" target="_blank" rel="noopener">382. Linked List Random Node</a> 和 <a href="https://leetcode.com/problems/random-pick-index/#/description" target="_blank" rel="noopener">398. Random Pick Index</a> 均用到了 Reservoir Sampling 的技巧，上面的依概率选择可以通过产生随机数并与概率值比较来实现，下面分别是 解决 382. Linked List Random Node 和 398. Random Pick Index 的 Java 代码</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 382. Linked List Random Node</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> ListNode dummy = <span class="keyword">new</span> ListNode(<span class="number">0</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Solution</span><span class="params">(ListNode head)</span> </span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        dummy.next = head;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getRandom</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        ListNode curr = dummy.next;</span><br><span class="line">        <span class="keyword">int</span> count = <span class="number">0</span>, result = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (curr != <span class="keyword">null</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            count ++;</span><br><span class="line">            <span class="keyword">if</span> (Math.random() &lt; <span class="number">1.0</span>/count) result = curr.val;</span><br><span class="line">            curr = curr.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 398. Random Pick Index</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span></span><br><span class="line"><span class="class"></span>&#123;  </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span>[] numbers;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Solution</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        numbers = nums;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">pick</span><span class="params">(<span class="keyword">int</span> target)</span> </span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> index = <span class="number">0</span>, count = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; numbers.length; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (numbers[i] == target)</span><br><span class="line">            &#123;</span><br><span class="line">                count++;</span><br><span class="line">                <span class="keyword">if</span>(Math.random() &lt; <span class="number">1.0</span>/count) index = i;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> index;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+<p>LeetCode 上的题目 <a href="https://leetcode.com/problems/linked-list-random-node/#/descriptionn.wikipedia.org/wiki/Reservoir_sampling" target="_blank" rel="external">382. Linked List Random Node</a> 和 <a href="https://leetcode.com/problems/random-pick-index/#/description" target="_blank" rel="external">398. Random Pick Index</a> 均用到了 Reservoir Sampling 的技巧，上面的依概率选择可以通过产生随机数并与概率值比较来实现，下面分别是 解决 382. Linked List Random Node 和 398. Random Pick Index 的 Java 代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 382. Linked List Random Node</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> ListNode dummy = <span class="keyword">new</span> ListNode(<span class="number">0</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Solution</span><span class="params">(ListNode head)</span> </span><br><span class="line">    </span>&#123;</span><br><span class="line">        dummy.next = head;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getRandom</span><span class="params">()</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        ListNode curr = dummy.next;</span><br><span class="line">        <span class="keyword">int</span> count = <span class="number">0</span>, result = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (curr != <span class="keyword">null</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            count ++;</span><br><span class="line">            <span class="keyword">if</span> (Math.random() &lt; <span class="number">1.0</span>/count) result = curr.val;</span><br><span class="line">            curr = curr.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 398. Random Pick Index</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span><br><span class="line"></span>&#123;  </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span>[] numbers;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Solution</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span><br><span class="line">    </span>&#123;</span><br><span class="line">        numbers = nums;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">pick</span><span class="params">(<span class="keyword">int</span> target)</span> </span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> index = <span class="number">0</span>, count = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; numbers.length; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (numbers[i] == target)</span><br><span class="line">            &#123;</span><br><span class="line">                count++;</span><br><span class="line">                <span class="keyword">if</span>(Math.random() &lt; <span class="number">1.0</span>/count) index = i;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> index;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -503,7 +493,9 @@
 
       <section class="site-overview sidebar-panel sidebar-panel-active">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image" src="http://wulc.me/files/profile.jpg" alt="良超">
+          <img class="site-author-image" itemprop="image"
+               src="http://wulc.me/files/profile.jpg"
+               alt="良超" />
           <p class="site-author-name" itemprop="name">良超</p>
           <p class="site-description motion-element" itemprop="description">工程师要把合适的技术放在合适的位置|算法工程师首先得是个工程师</p>
         </div>
@@ -512,7 +504,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">219</span>
+                <span class="site-state-item-count">218</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -588,12 +580,12 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <center>
-<div class="copyright">
+<div class="copyright" >
   
   &copy;  2015 - 
   <span itemprop="copyrightYear">2020</span>
-  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a>
-  <br>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
+  </br>
   <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
 </div>
 </center>

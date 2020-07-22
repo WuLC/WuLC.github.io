@@ -6,19 +6,19 @@
 
 
 <html class="theme-next mist use-motion" lang="zh-Hans">
-<head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform">
-<meta http-equiv="Cache-Control" content="no-siteapp">
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
 
 
-  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
 
 
 
@@ -31,7 +31,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
 
 
 
@@ -39,41 +39,51 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
-
-
-  <meta name="keywords" content="Linux,">
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
-
-
-
-
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
+  <meta name="keywords" content="Linux," />
 
 
 
 
 
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
 
-<meta name="description" content="可执行程序的类型Linux系统上有两类不同的Linux可执行程序。  第一类是静态链接的可执行程序。静态可执行程序包含执行所需的所有函数 — 换句话说，它们是“完整的”。因为这一原因，静态可执行程序不依赖任何外部库就可以运行。  第二类是动态链接的可执行程序。动态可执行程序是”不完整”的程序，它依靠外部共享库来提供运行所需的许多函数。">
-<meta name="keywords" content="Linux">
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="可执行程序的类型Linux系统上有两类不同的Linux可执行程序。
+
+第一类是静态链接的可执行程序。静态可执行程序包含执行所需的所有函数 — 换句话说，它们是“完整的”。因为这一原因，静态可执行程序不依赖任何外部库就可以运行。
+
+第二类是动态链接的可执行程序。动态可执行程序是”不完整”的程序，它依靠外部共享库来提供运行所需的许多函数。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="&#x2F;etc&#x2F;ld.so.conf文件详解">
+<meta property="og:title" content="/etc/ld.so.conf文件详解">
 <meta property="og:url" content="http://wulc.github.io/2015/11/21/etc-ld-so-conf文件详解/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
-<meta property="og:description" content="可执行程序的类型Linux系统上有两类不同的Linux可执行程序。  第一类是静态链接的可执行程序。静态可执行程序包含执行所需的所有函数 — 换句话说，它们是“完整的”。因为这一原因，静态可执行程序不依赖任何外部库就可以运行。  第二类是动态链接的可执行程序。动态可执行程序是”不完整”的程序，它依靠外部共享库来提供运行所需的许多函数。">
-<meta property="og:locale" content="zh-Hans">
+<meta property="og:description" content="可执行程序的类型Linux系统上有两类不同的Linux可执行程序。
+
+第一类是静态链接的可执行程序。静态可执行程序包含执行所需的所有函数 — 换句话说，它们是“完整的”。因为这一原因，静态可执行程序不依赖任何外部库就可以运行。
+
+第二类是动态链接的可执行程序。动态可执行程序是”不完整”的程序，它依靠外部共享库来提供运行所需的许多函数。">
 <meta property="og:updated_time" content="2019-06-01T09:14:44.093Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="&#x2F;etc&#x2F;ld.so.conf文件详解">
-<meta name="twitter:description" content="可执行程序的类型Linux系统上有两类不同的Linux可执行程序。  第一类是静态链接的可执行程序。静态可执行程序包含执行所需的所有函数 — 换句话说，它们是“完整的”。因为这一原因，静态可执行程序不依赖任何外部库就可以运行。  第二类是动态链接的可执行程序。动态可执行程序是”不完整”的程序，它依靠外部共享库来提供运行所需的许多函数。">
+<meta name="twitter:title" content="/etc/ld.so.conf文件详解">
+<meta name="twitter:description" content="可执行程序的类型Linux系统上有两类不同的Linux可执行程序。
+
+第一类是静态链接的可执行程序。静态可执行程序包含执行所需的所有函数 — 换句话说，它们是“完整的”。因为这一原因，静态可执行程序不依赖任何外部库就可以运行。
+
+第二类是动态链接的可执行程序。动态可执行程序是”不完整”的程序，它依靠外部共享库来提供运行所需的许多函数。">
 
 
 
@@ -101,7 +111,7 @@
 
 
 
-  <link rel="canonical" href="http://wulc.github.io/2015/11/21/etc-ld-so-conf文件详解/">
+  <link rel="canonical" href="http://wulc.github.io/2015/11/21/etc-ld-so-conf文件详解/"/>
 
 
 
@@ -142,7 +152,7 @@
   
 
   <div class="custom-logo-site-title">
-    <a href="/" class="brand" rel="start">
+    <a href="/"  class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <span class="site-title">吴良超的学习笔记</span>
       <span class="logo-line-after"><i></i></span>
@@ -171,7 +181,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
             首页
           </a>
@@ -181,7 +191,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
             
             标签
           </a>
@@ -191,7 +201,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
             归档
           </a>
@@ -201,7 +211,7 @@
         <li class="menu-item menu-item-about">
           <a href="/about" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
             
             关于
           </a>
@@ -214,7 +224,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
             
             站内搜索
           </a>
@@ -263,14 +273,14 @@
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="良超">
-    <meta itemprop="description" content>
+    <meta itemprop="description" content="">
     <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
   </span>
 
   <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
     <meta itemprop="name" content="吴良超的学习笔记">
     <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src>
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
     </span>
   </span>
 
@@ -313,7 +323,7 @@
 
 
           
-            <span class="post-category">
+            <span class="post-category" >
             
               <span class="post-meta-divider">|</span>
             
@@ -364,43 +374,42 @@
 <li><p>第二类是<strong>动态链接的可执行程序</strong>。动态可执行程序是”不完整”的程序，它依靠外部共享库来提供运行所需的许多函数。
 　　</p>
 <a id="more"></a>
-
 </li>
 </ul>
 <h2 id="静态可执行程序与动态可执行程序比较"><a href="#静态可执行程序与动态可执行程序比较" class="headerlink" title="静态可执行程序与动态可执行程序比较"></a><strong>静态可执行程序与动态可执行程序比较</strong></h2><p>我们可以<strong>用 ldd 命令来确定某一特定可执行程序是否为静态链接</strong>的：</p>
 <pre><code>#ldd /sbin/sln
-not a dynamic executable</code></pre>
-<p>“not a dynamic executable”是 ldd 说明 sln 是静态链接的一种方式。现在，让我们比较 sln 与其非静态同类 ln 的大小：</p>
+not a dynamic executable
+</code></pre><p>“not a dynamic executable”是 ldd 说明 sln 是静态链接的一种方式。现在，让我们比较 sln 与其非静态同类 ln 的大小：</p>
 <pre><code># ls -l /bin/ln /sbin/sln
 　　-rwxr-xr-x    1 root     root        23000 Jan 14 00:36 /bin/ln
-　　-rwxr-xr-x    1 root     root       381072 Jan 14 00:31 /sbin/sln</code></pre>
-<p>sln 的大小超过 ln 十倍。ln比sln小这么多是因为它是动态可执行程序.</p>
+　　-rwxr-xr-x    1 root     root       381072 Jan 14 00:31 /sbin/sln
+</code></pre><p>sln 的大小超过 ln 十倍。ln比sln小这么多是因为它是动态可执行程序.</p>
 <h2 id="动态链接相关性"><a href="#动态链接相关性" class="headerlink" title="动态链接相关性"></a><strong>动态链接相关性</strong></h2><p><strong>查看 ln 依赖的所有共享库的列表，可以使用 ldd 命令</strong>：
 　　</p>
 <pre><code># ldd /bin/ln
 　libc.so.6 =&gt; /lib/libc.so.6 (0x40021000)
-　/lib/ld-linux.so.2 =&gt; /lib/ld-linux.so.2 (0x40000000)</code></pre>
-<p>可见，ln 依赖外部共享库libc.so.6和ld-linux.so.2。通常，动态链接的程序比其静态链接的等价程序小得多。不过，静态链接的程序可以在某些低级维护任务中发挥作用。例如，sln 是修改位于 /lib中的不同库符号链接的极佳工具。但通常您会发现几乎所有 Linux 系统上的可执行程序都是某种动态链接的变体。
+　/lib/ld-linux.so.2 =&gt; /lib/ld-linux.so.2 (0x40000000)
+</code></pre><p>可见，ln 依赖外部共享库libc.so.6和ld-linux.so.2。通常，动态链接的程序比其静态链接的等价程序小得多。不过，静态链接的程序可以在某些低级维护任务中发挥作用。例如，sln 是修改位于 /lib中的不同库符号链接的极佳工具。但通常您会发现几乎所有 Linux 系统上的可执行程序都是某种动态链接的变体。
 　　</p>
 <h2 id="动态装入器"><a href="#动态装入器" class="headerlink" title="动态装入器"></a><strong>动态装入器</strong></h2><p> 那么，如果动态可执行程序不包含运行所需的所有函数，Linux 的哪部分负责将这些程序和所有必需的共享库一起装入，以使它们能正确执行呢？答案是<strong>动态装入器（dynamic loader），它实际上是在 ln 的ldd 清单中看到的作为共享库相关性列出的 ld-linux.so.2 库。</strong>动态装入器负责装入动态链接的可执行程序运行所需的共享库。那么，<strong>动态装入器如何在系统上找到适当的共享库？</strong></p>
 <p>动态装入器找到共享库要依靠两个文件 <code>/etc/ld.so.conf 和 /etc/ld.so.cache</code></p>
 <h3 id="etc-ld-so-conf文件"><a href="#etc-ld-so-conf文件" class="headerlink" title="/etc/ld.so.conf文件"></a><strong>/etc/ld.so.conf文件</strong></h3><p>文件进行cat操作，您可能会看到一个与下面类似的清单：</p>
-<pre><code>  $ cat /etc/ld.so.conf
+<pre><code>$ cat /etc/ld.so.conf
 　　/usr/X11R6/lib
 　　/usr/lib/gcc-lib/i686-pc-linux-gnu/2.95.3
 　　/usr/lib/mozilla
 　　/usr/lib/qt-x11-2.3.1/lib
-　　/usr/local/lib</code></pre>
-<p>ld.so.conf 文件包含一个所有目录（/lib 和 /usr/lib 除外，它们会自动包含在其中）的清单，动态装入器将在其中查找共享库。</p>
+　　/usr/local/lib
+</code></pre><p>ld.so.conf 文件包含一个所有目录（/lib 和 /usr/lib 除外，它们会自动包含在其中）的清单，动态装入器将在其中查找共享库。</p>
 <h3 id="etc-ld-so-cache文件"><a href="#etc-ld-so-cache文件" class="headerlink" title="/etc/ld.so.cache文件"></a><strong>/etc/ld.so.cache文件</strong></h3><p>在动态装入器能“看到”<code>/etc/ld.so.conf</code>里面的信息之前，必须将它转换到 <code>ld.so.cache</code>文件中。可以通过运行 <code>ldconfig</code> 命令做到这一点：</p>
-<pre><code># ldconfig</code></pre>
-<p>当 ldconfig 操作结束时，您会有一个最新的 <code>/etc/ld.so.cache</code> 文件，它反映对 <code>/etc/ld.so.conf</code> 所做的更改。从这一刻起，动态装入器在寻找共享库时会查看在 <code>/etc/ld.so.conf</code> 中指定的所有新目录。
+<pre><code># ldconfig
+</code></pre><p>当 ldconfig 操作结束时，您会有一个最新的 <code>/etc/ld.so.cache</code> 文件，它反映对 <code>/etc/ld.so.conf</code> 所做的更改。从这一刻起，动态装入器在寻找共享库时会查看在 <code>/etc/ld.so.conf</code> 中指定的所有新目录。
 　　 </p>
 <h3 id="ldconfig-技巧"><a href="#ldconfig-技巧" class="headerlink" title="ldconfig 技巧"></a><strong>ldconfig 技巧</strong></h3><p>　　<br>要查看 ldconfig 可以“看到”的所有共享库，可以输入：</p>
-<pre><code># ldconfig -p | less</code></pre>
-<p>还有另一个方便的技巧可以用来配置共享库路径。有时候希望告诉动态装入器在尝试任何 <code>/etc/ld.so.conf</code> 路径以前先尝试使用特定目录中的共享库。在运行的较旧的应用程序不能与当前安装的库版本一起工作的情况下，可以通过<code>LD_LIBRARY_PATH</code>这个环境变量来实现，计入需要指示动态装入器首先检查某个目录，需要将 LD_LIBRARY_PATH 变量设置成希望搜索的目录。多个路径之间用冒号分隔；例如：</p>
-<pre><code># export LD_LIBRARY_PATH=&quot;/usr/lib/old:/opt/lib&quot;</code></pre>
-<p>执行上面命令后，所有从当前shell启动的动态链接可执行程序都将使用 <code>/usr/lib/old</code> 或 <code>/opt/lib</code> 中的库，如果仍不能满足一些共享库相关性要求，则转回到 <code>/etc/ld.so.conf</code> 中指定的库。</p>
+<pre><code># ldconfig -p | less
+</code></pre><p>还有另一个方便的技巧可以用来配置共享库路径。有时候希望告诉动态装入器在尝试任何 <code>/etc/ld.so.conf</code> 路径以前先尝试使用特定目录中的共享库。在运行的较旧的应用程序不能与当前安装的库版本一起工作的情况下，可以通过<code>LD_LIBRARY_PATH</code>这个环境变量来实现，计入需要指示动态装入器首先检查某个目录，需要将 LD_LIBRARY_PATH 变量设置成希望搜索的目录。多个路径之间用冒号分隔；例如：</p>
+<pre><code># export LD_LIBRARY_PATH=&quot;/usr/lib/old:/opt/lib&quot;
+</code></pre><p>执行上面命令后，所有从当前shell启动的动态链接可执行程序都将使用 <code>/usr/lib/old</code> 或 <code>/opt/lib</code> 中的库，如果仍不能满足一些共享库相关性要求，则转回到 <code>/etc/ld.so.conf</code> 中指定的库。</p>
 
       
     </div>
@@ -493,7 +502,7 @@ not a dynamic executable</code></pre>
 
       
         <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
             文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
@@ -504,7 +513,9 @@ not a dynamic executable</code></pre>
 
       <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image" src="http://wulc.me/files/profile.jpg" alt="良超">
+          <img class="site-author-image" itemprop="image"
+               src="http://wulc.me/files/profile.jpg"
+               alt="良超" />
           <p class="site-author-name" itemprop="name">良超</p>
           <p class="site-description motion-element" itemprop="description">工程师要把合适的技术放在合适的位置|算法工程师首先得是个工程师</p>
         </div>
@@ -513,7 +524,7 @@ not a dynamic executable</code></pre>
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">219</span>
+                <span class="site-state-item-count">218</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -605,12 +616,12 @@ not a dynamic executable</code></pre>
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <center>
-<div class="copyright">
+<div class="copyright" >
   
   &copy;  2015 - 
   <span itemprop="copyrightYear">2020</span>
-  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a>
-  <br>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
+  </br>
   <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
 </div>
 </center>

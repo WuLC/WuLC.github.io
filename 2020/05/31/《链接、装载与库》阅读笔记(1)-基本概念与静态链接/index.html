@@ -6,19 +6,19 @@
 
 
 <html class="theme-next mist use-motion" lang="zh-Hans">
-<head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform">
-<meta http-equiv="Cache-Control" content="no-siteapp">
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
 
 
-  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
 
 
 
@@ -31,7 +31,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
 
 
 
@@ -39,23 +39,23 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
-
-
-  <meta name="keywords" content="C++,链接、装载与库,">
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
+  <meta name="keywords" content="C++,链接、装载与库," />
 
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
+
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
 
 
 
@@ -63,13 +63,11 @@
 
 
 <meta name="description" content="一直对以 C/C++ 为代表的的编译型语言的编译、运行的原理了解不多，最近正好看到这本由国人写的书 链接、装载与库，书名已经比较言简意赅的介绍了书里相关内容，而且写得挺通俗的，值得一看。这里是书里第一、二部分内容的一些笔记，主要讲了操作系统的一些基本概念，编译生成的目标文件格式和静态链接的过程；由于笔者只摘录一些不太了解的内容，因此总体内容可能不是非常成体系，建议读原书。">
-<meta name="keywords" content="C++,链接、装载与库">
 <meta property="og:type" content="article">
 <meta property="og:title" content="《链接、装载与库》 阅读笔记(1)-基本概念与静态链接">
 <meta property="og:url" content="http://wulc.github.io/2020/05/31/《链接、装载与库》阅读笔记(1)-基本概念与静态链接/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
 <meta property="og:description" content="一直对以 C/C++ 为代表的的编译型语言的编译、运行的原理了解不多，最近正好看到这本由国人写的书 链接、装载与库，书名已经比较言简意赅的介绍了书里相关内容，而且写得挺通俗的，值得一看。这里是书里第一、二部分内容的一些笔记，主要讲了操作系统的一些基本概念，编译生成的目标文件格式和静态链接的过程；由于笔者只摘录一些不太了解的内容，因此总体内容可能不是非常成体系，建议读原书。">
-<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/objdump_result.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/ObjectFile.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/SourceCode.jpg">
@@ -112,7 +110,7 @@
 
 
 
-  <link rel="canonical" href="http://wulc.github.io/2020/05/31/《链接、装载与库》阅读笔记(1)-基本概念与静态链接/">
+  <link rel="canonical" href="http://wulc.github.io/2020/05/31/《链接、装载与库》阅读笔记(1)-基本概念与静态链接/"/>
 
 
 
@@ -153,7 +151,7 @@
   
 
   <div class="custom-logo-site-title">
-    <a href="/" class="brand" rel="start">
+    <a href="/"  class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <span class="site-title">吴良超的学习笔记</span>
       <span class="logo-line-after"><i></i></span>
@@ -182,7 +180,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
             首页
           </a>
@@ -192,7 +190,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
             
             标签
           </a>
@@ -202,7 +200,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
             归档
           </a>
@@ -212,7 +210,7 @@
         <li class="menu-item menu-item-about">
           <a href="/about" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
             
             关于
           </a>
@@ -225,7 +223,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
             
             站内搜索
           </a>
@@ -274,14 +272,14 @@
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="良超">
-    <meta itemprop="description" content>
+    <meta itemprop="description" content="">
     <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
   </span>
 
   <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
     <meta itemprop="name" content="吴良超的学习笔记">
     <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src>
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
     </span>
   </span>
 
@@ -324,7 +322,7 @@
 
 
           
-            <span class="post-category">
+            <span class="post-category" >
             
               <span class="post-meta-divider">|</span>
             
@@ -379,9 +377,8 @@
       
 
       
-        <p>一直对以 C/C++ 为代表的的编译型语言的编译、运行的原理了解不多，最近正好看到这本由国人写的书 <a href="https://book.douban.com/subject/3652388/" target="_blank" rel="noopener">链接、装载与库</a>，书名已经比较言简意赅的介绍了书里相关内容，而且写得挺通俗的，值得一看。这里是书里第一、二部分内容的一些笔记，主要讲了操作系统的一些基本概念，编译生成的目标文件格式和静态链接的过程；由于笔者只摘录一些不太了解的内容，因此总体内容可能不是非常成体系，建议读原书。</p>
+        <p>一直对以 C/C++ 为代表的的编译型语言的编译、运行的原理了解不多，最近正好看到这本由国人写的书 <a href="https://book.douban.com/subject/3652388/" target="_blank" rel="external">链接、装载与库</a>，书名已经比较言简意赅的介绍了书里相关内容，而且写得挺通俗的，值得一看。这里是书里第一、二部分内容的一些笔记，主要讲了操作系统的一些基本概念，编译生成的目标文件格式和静态链接的过程；由于笔者只摘录一些不太了解的内容，因此总体内容可能不是非常成体系，建议读原书。</p>
 <a id="more"></a>
-
 <h2 id="操作系统基本概念"><a href="#操作系统基本概念" class="headerlink" title="操作系统基本概念"></a>操作系统基本概念</h2><p>这部分主要讲了一些与操作系统相关的基本概念，了解这些基本概念是了解书中后面内容的基础</p>
 <ul>
 <li>增加中间层解决问题<ul>
@@ -445,7 +442,7 @@
 <li>后端：将中间代码转换成目标机器代码</li>
 <li>跨平台编译器，使用同一个前端和不同后端</li>
 </ul>
-<p>关于编译器的架构可参考这篇文章：<a href="https://zhuanlan.zhihu.com/p/102250532" target="_blank" rel="noopener">LLVM概述——基础架构</a></p>
+<p>关于编译器的架构可参考这篇文章：<a href="https://zhuanlan.zhihu.com/p/102250532" target="_blank" rel="external">LLVM概述——基础架构</a></p>
 <p>链接基本概念</p>
 <ul>
 <li>处理各模块间的相互引用（如引用了其他模块的函数，需要在运行时知道这个函数的地址）</li>
@@ -454,7 +451,7 @@
 </ul>
 <h2 id="目标文件的格式"><a href="#目标文件的格式" class="headerlink" title="目标文件的格式"></a>目标文件的格式</h2><ul>
 <li>目标文件就是源代码编译后但是未进行链接的那些中间文件（windows 的 <code>.obj</code> 和 linux 下的 <code>.o</code>, 它跟可执行文件的内容基本一样，所以两类文件使用同一种格式存储（windows 下的 PE-COFF 和 Linux 下的 ELF）</li>
-<li>**除了目标文件,动态库(windows 的 <code>.dll</code> 和 linux 下的<code>.so</code>)和静态库(windows 的 <code>.lib</code> 和 linux 下的<code>.a</code>)**都是按照可执行文件格式存储</li>
+<li><strong>除了目标文件,动态库(windows 的 <code>.dll</code> 和 linux 下的<code>.so</code>)和静态库(windows 的 <code>.lib</code> 和 linux 下的<code>.a</code>)</strong>都是按照可执行文件格式存储</li>
 <li>ELF 文件格式可归为如下四类（linux下可通过file格式来显示文件格式）</li>
 </ul>
 <table>
@@ -465,7 +462,8 @@
 <th>实例</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>可重定位文件(Relocatable File)</td>
 <td>包含代码和数据，可用来被链接为可执行文件或共享目标文件，静态链接库也可归为这一类</td>
 <td>Linux 的 <code>.o</code>, Windows 的 <code>.obj</code></td>
@@ -485,7 +483,8 @@
 <td>进程意外终止是，系统将进程的地址空间和终止时的一些其他信息转储到核心存储文件下</td>
 <td>Linux 下的 core dump文件</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <ul>
 <li><p>目标文件组成主要分为两部分：<strong>程序指令和程序数据</strong>；顾名思义，程度指令就是存放代码，程序数据用来存放代码中的数据，分局数据中的类型又可分为几种段</p>
 </li>
@@ -547,7 +546,7 @@
 <p>从上图可知，main 函数地址确定了下来，同时 shared 和 swap 的地址也确定了，</p>
 <p><strong>链接器是怎么知道哪些指令是要被调整的？</strong>在 ELF 文件中有一个叫<strong>重定位表（Relocation Table</strong>）的结构来专门保存与重定位相关信息，重定位表实际上也是一个 ELF 文件中的一个段（重定位段），通过 <code>objdump -r</code> 可以看到目标文件中的重定位段，如下图所示</p>
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/RelocationTable.jpg" alt="RelocationTable"></p>
-<p>上图展示了 <code>a.o</code> 里面要重定位的地方，即 <code> a.o</code> 所有引用到外部符号的地址，对照前面 <code>objdump -d a.o</code> 的结果可知，上图中的偏移的值就是 shared 和 swap 在目标文件中的机器指令的后四个字节所在地址</p>
+<p>上图展示了 <code>a.o</code> 里面要重定位的地方，即 <code>a.o</code> 所有引用到外部符号的地址，对照前面 <code>objdump -d a.o</code> 的结果可知，上图中的偏移的值就是 shared 和 swap 在目标文件中的机器指令的后四个字节所在地址</p>
 <p>那<strong>在上面重定位的过程中，链接器怎么知道 a.o 里面需要的符号在哪去查找</strong>？这就涉及到链接器是如何进行符号解析的了，实际中，链接器会查找<strong>所有输入目标文件的符号表组成的全局符号表</strong>，找到相应的符号然后重定位。我们在编译过程中常碰到的找不到符号，或者符号冲突，其实都是发生在这个过程中</p>
 <p>通过 <code>readelf -s</code> 可以看到目标文件中的符号表，如下是 <code>a.o</code> 的符号表，可以看到 shared 和 swap 都是 UND(undefined）的</p>
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/charTable.jpg" alt="charTable"></p>
@@ -668,7 +667,7 @@
 
       
         <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
             文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
@@ -679,7 +678,9 @@
 
       <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image" src="http://wulc.me/files/profile.jpg" alt="良超">
+          <img class="site-author-image" itemprop="image"
+               src="http://wulc.me/files/profile.jpg"
+               alt="良超" />
           <p class="site-author-name" itemprop="name">良超</p>
           <p class="site-description motion-element" itemprop="description">工程师要把合适的技术放在合适的位置|算法工程师首先得是个工程师</p>
         </div>
@@ -688,7 +689,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">219</span>
+                <span class="site-state-item-count">218</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -780,12 +781,12 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <center>
-<div class="copyright">
+<div class="copyright" >
   
   &copy;  2015 - 
   <span itemprop="copyrightYear">2020</span>
-  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a>
-  <br>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
+  </br>
   <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
 </div>
 </center>

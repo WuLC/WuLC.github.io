@@ -6,19 +6,19 @@
 
 
 <html class="theme-next mist use-motion" lang="zh-Hans">
-<head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform">
-<meta http-equiv="Cache-Control" content="no-siteapp">
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
 
 
-  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
 
 
 
@@ -31,7 +31,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
 
 
 
@@ -39,23 +39,23 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
-
-
-  <meta name="keywords" content="C++,工具使用,">
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
+  <meta name="keywords" content="C++,工具使用," />
 
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
+
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
 
 
 
@@ -63,13 +63,11 @@
 
 
 <meta name="description" content="C/C++ 在 linux 下可通过 gcc 进行编译，当文件数量少，文件依赖关系简单时可通过命令进行编译，但是当文件数量庞大且关系复杂时，就要依赖于 make 和 Makefile 管理这些复杂关系了。MakeFile 类似于 shell 脚本，定义了文件的依赖关系，以及编译的先后顺序。本文主要介绍 Makefile 的基本语法，本系列文章主要参考了 跟我一起写Makefile。">
-<meta name="keywords" content="C++,工具使用">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Makefile 简介">
 <meta property="og:url" content="http://wulc.github.io/2018/12/05/Makefile 简介/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
 <meta property="og:description" content="C/C++ 在 linux 下可通过 gcc 进行编译，当文件数量少，文件依赖关系简单时可通过命令进行编译，但是当文件数量庞大且关系复杂时，就要依赖于 make 和 Makefile 管理这些复杂关系了。MakeFile 类似于 shell 脚本，定义了文件的依赖关系，以及编译的先后顺序。本文主要介绍 Makefile 的基本语法，本系列文章主要参考了 跟我一起写Makefile。">
-<meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2020-06-08T00:36:02.412Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Makefile 简介">
@@ -101,7 +99,7 @@
 
 
 
-  <link rel="canonical" href="http://wulc.github.io/2018/12/05/Makefile 简介/">
+  <link rel="canonical" href="http://wulc.github.io/2018/12/05/Makefile 简介/"/>
 
 
 
@@ -142,7 +140,7 @@
   
 
   <div class="custom-logo-site-title">
-    <a href="/" class="brand" rel="start">
+    <a href="/"  class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <span class="site-title">吴良超的学习笔记</span>
       <span class="logo-line-after"><i></i></span>
@@ -171,7 +169,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
             首页
           </a>
@@ -181,7 +179,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
             
             标签
           </a>
@@ -191,7 +189,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
             归档
           </a>
@@ -201,7 +199,7 @@
         <li class="menu-item menu-item-about">
           <a href="/about" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
             
             关于
           </a>
@@ -214,7 +212,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
             
             站内搜索
           </a>
@@ -263,14 +261,14 @@
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="良超">
-    <meta itemprop="description" content>
+    <meta itemprop="description" content="">
     <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
   </span>
 
   <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
     <meta itemprop="name" content="吴良超的学习笔记">
     <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src>
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
     </span>
   </span>
 
@@ -313,7 +311,7 @@
 
 
           
-            <span class="post-category">
+            <span class="post-category" >
             
               <span class="post-meta-divider">|</span>
             
@@ -368,12 +366,10 @@
       
 
       
-        <p>C/C++ 在 linux 下可通过 gcc 进行编译，当文件数量少，文件依赖关系简单时可通过命令进行编译，但是当文件数量庞大且关系复杂时，就要依赖于 make 和 Makefile 管理这些复杂关系了。MakeFile 类似于 shell 脚本，定义了文件的依赖关系，以及编译的先后顺序。本文主要介绍 Makefile 的基本语法，本系列文章主要参考了 <a href="http://wiki.ubuntu.org.cn/%E8%B7%9F%E6%88%91%E4%B8%80%E8%B5%B7%E5%86%99Makefile:%E6%A6%82%E8%BF%B0" target="_blank" rel="noopener">跟我一起写Makefile</a>。</p>
+        <p>C/C++ 在 linux 下可通过 gcc 进行编译，当文件数量少，文件依赖关系简单时可通过命令进行编译，但是当文件数量庞大且关系复杂时，就要依赖于 make 和 Makefile 管理这些复杂关系了。MakeFile 类似于 shell 脚本，定义了文件的依赖关系，以及编译的先后顺序。本文主要介绍 Makefile 的基本语法，本系列文章主要参考了 <a href="http://wiki.ubuntu.org.cn/%E8%B7%9F%E6%88%91%E4%B8%80%E8%B5%B7%E5%86%99Makefile:%E6%A6%82%E8%BF%B0" target="_blank" rel="external">跟我一起写Makefile</a>。</p>
 <a id="more"></a>
-
 <h2 id="基本格式"><a href="#基本格式" class="headerlink" title="基本格式"></a>基本格式</h2><p><code>Makefile</code> 书写格式一般如下</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 方式一</span><br><span class="line">target : prerequisites </span><br><span class="line">	command</span><br><span class="line"></span><br><span class="line"># 方式二</span><br><span class="line">target : prerequisites; command</span><br></pre></td></tr></table></figure>
-
 <ul>
 <li>target 可以是一个 object file(目标文件)，也可以是一个执行文件，还可以是一个标签（label）</li>
 <li>prerequisites 是要生成那个 target 所需要的文件或是目标。</li>
@@ -382,7 +378,6 @@
 <p>这是一个文件的依赖关系，也就是说，target 这一个或多个的目标文件依赖于 prerequisites 中的文件，其生成规则定义在 command 中。说白一点就是说，<strong>prerequisites 中如果有一个以上的文件比 target 文件要新的话，command 所定义的命令就会被执行。这就是 Makefile 的规则。也就是 Makefile 中最核心的内容。</strong></p>
 <h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><p>如果一个工程有3个头文件，和8个c文件，我们为了完成前面所述的那三个规则，我们的 Makefile 应该是下面这个样子的。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"># 如果后面这些.o文件比edit可执行文件新,那么才会去执行命令</span><br><span class="line">edit : main.o kbd.o command.o display.o \</span><br><span class="line">		insert.o search.o files.o utils.o       </span><br><span class="line">	cc -o edit main.o kbd.o command.o display.o \</span><br><span class="line">		insert.o search.o files.o utils.o</span><br><span class="line"></span><br><span class="line">main.o : main.c defs.h</span><br><span class="line">	cc -c main.c</span><br><span class="line">kbd.o : kbd.c defs.h command.h</span><br><span class="line">	cc -c kbd.c</span><br><span class="line">command.o : command.c defs.h command.h</span><br><span class="line">	cc -c command.c</span><br><span class="line">display.o : display.c defs.h buffer.h</span><br><span class="line">	cc -c display.c</span><br><span class="line">insert.o : insert.c defs.h buffer.h</span><br><span class="line">	cc -c insert.c</span><br><span class="line">search.o : search.c defs.h buffer.h</span><br><span class="line">	cc -c search.c</span><br><span class="line">files.o : files.c defs.h buffer.h command.h</span><br><span class="line">	cc -c files.c</span><br><span class="line">utils.o : utils.c defs.h</span><br><span class="line">	cc -c utils.c</span><br><span class="line">clean :</span><br><span class="line">	rm edit main.o kbd.o command.o display.o \</span><br><span class="line">		insert.o search.o files.o utils.o</span><br></pre></td></tr></table></figure>
-
 <p>我们可以把这个内容保存在名字为 “makefile” 或 “Makefile” 的文件中，然后在该目录下直接输入命令 “make” 就可以生成执行文件edit。如果要删除执行文件和所有的中间目标文件，那么，只要简单地执行一下 make clean 就可以了。</p>
 <p>在定义好依赖关系后，后续的那一行定义了如何生成目标文件的操作系统命令，一定要以一个tab键作为开头。记住，make 并不管命令是怎么工作的，他只管执行所定义的命令。make 会比较 targets 文件和 prerequisites 文件的修改日期，<strong>如果 prerequisites 文件的日期要比 targets 文件的日期要新，或者target不存在的话，那么，make就会执行后续定义的命令</strong>。</p>
 <p>输入 make 命令后，发生了如下的动作</p>
@@ -396,18 +391,14 @@
 <p>如果这个工程已被编译过，当我们修改了其中一个源文件时，比如 <code>file.c</code>，那么根据我们的依赖性，我们的目标 <code>file.o</code> 会被重编译, 因此 <code>file.o</code> 文件修改时间要比edit要新，所以 edit 也会被重新链接了</p>
 <h2 id="使用变量与自动推导"><a href="#使用变量与自动推导" class="headerlink" title="使用变量与自动推导"></a>使用变量与自动推导</h2><p>上面同一个 <code>.o</code> 文件在多个地方都重复了，因此可通过变量的方式简化 Makefile，Makefile 的变量也就是一个字符串，类似于 C 语言的宏，通过 <code>$(变量名)</code> 来访问变量内容</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">objects = main.o kbd.o command.o display.o \</span><br><span class="line">		insert.o search.o files.o utils.o</span><br><span class="line"></span><br><span class="line">edit : $(objects)</span><br><span class="line">	cc -o edit $(objects)</span><br><span class="line">main.o : main.c defs.h</span><br><span class="line">	cc -c main.c</span><br><span class="line">kbd.o : kbd.c defs.h command.h</span><br><span class="line">	cc -c kbd.c</span><br><span class="line">command.o : command.c defs.h command.h</span><br><span class="line">	cc -c command.c</span><br><span class="line">display.o : display.c defs.h buffer.h</span><br><span class="line">	cc -c display.c</span><br><span class="line">insert.o : insert.c defs.h buffer.h</span><br><span class="line">	cc -c insert.c</span><br><span class="line">search.o : search.c defs.h buffer.h</span><br><span class="line">	cc -c search.c</span><br><span class="line">files.o : files.c defs.h buffer.h command.h</span><br><span class="line">	cc -c files.c</span><br><span class="line">utils.o : utils.c defs.h</span><br><span class="line">	cc -c utils.c</span><br><span class="line">clean :</span><br><span class="line">	rm edit $(objects)</span><br></pre></td></tr></table></figure>
-
 <p>make 能够自动推导文件以及文件依赖关系后面的命令，即只要make看到一个 <code>.o</code> 文件，它就会自动的把 <code>.c</code> 文件加在依赖关系中，如果 make 找到一个 <code>whatever.o</code>，那么 <code>whatever.c</code>，就会是 <code>whatever.o</code> 的依赖文件。并且 <code>cc -c whatever.c</code> 也会被推导出来，于是，我们的 Makefile 再也不用写得这么复杂。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">objects = main.o kbd.o command.o display.o \</span><br><span class="line">		insert.o search.o files.o utils.o</span><br><span class="line"> cc = gcc</span><br><span class="line"></span><br><span class="line">edit : $(objects)</span><br><span class="line">	cc -o edit $(objects)</span><br><span class="line"></span><br><span class="line">main.o : defs.h</span><br><span class="line">kbd.o : defs.h command.h</span><br><span class="line">command.o : defs.h command.h</span><br><span class="line">display.o : defs.h buffer.h</span><br><span class="line">insert.o : defs.h buffer.h</span><br><span class="line">search.o : defs.h buffer.h</span><br><span class="line">files.o : defs.h buffer.h command.h</span><br><span class="line">utils.o : defs.h</span><br><span class="line"></span><br><span class="line">.PHONY : clean</span><br><span class="line">clean :</span><br><span class="line">	-rm edit $(objects)</span><br></pre></td></tr></table></figure>
-
 <p><code>.PHONY</code> 意思表示clean是一个<strong>伪目标</strong>。而在 rm 命令前面加了一个小减号的意思是当某些文件出现问题时不要管，继续做后面的事。当然，clean 的规则不要放在文件的开头，这就会变成 make 的默认目标。不成文的规矩是<strong>clean从来都是放在文件的最后</strong></p>
 <h2 id="引用其他-MakeFile"><a href="#引用其他-MakeFile" class="headerlink" title="引用其他 MakeFile"></a>引用其他 MakeFile</h2><p>在 Makefile 使用 include 关键字可以把别的 Makefile 包含进来，这很像 C/C++ 语言的 <code>#include</code>，被包含的文件会原模原样的放在当前文件的包含位置。include的语法是：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">include &lt;filename&gt;;</span><br></pre></td></tr></table></figure>
-
 <p>filename可以是当前操作系统Shell的文件模式（可以包含路径和通配符）</p>
 <p>比如有这样几个Makefile：a.mk、b.mk、c.mk，还有一个文件叫 foo.make，以及一个变量 <code>$(bar)</code>，其包含了 e.mk和f.mk，那么，下面两个语句等价：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">include foo.make *.mk $(bar)</span><br><span class="line"></span><br><span class="line">include foo.make a.mk b.mk c.mk e.mk f.mk</span><br></pre></td></tr></table></figure>
-
 <p>make 命令开始时，会找寻 include 所指出的其它 Makefile，并把其内容安置在当前的位置。类似 C/C++的 <code>#include</code> 指令一样。<strong>如果文件都没有指定绝对路径或是相对路径的话，make会在当前目录下首先寻找，如果当前目录下没有找到，那么，make还会在下面的几个目录下找</strong>：</p>
 <ul>
 <li>如果 make 执行时，有 <code>-I</code> 或 <code>--include-dir</code> 参数，那么 make 就会在这个参数所指定的目录下去寻找。</li>
@@ -518,7 +509,7 @@
 
       
         <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
             文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
@@ -529,7 +520,9 @@
 
       <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image" src="http://wulc.me/files/profile.jpg" alt="良超">
+          <img class="site-author-image" itemprop="image"
+               src="http://wulc.me/files/profile.jpg"
+               alt="良超" />
           <p class="site-author-name" itemprop="name">良超</p>
           <p class="site-description motion-element" itemprop="description">工程师要把合适的技术放在合适的位置|算法工程师首先得是个工程师</p>
         </div>
@@ -538,7 +531,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">219</span>
+                <span class="site-state-item-count">218</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -630,12 +623,12 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <center>
-<div class="copyright">
+<div class="copyright" >
   
   &copy;  2015 - 
   <span itemprop="copyrightYear">2020</span>
-  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a>
-  <br>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
+  </br>
   <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
 </div>
 </center>

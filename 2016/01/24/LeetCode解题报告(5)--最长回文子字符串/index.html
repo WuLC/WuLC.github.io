@@ -6,19 +6,19 @@
 
 
 <html class="theme-next mist use-motion" lang="zh-Hans">
-<head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform">
-<meta http-equiv="Cache-Control" content="no-siteapp">
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
 
 
-  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
 
 
 
@@ -31,7 +31,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
 
 
 
@@ -39,41 +39,51 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
-
-
-  <meta name="keywords" content="python,动态规划,字符串,">
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
-
-
-
-
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
+  <meta name="keywords" content="python,动态规划,字符串," />
 
 
 
 
 
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
 
-<meta name="description" content="原题如下：  Given a string S, find the longest palindromic substring in S. You may assume that the maximum length of S is 1000, and there exists one unique longest palindromic substring.  就是要从给定的字符串中找出最大的回">
-<meta name="keywords" content="python,动态规划,字符串">
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="原题如下：
+
+Given a string S, find the longest palindromic substring in S. You may assume that the maximum length of S is 1000, and there exists one unique longest palindromic substring.
+
+就是要从给定的字符串中找出最大的回">
 <meta property="og:type" content="article">
 <meta property="og:title" content="LeetCode解题报告(5)--最长回文子字符串">
 <meta property="og:url" content="http://wulc.github.io/2016/01/24/LeetCode解题报告(5)--最长回文子字符串/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
-<meta property="og:description" content="原题如下：  Given a string S, find the longest palindromic substring in S. You may assume that the maximum length of S is 1000, and there exists one unique longest palindromic substring.  就是要从给定的字符串中找出最大的回">
-<meta property="og:locale" content="zh-Hans">
+<meta property="og:description" content="原题如下：
+
+Given a string S, find the longest palindromic substring in S. You may assume that the maximum length of S is 1000, and there exists one unique longest palindromic substring.
+
+就是要从给定的字符串中找出最大的回">
 <meta property="og:updated_time" content="2019-06-01T09:14:44.066Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="LeetCode解题报告(5)--最长回文子字符串">
-<meta name="twitter:description" content="原题如下：  Given a string S, find the longest palindromic substring in S. You may assume that the maximum length of S is 1000, and there exists one unique longest palindromic substring.  就是要从给定的字符串中找出最大的回">
+<meta name="twitter:description" content="原题如下：
+
+Given a string S, find the longest palindromic substring in S. You may assume that the maximum length of S is 1000, and there exists one unique longest palindromic substring.
+
+就是要从给定的字符串中找出最大的回">
 
 
 
@@ -101,7 +111,7 @@
 
 
 
-  <link rel="canonical" href="http://wulc.github.io/2016/01/24/LeetCode解题报告(5)--最长回文子字符串/">
+  <link rel="canonical" href="http://wulc.github.io/2016/01/24/LeetCode解题报告(5)--最长回文子字符串/"/>
 
 
 
@@ -142,7 +152,7 @@
   
 
   <div class="custom-logo-site-title">
-    <a href="/" class="brand" rel="start">
+    <a href="/"  class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <span class="site-title">吴良超的学习笔记</span>
       <span class="logo-line-after"><i></i></span>
@@ -171,7 +181,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
             首页
           </a>
@@ -181,7 +191,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
             
             标签
           </a>
@@ -191,7 +201,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
             归档
           </a>
@@ -201,7 +211,7 @@
         <li class="menu-item menu-item-about">
           <a href="/about" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
             
             关于
           </a>
@@ -214,7 +224,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
             
             站内搜索
           </a>
@@ -263,14 +273,14 @@
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="良超">
-    <meta itemprop="description" content>
+    <meta itemprop="description" content="">
     <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
   </span>
 
   <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
     <meta itemprop="name" content="吴良超的学习笔记">
     <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src>
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
     </span>
   </span>
 
@@ -313,7 +323,7 @@
 
 
           
-            <span class="post-category">
+            <span class="post-category" >
             
               <span class="post-meta-divider">|</span>
             
@@ -379,22 +389,16 @@
       
 
       
-        <p><a href="https://leetcode.com/problems/longest-palindromic-substring/" target="_blank" rel="noopener">原题</a>如下：</p>
+        <p><a href="https://leetcode.com/problems/longest-palindromic-substring/" target="_blank" rel="external">原题</a>如下：</p>
 <blockquote>
 <p>Given a string S, find the longest palindromic substring in S. You may assume that the maximum length of S is 1000, and there exists one unique longest palindromic substring.</p>
 </blockquote>
-<p>就是要从给定的字符串中找出最大的回文子字符串。</p>
-<a id="more"></a>
-
-
+<p>就是要从给定的字符串中找出最大的回文子字符串。<br><a id="more"></a></p>
 <p>下面介绍两种时间复杂度为 $O(n^2)$ 的方法，第一种是以每个字符为中心向两边拓展从而得到尽可能长的回文字符串，第二种是利用动态规划。</p>
 <p>第一种方法的关键点是<strong>以每个字符为中心向两边拓展从而得到尽可能长的回文字符串</strong>。这里要注意的是回文字符串的长度可以是奇数也可以是偶数，所以要分两种情况讨论。</p>
-<p>实现代码如下：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#encoding:utf-8</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">longestPalindrome</span><span class="params">(self, s)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        :type s: str</span></span><br><span class="line"><span class="string">        :rtype: str</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        r=s[<span class="number">0</span>]</span><br><span class="line">        <span class="keyword">if</span> len(s) &gt; <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> range (<span class="number">1</span>,len(s)):</span><br><span class="line">                <span class="comment"># oddResult</span></span><br><span class="line">                begin=i </span><br><span class="line">                end=i</span><br><span class="line">                oddResult=self.getPalindoreStr(s,begin,end)</span><br><span class="line">                <span class="keyword">if</span> oddResult != <span class="literal">None</span> <span class="keyword">and</span> len(oddResult)&gt; len(r):</span><br><span class="line">                    r=oddResult</span><br><span class="line"></span><br><span class="line">                <span class="comment"># enevResult</span></span><br><span class="line">                begin=i<span class="number">-1</span></span><br><span class="line">                end=i</span><br><span class="line">                evenResult=self.getPalindoreStr(s,begin,end)</span><br><span class="line">                <span class="keyword">if</span> evenResult != <span class="literal">None</span> <span class="keyword">and</span> len(evenResult)&gt; len(r):</span><br><span class="line">                    r=evenResult</span><br><span class="line">        <span class="keyword">return</span> r</span><br><span class="line"></span><br><span class="line">    <span class="comment">#从给定的begin和end位置向两边扩展，得到回文字符串                </span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">getPalindoreStr</span><span class="params">(self,s,begin,end)</span>:</span></span><br><span class="line">        <span class="keyword">while</span> ( begin&gt;=<span class="number">0</span> <span class="keyword">and</span> end&lt;len(s) <span class="keyword">and</span> s[begin]==s[end] ):</span><br><span class="line">                begin-=<span class="number">1</span></span><br><span class="line">                end+=<span class="number">1</span></span><br><span class="line">        result=s[begin+<span class="number">1</span>:end] <span class="keyword">if</span>  begin+<span class="number">1</span> &lt;= end <span class="keyword">else</span> <span class="literal">None</span></span><br><span class="line">        <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
-
+<p>实现代码如下：<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#encoding:utf-8</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">longestPalindrome</span><span class="params">(self, s)</span>:</span></span><br><span class="line">        <span class="string">"""</span><br><span class="line">        :type s: str</span><br><span class="line">        :rtype: str</span><br><span class="line">        """</span></span><br><span class="line">        r=s[<span class="number">0</span>]</span><br><span class="line">        <span class="keyword">if</span> len(s) &gt; <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> range (<span class="number">1</span>,len(s)):</span><br><span class="line">                <span class="comment"># oddResult</span></span><br><span class="line">                begin=i </span><br><span class="line">                end=i</span><br><span class="line">                oddResult=self.getPalindoreStr(s,begin,end)</span><br><span class="line">                <span class="keyword">if</span> oddResult != <span class="keyword">None</span> <span class="keyword">and</span> len(oddResult)&gt; len(r):</span><br><span class="line">                    r=oddResult</span><br><span class="line"></span><br><span class="line">                <span class="comment"># enevResult</span></span><br><span class="line">                begin=i<span class="number">-1</span></span><br><span class="line">                end=i</span><br><span class="line">                evenResult=self.getPalindoreStr(s,begin,end)</span><br><span class="line">                <span class="keyword">if</span> evenResult != <span class="keyword">None</span> <span class="keyword">and</span> len(evenResult)&gt; len(r):</span><br><span class="line">                    r=evenResult</span><br><span class="line">        <span class="keyword">return</span> r</span><br><span class="line"></span><br><span class="line">    <span class="comment">#从给定的begin和end位置向两边扩展，得到回文字符串                </span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">getPalindoreStr</span><span class="params">(self,s,begin,end)</span>:</span></span><br><span class="line">        <span class="keyword">while</span> ( begin&gt;=<span class="number">0</span> <span class="keyword">and</span> end&lt;len(s) <span class="keyword">and</span> s[begin]==s[end] ):</span><br><span class="line">                begin-=<span class="number">1</span></span><br><span class="line">                end+=<span class="number">1</span></span><br><span class="line">        result=s[begin+<span class="number">1</span>:end] <span class="keyword">if</span>  begin+<span class="number">1</span> &lt;= end <span class="keyword">else</span> <span class="keyword">None</span></span><br><span class="line">        <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure></p>
 <p>第二种方法采用的是动态规划，<code>dp[i][j]</code> 表示 s[i:j] 所形成的字符串是否为回文字符串，时间复杂度为 $O(n^2)$。代码如下</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">longestPalindrome</span><span class="params">(self, s)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        :type s: str</span></span><br><span class="line"><span class="string">        :rtype: str</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        n = len(s)</span><br><span class="line">        dp = [[<span class="literal">False</span> <span class="keyword">for</span> j <span class="keyword">in</span> xrange(n)] <span class="keyword">for</span> i <span class="keyword">in</span> xrange(n)]</span><br><span class="line">        result = <span class="string">''</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> reversed(xrange(n)):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> xrange(i, n):</span><br><span class="line">                <span class="keyword">if</span> i == j:</span><br><span class="line">                    dp[i][j] = <span class="literal">True</span></span><br><span class="line">                <span class="keyword">elif</span> s[i] == s[j]:</span><br><span class="line">                    dp[i][j] = dp[i+<span class="number">1</span>][j<span class="number">-1</span>] <span class="keyword">if</span> i+<span class="number">1</span>&lt;=j<span class="number">-1</span> <span class="keyword">else</span> <span class="literal">True</span></span><br><span class="line">                <span class="keyword">if</span> dp[i][j] <span class="keyword">and</span> j-i+<span class="number">1</span> &gt; len(result):</span><br><span class="line">                    result = s[i:j+<span class="number">1</span>]</span><br><span class="line">        <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
-
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">longestPalindrome</span><span class="params">(self, s)</span>:</span></span><br><span class="line">        <span class="string">"""</span><br><span class="line">        :type s: str</span><br><span class="line">        :rtype: str</span><br><span class="line">        """</span></span><br><span class="line">        n = len(s)</span><br><span class="line">        dp = [[<span class="keyword">False</span> <span class="keyword">for</span> j <span class="keyword">in</span> xrange(n)] <span class="keyword">for</span> i <span class="keyword">in</span> xrange(n)]</span><br><span class="line">        result = <span class="string">''</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> reversed(xrange(n)):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> xrange(i, n):</span><br><span class="line">                <span class="keyword">if</span> i == j:</span><br><span class="line">                    dp[i][j] = <span class="keyword">True</span></span><br><span class="line">                <span class="keyword">elif</span> s[i] == s[j]:</span><br><span class="line">                    dp[i][j] = dp[i+<span class="number">1</span>][j<span class="number">-1</span>] <span class="keyword">if</span> i+<span class="number">1</span>&lt;=j<span class="number">-1</span> <span class="keyword">else</span> <span class="keyword">True</span></span><br><span class="line">                <span class="keyword">if</span> dp[i][j] <span class="keyword">and</span> j-i+<span class="number">1</span> &gt; len(result):</span><br><span class="line">                    result = s[i:j+<span class="number">1</span>]</span><br><span class="line">        <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -493,7 +497,9 @@
 
       <section class="site-overview sidebar-panel sidebar-panel-active">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image" src="http://wulc.me/files/profile.jpg" alt="良超">
+          <img class="site-author-image" itemprop="image"
+               src="http://wulc.me/files/profile.jpg"
+               alt="良超" />
           <p class="site-author-name" itemprop="name">良超</p>
           <p class="site-description motion-element" itemprop="description">工程师要把合适的技术放在合适的位置|算法工程师首先得是个工程师</p>
         </div>
@@ -502,7 +508,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">219</span>
+                <span class="site-state-item-count">218</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -578,12 +584,12 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <center>
-<div class="copyright">
+<div class="copyright" >
   
   &copy;  2015 - 
   <span itemprop="copyrightYear">2020</span>
-  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a>
-  <br>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
+  </br>
   <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
 </div>
 </center>

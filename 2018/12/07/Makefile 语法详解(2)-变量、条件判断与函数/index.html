@@ -6,19 +6,19 @@
 
 
 <html class="theme-next mist use-motion" lang="zh-Hans">
-<head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform">
-<meta http-equiv="Cache-Control" content="no-siteapp">
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
 
 
-  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
 
 
 
@@ -31,7 +31,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
 
 
 
@@ -39,23 +39,23 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
-
-
-  <meta name="keywords" content="C++,工具使用,">
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
+  <meta name="keywords" content="C++,工具使用," />
 
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
+
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
 
 
 
@@ -63,13 +63,11 @@
 
 
 <meta name="description" content="本文内容是之前的文章 Makefile 简介 的补充，详细介绍了 Makefile 中的变量（包括变量的定义、批量替换、局部变量等）、条件判断和函数（内置函数和自定义函数）。">
-<meta name="keywords" content="C++,工具使用">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Makefile 语法详解(2)-变量、条件判断与函数">
 <meta property="og:url" content="http://wulc.github.io/2018/12/07/Makefile 语法详解(2)-变量、条件判断与函数/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
 <meta property="og:description" content="本文内容是之前的文章 Makefile 简介 的补充，详细介绍了 Makefile 中的变量（包括变量的定义、批量替换、局部变量等）、条件判断和函数（内置函数和自定义函数）。">
-<meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2020-06-08T00:36:37.682Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Makefile 语法详解(2)-变量、条件判断与函数">
@@ -101,7 +99,7 @@
 
 
 
-  <link rel="canonical" href="http://wulc.github.io/2018/12/07/Makefile 语法详解(2)-变量、条件判断与函数/">
+  <link rel="canonical" href="http://wulc.github.io/2018/12/07/Makefile 语法详解(2)-变量、条件判断与函数/"/>
 
 
 
@@ -142,7 +140,7 @@
   
 
   <div class="custom-logo-site-title">
-    <a href="/" class="brand" rel="start">
+    <a href="/"  class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <span class="site-title">吴良超的学习笔记</span>
       <span class="logo-line-after"><i></i></span>
@@ -171,7 +169,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
             首页
           </a>
@@ -181,7 +179,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
             
             标签
           </a>
@@ -191,7 +189,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
             归档
           </a>
@@ -201,7 +199,7 @@
         <li class="menu-item menu-item-about">
           <a href="/about" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
             
             关于
           </a>
@@ -214,7 +212,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
             
             站内搜索
           </a>
@@ -263,14 +261,14 @@
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="良超">
-    <meta itemprop="description" content>
+    <meta itemprop="description" content="">
     <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
   </span>
 
   <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
     <meta itemprop="name" content="吴良超的学习笔记">
     <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src>
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
     </span>
   </span>
 
@@ -313,7 +311,7 @@
 
 
           
-            <span class="post-category">
+            <span class="post-category" >
             
               <span class="post-meta-divider">|</span>
             
@@ -368,12 +366,11 @@
       
 
       
-        <p>本文内容是之前的文章 <a href="http://wulc.me/2018/12/05/Makefile%20%E7%AE%80%E4%BB%8B/" target="_blank" rel="noopener">Makefile 简介</a> 的补充，详细介绍了 Makefile 中的变量（包括变量的定义、批量替换、局部变量等）、条件判断和函数（内置函数和自定义函数）。</p>
+        <p>本文内容是之前的文章 <a href="http://wulc.me/2018/12/05/Makefile%20%E7%AE%80%E4%BB%8B/" target="_blank" rel="external">Makefile 简介</a> 的补充，详细介绍了 Makefile 中的变量（包括变量的定义、批量替换、局部变量等）、条件判断和函数（内置函数和自定义函数）。</p>
 <a id="more"></a>
-
 <h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><p>在 Makefile 中的定义的变量，就像是 C/C++ 语言中的宏一样，代表了一个文本字串，在 Makefile 中执行的时候其会自动地展开在所使用的地方。其与C/C++所不同的是，可以在 Makefile 中改变其值。</p>
 <p>变量在声明时需要给予初值，而在使用时，需要给在变量名前加上 <code>$</code> 符号，但最好用小括号 <code>()</code>或是大括号 <code>{}</code> 把变量给包括起来。如果你要使用真实的 <code>$</code> 字符，那么你需要用 <code>$$</code> 来表示。</p>
-<h3 id="变量的赋值"><a href="#变量的赋值" class="headerlink" title="变量的赋值"></a>变量的赋值</h3><p>定义 Makefile 中为变量赋值可用四种操作符：<code>=</code>、<code>:=</code>、<code>?=</code>、<code>+=</code>， 参考 StackOverflow 上的问题 <a href="https://stackoverflow.com/questions/6283320/vs-in-make-macros?lq=1" target="_blank" rel="noopener">What is the difference between the GNU Makefile variable assignments =, ?=, := and +=?</a>, 这四个符号的主要区别是</p>
+<h3 id="变量的赋值"><a href="#变量的赋值" class="headerlink" title="变量的赋值"></a>变量的赋值</h3><p>定义 Makefile 中为变量赋值可用四种操作符：<code>=</code>、<code>:=</code>、<code>?=</code>、<code>+=</code>， 参考 StackOverflow 上的问题 <a href="https://stackoverflow.com/questions/6283320/vs-in-make-macros?lq=1" target="_blank" rel="external">What is the difference between the GNU Makefile variable assignments =, ?=, := and +=?</a>, 这四个符号的主要区别是</p>
 <ol>
 <li><code>=</code> 赋值是 lazy 的，也就是在使用的时候才会递归的获取变量的值（递归指的是可以通过一个变量为另一个变量赋值）</li>
 <li><code>:=</code> 则是在声明的时候变量的值就确定了</li>
@@ -381,48 +378,33 @@
 <li><code>+=</code> 则是在原来的值上 append 一个其他的值（自动添加空格）</li>
 </ol>
 <p>其中 <code>=</code> 赋值是的递归获取值比较难理解，简单来说就是右侧中的变量不一定非要是已定义好的值，也可以使用<strong>后面定义</strong>的值。如下是一个简单地例子</p>
-<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">foo = <span class="variable">$(bar)</span></span><br><span class="line">bar = <span class="variable">$(ugh)</span></span><br><span class="line">ugh = Haha</span><br><span class="line"></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">    echo <span class="variable">$(foo)</span></span><br></pre></td></tr></table></figure>
-
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">foo = <span class="variable">$(bar)</span></span><br><span class="line">bar = <span class="variable">$(ugh)</span></span><br><span class="line">ugh = Haha</span><br><span class="line"></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">    echo $(foo)</span><br></pre></td></tr></table></figure>
 <p>执行 <code>make all</code> 时输出的值是 <code>Haha</code>, 而是用 <code>:=</code> 赋值时就不允许这么赋值，在 <code>:=</code> 右边的值必须只能是字符串或者<strong>前面定义</strong>的变量，也就是在 <code>:=</code> 右边的值必须要是目前为止已经确定的值。</p>
 <figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 示例 1</span></span><br><span class="line">x := foo</span><br><span class="line">y := <span class="variable">$(x)</span> bar</span><br><span class="line">x := later</span><br><span class="line"></span><br><span class="line"><span class="comment"># 示例 2</span></span><br><span class="line">y := <span class="variable">$(x)</span> bar</span><br><span class="line">x := foo</span><br></pre></td></tr></table></figure>
-
 <p>上面示例1 中的 y 的值为 foo bar，示例2 中的值为 bar。</p>
 <h3 id="变量值的替换"><a href="#变量值的替换" class="headerlink" title="变量值的替换"></a>变量值的替换</h3><p>我们可以替换变量中的共有的部分，其格式是 <code>$(var:a=b)</code> 或是 <code>$(var: %a=%b)</code>，其意思是，把变量 <code>var</code> 中所有以 <code>a</code> 字串结尾的那些值从 <code>a</code> 替换成 <code>b</code>; 如下是一个简单的示例</p>
-<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">foo := a.o b.o c.o</span><br><span class="line">bar := $(foo:.o=.c) 或 bar := $(foo:%.o=%.c)</span><br><span class="line"></span><br><span class="line"><span class="comment"># bar 的值是 a.c b.c c.c</span></span><br></pre></td></tr></table></figure>
-
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">foo := a.o b.o c.o</span><br><span class="line">bar := <span class="variable">$(foo:.o=.c)</span> 或 bar := <span class="variable">$(foo:%.o=%.c)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># bar 的值是 a.c b.c c.c</span></span><br></pre></td></tr></table></figure>
 <h3 id="把变量值当做变量名"><a href="#把变量值当做变量名" class="headerlink" title="把变量值当做变量名"></a>把变量值当做变量名</h3><p>Makefile 中如果变量 a 的值是变量 b 的名称，那么可以把变量 a 的值直接当做变量 b 使用，如下是一些简单的例子</p>
-<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 示例一</span></span><br><span class="line">x = y</span><br><span class="line">y = z</span><br><span class="line">z = u</span><br><span class="line">a := $($(<span class="variable">$(x)</span>)) <span class="comment"># u</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 示例二</span></span><br><span class="line">x = <span class="variable">$(y)</span></span><br><span class="line">y = z</span><br><span class="line">z = Hello</span><br><span class="line">a := $(<span class="variable">$(x)</span>) <span class="comment"># Hello</span></span><br></pre></td></tr></table></figure>
-
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 示例一</span></span><br><span class="line">x = y</span><br><span class="line">y = z</span><br><span class="line">z = u</span><br><span class="line">a := <span class="variable">$($($(x)</span>)) # u</span><br><span class="line"></span><br><span class="line"><span class="comment"># 示例二</span></span><br><span class="line">x = <span class="variable">$(y)</span></span><br><span class="line">y = z</span><br><span class="line">z = Hello</span><br><span class="line">a := <span class="variable">$($(x)</span>) # Hello</span><br></pre></td></tr></table></figure>
 <h3 id="局部变量"><a href="#局部变量" class="headerlink" title="局部变量"></a>局部变量</h3><p>前面我们所讲的在 Makefile 中定义的变量都是全局变量, 但是也可以为某个目标设置局部变量，这种变量被称为 Target-specific Variable，<strong>因为它的作用范围只在这条规则以及连带规则中，所以其值也只在作用范围内有效。而不会影响规则链以外的全局变量的值</strong>，因为局部变量的名称可与全局变量的名称相同。</p>
-<p>其一般语法如下，首先在 target 中定义局部变量，则在 <strong>target 及其依赖的目标</strong>中使用该变量即可</p>
-<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">target : local_variable assignment</span><br><span class="line">target : use variable</span><br></pre></td></tr></table></figure>
-
-<p>如下是个简单的例子</p>
-<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">prog : CFLAGS = -g</span><br><span class="line">prog : prog.o foo.o bar.o</span><br><span class="line">        <span class="variable">$(CC)</span> <span class="variable">$(CFLAGS)</span> prog.o foo.o bar.o</span><br><span class="line"></span><br><span class="line">prog.o : prog.c</span><br><span class="line">        <span class="variable">$(CC)</span> <span class="variable">$(CFLAGS)</span> prog.c</span><br><span class="line"></span><br><span class="line">foo.o : foo.c</span><br><span class="line">        <span class="variable">$(CC)</span> <span class="variable">$(CFLAGS)</span> foo.c</span><br><span class="line"></span><br><span class="line">bar.o : bar.c</span><br><span class="line">        <span class="variable">$(CC)</span> <span class="variable">$(CFLAGS)</span> bar.c</span><br></pre></td></tr></table></figure>
-
+<p>其一般语法如下，首先在 target 中定义局部变量，则在 <strong>target 及其依赖的目标</strong>中使用该变量即可<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">target : local_variable assignment</span><br><span class="line">target : use variable</span><br></pre></td></tr></table></figure></p>
+<p>如下是个简单的例子<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">prog : CFLAGS = -g</span><br><span class="line">prog : prog.o foo.o bar.o</span><br><span class="line">        $(CC) $(CFLAGS) prog.o foo.o bar.o</span><br><span class="line"></span><br><span class="line">prog.o : prog.c</span><br><span class="line">        $(CC) $(CFLAGS) prog.c</span><br><span class="line"></span><br><span class="line">foo.o : foo.c</span><br><span class="line">        $(CC) $(CFLAGS) foo.c</span><br><span class="line"></span><br><span class="line">bar.o : bar.c</span><br><span class="line">        $(CC) $(CFLAGS) bar.c</span><br></pre></td></tr></table></figure></p>
 <p>除了 Target-specific Variable，还有 Pattern-specific Variable，即不是在某个特定的 target 中定义局部变量，而是在某个特定的 pattern 中定义局部变量，其语法与上面的类似，如下所示是定义了所有以 <code>.o</code> 结尾的目标中的一个局部变量</p>
 <figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%.o : CFLAGS = -O</span><br></pre></td></tr></table></figure>
-
 <h2 id="条件判断"><a href="#条件判断" class="headerlink" title="条件判断"></a>条件判断</h2><p>使用条件判断，可以让 make 根据运行时的不同情况选择不同的执行分支，主要有以下几个关键字： <code>ifeq</code>、<code>ifneq</code>、<code>ifdef</code>、<code>ifndef</code>、<code>else</code> 和 <code>endif</code>;</p>
 <p>根据名称其实也能基本能猜出各个关键字的作用了, <code>ifeq</code> 和 <code>ifneq</code> 是一对关键字，表示其后面跟随的两个参数是够相等，<code>ifdef</code> 和 <code>ifndef</code> 是一对关键字，表示其后跟随的变量是否已经被定义过。</p>
-<p>如下是一个简单的例子，表示目标 foo 可以根据变量 <code>$(CC)</code> 值来选取不同的函数库来编译</p>
-<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">libs_for_gcc = -lgnu</span><br><span class="line">normal_libs =</span><br><span class="line"></span><br><span class="line"><span class="section">foo: <span class="variable">$(objects)</span></span></span><br><span class="line"><span class="keyword">ifeq</span> (<span class="variable">$(CC)</span>,gcc)</span><br><span class="line">        <span class="variable">$(CC)</span> -o foo <span class="variable">$(objects)</span> <span class="variable">$(libs_for_gcc)</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">        <span class="variable">$(CC)</span> -o foo <span class="variable">$(objects)</span> <span class="variable">$(normal_libs)</span></span><br><span class="line"><span class="keyword">endif</span></span><br></pre></td></tr></table></figure>
-
+<p>如下是一个简单的例子，表示目标 foo 可以根据变量 <code>$(CC)</code> 值来选取不同的函数库来编译<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">libs_for_gcc = -lgnu</span><br><span class="line">normal_libs =</span><br><span class="line"></span><br><span class="line">foo: $(objects)</span><br><span class="line">ifeq ($(CC),gcc)</span><br><span class="line">        $(CC) -o foo $(objects) $(libs_for_gcc)</span><br><span class="line">else</span><br><span class="line">        $(CC) -o foo $(objects) $(normal_libs)</span><br><span class="line">endif</span><br></pre></td></tr></table></figure></p>
 <p>当 <code>$(CC)</code> 是 gcc 时，目标 foo 的规则是</p>
-<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">foo: <span class="variable">$(objects)</span></span></span><br><span class="line">    <span class="variable">$(CC)</span> -o foo <span class="variable">$(objects)</span> <span class="variable">$(libs_for_gcc)</span></span><br></pre></td></tr></table></figure>
-
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">foo: $(objects)</span><br><span class="line">    $(CC) -o foo $(objects) $(libs_for_gcc)</span><br></pre></td></tr></table></figure>
 <p>因此，上面的写法可以写成如下更简洁且容易理解的形式</p>
-<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">libs_for_gcc = -lgnu</span><br><span class="line">normal_libs =</span><br><span class="line"></span><br><span class="line"><span class="keyword">ifeq</span> (<span class="variable">$(CC)</span>, gcc)</span><br><span class="line">  libs=<span class="variable">$(libs_for_gcc)</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">  libs=<span class="variable">$(normal_libs)</span></span><br><span class="line"><span class="keyword">endif</span></span><br><span class="line"></span><br><span class="line"><span class="section">foo: <span class="variable">$(objects)</span></span></span><br><span class="line">        <span class="variable">$(CC)</span> -o foo <span class="variable">$(objects)</span> <span class="variable">$(libs)</span></span><br></pre></td></tr></table></figure>
-
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">libs_for_gcc = -lgnu</span><br><span class="line">normal_libs =</span><br><span class="line"></span><br><span class="line">ifeq ($(CC), gcc)</span><br><span class="line">  libs=$(libs_for_gcc)</span><br><span class="line">else</span><br><span class="line">  libs=$(normal_libs)</span><br><span class="line">endif</span><br><span class="line"></span><br><span class="line">foo: $(objects)</span><br><span class="line">        $(CC) -o foo $(objects) $(libs)</span><br></pre></td></tr></table></figure>
 <p>需要注意的一点是<strong>在关键字所在的这一行上，多余的空格是被允许的，但是不能以 Tab 键做为开始，否则就被认为是命令</strong></p>
 <p>使用 <code>ifeq</code> 可有若干种形式，如下所示的五种形式都是等价的,  <code>ifneq</code> 的使用方法相同</p>
-<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ifeq</span> (&lt;arg1&gt;, &lt;arg2&gt;) </span><br><span class="line"><span class="keyword">ifeq</span> '&lt;arg1&gt;' '&lt;arg2&gt;' </span><br><span class="line"><span class="keyword">ifeq</span> <span class="string">"&lt;arg1&gt;"</span> <span class="string">"&lt;arg2&gt;"</span> </span><br><span class="line"><span class="keyword">ifeq</span> <span class="string">"&lt;arg1&gt;"</span> '&lt;arg2&gt;' </span><br><span class="line"><span class="keyword">ifeq</span> '&lt;arg1&gt;' <span class="string">"&lt;arg2&gt;"</span></span><br></pre></td></tr></table></figure>
-
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ifeq (&lt;arg1&gt;, &lt;arg2&gt;) </span><br><span class="line">ifeq '&lt;arg1&gt;' '&lt;arg2&gt;' </span><br><span class="line">ifeq "&lt;arg1&gt;" "&lt;arg2&gt;" </span><br><span class="line">ifeq "&lt;arg1&gt;" '&lt;arg2&gt;' </span><br><span class="line">ifeq '&lt;arg1&gt;' "&lt;arg2&gt;"</span><br></pre></td></tr></table></figure>
 <p><code>ifdef</code> 和 <code>ifndef</code> 的使用方法也类似，只是其后面只跟着一个变量。</p>
 <h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><p>GNU make 内置了一些函数，在 Makefile 中使用函数来处理变量，可以让我们的命令或是规则更为的灵活</p>
 <p>函数调用很像变量的使用，也是以 <code>$</code> 来标识的，其语法如下，其中 <code>&lt;function&gt;</code> 就是函数名，<code>&lt;arguments&gt;</code> 为函数的参数，参数间以逗号 <code>,</code> 分隔，而函数名和参数之间以空格分隔</p>
 <figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$(&lt;function&gt; &lt;arguments&gt;)</span><br><span class="line">或</span><br><span class="line">$&#123;&lt;function&gt; &lt;arguments&gt;&#125;</span><br></pre></td></tr></table></figure>
-
 <p>以下是 GNU make 内置的一些函数</p>
 <h3 id="字符串处理函数"><a href="#字符串处理函数" class="headerlink" title="字符串处理函数"></a>字符串处理函数</h3><ul>
 <li><p><strong>subst</strong><br>用法：<code>$(subst &lt;from&gt;,&lt;to&gt;,&lt;text&gt;)</code><br>功能：把字串 <code>&lt;text&gt;</code> 中的 <code>&lt;from&gt;</code> 字符串替换成 <code>&lt;to&gt;</code>。<br>返回：函数返回被替换过后的字符串。</p>
@@ -440,19 +422,16 @@
 <p><code>$(foreach  &lt;var&gt;,&lt;list&gt;,&lt;text&gt;)</code></p>
 <p>该函数的意思是，把参数 <code>&lt;list&gt;</code> 中的单词逐一取出放到参数所指定的变量 <code>&lt;var&gt;</code> 中，然后再执行 <code>&lt; text&gt;</code> 所包含的表达式。每一次 <code>&lt;text&gt;</code> 会返回一个字符串，循环过程中，<code>&lt;text&gt;</code> 的所返回的每个字符串会以空格分隔，最后当整个循环结束时，<code>&lt;text&gt;</code>所返回的每个字符串所组成的整个字符串（以空格分隔）将会是foreach函数的返回值。</p>
 <p>如下是一个简单的例子</p>
-<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">names := a b c d</span><br><span class="line"></span><br><span class="line">files := <span class="variable">$(<span class="built_in">foreach</span> n,<span class="variable">$(names)</span>,<span class="variable">$(n)</span>.o)</span></span><br></pre></td></tr></table></figure>
-
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">names := a b c d</span><br><span class="line"></span><br><span class="line">files := <span class="variable">$(foreach n,$(names)</span>,<span class="variable">$(n)</span>.o)</span><br></pre></td></tr></table></figure>
 <p>上面的例子中，<code>$(name)</code> 中的单词会被挨个取出，并存到变量 n 中，<code>$(n).o</code> 每次根据 <code>$(n)</code> 计算出一个值，这些值以空格分隔，最后作为 foreach 函数的返回值，所以，<code>$(files)</code> 的值是 <code>a.o b.o c.o d.o</code></p>
 <p><strong>需要注意的是，foreach 中的参数是一个临时的局部变量，foreach函数执行完后，参数的变量将不在作用，其作用域只在foreach函数当中。</strong></p>
 <h3 id="call函数"><a href="#call函数" class="headerlink" title="call函数"></a>call函数</h3><p>call 函数可以用来创建自定义函数。其语法是：</p>
 <p><code>$(call &lt;expression&gt;,&lt;parm1&gt;,&lt;parm2&gt;,&lt;parm3&gt;,...)</code></p>
 <p>当 make 执行这个函数时，<code>&lt;expression&gt;</code> 参数中的变量: <code>$(1)，$(2)，$(3)</code>等，会被参数 <code>&lt;parm1&gt;，&lt;parm2&gt;，&lt;parm3&gt;</code>依次取代。而 <code>&lt;expression&gt;</code> 的返回值就是 <code>call</code> 函数的返回值。例如：</p>
-<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">reverse =  $(2) $(1) </span><br><span class="line">foo = <span class="variable">$(<span class="built_in">call</span> reverse,a,b)</span></span><br></pre></td></tr></table></figure>
-
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">reverse =  <span class="variable">$(2)</span> <span class="variable">$(1)</span> </span><br><span class="line">foo = <span class="variable">$(call reverse,a,b)</span></span><br></pre></td></tr></table></figure>
 <p>经过上面的表达式得到的 foo 的值是 <code>b a</code>。当然，可以为 reverse 定义更复杂的操作。</p>
 <h3 id="shell函数"><a href="#shell函数" class="headerlink" title="shell函数"></a>shell函数</h3><p>，shell函数把执行操作系统命令后的输出作为函数返回。因此可以用操作系统命令以及字符串处理命令 <code>awk，sed</code> 等等命令来生成一个变量，如：</p>
-<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">contents := <span class="variable">$(<span class="built_in">shell</span> cat foo)</span></span><br><span class="line">files := <span class="variable">$(<span class="built_in">shell</span> echo *.c)</span></span><br></pre></td></tr></table></figure>
-
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">contents := <span class="variable">$(shell cat foo)</span></span><br><span class="line">files := <span class="variable">$(shell echo *.c)</span></span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -547,7 +526,7 @@
 
       
         <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
             文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
@@ -558,7 +537,9 @@
 
       <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image" src="http://wulc.me/files/profile.jpg" alt="良超">
+          <img class="site-author-image" itemprop="image"
+               src="http://wulc.me/files/profile.jpg"
+               alt="良超" />
           <p class="site-author-name" itemprop="name">良超</p>
           <p class="site-description motion-element" itemprop="description">工程师要把合适的技术放在合适的位置|算法工程师首先得是个工程师</p>
         </div>
@@ -567,7 +548,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">219</span>
+                <span class="site-state-item-count">218</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -659,12 +640,12 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <center>
-<div class="copyright">
+<div class="copyright" >
   
   &copy;  2015 - 
   <span itemprop="copyrightYear">2020</span>
-  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a>
-  <br>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
+  </br>
   <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
 </div>
 </center>

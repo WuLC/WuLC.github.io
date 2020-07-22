@@ -6,19 +6,19 @@
 
 
 <html class="theme-next mist use-motion" lang="zh-Hans">
-<head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform">
-<meta http-equiv="Cache-Control" content="no-siteapp">
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
 
 
-  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
 
 
 
@@ -31,7 +31,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
 
 
 
@@ -39,37 +39,37 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
-
-
-  <meta name="keywords" content="数学,">
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
-
-
-
-
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
+  <meta name="keywords" content="数学," />
 
 
 
 
 
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
 
-<meta name="description" content="前面几部分主要总结了概率论中的一些知识，后面主要讲述与数理统计相关的知识。 概率论与数理统计的主要区别为，在概率论中所研究的随机变量，其分布都是假设已知的，在这一前提下去研究它的性质（数字特征，分布函数等）；而在数理统计中研究的随机变量其分布是未知的，通过对所研究的随机变量进行重复独立的试验和观察，得到许多观察值，再对观察值进行分析，从而对所研究的随机变量的分布做出各种推断。">
-<meta name="keywords" content="数学">
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="前面几部分主要总结了概率论中的一些知识，后面主要讲述与数理统计相关的知识。
+概率论与数理统计的主要区别为，在概率论中所研究的随机变量，其分布都是假设已知的，在这一前提下去研究它的性质（数字特征，分布函数等）；而在数理统计中研究的随机变量其分布是未知的，通过对所研究的随机变量进行重复独立的试验和观察，得到许多观察值，再对观察值进行分析，从而对所研究的随机变量的分布做出各种推断。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="概率论与数理统计知识整理(5)--样本及抽样分布">
 <meta property="og:url" content="http://wulc.github.io/2016/11/18/概率论与数理统计知识整理(5)--样本及抽样分布/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
-<meta property="og:description" content="前面几部分主要总结了概率论中的一些知识，后面主要讲述与数理统计相关的知识。 概率论与数理统计的主要区别为，在概率论中所研究的随机变量，其分布都是假设已知的，在这一前提下去研究它的性质（数字特征，分布函数等）；而在数理统计中研究的随机变量其分布是未知的，通过对所研究的随机变量进行重复独立的试验和观察，得到许多观察值，再对观察值进行分析，从而对所研究的随机变量的分布做出各种推断。">
-<meta property="og:locale" content="zh-Hans">
+<meta property="og:description" content="前面几部分主要总结了概率论中的一些知识，后面主要讲述与数理统计相关的知识。
+概率论与数理统计的主要区别为，在概率论中所研究的随机变量，其分布都是假设已知的，在这一前提下去研究它的性质（数字特征，分布函数等）；而在数理统计中研究的随机变量其分布是未知的，通过对所研究的随机变量进行重复独立的试验和观察，得到许多观察值，再对观察值进行分析，从而对所研究的随机变量的分布做出各种推断。">
 <meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/x39jhwwd6cqhcvgo0wqmeug4/image_1b2b4i5eu1923bao1e801k76816p.png">
 <meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/yc4vnw70ofi0h3t0larzlslb/image_1b2b76hpl42rb2o8ig1aki11kq2q.png">
 <meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/zvnpwplptlma6nlwmv5yt3g6/image_1b2b8ahhmc23e9l80doqjq3q58.png">
@@ -80,7 +80,8 @@
 <meta property="og:updated_time" content="2019-06-01T09:14:44.182Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="概率论与数理统计知识整理(5)--样本及抽样分布">
-<meta name="twitter:description" content="前面几部分主要总结了概率论中的一些知识，后面主要讲述与数理统计相关的知识。 概率论与数理统计的主要区别为，在概率论中所研究的随机变量，其分布都是假设已知的，在这一前提下去研究它的性质（数字特征，分布函数等）；而在数理统计中研究的随机变量其分布是未知的，通过对所研究的随机变量进行重复独立的试验和观察，得到许多观察值，再对观察值进行分析，从而对所研究的随机变量的分布做出各种推断。">
+<meta name="twitter:description" content="前面几部分主要总结了概率论中的一些知识，后面主要讲述与数理统计相关的知识。
+概率论与数理统计的主要区别为，在概率论中所研究的随机变量，其分布都是假设已知的，在这一前提下去研究它的性质（数字特征，分布函数等）；而在数理统计中研究的随机变量其分布是未知的，通过对所研究的随机变量进行重复独立的试验和观察，得到许多观察值，再对观察值进行分析，从而对所研究的随机变量的分布做出各种推断。">
 <meta name="twitter:image" content="http://static.zybuluo.com/WuLiangchao/x39jhwwd6cqhcvgo0wqmeug4/image_1b2b4i5eu1923bao1e801k76816p.png">
 
 
@@ -109,7 +110,7 @@
 
 
 
-  <link rel="canonical" href="http://wulc.github.io/2016/11/18/概率论与数理统计知识整理(5)--样本及抽样分布/">
+  <link rel="canonical" href="http://wulc.github.io/2016/11/18/概率论与数理统计知识整理(5)--样本及抽样分布/"/>
 
 
 
@@ -150,7 +151,7 @@
   
 
   <div class="custom-logo-site-title">
-    <a href="/" class="brand" rel="start">
+    <a href="/"  class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <span class="site-title">吴良超的学习笔记</span>
       <span class="logo-line-after"><i></i></span>
@@ -179,7 +180,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
             首页
           </a>
@@ -189,7 +190,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
             
             标签
           </a>
@@ -199,7 +200,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
             归档
           </a>
@@ -209,7 +210,7 @@
         <li class="menu-item menu-item-about">
           <a href="/about" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
             
             关于
           </a>
@@ -222,7 +223,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
             
             站内搜索
           </a>
@@ -271,14 +272,14 @@
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="良超">
-    <meta itemprop="description" content>
+    <meta itemprop="description" content="">
     <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
   </span>
 
   <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
     <meta itemprop="name" content="吴良超的学习笔记">
     <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src>
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
     </span>
   </span>
 
@@ -321,7 +322,7 @@
 
 
           
-            <span class="post-category">
+            <span class="post-category" >
             
               <span class="post-meta-divider">|</span>
             
@@ -368,7 +369,6 @@
         <p>前面几部分主要总结了概率论中的一些知识，后面主要讲述与数理统计相关的知识。</p>
 <p>概率论与数理统计的主要区别为，在概率论中所研究的随机变量，其<strong>分布都是假设已知</strong>的，在这一前提下去研究它的性质（数字特征，分布函数等）；而在数理统计中研究的随机变量其<strong>分布是未知的</strong>，通过对所研究的随机变量进行<strong>重复独立的试验和观察</strong>，得到许多观察值，再对观察值进行分析，从而<strong>对所研究的随机变量的分布做出各种推断</strong>。</p>
 <a id="more"></a>
-
 <p>因此数理统计的主要内容包括两部分，一是如何收集，整理数据资料，二是如何对得到的数据资料进行分析和研究，从而对所研究的对象的性质和特点做出推断。第二部分其实就是统计推断的问题，也是后面主要讲述的内容。本文主要讲述数理统计中的两个基本概念：样本和抽样分布。</p>
 <h2 id="样本"><a href="#样本" class="headerlink" title="样本"></a>样本</h2><p>从前面可知，数理统计就是通过数据来推断变量的分布，比如说现在要求求出全国成年男人的身高的一个分布，那只需要测出每个成年男人的身高后进行统计即可。</p>
 <p>但是在实际中，受限于人力物力和测试的难度，我们往往不会对每个成年男人进行身高的测试，而是在全国男人中选择部分的男人进行测试(如根据每个地区的人口数量按比例测试)，然后用这部分男人的身高分布来推断全国男人的分布，这样的推断肯定会存在误差，但是通过增加样本的数量，可以减少这种误差(大数定理)。</p>
@@ -388,16 +388,16 @@
 <p>样本标准差：$$S = \sqrt {S^2}$$</p>
 <p>样本 k 阶原点矩： $$A_k = \frac{1}{n} \sum_{i=1}^{n} X_i^k (k=1,2,…)$$</p>
 <p>样本 k 阶中心矩: $$B_k = \frac{1}{n} \sum_{i=1}^{n}(X_i - \overline X)^k (k=2,3,4…..)$$</p>
-<p>这些统计量的定义与概率论中的基本相似，唯一比较奇怪的是为什么样本方差的分母是 $n - 1$ 而不是 n，原因是通过数学证明可以得到**只有当分母取n-1时，用样本来估计总体才是无偏的(无偏指的是估计量的期望与总体的参数一致)**，下面是分母取n时得到的有偏估计的证明过程（$S_1^2$为样本方差）</p>
-<p><img src="http://static.zybuluo.com/WuLiangchao/x39jhwwd6cqhcvgo0wqmeug4/image_1b2b4i5eu1923bao1e801k76816p.png"></p>
-<p>更多的解释可参考<a href="https://www.zhihu.com/question/20099757" target="_blank" rel="noopener">这里</a></p>
+<p>这些统计量的定义与概率论中的基本相似，唯一比较奇怪的是为什么样本方差的分母是 $n - 1$ 而不是 n，原因是通过数学证明可以得到<strong>只有当分母取n-1时，用样本来估计总体才是无偏的(无偏指的是估计量的期望与总体的参数一致)</strong>，下面是分母取n时得到的有偏估计的证明过程（$S_1^2$为样本方差）</p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/x39jhwwd6cqhcvgo0wqmeug4/image_1b2b4i5eu1923bao1e801k76816p.png" alt=""></p>
+<p>更多的解释可参考<a href="https://www.zhihu.com/question/20099757" target="_blank" rel="external">这里</a></p>
 <p>除了上面的统计量还定义了与总体分布函数 $F(x)$ 相应的统计量–经验分布函数。其定义如下</p>
 <blockquote>
 <p>设 $ X_1,X_2,….,X_n $ 为总体的一个样本，$ S(x)(-\infty &lt; x &lt; \infty) $表示为样本中不大于 $x$ 的随机变量的个数，则经验分布函数 $F_n(x)$ 的定义如下$$F_n(x) = \frac{1}{n}S(x) (-\infty &lt; x &lt; \infty)$$</p>
 </blockquote>
 <p>下面是关于经验分布函数的一个简单例子。</p>
 <p>设总体 $F$ 具有一个样本值1,2,3，则经验分布函数 $F_3(x)$ 的观测值为</p>
-<p>$$f(y) = \begin{cases}<br>0 &amp;{x&lt;1} \<br>\frac{1}{3} &amp;{1\le x&lt;2}\<br>\frac{2}{3} &amp;{2\le x&lt;3}\<br>1 &amp;{x \ge 3}\end{cases}$$</p>
+<p>$$f(y) = \begin{cases}<br>0 &amp;{x&lt;1} \\<br>\frac{1}{3} &amp;{1\le x&lt;2}\\<br>\frac{2}{3} &amp;{2\le x&lt;3}\\<br>1 &amp;{x \ge 3}\end{cases}$$</p>
 <p><strong>经验分布函数的意义在于当 n 充分大的时候，$F_n(x)$ 以概率1收敛于总体分布函数 $F(x)$</strong></p>
 <h3 id="统计量的分布"><a href="#统计量的分布" class="headerlink" title="统计量的分布"></a>统计量的分布</h3><p>使用统计量进行统计推断时，常常需要知道其分布，<strong>统计量的分布也称为抽样分布</strong>，下面介绍三种来自<strong>正态分布</strong>的抽样分布： $\chi^2$ 分布，$t$ 分布和 $F$ 分布。</p>
 <h4 id="chi-2-分布"><a href="#chi-2-分布" class="headerlink" title="$\chi^2$ 分布"></a>$\chi^2$ 分布</h4><p>$\chi^2$ 分布的定义如下</p>
@@ -415,7 +415,7 @@
 <ul>
 <li><strong>可加性</strong></li>
 </ul>
-<p>设 $\chi_1^2$<del>$\chi^2(n_1), \chi_2^2$</del>$\chi^2(n_2)$, 并且 $\chi_1^2, \chi_2^2$相互独立，则有 $$\chi_1^2 + \chi_2^2 \sim \chi^2(n_1 + n_2)$$ </p>
+<p>设 $\chi_1^2$~$\chi^2(n_1), \chi_2^2$~$\chi^2(n_2)$, 并且 $\chi_1^2, \chi_2^2$相互独立，则有 $$\chi_1^2 + \chi_2^2 \sim \chi^2(n_1 + n_2)$$ </p>
 <ul>
 <li><strong>期望和方差</strong></li>
 </ul>
@@ -426,7 +426,7 @@
 <p>分位点的定义如下，给定正数 $a, 0&lt;a&lt;1$, 称满足下面条件</p>
 <p>$$P(\chi^2 \gt \chi_a^2(n)) = \int_{\chi_a^2(n)}^{\infty}f(y)dy= a$$ </p>
 <p>的 $\chi_a^2(n)$ 为 $\chi^2(n)$上的a分位点，其图像如下所示</p>
-<p><img src="http://static.zybuluo.com/WuLiangchao/zvnpwplptlma6nlwmv5yt3g6/image_1b2b8ahhmc23e9l80doqjq3q58.png"></p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/zvnpwplptlma6nlwmv5yt3g6/image_1b2b8ahhmc23e9l80doqjq3q58.png" alt=""></p>
 <p>由定义可知，分位点由 $a,n$ 共同决定，因此对于不同的 $a，n$ 可以查阅表格得到其 $a$ 分位点。 </p>
 <h4 id="t-分布"><a href="#t-分布" class="headerlink" title="$t$ 分布"></a>$t$ 分布</h4><p>$t$分布的定义如下：</p>
 <blockquote>
@@ -436,7 +436,7 @@
 <p><img src="http://static.zybuluo.com/WuLiangchao/8dkl1jimzpgdm6yolotwga0j/image_1b2b8il5d15avfccade13di1o3062.png" alt="t分布的概率密度函数和图像"></p>
 <p>其分位点的定义与上面讲述的一样，</p>
 <p>$$P(t \gt t_a(n)) = \int_{t_a(n)}^{\infty}h(t)dt= a$$ </p>
-<p><img src="http://static.zybuluo.com/WuLiangchao/s7c57tfaav6qkhkg66h1o55o/image_1b2b8n0cm104q18c2mtbkf9am6f.png"></p>
+<p><img src="http://static.zybuluo.com/WuLiangchao/s7c57tfaav6qkhkg66h1o55o/image_1b2b8n0cm104q18c2mtbkf9am6f.png" alt=""></p>
 <p>且由于其概率密度函数的对称性可知,总是存在这样对称的两个分位点 ： $t_{1-a}(n) = -t_a(n)$</p>
 <h4 id="F-分布"><a href="#F-分布" class="headerlink" title="$F$ 分布"></a>$F$ 分布</h4><p>F 分布的定义如下</p>
 <blockquote>
@@ -573,7 +573,7 @@
 
       
         <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
             文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
@@ -584,7 +584,9 @@
 
       <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image" src="http://wulc.me/files/profile.jpg" alt="良超">
+          <img class="site-author-image" itemprop="image"
+               src="http://wulc.me/files/profile.jpg"
+               alt="良超" />
           <p class="site-author-name" itemprop="name">良超</p>
           <p class="site-description motion-element" itemprop="description">工程师要把合适的技术放在合适的位置|算法工程师首先得是个工程师</p>
         </div>
@@ -593,7 +595,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">219</span>
+                <span class="site-state-item-count">218</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -685,12 +687,12 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <center>
-<div class="copyright">
+<div class="copyright" >
   
   &copy;  2015 - 
   <span itemprop="copyrightYear">2020</span>
-  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a>
-  <br>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
+  </br>
   <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
 </div>
 </center>
