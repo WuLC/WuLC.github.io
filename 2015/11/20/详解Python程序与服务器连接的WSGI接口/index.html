@@ -75,7 +75,7 @@
 <meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/yf02ozh6fbxlc11m5bqmu0nv/2016-01-09_102745.png">
 <meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/w47bkjxaemedkgskxvhlf45f/2016-01-09_103107.png">
 <meta property="og:image" content="http://static.zybuluo.com/WuLiangchao/z5gni3jx6n9m5g7w6l7r2q9i/2016-01-09_103748.png">
-<meta property="og:updated_time" content="2020-07-22T02:52:38.846Z">
+<meta property="og:updated_time" content="2020-07-22T02:59:28.311Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="详解Python程序与服务器连接的WSGI接口">
 <meta name="twitter:description" content="文章为转载，原文见这里，侵删
@@ -407,7 +407,7 @@
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># server.py</span></span><br><span class="line"><span class="comment"># 从wsgiref模块导入:</span></span><br><span class="line"><span class="keyword">from</span> wsgiref.simple_server <span class="keyword">import</span> make_server</span><br><span class="line"><span class="comment"># 导入我们自己编写的application函数:</span></span><br><span class="line"><span class="keyword">from</span> hello <span class="keyword">import</span> application</span><br><span class="line"> </span><br><span class="line"><span class="comment"># 创建一个服务器，IP地址为空，端口是8000，处理函数是application:</span></span><br><span class="line">httpd = make_server(<span class="string">''</span>, <span class="number">8000</span>, application)</span><br><span class="line"><span class="keyword">print</span> <span class="string">"Serving HTTP on port 8000..."</span></span><br><span class="line"> <span class="comment"># 开始监听HTTP请求:</span></span><br><span class="line">httpd.serve_forever()</span><br></pre></td></tr></table></figure>
 <p>确保以上两个文件在同一个目录下，然后在命令行输入<code>python server.py</code>来启动WSGI服务</p>
 <p><img src="http://static.zybuluo.com/WuLiangchao/yf02ozh6fbxlc11m5bqmu0nv/2016-01-09_102745.png" alt="启动server"></p>
-<p>启动成功后，打开浏览器，输入<a href="http://localhost:8000/，就可以看到结果了" target="_blank" rel="external">http://localhost:8000/，就可以看到结果了</a></p>
+<p>启动成功后，打开浏览器，输入 <code>http://localhost:8000/</code>，就可以看到结果了</p>
 <p><img src="http://static.zybuluo.com/WuLiangchao/w47bkjxaemedkgskxvhlf45f/2016-01-09_103107.png" alt="浏览器观察"></p>
 <p>再看看刚刚打开的cmd窗口，会输出请求的如下所示</p>
 <p><img src="http://static.zybuluo.com/WuLiangchao/z5gni3jx6n9m5g7w6l7r2q9i/2016-01-09_103748.png" alt="请求情况"></p>
