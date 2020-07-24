@@ -28,7 +28,7 @@
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/bid_optimization_dual_problem_LP2.jpg" alt="LP2"></p>
 <p>上图中的 $p,q,r$ 都是对偶问题中变量，对应于原问题中的三类约束：预算，成本和对 $x$ 的范围的约束，根据互补松弛定理(Complementary Slackness) ，可得到下面两个式子, 互补松弛定理的详细描述同样可参考上面的两个链接</p>
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/bidding_optimization_Complementary_Slackness.jpg" alt="Complementary Slackness"></p>
-<p>上面的公式中 $x_i^{<em>}$ 和 $r_i^{</em>}$ 分别表示原问题和对偶问题的最优解，后面带 <code>*</code> 上标的符号均表示最优解，至此为止，上面都是基于最优化理论推导出来的一些公式，但是<strong>接下来这一步就有点跳了</strong>，paper 中直接令最优出价公式为</p>
+<p>上面的公式中 $x_i^{*}$ 和 $r_i^{*}$ 分别表示原问题和对偶问题的最优解，后面带 <code>*</code> 上标的符号均表示最优解，至此为止，上面都是基于最优化理论推导出来的一些公式，但是<strong>接下来这一步就有点跳了</strong>，paper 中直接令最优出价公式为</p>
 <p>$$bid^{*} = \frac{1}{p^*+q^*} × CTR_i × CVR_i + \frac{q^*}{p^*+q^*} × C × CTR_{i}\tag{6}$$</p>
 <p>则上面那些公式中表示给广告主带来的价值 $v_i$ 可写成 $v_i = bid_i - wp_i$, 将公式（6）代入这个式子，再将 $v_i$ 代入上图中的公式(8)，可得到下面的公式（10）及其分类讨论的结果</p>
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/bid_optimization_classify_situation.jpg" alt="分类讨论结果"></p>
@@ -45,7 +45,7 @@
 <h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>综合考虑上面两部分的推导，可以得到最优的出价公式如上面公式(6)所示，公式中的 $p$ 和 $q$ 是两个超参，是对偶问题中需要求解的变量，<strong>如果需要求解，意味着需要拿到参竞的所有后验数据，但是实际中在参竞时就需要通过这些参数给出参竞的 bid，这似乎就成了一个先有鸡还是先有蛋的问题了</strong>，后面会通过控制器描述如何解决这一问题，具体思想就是不直接求解原始的最优化问题，而是通过近似的方式来逐渐逼近最优解</p>
 <p>回到公式(6)的最优出价公式，如果将其写成 <code>c_bid * ctr</code> 的形式，有如下公式</p>
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/bid_optimization_cbid.jpg" alt="click bid"></p>
-<p>如果更直观的画出来如下图所示, 从图中可知，哪怕 CVR 为 0 时，bid 也不一定为 0，这跟常见的 ecpm = bid<em>ctr</em>cvr 不太一样，这可理解为一些 cvr 低但是 ctr 高的流量也是可以拿的；此外，c_bid 的直线会过两个定点： (-qC, 0) 和 (pC, C), 后面在控制器中会详细描述这两个点的具体含义。</p>
+<p>如果更直观的画出来如下图所示, 从图中可知，哪怕 CVR 为 0 时，bid 也不一定为 0，这跟常见的 ecpm = bid×ctr×cvr 不太一样，这可理解为一些 cvr 低但是 ctr 高的流量也是可以拿的；此外，c_bid 的直线会过两个定点： (-qC, 0) 和 (pC, C), 后面在控制器中会详细描述这两个点的具体含义。</p>
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/bid_optimization_cbid_graph.jpg" alt="bid\_optimization\_cbid\_graph"></p>
 <h2 id="调价策略"><a href="#调价策略" class="headerlink" title="调价策略"></a>调价策略</h2><p>前面提到，最优出价公式中的 $p$ 和 $q$ 的最优解求解需要拿到参竞后的后验数据，但是 bid 是要在参竞的时候就给出来，因此这就成了一个先有鸡还是先有蛋的问题。针对这个问题，最直观的一个想法是，我们<strong>可不可以用历史数据来求出最优的 $p$ 和 $q$, 然后应用到下一时刻的出价中？</strong> paper 中也提到了这一点，答案是 no，因为这个方法假设了参竞流量的分布是基本不变的，但是竞价环境是一个受多个因素影响的动态变化环境(包括参竞流量、ctr、cvr 等)，即历史的最优不会是未来的最优。在实际的实践中，笔者的实践经验的确是这样的。</p>
 <p>由于竞价环境是实时变化的，因此需要动态调价，在调价策略中，需要先明确两个点：<strong>调控的目标和调控的变量</strong>。以最经典的 PID 控制器为例，如下图所示，调控的目标是 $r(t)$ 与 $y(t)$ 尽可能接近，调控的变量是 $x(t)$。</p>
@@ -60,7 +60,7 @@
 <li><strong>当 $p$ 取最小值即 0 时，表示没有 budget 的限制</strong>，出价公式退化为 $C×CTR+\frac{1}{q}CTR×CVR$, 公式第一项可以认为是只按照点击出价来保点击成本 $C$，第二项则是为了达到  $\max v=CTR×CVR$的目标</li>
 </ul>
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/bid_optimization_controll_qfixed.jpg" alt="q fixed"></p>
-<p>同理可画出下图 5 中固定 $p$，改变 $q$ 时, <code>c\_bid</code> 的变化; 从图中可知</p>
+<p>同理可画出下图 5 中固定 $p$，改变 $q$ 时, <code>c_bid</code> 的变化; 从图中可知</p>
 <ul>
 <li>出价的直线始终通过 (pC, C) 这个点</li>
 <li><strong>随着 $q$ 的减小，出价的直线的斜率逐渐增大，表示对于 CVR 比 p<em>C 更高的流量出价更高，CVR 比 p</em>C 更低的流量出价更低</strong>, 而随着 $q$ 增大导致的结果则是刚好相反</li>
