@@ -62,12 +62,12 @@
 
 
 
-<meta name="description" content="本文是 程序的表示、转换与链接 中第 7 周的内容，主要介绍了 C 语言程序中过程调用、也就是函数调用对应的机器级表示， 包括如何传递参数，如何将控制转移到被调用过程， 寄存器使用约定，递归函数的实现等等。 通过了解这些内容，能够更清楚机器执行的详细过程，通过也能更了解函数调用过程中栈空间是如何变化的，课程选用的指令系统是前面介绍过的IA-32指令系统。">
+<meta name="description" content="本文是 程序的表示、转换与链接 中第 7 周的内容，主要介绍了 C 语言程序中过程调用、也就是函数调用对应的机器级表示， 包括如何传递参数，如何将控制转移到被调用过程， 寄存器使用约定，递归函数的实现等等。 通过了解这些内容，能够更清楚机器执行的详细过程，同时也能更清楚函数调用过程中栈空间是如何变化的；课程选用的指令系统是前面介绍过的IA-32指令系统。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="程序的表示、转换与链接-week7">
 <meta property="og:url" content="http://wulc.github.io/2020/07/04/程序的表示、转换与链接-week7/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
-<meta property="og:description" content="本文是 程序的表示、转换与链接 中第 7 周的内容，主要介绍了 C 语言程序中过程调用、也就是函数调用对应的机器级表示， 包括如何传递参数，如何将控制转移到被调用过程， 寄存器使用约定，递归函数的实现等等。 通过了解这些内容，能够更清楚机器执行的详细过程，通过也能更了解函数调用过程中栈空间是如何变化的，课程选用的指令系统是前面介绍过的IA-32指令系统。">
+<meta property="og:description" content="本文是 程序的表示、转换与链接 中第 7 周的内容，主要介绍了 C 语言程序中过程调用、也就是函数调用对应的机器级表示， 包括如何传递参数，如何将控制转移到被调用过程， 寄存器使用约定，递归函数的实现等等。 通过了解这些内容，能够更清楚机器执行的详细过程，同时也能更清楚函数调用过程中栈空间是如何变化的；课程选用的指令系统是前面介绍过的IA-32指令系统。">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/exec2virtualaddress.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/procedure_call_process.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/stackAndStackFrame.jpg">
@@ -82,10 +82,10 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/switch_compilation.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/cycle_structure.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/for_compilation.jpg">
-<meta property="og:updated_time" content="2020-07-25T09:17:30.581Z">
+<meta property="og:updated_time" content="2020-07-25T10:12:42.508Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="程序的表示、转换与链接-week7">
-<meta name="twitter:description" content="本文是 程序的表示、转换与链接 中第 7 周的内容，主要介绍了 C 语言程序中过程调用、也就是函数调用对应的机器级表示， 包括如何传递参数，如何将控制转移到被调用过程， 寄存器使用约定，递归函数的实现等等。 通过了解这些内容，能够更清楚机器执行的详细过程，通过也能更了解函数调用过程中栈空间是如何变化的，课程选用的指令系统是前面介绍过的IA-32指令系统。">
+<meta name="twitter:description" content="本文是 程序的表示、转换与链接 中第 7 周的内容，主要介绍了 C 语言程序中过程调用、也就是函数调用对应的机器级表示， 包括如何传递参数，如何将控制转移到被调用过程， 寄存器使用约定，递归函数的实现等等。 通过了解这些内容，能够更清楚机器执行的详细过程，同时也能更清楚函数调用过程中栈空间是如何变化的；课程选用的指令系统是前面介绍过的IA-32指令系统。">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/exec2virtualaddress.jpg">
 
 
@@ -370,7 +370,7 @@
       
 
       
-        <p>本文是 <a href="https://www.coursera.org/learn/jisuanji-xitong/home/welcome" target="_blank" rel="external">程序的表示、转换与链接</a> 中第 7 周的内容，主要介绍了 C 语言程序中过程调用、也就是函数调用对应的机器级表示， 包括如何传递参数，如何将控制转移到被调用过程， 寄存器使用约定，递归函数的实现等等。 通过了解这些内容，能够更清楚机器执行的详细过程，通过也能更了解函数调用过程中栈空间是如何变化的，课程选用的指令系统是前面介绍过的IA-32指令系统。</p>
+        <p>本文是 <a href="https://www.coursera.org/learn/jisuanji-xitong/home/welcome" target="_blank" rel="external">程序的表示、转换与链接</a> 中第 7 周的内容，主要介绍了 C 语言程序中过程调用、也就是函数调用对应的机器级表示， 包括如何传递参数，如何将控制转移到被调用过程， 寄存器使用约定，递归函数的实现等等。 通过了解这些内容，能够更清楚机器执行的详细过程，同时也能更清楚函数调用过程中栈空间是如何变化的；课程选用的指令系统是前面介绍过的IA-32指令系统。</p>
 <a id="more"></a>
 <h2 id="过程调用概述"><a href="#过程调用概述" class="headerlink" title="过程调用概述"></a>过程调用概述</h2><p>如下是一个简单的例子，通过这个例子主要阐述 3 个问题</p>
 <ul>
@@ -379,7 +379,7 @@
 <li><code>add</code> 的结果是如何返回给调用过程的</li>
 </ul>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> x+y;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> t1=<span class="number">125</span>;</span><br><span class="line">    <span class="keyword">int</span> t2=<span class="number">80</span>;</span><br><span class="line">    <span class="keyword">int</span> sum=add(t1, t2);</span><br><span class="line">    <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>关于第一个问题和第三个问题，当 <code>main</code> 中调用 <code>add</code> 函数时，实际上是通过 call 指令实现的，<strong>call 指令会把返回地址，也就是call指令下一条指令的地址 会放到栈里面</strong>，这样的话在 <code>add</code> 函数最后执行 return 指令的时候，可以从栈里面取出这个返回地址使得它能够正确的返回到main执行。</p>
+<p>关于第一个问题和第三个问题，当 <code>main</code> 中调用 <code>add</code> 函数时，实际上是通过 call 指令实现的，<strong>call 指令会把返回地址，也就是call指令下一条指令的地址放到栈里面</strong>，这样的话在 <code>add</code> 函数最后执行 return 指令的时候，可以从栈里面取出这个返回地址使得它能够正确的返回到main执行。</p>
 <p>关于第二个问题，参数是通过栈传递的，即在调用的时候会把参数压栈，如下所示是进程的虚拟地址(也叫)空间分布的情况，其中<strong>栈是从高地址往低地址增长的，指向栈顶的指针也叫 ESP 指针</strong></p>
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/exec2virtualaddress.jpg" alt="exec2virtualaddress"></p>
 <p>如下图所示是过程调用的机器级表示，调用的函数执行的是 P 过程，被调用的函数执行的是 Q 过程；P 过程做的事情主要是把参数和返回地址压栈，Q 过程做的则是保存现场、执行被调用函数，恢复现场并返回调用函数；其中<strong>现场指的是共享的通用寄存器</strong>，因为是共享的，因此被 Q 使用时需要先保存 P 之前在上面的值，后面再恢复</p>
@@ -395,7 +395,7 @@
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/stackAndStackFrame.jpg" alt="stackAndStackFrame"></p>
 <p>上面简单介绍了过程调用的一些基本操作，下图则是基于上面的例子更详细地描述其对应的汇编指令和栈的变化</p>
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/procedure_example.jpg" alt="procedure example"></p>
-<p>caller 这个函数对应的指令序列如下图，指令对应的基本操作在图中已经描述的比较清楚了，在这里着重讲指令序列中前三条指令，<strong>前三条指令是准备阶段， 做的事情是保存P的现场，并且形成新的栈帧</strong>，这三条指令的执行过程如下所示</p>
+<p>caller 这个函数对应的指令序列如上图所示，指令对应的基本操作在图中已经描述的比较清楚了，在这里着重讲指令序列中前三条指令，<strong>前三条指令是准备阶段， 做的事情是保存P的现场，并且形成新的栈帧</strong>，这三条指令的执行过程如下所示</p>
 <p>第一条 pushl 指令：把老的 EBP 的值压栈，在这条指令执行完后，栈顶指针 ESP 也会自动指向这个地方<br>第二条 movl 指令：<strong>把当前的 ESP 赋给了个 EBP, 相当于是栈底的形成</strong><br>第三条 subl 指令：会把 ESP 减去 24(相当于用了 24 个字节来存储在 caller 中的变量、参数等)</p>
 <p>而在被调用的 add 函数中最开始的两条指令其实也是上面的 pushl 和 movl，起作用便是形成栈底</p>
 <p>最后的 <strong>leave 指令实际上是退栈，其操作是把 EBP 的内容送到ESP</strong>，相当于是把栈里面所有的空间释放掉了</p>
@@ -407,7 +407,7 @@
 </ul>
 <p>因此，一个 C 过程的大致结构如下</p>
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/procedure_summary.jpeg" alt="summary"></p>
-<h2 id="过程调用的参数传递"><a href="#过程调用的参数传递" class="headerlink" title="过程调用的参数传递"></a>过程调用的参数传递</h2><p>这里讲了一个比较经典的例子，就是按地址传参和按值传参带来的会带来不同结果，那其中的原因就是这两种方式最终对应的机器指令是不一样的</p>
+<h2 id="过程调用的参数传递"><a href="#过程调用的参数传递" class="headerlink" title="过程调用的参数传递"></a>过程调用的参数传递</h2><p>这里讲了一个比较经典的例子，就是按地址传参和按值传参带来的会带来不同结果，其中的原因就是这两种方式最终对应的机器指令是不一样的</p>
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/swap_compare.jpg" alt="swap compare"></p>
 <p>下面是上面分别按地址传递和按照参数传递对应的汇编指令，从中可知，两者的一些关键区别有</p>
 <ul>
