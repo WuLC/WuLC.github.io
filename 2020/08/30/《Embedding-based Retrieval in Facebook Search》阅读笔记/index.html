@@ -72,7 +72,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/ModelOverview.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/LocationFeature.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/FeatureEffectiveness.jpg">
-<meta property="og:updated_time" content="2020-09-13T09:27:02.978Z">
+<meta property="og:updated_time" content="2020-09-13T09:34:44.302Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《Embedding-based Retrieval in Facebook Search》阅读笔记">
 <meta name="twitter:description" content="Embedding-based Retrieval in Facebook Search 是 FB 在 2020 年发表的一篇搜索场景下如何做向量化召回的 paper，整篇文章读下来，就像是一个奋战在一线的工程师向你娓娓道来他们是怎么从 0 到 1 构建一个召回系统，从训练数据与特征的选取, 到模型的 training 与 serving、再到把新的召回策略融入现有的 ranking system">
@@ -371,7 +371,7 @@
       
 
       
-        <p><a href="https://arxiv.org/abs/2006.11632" target="_blank" rel="external">Embedding-based Retrieval in Facebook Search</a> 是 FB 在 2020 年发表的一篇搜索场景下如何做向量化召回的 paper，整篇文章读下来，就像是一个奋战在一线的工程师向你娓娓道来他们是怎么从 0 到 1 构建一个召回系统，从训练数据与特征的选取, 到模型的 training 与 serving、再到把新的召回策略融入现有的 ranking system,<br>整篇 paper 并没有太多的公式与推导，但是却有很多在实战中总结出来的经验，而且这些经验相信也可以推广搜索以外的推荐/广告领域。本文主要是根据笔者对这篇 paper 的理解做一些提炼，推荐读原文。</p>
+        <p><a href="https://arxiv.org/abs/2006.11632" target="_blank" rel="external">Embedding-based Retrieval in Facebook Search</a> 是 FB 在 2020 年发表的一篇搜索场景下如何做向量化召回的 paper，整篇文章读下来，就像是一个奋战在一线的工程师向你娓娓道来他们是怎么从 0 到 1 构建一个召回系统，从训练数据与特征的选取, 到模型的 training 与 serving、再到把新的召回策略融入现有的 ranking system, 整篇 paper 并没有太多的公式与推导，但是却有很多在实战中总结出来的经验，而且这些经验相信也可以推广搜索以外的推荐/广告领域。本文主要是根据笔者对这篇 paper 的理解做一些提炼，推荐读原文。</p>
 <a id="more"></a>
 <p>笔者认为这篇 paper 值得关注的点如下</p>
 <ol>
@@ -387,7 +387,7 @@
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/ModelOverview.jpg" alt="model overview"></p>
 <h3 id="损失函数"><a href="#损失函数" class="headerlink" title="损失函数"></a>损失函数</h3><p>模型采用的损失函数是 triple loss，最早是在人脸识别中提出的一个 loss，假设每条训练样本是 $(q^{(i)},d_+^{(i)}, d_-^{(i)})$, 式子中的$d_+^{(i)}$ 表示与 query $q^{(i)}$ 相关的 document，而 $d_-^{(i)}$表示与query $q^{(i)}$ 不相关的 document, 则 paper 中的 loss 定义如下</p>
 <p>$$L=\sum_{i=1}^{N} \max(0, D(q^{(i)},d_+^{(i)}) - D(q^{(i)},d_-^{(i)}) + m)$$</p>
-<p>上式中的 $m$ 是一个超参，表示正样本与负样本的 enforced margin，<strong>表示正负样本的的 distance 的假如大于 m，则认为这个是一个 easy example 不需要模型进一步学习去区分了</strong>；paper 中提到了这个超参对结果影响较大，因为不同的任务的最优的 m 往往不一样。</p>
+<p>上式中的 $m$ 是一个超参，表示正样本与负样本的 enforced margin，<strong>表示正负样本的 distance 假如大于 m，则认为这个是一个 easy example 不需要模型进一步学习去区分了</strong>；paper 中提到了这个超参对结果影响较大，因为不同的任务的最优的 m 往往不一样。</p>
 <p>上面的 D 表示距离函数(越小表示越相似)，paper 中采用的 distance 函数是 $D(q,d) = 1-cos(q, d)$,</p>
 <p>此外，<strong>针对 paper 中的训练样本对，其实也可以采用经典的 LTR 中的 pariwise loss</strong>，具体可参考 <a href="https://www.microsoft.com/en-us/research/uploads/prod/2016/02/MSR-TR-2010-82.pdf" target="_blank" rel="external">From RankNet to LambdaRank to LambdaMART: An Overview</a></p>
 <p>此外，paper 中的 <strong>采用的指标是离线评估的召回率（recall），采用的验证集是 10000 个 search session 中每个 query 及其 target result</strong>(paper 中并无明确给出这一标准，只是提到按照点击或人工评估方式来获取均可以)</p>
