@@ -79,7 +79,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/EmbeddingEvaluation.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/AirbnbFeatureList.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/featureImportance.jpg">
-<meta property="og:updated_time" content="2020-06-25T01:51:42.971Z">
+<meta property="og:updated_time" content="2020-09-18T08:23:58.345Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《Real-time Personalization using Embeddings for Search Ranking at Airbnb》 阅读笔记">
 <meta name="twitter:description" content="Real-time Personalization using Embeddings for Search Ranking at Airbnb 是 KDD 2018 的 best paper, 整篇文章读下来，初看好像只是套了 word2vec 来生成 user embedding 和 item embedding；但是细读下来，会发现其中有不少细节值得考究，这种风格跟 youtube 在 201">
@@ -396,16 +396,16 @@
 <p>上式中的 $|V|$ 是所有 item 的集合， $v$ 和 $v’$ 分表表示 input vector 和 output vetor，其实就是同一个 item 在 skip gram 模型中两个参数矩阵的表示，即如下图所示的参数矩阵<br>W 和 W’；具体可参考讲义 <a href="https://web.stanford.edu/class/cs224n/readings/cs224n-2019-notes01-wordvecs1.pdf" target="_blank" rel="external">CS224n: Natural Language Processing with Deep Learning</a></p>
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/skip_gram_model.jpg" alt="skip gram"></p>
 <p>类似 word2vec 由于这个集合一般很大，算一次公式（2）的概率时分母的累加的耗时会非常长，为了加速训练，word2vec 中提出了 <strong>negative sampling</strong> 的策略，简单来说，就是对于每个 session 内的每个 clicked item，从其窗口 m 内选择一些 positive pairs $(l, c)$作为 positive set（记为$D_p$）,同时从整个 item 集合 $|V|$ 中随机选一些 negative pairs $(l, c)$取一些 item 作为 negative set(记为$D_n$), 不用 softmax 而是用 sigmoid 的方式将要求解的参数写成如下形式</p>
-<p>$$ \arg\max_{\theta} \sum_{(l,c) \in D_p} \log\frac{1}{1+e^{-v_{c}^{‘}v_l}} + \sum_{(l,c) \in D_p} \log\frac{1}{1+e^{v_{c}^{‘}v_l}} \tag{3}$$</p>
+<p>$$ \arg\max_{\theta} \sum_{(l,c) \in D_p} \log\frac{1}{1+e^{-v_{c}^{‘}v_l}} + \sum_{(l,c) \in D_n} \log\frac{1}{1+e^{v_{c}^{‘}v_l}} \tag{3}$$</p>
 <p>上式中要求解的参数 $\theta$ 就是 每个 item 的 embedding $v_l$，基本就是原始 word2vec 中的 skip-gram 算法了，下面文章中的几个点可以认为是作者根据业务对 word2vec 的一些改动，也是非常值得借鉴的</p>
 <p><strong>(1)利用监督信号作为 global context</strong> </p>
 <p>在 airbnb 的业务中，上面的 session 实际上可分为两大类，分别是最终有下单的 session 和没有下单的 session，paper 中分别称其为 booked session 和 exploratory sessions，这两个实际上都是监督信号，而在 paper 中<strong>只使用了第一个监督信号</strong>，则公式(3）可写成如下形式</p>
-<p>$$ \arg\max_{\theta} \sum_{(l,c) \in D_p} \log\frac{1}{1+e^{-v_{c}^{‘}v_l}} + \sum_{(l,c) \in D_p} \log\frac{1}{1+e^{v_{c}^{‘}v_l}} + \\<br>\log \frac{1}{1+e^{v_{l_b}^{‘}v_l}}\tag{4}$$</p>
+<p>$$ \arg\max_{\theta} \sum_{(l,c) \in D_p} \log\frac{1}{1+e^{-v_{c}^{‘}v_l}} + \sum_{(l,c) \in D_n} \log\frac{1}{1+e^{v_{c}^{‘}v_l}} + \\<br>\log \frac{1}{1+e^{-v_{l_b}v_l}}\tag{4}$$</p>
 <p>公式（4）中的 $v_{l_b}$ 表示的是被下单的 item $l_b$ 的 embedding，下图则是更直观地显示了这个监督信号是如何起作用的, 可以看到，<strong>每个 centeral listing/item 更新时都会与 booked listing/item 一起算一次概率，因此称这个 listing 为 global context</strong>，其效果相当于加强用户在购买前点击的所有 item 和最终下单的 item 的联系</p>
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/global_context.jpg" alt="global context"></p>
 <p><strong>(2)控制 negative sampling 的采样空间</strong></p>
 <p>上面提到 negative sampling 会随机从全集中抽取 n 个 item 作为负例，但是在 airbnb 的业务中，一个用户往往只会在一个 market(也就是旅游地点) 中下单，而上面做 negative sampling 得到的结果往往是， $D_p$ 里的候选都是同一个 market 的，$D_n$ 里的候选往往都不是同一个 market 的，paper 称这样的 imbalanced 并不是最优的，笔者猜测原始是<strong>在做预估时候候选的 item 基本都是同一个 market 的，而这样 $D_n$ 的随机性使得同一个 market 内的正负 item 区分度并不高</strong>，因此，在原始的 nagative sampling 基础上增加了一项在同一 market 下随机选取负样本的 $D_{m_n}$, 因此，最终的 loss 形式如下</p>
-<p>$$<br>\arg\max_{\theta} \sum_{(l,c) \in D_p} \log\frac{1}{1+e^{-v_{c}^{‘}v_l}} + \sum_{(l,c) \in D_p} \log\frac{1}{1+e^{v_{c}^{‘}v_l}} + \\<br>\log \frac{1}{1+e^{v_{l_b}^{‘}v_l}}+\sum_{(l,m_n) \in D_{m_n}} \log\frac{1}{1+e^{v_{m_n}^{‘}v_l}}\tag{5}<br>$$</p>
+<p>$$<br>\arg\max_{\theta} \sum_{(l,c) \in D_p} \log\frac{1}{1+e^{-v_{c}^{‘}v_l}} + \sum_{(l,c) \in D_p} \log\frac{1}{1+e^{v_{c}^{‘}v_l}} + \\<br>\log \frac{1}{1+e^{-v_{l_b}v_l}}+\sum_{(l,m_n) \in D_{m_n}} \log\frac{1}{1+e^{v_{m_n}^{‘}v_l}}\tag{5}<br>$$</p>
 <p><strong>(3)冷启动的 item embedding</strong></p>
 <p>在推荐系统中，每天都会有很多新的 item 加入，还有一些 item 压根没有 click session，无法通过上面的 word2vec 训练出对应的 embedding；对于这些处于冷启动的item，paper 中用了一种比较常见且有效的手段来处理：<strong>根据冷启动的 item 的属性选取 k 个与其最相似且有 embedding 的 item 然后做 mean pooling</strong>，选取的方法则是根据 item 的一些 meta-data，如 price，listing type 等</p>
 <h3 id="user-type-listing-type-embeddings"><a href="#user-type-listing-type-embeddings" class="headerlink" title="user_type/listing_type embeddings"></a>user_type/listing_type embeddings</h3><p>上面的训练方法中只用了 click session，且只生成了 listing embedding，paper 中认为这个是 <strong>short-term interest</strong>，其实这从上面对 session 的划分规则就体现了这一点，即两次点击间隔超过 30 min 就认为是两个不同的 session，在这种划分规则下，捕获的就是用户的短期兴趣，且一个 session 内所有的 item 基本上都是同一个 market 的了</p>
