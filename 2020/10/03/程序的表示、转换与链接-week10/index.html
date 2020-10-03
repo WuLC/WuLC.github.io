@@ -1,0 +1,956 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U" />
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="程序的表示、转换与链接," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="本文是 程序的表示、转换与链接 中第 10 周的内容，主要介绍了讲了从源文件生成可执行文件的步骤(预处理、编译、汇编、链接)，并详细描述了其中的链接这一步骤的过程，对比了静态链接中涉及到的可重定位目标文件组合成可执行目标文件的差别；对了解文件的从编译到执行原理有一定帮助，可配合 《链接、装载与库》 阅读笔记(2)-可执行文件的装载 一起阅读。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="程序的表示、转换与链接-week10">
+<meta property="og:url" content="http://wulc.github.io/2020/10/03/程序的表示、转换与链接-week10/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="本文是 程序的表示、转换与链接 中第 10 周的内容，主要介绍了讲了从源文件生成可执行文件的步骤(预处理、编译、汇编、链接)，并详细描述了其中的链接这一步骤的过程，对比了静态链接中涉及到的可重定位目标文件组合成可执行目标文件的差别；对了解文件的从编译到执行原理有一定帮助，可配合 《链接、装载与库》 阅读笔记(2)-可执行文件的装载 一起阅读。">
+<meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/ProgramConv.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/Precompiled.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/LinkExample.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/LinkMerge.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/ELFFile.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/ELF2View.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/ReloadFile.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/ReloadFile1.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/ELFHEader.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/SectionHeaderTable.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/ExecFile.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/SegmentHeaderTable.jpg">
+<meta property="og:updated_time" content="2020-10-03T13:19:16.320Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="程序的表示、转换与链接-week10">
+<meta name="twitter:description" content="本文是 程序的表示、转换与链接 中第 10 周的内容，主要介绍了讲了从源文件生成可执行文件的步骤(预处理、编译、汇编、链接)，并详细描述了其中的链接这一步骤的过程，对比了静态链接中涉及到的可重定位目标文件组合成可执行目标文件的差别；对了解文件的从编译到执行原理有一定帮助，可配合 《链接、装载与库》 阅读笔记(2)-可执行文件的装载 一起阅读。">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/ProgramConv.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"always"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://wulc.github.io/2020/10/03/程序的表示、转换与链接-week10/"/>
+
+
+
+
+
+  <title> 程序的表示、转换与链接-week10 | 吴良超的学习笔记 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1258114456&web_id=1258114456" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">吴良超的学习笔记</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <h1 class="site-subtitle" itemprop="description"></h1>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            站内搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://wulc.github.io/2020/10/03/程序的表示、转换与链接-week10/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="良超">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="http://wulc.me/files/profile.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="吴良超的学习笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="吴良超的学习笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                程序的表示、转换与链接-week10
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+  
+          
+
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-10-03T21:37:39+08:00">
+                2020-10-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-tags"></i>
+              </span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/tags/程序的表示、转换与链接/" itemprop="url" rel="index">
+                    <span itemprop="name">程序的表示、转换与链接</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文是 <a href="https://www.coursera.org/learn/jisuanji-xitong/home/welcome" target="_blank" rel="external">程序的表示、转换与链接</a> 中第 10 周的内容，主要介绍了讲了从源文件生成可执行文件的步骤(预处理、编译、汇编、链接)，并详细描述了其中的链接这一步骤的过程，对比了静态链接中涉及到的可重定位目标文件组合成可执行目标文件的差别；对了解文件的从编译到执行原理有一定帮助，可配合 <a href="http://wulc.me/2020/06/13/%E3%80%8A%E9%93%BE%E6%8E%A5%E3%80%81%E8%A3%85%E8%BD%BD%E4%B8%8E%E5%BA%93%E3%80%8B%20%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0%282%29-%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6%E7%9A%84%E8%A3%85%E8%BD%BD/" target="_blank" rel="external">《链接、装载与库》 阅读笔记(2)-可执行文件的装载</a> 一起阅读。</p>
+<a id="more"></a>
+<p>通过对源文件的预处理、编译，汇编等转换 可以得到一个个模块对应的机器代码, 也就是目标文件； 但是目标还不能直接执行，还需要将这些目标文件链接起来才能得到一个可执行文件</p>
+<p>链接过程用到的目标文件主要有：</p>
+<ul>
+<li>编译、汇编后得到的目标文件，称为可重定位目标文件</li>
+<li>链接后生成的目标文件，称为可执行目标文件，</li>
+<li>共享库文件 </li>
+</ul>
+<p>下面以Linux平台所用的elf格式 为例，来讲解这些目标文件的相关内容</p>
+<h2 id="程序转换过程"><a href="#程序转换过程" class="headerlink" title="程序转换过程"></a>程序转换过程</h2><p>以 c 语言为例，从源码到可执行文件的典型过程如下图所示</p>
+<p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/ProgramConv.jpg" alt="转换过程"></p>
+<p>在 Linux 下，通过 gcc 命令能完成上面各个步骤，而实际上， gcc 命令实际上是由具体程序(如 ccp，cc1, as，ld等)包装的命令，用户实际上是通过 gcc 命令来使用具体的预处理程序 ccp，编译程序 cc1 ，汇编程序 sa 和链接程序 ld 等。</p>
+<p>以 c 语言为例，各个步骤的 input/output 及其主要做的事情如下所示</p>
+<h3 id="预处理"><a href="#预处理" class="headerlink" title="预处理"></a>预处理</h3><p>主要处理以 <code>#</code> 开头的代码，具体处理包括宏展开、条件预编译等</p>
+<p>input: 源代码文件（文本文件，<code>.c</code> 文件）<br>output：预处理后的代码文件（文本文件，<code>.i</code> 文件）</p>
+<p>预处理主要做的事情有</p>
+<ul>
+<li>删除 <code>#define</code> 并展开所定义的宏</li>
+<li>处理所有条件预编译指令，如 <code>#if</code>、<code>#ifdef</code>、<code>#endif</code> 等</li>
+<li>插入头文件到 <code>#include</code> 处，可用递归方式进行处理</li>
+<li>删除所有注释</li>
+<li>保留行号和文件名标识，以便编译时编译器产生调试用的行号信息</li>
+<li>保留所有 <code>#pragma</code> 指定的编译指令(编译器需要使用)</li>
+</ul>
+<p>下面是一个预编译例子, 其实就是把头文件嵌入到源文件中</p>
+<p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/Precompiled.jpg" alt="preCompiled"></p>
+<h3 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h3><p>对预处理后的文件进行<strong>词法分析、语法分析、语义分析并优化</strong>，生成汇编代码文件；这个步骤通过编译程序(就是编译器）完成的</p>
+<p>input: 预处理后的代码文件（文本文件，<code>.i</code> 文件）<br>output：汇编代码文件（文本文件，<code>.s</code> 文件）</p>
+<p>这部分详细内容就不展开了，详细可参考这一系列的文章 <a href="https://zhuanlan.zhihu.com/p/102250532" target="_blank" rel="external">LLVM概述——基础架构</a></p>
+<h3 id="汇编"><a href="#汇编" class="headerlink" title="汇编"></a>汇编</h3><p>对编译后的文件通过查表操作（因为机器指令和汇编指令是一一对应的）生成机器指令序列；这个步骤通过汇编程序(就是汇编器）完成的</p>
+<p>input：汇编代码文件（文本文件，<code>.s</code> 文件）<br>output：目标文件/可重定位文件（二进制文件，<code>.o</code> 文件）</p>
+<h3 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h3><p>input: 多个可重定位文件<br>output: 可执行文件</p>
+<p>后面会详细介绍链接的主要内容</p>
+<h2 id="链接的由来与本质"><a href="#链接的由来与本质" class="headerlink" title="链接的由来与本质"></a>链接的由来与本质</h2><h3 id="链接的由来"><a href="#链接的由来" class="headerlink" title="链接的由来"></a>链接的由来</h3><p>程序往往会被分成多个模块，在进行模块间会进行引用(reference)操作，因此在运行时需要确定被引用的符号的地址，而链接可以认为是在<strong>生成可执行文件时确定程序中引用的符号的地址</strong></p>
+<p>如下是通过两个目标文件生成一个可执行文件的简单例子</p>
+<p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/LinkExample.jpg" alt="link example"></p>
+<p>上图中的四个步骤从概念上又可分为<strong>符号解析和重定位两大步骤</strong>，符号解析是就是在合并之前先确定引用和定义之间的关系。 重定位则是代码和代码 合并、数据和数据合并，合并以后它就在一个地址空间里面， 这个地址空间实际上我们称为虚拟地址空间。</p>
+<p>虚拟地址可以认为是从 0 开始连续增长的，在虚拟地址空间中，能得到各个符号的地址。 再把这个地址填到引用的地方，那么就得到了每一条指令真实的 01 序列。那最终虚拟地址空间怎么跟物理内存挂钩呢，实际上这个是由操作系统进行内存管理与分配时确定的</p>
+<p>链接的好处是</p>
+<ol>
+<li>模块化编程：程序可分为多个源程序文件多人协助开发、可构建共享函数库等</li>
+<li>效率高：重新编译时只需要编译那些被修改过的源代码</li>
+</ol>
+<h3 id="链接的本质"><a href="#链接的本质" class="headerlink" title="链接的本质"></a>链接的本质</h3><p>链接的本质实际上就是在合并不同目标文件中相同的节，这部分跟之前写的<a href="http://wulc.me/2020/05/31/%E3%80%8A%E9%93%BE%E6%8E%A5%E3%80%81%E8%A3%85%E8%BD%BD%E4%B8%8E%E5%BA%93%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0%281%29-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E4%B8%8E%E9%9D%99%E6%80%81%E9%93%BE%E6%8E%A5/" target="_blank" rel="external">《链接、装载与库》 阅读笔记(1)-基本概念与静态链接</a> 内容比较相似，这里不再赘述</p>
+<p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/LinkMerge.jpg" alt="merge"></p>
+<p>存储在磁盘中的可执行文件中有一个比较重要的组成部分：<strong>程序头表</strong>，该部分存储着<strong>各个节到虚拟地址空间的映射关系</strong>, 这部分后面会详细描述</p>
+<h2 id="目标文件"><a href="#目标文件" class="headerlink" title="目标文件"></a>目标文件</h2><p>目标文件可分为三大类：可重定位目标文件、可执行目标文件 和 共享的目标文件，这三类文件的特点如下</p>
+<ul>
+<li>可重定位目标文件（<code>.o</code> 文件）<ul>
+<li>其代码和数据可和其他重定位文件合并成可执行文件</li>
+<li>每个 .o 文件由对应的 .c 文件组成</li>
+<li>每个 .o 文件的<strong>代码和数据地址都从 0 开始</strong></li>
+</ul>
+</li>
+<li>可执行目标文件（Linux 的 <code>.out</code>文件，Windows 下的 <code>.exe</code> 文件）<ul>
+<li>包含的代码和数据可直接被复制到内存并被执行</li>
+<li>代码和数据的地址为<strong>虚拟地址空间</strong>中的地址</li>
+</ul>
+</li>
+<li>共享的目标文件(Linux 下的 <code>.so</code> 文件，Windows 下的 <code>.dll</code> 文件)<ul>
+<li>用于动态链接</li>
+<li>在<strong>装入和运行时</strong>(前面的都是在链接阶段就用到了目标文件)被转入到内存并自动被链接</li>
+</ul>
+</li>
+</ul>
+<p>在 Linux 下最常见的目标文件格式就是 ELF 格式，其实就是将代码和数据放到不同的节(section) 中，如下 ELF 文件的基本格式和一个简单的例子</p>
+<p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/ELFFile.jpg" alt="elf file"></p>
+<p>值得注意的是，目标文件与可执行文件的格式非常相似，基本都是 ELF 文件格式，因此可以从两种视角来看ELF 文件，即链接视角和执行视角，两者的简单对比如下, 后面会详细分析这两种视角下的 ELF 文件的异同</p>
+<p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/ELF2View.jpg" alt="elf2view"></p>
+<h3 id="可重定位文件"><a href="#可重定位文件" class="headerlink" title="可重定位文件"></a>可重定位文件</h3><p>可重定位文件主要由 ELF 头、各种类型的节和节头表(Section header table)组成，各部分的含义如下如所示</p>
+<p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/ReloadFile.jpg" alt="reload file"></p>
+<p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/ReloadFile1.jpg" alt="reload file1"></p>
+<p>为什么要将未初始化的变量(<code>.bss</code>节)与已初始化的变量(<code>.data</code>节)分开？ 主要是为了<strong>节省磁盘空间</strong>，因为<code>.data</code>节中存放的是具体的初始值，需要占磁盘空间；而 <code>.bss</code> 节中无需存放初始值，只要说明 <code>.bss</code> 中的每个变量将来在执行时占用几个字节即可（通过节头表来说明应该为 .bss 节预留多大的空间）</p>
+<p>除了上面提到的各个节，ELF 头和节头表也是 ELF 文件的两个重要组成部分</p>
+<p>ELF 头位于一个ELF文件的最开始的地方，里面包含了一些文件结构的说明信息，如ELF 魔数、版本、小端/大端、操作系统平台、目标文件的类型、机器结构类型、程序执行的入口地址、节头表的起始地址和长度等；且根据操作系统主要分两种结构，一种是32位系统对应的结构，一种是 64位系统对应的结构</p>
+<p>如下是通过 readelf 读取 ELF 头信息的一个例子</p>
+<p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/ELFHEader.jpg" alt="ELF Header"></p>
+<p>除了 ELF 头，节头表是 ELF 可重定位目标文件中最终要的部分，节头表主要描述了<strong>各个节的节名及其在文件中的偏移、大小、访问属性、对齐方式等</strong>，如下是一个简单的例子</p>
+<p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/SectionHeaderTable.jpg" alt="SectionHeaderTable"></p>
+<p>从上面的 Off 和 Size 可知，有四个节会分配存储空间：.text、.data、.bss、.rodata</p>
+<h3 id="可执行目标文件"><a href="#可执行目标文件" class="headerlink" title="可执行目标文件"></a>可执行目标文件</h3><p>可执行目标文件与可重定位目标文件很像，两者的不同点在于</p>
+<p>（1）在ELF头里面，有一个字段 e_entry，表示程序的执行入口，e_entry 在可 重定位文件当中是0，因为可重定位文件只是用来链接的；而在可执行目标文件当中，这个字段给出这个<strong>程序执行的时候第一条指令的地址</strong><br>（2）可执行目标文件多了一个程序头表，也称为段头表（segment header table）； 类似可重定位目标文件中的节头表，描述的是各个段的一些信息，而可执行目标文件中的<strong>一个段(segment)是由可重定位目标文件中的多个有相同访问属性的节(section)组成的</strong>; 如下图是可执行文件中的各个段及组成其的各个节<br>（3）多了一个 <code>.init</code> 节, 用于定义 _init 函数，该函数用来进行可执行目标文件开始执行是的初始化工作<br><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/ExecFile.jpg" alt="ExecFile"></p>
+<p>程序头表/段头表主要是用来说明可执行目标文件中各个段的一些属性，如<strong>各个段在可执行文件中的位移、大小、在虚拟地址空间中的位置、对齐方式、访问属性</strong>等，如下是其定义和一个例子</p>
+<p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/SegmentHeaderTable.jpg" alt="SegmentHeaderTable"></p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>这一周主要讲了从源文件生成可执行文件的步骤，并详细描述了其中的链接这一步骤的过程，包括使用链接的优点，链接如何将可重定位目标文件组合成可执行目标文件，以及这两类文件的差别，两类文件都是 ELF 格式，但是可执行目标文件中多包含了一些程序执行的入口信息和初始化信息（因为可重定位目标文件是无法执行了），且两类文件中都有一个表头用来描述 section/segment 的一些属性，在可重定位目标文件中是节头表，而在可执行目标文件中是段头表。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/程序的表示、转换与链接/" rel="tag">程序的表示、转换与链接</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/08/30/《Embedding-based Retrieval in Facebook Search》阅读笔记/" rel="next" title="《Embedding-based Retrieval in Facebook Search》阅读笔记">
+                <i class="fa fa-chevron-left"></i> 《Embedding-based Retrieval in Facebook Search》阅读笔记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://wulc.me/files/profile.jpg"
+               alt="良超" />
+          <p class="site-author-name" itemprop="name">良超</p>
+          <p class="site-description motion-element" itemprop="description">工程师要把合适的技术放在合适的位置|算法工程师首先得是个工程师</p>
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">222</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">41</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/WuLC" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github-alt"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.linkedin.com/in/wuliangchao/" target="_blank" title="Linkedin">
+                  
+                    <i class="fa fa-fw fa-linkedin"></i>
+                  
+                  Linkedin
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:liangchaowu5@gmail.com" target="_blank" title="E-mail">
+                  
+                    <i class="fa fa-fw fa-envelope-square"></i>
+                  
+                  E-mail
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#程序转换过程"><span class="nav-number">1.</span> <span class="nav-text">程序转换过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#预处理"><span class="nav-number">1.1.</span> <span class="nav-text">预处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编译"><span class="nav-number">1.2.</span> <span class="nav-text">编译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#汇编"><span class="nav-number">1.3.</span> <span class="nav-text">汇编</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#链接"><span class="nav-number">1.4.</span> <span class="nav-text">链接</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#链接的由来与本质"><span class="nav-number">2.</span> <span class="nav-text">链接的由来与本质</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#链接的由来"><span class="nav-number">2.1.</span> <span class="nav-text">链接的由来</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#链接的本质"><span class="nav-number">2.2.</span> <span class="nav-text">链接的本质</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#目标文件"><span class="nav-number">3.</span> <span class="nav-text">目标文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#可重定位文件"><span class="nav-number">3.1.</span> <span class="nav-text">可重定位文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#可执行目标文件"><span class="nav-number">3.2.</span> <span class="nav-text">可执行目标文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">4.</span> <span class="nav-text">小结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <center>
+<div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2020</span>
+  &nbsp;&nbsp;|&nbsp;&nbsp;Powered by <a href="http://hexo.io">Hexo</a> and <a href="http://theme-next.iissnan.com/">NexT</a></span>
+  </br>
+  <span>Documentation Licensed Under <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></span>
+</div>
+</center>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>
