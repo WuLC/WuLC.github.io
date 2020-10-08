@@ -62,12 +62,12 @@
 
 
 
-<meta name="description" content="本文是 程序的表示、转换与链接 中第 10 周的内容，主要介绍了讲了从源文件生成可执行文件的步骤(预处理、编译、汇编、链接)，并详细描述了其中的链接这一步骤的过程，对比了静态链接中涉及到的可重定位目标文件组合成可执行目标文件的差别；对了解文件的从编译到执行原理有一定帮助，可配合 《链接、装载与库》 阅读笔记(2)-可执行文件的装载 一起阅读。">
+<meta name="description" content="本文是 程序的表示、转换与链接 中第 10、11 周的内容，主要介绍了从源文件生成可执行文件的步骤(预处理、编译、汇编、链接)，并详细描述了其中的链接这一步骤中的两大过程：符号解析与重定位，并对比了链接输入的可重定位目标文件和输出的可执行目标文件的差别；对了解文件的从编译到执行原理有一定帮助，可配合 《链接、装载与库》 阅读笔记 一起阅读。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="程序的表示、转换与链接-week10">
+<meta property="og:title" content="程序的表示、转换与链接-week10、11">
 <meta property="og:url" content="http://wulc.github.io/2020/10/03/程序的表示、转换与链接-week10/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
-<meta property="og:description" content="本文是 程序的表示、转换与链接 中第 10 周的内容，主要介绍了讲了从源文件生成可执行文件的步骤(预处理、编译、汇编、链接)，并详细描述了其中的链接这一步骤的过程，对比了静态链接中涉及到的可重定位目标文件组合成可执行目标文件的差别；对了解文件的从编译到执行原理有一定帮助，可配合 《链接、装载与库》 阅读笔记(2)-可执行文件的装载 一起阅读。">
+<meta property="og:description" content="本文是 程序的表示、转换与链接 中第 10、11 周的内容，主要介绍了从源文件生成可执行文件的步骤(预处理、编译、汇编、链接)，并详细描述了其中的链接这一步骤中的两大过程：符号解析与重定位，并对比了链接输入的可重定位目标文件和输出的可执行目标文件的差别；对了解文件的从编译到执行原理有一定帮助，可配合 《链接、装载与库》 阅读笔记 一起阅读。">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/ProgramConv.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/Precompiled.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/LinkExample.jpg">
@@ -80,10 +80,15 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/SectionHeaderTable.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/ExecFile.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/SegmentHeaderTable.jpg">
-<meta property="og:updated_time" content="2020-10-03T13:19:16.320Z">
+<meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/SymbolType.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/StrongSymbolsMultiDef.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/StaticLibrary_.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/ParseSymbol.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/LinkProcess.jpg">
+<meta property="og:updated_time" content="2020-10-08T07:47:13.523Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="程序的表示、转换与链接-week10">
-<meta name="twitter:description" content="本文是 程序的表示、转换与链接 中第 10 周的内容，主要介绍了讲了从源文件生成可执行文件的步骤(预处理、编译、汇编、链接)，并详细描述了其中的链接这一步骤的过程，对比了静态链接中涉及到的可重定位目标文件组合成可执行目标文件的差别；对了解文件的从编译到执行原理有一定帮助，可配合 《链接、装载与库》 阅读笔记(2)-可执行文件的装载 一起阅读。">
+<meta name="twitter:title" content="程序的表示、转换与链接-week10、11">
+<meta name="twitter:description" content="本文是 程序的表示、转换与链接 中第 10、11 周的内容，主要介绍了从源文件生成可执行文件的步骤(预处理、编译、汇编、链接)，并详细描述了其中的链接这一步骤中的两大过程：符号解析与重定位，并对比了链接输入的可重定位目标文件和输出的可执行目标文件的差别；对了解文件的从编译到执行原理有一定帮助，可配合 《链接、装载与库》 阅读笔记 一起阅读。">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/ProgramConv.jpg">
 
 
@@ -118,7 +123,7 @@
 
 
 
-  <title> 程序的表示、转换与链接-week10 | 吴良超的学习笔记 </title>
+  <title> 程序的表示、转换与链接-week10、11 | 吴良超的学习笔记 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -294,7 +299,7 @@
             
             
               
-                程序的表示、转换与链接-week10
+                程序的表示、转换与链接-week10、11
               
             
           </h2>
@@ -368,7 +373,7 @@
       
 
       
-        <p>本文是 <a href="https://www.coursera.org/learn/jisuanji-xitong/home/welcome" target="_blank" rel="external">程序的表示、转换与链接</a> 中第 10 周的内容，主要介绍了讲了从源文件生成可执行文件的步骤(预处理、编译、汇编、链接)，并详细描述了其中的链接这一步骤的过程，对比了静态链接中涉及到的可重定位目标文件组合成可执行目标文件的差别；对了解文件的从编译到执行原理有一定帮助，可配合 <a href="http://wulc.me/2020/06/13/%E3%80%8A%E9%93%BE%E6%8E%A5%E3%80%81%E8%A3%85%E8%BD%BD%E4%B8%8E%E5%BA%93%E3%80%8B%20%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0%282%29-%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6%E7%9A%84%E8%A3%85%E8%BD%BD/" target="_blank" rel="external">《链接、装载与库》 阅读笔记(2)-可执行文件的装载</a> 一起阅读。</p>
+        <p>本文是 <a href="https://www.coursera.org/learn/jisuanji-xitong/home/welcome" target="_blank" rel="external">程序的表示、转换与链接</a> 中第 10、11 周的内容，主要介绍了从源文件生成可执行文件的步骤(预处理、编译、汇编、链接)，并详细描述了其中的链接这一步骤中的两大过程：<strong>符号解析与重定位</strong>，并对比了链接输入的可重定位目标文件和输出的可执行目标文件的差别；对了解文件的从编译到执行原理有一定帮助，可配合 <a href="http://wulc.me/tags/%E9%93%BE%E6%8E%A5%E3%80%81%E8%A3%85%E8%BD%BD%E4%B8%8E%E5%BA%93/" target="_blank" rel="external">《链接、装载与库》 阅读笔记</a> 一起阅读。</p>
 <a id="more"></a>
 <p>通过对源文件的预处理、编译，汇编等转换 可以得到一个个模块对应的机器代码, 也就是目标文件； 但是目标还不能直接执行，还需要将这些目标文件链接起来才能得到一个可执行文件</p>
 <p>链接过程用到的目标文件主要有：</p>
@@ -406,7 +411,7 @@
 <p>如下是通过两个目标文件生成一个可执行文件的简单例子</p>
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/LinkExample.jpg" alt="link example"></p>
 <p>上图中的四个步骤从概念上又可分为<strong>符号解析和重定位两大步骤</strong>，符号解析是就是在合并之前先确定引用和定义之间的关系。 重定位则是代码和代码 合并、数据和数据合并，合并以后它就在一个地址空间里面， 这个地址空间实际上我们称为虚拟地址空间。</p>
-<p>虚拟地址可以认为是从 0 开始连续增长的，在虚拟地址空间中，能得到各个符号的地址。 再把这个地址填到引用的地方，那么就得到了每一条指令真实的 01 序列。那最终虚拟地址空间怎么跟物理内存挂钩呢，实际上这个是由操作系统进行内存管理与分配时确定的</p>
+<p>虚拟地址可以认为是从 0 开始连续增长的，在虚拟地址空间中，能得到各个符号的地址。 再把这个地址填到引用的地方，那么就得到了每一条指令真实的 01 序列。每个进程都有自己独立的虚拟地址空间，那最终虚拟地址空间怎么跟物理内存挂钩呢，实际上这个是由操作系统进行内存管理与分配时确定的, 详细可参考 <a href="http://abcdxyzk.github.io/blog/2015/04/18/kernel-mm-vm-rm/" target="_blank" rel="external">Linux 虚拟内存和物理内存的理解</a></p>
 <p>链接的好处是</p>
 <ol>
 <li>模块化编程：程序可分为多个源程序文件多人协助开发、可构建共享函数库等</li>
@@ -453,6 +458,36 @@
 <p>（1）在ELF头里面，有一个字段 e_entry，表示程序的执行入口，e_entry 在可 重定位文件当中是0，因为可重定位文件只是用来链接的；而在可执行目标文件当中，这个字段给出这个<strong>程序执行的时候第一条指令的地址</strong><br>（2）可执行目标文件多了一个程序头表，也称为段头表（segment header table）； 类似可重定位目标文件中的节头表，描述的是各个段的一些信息，而可执行目标文件中的<strong>一个段(segment)是由可重定位目标文件中的多个有相同访问属性的节(section)组成的</strong>; 如下图是可执行文件中的各个段及组成其的各个节<br>（3）多了一个 <code>.init</code> 节, 用于定义 _init 函数，该函数用来进行可执行目标文件开始执行是的初始化工作<br><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/ExecFile.jpg" alt="ExecFile"></p>
 <p>程序头表/段头表主要是用来说明可执行目标文件中各个段的一些属性，如<strong>各个段在可执行文件中的位移、大小、在虚拟地址空间中的位置、对齐方式、访问属性</strong>等，如下是其定义和一个例子</p>
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/SegmentHeaderTable.jpg" alt="SegmentHeaderTable"></p>
+<h2 id="符号解析"><a href="#符号解析" class="headerlink" title="符号解析"></a>符号解析</h2><p>前面提到，链接主要分为符号解析和重定位两大步骤，符号解析的目的是<strong>把符号的引用和符号的定义关联起来</strong>；每个定义符号在代码段和数据段都分配了存储空间，而在引用符号和定义符号建立关联以后，重定位时就可以把引用符号的地址重定位成相关联的定义符号的地址(虚拟地址空间中的地址)</p>
+<p>每个可重定位目标模块的符号存都放在各自的符号表(在 <code>.symtab</code> 节)，这些符号可分为三种</p>
+<ul>
+<li>全局符号(Global symbols)：由当前模块定义且能被其他模块引用的符号(不带 static)</li>
+<li>外部符号(External symbols)：由其他模块定义且被当前模块应用的 </li>
+<li>局部符号(Local symbols)：仅有当前模块定义和引用的本地符号</li>
+</ul>
+<p>值得注意的是，这里的<strong>局部符号(Local symbol)不是指程序当中的局部变量</strong>，局部变量是分配在栈中 的临时性的变量，链接器是不关心这种局部变量的, 而局部符号则是分配在静态 数据区，且在整个模块里面都可以使用的。 如下是一个例子：<strong>局部变量 temp 分配在栈中，不会在外部过程被调用，因此不是符号定义</strong></p>
+<p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/SymbolType.jpg" alt="symbolType"></p>
+<h3 id="符号强弱性"><a href="#符号强弱性" class="headerlink" title="符号强弱性"></a>符号强弱性</h3><p><strong>当一个符号在多个地方有定义的时候，最终解析的时候只能有一个确定的定义</strong>；因此有如下规则：</p>
+<ol>
+<li>强符号不能多次定义</li>
+<li>若一个符号被定义为一次强符号和多次弱符号，则以强符号为准(即对弱符号的引用被解析为其强定义符号)</li>
+<li>若有多个弱符号的定义，则任选其中一个(gcc -fno-common 链接时会有 warning)</li>
+</ol>
+<p>那强符号和弱符号的定义又是什么呢？全局符号又可分为强符号和弱符号，区分两者特点如下</p>
+<ul>
+<li>所有的<strong>函数名和已初始化的全局变量名</strong>都是强符号</li>
+<li><strong>未初始化的全局变量</strong>名是弱符号</li>
+</ul>
+<p>如下是一些例子</p>
+<p>下面的例子中由于 x 被重定义了多次，因此链接时会报错</p>
+<p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/StrongSymbolsMultiDef.jpg" alt="多重定义"></p>
+<h3 id="静态库文件"><a href="#静态库文件" class="headerlink" title="静态库文件"></a>静态库文件</h3><p>静态库文件实际上是把若干可重定位文件打包好的一个文件，如C 自带的标准库 libc.a 就是一个静态库文件，下面是一个例子，描述了<strong>如何定义与使用静态库文件</strong></p>
+<p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/StaticLibrary_.jpg" alt="static library"></p>
+<p>符号解析过程描述如下所示</p>
+<p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/ParseSymbol.jpg" alt="parse symbol"></p>
+<p>此外，值得注意的是，上面的链接中如果调换了 mylib.a 和 main.o 的位置会报错，原因是先扫描 mylib.a 时，<strong>由于找不到 mylib.a 中定义的函数被调用的地方，因此mylib.a 中的所有 <code>.o</code> 文件都会被丢弃</strong>, 然后扫描 main.o 文件时，myfunc1 无法解析。</p>
+<p>因此，使用静态库时链接器对外部引用的符号的解析算法如下</p>
+<p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/LinkProcess.jpg" alt="link process"></p>
 <h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>这一周主要讲了从源文件生成可执行文件的步骤，并详细描述了其中的链接这一步骤的过程，包括使用链接的优点，链接如何将可重定位目标文件组合成可执行目标文件，以及这两类文件的差别，两类文件都是 ELF 格式，但是可执行目标文件中多包含了一些程序执行的入口信息和初始化信息（因为可重定位目标文件是无法执行了），且两类文件中都有一个表头用来描述 section/segment 的一些属性，在可重定位目标文件中是节头表，而在可执行目标文件中是段头表。</p>
 
       
@@ -646,7 +681,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#程序转换过程"><span class="nav-number">1.</span> <span class="nav-text">程序转换过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#预处理"><span class="nav-number">1.1.</span> <span class="nav-text">预处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编译"><span class="nav-number">1.2.</span> <span class="nav-text">编译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#汇编"><span class="nav-number">1.3.</span> <span class="nav-text">汇编</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#链接"><span class="nav-number">1.4.</span> <span class="nav-text">链接</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#链接的由来与本质"><span class="nav-number">2.</span> <span class="nav-text">链接的由来与本质</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#链接的由来"><span class="nav-number">2.1.</span> <span class="nav-text">链接的由来</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#链接的本质"><span class="nav-number">2.2.</span> <span class="nav-text">链接的本质</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#目标文件"><span class="nav-number">3.</span> <span class="nav-text">目标文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#可重定位文件"><span class="nav-number">3.1.</span> <span class="nav-text">可重定位文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#可执行目标文件"><span class="nav-number">3.2.</span> <span class="nav-text">可执行目标文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">4.</span> <span class="nav-text">小结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#程序转换过程"><span class="nav-number">1.</span> <span class="nav-text">程序转换过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#预处理"><span class="nav-number">1.1.</span> <span class="nav-text">预处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编译"><span class="nav-number">1.2.</span> <span class="nav-text">编译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#汇编"><span class="nav-number">1.3.</span> <span class="nav-text">汇编</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#链接"><span class="nav-number">1.4.</span> <span class="nav-text">链接</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#链接的由来与本质"><span class="nav-number">2.</span> <span class="nav-text">链接的由来与本质</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#链接的由来"><span class="nav-number">2.1.</span> <span class="nav-text">链接的由来</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#链接的本质"><span class="nav-number">2.2.</span> <span class="nav-text">链接的本质</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#目标文件"><span class="nav-number">3.</span> <span class="nav-text">目标文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#可重定位文件"><span class="nav-number">3.1.</span> <span class="nav-text">可重定位文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#可执行目标文件"><span class="nav-number">3.2.</span> <span class="nav-text">可执行目标文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#符号解析"><span class="nav-number">4.</span> <span class="nav-text">符号解析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#符号强弱性"><span class="nav-number">4.1.</span> <span class="nav-text">符号强弱性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#静态库文件"><span class="nav-number">4.2.</span> <span class="nav-text">静态库文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">5.</span> <span class="nav-text">小结</span></a></li></ol></div>
             
 
           </div>
