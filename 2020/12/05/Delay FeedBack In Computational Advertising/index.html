@@ -62,22 +62,22 @@
 
 
 
-<meta name="description" content="问题描述转化是有延迟的，即在点击发生后过一段时间用户可能才会发生转化，且往往转化漏斗越深，延迟的时间越长；在计算广告中，delay feedback 主要影响下面两个场景
+<meta name="description" content="转化是有延迟的，即在点击发生后过一段时间用户可能才会发生转化，且往往转化漏斗越深，延迟的时间越长；在计算广告中，delay feedback 主要影响下面两个场景
 
 CVR 模型的训练
 基于后验的调价策略
 
-对于场景1，影响体现在（1）过早把样本送入模型，把最终会转化但是还没回传 label 的事件当做负例，导致模型低估（2）过晚把样本送入模型，即让所有样本都等待一个足够长的时间才送入模型">
+对于场景1，影响体现在（1）过早把样本送入模型，把最终会转化但是还没回传 label 的事件当做负例，导致模型低估（2）过晚把样本送入模型，即让所有样本都等待一个足够长的时间才送入模型，导致模">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Delay FeedBack In Computational Advertising">
 <meta property="og:url" content="http://wulc.github.io/2020/12/05/Delay FeedBack In Computational Advertising/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
-<meta property="og:description" content="问题描述转化是有延迟的，即在点击发生后过一段时间用户可能才会发生转化，且往往转化漏斗越深，延迟的时间越长；在计算广告中，delay feedback 主要影响下面两个场景
+<meta property="og:description" content="转化是有延迟的，即在点击发生后过一段时间用户可能才会发生转化，且往往转化漏斗越深，延迟的时间越长；在计算广告中，delay feedback 主要影响下面两个场景
 
 CVR 模型的训练
 基于后验的调价策略
 
-对于场景1，影响体现在（1）过早把样本送入模型，把最终会转化但是还没回传 label 的事件当做负例，导致模型低估（2）过晚把样本送入模型，即让所有样本都等待一个足够长的时间才送入模型">
+对于场景1，影响体现在（1）过早把样本送入模型，把最终会转化但是还没回传 label 的事件当做负例，导致模型低估（2）过晚把样本送入模型，即让所有样本都等待一个足够长的时间才送入模型，导致模">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/SurvivalAnalytics.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/SA_assumption.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/SAKDE.jpg">
@@ -89,15 +89,15 @@ CVR 模型的训练
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/PUAsumption.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/PUMLE.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/PU_finalloss.jpg">
-<meta property="og:updated_time" content="2020-12-05T15:44:34.312Z">
+<meta property="og:updated_time" content="2020-12-05T15:48:07.503Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Delay FeedBack In Computational Advertising">
-<meta name="twitter:description" content="问题描述转化是有延迟的，即在点击发生后过一段时间用户可能才会发生转化，且往往转化漏斗越深，延迟的时间越长；在计算广告中，delay feedback 主要影响下面两个场景
+<meta name="twitter:description" content="转化是有延迟的，即在点击发生后过一段时间用户可能才会发生转化，且往往转化漏斗越深，延迟的时间越长；在计算广告中，delay feedback 主要影响下面两个场景
 
 CVR 模型的训练
 基于后验的调价策略
 
-对于场景1，影响体现在（1）过早把样本送入模型，把最终会转化但是还没回传 label 的事件当做负例，导致模型低估（2）过晚把样本送入模型，即让所有样本都等待一个足够长的时间才送入模型">
+对于场景1，影响体现在（1）过早把样本送入模型，把最终会转化但是还没回传 label 的事件当做负例，导致模型低估（2）过晚把样本送入模型，即让所有样本都等待一个足够长的时间才送入模型，导致模">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/SurvivalAnalytics.jpg">
 
 
@@ -393,7 +393,7 @@ CVR 模型的训练
       
 
       
-        <h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>转化是有延迟的，即在点击发生后过一段时间用户可能才会发生转化，且往往转化漏斗越深，延迟的时间越长；在计算广告中，delay feedback 主要影响下面两个场景</p>
+        <p>转化是有延迟的，即在点击发生后过一段时间用户可能才会发生转化，且往往转化漏斗越深，延迟的时间越长；在计算广告中，delay feedback 主要影响下面两个场景</p>
 <ol>
 <li>CVR 模型的训练</li>
 <li>基于后验的调价策略</li>
@@ -402,6 +402,7 @@ CVR 模型的训练
 <p>对于场景2，影响体现控制器控制 cost/value=target 时，分母会小于实际值，导致控制的不稳定</p>
 <p>下面三篇 paper 都是针对这个问题在场景 1 的一些解决思路，其中涉及到的一些方法也能应用到场景 2 中（而如果问题 1 能被较好地解决，也能基于预估值而不是后验数据进行调价）</p>
 <p>第一篇 paper 是较早提出的一个解决方法，引入了一个隐变量辅助建模，同时对延迟时间单独建模，总体建模思路比较值得学习<br>第二篇 paper 是对第一篇 paper 的拓展，第一篇 paper 是通过指数分布建模回传延迟的时间的，而这篇 paper 则借鉴了 KDE(Kernel density estimation) 来学习任意分布去建模回传延迟时间<br>第三篇 paper 则是比较了几种方法在离线数据和在线实验的效果，改动主要是在 loss function 上；其中就包括了第一篇 paper 的方法，以及其他一些利用了 positive-unlabeled learning/importance sampling 等方法推导出来出新的 loss。</p>
+<a id="more"></a>
 <h2 id="Modeling-Delayed-Feedback-in-Display-Advertising-2014"><a href="#Modeling-Delayed-Feedback-in-Display-Advertising-2014" class="headerlink" title="Modeling Delayed Feedback in Display Advertising(2014)"></a>Modeling Delayed Feedback in Display Advertising(2014)</h2><p>这篇 paper 是 criteo 在 2014 年发表的一篇对 delayed feedback 建模的 paper，建模思路比较值得学习。针对这篇 paper 可参考之前写过的一篇文章</p>
 <p><a href="http://wulc.me/2020/05/17/Modeling%20Delayed%20Feedback%20in%20Display%20Advertising%20%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" target="_blank" rel="external">《Modeling Delayed Feedback in Display Advertising》 阅读笔记</a></p>
 <h2 id="A-Nonparametric-Delayed-Feedback-Model-for-Conversion-Rate-Prediction-2018"><a href="#A-Nonparametric-Delayed-Feedback-Model-for-Conversion-Rate-Prediction-2018" class="headerlink" title="A Nonparametric Delayed Feedback Model for Conversion Rate Prediction(2018)"></a>A Nonparametric Delayed Feedback Model for Conversion Rate Prediction(2018)</h2><p>这篇 paper 是在第一篇 paper 基础上对回传延迟函数做了改进，第一篇回传延迟使用了指数分布来建模，这里则借助了 KDE（<a href="https://en.wikipedia.org/wiki/Kernel_density_estimation" target="_blank" rel="external">Kernel density estimation</a>） 的思想用任意分布来代替第一篇 paper 的指数分布，而这正是 paper 名字中 <a href="https://en.wikipedia.org/wiki/Nonparametric_statistics" target="_blank" rel="external">nonparametric</a> 意思的含义。</p>
@@ -669,7 +670,7 @@ CVR 模型的训练
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题描述"><span class="nav-number">1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Modeling-Delayed-Feedback-in-Display-Advertising-2014"><span class="nav-number">2.</span> <span class="nav-text">Modeling Delayed Feedback in Display Advertising(2014)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#A-Nonparametric-Delayed-Feedback-Model-for-Conversion-Rate-Prediction-2018"><span class="nav-number">3.</span> <span class="nav-text">A Nonparametric Delayed Feedback Model for Conversion Rate Prediction(2018)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Addressing-Delayed-Feedback-for-Continuous-Training-with-Neural-Networks-in-CTR-prediction-2019"><span class="nav-number">4.</span> <span class="nav-text">Addressing Delayed Feedback for Continuous Training with Neural Networks in CTR prediction(2019)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Faked-nagative-weighted"><span class="nav-number">4.1.</span> <span class="nav-text">Faked nagative weighted</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Fake-negative-calibration"><span class="nav-number">4.2.</span> <span class="nav-text">Fake negative calibration</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Positive-Unlabeled-Learning"><span class="nav-number">4.3.</span> <span class="nav-text">Positive-Unlabeled Learning</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Modeling-Delayed-Feedback-in-Display-Advertising-2014"><span class="nav-number">1.</span> <span class="nav-text">Modeling Delayed Feedback in Display Advertising(2014)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#A-Nonparametric-Delayed-Feedback-Model-for-Conversion-Rate-Prediction-2018"><span class="nav-number">2.</span> <span class="nav-text">A Nonparametric Delayed Feedback Model for Conversion Rate Prediction(2018)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Addressing-Delayed-Feedback-for-Continuous-Training-with-Neural-Networks-in-CTR-prediction-2019"><span class="nav-number">3.</span> <span class="nav-text">Addressing Delayed Feedback for Continuous Training with Neural Networks in CTR prediction(2019)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Faked-nagative-weighted"><span class="nav-number">3.1.</span> <span class="nav-text">Faked nagative weighted</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Fake-negative-calibration"><span class="nav-number">3.2.</span> <span class="nav-text">Fake negative calibration</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Positive-Unlabeled-Learning"><span class="nav-number">3.3.</span> <span class="nav-text">Positive-Unlabeled Learning</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
 
           </div>
