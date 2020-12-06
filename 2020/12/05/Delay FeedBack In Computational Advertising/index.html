@@ -89,7 +89,7 @@ CVR 模型的训练
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/PUAsumption.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/PUMLE.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/PU_finalloss.jpg">
-<meta property="og:updated_time" content="2020-12-06T01:46:40.135Z">
+<meta property="og:updated_time" content="2020-12-06T09:17:22.743Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Delay FeedBack In Computational Advertising">
 <meta name="twitter:description" content="转化是有延迟的，即在点击发生后过一段时间用户可能才会发生转化，且往往转化漏斗越深，延迟的时间越长；在计算广告中，delay feedback 主要影响下面两个场景
@@ -400,9 +400,9 @@ CVR 模型的训练
 </ol>
 <p>对于场景1，影响体现在（1）过早把样本送入模型，把最终会转化但是还没回传 label 的事件当做负例，导致模型低估（2）过晚把样本送入模型，即让所有样本都等待一个足够长的时间才送入模型，导致模型没能及时更新</p>
 <p>对于场景2，影响体现控制器控制 cost/value=target 时，分母会小于实际值，导致控制的不稳定</p>
-<p>下面三篇 paper 都是针对这个问题在场景 1 的一些解决思路，其中涉及到的一些方法也能应用到场景 2 中（而如果问题 1 能被较好地解决，也能基于预估值而不是后验数据进行调价）</p>
-<p>第一篇 paper 是较早提出的一个解决方法，引入了一个隐变量辅助建模，同时对延迟时间单独建模，总体建模思路比较值得学习<br>第二篇 paper 是对第一篇 paper 的拓展，第一篇 paper 是通过指数分布建模回传延迟的时间的，而这篇 paper 则借鉴了 KDE(Kernel density estimation) 来学习任意分布去建模回传延迟时间<br>第三篇 paper 则是比较了几种方法在离线数据和在线实验的效果，改动主要是在 loss function 上；其中就包括了第一篇 paper 的方法，以及其他一些利用了 positive-unlabeled learning/importance sampling 等方法推导出来出新的 loss。</p>
+<p>本文主要介绍三篇 paper 针对这个问题在场景 1 的一些解决思路，其中涉及到的一些方法也能应用到场景 2 中（而如果问题 1 能被较好地解决，也能基于预估值而不是后验数据进行调价）</p>
 <a id="more"></a>
+<p>第一篇 paper 是较早提出的一个解决方法，引入了一个隐变量辅助建模，同时对延迟时间单独建模，总体建模思路比较值得学习<br>第二篇 paper 是对第一篇 paper 的拓展，第一篇 paper 是通过指数分布建模回传延迟的时间的，而这篇 paper 则借鉴了 KDE(Kernel density estimation) 来学习任意分布去建模回传延迟时间<br>第三篇 paper 则是比较了几种方法在离线数据和在线实验的效果，改动主要是在 loss function 上；其中就包括了第一篇 paper 的方法，以及其他一些利用了 positive-unlabeled learning/importance sampling 等方法推导出来出新的 loss。</p>
 <h2 id="Modeling-Delayed-Feedback-in-Display-Advertising-2014"><a href="#Modeling-Delayed-Feedback-in-Display-Advertising-2014" class="headerlink" title="Modeling Delayed Feedback in Display Advertising(2014)"></a>Modeling Delayed Feedback in Display Advertising(2014)</h2><p>这篇 paper 是 criteo 在 2014 年发表的一篇对 delayed feedback 建模的 paper，建模思路比较值得学习。针对这篇 paper 可参考之前写过的一篇文章</p>
 <p><a href="http://wulc.me/2020/05/17/Modeling%20Delayed%20Feedback%20in%20Display%20Advertising%20%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" target="_blank" rel="external">《Modeling Delayed Feedback in Display Advertising》 阅读笔记</a></p>
 <h2 id="A-Nonparametric-Delayed-Feedback-Model-for-Conversion-Rate-Prediction-2018"><a href="#A-Nonparametric-Delayed-Feedback-Model-for-Conversion-Rate-Prediction-2018" class="headerlink" title="A Nonparametric Delayed Feedback Model for Conversion Rate Prediction(2018)"></a>A Nonparametric Delayed Feedback Model for Conversion Rate Prediction(2018)</h2><p>这篇 paper 是在第一篇 paper 基础上对回传延迟函数做了改进，第一篇回传延迟使用了指数分布来建模，这里则借助了 KDE（<a href="https://en.wikipedia.org/wiki/Kernel_density_estimation" target="_blank" rel="external">Kernel density estimation</a>） 的思想用任意分布来代替第一篇 paper 的指数分布，而这正是 paper 名字中 <a href="https://en.wikipedia.org/wiki/Nonparametric_statistics" target="_blank" rel="external">nonparametric</a> 意思的含义。</p>
@@ -444,7 +444,7 @@ CVR 模型的训练
 <p>$$b(y=0|x) = 1- b(y=1|x)= \frac{1}{1+p(y=1|x)}$$</p>
 <p>即上面公式(7)可被写成下面公式(10), 即需要给分布 $b$ 中的正样本加的权重为$1+p(y=1|x)$, 负样本的权重为 $p(y=0|x)(1+p(y=1|x))$</p>
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/FakeNegativeWeightedLoss1.jpg" alt="loss func1"></p>
-<p>但是这里的 $p$ 是未知的，因此 paper 中利用了模型的预估值 $f_{\theta}$ 来近似，则可写成下式，而在</p>
+<p>但是这里的 $p$ 是未知的，因此 paper 中利用了模型的预估值 $f_{\theta}$ 来近似</p>
 <p>此外，importance sampling 也被应用在强化学习中的 off-policy 策略中，简单来说就是通过行为策略(behavior strategy) $b$ 产生的序列分布来优化目标策略(target strategy) $π$ 价值函数，关于 on-policy 与 off-policy 的区别可参考这个回答 <a href="https://www.zhihu.com/question/57159315/answer/465865135" target="_blank" rel="external">强化学习中on-policy 与off-policy有什么区别？</a> ）</p>
 <h3 id="Fake-negative-calibration"><a href="#Fake-negative-calibration" class="headerlink" title="Fake negative calibration"></a>Fake negative calibration</h3><p>这个方法直接让模型学习 biased distribution $b$,然后基于上面 Faked nagative weighted 中推导出来的公式反推出 $p(y=1|x)$的概率，即由</p>
 <p>$$b(y=1|x) = \frac{M}{M+N} = \frac{\frac{M}{N}}{1+\frac{M}{N}} = \frac{p(y=1|x)}{1+p(y=1|x)} $$</p>

@@ -378,8 +378,7 @@
 </ol>
 <p>对于场景1，影响体现在（1）过早把样本送入模型，把最终会转化但是还没回传 label 的事件当做负例，导致模型低估（2）过晚把样本送入模型，即让所有样本都等待一个足够长的时间才送入模型，导致模型没能及时更新</p>
 <p>对于场景2，影响体现控制器控制 cost/value=target 时，分母会小于实际值，导致控制的不稳定</p>
-<p>下面三篇 paper 都是针对这个问题在场景 1 的一些解决思路，其中涉及到的一些方法也能应用到场景 2 中（而如果问题 1 能被较好地解决，也能基于预估值而不是后验数据进行调价）</p>
-<p>第一篇 paper 是较早提出的一个解决方法，引入了一个隐变量辅助建模，同时对延迟时间单独建模，总体建模思路比较值得学习<br>第二篇 paper 是对第一篇 paper 的拓展，第一篇 paper 是通过指数分布建模回传延迟的时间的，而这篇 paper 则借鉴了 KDE(Kernel density estimation) 来学习任意分布去建模回传延迟时间<br>第三篇 paper 则是比较了几种方法在离线数据和在线实验的效果，改动主要是在 loss function 上；其中就包括了第一篇 paper 的方法，以及其他一些利用了 positive-unlabeled learning/importance sampling 等方法推导出来出新的 loss。</p>
+<p>本文主要介绍三篇 paper 针对这个问题在场景 1 的一些解决思路，其中涉及到的一些方法也能应用到场景 2 中（而如果问题 1 能被较好地解决，也能基于预估值而不是后验数据进行调价）</p>
           <!--noindex-->
           <div class="post-more-link text-center">
             <a class="btn" href="/2020/12/05/Delay FeedBack In Computational Advertising/#more" rel="contents">
