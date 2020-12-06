@@ -89,7 +89,7 @@ CVR 模型的训练
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/PUAsumption.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/PUMLE.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/PU_finalloss.jpg">
-<meta property="og:updated_time" content="2020-12-05T15:48:07.503Z">
+<meta property="og:updated_time" content="2020-12-06T01:46:40.135Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Delay FeedBack In Computational Advertising">
 <meta name="twitter:description" content="转化是有延迟的，即在点击发生后过一段时间用户可能才会发生转化，且往往转化漏斗越深，延迟的时间越长；在计算广告中，delay feedback 主要影响下面两个场景
@@ -453,14 +453,15 @@ CVR 模型的训练
 <p>这种方法可以认为是一种 post calibration，除此之外，也有一种方法是在训练的时候就做了纠正的，也叫做 prior correction，基本思路就是在训练的时候对预估的 logit 做一层转换，简单推导如下</p>
 <p>假设真实的分布下, 正样本的数量是 $P$，负样本的数量是 $N$，</p>
 <p>则 serving 是输出的概率值应该是</p>
-<p>$\frac{P}{P+N} = \frac{1}{1+e^{-x}}$</p>
+<p>$$\frac{P}{P+N} = \frac{1}{1+e^{-x}}$$</p>
 <p>但是在 training 时，由于上面的机制使得每条样本都会以负样本的形式出现一次， 同时假设会对负样本采样，采样率为 $r$, 则有</p>
-<p>$\frac{P}{r*(P+N)+P} = \frac{1}{1+e^{-y}}$</p>
+<p>$$\frac{P}{r*(P+N)+P} = \frac{1}{1+e^{-y}}$$</p>
 <p>通过对上面的变换有</p>
-<p>$\frac{P}{r*(P+N)+P} =  \frac{P/(P+N)}{r+P/(P+N)} =  \frac{1/(1+e^{-x})}{r + 1/(1+e^{-x})}$</p>
-<p>则令<br>$\frac{1/(1+e^{-x})}{r + 1/(1+e^{-x})}=\frac{1}{1+e^{-y}}$</p>
+<p>$$\frac{P}{r*(P+N)+P} =  \frac{P/(P+N)}{r+P/(P+N)} =  \frac{1/(1+e^{-x})}{r + 1/(1+e^{-x})}$$</p>
+<p>则令</p>
+<p>$$\frac{1/(1+e^{-x})}{r + 1/(1+e^{-x})}=\frac{1}{1+e^{-y}}$$</p>
 <p>可推导出</p>
-<p>$ y = -(\ln r+ \ln(1+e^{-x}))$</p>
+<p>$$y = -(\ln r+ \ln(1+e^{-x}))$$</p>
 <p>即在训练时计算 logit，不使用 $x$ 而是使用 $y$ </p>
 <h3 id="Positive-Unlabeled-Learning"><a href="#Positive-Unlabeled-Learning" class="headerlink" title="Positive-Unlabeled Learning"></a>Positive-Unlabeled Learning</h3><p>paper 关于里面基本没有推导，详细的推导可参考 <a href="http://cseweb.ucsd.edu/~elkan/posonly.pdf" target="_blank" rel="external">Learning Classifiers from Only Positive and Unlabeled Data</a>, 基本思路跟第一篇比较像，这里就不详细展开了，主要引用了里面一些关键的推导步骤</p>
 <blockquote>
