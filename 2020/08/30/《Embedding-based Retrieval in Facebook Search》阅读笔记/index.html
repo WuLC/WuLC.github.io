@@ -72,7 +72,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/ModelOverview.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/LocationFeature.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/FeatureEffectiveness.jpg">
-<meta property="og:updated_time" content="2020-09-13T09:34:44.302Z">
+<meta property="og:updated_time" content="2020-12-27T05:38:33.431Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《Embedding-based Retrieval in Facebook Search》阅读笔记">
 <meta name="twitter:description" content="Embedding-based Retrieval in Facebook Search 是 FB 在 2020 年发表的一篇搜索场景下如何做向量化召回的 paper，整篇文章读下来，就像是一个奋战在一线的工程师向你娓娓道来他们是怎么从 0 到 1 构建一个召回系统，从训练数据与特征的选取, 到模型的 training 与 serving、再到把新的召回策略融入现有的 ranking system">
@@ -466,7 +466,7 @@
 </ol>
 <h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>这篇 paper 主要讲了 FB 在搜索场景下构建一个 ANN 召回系统的基本步骤，包括训练数据的选择、模型的训练、 serving等，每一部分都给出了一些实战经验，值得参考；而其中比较值得关注的是负样本的选择，paper 将负样本分为 easy negative 与 hard nagative 两大类，并通过实验证明只用 easy nagative 或 hard nagative 训练出来的都不是最优的，而是需要联合两者共同训练。</p>
 <p>此外，paper 最后还提到了 embedding ensemble 方法，基本的方法就是 weighted concatentation(parallel，类似 bagging) 和 cascade model(cascade, 类似 boosting)，但是笔者觉得召回阶段本来的候选就非常大，对耗时要求严格，如果再加上 ensemble，耗时会更严重，在实际中是否具有可行性？ensemble 做在精排是否更合理？</p>
-<p>最后，知乎上也有一篇针对这篇 paper 的解读，也值得看一下 <a href="https://zhuanlan.zhihu.com/p/165064102" target="_blank" rel="external">负样本为王：评Facebook的向量化召回算法</a></p>
+<p>最后，知乎上也有一篇针对这篇 paper 的解读，也值得看一下 <a href="https://zhuanlan.zhihu.com/p/165064102" target="_blank" rel="external">负样本为王：评Facebook的向量化召回算法</a>，而关于 embedding 在推荐/广告上的各种应用推荐看 <a href="https://zhuanlan.zhihu.com/p/143763320" target="_blank" rel="external">推荐系统 embedding 技术实践总结</a></p>
 
       
     </div>
