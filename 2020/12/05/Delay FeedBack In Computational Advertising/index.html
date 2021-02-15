@@ -62,22 +62,22 @@
 
 
 
-<meta name="description" content="转化是有延迟的，即在点击发生后过一段时间用户可能才会发生转化，且往往转化漏斗越深，延迟的时间越长；在计算广告中，delay feedback 主要影响下面两个场景
+<meta name="description" content="转化是有延迟的，即在点击发生后过一段时间用户可能才会发生转化，且往往转化漏斗越深，延迟的时间越长；在计算广告中，delayed feedback 主要影响下面两个场景
 
 CVR 模型的训练
 基于后验的调价策略
 
-对于场景1，影响体现在（1）过早把样本送入模型，把最终会转化但是还没回传 label 的事件当做负例，导致模型低估（2）过晚把样本送入模型，即让所有样本都等待一个足够长的时间才送入模型，导致模">
+对于场景1，影响体现在（1）过早把样本送入模型，把最终会转化但是还没回传 label 的事件当做负例，导致模型低估（2）过晚把样本送入模型，即让所有样本都等待一个足够长的时间才送入模型，导">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Delay FeedBack In Computational Advertising">
+<meta property="og:title" content="Delayed FeedBack In Computational Advertising">
 <meta property="og:url" content="http://wulc.github.io/2020/12/05/Delay FeedBack In Computational Advertising/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
-<meta property="og:description" content="转化是有延迟的，即在点击发生后过一段时间用户可能才会发生转化，且往往转化漏斗越深，延迟的时间越长；在计算广告中，delay feedback 主要影响下面两个场景
+<meta property="og:description" content="转化是有延迟的，即在点击发生后过一段时间用户可能才会发生转化，且往往转化漏斗越深，延迟的时间越长；在计算广告中，delayed feedback 主要影响下面两个场景
 
 CVR 模型的训练
 基于后验的调价策略
 
-对于场景1，影响体现在（1）过早把样本送入模型，把最终会转化但是还没回传 label 的事件当做负例，导致模型低估（2）过晚把样本送入模型，即让所有样本都等待一个足够长的时间才送入模型，导致模">
+对于场景1，影响体现在（1）过早把样本送入模型，把最终会转化但是还没回传 label 的事件当做负例，导致模型低估（2）过晚把样本送入模型，即让所有样本都等待一个足够长的时间才送入模型，导">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/SurvivalAnalytics.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/SA_assumption.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/SAKDE.jpg">
@@ -89,15 +89,15 @@ CVR 模型的训练
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/PUAsumption.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/PUMLE.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/PU_finalloss.jpg">
-<meta property="og:updated_time" content="2020-12-06T09:17:22.743Z">
+<meta property="og:updated_time" content="2021-02-15T09:50:07.066Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Delay FeedBack In Computational Advertising">
-<meta name="twitter:description" content="转化是有延迟的，即在点击发生后过一段时间用户可能才会发生转化，且往往转化漏斗越深，延迟的时间越长；在计算广告中，delay feedback 主要影响下面两个场景
+<meta name="twitter:title" content="Delayed FeedBack In Computational Advertising">
+<meta name="twitter:description" content="转化是有延迟的，即在点击发生后过一段时间用户可能才会发生转化，且往往转化漏斗越深，延迟的时间越长；在计算广告中，delayed feedback 主要影响下面两个场景
 
 CVR 模型的训练
 基于后验的调价策略
 
-对于场景1，影响体现在（1）过早把样本送入模型，把最终会转化但是还没回传 label 的事件当做负例，导致模型低估（2）过晚把样本送入模型，即让所有样本都等待一个足够长的时间才送入模型，导致模">
+对于场景1，影响体现在（1）过早把样本送入模型，把最终会转化但是还没回传 label 的事件当做负例，导致模型低估（2）过晚把样本送入模型，即让所有样本都等待一个足够长的时间才送入模型，导">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/SurvivalAnalytics.jpg">
 
 
@@ -132,7 +132,7 @@ CVR 模型的训练
 
 
 
-  <title> Delay FeedBack In Computational Advertising | 吴良超的学习笔记 </title>
+  <title> Delayed FeedBack In Computational Advertising | 吴良超的学习笔记 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -308,7 +308,7 @@ CVR 模型的训练
             
             
               
-                Delay FeedBack In Computational Advertising
+                Delayed FeedBack In Computational Advertising
               
             
           </h2>
@@ -393,7 +393,7 @@ CVR 模型的训练
       
 
       
-        <p>转化是有延迟的，即在点击发生后过一段时间用户可能才会发生转化，且往往转化漏斗越深，延迟的时间越长；在计算广告中，delay feedback 主要影响下面两个场景</p>
+        <p>转化是有延迟的，即在点击发生后过一段时间用户可能才会发生转化，且往往转化漏斗越深，延迟的时间越长；在计算广告中，delayed feedback 主要影响下面两个场景</p>
 <ol>
 <li>CVR 模型的训练</li>
 <li>基于后验的调价策略</li>
