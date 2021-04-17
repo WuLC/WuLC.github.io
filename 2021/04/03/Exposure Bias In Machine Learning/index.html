@@ -62,12 +62,12 @@
 
 
 
-<meta name="description" content="机器学习本质上是在学习数据的分布, 其有效性的假设是模型 training 和 serving 时的数据是 IID 的，但是在实际应用中，由于采样有偏、具体场景等约束， training 的样本与 serving 时的样本并不是 IID 的。在广告场景下，最典型的就是训练 cvr 模型时，训练样本都是 post clicked 的，但是 serving 时，cvr 模型面临的是所有被召回的样本；这">
+<meta name="description" content="机器学习本质上是在学习数据的分布, 其有效性的假设是模型 training 和 serving 时的数据是独立同分布(Independent and Identically Distributed, IID) 的，但是在实际应用中，由于采样有偏、具体场景等约束， training 的样本与 serving 时的样本并不是 IID 的。在广告场景下，最典型的就是训练 cvr 模型时，训练样本都是 p">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Exposure Bias In Machine Learning">
 <meta property="og:url" content="http://wulc.github.io/2021/04/03/Exposure Bias In Machine Learning/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
-<meta property="og:description" content="机器学习本质上是在学习数据的分布, 其有效性的假设是模型 training 和 serving 时的数据是 IID 的，但是在实际应用中，由于采样有偏、具体场景等约束， training 的样本与 serving 时的样本并不是 IID 的。在广告场景下，最典型的就是训练 cvr 模型时，训练样本都是 post clicked 的，但是 serving 时，cvr 模型面临的是所有被召回的样本；这">
+<meta property="og:description" content="机器学习本质上是在学习数据的分布, 其有效性的假设是模型 training 和 serving 时的数据是独立同分布(Independent and Identically Distributed, IID) 的，但是在实际应用中，由于采样有偏、具体场景等约束， training 的样本与 serving 时的样本并不是 IID 的。在广告场景下，最典型的就是训练 cvr 模型时，训练样本都是 p">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/BiasInML.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/BiasTableInML.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/ESMM_Model.jpg">
@@ -78,10 +78,10 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/ESAM_Loss2.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/EntropyRegularization.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/ESAM_loss3.jpg">
-<meta property="og:updated_time" content="2021-04-17T11:01:36.640Z">
+<meta property="og:updated_time" content="2021-04-17T11:07:20.730Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Exposure Bias In Machine Learning">
-<meta name="twitter:description" content="机器学习本质上是在学习数据的分布, 其有效性的假设是模型 training 和 serving 时的数据是 IID 的，但是在实际应用中，由于采样有偏、具体场景等约束， training 的样本与 serving 时的样本并不是 IID 的。在广告场景下，最典型的就是训练 cvr 模型时，训练样本都是 post clicked 的，但是 serving 时，cvr 模型面临的是所有被召回的样本；这">
+<meta name="twitter:description" content="机器学习本质上是在学习数据的分布, 其有效性的假设是模型 training 和 serving 时的数据是独立同分布(Independent and Identically Distributed, IID) 的，但是在实际应用中，由于采样有偏、具体场景等约束， training 的样本与 serving 时的样本并不是 IID 的。在广告场景下，最典型的就是训练 cvr 模型时，训练样本都是 p">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/BiasInML.jpg">
 
 
@@ -377,7 +377,7 @@
       
 
       
-        <p>机器学习本质上是在学习数据的分布, 其有效性的假设是模型 training 和 serving 时的数据是 IID 的，但是在实际应用中，由于采样有偏、具体场景等约束， training 的样本与 serving 时的样本并不是 IID 的。在广告场景下，最典型的就是训练 cvr 模型时，训练样本都是 post clicked 的，但是 serving 时，cvr 模型面临的是所有被召回的样本；这类问题也被称为 exposure bias 或 sample selection bias，除了 exposure bias，position bias 等也是常见的 bias。</p>
+        <p>机器学习本质上是在学习数据的分布, 其有效性的假设是模型 training 和 serving 时的数据是独立同分布(Independent and Identically Distributed, IID) 的，但是在实际应用中，由于采样有偏、具体场景等约束， training 的样本与 serving 时的样本并不是 IID 的。在广告场景下，最典型的就是训练 cvr 模型时，训练样本都是 post clicked 的，但是 serving 时，cvr 模型面临的是所有被召回的样本；这类问题也被称为 exposure bias 或 sample selection bias，除了 exposure bias，position bias 等也是常见的 bias。</p>
 <p>本文首先会简单介绍一些机器学习中的常见 bias，并着重介绍上面提到的 exposure bias 的在当前的一些解决思路。</p>
 <a id="more"></a>
 <h2 id="Bias-In-Recommender-System"><a href="#Bias-In-Recommender-System" class="headerlink" title="Bias In Recommender System"></a>Bias In Recommender System</h2><p>除了本文要重点介绍的 exposure bias，这篇综述 <a href="https://arxiv.org/abs/2010.03240" target="_blank" rel="external">Bias and Debias in Recommender System: A Survey and Future Directions</a> 描述了当前的推荐系统中存在的若干种 bias，paper 将当前的推荐系统划分为 User、Data、Model 三个大模块，并将各个模块的 iteraction 导致的 7 种 bias 归纳成下图</p>
@@ -478,7 +478,7 @@
 <p>记 $L$ 是观测到 label 的样本数，$L’$ 则是同时包含了那些没被观测到的样本($L’ \gg L$);则无偏的优化目标应该是 ($y_i$、$p_i$ 分别表示 label 与预估值)</p>
 <p>$$\min \sum_{i=1}^{L’} l(y_i, p_i) \tag{1}$$</p>
 <p>现在令第 $i$ 个样本的是否被观测到记为 $O_i \in \lbrace 0, 1 \rbrace$，则可假设 $O_i$ 服从一个伯努利分布即 $O_i \sim Bern(z_i)$, 这里的 $z_i$ 是样本 $i$ 被观测到的概率，则上面的优化问题可写成如下形式</p>
-<p>$$<br>\begin{align}<br>Loss &amp;= \sum_{i=1}^{L’} l(y_i, p_i)\notag \<br>&amp;= \sum_{i=1}^{L’} \frac{l(y_i, p_i)}{z_i} E_{O}(O_i)\notag \<br>&amp;= E_{O}(\sum_{i=1}^{L’} \frac{l(y_i, p_i)}{z_i} O_i)\notag \<br>&amp;= \sum_{i=1}^{L} \frac{l(y_i, p_i)}{z_i}\notag<br>\end{align}<br>$$</p>
+<p>$$<br>\begin{align}<br>Loss &amp;= \sum_{i=1}^{L’} l(y_i, p_i)\notag \\<br>&amp;= \sum_{i=1}^{L’} \frac{l(y_i, p_i)}{z_i} E_{O}(O_i)\notag \\<br>&amp;= E_{O}(\sum_{i=1}^{L’} \frac{l(y_i, p_i)}{z_i} O_i)\notag \\<br>&amp;= \sum_{i=1}^{L} \frac{l(y_i, p_i)}{z_i}\notag<br>\end{align}<br>$$</p>
 <p>则上面问题 (1) 可被写成如下形式, 即可通过观测到的数据进行模型的训练，而 $z_i$ 可利用label 为是否被观测到的数据进行训练，训练方式可以是单独训练或与这个 task 做 joint training。</p>
 <p>$$\min \sum_{i=1}^{L} \frac{l(y_i, p_i)}{z_i} \tag{2}$$</p>
 <p>而如果套用 <a href="https://zhuanlan.zhihu.com/p/41217212" target="_blank" rel="external">importance sampling</a> 的方法，其实也能得到上面问题(2)的形式，在观测到的样本中, 样本 $i$ 被采样的概率是 $z_i$, 而在全部样本中，由于每个样本都会被采样到，因此其采样概率是 1，即加权的系数是 $\frac{1}{z_i}$</p>
@@ -519,13 +519,13 @@
 <p>如果将每个 embedding 相同的维度提取出来作为一个 vector $h$，则 $D^{s}$ 和 $D^{t}$ 也可写成如下形式，每个 $h$ 是一个长度为 $n$ 的向量</p>
 <p>$D^{s}=\lbrack h_{1}^{s},h_{2}^{s};\dots h_{L}^{s} \rbrack \in \mathbb{R}^{n×L}$<br>$D^{t}=\lbrack h_{1}^{t},h_{2}^{t};\dots h_{L}^{t} \rbrack \in \mathbb{R}^{n×L}$</p>
 <p>则 $L_{DA}$ 计算方式如下</p>
-<p>$$\begin{align}<br>L_{DA} &amp;= \frac{1}{L^2}\sum_{(j,k)}({h_j^s}^T{h_k^s} - {h_j^t}^T{h_k^t})^2 \notag  \<br>&amp;= \frac{1}{L^2} ||Cov(D^s) - Cov(D^t)||_F^2 \notag<br>\end{align}$$</p>
+<p>$$\begin{align}<br>L_{DA} &amp;= \frac{1}{L^2}\sum_{(j,k)}({h_j^s}^T{h_k^s} - {h_j^t}^T{h_k^t})^2 \notag  \\<br>&amp;= \frac{1}{L^2} ||Cov(D^s) - Cov(D^t)||_F^2 \notag<br>\end{align}$$</p>
 <p>上式中的 $Cov(D^s) \in \mathbb{R}^{L×L}$ 和 $Cov(D^t) \in \mathbb{R}^{L×L}$ 分别代表 source domain 和 target domain 的 covariance matrix，此外，笔者认为上面的公式其实表达不完全准确，因为 <a href="https://en.wikipedia.org/wiki/Covariance" target="_blank" rel="external">covariance</a> 计算还需要减去均值的，上面并没有这么做</p>
 <p>加上改了这一项后，可以认为 source domain 和 target domain 在向量空间中的分布变化如下</p>
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/ESAM_Loss1.jpg" alt="ESAM\_L1"></p>
 <h4 id="L-DC-c-：Center-Wise-Clustering-for-Source-Clustering"><a href="#L-DC-c-：Center-Wise-Clustering-for-Source-Clustering" class="headerlink" title="$L_{DC}^{c}$：Center-Wise Clustering for Source Clustering."></a>$L_{DC}^{c}$：Center-Wise Clustering for Source Clustering.</h4><p>第二项 loss $L_{DC}^{c}$ $L_{DC}^{c}$跟人脸识别中最早提出的 <a href="https://link.springer.com/chapter/10.1007/978-3-319-46478-7_31" target="_blank" rel="external">center loss</a> 很相似，就是让相同类型的样本在向量空间中尽可能接近，在广告的场景下这个类型可以是 click、non-click、purchase等；此外，还会令不同类型的样本在向量空间中的距离尽可能远；这个思想比较好理解</p>
 <p>而为了定义出距离，会为每一个类型定义出一个聚类中心，聚类中心会被参数化；具体计算方式如下</p>
-<p>$$\begin{align}<br>L_{DC}^{c} &amp;= \sum_{j=1}^{n} \max(0, ||\frac{v_{d_j^s}}{||v_{d_j^s}||} - c_{q}^{y_j^s}||_{2}^{2} - m_1)  \notag \<br>&amp;+ \sum_{k=1}^{n_y} \sum_{u=k+1}^{n_y} \max(0, m2 - ||c_{q}^{k} - c_{q}^{u}||_{2}^{2})\notag<br>\end{align}$$</p>
+<p>$$\begin{align}<br>L_{DC}^{c} &amp;= \sum_{j=1}^{n} \max(0, ||\frac{v_{d_j^s}}{||v_{d_j^s}||} - c_{q}^{y_j^s}||_{2}^{2} - m_1)  \notag \\<br>&amp;+ \sum_{k=1}^{n_y} \sum_{u=k+1}^{n_y} \max(0, m2 - ||c_{q}^{k} - c_{q}^{u}||_{2}^{2})\notag<br>\end{align}$$</p>
 <p>上面的公式中 $m_1$ 和 $m_2$ 分别是两个 margin，表示样本距离其类簇距离小于 $m_1$ 和 类簇之间的距离大于 $m_2$ 的情况下无需优化；同时假设所有样本有 $n_y$ 种类型, 第 $k$ 种类型(即样本 label 为 $Y_k$)样本的 center 是 $c_{q}^{k}$，其定义为当前训练样本中类型为 $k$ 的样本的向量的中心，表示如下($\delta(cond)$ 函数的值为 1(cond=true) 或 0(cond=false))</p>
 <p>$$c_q^k = \frac{\sum_{j=1}^{n} \delta(y_j^s = Y_k)\frac{v_{d_j^s}}{||v_{d_j^s}||}}{\sum_{j=1}^{n} \delta(y_j^s = Y_k)}$$</p>
 <p>则加入 $L_{DC}^{c}$ 这一项后，source domain 和 target domain 在向量空间中的分布变化如下，可以看到，<strong>虽然 target domain 中的样本具有高内聚性，但是其聚类的簇可能是错误，其原因是对于 target domain 中的样本，目前为止都没有加入 label 信息</strong>，而这便是下一项 loss $L_{DC}^{p}$ 要解决的问题</p>
