@@ -78,7 +78,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/ESAM_Loss2.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/EntropyRegularization.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/ESAM_loss3.jpg">
-<meta property="og:updated_time" content="2021-04-17T11:16:26.849Z">
+<meta property="og:updated_time" content="2021-04-17T11:18:36.090Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Exposure Bias In Machine Learning">
 <meta name="twitter:description" content="机器学习本质上是在学习数据的分布, 其有效性的假设是模型 training 和 serving 时的数据是独立同分布(Independent and Identically Distributed, IID) 的，但是在实际应用中，由于采样有偏、具体场景等约束， training 的样本与 serving 时的样本并不是 IID 的。在广告场景下，最典型的就是训练 cvr 模型时，训练样本都是 p">
@@ -378,7 +378,7 @@
 
       
         <p>机器学习本质上是在学习数据的分布, 其有效性的假设是模型 training 和 serving 时的数据是独立同分布(Independent and Identically Distributed, IID) 的，但是在实际应用中，由于采样有偏、具体场景等约束， training 的样本与 serving 时的样本并不是 IID 的。在广告场景下，最典型的就是训练 cvr 模型时，训练样本都是 post clicked 的，但是 serving 时，cvr 模型面临的是所有被召回的样本；这类问题也被称为 exposure bias 或 sample selection bias，除了 exposure bias，position bias 等也是常见的 bias。</p>
-<p>本文首先会简单介绍一些机器学习中的常见 bias，并着重介绍上面提到的 exposure bias 的在当前的一些解决思路, 笔者将其总结为 Data Augmentation、IPS 和 Domain Adaption 三大类方法。</p>
+<p>本文首先会简单介绍一些机器学习中的常见 bias，并着重介绍上面提到的 exposure bias(也叫 sample selection bias) 的在当前的一些解决思路, 笔者将其总结为 Data Augmentation、IPS 和 Domain Adaption 三大类方法。</p>
 <a id="more"></a>
 <h2 id="Bias-In-Recommender-System"><a href="#Bias-In-Recommender-System" class="headerlink" title="Bias In Recommender System"></a>Bias In Recommender System</h2><p>除了本文要重点介绍的 exposure bias，这篇综述 <a href="https://arxiv.org/abs/2010.03240" target="_blank" rel="external">Bias and Debias in Recommender System: A Survey and Future Directions</a> 描述了当前的推荐系统中存在的若干种 bias，paper 将当前的推荐系统划分为 User、Data、Model 三个大模块，并将各个模块的 iteraction 导致的 7 种 bias 归纳成下图</p>
 <p><img src="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/BiasInML.jpg" alt="Bias in ML"></p>
