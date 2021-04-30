@@ -78,7 +78,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/ESAM_Loss2.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/EntropyRegularization.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/ESAM_loss3.jpg">
-<meta property="og:updated_time" content="2021-04-17T11:18:36.090Z">
+<meta property="og:updated_time" content="2021-04-30T06:37:55.868Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Exposure Bias In Machine Learning">
 <meta name="twitter:description" content="机器学习本质上是在学习数据的分布, 其有效性的假设是模型 training 和 serving 时的数据是独立同分布(Independent and Identically Distributed, IID) 的，但是在实际应用中，由于采样有偏、具体场景等约束， training 的样本与 serving 时的样本并不是 IID 的。在广告场景下，最典型的就是训练 cvr 模型时，训练样本都是 p">
@@ -417,7 +417,7 @@
 </ul>
 <p>(2) <strong>IPS(Inverse Propensity Score)</strong>: 这个方法的假设是样本被<strong>曝光或点击服一个伯努利分布</strong>，然后从概率论推导出：只要给每个曝光的样本加权(权重即为 inverse propensity score)，最终在曝光的样本上求得的期望等于在全量样本上的期望；实际上，这个方法的思想就是 <a href="https://en.wikipedia.org/wiki/Importance_sampling" target="_blank" rel="external">importance sampling</a></p>
 <p>(3) <strong>Domain Adaption</strong>: 类似 transfer learning 的思想，将曝光/点击的样本视为 source domain，全部样本视为 target domain；通过 domain adaption 的一些方法去进行 debias</p>
-<h3 id="Data-Augmentation"><a href="#Data-Augmentation" class="headerlink" title="Data Augmentation"></a>Data Augmentation</h3><p>上面提到了，最朴素的想法是将那些未被观测到的样本利用上，而这里面又可分为三大类方法</p>
+<h3 id="Data-Augmentation"><a href="#Data-Augmentation" class="headerlink" title="Data Augmentation"></a>Data Augmentation</h3><p>上面提到了，最朴素的想法是将那些未被观测到的样本利用上，而这里面又可分为三大类方法：all nagative with confidence、imputation model 和 multitask learning</p>
 <h4 id="all-nagative-with-confidence"><a href="#all-nagative-with-confidence" class="headerlink" title="all nagative with confidence"></a>all nagative with confidence</h4><p>第一类方法是将所有未被观测到的样本都当做负样本，而这里的核心是如何给每个样本一个合理的 confidence，其实就是样本的加权，上面提到的综述中介绍了三种方法，分别是 <strong>Heuristic、Sampling、Exposure-based model</strong></p>
 <ul>
 <li><p>Heuristic 尝试将 user activity level、user preference、item popularity、user-item feature similarity 等作为 (user, item) pair 的 confidence, 其思想都是认为用户活跃度越高、商品越热门、用户-商品匹配度越高，该样本的可信度(confidence) 越高；但是这种方法往往可行性不够高，因为这个 confidence 实际的值是比较难获取的，其量纲以及需要对庞大的数据集都生成这个 confidence，难度是很大的。</p>
