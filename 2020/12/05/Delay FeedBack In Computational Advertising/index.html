@@ -89,7 +89,7 @@ CVR 模型的训练
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/PUAsumption.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/PUMLE.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/WuLC/MarkDownImages/master/PU_finalloss.jpg">
-<meta property="og:updated_time" content="2021-02-15T09:50:07.066Z">
+<meta property="og:updated_time" content="2021-05-16T06:53:40.627Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Delayed FeedBack In Computational Advertising">
 <meta name="twitter:description" content="转化是有延迟的，即在点击发生后过一段时间用户可能才会发生转化，且往往转化漏斗越深，延迟的时间越长；在计算广告中，delayed feedback 主要影响下面两个场景
@@ -455,14 +455,14 @@ CVR 模型的训练
 <p>则 serving 是输出的概率值应该是</p>
 <p>$$\frac{P}{P+N} = \frac{1}{1+e^{-x}}$$</p>
 <p>但是在 training 时，由于上面的机制使得每条样本都会以负样本的形式出现一次， 同时假设会对负样本采样，采样率为 $r$, 则有</p>
-<p>$$\frac{P}{r*(P+N)+P} = \frac{1}{1+e^{-y}}$$</p>
+<p>$$\frac{P}{r<em>(P+N)+P} = \frac{1}{1+e^{-x^{</em>}}}$$</p>
 <p>通过对上面的变换有</p>
 <p>$$\frac{P}{r*(P+N)+P} =  \frac{P/(P+N)}{r+P/(P+N)} =  \frac{1/(1+e^{-x})}{r + 1/(1+e^{-x})}$$</p>
 <p>则令</p>
-<p>$$\frac{1/(1+e^{-x})}{r + 1/(1+e^{-x})}=\frac{1}{1+e^{-y}}$$</p>
+<p>$$\frac{1/(1+e^{-x})}{r + 1/(1+e^{-x})}=\frac{1}{1+e^{-x^{*}}}$$</p>
 <p>可推导出</p>
-<p>$$y = -(\ln r+ \ln(1+e^{-x}))$$</p>
-<p>即在训练时计算 logit，不使用 $x$ 而是使用 $y$ </p>
+<p>$$x^{*} = -(\ln r+ \ln(1+e^{-x}))$$</p>
+<p>即在训练时计算 logit，不使用 $\frac{1}{1+e^{-x}}$ 而是使用 $\frac{1}{1+e^{-x^{*}}}$ </p>
 <h3 id="Positive-Unlabeled-Learning"><a href="#Positive-Unlabeled-Learning" class="headerlink" title="Positive-Unlabeled Learning"></a>Positive-Unlabeled Learning</h3><p>paper 关于里面基本没有推导，详细的推导可参考 <a href="http://cseweb.ucsd.edu/~elkan/posonly.pdf" target="_blank" rel="external">Learning Classifiers from Only Positive and Unlabeled Data</a>, 基本思路跟第一篇比较像，这里就不详细展开了，主要引用了里面一些关键的推导步骤</p>
 <blockquote>
 <p>A key assumption about the training data is that they are drawn randomly from $p(x,y,s)$, and for each tuple $&lt; x,y,s &gt;$ that is drawn, only $&lt; x,s &gt;$ is recorded. Here $s$ is the observed label and $y$ is the actual label, which might not have occurred yet. Along with this, it is assumed that labeled positive examples are chosen completely randomly from all positive examples, i.e. $p(s = 1|x, y = 1) = p(s = 1|y = 1)$</p>
