@@ -68,7 +68,7 @@
 <meta property="og:url" content="http://wulc.github.io/2021/05/05/An Overview Of Ad System/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
 <meta property="og:description" content="从实习到工作，接触过一些大大小小的广告系统，有麻雀虽小但五脏俱全的小 dsp，也有把 ssp、adx、dsp 都打包了的大媒体 ，算是对业界的广告系统有了一个初步的了解。趁着五一放假这几天，简单地梳理一下当前了解到的广告系统知识，主要是想对零散的知识做个整理，由于广告系统这个概念非常的大，涉及到的部分非常的多，无法面面俱到，所以本文主要是从几个视角（技术、业务、产品）言简意赅的描述一下笔者比较关心">
-<meta property="og:updated_time" content="2021-06-17T13:42:22.789Z">
+<meta property="og:updated_time" content="2021-06-17T13:45:23.321Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="An Overview Of Ad System">
 <meta name="twitter:description" content="从实习到工作，接触过一些大大小小的广告系统，有麻雀虽小但五脏俱全的小 dsp，也有把 ssp、adx、dsp 都打包了的大媒体 ，算是对业界的广告系统有了一个初步的了解。趁着五一放假这几天，简单地梳理一下当前了解到的广告系统知识，主要是想对零散的知识做个整理，由于广告系统这个概念非常的大，涉及到的部分非常的多，无法面面俱到，所以本文主要是从几个视角（技术、业务、产品）言简意赅的描述一下笔者比较关心">
@@ -507,7 +507,7 @@
 <h3 id="深度转化产品"><a href="#深度转化产品" class="headerlink" title="深度转化产品"></a>深度转化产品</h3><p>随着优化的深入，常见的效果广告的优化目标已经不能满足所有广告主的需求了，比如部分行业广告主会希望直接优化到 roi 而不仅仅是成本，同时也能提供相应的数据</p>
 <p>这个时候就需要考虑为这个广告主进行额外建模了，这里又有两种选择，一种是广告主直接把数据回传到平台进行常规的模型训练，另一种则是广告主不愿意把 label 直接回传到平台，这中情况下可以通过 Federated Learning 的方法对其进行优化，笔者在实际中对这部分也有一定实践经验，详细可参考 <a href="https://mp.weixin.qq.com/s/mLLkLvO0MWBLYRmLMQquHA" target="_blank" rel="external">字节跳动联邦学习平台Fedlearner：4个月落地开源，投放增效200%+</a></p>
 <p>建模后往往会通过出价的方式应用模型，除非广告主能够提供直投深度目标的 bid；而这往往又是一个多目标约束的优化问题，具体的策略可以看上面出价部分</p>
-<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>综上，本文主要从技术视角、业务视角和产品视角总结了一些笔者比较关注的计算广告领域的知识，但也只是冰山一角，如 dsp 常用的 bid landscape forcasting、为样本打上 label 的各种 attribution 方法、反作弊、dmp 相关的等等都没涉及(这部分可参考 <a href="https://github.com/wnzhang/rtb-papers" target="_blank" rel="external">rtb-papers</a>)；同时因为保密性原因，很多具体方法没有在文中提及，但是相信文中提及的思想都是普适用的，欢迎交流指导。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>综上，本文主要从技术视角、业务视角和产品视角总结了一些笔者比较关注的计算广告领域的知识，但也只是冰山一角，如 dsp 常用的 bid landscape forcasting、各种 attribution 方法、反作弊、dmp 相关的等等都没涉及(这部分可参考 <a href="https://github.com/wnzhang/rtb-papers" target="_blank" rel="external">rtb-papers</a>)；同时因为保密性原因，很多具体方法没有在文中提及，但是相信文中提及的思想都是普适用的，欢迎交流指导。</p>
 
       
     </div>
