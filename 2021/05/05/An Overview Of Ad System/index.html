@@ -68,7 +68,7 @@
 <meta property="og:url" content="http://wulc.github.io/2021/05/05/An Overview Of Ad System/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
 <meta property="og:description" content="从实习到工作，接触过一些大大小小的广告系统，有麻雀虽小但五脏俱全的小 dsp，也有把 ssp、adx、dsp 都打包了的大媒体 ，算是对业界的广告系统有了一个初步的了解。趁着五一放假这几天，简单地梳理一下当前了解到的广告系统知识，主要是想对零散的知识做个整理，由于广告系统这个概念非常的大，涉及到的部分非常的多，无法面面俱到，所以本文主要是从几个视角（技术、业务、产品）言简意赅的描述一下笔者比较关心">
-<meta property="og:updated_time" content="2021-06-18T09:17:40.865Z">
+<meta property="og:updated_time" content="2021-06-22T04:06:20.238Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="An Overview Of Ad System">
 <meta name="twitter:description" content="从实习到工作，接触过一些大大小小的广告系统，有麻雀虽小但五脏俱全的小 dsp，也有把 ssp、adx、dsp 都打包了的大媒体 ，算是对业界的广告系统有了一个初步的了解。趁着五一放假这几天，简单地梳理一下当前了解到的广告系统知识，主要是想对零散的知识做个整理，由于广告系统这个概念非常的大，涉及到的部分非常的多，无法面面俱到，所以本文主要是从几个视角（技术、业务、产品）言简意赅的描述一下笔者比较关心">
@@ -429,7 +429,7 @@
 </ul>
 <p>这里的模型结构针对是 NN 这一类模型，NN 里的各种结构可以说是百花齐放，如推荐领域的 Wide&amp;Deep、DeepFM、DIN、DCN等，CV 领域的 AlexNet、VGG、Inception、ResNet等，NLP 领域 transformer、Bert等；这些还是笔者读书那会就已经发表的paper 里的结构，如果算上近年发表的相关结构等，那就更多了</p>
 <p>而由于深度学习的不可解释性，使得模型的构建这一过程基本没有什么理论基础，基本上只能尝试，然后根据效果推测有效的原因，所以也出现了 autoML 这种自动化去搜寻结构和参数的方法。但是抛开那些玄学的部分，在实际应用中模型结构还是有一些可以借鉴的经验，</p>
-<p>(1) <a href="https://en.wikipedia.org/wiki/Vapnik%E2%80%93Chervonenkis_dimension" target="_blank" rel="external">VC Dimension</a>: VC Dimension 本质上是在描述数据量大小和模型大小的关系，即模型参数量应该与数据量大小成正比关系，否则容易出现过拟合或欠拟合的问题<br>(2) attention: attention 用最直白的话来说就是动态加权，而这也很符合直觉，如每个特征的重要性不一样，应该对重要性高的给予更高的权重；在 NN 模型中，attention 常用在两个地方: embedding 和 hidden unit； embedding 的 attention 策略可参考这篇文章 <a href="https://zhuanlan.zhihu.com/p/358779957" target="_blank" rel="external">SENet双塔模型：在推荐领域召回粗排的应用及其它</a><br>；而针对 hidden unit 的 attention 则可参考这篇 paper，<a href="https://arxiv.org/abs/1601.02828" target="_blank" rel="external">Learning Hidden Unit Contributions for Unsupervised Acoustic Model Adaptation</a><br>(3) multitask:  multitask 结构有两个常见的用处, 第一种认为多个 task 之间有关联，联合训练能增加数据量,同时提升效果;第二种则是对于预估值的准确性有要求的场景，如果广告的 ctr、cvr 的预估，往往数据流中混合了多个场景的数据，且每个场景对应的数据的后验不同的，为了保值预估值的准确性，需要将后验值不同的数据分到不同的 head 中</p>
+<p>(1) <a href="https://en.wikipedia.org/wiki/Vapnik%E2%80%93Chervonenkis_dimension" target="_blank" rel="external">VC Dimension</a>: VC Dimension 本质上是在描述数据量大小和模型大小的关系，即模型参数量应该与数据量大小成正比关系，否则容易出现过拟合或欠拟合的问题<br>(2) attention: attention 用最直白的话来说就是动态加权，而这也很符合直觉，如每个特征的重要性不一样，应该对重要性高的给予更高的权重；在 NN 模型中，attention 常用在两个地方: embedding 和 hidden unit； embedding 的 attention 策略可参考这篇文章 <a href="https://zhuanlan.zhihu.com/p/358779957" target="_blank" rel="external">SENet双塔模型：在推荐领域召回粗排的应用及其它</a>；而针对 hidden unit 的 attention 则可参考这篇 paper，<a href="https://arxiv.org/abs/1601.02828" target="_blank" rel="external">Learning Hidden Unit Contributions for Unsupervised Acoustic Model Adaptation</a><br>(3) multitask:  multitask 结构有两个常见的用处, 第一种认为多个 task 之间有关联，联合训练能增加数据量,同时提升效果;第二种则是对于预估值的准确性有要求的场景，如果广告的 ctr、cvr 的预估，往往数据流中混合了多个场景的数据，且每个场景对应的数据的后验不同的，为了保值预估值的准确性，需要将后验值不同的数据分到不同的 head 中</p>
 <ul>
 <li>模型训练</li>
 </ul>
@@ -438,7 +438,7 @@
 <p>训练过程本质上就是个优化问题，通过 bp 过程 不断修正初始化的 parameter，从而达到损失函数最小的目标，更详细的描述可以参考 <a href="https://www.deeplearning.ai/ai-notes/optimization/" target="_blank" rel="external">Parameter optimization in neural networks</a>；中间涉及到了各种超参数的选择：如 learning rate、batch size、optimizer 等；其中 optimizer 也有非常多的选择，其中 optimizer 的选择往往又是一个值得考量的地方，关于各类 optimizer 的区别可以参考这篇文章，<a href="https://zhuanlan.zhihu.com/p/32230623" target="_blank" rel="external">一个框架看懂优化算法之异同 SGD/AdaGrad/Adam</a></p>
 <p>损失函数基本都是通过 <a href="https://zhuanlan.zhihu.com/p/32480810" target="_blank" rel="external">MLE 或 MAP</a> 推导出来的，其思想都是假设训练样本都是服从某些分布生成的，而训练的目标是让这些样本的联合概率最大；如 mse 的 assumption 是模型预估值与 ground truth 的误差服从正态分布，cross entropy 的 assumption 是预估值服从伯努利分布；而这两个其实也能被统一到 GLM 这个框架下。</p>
 <p>目前在业界更常见的做法是把问题转为分类问题，对应的 loss 即为 cross entropy，而其实一些回归的 loss 也能通过 weighted logistics regression 转化为分类的问题，比较经典的就是 youtube 的 <a href="https://static.googleusercontent.com/media/research.google.com/zh-CN//pubs/archive/45530.pdf" target="_blank" rel="external">Deep Neural Networks for YouTube Recommendations</a> 中 Modeling Expected Watch Time 部分；基于最原始 cross entropy 衍生出来的 loss 主要有两种形式</p>
-<p>(1) reweight, 即对样本进行各种加权, 包括但不限于根据物理含义直接加权(如观看市场)、通过 importance sampling 等方式推导出来的 loss，其最终形式也是 reweight 的模式<br>(2) auxiliary/regularization, 即在原始的 task 上增加一些辅助任务或正则项，如 center loss等</p>
+<p>(1) reweight, 即对样本进行各种加权, 包括但不限于根据物理含义直接加权(如观看时长)、通过 importance sampling 等方式推导出来的 loss，其最终形式也是 reweight 的模式<br>(2) auxiliary/regularization, 即在原始的 task 上增加一些辅助任务或正则项，如 center loss等</p>
 <h4 id="预估纠偏"><a href="#预估纠偏" class="headerlink" title="预估纠偏"></a>预估纠偏</h4><p>在推荐场景下，往往只要序准确就可以了，而总体高估或低估理论上不会影响总体的排序；但是广告场景下涉及到计费环节，需要保证计费时的准确性，因此在广告场景下还需要关注模型预估准确性的问题，假设模型高估了，相当于多收了广告主的钱，广告主吃亏，反之平台吃亏。</p>
 <p>因此，在广告场景下，模型需要关注的指标不仅仅是 auc，还需要关注预估偏差；为了保证纠偏后不影响总体的排序即 auc 指标，预估纠偏往往采用的是保序回归，关于预估纠偏可参考这篇文章：<a href="http://vividfree.github.io/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/2015/12/21/classifier-calibration-with-isotonic-regression" target="_blank" rel="external">使用 Isotonic Regression 校准分类器</a></p>
 <p>另外，上面在 loss 中对样本进行 reweight 的方式，会影响正负样本的分布，导致统计意义上预估值的就是有偏的，应对的策略可以在训练阶段就进行纠偏，或者在预估值上直接做一个转换，这部分内容可参考这篇文章 <a href="http://wulc.me/2020/12/05/Delay%20FeedBack%20In%20Computational%20Advertising/" target="_blank" rel="external">Delayed FeedBack In Computational Advertising</a> 的 Fake negative calibration</p>
@@ -453,8 +453,8 @@
 <p>因此，一个朴素的思想是固定一些 explore 的 quota，专门用于处于起量阶段的计划，相当于给这些起量阶段的计划开的绿色通道；有了绿色通道后，需要考虑的第二个问题是：哪些计划能通过这些绿色通道？每个计划都给同等的机会显然不是最优的，因为不同计划起量后的表现不一样，因此一种更合理的做法是建模判断这些计划在起量后的表现能力，然后根据表现能力决定计划是否能进绿色通道，同时还需要考虑那些堆计划的 case，避免对相同或只做了微小改动的计划重复进入绿色通道，给更多广告主以探索的机会。</p>
 <h3 id="成本"><a href="#成本" class="headerlink" title="成本"></a>成本</h3><p>大部分客户投放广告关注的是其 roi（品牌广告其实也可以认为追求的是长期的 roi），而近年各个媒体平台上也出现了各种 roi 类的产品，但是 roi 类的产品要求广告主把付费金额等敏感数据回传，因此大范围推广还需要时间；当前使用更多的是成本类产品，即认为广告主出价是 truthful bidding 的，可以将广告主的出价作为成本，投放过程中尽量让实际成本贴近广告主填的出价。</p>
 <p>由于当前的广告系统都是基于 ecpm 排序和扣费的，因此构成 ecpm 的几个元素(bid, ctr, cvr)的值必须要准确，才能保证成本不会过高(广告主亏)或过低(媒体亏)</p>
-<p>首先需要重点关注的是 <strong>ctr、cvr 预估的准确性，而这个问题的难点在于能拿到的 ground truth 即训练数据的 label 是 01(代表是否点击/转化)，但是实际中需要预估的是一个 rate，而这导致了没有一个绝对准确的 ground truth，退化成只能通过训练来逼近训练样本中的正负样本的比例</strong>，这也是为什么改变了训练样本的分布需要在 loss function 或预估值上做纠偏。</p>
-<p>因此，面对这么一个没有绝对 ground truth 带来的预估偏差的问题，需要有额外的策略来应对，最常见的就是上面提到的保序回归，这个也是基于后验数据的统计对预估值做 calibration。</p>
+<p>首先需要重点关注的是 <strong>ctr、cvr 预估的准确性，而这个问题的难点在于能拿到的训练数据的 label 是 0和1(代表是否点击/转化)，但是实际中需要预估的是一个 rate，而这导致了没有一个绝对准确的 ground truth，退化成只能通过训练来逼近训练样本中的正负样本的比例</strong>，这也是为什么改变了训练样本的分布需要在 loss function 或预估值上做纠偏，。另外，从概率论出发，大数定律告诉我们：当样本数量越多，则其算术平均值就有越高的概率接近期望值，但问题是很多计划的的 click、convert 数量非常少，所以训练也没法很好的学习出各个计划的期望cvr。</p>
+<p>因此，面对这么一个没有绝对 ground truth，同时大数定律也不完全适用的而带来的预估偏差的问题，需要有额外的策略来应对，最常见的就是上面提到的保序回归，这个也是基于后验数据的统计对预估值做 calibration，因此也需要考虑纠偏粒度上的后验数据是否过少的问题。</p>
 <p>另一个就是出价了，如果预估完全准确的情况下，按照广告主给定的出价来投放是最优的，但这显然是不太可能，因此，才有了控制器不断地调价来控制成本，满足保成本的诉求，可以认为出价是预估不准的兜底策略。</p>
 <h3 id="冷启动"><a href="#冷启动" class="headerlink" title="冷启动"></a>冷启动</h3><p>无论是在广告还是推荐，冷启动都是一个长期存在的问题，其原因是新用户/计划缺少历史数据，模型/策略对其学习不够充分，从而效果表现得很差；而在广告场景中，新计划比起新用户的冷启动往往是更常见且严峻的，因为对于成熟的媒体而言，dau/mau 等基本都是稳定的，但广告主会不断地新建计划。</p>
 <p>冷启动往往会加剧上面提到的各类问题，如在模型上，预估值的准确性更难保证；在出价上，成本更难控制等；而针对冷启动的问题，往往也会从两个方面去优化，即模型和策略。</p>
