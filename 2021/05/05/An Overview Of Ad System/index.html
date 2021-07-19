@@ -68,7 +68,7 @@
 <meta property="og:url" content="http://wulc.github.io/2021/05/05/An Overview Of Ad System/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
 <meta property="og:description" content="从实习到工作，接触过一些大大小小的广告系统，有麻雀虽小但五脏俱全的小 dsp，也有把 ssp、adx、dsp 都打包了的大媒体 ，算是对业界的广告系统有了一个初步的了解。趁着五一放假这几天，简单地梳理一下当前了解到的广告系统知识，主要是想对零散的知识做个整理，由于广告系统这个概念非常的大，涉及到的部分非常的多，无法面面俱到，所以本文主要是从几个视角（技术、业务、产品）言简意赅的描述一下笔者比较关心">
-<meta property="og:updated_time" content="2021-07-02T07:05:57.913Z">
+<meta property="og:updated_time" content="2021-07-19T01:59:05.681Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="An Overview Of Ad System">
 <meta name="twitter:description" content="从实习到工作，接触过一些大大小小的广告系统，有麻雀虽小但五脏俱全的小 dsp，也有把 ssp、adx、dsp 都打包了的大媒体 ，算是对业界的广告系统有了一个初步的了解。趁着五一放假这几天，简单地梳理一下当前了解到的广告系统知识，主要是想对零散的知识做个整理，由于广告系统这个概念非常的大，涉及到的部分非常的多，无法面面俱到，所以本文主要是从几个视角（技术、业务、产品）言简意赅的描述一下笔者比较关心">
@@ -443,9 +443,9 @@
 <p>因此，在广告场景下，模型需要关注的指标不仅仅是 auc，还需要关注预估偏差；为了保证纠偏后不影响总体的排序即 auc 指标，预估纠偏往往采用的是保序回归，关于预估纠偏可参考这篇文章：<a href="http://vividfree.github.io/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/2015/12/21/classifier-calibration-with-isotonic-regression" target="_blank" rel="external">使用 Isotonic Regression 校准分类器</a></p>
 <p>另外，上面在 loss 中对样本进行 reweight 的方式，会影响正负样本的分布，导致统计意义上预估值的就是有偏的，应对的策略可以在训练阶段就进行纠偏，或者在预估值上直接做一个转换，这部分内容可参考这篇文章 <a href="http://wulc.me/2020/12/05/Delay%20FeedBack%20In%20Computational%20Advertising/" target="_blank" rel="external">Delayed FeedBack In Computational Advertising</a> 的 Fake negative calibration</p>
 <h3 id="出价"><a href="#出价" class="headerlink" title="出价"></a>出价</h3><p>上面的无论是召回+精排的架构，还是模型相关的部分，在推荐和广告基本都是通用的；而出价(bidding)这个领域, 则是笔者认为是广告相对于推荐的最大的不同；因为在广告场景中引入了广告主(advertiser)这一角色, 出价则是提供了一种方式供广告主表达其对付费诉求，即对一次曝光/点击/转化愿意付多少钱。</p>
-<p>其次，广告平台往往需要提供多种产品形态来满足广告主的各种需求，如最常见的是保成本类产品、还有一些更追求跑量、品牌广告则是对保量有严格的要求；针对这些不同的产品形态，基本上最终的粗略都落在了出价上。因为在基于 ecpm 排序的广告系统中，基本上能比较灵活地改动的就是 bid 这个因素了</p>
-<p>而针对上面各种产品需求，其实都是可以通过相同的最优化建模的方式来解决的，阿里之前发表过一篇 paper 来描述这个问题，对于出价公式的推导和控制器的构建都有较好的知道意义；笔者针对这篇 paper 也写了一篇文章 <a href="http://wulc.me/2020/07/19/%E3%80%8ABid%20Optimization%20by%20Multivariable%20Control%20in%20Display%20Advertising%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" target="_blank" rel="external">《Bid Optimization by Multivariable Control in Display Advertising》阅读笔记</a>，供参考。</p>
-<h2 id="业务视角"><a href="#业务视角" class="headerlink" title="业务视角"></a>业务视角</h2><p>这里的业务视角，其实就是在实际迭代中直接面临的几个问题，也是会直接影响到客户体验与平台收入的几个问题；上面提到的技术可以说都是为了这些业务服务的。笔者将其总结为:  起量、成本、持续跑量和冷启动四大块。</p>
+<p>其次，广告平台往往需要提供多种产品形态来满足广告主的各种需求，如最常见的是保成本类产品、还有一些更追求跑量、品牌广告则是对保量有严格的要求；针对这些不同的产品形态，基本上最终的策略都落在了出价上。因为在基于 ecpm 排序的广告系统中，基本上能比较灵活地改动的就是 bid 这个因素了</p>
+<p>而针对上面各种产品需求，其实都是可以通过相同的最优化建模的方式来解决的，阿里之前发表过一篇 paper 来描述这个问题，对于出价公式的推导和控制器的构建都有较好的指导意义；笔者针对这篇 paper 也写了一篇文章 <a href="http://wulc.me/2020/07/19/%E3%80%8ABid%20Optimization%20by%20Multivariable%20Control%20in%20Display%20Advertising%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" target="_blank" rel="external">《Bid Optimization by Multivariable Control in Display Advertising》阅读笔记</a>，供参考。</p>
+<h2 id="业务视角"><a href="#业务视角" class="headerlink" title="业务视角"></a>业务视角</h2><p>这里的业务视角，其实就是在实际迭代中直接面临的几个问题，也是会直接影响到客户体验与平台收入的几个问题；上面提到的技术可以说都是为了这些业务服务的。笔者将其总结为:  <strong>起量、成本、持续跑量和冷启动</strong>四大块。</p>
 <h3 id="起量"><a href="#起量" class="headerlink" title="起量"></a>起量</h3><p>起量可以说是投放面临的第一个难题，素材过审了、计划建好了、预算也准备好，计划是不是就能够如期地起量呢？答案肯定不是的</p>
 <p><a href="https://www.cnwebe.com/articles/187702.html" target="_blank" rel="external">信息流广告起量真的要靠大量堆账户堆计划吗？</a> 和 <a href="https://www.zhihu.com/question/438326415" target="_blank" rel="external">广告投放不起量都是怎么解决的？</a> 就从优化师的角度，描述了为了让计划起量而想出的各种“奇技淫巧”，总的来说，有以下几个方向：优化素材、放开定向、提高出价&amp;预算、堆计划等。</p>
 <p>那么从媒体/平台侧的角度来说，有什么手段去缓解广告主起量难的问题么？</p>
@@ -507,7 +507,13 @@
 <h3 id="深度转化产品"><a href="#深度转化产品" class="headerlink" title="深度转化产品"></a>深度转化产品</h3><p>随着优化的深入，常见的效果广告的优化目标已经不能满足所有广告主的需求了，比如部分行业广告主会希望直接优化到 roi 而不仅仅是成本，同时也能提供相应的数据</p>
 <p>这个时候就需要考虑为这个广告主进行额外建模了，这里又有两种选择，一种是广告主直接把数据回传到平台进行常规的模型训练，另一种则是广告主不愿意把 label 直接回传到平台，这中情况下可以通过 Federated Learning 的方法对其进行优化，笔者在实际中对这部分也有一定实践经验，详细可参考 <a href="https://mp.weixin.qq.com/s/mLLkLvO0MWBLYRmLMQquHA" target="_blank" rel="external">字节跳动联邦学习平台Fedlearner：4个月落地开源，投放增效200%+</a></p>
 <p>建模后往往会通过出价的方式应用模型，除非广告主能够提供直投深度目标的 bid；而这往往又是一个多目标约束的优化问题，具体的策略可以看上面出价部分</p>
-<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>综上，本文主要从技术视角、业务视角和产品视角总结了一些笔者比较关注的计算广告领域的知识，内容很多也很乱&gt;_&lt;, 但在整个广告系统下也只是冰山一角；同时因为保密性原因，很多具体方法没有在文中提及，但是相信提及的思想都是普适的，欢迎交流指导。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>综上，本文主要从技术视角、业务视角和产品视角总结了一些笔者比较关注的计算广告领域的知识</p>
+<ul>
+<li>技术视角：基本是 “召回+精排” 的结构，里面两个值得关注的部分是模型和出价</li>
+<li>业务视角：主要面临4个问题：起量、成本、持续跑量、冷启动</li>
+<li>产品视角：主要可分为品牌广告、效果广告和深度转化广告三大类</li>
+</ul>
+<p>内容很多也很乱&gt;_&lt;, 但在整个广告系统下也只是冰山一角；同时因为保密性原因，很多具体方法没有在文中提及，但是相信提及的思想都是普适的，欢迎交流指导。</p>
 
       
     </div>
