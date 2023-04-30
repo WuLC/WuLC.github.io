@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="面向对象语言中，一般会有“静态变量”，也就是给整个类共享的变量，如C++，java中static修饰的变量。但是在 python 中并没有 static 这个关键字，实现类似功能需要依靠python中的类属性和实例属性的语法特点。本文主要就是讲述这两种属性的区别。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python中的类属性和实例属性">
+<meta property="og:url" content="https://wulc.me/2016/02/14/python%E4%B8%AD%E7%9A%84%E7%B1%BB%E5%B1%9E%E6%80%A7%E5%92%8C%E5%AE%9E%E4%BE%8B%E5%B1%9E%E6%80%A7/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="面向对象语言中，一般会有“静态变量”，也就是给整个类共享的变量，如C++，java中static修饰的变量。但是在 python 中并没有 static 这个关键字，实现类似功能需要依靠python中的类属性和实例属性的语法特点。本文主要就是讲述这两种属性的区别。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2016-02-14T13:53:19.000Z">
+<meta property="article:modified_time" content="2023-04-30T05:12:49.136Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="python">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://wulc.me/2016/02/14/python%E4%B8%AD%E7%9A%84%E7%B1%BB%E5%B1%9E%E6%80%A7%E5%92%8C%E5%AE%9E%E4%BE%8B%E5%B1%9E%E6%80%A7/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>python中的类属性和实例属性 | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">吴良超的学习笔记</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2016/02/14/python%E4%B8%AD%E7%9A%84%E7%B1%BB%E5%B1%9E%E6%80%A7%E5%92%8C%E5%AE%9E%E4%BE%8B%E5%B1%9E%E6%80%A7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          python中的类属性和实例属性
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2016-02-14 21:53:19" itemprop="dateCreated datePublished" datetime="2016-02-14T21:53:19+08:00">2016-02-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-30 13:12:49" itemprop="dateModified" datetime="2023-04-30T13:12:49+08:00">2023-04-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/%E8%AF%AD%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">语法</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>面向对象语言中，一般会有“静态变量”，也就是给整个类共享的变量，如C++，java中static修饰的变量。但是在
+python 中并没有 static
+这个关键字，实现类似功能需要依靠python中的类属性和实例属性的语法特点。本文主要就是讲述这两种属性的区别。</p>
+<span id="more"></span>
+<p>在讲述之前，需要清楚下面两个事实： <strong>1）python
+中类创建的对象叫实例
+2）类和实例均是对象，均有自己的对象属性,可通过<code>__dict__</code>查看</strong></p>
+<p>下面先看一个例子： <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">TestAttribute</span>:</span><br><span class="line">    content = []</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">addContent</span>(<span class="params">self,x</span>):</span><br><span class="line">        self.content.append(x)</span><br><span class="line">        </span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    t1 = TestAttribute()</span><br><span class="line">    t2 = TestAttribute()</span><br><span class="line">    t1.addContent(<span class="string">&#x27;t1&#x27;</span>)</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&#x27;object t1:&#x27;</span>, t1.content, t1.__dict__</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&#x27;object t2:&#x27;</span>, t2.content, t2.__dict__</span><br></pre></td></tr></table></figure></p>
+<p>输出结果： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">object t1: [&#x27;t1&#x27;] &#123;&#125;</span><br><span class="line">object t2: [&#x27;t1&#x27;] &#123;&#125;</span><br></pre></td></tr></table></figure> 从例子可以看到，这时的 content
+就相当于一个static
+变量，被所有实例共享。<strong>注意后面那个花括号{}表示实例的所有对象属性，只是当前实例没有自己的属性</strong>。</p>
+<p>那假如各个实例要有自己独立的变量的？也很简单，**只需要在类的构造函数（也就是__init__函数)为变量赋值即可.**</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">TestAttribute</span>:</span><br><span class="line">    content = []</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span>  <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        self.content=[]</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">addContent</span>(<span class="params">self,x</span>):</span><br><span class="line">        self.content.append(x)</span><br><span class="line">        </span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    t1 = TestAttribute()</span><br><span class="line">    t2 = TestAttribute()</span><br><span class="line">    t1.addContent(<span class="string">&#x27;t1&#x27;</span>)</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&#x27;object t1:&#x27;</span>, t1.content ,t1.__dict__</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&#x27;object t2:&#x27;</span>, t2.content ,t2.__dict__</span><br></pre></td></tr></table></figure>
+<p>输出的结果如下所示： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">object t1: [&#x27;t1&#x27;] &#123;&#x27;content&#x27;:[&#x27;t1&#x27;]&#125;</span><br><span class="line">object t2: [] &#123;&#x27;content&#x27;:[]&#125;</span><br></pre></td></tr></table></figure></p>
+<p>从结果可知，现在的t1,t2的变量独立了。那原因是什么呢？</p>
+<p>原因是<strong>Python中对象属性的获取是按照从下到上的顺序来查找属性</strong></p>
+<p>怎么理解上面这句话呢？以上面代码为例，类和实例的关系如下所示：
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"> TestAttribute</span><br><span class="line">  ____|____</span><br><span class="line"> |         |</span><br><span class="line">t1         t2</span><br></pre></td></tr></table></figure> <strong>输出<code>t1.content</code>时，python
+解析器会先查看对象 t1
+中是否有content这个属性，有的话输出这个属性的值，没有的话就往上查找
+TestAttribute 中是否有这个属性并输出。</strong></p>
+<p>在上面的例一中，因为<strong>t1和t2的属性均为空，所以输出 t1.content
+和 t2.content时实际上是输出 TestAttribute 的属性</strong>。又因为
+TestAttribute 的 content 属性被修改了 t1 修改了，所以最后输出的的
+t1.content 和 t2.content 内容一致。</p>
+<p>而在例二中，因为<strong>在构造函数中的为content复制的操作使得每个被创建的实例均有自己的content属性</strong>，所以
+t1 修改 content 时查到自己有content的属性，就只会修改自己的
+content。不影响t2 的 content 和 TestAttribute 的
+content。这个可以从下面的例子看出，假如将例二的代码修改成如下所示：
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">TestAttribute</span>:</span><br><span class="line">    content = []</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span>  <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        self.content=[]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">addContent</span>(<span class="params">self,x</span>):</span><br><span class="line">        self.content.append(x)</span><br><span class="line">        </span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    t1 = TestAttribute()</span><br><span class="line">    t2 = TestAttribute()</span><br><span class="line">    t1.addContent(<span class="string">&#x27;t1&#x27;</span>)</span><br><span class="line">    TestAttribute.content.append(<span class="string">&#x27;tt&#x27;</span>)</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&#x27;object t1:&#x27;</span>, t1.content ,t1.__dict__</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&#x27;object t2:&#x27;</span>, t2.content ,t2.__dict__</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&#x27;class TestAttribute:&#x27;</span>, TestAttribute.content</span><br></pre></td></tr></table></figure> 那输出结果是： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">object t1: [&#x27;t1&#x27;] &#123;&#x27;content&#x27;:[&#x27;t1&#x27;]&#125;</span><br><span class="line">object t2: [] &#123;&#x27;content&#x27;:[]&#125;</span><br><span class="line">class TestAttribute: [&#x27;tt&#x27;]</span><br></pre></td></tr></table></figure>
+可以看到这三个对象的属性均独立。</p>
+<p>那么如何为一个实例添加属性呢？</p>
+<p><strong>答案是通过赋值号 = 给实例所需添加的属性赋值。</strong>
+通过赋值号 =
+给实例所需添加的属性赋值实际上是将这个属性指向了新的引用，也就是新的内存空间。</p>
+<p>如在例一中没有通过赋值号为 content 赋值，所以这个属性并没有成为 t1
+自己的属性，输出t1.__dict__
+为空。而在例二中的构造函数里面为每个实例的content均赋值，所以例二中的三个对象的content属性独立。通过下面的例子可以更深入说明这点：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">TestAttribute</span>:   </span><br><span class="line">    num = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    t1 = TestAttribute()</span><br><span class="line">    t2 = TestAttribute()</span><br><span class="line">    </span><br><span class="line">    t1.num = <span class="number">1</span></span><br><span class="line">    <span class="built_in">print</span> <span class="string">&#x27;object t1:&#x27;</span>, t1.num, t1.__dict__</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&#x27;object t2:&#x27;</span>, t2.num, t2.__dict__ </span><br></pre></td></tr></table></figure>
+<p>输出结果： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">object t1: 1 &#123;&#x27;num&#x27;: 1&#125;</span><br><span class="line">object t2: 0 &#123;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>最后，小结如下： <strong>1.Python中的类和实例是两个完全独立的对象；
+2.Python中属性的获取是按照从下到上的顺序来查找属性；
+3.为实例添加属性的方法：通过赋值号 =
+给实例所需添加的属性赋值</strong></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/python/" rel="tag"># python</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2016/02/12/%E6%B5%8F%E8%A7%88%E5%99%A8%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B6/" rel="prev" title="浏览器缓存机制">
+      <i class="fa fa-chevron-left"></i> 浏览器缓存机制
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2016/02/18/Maven%E7%9A%84%E5%AE%89%E8%A3%85%E3%80%81%E9%85%8D%E7%BD%AE%E5%8F%8A%E4%BD%BF%E7%94%A8%E5%85%A5%E9%97%A8/" rel="next" title="Maven的安装、配置及使用入门">
+      Maven的安装、配置及使用入门 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">248</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.linkedin.com/in/wuliangchao/" title="LinkedIn → https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;wuliangchao&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i>LinkedIn</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

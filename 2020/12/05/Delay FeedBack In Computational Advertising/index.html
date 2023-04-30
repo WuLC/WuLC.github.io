@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="转化是有延迟的，即在点击发生后过一段时间用户可能才会发生转化，且往往转化漏斗越深，延迟的时间越长；在计算广告中，delayed feedback 主要影响下面两个场景  CVR 模型的训练 基于后验的调价策略  对于场景1，影响体现在（1）过早把样本送入模型，把最终会转化但是还没回传 label 的事件当做负例，导致模型低估（2）过晚把样本送入模型，即让所有样本都等待一个足够长的时间才送入模型，导">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Delayed FeedBack In Computational Advertising">
+<meta property="og:url" content="https://wulc.me/2020/12/05/Delay%20FeedBack%20In%20Computational%20Advertising/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="转化是有延迟的，即在点击发生后过一段时间用户可能才会发生转化，且往往转化漏斗越深，延迟的时间越长；在计算广告中，delayed feedback 主要影响下面两个场景  CVR 模型的训练 基于后验的调价策略  对于场景1，影响体现在（1）过早把样本送入模型，把最终会转化但是还没回传 label 的事件当做负例，导致模型低估（2）过晚把样本送入模型，即让所有样本都等待一个足够长的时间才送入模型，导">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/SurvivalAnalytics.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/SA_assumption.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/SAKDE.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/survivalFunction.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/nonparametricf2.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/nonparametric_EM.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/FakeNegativeWeightedLoss.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/FakeNegativeWeightedLoss1.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/PUAsumption.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/PUMLE.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/PU_finalloss.jpg">
+<meta property="article:published_time" content="2020-12-05T13:37:39.000Z">
+<meta property="article:modified_time" content="2023-04-30T05:12:49.111Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="计算广告">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/SurvivalAnalytics.jpg">
+
+<link rel="canonical" href="https://wulc.me/2020/12/05/Delay%20FeedBack%20In%20Computational%20Advertising/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Delayed FeedBack In Computational Advertising | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">吴良超的学习笔记</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2020/12/05/Delay%20FeedBack%20In%20Computational%20Advertising/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Delayed FeedBack In Computational Advertising
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-12-05 21:37:39" itemprop="dateCreated datePublished" datetime="2020-12-05T21:37:39+08:00">2020-12-05</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-30 13:12:49" itemprop="dateModified" datetime="2023-04-30T13:12:49+08:00">2023-04-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A/" itemprop="url" rel="index"><span itemprop="name">计算广告</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>转化是有延迟的，即在点击发生后过一段时间用户可能才会发生转化，且往往转化漏斗越深，延迟的时间越长；在计算广告中，delayed
+feedback 主要影响下面两个场景</p>
+<ol type="1">
+<li>CVR 模型的训练</li>
+<li>基于后验的调价策略</li>
+</ol>
+<p>对于场景1，影响体现在（1）过早把样本送入模型，把最终会转化但是还没回传
+label
+的事件当做负例，导致模型低估（2）过晚把样本送入模型，即让所有样本都等待一个足够长的时间才送入模型，导致模型没能及时更新</p>
+<p>对于场景2，影响体现控制器控制 cost/value=target
+时，分母会小于实际值，导致控制的不稳定</p>
+<p>本文主要介绍三篇 paper 针对这个问题在场景 1
+的一些解决思路，其中涉及到的一些方法也能应用到场景 2 中（而如果问题 1
+能被较好地解决，也能基于预估值而不是后验数据进行调价）</p>
+<span id="more"></span>
+<p>第一篇 paper
+是较早提出的一个解决方法，引入了一个隐变量辅助建模，同时对延迟时间单独建模，总体建模思路比较值得学习
+第二篇 paper 是对第一篇 paper 的拓展，第一篇 paper
+是通过指数分布建模回传延迟的时间的，而这篇 paper 则借鉴了 KDE(Kernel
+density estimation) 来学习任意分布去建模回传延迟时间 第三篇 paper
+则是比较了几种方法在离线数据和在线实验的效果，改动主要是在 loss function
+上；其中就包括了第一篇 paper 的方法，以及其他一些利用了
+positive-unlabeled learning/importance sampling 等方法推导出来出新的
+loss。</p>
+<h2 id="modeling-delayed-feedback-in-display-advertising2014">Modeling
+Delayed Feedback in Display Advertising(2014)</h2>
+<p>这篇 paper 是 criteo 在 2014 年发表的一篇对 delayed feedback 建模的
+paper，建模思路比较值得学习。针对这篇 paper 可参考之前写过的一篇文章</p>
+<p><a
+href="http://wulc.me/2020/05/17/Modeling%20Delayed%20Feedback%20in%20Display%20Advertising%20%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/">《Modeling
+Delayed Feedback in Display Advertising》 阅读笔记</a></p>
+<h2
+id="a-nonparametric-delayed-feedback-model-for-conversion-rate-prediction2018">A
+Nonparametric Delayed Feedback Model for Conversion Rate
+Prediction(2018)</h2>
+<p>这篇 paper 是在第一篇 paper
+基础上对回传延迟函数做了改进，第一篇回传延迟使用了指数分布来建模，这里则借助了
+KDE（<a
+target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Kernel_density_estimation">Kernel
+density estimation</a>） 的思想用任意分布来代替第一篇 paper
+的指数分布，而这正是 paper 名字中 <a
+target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Nonparametric_statistics">nonparametric</a>
+意思的含义。</p>
+<p>基本符号定义跟第一篇 paper 差不多</p>
+<figure>
+<img src="https://wulc.me/imgs/SurvivalAnalytics.jpg" alt="notion" />
+<figcaption aria-hidden="true">notion</figcaption>
+</figure>
+<p>Paper 中主要通过 <a
+target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Survival_analysis">Survival
+analysis</a> 的方法来推导, 简单来说，survival analysis
+主要研究如下领域</p>
+<blockquote>
+<p>Survival analysis is a branch of statistics for analyzing the
+expected duration of time until one or more events happen, such as death
+in biological organisms and failure in mechanical systems.</p>
+</blockquote>
+<p>Paper 中使用到的 survival analysis 概念和推论如下</p>
+<figure>
+<img src="https://wulc.me/imgs/SA_assumption.jpg" alt="assumption" />
+<figcaption aria-hidden="true">assumption</figcaption>
+</figure>
+<p>第一篇 paper 其实也用了上面的推论，<span
+class="math inline">\(f(t)\)</span> 是指数分布的 pdf，<span
+class="math inline">\(s(t)\)</span> 是指数分布的 cdf，而 <span
+class="math inline">\(h(t)\)</span> 则是第一篇 paper 中的 <span
+class="math inline">\(\lambda(x)\)</span></p>
+<p>而从上面的表达可知，求解出 <span class="math inline">\(s(t)\)</span>
+的关键是求出 hazard function <span class="math inline">\(h(x)\)</span>,
+hazard function 的含义是当前时刻第一次发生事件的 event rate;
+相比于第一篇直接令 <span class="math inline">\(h(x) = \lambda(x) =
+w\\_dx\)</span>, 这里借鉴了 Kernel density estimation 的思想将 hazard
+function 写成如下形式（<span
+class="math inline">\(L\)</span>是一个超参，表示时间轴上的 <span
+class="math inline">\(L\)</span>个 pseudo-points）</p>
+<p><span class="math display">\[h(d\_i; x\_i, V) =
+\sum\_{l=1}^{L}\alpha\_l(x\_i;V)k(t\_l, d\_i)\]</span></p>
+<p>下图更直观地描述了这种形式是如何拟合任意分布的</p>
+<figure>
+<img src="https://wulc.me/imgs/SAKDE.jpg" alt="KDE" />
+<figcaption aria-hidden="true">KDE</figcaption>
+</figure>
+<p>上面中的 <span class="math inline">\(\alpha\_l,
+k\)</span>定义如下，直观来看，<span
+class="math inline">\(\alpha\_l\)</span> 表示当前的 pseudo-point
+对总体的 hazard function 的贡献，<span class="math inline">\(k(t\_l,
+\tau)\)</span> 表示离当前的 pseudo-point <span
+class="math inline">\(t\_l\)</span>越近的训练样本，对当前的 pseudo-point
+<span class="math inline">\(t\_l\)</span>的参数 <span
+class="math inline">\(V\_l\)</span> 的影响越大（想象 bp 时各个 <span
+class="math inline">\(V\_l\)</span>的 gradient）</p>
+<p><span class="math display">\[\alpha\_l(x\_i; V) =
+(1+\exp(-V\_{l}^{T}x\_i))^{-1}\]</span></p>
+<p><span class="math display">\[k(t\_l, \tau) =
+\exp(-\frac{(t\_l-\tau)^2}{2h^2})\]</span></p>
+<p>写出了 hazard function 后，根据公式（2）有</p>
+<figure>
+<img src="https://wulc.me/imgs/survivalFunction.jpg"
+alt="survival function" />
+<figcaption aria-hidden="true">survival function</figcaption>
+</figure>
+<p>则 paper1 的的回传延迟概率可写成如下形式</p>
+<p><span class="math display">\[p(d\_i|x\_i, c\_i = 1) = s(d\_i; x\_i, V
+)h(d\_i; x\_i, V)\]</span></p>
+<figure>
+<img src="https://wulc.me/imgs/nonparametricf2.jpg" alt="probability" />
+<figcaption aria-hidden="true">probability</figcaption>
+</figure>
+<p>训练的算法就跟 paper1 中的 EM 算法一样</p>
+<figure>
+<img src="https://wulc.me/imgs/nonparametric_EM.jpg" alt="EM" />
+<figcaption aria-hidden="true">EM</figcaption>
+</figure>
+<p>上面这种形式是借鉴了 KDE 的思想，KDE 可以理解为一种可写出任意分布的
+pdf 的方法，关于这部分的推导这里有一个直观的回答：<a
+target="_blank" rel="noopener" href="https://www.zhihu.com/question/27301358/answer/105267357">什么是核密度估计？如何感性认识？</a></p>
+<h2
+id="addressing-delayed-feedback-for-continuous-training-with-neural-networks-in-ctr-prediction2019">Addressing
+Delayed Feedback for Continuous Training with Neural Networks in CTR
+prediction(2019)</h2>
+<p>这是 Twitter 发的一篇 paper，主要对比了几种方法在 delayed feedback
+问题上的效果</p>
+<h3 id="faked-nagative-weighted">Faked nagative weighted</h3>
+<p>Delay feedback 的问题也可以从另一个角度去理解，观察到的样本的分布是
+biased distribution <span
+class="math inline">\(b\)</span>,但是需要求解真实的样本的分布 <span
+class="math inline">\(p\)</span>的期望；而 <a
+target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Importance_sampling">importance
+sampling</a> 是解决这个问题的一个方法，这个方法在 Wikipedia
+上的简单介绍如下</p>
+<blockquote>
+<p>In statistics, importance sampling is a general technique for
+estimating properties of a particular distribution, while only having
+samples generated from a different distribution than the distribution of
+interest</p>
+</blockquote>
+<p>zhihu 上一个更通俗的解释见 <a
+target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/41217212">重要性采样（Importance
+Sampling</a>），则 paper 中的可将真实分布的期望写成如下形式</p>
+<p><span class="math display">\[E\_p[\log f\_{\theta}(y|x)] =
+E\_b[\frac{p(x,y)}{b(x,y)} f\_{\theta}(y|x)]\]</span></p>
+<p>即在观察到的 biased distribution <span
+class="math inline">\(b\)</span> 上对样本进行加权 <span
+class="math inline">\(w(x,y) = \frac{p(x,y)}{b(x,y)}\)</span>，则 loss
+function 可写成如下形式</p>
+<figure>
+<img src="https://wulc.me/imgs/FakeNegativeWeightedLoss.jpg"
+alt="loss func" />
+<figcaption aria-hidden="true">loss func</figcaption>
+</figure>
+<p>这个方法会将所有的样本在一开始都当做负样本，然后在正样本回传时多传一个正样本，假设
+<span class="math inline">\(N\)</span>是全部样本，<span
+class="math inline">\(M\)</span>是其中的正样本，则有</p>
+<p><span class="math display">\[b(y=1|x) = \frac{M}{M+N} =
+\frac{\frac{M}{N}}{1+\frac{M}{N}} =
+\frac{p(y=1|x)}{1+p(y=1|x)}\]</span></p>
+<p><span class="math display">\[b(y=0|x) = 1- b(y=1|x)=
+\frac{1}{1+p(y=1|x)}\]</span></p>
+<p>即上面公式(7)可被写成下面公式(10), 即需要给分布 <span
+class="math inline">\(b\)</span> 中的正样本加的权重为<span
+class="math inline">\(1+p(y=1|x)\)</span>, 负样本的权重为 <span
+class="math inline">\(p(y=0|x)(1+p(y=1|x))\)</span></p>
+<figure>
+<img src="https://wulc.me/imgs/FakeNegativeWeightedLoss1.jpg"
+alt="loss func1" />
+<figcaption aria-hidden="true">loss func1</figcaption>
+</figure>
+<p>但是这里的 <span class="math inline">\(p\)</span> 是未知的，因此
+paper 中利用了模型的预估值 <span
+class="math inline">\(f\_{\theta}\)</span> 来近似</p>
+<p>此外，importance sampling 也被应用在强化学习中的 off-policy
+策略中，简单来说就是通过行为策略(behavior strategy) <span
+class="math inline">\(b\)</span> 产生的序列分布来优化目标策略(target
+strategy) <span class="math inline">\(π\)</span> 价值函数，关于
+on-policy 与 off-policy 的区别可参考这个回答 <a
+target="_blank" rel="noopener" href="https://www.zhihu.com/question/57159315/answer/465865135">强化学习中on-policy
+与off-policy有什么区别？</a> ）</p>
+<h3 id="fake-negative-calibration">Fake negative calibration</h3>
+<p>这个方法直接让模型学习 biased distribution <span
+class="math inline">\(b\)</span>,然后基于上面 Faked nagative weighted
+中推导出来的公式反推出 <span
+class="math inline">\(p(y=1|x)\)</span>的概率，即由</p>
+<p><span class="math display">\[b(y=1|x) = \frac{M}{M+N} =
+\frac{\frac{M}{N}}{1+\frac{M}{N}} = \frac{p(y=1|x)}{1+p(y=1|x)}
+\]</span></p>
+<p>可推出</p>
+<p><span class="math display">\[p(y=1|x) = \frac{b(y=1|x)}{1-b(y=1|x)}
+\]</span></p>
+<p>这种方法可以认为是一种 post
+calibration，除此之外，也有一种方法是在训练的时候就做了纠正的，也叫做
+prior correction，基本思路就是在训练的时候对预估的 logit
+做一层转换，简单推导如下</p>
+<p>假设真实的分布下, 正样本的数量是 <span
+class="math inline">\(P\)</span>，负样本的数量是 <span
+class="math inline">\(N\)</span>，</p>
+<p>则 serving 是输出的概率值应该是</p>
+<p><span class="math display">\[\frac{P}{P+N} =
+\frac{1}{1+e^{-x}}\]</span></p>
+<p>但是在 training
+时，由于上面的机制使得每条样本都会以负样本的形式出现一次，
+同时假设会对负样本采样，采样率为 <span class="math inline">\(r\)</span>,
+则有</p>
+<p><span class="math display">\[\frac{P}{r*(P+N)+P} =
+\frac{1}{1+e^{-x^{*}}}\]</span></p>
+<p>通过对上面的变换有</p>
+<p><span class="math display">\[\frac{P}{r*(P+N)+P}
+=  \frac{P/(P+N)}{r+P/(P+N)} =  \frac{1/(1+e^{-x})}{r +
+1/(1+e^{-x})}\]</span></p>
+<p>则令</p>
+<p><span class="math display">\[\frac{1/(1+e^{-x})}{r +
+1/(1+e^{-x})}=\frac{1}{1+e^{-x^{*}}}\]</span></p>
+<p>可推导出</p>
+<p><span class="math display">\[x^{*} = -(\ln r+
+\ln(1+e^{-x}))\]</span></p>
+<p>即在训练时计算 logit，不使用 <span
+class="math inline">\(\frac{1}{1+e^{-x}}\)</span> 而是使用 <span
+class="math inline">\(\frac{1}{1+e^{-x^{*}}}\)</span></p>
+<h3 id="positive-unlabeled-learning">Positive-Unlabeled Learning</h3>
+<p>paper 关于里面基本没有推导，详细的推导可参考 <a
+target="_blank" rel="noopener" href="http://cseweb.ucsd.edu/~elkan/posonly.pdf">Learning Classifiers
+from Only Positive and Unlabeled Data</a>,
+基本思路跟第一篇比较像，这里就不详细展开了，主要引用了里面一些关键的推导步骤</p>
+<blockquote>
+<p>A key assumption about the training data is that they are drawn
+randomly from <span class="math inline">\(p(x,y,s)\)</span>, and for
+each tuple <span class="math inline">\(&lt; x,y,s &gt;\)</span> that is
+drawn, only <span class="math inline">\(&lt; x,s &gt;\)</span> is
+recorded. Here <span class="math inline">\(s\)</span> is the observed
+label and <span class="math inline">\(y\)</span> is the actual label,
+which might not have occurred yet. Along with this, it is assumed that
+labeled positive examples are chosen completely randomly from all
+positive examples, i.e. <span class="math inline">\(p(s = 1|x, y = 1) =
+p(s = 1|y = 1)\)</span></p>
+</blockquote>
+<p>基于上面的 assumption 有</p>
+<figure>
+<img src="https://wulc.me/imgs/PUAsumption.jpg" alt="assumption" />
+<figcaption aria-hidden="true">assumption</figcaption>
+</figure>
+<blockquote>
+<p>The value of the constant <span class="math inline">\(c = p(s = 1|y =
+1)\)</span> can be estimated using a trained classifier <span
+class="math inline">\(g\)</span> and a validation set of examples. Let
+<span class="math inline">\(V\)</span> be such a validation set that is
+drawn from the overall distribution <span class="math inline">\(p(x, y,
+s)\)</span> in the same manner as the nontraditional training set. Let
+<span class="math inline">\(P\)</span> be the subset of examples in
+<span class="math inline">\(V\)</span> that are labeled (and hence
+positive). The estimator of <span class="math inline">\(p(s = 1|y =
+1)\)</span> is the average value of <span
+class="math inline">\(g(x)\)</span> for <span
+class="math inline">\(x\)</span> in <span
+class="math inline">\(P\)</span>. That is <span
+class="math inline">\(\frac{1}{n}\sum\_{x \in P}g(x)\)</span></p>
+</blockquote>
+<p>求解环节，所有样本的 期望/likelihook 可写成如下形式</p>
+<figure>
+<img src="https://wulc.me/imgs/PUMLE.jpg" alt="MLE" />
+<figcaption aria-hidden="true">MLE</figcaption>
+</figure>
+<p>则最终的 loss 函数形式如下</p>
+<figure>
+<img src="https://wulc.me/imgs/PU_finalloss.jpg" alt="pu-loss" />
+<figcaption aria-hidden="true">pu-loss</figcaption>
+</figure>
+<h2 id="总结">总结</h2>
+<p>本文主要介绍了对 delay feedback 问题的几种解决方法，其中第一篇 paper
+引入了一个隐变量，同时对转化延迟和转化分别建模，建模思路比较值得学习；第二篇
+paper 则是对第一篇 paper
+的转化延迟模型做了改进；第三篇则介绍了几种在一开始将所有样本都当做负样本，并在正样本回传的时候再进一次模型，但是这样会导致
+training 和 serving 不一致（正负样本比例不一致），对此 paper
+也提出了几种解决方法。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A/" rel="tag"># 计算广告</a>
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 机器学习</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/10/03/%E7%A8%8B%E5%BA%8F%E7%9A%84%E8%A1%A8%E7%A4%BA%E3%80%81%E8%BD%AC%E6%8D%A2%E4%B8%8E%E9%93%BE%E6%8E%A5-week10/" rel="prev" title="程序的表示、转换与链接-week10、11">
+      <i class="fa fa-chevron-left"></i> 程序的表示、转换与链接-week10、11
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/01/02/2020%E5%B0%8F%E7%BB%93/" rel="next" title="2020 小结">
+      2020 小结 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#modeling-delayed-feedback-in-display-advertising2014"><span class="nav-number">1.</span> <span class="nav-text">Modeling
+Delayed Feedback in Display Advertising(2014)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#a-nonparametric-delayed-feedback-model-for-conversion-rate-prediction2018"><span class="nav-number">2.</span> <span class="nav-text">A
+Nonparametric Delayed Feedback Model for Conversion Rate
+Prediction(2018)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#addressing-delayed-feedback-for-continuous-training-with-neural-networks-in-ctr-prediction2019"><span class="nav-number">3.</span> <span class="nav-text">Addressing
+Delayed Feedback for Continuous Training with Neural Networks in CTR
+prediction(2019)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#faked-nagative-weighted"><span class="nav-number">3.1.</span> <span class="nav-text">Faked nagative weighted</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#fake-negative-calibration"><span class="nav-number">3.2.</span> <span class="nav-text">Fake negative calibration</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#positive-unlabeled-learning"><span class="nav-number">3.3.</span> <span class="nav-text">Positive-Unlabeled Learning</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">248</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.linkedin.com/in/wuliangchao/" title="LinkedIn → https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;wuliangchao&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i>LinkedIn</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

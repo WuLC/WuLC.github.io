@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="本文转载自 http:&#x2F;&#x2F;www.cnblogs.com&#x2F;jasonfreak&#x2F;p&#x2F;5448462.html， 主要讲述如何通过 sklearn 完成数据挖掘中的一个完整的流程。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用sklearn优雅地进行数据挖掘">
+<meta property="og:url" content="https://wulc.me/2017/01/16/%E4%BD%BF%E7%94%A8sklearn%E4%BC%98%E9%9B%85%E5%9C%B0%E8%BF%9B%E8%A1%8C%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="本文转载自 http:&#x2F;&#x2F;www.cnblogs.com&#x2F;jasonfreak&#x2F;p&#x2F;5448462.html， 主要讲述如何通过 sklearn 完成数据挖掘中的一个完整的流程。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b9cq73pg19f71ajf2e41u8r1d5n9.png">
+<meta property="article:published_time" content="2017-01-16T12:15:44.000Z">
+<meta property="article:modified_time" content="2023-04-30T05:12:49.147Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/image_1b9cq73pg19f71ajf2e41u8r1d5n9.png">
+
+<link rel="canonical" href="https://wulc.me/2017/01/16/%E4%BD%BF%E7%94%A8sklearn%E4%BC%98%E9%9B%85%E5%9C%B0%E8%BF%9B%E8%A1%8C%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>使用sklearn优雅地进行数据挖掘 | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">吴良超的学习笔记</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2017/01/16/%E4%BD%BF%E7%94%A8sklearn%E4%BC%98%E9%9B%85%E5%9C%B0%E8%BF%9B%E8%A1%8C%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          使用sklearn优雅地进行数据挖掘
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-01-16 20:15:44" itemprop="dateCreated datePublished" datetime="2017-01-16T20:15:44+08:00">2017-01-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-30 13:12:49" itemprop="dateModified" datetime="2023-04-30T13:12:49+08:00">2023-04-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本文转载自 http://www.cnblogs.com/jasonfreak/p/5448462.html，
+主要讲述如何通过 sklearn 完成数据挖掘中的一个完整的流程。</p>
+<span id="more"></span>
+<h2 id="数据挖掘的步骤">数据挖掘的步骤</h2>
+<p>数据挖掘通常包括数据采集，数据分析，特征工程，训练模型，模型评估等步骤。使用sklearn工具可以方便地进行特征工程和模型训练工作，在《使用sklearn做单机特征工程》中，我们最后留下了一些疑问：特征处理类都有三个方法
+<code>fit</code>、<code>transform</code>和<code>fit_transform</code>，而
+fit 方法居然和模型训练方法 fit
+同名（不光同名，参数列表都一样），这难道都是巧合？</p>
+<p>显然，这不是巧合，这正是sklearn的设计风格。我们能够更加优雅地使用sklearn进行特征工程和模型训练工作。此时，不妨从一个基本的数据挖掘场景入手：</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1b9cq73pg19f71ajf2e41u8r1d5n9.png"
+alt="基本数据挖掘场景" />
+<figcaption aria-hidden="true">基本数据挖掘场景</figcaption>
+</figure>
+<p>我们使用 sklearn
+进行虚线框内的工作（sklearn也可以进行文本特征提取）。通过分析 sklearn
+源码，我们可以看到除训练，预测和评估以外，处理其他工作的类都实现了3个方法：<code>fit</code>、<code>transform</code>和<code>fit_transform</code>。<strong>从命名中可以看到，<code>fit_transform</code>方法是先调用<code>fit</code>然后调用<code>transform</code>，我们只需要关注
+fit 方法和 transform 方法即可。</strong></p>
+<p><code>transform</code>
+方法主要用来对特征进行转换。<strong>从可利用信息的角度来说，转换分为无信息转换和有信息转换。无信息转换是指不利用任何其他信息进行转换，比如指数、对数函数转换等。有信息转换从是否利用目标值向量又可分为无监督转换和有监督转换。无监督转换指只利用特征的统计信息的转换，统计信息包括均值、标准差、边界等等，比如标准化、PCA法降维等。有监督转换指既利用了特征信息又利用了目标值信息的转换，比如通过模型选择特征、LDA法降维等</strong>。通过总结常用的转换类，我们得到下表：</p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>包</th>
+<th>类</th>
+<th>参数列表</th>
+<th>类别</th>
+<th>fit方法有用</th>
+<th>说明</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>sklearn.preprocessing</td>
+<td>StandardScaler</td>
+<td>特征</td>
+<td>无监督</td>
+<td>Y</td>
+<td>标准化</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>sklearn.preprocessing</td>
+<td>MinMaxScaler</td>
+<td>特征</td>
+<td>无监督</td>
+<td>Y</td>
+<td>区间缩放</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>sklearn.preprocessing</td>
+<td>Binarizer</td>
+<td>特征</td>
+<td>无信息</td>
+<td>N</td>
+<td>定量特征二值化</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>sklearn.preprocessing</td>
+<td>OneHotEncoder</td>
+<td>特征</td>
+<td>无监督</td>
+<td>Y</td>
+<td>定性特征编码</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>sklearn.preprocessing</td>
+<td>Imputer</td>
+<td>特征</td>
+<td>无监督</td>
+<td>Y</td>
+<td>缺失值计算</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>sklearn.preprocessing</td>
+<td>PolynomialFeatures</td>
+<td>特征</td>
+<td>无信息</td>
+<td>N</td>
+<td>多项式变换（fit方法仅仅生成了多项式的表达式）</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>sklearn.preprocessing</td>
+<td>FunctionTransformer</td>
+<td>特征</td>
+<td>无信息</td>
+<td>N</td>
+<td>自定义函数变换（自定义函数在transform方法中调用）</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>sklearn.feature_selection</td>
+<td>VarianceThreshold</td>
+<td>特征</td>
+<td>无监督</td>
+<td>Y</td>
+<td>方差选择法</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>sklearn.feature_selection</td>
+<td>SelectKBest</td>
+<td>特征/特征+目标值</td>
+<td>无监督/有监督</td>
+<td>Y</td>
+<td>自定义特征评分选择法</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>sklearn.feature_selection</td>
+<td>SelectKBest+chi2</td>
+<td>特征+目标值</td>
+<td>有监督</td>
+<td>Y</td>
+<td>卡方检验选择法</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>sklearn.feature_selection</td>
+<td>RFE</td>
+<td>特征+目标值</td>
+<td>有监督</td>
+<td>Y</td>
+<td>递归特征消除法</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>sklearn.feature_selection</td>
+<td>SelectFromModel</td>
+<td>特征+目标值</td>
+<td>有监督</td>
+<td>Y</td>
+<td>自定义模型训练选择法</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>sklearn.decomposition</td>
+<td>PCA</td>
+<td>特征</td>
+<td>无监督</td>
+<td>Y</td>
+<td>PCA降维</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>sklearn.lda</td>
+<td>LDA</td>
+<td>特征+目标值</td>
+<td>有监督</td>
+<td>Y</td>
+<td>LDA降维</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>不难看到，<strong>只有有信息的转换类的<code>fit</code>方法才实际有用，显然<code>fit</code>方法的主要工作是获取特征信息和目标值信息</strong>，在这点上，<code>fit</code>方法和模型训练时的<code>fit</code>方法就能够联系在一起了：<strong>都是通过分析特征和目标值，提取有价值的信息</strong>，对于转换类来说是某些统计量，对于模型来说可能是特征的权值系数等。另外，<strong>只有有监督的转换类的fit和transform方法才需要特征和目标值两个参数</strong>。fit方法无用不代表其没实现，而是除合法性校验以外，其并没有对特征和目标值进行任何处理，<code>Normalizer</code>的<code>fit</code>方法实现如下：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">fit</span>(<span class="params">self, X, y=<span class="literal">None</span></span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;Do nothing and return the estimator unchanged</span></span><br><span class="line"><span class="string">        This method is just there to implement the usual API and hence</span></span><br><span class="line"><span class="string">        work in pipelines.</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        X = check_array(X, accept_sparse=<span class="string">&#x27;csr&#x27;</span>)</span><br><span class="line">        <span class="keyword">return</span> self</span><br></pre></td></tr></table></figure>
+<p>基于这些特征处理工作都有共同的方法，那么试想可不可以将他们组合在一起？在本文假设的场景中，我们可以看到这些工作的组合形式有两种：流水线式和并行式。基于流水线组合的工作需要依次进行，前一个工作的输出是后一个工作的输入；基于并行式的工作可以同时进行，其使用同样的输入，所有工作完成后将各自的输出合并之后输出。sklearn提供了包<code>pipeline</code>来完成流水线式和并行式的工作。</p>
+<h2 id="数据初貌">数据初貌</h2>
+<p>在此，我们仍然使用IRIS数据集来进行说明。为了适应提出的场景，对原数据集需要稍微加工：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> numpy <span class="keyword">import</span> hstack, vstack, array, median, nan</span><br><span class="line"><span class="keyword">from</span> numpy.random <span class="keyword">import</span> choice</span><br><span class="line"><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> load_iris</span><br><span class="line"></span><br><span class="line"><span class="comment">#特征矩阵加工</span></span><br><span class="line"><span class="comment">#使用vstack增加一行含缺失值的样本(nan, nan, nan, nan)</span></span><br><span class="line"><span class="comment">#使用hstack增加一列表示花的颜色（0-白、1-黄、2-红），花的颜色是随机的，意味着颜色并不影响花的分类</span></span><br><span class="line">iris.data = hstack((choice([<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>], size=iris.data.shape[<span class="number">0</span>]+<span class="number">1</span>).reshape(-<span class="number">1</span>,<span class="number">1</span>), vstack((iris.data, array([nan, nan, nan, nan]).reshape(<span class="number">1</span>,-<span class="number">1</span>)))))</span><br><span class="line"><span class="comment">#目标值向量加工</span></span><br><span class="line"><span class="comment">#增加一个目标值，对应含缺失值的样本，值为众数</span></span><br><span class="line">iris.target = hstack((iris.target, array([median(iris.target)])))</span><br></pre></td></tr></table></figure>
+<h2 id="关键技术">关键技术</h2>
+<p><strong>并行处理，流水线处理，自动化调参，持久化是使用sklearn优雅地进行数据挖掘的核心</strong>。并行处理和流水线处理将多个特征处理工作，甚至包括模型训练工作组合成一个工作（从代码的角度来说，即将多个对象组合成了一个对象）。在组合的前提下，自动化调参技术帮我们省去了人工调参的反锁。训练好的模型是贮存在内存中的数据，持久化能够将这些数据保存在文件系统中，之后使用时无需再进行训练，直接从文件系统中加载即可。</p>
+<h3 id="并行技术">并行技术</h3>
+<p>并行处理使得多个特征处理工作能够并行地进行。根据对特征矩阵的读取方式不同，可分为整体并行处理和部分并行处理。整体并行处理，即并行处理的每个工作的输入都是特征矩阵的整体；部分并行处理，即可定义每个工作需要输入的特征矩阵的列。
+#### 整体并行处理
+<code>pipeline</code>包提供了<code>FeatureUnion</code>类来进行整体并行处理：
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> numpy <span class="keyword">import</span> log1p</span><br><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> FunctionTransformer</span><br><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> Binarizer</span><br><span class="line"><span class="keyword">from</span> sklearn.pipeline <span class="keyword">import</span> FeatureUnion</span><br><span class="line"></span><br><span class="line"><span class="comment">#新建将整体特征矩阵进行对数函数转换的对象</span></span><br><span class="line">step2_1 = (<span class="string">&#x27;ToLog&#x27;</span>, FunctionTransformer(log1p))</span><br><span class="line"><span class="comment">#新建将整体特征矩阵进行二值化类的对象</span></span><br><span class="line">step2_2 = (<span class="string">&#x27;ToBinary&#x27;</span>, Binarizer())</span><br><span class="line"><span class="comment">#新建整体并行处理对象</span></span><br><span class="line"><span class="comment">#该对象也有fit和transform方法，fit和transform方法均是并行地调用需要并行处理的对象的fit和transform方法</span></span><br><span class="line"><span class="comment">#参数transformer_list为需要并行处理的对象列表，该列表为二元组列表，第一元为对象的名称，第二元为对象</span></span><br><span class="line">step2 = (<span class="string">&#x27;FeatureUnion&#x27;</span>, FeatureUnion(transformer_list=[step2_1, step2_2, step2_3]))</span><br></pre></td></tr></table></figure></p>
+<h4 id="部分并行处理">部分并行处理</h4>
+<p>整体并行处理有其缺陷，在一些场景下，我们只需要对特征矩阵的某些列进行转换，而不是所有列。<code>pipeline</code>并没有提供相应的类（仅<code>OneHotEncoder</code>类实现了该功能），需要我们在<code>FeatureUnion</code>的基础上进行优化：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.pipeline <span class="keyword">import</span> FeatureUnion, _fit_one_transformer, _fit_transform_one, _transform_one </span><br><span class="line"><span class="keyword">from</span> sklearn.externals.joblib <span class="keyword">import</span> Parallel, delayed</span><br><span class="line"><span class="keyword">from</span> scipy <span class="keyword">import</span> sparse</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"><span class="comment">#部分并行处理，继承FeatureUnion</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">FeatureUnionExt</span>(<span class="title class_ inherited__">FeatureUnion</span>):</span><br><span class="line">    <span class="comment">#相比FeatureUnion，多了idx_list参数，其表示每个并行工作需要读取的特征矩阵的列</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, transformer_list, idx_list, n_jobs=<span class="number">1</span>, transformer_weights=<span class="literal">None</span></span>):</span><br><span class="line">        self.idx_list = idx_list</span><br><span class="line">        FeatureUnion.__init__(self, transformer_list=<span class="built_in">map</span>(<span class="keyword">lambda</span> trans:(trans[<span class="number">0</span>], trans[<span class="number">1</span>]), transformer_list), n_jobs=n_jobs, transformer_weights=transformer_weights)</span><br><span class="line"></span><br><span class="line">    <span class="comment">#由于只部分读取特征矩阵，方法fit需要重构</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">fit</span>(<span class="params">self, X, y=<span class="literal">None</span></span>):</span><br><span class="line">        transformer_idx_list = <span class="built_in">map</span>(<span class="keyword">lambda</span> trans, idx:(trans[<span class="number">0</span>], trans[<span class="number">1</span>], idx), self.transformer_list, self.idx_list)</span><br><span class="line">        transformers = Parallel(n_jobs=self.n_jobs)(</span><br><span class="line">            <span class="comment">#从特征矩阵中提取部分输入fit方法</span></span><br><span class="line">            delayed(_fit_one_transformer)(trans, X[:,idx], y)</span><br><span class="line">            <span class="keyword">for</span> name, trans, idx <span class="keyword">in</span> transformer_idx_list)</span><br><span class="line">        self._update_transformer_list(transformers)</span><br><span class="line">        <span class="keyword">return</span> self</span><br><span class="line"></span><br><span class="line">    <span class="comment">#由于只部分读取特征矩阵，方法fit_transform需要重构</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">fit_transform</span>(<span class="params">self, X, y=<span class="literal">None</span>, **fit_params</span>):</span><br><span class="line">        transformer_idx_list = <span class="built_in">map</span>(<span class="keyword">lambda</span> trans, idx:(trans[<span class="number">0</span>], trans[<span class="number">1</span>], idx), self.transformer_list, self.idx_list)</span><br><span class="line">        result = Parallel(n_jobs=self.n_jobs)(</span><br><span class="line">            <span class="comment">#从特征矩阵中提取部分输入fit_transform方法</span></span><br><span class="line">            delayed(_fit_transform_one)(trans, name, X[:,idx], y,</span><br><span class="line">                                        self.transformer_weights, **fit_params)</span><br><span class="line">            <span class="keyword">for</span> name, trans, idx <span class="keyword">in</span> transformer_idx_list)</span><br><span class="line"></span><br><span class="line">        Xs, transformers = <span class="built_in">zip</span>(*result)</span><br><span class="line">        self._update_transformer_list(transformers)</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">any</span>(sparse.issparse(f) <span class="keyword">for</span> f <span class="keyword">in</span> Xs):</span><br><span class="line">            Xs = sparse.hstack(Xs).tocsr()</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            Xs = np.hstack(Xs)</span><br><span class="line">        <span class="keyword">return</span> Xs</span><br><span class="line"></span><br><span class="line">    <span class="comment">#由于只部分读取特征矩阵，方法transform需要重构</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">transform</span>(<span class="params">self, X</span>):</span><br><span class="line">        transformer_idx_list = <span class="built_in">map</span>(<span class="keyword">lambda</span> trans, idx:(trans[<span class="number">0</span>], trans[<span class="number">1</span>], idx), self.transformer_list, self.idx_list)</span><br><span class="line">        Xs = Parallel(n_jobs=self.n_jobs)(</span><br><span class="line">            <span class="comment">#从特征矩阵中提取部分输入transform方法</span></span><br><span class="line">            delayed(_transform_one)(trans, name, X[:,idx], self.transformer_weights)</span><br><span class="line">            <span class="keyword">for</span> name, trans, idx <span class="keyword">in</span> transformer_idx_list)</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">any</span>(sparse.issparse(f) <span class="keyword">for</span> f <span class="keyword">in</span> Xs):</span><br><span class="line">            Xs = sparse.hstack(Xs).tocsr()</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            Xs = np.hstack(Xs)</span><br><span class="line">        <span class="keyword">return</span> Xs</span><br></pre></td></tr></table></figure>
+<p>在本文提出的场景中，我们对特征矩阵的第1列（花的颜色）进行定性特征编码，对第2、3、4列进行对数函数转换，对第5列进行定量特征二值化处理。使用<code>FeatureUnionExt</code>类进行部分并行处理的代码如下：
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> numpy <span class="keyword">import</span> log1p</span><br><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> OneHotEncoder</span><br><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> FunctionTransformer</span><br><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> Binarizer</span><br><span class="line"></span><br><span class="line"><span class="comment">#新建将部分特征矩阵进行定性特征编码的对象</span></span><br><span class="line">step2_1 = (<span class="string">&#x27;OneHotEncoder&#x27;</span>, OneHotEncoder(sparse=<span class="literal">False</span>))</span><br><span class="line"><span class="comment">#新建将部分特征矩阵进行对数函数转换的对象</span></span><br><span class="line">step2_2 = (<span class="string">&#x27;ToLog&#x27;</span>, FunctionTransformer(log1p))</span><br><span class="line"><span class="comment">#新建将部分特征矩阵进行二值化类的对象</span></span><br><span class="line">step2_3 = (<span class="string">&#x27;ToBinary&#x27;</span>, Binarizer())</span><br><span class="line"><span class="comment">#新建部分并行处理对象</span></span><br><span class="line"><span class="comment">#参数transformer_list为需要并行处理的对象列表，该列表为二元组列表，第一元为对象的名称，第二元为对象</span></span><br><span class="line"><span class="comment">#参数idx_list为相应的需要读取的特征矩阵的列</span></span><br><span class="line">step2 = (<span class="string">&#x27;FeatureUnionExt&#x27;</span>, FeatureUnionExt(transformer_list=[step2_1, step2_2, step2_3], idx_list=[[<span class="number">0</span>], [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], [<span class="number">4</span>]]))</span><br></pre></td></tr></table></figure></p>
+<h3 id="流水线处理">流水线处理</h3>
+<p><code>pipeline</code>包提供了<code>Pipeline</code>类来进行流水线处理。流水线上除最后一个工作以外，其他都要执行<code>fit_transform</code>方法，且上一个工作输出作为下一个工作的输入。最后一个工作必须实现fit方法，输入为上一个工作的输出；但是不限定一定有<code>transform</code>方法，因为流水线的最后一个工作可能是训练！</p>
+<p>根据本文提出的场景，结合并行处理，构建完整的流水线的代码如下：
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> numpy <span class="keyword">import</span> log1p</span><br><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> Imputer</span><br><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> OneHotEncoder</span><br><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> FunctionTransformer</span><br><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> Binarizer</span><br><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> MinMaxScaler</span><br><span class="line"><span class="keyword">from</span> sklearn.feature_selection <span class="keyword">import</span> SelectKBest</span><br><span class="line"><span class="keyword">from</span> sklearn.feature_selection <span class="keyword">import</span> chi2</span><br><span class="line"><span class="keyword">from</span> sklearn.decomposition <span class="keyword">import</span> PCA</span><br><span class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LogisticRegression</span><br><span class="line"><span class="keyword">from</span> sklearn.pipeline <span class="keyword">import</span> Pipeline</span><br><span class="line"></span><br><span class="line"><span class="comment">#新建计算缺失值的对象</span></span><br><span class="line">step1 = (<span class="string">&#x27;Imputer&#x27;</span>, Imputer())</span><br><span class="line"><span class="comment">#新建将部分特征矩阵进行定性特征编码的对象</span></span><br><span class="line">step2_1 = (<span class="string">&#x27;OneHotEncoder&#x27;</span>, OneHotEncoder(sparse=<span class="literal">False</span>))</span><br><span class="line"><span class="comment">#新建将部分特征矩阵进行对数函数转换的对象</span></span><br><span class="line">step2_2 = (<span class="string">&#x27;ToLog&#x27;</span>, FunctionTransformer(log1p))</span><br><span class="line"><span class="comment">#新建将部分特征矩阵进行二值化类的对象</span></span><br><span class="line">step2_3 = (<span class="string">&#x27;ToBinary&#x27;</span>, Binarizer())</span><br><span class="line"><span class="comment">#新建部分并行处理对象，返回值为每个并行工作的输出的合并</span></span><br><span class="line">step2 = (<span class="string">&#x27;FeatureUnionExt&#x27;</span>, FeatureUnionExt(transformer_list=[step2_1, step2_2, step2_3], idx_list=[[<span class="number">0</span>], [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], [<span class="number">4</span>]]))</span><br><span class="line"><span class="comment">#新建无量纲化对象</span></span><br><span class="line">step3 = (<span class="string">&#x27;MinMaxScaler&#x27;</span>, MinMaxScaler())</span><br><span class="line"><span class="comment">#新建卡方校验选择特征的对象</span></span><br><span class="line">step4 = (<span class="string">&#x27;SelectKBest&#x27;</span>, SelectKBest(chi2, k=<span class="number">3</span>))</span><br><span class="line"><span class="comment">#新建PCA降维的对象</span></span><br><span class="line">step5 = (<span class="string">&#x27;PCA&#x27;</span>, PCA(n_components=<span class="number">2</span>))</span><br><span class="line"><span class="comment">#新建逻辑回归的对象，其为待训练的模型作为流水线的最后一步</span></span><br><span class="line">step6 = (<span class="string">&#x27;LogisticRegression&#x27;</span>, LogisticRegression(penalty=<span class="string">&#x27;l2&#x27;</span>))</span><br><span class="line"><span class="comment">#新建流水线处理对象</span></span><br><span class="line"><span class="comment">#参数steps为需要流水线处理的对象列表，该列表为二元组列表，第一元为对象的名称，第二元为对象</span></span><br><span class="line">pipeline = Pipeline(steps=[step1, step2, step3, step4, step5, step6])</span><br></pre></td></tr></table></figure></p>
+<h3 id="自动化调参">自动化调参</h3>
+<p><strong>网格搜索为自动化调参的常见技术之一</strong>，<code>grid_search</code>包提供了自动化调参的工具，包括<code>GridSearchCV</code>类。对组合好的对象进行训练以及调参的代码如下：
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.grid_search <span class="keyword">import</span> GridSearchCV</span><br><span class="line"></span><br><span class="line"><span class="comment">#新建网格搜索对象</span></span><br><span class="line"><span class="comment">#第一参数为待训练的模型</span></span><br><span class="line"> <span class="comment">#param_grid为待调参数组成的网格，字典格式，键为参数名称（格式“对象名称__子对象名称__参数名称”），值为可取的参数值列表</span></span><br><span class="line"> grid_search = GridSearchCV(pipeline, param_grid=&#123;<span class="string">&#x27;FeatureUnionExt__ToBinary__threshold&#x27;</span>:[<span class="number">1.0</span>, <span class="number">2.0</span>, <span class="number">3.0</span>, <span class="number">4.0</span>], <span class="string">&#x27;LogisticRegression__C&#x27;</span>:[<span class="number">0.1</span>, <span class="number">0.2</span>, <span class="number">0.4</span>, <span class="number">0.8</span>]&#125;)</span><br><span class="line"><span class="comment">#训练以及调参</span></span><br><span class="line">grid_search.fit(iris.data, iris.target)</span><br></pre></td></tr></table></figure></p>
+<h3 id="持久化">持久化</h3>
+<p><code>externals.joblib</code>包提供了<code>dump</code>和<code>load</code>方法来持久化和加载内存数据：
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#持久化数据</span></span><br><span class="line"><span class="comment">#第一个参数为内存中的对象</span></span><br><span class="line"><span class="comment">#第二个参数为保存在文件系统中的名称</span></span><br><span class="line"><span class="comment">#第三个参数为压缩级别，0为不压缩，3为合适的压缩级别</span></span><br><span class="line">dump(grid_search, <span class="string">&#x27;grid_search.dmp&#x27;</span>, compress=<span class="number">3</span>)</span><br><span class="line"><span class="comment">#从文件系统中加载数据到内存中</span></span><br><span class="line">grid_search = load(<span class="string">&#x27;grid_search.dmp&#x27;</span>)</span><br></pre></td></tr></table></figure></p>
+<h3 id="小结">小结</h3>
+<table>
+<thead>
+<tr class="header">
+<th>包</th>
+<th>类或方法</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>sklearn.pipeline</td>
+<td>Pipeline</td>
+<td>流水线处理</td>
+</tr>
+<tr class="even">
+<td>sklearn.pipeline</td>
+<td>FeatureUnion</td>
+<td>并行处理</td>
+</tr>
+<tr class="odd">
+<td>sklearn.grid_search</td>
+<td>GridSearchCV</td>
+<td>网格搜索调参</td>
+</tr>
+<tr class="even">
+<td>externals.joblib</td>
+<td>dump</td>
+<td>数据持久化</td>
+</tr>
+<tr class="odd">
+<td>externals.joblib</td>
+<td>load</td>
+<td>从文件系统中加载数据至内存</td>
+</tr>
+</tbody>
+</table>
+<p>组合和持久化都会涉及pickle技术，在sklearn的技术文档中有说明，<strong>将lambda定义的函数作为<code>FunctionTransformer</code>的自定义转换函数将不能pickle化。</strong></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 机器学习</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/01/08/%E5%85%88%E9%AA%8C%E6%A6%82%E7%8E%87%EF%BC%8C%E5%90%8E%E9%AA%8C%E6%A6%82%E7%8E%87%EF%BC%8C%E5%85%B1%E8%BD%AD%E5%88%86%E5%B8%83%E4%B8%8E%E5%85%B1%E8%BD%AD%E5%85%88%E9%AA%8C/" rel="prev" title="先验概率，后验概率，共轭分布与共轭先验">
+      <i class="fa fa-chevron-left"></i> 先验概率，后验概率，共轭分布与共轭先验
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/01/25/%E3%80%8AProgramming%20Collective%20Intelligence%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0(3)--%E8%81%9A%E7%B1%BB/" rel="next" title="《Programming Collective Intelligence》读书笔记(3)--聚类">
+      《Programming Collective Intelligence》读书笔记(3)--聚类 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E7%9A%84%E6%AD%A5%E9%AA%A4"><span class="nav-number">1.</span> <span class="nav-text">数据挖掘的步骤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%88%9D%E8%B2%8C"><span class="nav-number">2.</span> <span class="nav-text">数据初貌</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E6%8A%80%E6%9C%AF"><span class="nav-number">3.</span> <span class="nav-text">关键技术</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B9%B6%E8%A1%8C%E6%8A%80%E6%9C%AF"><span class="nav-number">3.1.</span> <span class="nav-text">并行技术</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%83%A8%E5%88%86%E5%B9%B6%E8%A1%8C%E5%A4%84%E7%90%86"><span class="nav-number">3.1.1.</span> <span class="nav-text">部分并行处理</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%81%E6%B0%B4%E7%BA%BF%E5%A4%84%E7%90%86"><span class="nav-number">3.2.</span> <span class="nav-text">流水线处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E5%8C%96%E8%B0%83%E5%8F%82"><span class="nav-number">3.3.</span> <span class="nav-text">自动化调参</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%81%E4%B9%85%E5%8C%96"><span class="nav-number">3.4.</span> <span class="nav-text">持久化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">3.5.</span> <span class="nav-text">小结</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">248</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.linkedin.com/in/wuliangchao/" title="LinkedIn → https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;wuliangchao&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i>LinkedIn</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

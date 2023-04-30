@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="本文主要讲述内部网关协议中两个著名的协议RIP和OSPF。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计算机网络课程总结--RIP与OSPF">
+<meta property="og:url" content="https://wulc.me/2016/12/27/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93--RIP%E4%B8%8EOSPF/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="本文主要讲述内部网关协议中两个著名的协议RIP和OSPF。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4uspd50dec1ssb1v7j1aunb379.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4v3ecpin8p1qibhum18j814n05i.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4uts4rn1k9cm5n1a4scrg1q4213.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4uulq6n1c0m1fmi1o8qk0pvlc1g.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4uv2n5vcbvshosde131fuv51t.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4uvpghh12mfool1fd3rtq4go2a.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4v183kjv0lpi11m0g16be10p32n.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4v26h5i5v98cq14m015ttk0234.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4v2k08qtla1dgv8j515s0q733u.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4v2or8m2qr1k8qflp1go5er74b.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4vf3po2etc1ila1pv3cto3qa6p.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4v54o4s1a2h1s6d1umht3q1suq5v.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4v5vjpmrpf1chc1dbt1898o8u6c.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4vjo5c2cn367e1m23130j17d87j.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4vjsatj1ugu3lj11tpcfn9rp80.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4vnobbs1k02iu81fso1u1832j8d.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4vo37b6lffipr137u7emv5u8q.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4vo4iql9lsc6v13qleu16ku97.png">
+<meta property="article:published_time" content="2016-12-27T13:37:39.000Z">
+<meta property="article:modified_time" content="2023-04-30T05:12:49.157Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="计算机网络">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/image_1b4uspd50dec1ssb1v7j1aunb379.png">
+
+<link rel="canonical" href="https://wulc.me/2016/12/27/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93--RIP%E4%B8%8EOSPF/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>计算机网络课程总结--RIP与OSPF | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">吴良超的学习笔记</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2016/12/27/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93--RIP%E4%B8%8EOSPF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          计算机网络课程总结--RIP与OSPF
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2016-12-27 21:37:39" itemprop="dateCreated datePublished" datetime="2016-12-27T21:37:39+08:00">2016-12-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-30 13:12:49" itemprop="dateModified" datetime="2023-04-30T13:12:49+08:00">2023-04-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9D%82/" itemprop="url" rel="index"><span itemprop="name">杂</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本文主要讲述内部网关协议中两个著名的协议RIP和OSPF。</p>
+<span id="more"></span>
+<p>路由器的基本功能是路由(Routing)和转发(Forwarding)。其中路由指的是通过路由选择协议将路由信息注入到路由表中，转发指的是依据路由表和分组携带的信息将分组从入口转到正确的出口的过程。</p>
+<p>分组转发的技术有以下几种</p>
+<ul>
+<li><strong>Source routing（源路由）</strong>：分组携带路径</li>
+<li><strong>Table of virtual
+circuits（虚电路）</strong>：穿越网络建立链接及状态，使用链接转发分组</li>
+<li><strong>Table of global addresses
+(IP，数据报交换)</strong>：路由器维持到目的地的下一条，分组需要携带目的地地址</li>
+</ul>
+<p>本文主要涉及到的是第三种。</p>
+<h2 id="静态路由">静态路由</h2>
+<p>配置命令
+<code>Ip route prefix mask &#123;address|interface&#125; [distance]</code></p>
+<p>使用地址(address)和使用接口(interface)的差别</p>
+<ul>
+<li>使用接口，路由器知道从哪里转发出去，更高效</li>
+<li>使用地址需要第二次查找，以确定转发接口</li>
+</ul>
+<p>距离(distance)的特定</p>
+<ul>
+<li>直连网络的管理距离为0</li>
+<li>静态路由的管理距离为1</li>
+<li>值越小，优先级越高</li>
+<li>到达某个网络出现多条路由的情况下，可以依据管理距离进行选择</li>
+</ul>
+<p>还可以通过管理距离配置备份路由（也称为浮动静态路由），如下图所示</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1b4uspd50dec1ssb1v7j1aunb379.png"
+alt="备份路由" />
+<figcaption aria-hidden="true">备份路由</figcaption>
+</figure>
+<h2 id="动态路由">动态路由</h2>
+<p>动态路由就是通过协议动态地学习到路由信息，据其作用域的不同，又可分为内部网管协议(IGP)和边界网络协议(BGP)；内部网关协议有RIP，OSPF，IGRP，EIGRP等，其在网络中的位置入下</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1b4v3ecpin8p1qibhum18j814n05i.png"
+alt="路由协议在协议层中的位置" />
+<figcaption aria-hidden="true">路由协议在协议层中的位置</figcaption>
+</figure>
+<p>这里主要讲述内部网络协议中的RIP和OSPF。</p>
+<h3 id="rip">RIP</h3>
+<p>RIP是典型DV(Distance Vector,距离矢量)协议，其工作原理如下：</p>
+<ul>
+<li>每个路由器维护两个向量<span
+class="math inline">\(D\_i\)</span>和<span
+class="math inline">\(S\_i\)</span>来表示<strong>该点到网上所有节点的路径距离及其下一个节点</strong></li>
+<li><strong>相邻路由器</strong>之间交换路径信息</li>
+<li>各节点<strong>根据路径信息更新路由表</strong></li>
+</ul>
+<p>向量<span class="math inline">\(D\_i\)</span>和<span
+class="math inline">\(S\_i\)</span>的含义如下: <span
+class="math inline">\(d\_{i1}\)</span>：从节点i 到节点1 的时延向量 <span
+class="math inline">\(S\_{i1}\)</span>：从节点i到节点1的一条最小时延路径上的下一个节点
+n ：网络中的节点数</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1b4uts4rn1k9cm5n1a4scrg1q4213.png"
+alt="距离矢量" />
+<figcaption aria-hidden="true">距离矢量</figcaption>
+</figure>
+<p>RIP使用跳数作为路由选择的度量，当到达目的网络的跳数超过15跳，数据包将被丢掉。
+RIP路由更新广播默认周期为30秒。</p>
+<p>下图是RIP的一个简单例子</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1b4uulq6n1c0m1fmi1o8qk0pvlc1g.png"
+alt="RIP工作原理" />
+<figcaption aria-hidden="true">RIP工作原理</figcaption>
+</figure>
+<p>RIP在ipv4中的协议版本有RIPv1和RIPv2,其中 RIPv1
+只支持传输自然网段的地址(也就是ABC三类网络)，而 RIPv2
+修复了这个缺陷,增加了一个子网掩码的段，支持所有长度的子网掩码，也支持
+CIDR 和 VLSM。</p>
+<h4 id="路由环路">路由环路</h4>
+<p>RIP协议可能会导致路由环路，下图为一个路由环路的例子，图中初始状态是正常状态，但是当40.0.0.0的网络挂掉后，C
+不会修改到网络 40.0.0.0 的距离不可达，而是相信B传过来的关于 40.0.0.0
+网路的距离为 1 的消息，从而导致错误信息不断在网络中传输，每个路由器到
+40.0.0.0 的距离不断增大，直到距离超过15才将网络40.0.0.0
+标记为不可达。</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1b4uv2n5vcbvshosde131fuv51t.png"
+alt="路由环路" />
+<figcaption aria-hidden="true">路由环路</figcaption>
+</figure>
+<p>虽然上面的例子中距离增大到16的时候会将网络 40.0.0.0
+标记为不可达，但是这样的话收敛的速度会非常慢。为了提高收敛的速度，常常会有以下方法</p>
+<ul>
+<li>水平分割（Split Horizon）</li>
+<li>毒性逆转（Poison Reverse）</li>
+<li>抑制定时器（Hold-Down Timers）</li>
+<li>触发更新（Triggered Updates）</li>
+</ul>
+<p><strong>水平分割（Split Horizon）</strong>
+分析上面的例子中路径环产生的原因，就是B向C提供了一条过时的、错误的路由信息。</p>
+<p>但是分析可知，B必须经由C方可到达网络40.0.0.0，所以B不可能向C提供任何有价值的路由信息。因此可以修改B对C提供的路由，禁止B向C提供关于此信宿的路由信息，具体操作就是<strong>B告诉C一条在正常情况下不真实的消息：网络40.0.0.0不可达（距离为无穷大，实际中记为16即可）。</strong></p>
+<p>通过水平分割可以使得上面的情况的收敛速度加快，如下所示</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1b4uvpghh12mfool1fd3rtq4go2a.png"
+alt="水平分割" />
+<figcaption aria-hidden="true">水平分割</figcaption>
+</figure>
+<p><strong>毒性逆转（Poison Reverse）</strong>
+分析上面的例子，当网络40.0.0.0
+挂掉的时候，路由器C并没有采取任何措施，而是利用了B的信息更新。</p>
+<p>而毒性逆转的方法就是指当C
+发现网络40.0.0.0发生故障时，主动将到达信宿的距离改为无穷大（实际中改为16即可），收敛过程如下图所示</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1b4v183kjv0lpi11m0g16be10p32n.png"
+alt="毒性逆转收敛" />
+<figcaption aria-hidden="true">毒性逆转收敛</figcaption>
+</figure>
+<p><strong>抑制定时器（Hold-Down Timers）</strong>
+当C发现网络40.0.0.0发生故障时，启动抑制计时器。</p>
+<p>在抑制计时期间内，有三种可能 1.
+如果网络状态转变，即<code>down→up</code>，则关闭计时器，保留原有路由信息
+2.
+如果收到来自B的关于信宿的路由信息，且路径比原有路径短，则关闭计时器，更新路由信息
+3. 如果无上述两种情况发生，计时器到时，更新路由为信宿不可达。</p>
+<p><strong>触发更新（Triggered Updates）</strong>
+当C发现网络40.0.0.0发生故障时，不等下一刷新周期到来，<strong>立刻更改路由为“信宿不可达”</strong>，引起全网的连锁反映，迅速刷新</p>
+<p>类似于RIP这种DV类协议的优点是算法简单，但是缺点有：</p>
+<ul>
+<li>交换的路径信息量大</li>
+<li>路径信息传播慢，使得路径信息可能不一致。</li>
+<li>收敛速度慢，存在无穷计算问题。</li>
+<li>不适合大型网络</li>
+</ul>
+<h4 id="ripng">RIPng</h4>
+<p>RIPng 是IPV6 中使用的RIP协议，保留了原来 RIP
+协议的一些特性，也增加了一些新的特点。</p>
+<p>RIPng有以下特点</p>
+<ul>
+<li>UDP端口号：使用521端口收、发报文（RIPv2用520端口）</li>
+<li>组播地址：<code>FF02::9</code>作为链路本地范围的路由器组播地址</li>
+<li>源地址：使用链路本地地址<code>FE80::/10</code>作为源地址发送RIPng路由信息报文</li>
+<li>下一跳地址：使用128位的IPv6地址</li>
+</ul>
+<p>’ RIPng 和 RIPv2的报文对比如下
+其中RIPng的一个报文种可包含多条路由信息，而RIPv2一个报文只含有一条路由信息。</p>
+<p>RIPng的报文格式为 <img
+src="https://wulc.me/imgs/image_1b4v277qo80a1b811qtburvkel3h.png"
+alt="RIPng报文" /></p>
+<p>RIPv2 的报文格式为</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1b4v26h5i5v98cq14m015ttk0234.png"
+alt="RIPv2报文" />
+<figcaption aria-hidden="true">RIPv2报文</figcaption>
+</figure>
+<p>RIPng中有Request和Response两种报文，其作用分别如下
+<strong>Request报文</strong>：当路由器启动或更新时，发该类报文（组播），用于请求其他路由器的路由信息
+<strong>Response报文</strong>：对Request的回应，通常包含全部的路由信息。除了收到Request的时候会发送，路由器还会周期性地发送。</p>
+<h4 id="配置">配置</h4>
+<p>RIP的配置的主要工作就是启动RIP进程并声明路由器所连接的网络。如下图所示</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1b4v2k08qtla1dgv8j515s0q733u.png"
+alt="RIP配置" />
+<figcaption aria-hidden="true">RIP配置</figcaption>
+</figure>
+<p>默认是RIPv1，如果要配置RIPv2,需要<code>version 2</code>的命令，如下图所示</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1b4v2or8m2qr1k8qflp1go5er74b.png"
+alt="RIPv2配置" />
+<figcaption aria-hidden="true">RIPv2配置</figcaption>
+</figure>
+<p>RIPng的配置过程入下 <img
+src="https://wulc.me/imgs/image_1b4v2tuvh1kri12kf90c1qq6133b4o.png"
+alt="RIPng配置" /></p>
+<h3 id="ospf">OSPF</h3>
+<p>OSPF时典型的LS(Link
+State,链路状态)协议，其思想是<strong>通过邻居的LSA(Link-state
+advertisement,
+链路转态通告)构建整个网络的拓扑并构建最小生成树，然后通过dijkstra
+计算最短路径，并根据最短路径修改路由表。</strong></p>
+<p>OSPF有以下特点</p>
+<ul>
+<li>无路由自环</li>
+<li>支持VLSM、CIDR</li>
+<li>使用<strong>带宽</strong>作为度量值（108/BW）</li>
+<li>收敛速度快</li>
+<li>通过分区实现高效的网络管理</li>
+<li>支持帧中继，X2.5, Ethernet, ppp等网络</li>
+<li>可以在大型网络中使用</li>
+</ul>
+<p>OSPF协议的一些基本概念如下;</p>
+<ul>
+<li><strong>协议号=89</strong>：IP头中代表OSPF报文的协议号是89</li>
+<li><strong>RouterID</strong>：一个32位的无符号整数，是一台路由器的唯一标识，在整个自治系统内唯一</li>
+<li><strong>路由器间的关系</strong>：邻居(Neighbor)、邻接(Adjacent)、未知(Unknown)</li>
+<li><strong>TTL=1</strong>：通常OSPF报文不转发，只被传递一条，即在IP报头的TTL值被设为1，</li>
+<li>DR(Designated Router)和BDR(Backup Designated Router):
+DR是由所有路由器选举出来的，<strong>目的是减少路由器间同步的次数</strong>，所有路由器只需要和选举出来的DR进行同步即可，原理如下图所示，BDR是DR的备份路由器。</li>
+</ul>
+<figure>
+<img src="https://wulc.me/imgs/image_1b4vf3po2etc1ila1pv3cto3qa6p.png"
+alt="选举DR的必要性" />
+<figcaption aria-hidden="true">选举DR的必要性</figcaption>
+</figure>
+<p>这里需要注意的是，DR是路由器选出来的，选举规则根据其priority值的大小，若priority相同则比较router
+id；DR一旦当选，除非路由器故障，否则不会更换；DR选出的同时，也选出BDR，DR故障后，由BDR接替DR成为新的DR</p>
+<h4 id="报文类型">报文类型</h4>
+<p>OSPF的分组有五种，分别如下所示</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>OSPF报文类型</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Type = 1, Hello报文</td>
+<td>建立和维护连接，报文中包含自己的RouterID和区域ID</td>
+</tr>
+<tr class="even">
+<td>Type = 2，DD(数据库描述)报文</td>
+<td>描述一个OSPF路由器的链路状态数据库内容，传输LSA摘要</td>
+</tr>
+<tr class="odd">
+<td>Type = 3，LSR(链路状态请求)报文</td>
+<td>请求对方发送自己没有的LSA</td>
+</tr>
+<tr class="even">
+<td>Type = 4，LSU(链路状态更新)报文</td>
+<td>LSR 的应答，可回传<strong>多条</strong>LSA</td>
+</tr>
+<tr class="odd">
+<td>Type = 3，LSAck(链路状态确认)报文</td>
+<td>确认收到LSA</td>
+</tr>
+</tbody>
+</table>
+<h4 id="建立毗邻关系">建立毗邻关系</h4>
+<p>OSPF运行的步骤为 1. 建立路由器毗邻关系 2. 选举DR和BDR 3. 发现路由 4.
+选择最佳路由 5. 维护路由信息</p>
+<p>OSPF中，一个路由器的的状态可能为</p>
+<ul>
+<li>Down</li>
+<li>Init（初始）</li>
+<li>Two-way（双向）</li>
+<li>ExStart（准启动）</li>
+<li>Exchange（交换）</li>
+<li>Loading（加载）</li>
+<li>Full adjacency（全毗邻）</li>
+</ul>
+<p>结合路由器的状态，OSPF建立毗邻关系的步骤如下</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1b4v54o4s1a2h1s6d1umht3q1suq5v.png"
+alt="OSPF建立毗邻关系" />
+<figcaption aria-hidden="true">OSPF建立毗邻关系</figcaption>
+</figure>
+<p><strong>1）</strong>RT1，RT2在某个接口激活了OSPF后，都会开始在这个接口上去发组播的Hello报文，目的是发现OSPF邻居，此时双方都处于<code>Down</code>状态。</p>
+<p><strong>2）</strong>当RT2收到RT1发来的Hello包（Neighbors Seen
+为空），此时RT2的状态变为<code>init</code>，然后将RT1的Router-ID存储放在Hello报文中(Neighbors
+Seen =
+RT1)发送出去，当RT1收到这个hello报文并从中找到自己的Router-ID，RT1会认为与RT2已经完成了双边关系的建立，此时RT1的状态变为<code>Two-way</code>，而RT1会发送Neighbors
+Seen = RT2的hello包让RT2的状态也变为<code>Two-way</code>。</p>
+<p><strong>3）</strong>接下来RT1和RT2会进入<code>ExStart</code>状态并开始进行Master、Slave的协商。协商M/S的目的是为了决定在后续的LSA交互中，谁来决定DD（Database
+Description）报文的序列号（Sequence
+Number），而Router-ID大的那个OSPF路由器的接口将会成为Master（注意这里的Master不是DR）.协商过程通过DD报文实现，有三个关键的字段：I、M、MS，其含义如下</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>字段</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>I(Init)</td>
+<td>如果是第一个DD报文则置1，其它的均置0</td>
+</tr>
+<tr class="even">
+<td>M(More)</td>
+<td>如果是最后一个DD报文则置0，否则均置1</td>
+</tr>
+<tr class="odd">
+<td>M/S</td>
+<td>设置进行DD报文双方的主从关系，如果本端是Master角色，则置1，否则置0</td>
+</tr>
+<tr class="even">
+<td>Sequence Number</td>
+<td>指定所发送的DD报文序列号。主从双方利用序列号来确保DD报文传输的可靠性和完整性</td>
+</tr>
+</tbody>
+</table>
+<p><strong>4）</strong>确认了M/S关系后，两个路由器就进入了
+<code>Exchange</code> 状态，
+主路由器首先开始和从路由器共享链路状态信息。如果将链路状态数据库比喻成一本书，那么DD报文相当于这本书的目录，通过DD报文，可以发现自己所没有的信息。</p>
+<p><strong>5）</strong>当所有的DD报文传输完后，假如从路由器通过DD报文发现了自己所没有的信息后，会发送LSR报文给主路由器，随后主路由器会发送LSU报文给从路由器。从路由器将该信息合并到它的本地链路状态数据库中。从路由器会回应一个LSAck包给主路由器。此时两者处于<code>loading</code>状态。</p>
+<p><strong>6）</strong>两者的链路数据库一致，达到了<code>full</code>状态。</p>
+<p>其状态转移图如下所示，图中的稳态有三种(<code>Down</code>,<code>Two-way</code>,<code>Full</code>)
+<img src="https://wulc.me/imgs/image_1b4v5vjpmrpf1chc1dbt1898o8u6c.png"
+alt="OSPF状态转移图" /></p>
+<h4 id="其他概念">其他概念</h4>
+<p><strong>克服路由自环</strong>
+OSPF能够克服路由自环的原因有以下几个</p>
+<ul>
+<li>每一条LSA都标记了生成者（用生成该LSA的路由器的RouterID标记），其他路由器只负责传输，这样不会在传输的过程中发生对该信息的改变和错误理解。</li>
+<li>路由计算的算法是SPF，计算的结果是一棵树，路由是树上的叶子节点，从根节点到叶子节点是单向不可回复的路径。</li>
+<li>区域则通过规定骨干区域避免</li>
+</ul>
+<p><strong>大型网络中存在的问题及对策</strong></p>
+<p>在大型网络中，OSPF存在着以下问题</p>
+<ul>
+<li>链路状态数据库(LSDB)非常庞大，占用大量存储空间</li>
+<li>计算最小生成树耗时增加，CPU负担很重,一点变化都会引发从头重新计算</li>
+<li>网络拓扑结构经常发生变化，网络经常处于“动荡”之中</li>
+</ul>
+<p>针对该问题，常用的解决方法是对OSPF划分区域</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1b4vjo5c2cn367e1m23130j17d87j.png"
+alt="ospf划分区域" />
+<figcaption aria-hidden="true">ospf划分区域</figcaption>
+</figure>
+<p><strong>OSPF路由器的类型</strong>
+根据位置不同，OSPF路由器可以被被划分为不同类型</p>
+<ul>
+<li>内部路由器 --- 路由器所有接口都在一个区</li>
+<li>主干路由器 --- 所有接口都在主干区域的路由器</li>
+<li>区域边界路由器(ABR) ---路由器接口分属不同区域(Area)</li>
+<li>自治域边界路由器 (ASBR) ---
+路由器至少有一个接口不属于本自治域(AS).</li>
+</ul>
+<figure>
+<img src="https://wulc.me/imgs/image_1b4vjsatj1ugu3lj11tpcfn9rp80.png"
+alt="路由器类型" />
+<figcaption aria-hidden="true">路由器类型</figcaption>
+</figure>
+<h4 id="ospfv3">OSPFv3</h4>
+<p>OSPFv3保留了OSPFv2的基本机制</p>
+<ul>
+<li>网络类型和接口类型</li>
+<li>邻居发现和邻接（毗邻）建立机制</li>
+<li>接口状态机和邻居状态机</li>
+<li>基于LSDB计算路由</li>
+<li>LSA老化更新机制</li>
+<li>泛洪机制(Flooding mechanism)</li>
+<li>共五种协议报文: Hello, DD, LSR, LSU, LSAck</li>
+</ul>
+<p>但是 OSPFv3 在 OSPFv2 的基础上做出的变化为：</p>
+<p><strong>1）基于链路运行</strong></p>
+<p>在 OSPFv2
+中，协议的运行是基于<strong>子网</strong>的，邻居之间形成邻接关系的条件之一就是两端的IP地址属于同一网段而且掩码相同。</p>
+<p>而在 OSPFv3
+中，协议基于<strong>链路</strong>运行，与具体的IPv6地址、前缀分离开来，即使同一链路上的不同节点具有不同的IPv6地址时，协议也可以正常运行。</p>
+<p><strong>2）取消了编址语义</strong></p>
+<p>在OSPFv2中，协议分组和LSA中的许多字段都是来自于网络上的某个IP地址，或掩码，或某个IP子网号。严重依赖IPv4。</p>
+<p>在OSPFv3中，取消了上述编址性语义，而只保留协议运行必须的核心内容。ID依然保留32位，但只是一个编号，不再包含地址信息。</p>
+<p><strong>3）链路本地地址的使用</strong></p>
+<p>在OSPFv2中，每一个运行OSPF的接口都必须有一个全局的IPv4地址，协议的运行和路由的计算都依赖于它。</p>
+<p>在IPv6中，每个接口都会分配本地链路地址（link-local address），OSPFv3
+使用了这个本地链路地址作为协议分组发送的源地址（虚连接除外），而且使用它作为路由的下一跳。</p>
+<p>这样可以节省大量的全局地址，同时可以说协议的运行独立于IPv6，可以方便的扩展用于多种协议的路由</p>
+<p><strong>4）使用专门的LSA来发布路由前缀信息</strong></p>
+<p>新增加了<code>Intra-Area-Prefix-LSA</code>，用于传递区域内路由前缀
+新增加了 <code>Link-LSA</code>，用于传递链路范围内的IPv6前缀。</p>
+<p><strong>5）明确的LSA泛滥范围</strong></p>
+<p>泛滥的范围分为：本地链路范围（Link-local scope），区域范围（Area
+scope），AS范围（AS scope）</p>
+<p><strong>6）提供了对多实例的支持</strong></p>
+<p>在OSPFv2中，不同的实例必须运行在不同的链路上；在OSPFv3中，明确的提供了对多实例的支持，同一链路也可以运行多个OSPF实例了，而且互相独立运行不会影响。</p>
+<h4 id="配置-1">配置</h4>
+<p><strong>单区域配置</strong></p>
+<figure>
+<img src="https://wulc.me/imgs/image_1b4vnobbs1k02iu81fso1u1832j8d.png"
+alt="OSPF单区域配置" />
+<figcaption aria-hidden="true">OSPF单区域配置</figcaption>
+</figure>
+<p><strong>配置Routert-ID</strong></p>
+<p>router-id是一个可选的配置，其获取方式依次为 1）手动配置
+2）使用环回地址作为router ID
+3）如果没有，选择路由器的最高逻辑地址作为routerID</p>
+<p>注意：IOS 的某些早期版本无法识别 router-id
+命令；因此，为这些路由器设置路由器 ID 的最佳方法是使用环回接口</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1b4vo37b6lffipr137u7emv5u8q.png"
+alt="配置router-id" />
+<figcaption aria-hidden="true">配置router-id</figcaption>
+</figure>
+<p><strong>配置优先级</strong>
+优先级的取值范围为0~255，优先级为0的路由器不能被选举为DR</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1b4vo4iql9lsc6v13qleu16ku97.png"
+alt="优先级配置" />
+<figcaption aria-hidden="true">优先级配置</figcaption>
+</figure>
+<p><strong>配置计时器</strong></p>
+<p>广播型OSPF网络，缺省hello包间隔为10秒，down机判断间隔为40秒
+非广播型OSPF网络，缺省hello包间隔为30秒，down机判断间隔为120秒</p>
+<p>实际配置的例子如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Router（config-if）＃ip ospf hello-interval 5</span><br><span class="line">Router（config-if）＃ip ospf dead-interval 10</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="tag"># 计算机网络</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2016/12/26/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93--IPV6/" rel="prev" title="计算机网络课程总结--IPV6">
+      <i class="fa fa-chevron-left"></i> 计算机网络课程总结--IPV6
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/01/03/%E4%BD%BF%E7%94%A8sklearn%E5%81%9A%E5%8D%95%E6%9C%BA%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B/" rel="next" title="使用sklearn做单机特征工程">
+      使用sklearn做单机特征工程 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%99%E6%80%81%E8%B7%AF%E7%94%B1"><span class="nav-number">1.</span> <span class="nav-text">静态路由</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1"><span class="nav-number">2.</span> <span class="nav-text">动态路由</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#rip"><span class="nav-number">2.1.</span> <span class="nav-text">RIP</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B7%AF%E7%94%B1%E7%8E%AF%E8%B7%AF"><span class="nav-number">2.1.1.</span> <span class="nav-text">路由环路</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ripng"><span class="nav-number">2.1.2.</span> <span class="nav-text">RIPng</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE"><span class="nav-number">2.1.3.</span> <span class="nav-text">配置</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ospf"><span class="nav-number">2.2.</span> <span class="nav-text">OSPF</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8A%A5%E6%96%87%E7%B1%BB%E5%9E%8B"><span class="nav-number">2.2.1.</span> <span class="nav-text">报文类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BB%BA%E7%AB%8B%E6%AF%97%E9%82%BB%E5%85%B3%E7%B3%BB"><span class="nav-number">2.2.2.</span> <span class="nav-text">建立毗邻关系</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E6%A6%82%E5%BF%B5"><span class="nav-number">2.2.3.</span> <span class="nav-text">其他概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ospfv3"><span class="nav-number">2.2.4.</span> <span class="nav-text">OSPFv3</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-1"><span class="nav-number">2.2.5.</span> <span class="nav-text">配置</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">248</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.linkedin.com/in/wuliangchao/" title="LinkedIn → https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;wuliangchao&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i>LinkedIn</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

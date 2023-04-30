@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="本系列文章是刘鹏老师的计算广告学中的一些记录。本文是第二章:合约广告系统，主要介绍了广告系统中一些常用的开源工具，合约广告系统的概念以及在线分配问题的建模与求解。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计算广告笔记(2)--合约广告系统">
+<meta property="og:url" content="https://wulc.me/2017/04/25/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A%E7%AC%94%E8%AE%B0(2)--%E5%90%88%E7%BA%A6%E5%B9%BF%E5%91%8A%E7%B3%BB%E7%BB%9F/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="本系列文章是刘鹏老师的计算广告学中的一些记录。本文是第二章:合约广告系统，主要介绍了广告系统中一些常用的开源工具，合约广告系统的概念以及在线分配问题的建模与求解。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/image_1begf63m7ar31mth7jb143bm2n9.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1bhbevjhb1h4lp9g5p317n11k8a9.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1behcsvao1se81fl1jub1j6s1bh0m.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b5or34n01nrhp533c31evp9939.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1belf793j11fo1or618tno6ufs9.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1belg5n9m11kd1pni1krdb6d1220m.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1belga1ij1tn01nov1ota1kmr9a1g.png">
+<meta property="article:published_time" content="2017-04-25T13:37:39.000Z">
+<meta property="article:modified_time" content="2023-04-30T05:12:49.028Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="计算广告">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/image_1begf63m7ar31mth7jb143bm2n9.png">
+
+<link rel="canonical" href="https://wulc.me/2017/04/25/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A%E7%AC%94%E8%AE%B0(2)--%E5%90%88%E7%BA%A6%E5%B9%BF%E5%91%8A%E7%B3%BB%E7%BB%9F/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>计算广告笔记(2)--合约广告系统 | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">吴良超的学习笔记</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2017/04/25/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A%E7%AC%94%E8%AE%B0(2)--%E5%90%88%E7%BA%A6%E5%B9%BF%E5%91%8A%E7%B3%BB%E7%BB%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          计算广告笔记(2)--合约广告系统
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-04-25 21:37:39" itemprop="dateCreated datePublished" datetime="2017-04-25T21:37:39+08:00">2017-04-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-30 13:12:49" itemprop="dateModified" datetime="2023-04-30T13:12:49+08:00">2023-04-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A/" itemprop="url" rel="index"><span itemprop="name">计算广告</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本系列文章是刘鹏老师的<a
+target="_blank" rel="noopener" href="http://study.163.com/course/courseMain.htm?courseId=321007">计算广告学</a>中的一些记录。本文是第二章:合约广告系统，主要介绍了广告系统中一些常用的开源工具，合约广告系统的概念以及在线分配问题的建模与求解。</p>
+<span id="more"></span>
+<h2 id="常用广告系统开源工具">常用广告系统开源工具</h2>
+<p>广告系统中常用的工具有以下这些</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1begf63m7ar31mth7jb143bm2n9.png"
+alt="常用广告系统开源工具" />
+<figcaption aria-hidden="true">常用广告系统开源工具</figcaption>
+</figure>
+<p>总体可分为两类工具：离线与在线</p>
+<p><strong>离线</strong></p>
+<ul>
+<li>HBASE（列存储的NOSQL数据库，类似的有BigTable，HyperTable，Cassandra）</li>
+<li>Pig: 一种脚本语言</li>
+<li>Elephant-bird：将二进制文件转为 pig 可处理的文本文件</li>
+<li>Hive: 一种脚本语言</li>
+<li>mahout: 分布式机器学习</li>
+</ul>
+<p><strong>在线</strong></p>
+<ul>
+<li>ZooKeeper/Chubby: 分布式环境下解决一致性问题</li>
+<li>Avro/Thrift: 分布式环境下跨语言的通信问题</li>
+<li>S4/Storm: 流式计算平台</li>
+<li>Chuhwa/Scribe/Flume: data highway,
+分布式日志收集工具，并送到其他平台</li>
+</ul>
+<h2 id="合约广告系统">合约广告系统</h2>
+<p>合约广告有两个重要组成部分：<strong>广告位合约和展示量合约</strong>。</p>
+<p><strong>广告位合约</strong>：实际上是将线下的模式搬到了线上，指的是广告主与媒体约定在某一时间段内，在某些广告位上固定投放该广告主的广告，相应的结算方式是
+CPT(Cost Per
+Time)（也就是按照展示时间结算），<strong>这种模式下售卖给广告主的是广告位</strong>。</p>
+<p><strong>展示量合约</strong>：展示量合约广告指的是约定某种受众条件下的展示量，然后按照事先约定好的单位展示量价格来结算，这种结算方式是
+CPM(Cost Per
+Mille)（也就是每一千次展示的付费）。这种方式也叫<strong>担保式投放(Guarantee
+Delivery,
+GD)</strong>，意思就是先广告主担保其提出的广告展示量会被满足。<strong>这种模式下售卖给广告主的是广告位+人群</strong>。</p>
+<h3 id="广告位合约">广告位合约</h3>
+<p>广告位合约对供给方和需求方的技术的要求都不高。</p>
+<p>供给方即媒体往往会使用一种在合同确定以后自动的执行合同的广告管理工具：<strong>广告排期系统</strong>。广告排期系统能够帮助媒体自动执行多个合同的排期，可以将广告素材直接插入页面，且对于图片等静态资源，会放到
+CDN 上进行加速。</p>
+<p>需求方即广告主往往会通过代理商（agency）进行媒介采买（也就是广告位采买），代理商帮助广告主策划和执行排期，而<strong>对于广告的质和量，是根据代理公司人员对媒体广告位的历史经验以及对广告主业务的了解通过人工优化的方式来满足</strong>。这样的代理公司的代表有我们前面一讲提到的
+4A 公司。</p>
+<h3 id="展示量合约">展示量合约</h3>
+<p>媒体从前面的广告位售卖变为按 CPM
+的售卖，初衷是为了在受众定向的基础上提高单位流量的变现能力，可是面向的任然是原来的品牌广告主。广告主按广告位采买时，比较容易预估到自己能够拿到的流量，可是按照人群定向的方式采买，流量有诸多不确定的因素，因此，需求方希望在合约中加入对量的保证，才能放心购买。而假如约定的量未完成，则需要向广告商补偿。</p>
+<p>因此，<strong>这种方式卖的不仅仅是广告位，而是人群。</strong>
+后面半句我们很容易理解，而前面半句话的指的是在 CPM
+这种结算方式下，任然没有摆脱广告位这一标的物，原因是无法将多个差别很大的广告位打包成统一售卖标的（这样的话每个广告主都会抢着要那些曝光率更高的广告位）；因此<strong>实际中的展示量合约往往是以一些曝光量很大的广告位为基础，再切分人群售卖</strong>，最典型的例子就是视频网站的铁片位置或者门户网站首页的广告位。</p>
+<p>展示量合约这种模式的出现实际上已经反映了互联网广告计算驱动的本质：<strong>分析得到用户和上下文的属，并且由服务器端根据这些属性以及广告库情况动态决定广告候选。</strong>这一商业模式的出现，需要有一系列技术手段的支持，这些技术手段主要包括<strong>受众定向、流量预测、在线分配</strong>等。下面主要介绍流量预测和在线分配，受众定向会在下一讲中详细讲解。</p>
+<h2 id="流量预测">流量预测</h2>
+<p>流量预测(traffic forecasting)
+简单来说就是预测某个标签的人群访问某个站点的量。流量预测其目的有多种，典型的有<strong>售前指导，在线流量分配，出价指导</strong>，前面两个是合约广告中的内容，而后面一个是竞价广告中的内容。</p>
+<p>1）售前指导指的是在展示合约广告系统中，由于要约定曝光总数，事先尽可能准确地预测个人群标签的流量非常重要。因为如果流量低估，会出现资源售卖量不足的情形；而如果流量严重高估，则会出现一部分合约不能达成的状况。</p>
+<p>2）在线流量分配指的是在展示量合约广告系统中，由于合约之间在人群的选择上会有很多的交集，因此一次的曝光往往会满足多个合约的要求，这时候就需要在多个合约之间进行分配，目的是达到整体满足所有合约的目的。这也是下面要详细探讨的在线流量分配的问题。</p>
+<p>3）出价指导是竞价广告中的内容，在竞价广告中，没有了量的保证，广告主往往需要根据自己预计的出价先了解一下可能获得多少流量，以判断自己的出价是否合理。与前面在合约广告中的应用不同，这里还多了出价这一因素。</p>
+<p>综上，广告里一般的流量预测问题，可以描述为对流量 <span
+class="math inline">\(t(u,b)\)</span> 这个函数的估计，其中 <span
+class="math inline">\(u\)</span> 是给定的人群标签或这些标签的组合，而
+<span class="math inline">\(b\)</span>
+是具体的出价。在展示量合约中，由于没有竞价，可以看成是 <span
+class="math inline">\(b \rightarrow \infty\)</span> 的特例。</p>
+<h2 id="在线分配">在线分配</h2>
+<p><strong>在合约广告系统中主要讨论在线分配（Online
+Allocation）问题</strong>，在线分配问题指的是在通过对每一次广告展示进行实时在线决策，从而达到在满足某些量的约束的前提下，优化广告产品整体收益的过程。</p>
+<p>在线分配是广告中比较关键的算法框架之一，适用于许多量约束下的效果优化问题，而这实际上是广告业务非常本质的需求。</p>
+<h3 id="问题建模">问题建模</h3>
+<p>在线匹配可看作是一个二部图匹配问题，二部指的是代表广告库存的供给节点（集合记为
+<span
+class="math inline">\(I\)</span>）和代表广告合约的需求节点（集合记为
+<span class="math inline">\(A\)</span>）。如下图所示，上边为集合 <span
+class="math inline">\(A\)</span>, 下边为集合 <span
+class="math inline">\(I\)</span>,
+如果供给节点的受众标签能够满足某个需求节点的要求时，就在相应的两个节点之间建立一条连接边，所有边的连接记为集合
+<span class="math inline">\(E\)</span>。</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1bhbevjhb1h4lp9g5p317n11k8a9.png"
+alt="在线分配" />
+<figcaption aria-hidden="true">在线分配</figcaption>
+</figure>
+<p>在线分配技术并不仅仅适用于展示量合约中的担保投放（GD）问题，还适用于
+AdWords 问题，展示广告问题等。下面主要介绍 GD 问题和 AdWords 问题。</p>
+<p><strong>GD 问题</strong></p>
+<p>前面已经提到了GD的概念，在这里如果<strong>不考虑合约 <span
+class="math inline">\(a\)</span>
+未完成的惩罚</strong>，收益一定是常数。那么 GD 的优化问题可以表示为</p>
+<p><span class="math display">\[\begin{align\*}
+&amp;\max \quad C\\\
+&amp;\begin{array}\\\
+s.t. &amp;\sum\_{a \in \Gamma(i)} x\_{ia} \le 1 &amp;\forall i \in I\\\
+&amp;\sum\_{i \in \Gamma(a)} s\_i x\_{ia} \ge d\_a &amp;\forall a \in
+A\\\
+&amp;x\_{ia} \ge 0 &amp;\forall (i,a) \in E
+\end{array}
+\end{align\*}\]</span></p>
+<p>上面各式的符号含义如下</p>
+<p><span class="math inline">\(C\)</span> 是一个常数，指的是总收益 <span
+class="math inline">\(I\)</span>、<span
+class="math inline">\(A\)</span>、<span class="math inline">\(E\)</span>
+上面已经提到，分别表示供给点集合，需求点集合，边的集合 <span
+class="math inline">\(\Gamma(i)\)</span> 表示与供给节点 <span
+class="math inline">\(i\)</span> 连接的所有需求节点的集合 <span
+class="math inline">\(x\_{i,a}\)</span> 表示供给节点 <span
+class="math inline">\(i\)</span> 分配给需求节点 <span
+class="math inline">\(a\)</span> 的流量的比例 <span
+class="math inline">\(\Gamma(a)\)</span> 表示所有与需求节点 <span
+class="math inline">\(a\)</span> 连接的供给节点 <span
+class="math inline">\(i\)</span> 的集合 <span
+class="math inline">\(s\_i\)</span> 表示供给节点 <span
+class="math inline">\(i\)</span> 的总流量 <span
+class="math inline">\(d\_a\)</span> 表示需求节点 <span
+class="math inline">\(a\)</span> 的展示量需求</p>
+<p><strong>Adwords 问题</strong></p>
+<p>AdWorks
+问题，也被称为有预算约束的出价问题，是竞价广告领域内的问题。简单来说，这个问题讨论的是在按照
+CPC
+方式结算的广告环境下，给定广告主的预算，整体化市场营收问题。需要注意的是，竞价广告中已经没有了量的约束，广告主给的约束是其预算费用。因此可以将这个问题表示为如下的优化问题</p>
+<p><span class="math display">\[\begin{align\*}
+&amp;\max\_{(i,a) \in E} \quad q\_{ia} s\_i x\_{ia}\\\
+&amp;\begin{array}\\\
+s.t. &amp;\sum\_{a \in \Gamma(i)} x\_{ia} \le 1  &amp; \forall i \in
+I\\\
+&amp;\sum\_{i \in \Gamma(a)} q\_{ia}s\_i x\_{ia} \le d\_a &amp; \forall
+a \in A\\\
+&amp;x\_{i,a} \ge 0 &amp;\forall (i,a) \in E
+\end{array}
+\end{align\*}\]</span></p>
+<p>上式大部分的符号跟 GD 问题相同，不同的地方主要是以下两个符号 <span
+class="math inline">\(q\_{ia}\)</span> 表示需求节点(广告主) <span
+class="math inline">\(a\)</span> 对供给节点（某个人群标签） <span
+class="math inline">\(i\)</span> 的出价 <span
+class="math inline">\(d\_a\)</span> 表示则表示广告主 <span
+class="math inline">\(a\)</span> 的总预算</p>
+<h3 id="问题求解">问题求解</h3>
+<p>上面的两个最优化问题均是线性规划问题，未知量是 <span
+class="math inline">\(s\_i\)</span>（供给节点 <span
+class="math inline">\(i\)</span> 的流量） 和 <span
+class="math inline">\(x\_{ia}\)</span>（供给节点 <span
+class="math inline">\(i\)</span> 分配给需求节点 <span
+class="math inline">\(a\)</span> 的流量的比例）。但是对于 <span
+class="math inline">\(s\_i\)</span>
+，常常利用历史流量去估计它的值，因此上面的优化问题变成了仅仅需要求解
+<span class="math inline">\(x\_{ia}\)</span>
+的问题。下面解决这个问题的几种思路</p>
+<h4 id="直接求解">直接求解</h4>
+<p>对于这类线性规划问题，可以通过内点法或单纯形法直接进行求解，但是在大型的广告合约系统中，供给节点和需求节点的数目都很大，因此边
+<span class="math inline">\(|E|\)</span>
+的数目也会非常大（百万级以上),这样会使得对应的分配问题变得过于复杂而无法直接有效求解。令
+<span class="math inline">\(n\)</span>
+为变量的个数，则内点的时间复杂度为 <span
+class="math inline">\(n\)</span> 的多项式级别，单纯形法的时间复杂度为
+<span class="math inline">\(O(n^2)\)</span>, 这样直接求解的解参数正比于
+<span class="math inline">\(|E|\)</span>
+的数量，规模有可能过于庞大，无法进行实时的在线分配。因此有必要探索更新效率更高的的在线分配方案。</p>
+<h4 id="对偶求解">对偶求解</h4>
+<p>通过拉格朗日对偶可将原问题装化为对偶问题，但是对偶问题的变量数目仍然正比于约束的数目（供给约束和需求约束），前者的变量的量级为十万甚至百万千万，但后者的量级在数千级别。</p>
+<p>为了减少所需求解的变量，这篇文献 <a
+target="_blank" rel="noopener" href="http://dl.acm.org/citation.cfm?id=1807360">Optimal Online
+Assignment with Forecasts</a>
+提出了一个方法：<strong>只保留需求约束对应的对偶变量，然后通过数学变换恢复出供给约束对应的对偶变量和分配率</strong>。具体的算法过程可参考上面提到的文献。</p>
+<p>上面的方法在求解对偶问题时代价仍然比较高，因此在文献 <a
+target="_blank" rel="noopener" href="http://dl.acm.org/citation.cfm?id=2339718">SHALE: an efficient
+algorithm for allocation of guaranteed display advertising</a> 提出了
+SHALE
+算法，优化了求解对偶变量的步骤，采用了原始对偶方法迭代进行求解，求解出对偶变量后，通过数学变换恢复出供给约束对应的对偶变量和分配率跟上面的方法一致。</p>
+<h4 id="启发式分配方案-hwm">启发式分配方案 HWM</h4>
+<p>上面根据历史流量数据来求解的分配方案原理上可行，但是在实际的工程应用中仍然显得有些复杂，比如离线仍然要消耗大量的时间求解对偶解。因此，人们希望实现一种快速算法，保持前述方法的紧凑分配的特性，效果上也能够近似最优。前述方法中通过合同节点的对偶变量即可恢复最优解，受其讨论启发，可以发现，<strong>只要大体确定好每个合同在分配中的相对优先级以及分配时得到某次展示的概率，就可以构造出一种直觉上可行的在线分配方案。</strong></p>
+<p>文献 <a target="_blank" rel="noopener" href="http://dl.acm.org/citation.cfm?id=2229038">Ad serving
+using a compact allocation plan</a> 提出的 HWM（High Water MArk）
+算法便是这样一种方案，虽然在数学上并不完全严谨，但是由于根据历史数据来指定的分配方案本身就具有相当程度的近似，因此其实际效果也不错，而工程上的便利性则是这个算法的一大优点。</p>
+<p>HWM 分配算法有两个关键点：
+1）根据历史流量确定每个广告合约资源的稀缺程度，通过可满足各合约的供给节点总流量的升序排列进而得到分配优先级
+2）根据优先级确定每个广告合约的分配比例</p>
+<p>具体过程可参考文献内容</p>
+<h2 id="合约广告系统主要模块">合约广告系统主要模块</h2>
+<p>在前面提到的广告提供架构图中，合约广告系统主要表示为以下模块</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1behcsvao1se81fl1jub1j6s1bh0m.png"
+alt="合约广告系统" />
+<figcaption aria-hidden="true">合约广告系统</figcaption>
+</figure>
+<p>上面是竞价广告系统中截取出来的，但是截取出来的部分在概念上与合约广告系统相差不大；主要由以下几个部分构成</p>
+<p>Ad retrieval：搜索页面内容相关的广告 Ad Ranking：计算
+CTR，根据CTR排序 Yield management（Allocation）：广告分配的问题
+流量预测模块：跟 Allocation 打交道，在上图中没有画出来 Billing 和
+Anti-spam：实时计算部分，用于计价和防作弊，任何广告系统都有</p>
+<h2 id="hadoop-介绍">Hadoop 介绍</h2>
+<p>上面简单介绍了一些计算广告系统中常用的开源工具，下面主要介绍 Hadoop
+这个使用最为广告的分布式系统。</p>
+<p>Hadoop 源于Lucene项目一部分, 2006年成为子项目,
+后来成为Apache顶级项目</p>
+<p>Hadoop最为重要的两个部件： 1. HDFS：一个高可靠性,
+高效率的分布式文件系统 2. MapReduce: 一个海量数据处理的编程框架</p>
+<h3 id="hdfs">HDFS</h3>
+<p>HDFS的架构如下： <img
+src="https://wulc.me/imgs/image_1belcu4ugon1c7713n41irb5tnm.png"
+alt="HDFS架构" /></p>
+<p>HDFS中主要有 Namenode 和 Datanodes 两种角色，其中 Namenode 存储的的是
+metadata，其包含的信息是组成文件的各个block存储在哪个 Datanode 上，而
+DataNodes
+是真正存储文件数据的地方，并且为了达到高可用的效果，文件的一个block会以多个replication的方式存在多个Datanode上。</p>
+<p>当 client 访问 HDFS 上的文件时，会先访问 NameNode，得到 文件所在的
+DataNode 的后再去对文件进行具体操作。</p>
+<h3 id="mapreduce">MapReduce</h3>
+<p>MapReduce
+是一个分布式计算框架，整个过程包括一个Map过程和一个Reduce过程。相比于MPI,Map
+过程处理之间的独立性使得整个系统的可靠性大为提高；并且分布式操作和容错机制由系统实现,
+应用级编程非常简单。</p>
+<p>MapReduce的计算流程非常类似于简单的Unix pipe</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Pipe: cat input   | grep  |        sort    | uniq -c   &gt; output</span><br><span class="line">M/R:   Input      |  map  | shuffle &amp; sort |   reduce | output</span><br></pre></td></tr></table></figure>
+<p>MapReduce中进程间通信的时间只能是在map和reduce间的 shuffle &amp; sort
+过程，该过程主要是将经过map操作后 key
+相同的那些记录聚合到一起，已进行后面的reduce操作。其过程如下图示：</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1b5or34n01nrhp533c31evp9939.png"
+alt="MapReduce" />
+<figcaption aria-hidden="true">MapReduce</figcaption>
+</figure>
+<h3 id="mapreduce-与-分布式机器学习">MapReduce 与 分布式机器学习</h3>
+<p>在分布式机器学习中常用的统计模型有两种：<strong>指数族分布和指数族混合分布</strong></p>
+<p>指数族分布(<a
+target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Exponential_family">Exponential
+Family</a>)是条件概率服从某种形式的，常见的很多分布（如高斯分布，泊松分布，多项式分布等）通过变换都能够转化为这种形式，也就是常见的分布很多都是指数族分布。</p>
+<p>这种分布的一个好处是通过最大似然(Maximum likelihood,
+ML)估计可以通过充分统计量(sufficient
+statistics)链接到数据，或者说得到数据的规律。这里的充分统计量(sufficient
+statistics)是指数族分布中的一个组成部分，一般来说就是模型的参数（如高斯分布的均值和方差）。</p>
+<p>而当单个的指数族分布无法刻画数据的分布的时候，就要考虑多个指数族分布混合在一起的分布，也就是指数族混合分布；常见的指数族混合分布有Mixture
+of Gaussians, Hidden Markov Models, Probabilistic Latent Semantic
+Analysis (PLSI)等。</p>
+<p>在指数族混合分布中， ML估计一般通过EM算法迭代得到. 每个迭代中,
+我们使用上一个迭代的统计量更新模型。</p>
+<p>而一般的 ML 和 EM 算法能够通过 MapReduce 过程较好地刻画</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1belf793j11fo1or618tno6ufs9.png"
+alt="MapReduce与EM" />
+<figcaption aria-hidden="true">MapReduce与EM</figcaption>
+</figure>
+<p>对于 ML 过程只需要一个 mapper 和 一个 reducer 即可，上面从 reducer
+经过 model 返回到 mapper 的过程代表 EM 的迭代过程。</p>
+<p>这样刻画的好处使得在 mapper 中仅仅生成比较紧凑的统计量,
+其<strong>大小正比于模型参数量,
+与数据量无关</strong>；同时这样的流程可以抽象出来,
+而具体的模型算法只需要关注统计量计算和更新两个函数。</p>
+<p>但是对于需要迭代的算法，MapReduce 需要与 HDFS
+进行多次交互从而导致性能不佳，而这也是 Spark
+等框架致力于解决的问题之一。</p>
+<h3 id="mapreduce-的多种实现方式">MapReduce 的多种实现方式</h3>
+<p>MapReduce提供了多样的编程接口，除了上面介绍的直接通过 Java
+写MapReduce程序外；通过 Streaming 可以利用标准输入输出模拟以上
+pipeline；而通过Pig只需关注数据逻辑，无须考虑M/R实现</p>
+<p>Hadoop 的 Streaming 模拟 Pipe 方式执行Map/Reduce Job,
+并利用标准输入/输出调度数据；<strong>开发者可以使用任何编程语言实现map和reduce过程,
+只需要从标准输入读入数据, 并将处理结果打印到标准输出</strong>.</p>
+<p>其限制是只支持文本格式数据, 数据缺省配置为每行为一个Record,
+Key和value之间用<code>\t</code>分隔,如生成大量文本上的字典可通过下面的linux命令模拟map操作和reduce操作</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">map：   awk  <span class="string">&#x27;&#123;for (i=1; i &lt;=NF; i ++)&#123;print $i&#125;&#125;&#x27;</span></span><br><span class="line">reduce: <span class="built_in">uniq</span></span><br></pre></td></tr></table></figure>
+<p>Pig 通过类SQL操作在Hadoop上进行数据处理，如下是一段 pig 代码实例：
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Users = load ‘users’ as (name, age); </span><br><span class="line">Fltrd = filter Users by </span><br><span class="line">    age &gt;= 18 and age &lt;= 25; </span><br><span class="line">Pages = load ‘pages’ as (user, url); </span><br><span class="line">Jnd = join Fltrd by name, Pages by user; </span><br><span class="line">Grpd = group Jnd by url; </span><br><span class="line">Smmd = foreach Grpd generate group, </span><br><span class="line">    COUNT(Jnd) as clicks; </span><br><span class="line">Srtd = order Smmd by clicks desc; </span><br><span class="line">Top5 = limit Srtd 5; </span><br><span class="line">store Top5 into ‘top5sites’;</span><br></pre></td></tr></table></figure></p>
+<p>Pig 解释器会进行整体规划以减少总的map/reduce次数，而如果需要通过 Java
+来写 MapReduce 程序的话，会非常冗长，如下所示是实现相同功能的 MR
+代码</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1belg5n9m11kd1pni1krdb6d1220m.png"
+alt="naive java code" />
+<figcaption aria-hidden="true">naive java code</figcaption>
+</figure>
+<p>pig 常用的一些语句如下所示</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1belga1ij1tn01nov1ota1kmr9a1g.png"
+alt="pig常用语句" />
+<figcaption aria-hidden="true">pig常用语句</figcaption>
+</figure>
+<p>Hadoop上还有一个工作流引擎：Oozie，用于连接多个Map/reduce Job,
+完成复杂的数据处理，处理各Job以及数据之间的依赖关系（可以依赖的条件：数据,时间,其他Job等);
+Oozie使用hPDL(一种XML流程语言)
+来定义DAG工作流。这里需要注意的是<strong>工作流引擎在线上环境中非常重要，原因是当执行任务多了以后，任务间的关系依赖关系不能出错，否则会带来各种意想不到的后果。</strong></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A/" rel="tag"># 计算广告</a>
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 机器学习</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/04/20/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A%E7%AC%94%E8%AE%B0(1)--%E5%B9%BF%E5%91%8A%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86/" rel="prev" title="计算广告笔记(1)--广告的基本知识">
+      <i class="fa fa-chevron-left"></i> 计算广告笔记(1)--广告的基本知识
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/04/28/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A%E7%AC%94%E8%AE%B0(3)--%E5%8F%97%E4%BC%97%E5%AE%9A%E5%90%91/" rel="next" title="计算广告笔记(3)--受众定向">
+      计算广告笔记(3)--受众定向 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E5%B9%BF%E5%91%8A%E7%B3%BB%E7%BB%9F%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7"><span class="nav-number">1.</span> <span class="nav-text">常用广告系统开源工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%88%E7%BA%A6%E5%B9%BF%E5%91%8A%E7%B3%BB%E7%BB%9F"><span class="nav-number">2.</span> <span class="nav-text">合约广告系统</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B9%BF%E5%91%8A%E4%BD%8D%E5%90%88%E7%BA%A6"><span class="nav-number">2.1.</span> <span class="nav-text">广告位合约</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B1%95%E7%A4%BA%E9%87%8F%E5%90%88%E7%BA%A6"><span class="nav-number">2.2.</span> <span class="nav-text">展示量合约</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%81%E9%87%8F%E9%A2%84%E6%B5%8B"><span class="nav-number">3.</span> <span class="nav-text">流量预测</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%A8%E7%BA%BF%E5%88%86%E9%85%8D"><span class="nav-number">4.</span> <span class="nav-text">在线分配</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E5%BB%BA%E6%A8%A1"><span class="nav-number">4.1.</span> <span class="nav-text">问题建模</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%B1%82%E8%A7%A3"><span class="nav-number">4.2.</span> <span class="nav-text">问题求解</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%B4%E6%8E%A5%E6%B1%82%E8%A7%A3"><span class="nav-number">4.2.1.</span> <span class="nav-text">直接求解</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%B9%E5%81%B6%E6%B1%82%E8%A7%A3"><span class="nav-number">4.2.2.</span> <span class="nav-text">对偶求解</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%AF%E5%8F%91%E5%BC%8F%E5%88%86%E9%85%8D%E6%96%B9%E6%A1%88-hwm"><span class="nav-number">4.2.3.</span> <span class="nav-text">启发式分配方案 HWM</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%88%E7%BA%A6%E5%B9%BF%E5%91%8A%E7%B3%BB%E7%BB%9F%E4%B8%BB%E8%A6%81%E6%A8%A1%E5%9D%97"><span class="nav-number">5.</span> <span class="nav-text">合约广告系统主要模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hadoop-%E4%BB%8B%E7%BB%8D"><span class="nav-number">6.</span> <span class="nav-text">Hadoop 介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#hdfs"><span class="nav-number">6.1.</span> <span class="nav-text">HDFS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mapreduce"><span class="nav-number">6.2.</span> <span class="nav-text">MapReduce</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mapreduce-%E4%B8%8E-%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0"><span class="nav-number">6.3.</span> <span class="nav-text">MapReduce 与 分布式机器学习</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mapreduce-%E7%9A%84%E5%A4%9A%E7%A7%8D%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F"><span class="nav-number">6.4.</span> <span class="nav-text">MapReduce 的多种实现方式</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">248</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.linkedin.com/in/wuliangchao/" title="LinkedIn → https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;wuliangchao&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i>LinkedIn</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="本文主要介绍 CTR 预估中常用的一些模型，主要是非深度学习模型，包括 LR、GBDT+LR、FM&#x2F;FFM、MLR。每个模型会简单介绍其原理、论文出处以及其一些开源实现。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CTR 预估模型简介--非深度学习篇">
+<meta property="og:url" content="https://wulc.me/2018/07/15/CTR%20%E9%A2%84%E4%BC%B0%E6%A8%A1%E5%9E%8B%E7%AE%80%E4%BB%8B--%E9%9D%9E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AF%87/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="本文主要介绍 CTR 预估中常用的一些模型，主要是非深度学习模型，包括 LR、GBDT+LR、FM&#x2F;FFM、MLR。每个模型会简单介绍其原理、论文出处以及其一些开源实现。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/image_1cdhkuov7q2413hf3n14ecse0c.png">
+<meta property="og:image" content="https://wulc.me/imgs/gbdt.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1cdjf062nsovu4v1d3bbsn1rk49.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1cdk1jok51p5u13mgv2d1p6d1hll4c.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1cdjtahckkop2e81umc1l651lgi32.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1cdkhqh8gpjrb9n1mi11o6b16tj56.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1cdkb5qkk2ie1njv17ekj5s131k4p.png">
+<meta property="article:published_time" content="2018-07-15T13:53:19.000Z">
+<meta property="article:modified_time" content="2023-04-30T05:12:49.155Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="计算广告">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/image_1cdhkuov7q2413hf3n14ecse0c.png">
+
+<link rel="canonical" href="https://wulc.me/2018/07/15/CTR%20%E9%A2%84%E4%BC%B0%E6%A8%A1%E5%9E%8B%E7%AE%80%E4%BB%8B--%E9%9D%9E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AF%87/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>CTR 预估模型简介--非深度学习篇 | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">吴良超的学习笔记</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2018/07/15/CTR%20%E9%A2%84%E4%BC%B0%E6%A8%A1%E5%9E%8B%E7%AE%80%E4%BB%8B--%E9%9D%9E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AF%87/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          CTR 预估模型简介--非深度学习篇
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-07-15 21:53:19" itemprop="dateCreated datePublished" datetime="2018-07-15T21:53:19+08:00">2018-07-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-30 13:12:49" itemprop="dateModified" datetime="2023-04-30T13:12:49+08:00">2023-04-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本文主要介绍 CTR 预估中常用的一些模型，主要是非深度学习模型，包括
+LR、GBDT+LR、FM/FFM、MLR。每个模型会简单介绍其原理、论文出处以及其一些开源实现。</p>
+<span id="more"></span>
+<h2 id="lrlogistic-regerssion">LR(Logistic Regerssion)</h2>
+<p><strong>LR + 海量人工特征</strong>
+是业界流传已久的做法，这个方法由于简单、可解释性强，因此在工业界得到广泛应用，但是这种做法依赖于特征工程的有效性，也就是需要对具体的业务场景有深刻的认识才能提取出好的特征。</p>
+<h3 id="原理"><strong>原理</strong></h3>
+<p>LR 是一个很简单的线性模型，其输出的值可认为是事件发生(<span
+class="math inline">\(y=1\)</span>)的概率，即输出值如下式所示</p>
+<p><span class="math display">\[ h(x) = p(y=1|x) =
+\sigma(w^Tx+b)\]</span></p>
+<p>其中<span class="math inline">\(w\)</span> 为模型参数，<span
+class="math inline">\(x\)</span> 为提取的样本特征，两者均为向量，<span
+class="math inline">\(b\)</span> 是偏置项。<span
+class="math inline">\(\sigma\)</span> 为 sigmoid 函数，即 <span
+class="math inline">\(\sigma(x) = 1/(1+e^{-x})\)</span></p>
+<p>有了事件发生的概率，则事件不发生的概率为 <span
+class="math inline">\(p(y=0|x) =
+1-h(x)\)</span>,将这两个概率通过如下一条公式表示为</p>
+<p><span class="math display">\[p(y|x) =
+h(x)^y(1-h(x))^{1-y}\]</span></p>
+<p>有了这个概率值，则给定 <span class="math inline">\(n\)</span>
+个样本，便可通过极大似然估计来估算模型参数，即目标函数为</p>
+<p><span class="math display">\[\max
+\prod\_{i=1}^np(y\_i|x\_i)\]</span></p>
+<p>通常我们还会对概率取 log，同时添加负号将 max
+改成min，则可将目标函数改写成如下的形式</p>
+<p><span class="math display">\[\min -\sum\_{i=1}^ny\_i\log
+h(x\_i)+(1-y\_i)\log (1-h(x\_i))\]</span></p>
+<p>上面的损失函数也叫作 <strong>log loss</strong>，实际上多分类的
+<strong>cross entropy</strong> 也同以通过极大似然估计推导出来。</p>
+<p>有了损失函数，便可通过优化算法来求出最优的参数，由于这是个无约束的最优化问题，可选用的方法很多，最常用的就是
+gradient
+descent，除此之外，另外还有基于二阶导数的牛顿法系列，适用于分布式中的
+ADMM，以及由 Google 在论文 <a
+target="_blank" rel="noopener" href="https://static.googleusercontent.com/media/research.google.com/zh-CN//pubs/archive/41159.pdf">Ad
+Click Prediction: a View from the Trenches</a> 中提出的 FTRL
+算法，目前也是业界普遍采用的方法，该算法具有online learning
+和稀疏性的良好特性，online learning 指的是其更新方式与 SGD(stochastic
+gradient descent)
+相似，稀疏性指的是该算法能够解决带非光滑的L1正则项的优化问题。由于这里这篇文章主要讲述各种
+CTR 预估模型，因此这里不对优化算法做展开了。</p>
+<p>上面提到了 L1 正则项，就是在原来的损失函数基础上加上了 <span
+class="math inline">\(C\sum\_{i=1}^m |w\_i|\)</span> 这一项,
+表示各个参数的绝对值的和乘上常数 <span
+class="math inline">\(C\)</span>；加上这一项后能够使得最终的求解出来的参数中大部分的
+<span class="math inline">\(|w\_i|\)</span>
+为0，这也是稀疏性的名称来源。稀疏性使得模型的复杂度下降，缓解了过拟合的问题，同时具有有特征筛选的能力。因为
+LR 模型可以理解为对各个特征进行加权求和，如果某些特征的权重即 <span
+class="math inline">\(w\_i\)</span>
+为0，则可认为这些特征的重要性不高。在CTR预估中输入的是海量人工特征，因此添加
+L1 正则化就更有必要了。</p>
+<p>由于 L1 正则项不再是处处光滑可导的函数，因此在优化损失函数时。原来的
+gradient descent 不能够直接使用，而是要通过 <a
+target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Subgradient_method">subgradient</a>
+的方法或前面提到的 FTRL 算法进行优化。</p>
+<p>上面涵盖了 LR 模型的基本原理。而<strong>在 CTR 预估中，应用 LR
+模型的重点在于特征工程。LR 模型适用于高维稀疏特征</strong>。对于
+categorical 特征，可以通过 one-hot 编码使其变得高纬且稀疏。而对于
+continious 特征，可以先通过区间划分为 categorical 特征再进行 one-hot
+编码。同时还需要进行特征的组合/交叉，以获取更有效的特征。</p>
+<h3 id="一些问题"><strong>一些问题</strong></h3>
+<p>上面介绍过程中有一些结论我们直接就使用了，下面对于上面提到的某些结论做出一些解释</p>
+<p><strong>1. LR 的输出为什么可以被当做是概率值？</strong></p>
+<p>这部分涉及到广义线性模型(GLM，<a
+target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Generalized_linear_model">Generalized
+linear model</a>) 的知识，这里略过复杂的推导，直接给出结论。简单来说，LR
+实际上是一个广义线性模型，其假设是二分类中 <span
+class="math inline">\((y|x,\theta)\)</span>
+服从伯努利分布(二项分布)，即给定输入样本 <span
+class="math inline">\(x\)</span> 和模型参数 <span
+class="math inline">\(\theta\)</span>,
+事件是否发生服从伯努利分布。假设伯努利分布的参数 <span
+class="math inline">\(\phi\)</span> ，则 <span
+class="math inline">\(\phi\)</span> 可作为点击率。通过
+广义线性模型的推导，能够推出 <span class="math inline">\(\phi\)</span>
+的表示形式如下</p>
+<p><span class="math display">\[\phi = 1/(1+e^{-\eta})\]</span></p>
+<p>从上面的式子可知，<strong>LR 中的 sigmoid
+函数并不是凭空来的</strong>，而式子中的 <span
+class="math inline">\(\eta\)</span> 也被称为连接函数（Link function),
+是确定一个 GLM 的重要部分，在 LR 中为简单的线性加权。</p>
+<p>另外，如果将输出值与真实值的误差的分布假设为高斯分布，那么从 GLM
+可推导出 Linear Regression，关于 GLM 详细的推导可参考这篇文章 <a
+target="_blank" rel="noopener" href="https://www.cnblogs.com/dreamvibe/p/4259460.html">广义线性模型（GLM）</a>。</p>
+<p><strong>2. 为什么 L1 正则项能够带来稀疏性？</strong></p>
+<p>这里有个很直观的回答，<a
+target="_blank" rel="noopener" href="https://www.zhihu.com/question/37096933/answer/70426653">l1 相比于
+l2
+为什么容易获得稀疏解？</a>，简单来说，就是<strong>当不带正则项的损失函数对于某个参数
+<span class="math inline">\(w\_i\)</span> 的导数的绝对值小于 l1
+正则项中的常数 <span class="math inline">\(C\)</span> 时，这个参数 <span
+class="math inline">\(w\_i\)</span> 的最优解就是0</strong>。</p>
+<p>因为求解某个参数 <span class="math inline">\(w\_i\)</span>
+使得损失函数取极小值时可分两种情况讨论(下面的 <span
+class="math inline">\(L\)</span> 为不带正则项的损失函数) 1）<span
+class="math inline">\(w\_i&lt;0\)</span> 时, <span
+class="math inline">\(L+C|w\_i|\)</span> 的导数为 <span
+class="math inline">\(L&#39;- C\)</span> 2) <span
+class="math inline">\(w\_i&gt;0\)</span>时, <span
+class="math inline">\(L+C|w\_i|\)</span> 的导数为 <span
+class="math inline">\(L&#39;+C\)</span></p>
+<p>当 <span class="math inline">\(w\_i&lt;0\)</span> 时，令 <span
+class="math inline">\(L&#39;- C &lt; 0\)</span>, 函数在递减；而当<span
+class="math inline">\(w\_i&gt;0\)</span>时, 令 <span
+class="math inline">\(L&#39;+C &gt; 0\)</span>, 函数在递增，则 <span
+class="math inline">\(w\_i=0\)</span>
+便是使得损失函数最小的最优解，且结合 <span class="math inline">\(L&#39;-
+C &lt; 0\)</span> 和 <span class="math inline">\(L&#39;+C &gt;
+0\)</span>，可得 <span class="math inline">\(C &gt;
+|L&#39;|\)</span>。这便是我们上面得到的结论，上面是针对某一个参数，实际上也可以推广到所有参数上。事实上，通过
+subgradient descent 求解这个问题时也能够得到相同的结论。</p>
+<p><strong>3.连续特征为什么需要离散化？</strong></p>
+<p>参考这个问题：<a
+target="_blank" rel="noopener" href="https://www.zhihu.com/question/31989952/answer/54184582">连续特征的离散化：在什么情况下将连续的特征离散化之后可以获得更好的效果？</a></p>
+<p>离散化后有以下几个好处：</p>
+<ol type="1">
+<li>稀疏向量内积乘法运算速度快，计算结果方便存储</li>
+<li>离散化后的特征对异常数据有很强的鲁棒性：比如一个特征是年龄&gt;30是1，否则0。如果特征没有离散化，一个异常数据“年龄300岁”会给模型造成很大的干扰；</li>
+<li>逻辑回归属于广义线性模型，表达能力受限；单变量离散化为N个后，<strong>可以通过
+one-hot
+编码为每个变量设置单独的权重，相当于为模型引入了非线性，能够提升模型表达能力，加大拟合</strong>；</li>
+<li>离散化后可以进行<strong>特征交叉</strong>，由M+N个变量变为M*N个变量，进一步引入非线性，提升表达能力；</li>
+<li>特征离散化后，模型会更稳定，比如如果对用户年龄离散化，20-30作为一个区间，不会因为一个用户年龄长了一岁就变成一个完全不同的人。当然处于区间相邻处的样本会刚好相反，所以怎么划分区间要取决于具体的场景</li>
+</ol>
+<p><strong>4.1 为什么要对 categorical 特征做 One-hot 编码后再输入
+LR？</strong></p>
+<p>参考这篇文章 <a
+target="_blank" rel="noopener" href="http://www.jiehuozhe.com/article/3">One-Hot编码与哑变量</a>，简单来说，就是LR建模时，要求特征具有线性关系，而实际应用中很少有满足这个假设关系的，因此LR模型效果很难达到应用要求。但是通过对离散特征进行
+one-hot 编码，LR
+可以为某个特征中所有可能的值设置一个权重，这样就能够更准确的建模，也就能够获得更精准的模型。而
+one-hot 编码后特征实际上也是做了一个 min-max
+归一化，能够克服不同特征的量纲差异，同时使模型收敛更快。</p>
+<h3 id="开源实现"><strong>开源实现</strong></h3>
+<p>由于 LR 模型的广泛性，基本上每个机器学习库或者框架都有相关实现，如
+sklearn 提供了<a
+target="_blank" rel="noopener" href="http://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html">单机版的实现</a>，spark
+提供了<a
+target="_blank" rel="noopener" href="https://spark.apache.org/docs/2.3.0/mllib-linear-methods.html">分布式版本的实现</a>，腾讯开源的
+Parameter Server <a target="_blank" rel="noopener" href="https://github.com/Tencent/angel">Angel</a>
+中也提供了 <a
+target="_blank" rel="noopener" href="https://github.com/Tencent/angel/blob/master/docs/algo/sona/sparselr_ftrl.md">LR+FTRL</a>
+的实现，Angel 支持 Spark，目前也还在开发中 。除此之外，Github
+上也有很多个人开源的实现，这里不再列举。</p>
+<h2 id="ls-plmlarge-scale-piece-wise-linear-model">LS-PLM(Large Scale
+Piece-wise Linear Model)</h2>
+<p>LS-PLM(也叫作 MLR, Mixture of Logistics Regression)是阿里妈妈在 2017
+年在论文 <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1704.05194">Learning Piece-wise
+Linear Models from Large Scale Data for Ad Click Prediction</a>
+中公开的，但是模型早在 2012 年就在阿里妈妈内部使用。这个模型在 LR
+基础上进行了拓展，目的是为了解决单个 LR 无法进行非线性分割的问题。</p>
+<h3 id="原理-1"><strong>原理</strong></h3>
+<p>LR
+是一个线性模型，模型会在数据空间中生成一个线性分割平面，但是对于非线性可分的数据，这一个线性分割面显然无法正确分割这些数据。以下图为例（摘自上面的论文），A）为一组非线性训练数据的正负样本分布；对于该问题，LR会生成
+B）中的分割平面，C) 图展示的 LS-PLM 模型 则取得了较好的效果。</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1cdhkuov7q2413hf3n14ecse0c.png"
+alt="LS-PIC" />
+<figcaption aria-hidden="true">LS-PIC</figcaption>
+</figure>
+<p>在CTR问题中，<strong>划分场景分别建模</strong>是一种常见的手法。例如，同一产品的PC/APP端，其用户的使用时间和习惯差异可能很大；比如PC可能更多是办公时间在看，而手机则是通勤时间或者临睡前使用更多。假设有hour作为特征，那么“hour=23”对于APP端更加有信息量，而对于PC可能意义不大。因此，区分PC/APP端分别建模可能提升效果。</p>
+<p>LS-PLM
+也是采用这个思想的，不够这里不是划分场景，而是划分数据，通过将数据划分不同的region、然后每个region分别建立
+LR。</p>
+<p>这里需要注意的是这里一个样本并不是被唯一分到了一个region，而是按权重分到了不同的region。其思想有点像
+LDA(Latent Dirichlet allocation) 中一个单词会按照概率分到多个 topic
+上。</p>
+<p>论文中的公式如下</p>
+<p><span class="math display">\[p(y=1|x) = g ( \sum\_{j=1}^m
+\sigma(\mu\_j^T x)\eta(w\_j^Tx))\]</span></p>
+<p>公式中的符号定义如下：</p>
+<p>参数定义如下：</p>
+<ul>
+<li><span class="math inline">\(m\)</span> : region
+的个数(超参数：一般是10~100)</li>
+<li><span class="math inline">\(\Theta=\{\mu\_1,\dots,\mu\_m,
+w\_1,\dots,w\_m \}\)</span>: 表示模型的参数，需要训练</li>
+<li><span
+class="math inline">\(g(\cdot)\)</span>：为了让模型符合概率定义(概率和为1)的函数</li>
+<li><span class="math inline">\(\sigma(\cdot)\)</span>：将样本分到
+region 的函数</li>
+<li><span class="math inline">\(\eta(\cdot)\)</span>：在 region
+中划分样本的函数</li>
+</ul>
+<p>前面提出的公式更像个框架，在论文中，只讨论了 <span
+class="math inline">\(g(x) = x\)</span>, <span
+class="math inline">\(\sigma\)</span> = softmax ，<span
+class="math inline">\(\eta\)</span> = sigmoid
+的情形，而且因此，上面的公式可写成如下的形式</p>
+<p><span class="math display">\[p(y=1|x) = \sum\_{i=1}^m
+\frac{e^{\mu\_i^Tx}}{\sum\_{j=1}^m
+e^{\mu\_j^Tx}}\frac{1}{1+e^{-w\_i^Tx}}\]</span></p>
+<p>这个公式其实已经变成了通过多个 LR 模型进行加权求和的 bagging
+模式，只是这里每个模型的权重是学习出来而不是事先确定的。</p>
+<p>写出了概率函数, 后面的推导跟前面的 LR
+其实是一样的，也是先通过极大似然估计得到 <span
+class="math inline">\(\max\)</span> 问题，添加负号后转为损失函数求 <span
+class="math inline">\(\min\)</span> 问题。这里不做详细的推导了。</p>
+<p>在 LS-PLM 中也是需要添加正则项的，除了在 LR 中提到的 L1
+正则化，论文还提出了 <span class="math inline">\(L\_{2,1}\)</span>
+正则项，表示如下</p>
+<p><span class="math display">\[||\Theta||\_{2,1} = \sum\_{i=1}^d \sqrt
+{\sum\_{j=1}^m(\mu\_{ij}^2+w\_{ij}^2)}\]</span></p>
+<p>上式中的 <span class="math inline">\(d\)</span> 表示特征的维数，其中
+<span class="math inline">\(\sqrt
+{\sum\_{j=1}^m(\mu\_{ij}^2+w\_{ij}^2)}\)</span>
+表示对某一维特征的所有参数进行 L2 正则化，而外侧的 <span
+class="math inline">\(\sum\_{i=1}^d\)</span> 表示对所有的 feature 进行
+L1 正则化，由于开方后的值必为正，因此这里也不用添加绝对值了。由于结合了
+L1 和 L2 正则项，所以论文也将这个叫做<span
+class="math inline">\(L\_{2,1}\)</span> 正则项。</p>
+<p>由于损失函数和正则项都是光滑可导的，因此优化方面比带 L1 正则的 LR
+更加简单，可选的优化方法也更多。</p>
+<p>MLR 适用的场景跟 LR 一样，也是适用于高纬稀疏特征作为输入。</p>
+<h3 id="开源实现-1"><strong>开源实现</strong></h3>
+<p>前面提到的腾讯的 PS Angel 实现了这个算法，具体可参考<a
+target="_blank" rel="noopener" href="https://github.com/Tencent/angel/blob/master/docs/algo/mlr_on_angel.md">这里</a>；Angel
+是用 Scala 开发的。也有一些个人开源的版本如 <a
+target="_blank" rel="noopener" href="https://github.com/CastellanZhang/alphaPLM">alphaPLM</a>，这个版本是用
+C++ 写的，如果需要实现可以参考以上资料。</p>
+<h2
+id="gbdtlrgradient-boost-decision-tree-logistic-regression">GBDT+LR(Gradient
+Boost Decision Tree + Logistic Regression)</h2>
+<p>GBDT + LR 是 FaceBook 在这篇论文 <a
+target="_blank" rel="noopener" href="http://quinonero.net/Publications/predicting-clicks-facebook.pdf">Practical
+Lessons from Predicting Clicks on Ads at Facebook</a>
+中提出的，其思想是借助 GBDT 帮我们做部分特征工程，然后将 GBDT 的
+输出作为 LR 的输入。</p>
+<h3 id="原理-2"><strong>原理</strong></h3>
+<p>我们前面提到的无论 LR 还是
+MLR，都避免不了要做大量的特征工程。比如说构思可能的特征，将连续特征离散化，并对离散化的特征进行
+One-Hot
+编码，最后对特征进行二阶或者三阶的特征组合/交叉，这样做的目的是为了得到非线性的特征。但是特征工程存在几个难题：</p>
+<ol type="1">
+<li>连续变量切分点如何选取？</li>
+<li>离散化为多少份合理？</li>
+<li>选择哪些特征交叉？</li>
+<li>多少阶交叉，二阶，三阶或更多？</li>
+</ol>
+<p>而 GBDT + LR 这个模型中，GBDT 担任了特征工程的工作，下面首先介绍一下
+GBDT。</p>
+<p>GBDT 最早在这篇论文 <a
+target="_blank" rel="noopener" href="https://statweb.stanford.edu/~jhf/ftp/trebst.pdf">Greedy Function
+Approximation：A Gradient Boosting Machine</a> 中提出； GBDT
+中主要有两个概念：GB(<a
+target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Gradient_boosting">Gradient
+Boosting</a>)和DT(Decision Tree)，Gradient Boosting 是集成学习中
+boosting 的一种形式，Decision Tree
+则是机器学习中的一类模型，这里不对这两者展开，只讲述在 GBDT
+中用到的内容。关于决策树的介绍可参考这篇文章 <a
+target="_blank" rel="noopener" href="http://www.cnblogs.com/wxquare/p/5379970.html">决策树模型
+ID3/C4.5/CART算法比较</a>。</p>
+<p>在 GBDT 中采用的决策树是CART (Classification And Regression
+Tree)，将其当做回归树使用，这里的回归树是一棵在每个树节点进行分裂的时候，给节点设定其在某个特征的的值，若样本对应的特征的值大于这个给定的值的属于一个子树，小于这个给定的值的属于另一个子树。</p>
+<p>那么，构建 CART 回归树是
+的关键问题就在于选择具体的特征还有这个特征上具体的值了。选择的指标是<strong>平方误差最小化准则</strong>。对于任意一个切分，其平方误差计算方式如下</p>
+<ol type="1">
+<li>假设切分后左子树有 <span class="math inline">\(m\)</span>
+个样本，右子树有 <span class="math inline">\(n\)</span> 个</li>
+<li>计算左子树样本的目标值的均值为 <span class="math inline">\(y\_m =
+\frac{1}{m}\sum\_{i=1}^{m}y\_i\)</span>,
+同样计算右子树样本的目标值的均值为 <span class="math inline">\(y\_n =
+\frac{1}{n}\sum\_{j=1}^{n}y\_j\)</span></li>
+<li>平方误差和为 <span class="math inline">\(L = \sum\_{i=1}^m(y\_i -
+y\_m)^2 + \sum\_{j=1}^n(y\_j - y\_n)^2\)</span></li>
+<li>对于每一个可能的切分值，我们都可计算其平方误差和 <span
+class="math inline">\(L\)</span>，选择使得 <span
+class="math inline">\(L\)</span> 最小的切分点即可。</li>
+</ol>
+<p>上面便是 GBDT 中的 “DT”
+部分，用于解决一个回归问题，也就是给定一组样本，我们可以通过上面的方式来构建出一棵
+CART 来拟合这组样本。下面我们来讲一下 GBDT 中的 “GB” 部分。</p>
+<p>简单来说，<strong>gradient boosting
+就是将若干个模型的输出进行叠加作为最终模型的输出。</strong>如下图是一个简单的例子(图片来源于提出
+xgb 的论文：<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1603.02754.pdf">XGBoost: A
+Scalable Tree Boosting System</a>)</p>
+<figure>
+<img src="https://wulc.me/imgs/gbdt.png" alt="xgboost" />
+<figcaption aria-hidden="true">xgboost</figcaption>
+</figure>
+<p>下式就是叠加了 <span class="math inline">\(T\)</span> 个 <span
+class="math inline">\(f\_t(x)\)</span> 模型作为最终的模型，<span
+class="math inline">\(f\_t(x)\)</span> 在 GBDT 中就是一棵 CART，当然
+<span class="math inline">\(f\_t(x)\)</span> 不限于树模型。</p>
+<p><span class="math display">\[F(x) = \sum\_{t=1}^Tf\_t(x)\]</span></p>
+<p>在构建每棵树的时候，输入的样本不同的地方在于每个样本的目标值 <span
+class="math inline">\(y\)</span>；如构建第 <span
+class="math inline">\(k\)</span> 棵树，对于原始样本 <span
+class="math inline">\((x\_i, y\_i)\)</span>, 其目标值变为</p>
+<p><span class="math display">\[y\_{ik} = y\_i -
+\sum\_{t=1}^{k-1}f\_t(x\_i)\]</span></p>
+<p>即输入第 <span class="math inline">\(k\)</span> 棵树的样本变为 <span
+class="math inline">\((x\_i, y\_{ik})\)</span>，所以在<strong>构建第
+<span class="math inline">\(k\)</span> 棵树的时候，实际上是在拟合前
+<span class="math inline">\(k-1\)</span>
+棵树的输出值的和与样本真实值的残差。</strong></p>
+<p>回到我们的 GBDT + LR 模型，首先通过前面提到的 GBDT
+训练出一批树模型，然后样本输入每棵树后最终都会落到一个具体的叶子节点上，那我们就将这个节点标为
+1，其他叶子节点标为 0，<strong>这样每棵树输出的就相当于是一个 one-hot
+编码的特征</strong>。如下图是摘自 FaceBook
+原始论文的图，里面有两棵树，假如输入 <span
+class="math inline">\(x\)</span>
+在第一棵树中落入第一个叶子节点，在第二棵树种落入第二个叶子节点，那么输入
+LR 的特征为 [1, 0, 0, 0, 1].</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1cdjf062nsovu4v1d3bbsn1rk49.png"
+alt="GBDT + LR" />
+<figcaption aria-hidden="true">GBDT + LR</figcaption>
+</figure>
+<p>GBDT+LR
+方案中每棵决策树从根节点到叶节点的路径，会经过不同的特征，此路径就是特征组合，而且包含了二阶，三阶甚至更多，因此输出的
+one-hot
+特征是原始特征进行交叉后的结果。而且每一维的特征其实还是可以追溯出其含义的，因为从根节点到叶子节点的路径是唯一的，因此落入到某个叶子节点表示这个特征满足了这个路径中所有节点判断条件。</p>
+<p><strong>GBDT 适用的问题刚好与 LR 相反，GBDT
+不适用于高纬稀疏特征，因为这样很容易导致训练出来的树的数量和深度都比较大从而导致过拟合。因此一般输入GBDT
+的特征都是连续特征。</strong></p>
+<p>在 CTR 预估中，会存在大量的 id 特征，对于这种离散特征，一般有两种做法
+1) <strong>离散特征不直接输入到 GBDT 中进行编码</strong>，而是做 one-hot
+编码后直接输入到 LR 中即可；对于连续特征，先通过 GBDT
+进行离散化和特征组合输出 one-hot 编码的特征，最后结合这两种 one-hot
+特征直接输入到 LR。大致框架如下所示</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1cdk1jok51p5u13mgv2d1p6d1hll4c.png"
+alt="Real GBDT" />
+<figcaption aria-hidden="true">Real GBDT</figcaption>
+</figure>
+<ol start="2" type="1">
+<li><strong>将离散的特征也输入 GBDT
+进行编码</strong>，但是只保留那些出现频率高的离散特征，这样输入 GBDT
+中的 one-hot 特征的维度会遍地，同时通过 GBDT 也对原始的 one-hot
+特征进行了组合和交叉。</li>
+</ol>
+<h3 id="一些问题-1"><strong>一些问题</strong></h3>
+<p><strong>1. GBDT 中的 gradient 在哪里体现了？</strong></p>
+<p>推导到现在，好像也没有提及到
+gradient，其实前面<strong>拟合残差时已经用到了 gradient
+的信息</strong>。</p>
+<p>首先，我们要转换一下思维，我们一般在优化中使用的 gradient descent
+都是对某个参数进行的，或者说是在参数空间中进行的，但是除了参数空间，还可以在函数空间中进行。如下图所示对比了两种方式(下面两张图均摘自<a
+target="_blank" rel="noopener" href="http://wepon.me/files/gbdt.pdf">GBDT算法原理与系统设计简介</a>)</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1cdjtahckkop2e81umc1l651lgi32.png"
+alt="gredient descent v.s. gradient boosting" />
+<figcaption aria-hidden="true">gredient descent v.s. gradient
+boosting</figcaption>
+</figure>
+<p>在函数空间中，是对函数直接进行求导的，因此 GBDT 算法的流程如下</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1cdkhqh8gpjrb9n1mi11o6b16tj56.png"
+alt="GBDT" />
+<figcaption aria-hidden="true">GBDT</figcaption>
+</figure>
+<p>上图中的 <span class="math inline">\(\tilde{y\_i}\)</span>
+就是我们前面说的第 <span class="math inline">\(i\)</span>
+个样本的残差，当损失函数为平方损失即 <span
+class="math display">\[L(y,F(x)) = \frac{1}{2}(y-F(x))^2\]</span></p>
+<p>对 <span class="math inline">\(F(x)\)</span> 求导得出的残差为</p>
+<p><span class="math display">\[\tilde{y\_i} = y\_i -
+F(x\_i)\]</span></p>
+<p>这正是我们前面说的样本的真实值与前面建的树的输出和的差。<strong>如果损失函数改变，这个残差值也会进行相应的改变。</strong></p>
+<p><strong>2. GBDT 怎么处理分类问题？</strong></p>
+<p>上面我们讲的 GBDT 是处理回归问题的，但是对于 CTR
+预估这一类问题，从大分类上其实还是一个分类问题。那 GBDT
+是怎么处理这个问题？</p>
+<p>在回归问题中，GBDT每一轮迭代都构建了一棵树，实质是构建了一个函数
+<span class="math inline">\(f\)</span>，当输入为x时，树的输出为 <span
+class="math inline">\(f(x)\)</span>。</p>
+<p>在多分类问题中，假设有 <span class="math inline">\(k\)</span>
+个类别，那么每一轮迭代实质是构建了 <span
+class="math inline">\(k\)</span> 棵树，对某个样本 <span
+class="math inline">\(x\)</span> 的预测值为 <span
+class="math inline">\(f\_{1}(x), f\_{2}(x), ..., f\_{k}(x)\)</span>,</p>
+<p>在这里我们仿照多分类的逻辑回归，使用
+softmax来产生概率，则属于某个类别 <span class="math inline">\(j\)</span>
+的概率为</p>
+<p><span class="math display">\[p\_{c} = \frac{\exp(f\_{j}(x))}{
+\sum\_{i=1}^{k}{exp(f\_{k}(x))}}\]</span></p>
+<p>通过上面的概率值，可以分别计算出样本在各个分类下的 log loss，根据上面
+GBDT 在函数空间的求导，对 <span class="math inline">\(f\_1\)</span> 到
+<span class="math inline">\(f\_k\)</span>
+都可以算出一个梯度，也就是当前轮的残差，供下一轮迭代学习。也就是每一轮的迭代会同时产生
+k 棵树。</p>
+<p>最终做预测时，输入的 <span class="math inline">\(x\)</span> 会得到
+<span class="math inline">\(k\)</span>
+个输出值，然后通过softmax获得其属于各类别的概率即可。</p>
+<p>更详细的推导可参考这篇文章：<a
+target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/25257856">当我们在谈论GBDT：Gradient
+Boosting 用于分类与回归</a></p>
+<h3 id="开源实现-2"><strong>开源实现</strong></h3>
+<p>直接实现 GBDT + LR
+的开源方案不多，但是由于两者的耦合关系并不强，因此可以先训练
+GBDT，然后将原始特征通过 GBDT 转换后送入到 LR 中，GBDT
+有多个高效的实现，如 <a
+target="_blank" rel="noopener" href="https://github.com/dmlc/xgboost">xgboost</a>，<a
+target="_blank" rel="noopener" href="https://github.com/Microsoft/LightGBM">LightGBM</a>。</p>
+<h2 id="fmfactorization-machine">FM(Factorization Machine)</h2>
+<p>FM（Factorization Machine）是于2010年在论文 <a
+target="_blank" rel="noopener" href="http://www.algo.uni-konstanz.de/members/rendle/pdf/Rendle2010FM.pdf">Factorization
+Machines</a>
+中提出，旨在解决稀疏数据下的特征组合问题。其思想是对组合特征的参数所构成的参数矩阵进行矩阵分解，从而得到每个原始特征的隐向量表示，更新特征的隐向量对数据的稀疏性具有鲁棒性。关于
+FM 和 FFM ，美团点评这篇文章：<a
+target="_blank" rel="noopener" href="https://tech.meituan.com/deep-understanding-of-ffm-principles-and-practices.html">深入FFM原理与实践</a>
+其实已经写得很详细了，本文主要参考该文章进行修改。</p>
+<h3 id="原理-3"><strong>原理</strong></h3>
+<p>FM 可以认为是在 LR
+的基础上加入特征的二阶组合，即最多有两个特征相乘，则模型可表示成如下形式</p>
+<p><span class="math display">\[y(\mathbf{x}) = w\_0+ \sum\_{i=1}^n w\_i
+x\_i + \sum\_{i=1}^n \sum\_{j=i+1}^n w\_{ij} x\_i x\_j \]</span></p>
+<p>从模型也可以看出，其实 FM 是在 LR 基础上增加了最后的二阶交叉项。</p>
+<p>从上面的公式可以看出，组合特征的参数一共有 <span
+class="math inline">\(\frac{n(n−1)}{2}\)</span>
+个，任意两个参数都是独立的。然而，在数据稀疏性普遍存在的实际应用场景中，<strong>二次项参数的训练是很困难的,原因是每个参数
+<span class="math inline">\(w\_{ij}\)</span> 的训练需要大量 <span
+class="math inline">\(x\_i\)</span> 和 <span
+class="math inline">\(x\_j\)</span>
+都非零的样本</strong>；由于样本数据本来就比较稀疏，满足 <span
+class="math inline">\(x\_i\)</span> 和 <span
+class="math inline">\(x\_j\)</span>
+都非零的样本将会非常少。训练样本的不足，则会导致参数 <span
+class="math inline">\(w\_{ij}\)</span>
+不准确，最终将严重影响模型的性能。</p>
+<p>如何解决这个问题？FM 中借鉴了矩阵分解的思想，在推荐系统中，会对
+user-item 矩阵进行矩阵分解，从而每个 user 和每个 item
+都会得到一个隐向量。如下图所示</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1cdkb5qkk2ie1njv17ekj5s131k4p.png"
+alt="matrix" />
+<figcaption aria-hidden="true">matrix</figcaption>
+</figure>
+<p>类似地，所有二次项参数 <span class="math inline">\(w\_{ij}\)</span>
+可以组成一个对称阵 <span
+class="math inline">\(W\)</span>，那么这个矩阵就可以分解为 <span
+class="math inline">\(W=V^TV\)</span>，<span
+class="math inline">\(V\)</span> 的第 <span
+class="math inline">\(j\)</span> 列便是第 <span
+class="math inline">\(j\)</span>
+维特征的隐向量。换句话说，每个参数可表示成两个隐向量的内积的形式。即
+<span class="math inline">\(w\_{ij}=&lt;v\_i,v\_j&gt;\)</span>，<span
+class="math inline">\(v\_i\)</span> 表示第 <span
+class="math inline">\(i\)</span>
+维特征的隐向量，这就是FM模型的核心思想。因此，可以将上面的方程改写成如下形式</p>
+<p><span class="math display">\[y(\mathbf{x}) = w\_0+ \sum\_{i=1}^n w\_i
+x\_i + \sum\_{i=1}^n \sum\_{j=i+1}^n
+&lt;v\_i, v\_j&gt;x\_i x\_j \]</span></p>
+<p>假设隐向量的长度为 <span
+class="math inline">\(k(k&lt;&lt;n)\)</span>，二次项的参数数量减少为
+<span
+class="math inline">\(kn\)</span>个，远少于多项式模型的参数数量。另外，参数因子化使得
+<span class="math inline">\(x\_hx\_i\)</span> 的参数和 <span
+class="math inline">\(x\_ix\_j\)</span>
+的参数不再是相互独立的，因此我们可以在样本稀疏的情况下相对合理地估计FM的二次项参数。</p>
+<p>具体来说，<span class="math inline">\(x\_hx\_i\)</span> 和 <span
+class="math inline">\(x\_ix\_j\)</span> 的系数分别为 <span
+class="math inline">\(&lt;v\_h,v\_i&gt;\)</span> 和 <span
+class="math inline">\(&lt;v\_i,v\_j&gt;\)</span>，它们之间有共同项 <span
+class="math inline">\(v\_i\)</span>。也就是说，<strong>所有包含 <span
+class="math inline">\(x\_i\)</span> 的非零组合特征（即存在某个<span
+class="math inline">\(j≠i\)</span>，使得 <span
+class="math inline">\(x\_ix\_j≠0\)</span>）的样本都可以用来学习隐向量
+<span
+class="math inline">\(v\_i\)</span>，这很大程度上避免了数据稀疏性造成的影响</strong>。而在多项式模型中，<span
+class="math inline">\(w\_{hi}\)</span> 和 <span
+class="math inline">\(w\_{ij}\)</span> 是相互独立的。</p>
+<p>另外，原始论文还对特征交叉项计算的时间复杂度做了优化，具体见如下公式</p>
+<p><span class="math display">\[\sum\_{i=1}^n \sum\_{j=i+1}^n \langle
+\mathbf{v}\_i, \mathbf{v}\_j \rangle x\_i x\_j = \frac{1}{2}
+\sum\_{f=1}^k \left(\left( \sum\_{i=1}^n v\_{i, f} x\_i \right)^2 -
+\sum\_{i=1}^n v\_{i, f}^2 x\_i^2 \right)\]</span></p>
+<p>从公式可知，原来的计算复杂度为 <span
+class="math inline">\(O(kn^2)\)</span>，而改进后的时间复杂度为 <span
+class="math inline">\(O(kn)\)</span></p>
+<p>在 CTR 预估中，对 FM 的输出进行 sigmoid 变换后与 Logistics Regression
+是一致的，因此损失函数的求解方法以及优化算法都基本一致，这里不再详细展开。</p>
+<p>由于 FM 可以看做是 LR
+基础上加上二阶特征组合的模型，同时模型本身对稀疏性有较好的鲁棒性，因此
+FM
+适用范围跟LR一样，都<strong>适用于输入的特征是高纬度稀疏特征</strong>。</p>
+<h3 id="开源实现-3"><strong>开源实现</strong></h3>
+<p>FM 在 github 上有单机版本的开源实现 <a
+target="_blank" rel="noopener" href="http://ibayer.github.io/fastFM/">fastFM</a>和<a
+target="_blank" rel="noopener" href="https://github.com/coreylynch/pyFM">pyFM</a>， fastFM
+是一个学术项目，发表了相关论文 <a
+target="_blank" rel="noopener" href="https://arxiv.org/abs/1505.00641">fastFM: A Library for
+Factorization Machines</a>, 对 FM 进行了拓展；同时我们前面提到的腾讯的PS
+Angel 中也实现了这个算法，可参考<a
+target="_blank" rel="noopener" href="https://github.com/Tencent/angel/blob/master/docs/algo/fm_on_angel.md">这里</a>。</p>
+<h2 id="ffmfield-aware-factorization-machine">FFM(Field-aware
+Factorization Machine)</h2>
+<p>FFM 发表于论文 <a
+target="_blank" rel="noopener" href="https://www.csie.ntu.edu.tw/~cjlin//papers/ffm.pdf">Field-aware
+Factorization Machines for CTR Prediction</a>， 是台大的学生在参加 2012
+KDD Cup 时提出的，这个论文借鉴了论文 <a
+target="_blank" rel="noopener" href="https://kaggle2.blob.core.windows.net/competitions/kddcup2012/2748/media/Opera.pdf">Ensemble
+of Collaborative Filtering and Feature Engineered Models for Click
+Through Rate Prediction</a> 中的 field 的 概念，从而提出了 FM
+的升级版模型 FFM。</p>
+<h3 id="原理-4"><strong>原理</strong></h3>
+<p><strong>通过引入field的概念，FFM把相同性质的特征归于同一个field。简单来说，同一个categorical特征经过One-Hot编码生成的数值特征都可以放到同一个field</strong>，包括用户性别、职业、品类偏好等。</p>
+<p>在FFM中，每一维特征 <span
+class="math inline">\(x\_i\)</span>，针对其它特征的每一种 field <span
+class="math inline">\(f\_j\)</span>，都会学习一个隐向量 <span
+class="math inline">\(v\_{i,f\_j}\)</span>。因此，<strong>隐向量不仅与特征相关，也与field相关。也就是说，假设有
+<span class="math inline">\(f\)</span> 个 field，那么每个特征就有 <span
+class="math inline">\(f\)</span> 个隐向量，与不同的 field
+的特征组合时使用不同的隐向量</strong>，而原来的 FM
+中每个特征只有一个隐向量。</p>
+<p>实际上，FM 可以看作 FFM 的特例，是把所有特征都归属到一个 field
+时的FFM模型。根据FFM的field敏感特性，同样可以导出其模型方程如下</p>
+<p><span class="math display">\[y(\mathbf{x}) = w\_0 + \sum\_{i=1}^n
+w\_i x\_i + \sum\_{i=1}^n \sum\_{j=i+1}^n \langle \mathbf{v}\_{i, f\_j},
+\mathbf{v}\_{j, f\_i} \rangle x\_i x\_j \]</span></p>
+<p>其中，<span class="math inline">\(f\_j\)</span> 是第 <span
+class="math inline">\(j\)</span> 个特征所属的 field。如果隐向量的长度为
+<span class="math inline">\(k\)</span>，那么FFM的二次参数有 <span
+class="math inline">\(nfk\)</span> 个，远多于FM模型的 <span
+class="math inline">\(nk\)</span> 个。此外，由于隐向量与 field
+相关，FFM二次项并不能够化简，其预测复杂度是 <span
+class="math inline">\(O(kn^2)\)</span>。</p>
+<p>其实，FFM 是在 FM
+的基础上进行了更细致的分类，增加了参数的个数使得模型更复杂，能够拟合更复杂的数据分布。但是损失函数的推导以及优化的算法跟前面的
+FM 还有 LR 都是一样的，因此这里不再赘述。</p>
+<p>FFM 适用的场景跟 FM 和 LR
+一样，<strong>适用于输入的特征是高维稀疏特征</strong>。</p>
+<h3 id="开源实现-4"><strong>开源实现</strong></h3>
+<p>FFM 最早的开源实现是台大提供的 <a
+target="_blank" rel="noopener" href="https://github.com/guestwalk/libffm">libffm</a>，去年开源的 <a
+target="_blank" rel="noopener" href="https://github.com/aksnzhy/xlearn">xlearn</a>
+中也提供了该算法的实现，提供的 api 比 libffm 更加友好。</p>
+<p>另外，由于 FM/FFM 可以看做是 LR
+加了特征交叉的增强版本，对输入的特征的特点要求一致，因此上面的 GBDT+LR
+也可以直接套到 GBDT+FM/FFM 上，值得一提的是，还是台大的学生，在 2014 由
+Criteo 举办的比赛上，通过 GBDT+FFM 的方案夺冠，其实现细节可参考 <a
+target="_blank" rel="noopener" href="https://github.com/guestwalk/kaggle-2014-criteo">kaggle-2014-criteo</a>。</p>
+<h2 id="小结">小结</h2>
+<p>在非深度学习中，可以看到主流的几个模型基本都是基于 LR 进行的拓展或将
+LR 与其他模型结合。原因是 LR
+模型简单，具有良好的理论基础，可解释性强，能够获取各个特征的重要性，且能够直接输出概率值。但是应用
+LR 过程中无法避免且最为重要的一点就是人工特征工程，特征决定了上限，虽然
+FM/FMM 和 GBDT+LR
+在一定程度上起到了自动特征工程的作用，但是需要人工特征还是占主要部分。</p>
+<p>后面要讲的深度学习的方法在一定程度上能够缓解这个问题，因为深度学习能够通过模型自动学习出有效特征，因此，深度学习也被归类为表示学习(
+Representation
+Learning)的一种;但是，没有免费午餐的，特征工程的便利性带来的是特征的不可解释性，所以怎么选取还是要根据具体的需求和业务场景。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A/" rel="tag"># 计算广告</a>
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 机器学习</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/06/16/ROC%20%E6%9B%B2%E7%BA%BF%E4%B8%8E%20PR%20%E6%9B%B2%E7%BA%BF/" rel="prev" title="ROC 曲线与 PR 曲线">
+      <i class="fa fa-chevron-left"></i> ROC 曲线与 PR 曲线
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/07/16/CTR%E9%A2%84%E4%BC%B0%E6%A8%A1%E5%9E%8B%E7%AE%80%E4%BB%8B-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AF%87/" rel="next" title="CTR 预估模型简介--深度学习篇">
+      CTR 预估模型简介--深度学习篇 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#lrlogistic-regerssion"><span class="nav-number">1.</span> <span class="nav-text">LR(Logistic Regerssion)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%9F%E7%90%86"><span class="nav-number">1.1.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98"><span class="nav-number">1.2.</span> <span class="nav-text">一些问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E6%BA%90%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.3.</span> <span class="nav-text">开源实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ls-plmlarge-scale-piece-wise-linear-model"><span class="nav-number">2.</span> <span class="nav-text">LS-PLM(Large Scale
+Piece-wise Linear Model)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%9F%E7%90%86-1"><span class="nav-number">2.1.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E6%BA%90%E5%AE%9E%E7%8E%B0-1"><span class="nav-number">2.2.</span> <span class="nav-text">开源实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#gbdtlrgradient-boost-decision-tree-logistic-regression"><span class="nav-number">3.</span> <span class="nav-text">GBDT+LR(Gradient
+Boost Decision Tree + Logistic Regression)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%9F%E7%90%86-2"><span class="nav-number">3.1.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98-1"><span class="nav-number">3.2.</span> <span class="nav-text">一些问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E6%BA%90%E5%AE%9E%E7%8E%B0-2"><span class="nav-number">3.3.</span> <span class="nav-text">开源实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fmfactorization-machine"><span class="nav-number">4.</span> <span class="nav-text">FM(Factorization Machine)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%9F%E7%90%86-3"><span class="nav-number">4.1.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E6%BA%90%E5%AE%9E%E7%8E%B0-3"><span class="nav-number">4.2.</span> <span class="nav-text">开源实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ffmfield-aware-factorization-machine"><span class="nav-number">5.</span> <span class="nav-text">FFM(Field-aware
+Factorization Machine)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%9F%E7%90%86-4"><span class="nav-number">5.1.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E6%BA%90%E5%AE%9E%E7%8E%B0-4"><span class="nav-number">5.2.</span> <span class="nav-text">开源实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">小结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">248</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.linkedin.com/in/wuliangchao/" title="LinkedIn → https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;wuliangchao&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i>LinkedIn</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

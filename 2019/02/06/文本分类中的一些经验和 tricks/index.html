@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="最近在总结之前做的文本分类实验的一些经验和 tricks，同时也参考了网上的一些相关资料(见文末)，其中有些 tricks 没尝试过，先在这里记下，或者日后能用上。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="文本分类中的一些经验和 tricks">
+<meta property="og:url" content="https://wulc.me/2019/02/06/%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E4%B8%AD%E7%9A%84%E4%B8%80%E4%BA%9B%E7%BB%8F%E9%AA%8C%E5%92%8C%20tricks/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="最近在总结之前做的文本分类实验的一些经验和 tricks，同时也参考了网上的一些相关资料(见文末)，其中有些 tricks 没尝试过，先在这里记下，或者日后能用上。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-02-06T09:01:56.000Z">
+<meta property="article:modified_time" content="2023-04-30T05:12:49.141Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="深度学习">
+<meta property="article:tag" content="NLP">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://wulc.me/2019/02/06/%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E4%B8%AD%E7%9A%84%E4%B8%80%E4%BA%9B%E7%BB%8F%E9%AA%8C%E5%92%8C%20tricks/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>文本分类中的一些经验和 tricks | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">吴良超的学习笔记</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2019/02/06/%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E4%B8%AD%E7%9A%84%E4%B8%80%E4%BA%9B%E7%BB%8F%E9%AA%8C%E5%92%8C%20tricks/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          文本分类中的一些经验和 tricks
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-02-06 17:01:56" itemprop="dateCreated datePublished" datetime="2019-02-06T17:01:56+08:00">2019-02-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-30 13:12:49" itemprop="dateModified" datetime="2023-04-30T13:12:49+08:00">2023-04-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/NLP/" itemprop="url" rel="index"><span itemprop="name">NLP</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>最近在总结之前做的文本分类实验的一些经验和
+tricks，同时也参考了网上的一些相关资料(见文末)，其中有些 tricks
+没尝试过，先在这里记下，或者日后能用上。</p>
+<span id="more"></span>
+<p>这里的经验和 tricks
+大概可分为两部分：预处理部分和模型训练部分，下面分别介绍</p>
+<h2 id="预处理">预处理</h2>
+<ul>
+<li><p>文本更正，主要是将文本标准化，包括繁体转简体，全角转半角，拼音纠错等</p></li>
+<li><p>文本泛化，如一个手机号码，因为有几千万的手机号码，不可能为每个手机号码设一个特征，所以最好将手机号码转化为同一个特征；另外表情符号、人名、地址、网址、命名实体等也要考虑这种泛化，泛化的程度这个视具体的任务，比如说地址可以以国家为粒度，也可以以省份为粒度</p></li>
+<li><p>规范文本为统一长度时，取所有长度的均值或者中位数，但是别取最大值；截断时根据具体任务考虑从前面阶段或从后面截断</p></li>
+<li><p>构建数据集的 vocabulary 时，需要考虑以下几个方面</p>
+<ul>
+<li>取前N个高频词或者过滤掉出现次数小于某个阈值的词</li>
+<li>根据具体任务确定是否需要去掉 stop words</li>
+<li>假如采用了预训练的词向量，要尽可能让 vocabulary
+中的词语能找到对应的词向量(这个问题也涉及到预训练的词向量和分词器的选择)</li>
+</ul></li>
+<li><p>词向量的选择，当数据集较小时，直接使用预训练好的词向量（如google、facebook开源的），且不用微调；当训练集比较大的时候，可随机初始化进行训练，也可以对预训练的词向量进行微调（微调收敛得更快，但是结果差异不大）</p></li>
+<li><p>分词时考虑以下几个方面</p>
+<ul>
+<li>是否需要分词，使用 char-level 的方法时不需要分词，但是在很多场景下
+word-level 的效果都要比 char-level 的要好</li>
+<li>分词时可以只保留长度大于1的词(会去除很多停止词)，对结果精度没什么影响，但是可以有效降低特征维度</li>
+<li>采用预训练的词向量时，要保证分词后的大部分词语能够出现在预训练的词向量表中，否则这个词语的
+embedding
+就相当于是随机初始化，预训练的词向量没有提供任何信息；具体方法可参考<a
+target="_blank" rel="noopener" href="https://www.zhihu.com/question/265357659/answer/578944550">这里</a></li>
+</ul></li>
+<li><p>数据增强</p>
+<ul>
+<li>常见的方法有：drop(随机删掉文本)、shuffle(随机改变文本顺序)、replace(用近义词进行替换)</li>
+<li>数据增强对 word-level 的方法有一定的提升，但是对于 char-level
+的方法效果不一定好，甚至会起到反作用</li>
+</ul></li>
+</ul>
+<h2 id="模型训练">模型训练</h2>
+<ul>
+<li><p>规则有时能解决大部分的问题，不一定要用到模型，使用时要权衡模型带来的收益和复杂性</p></li>
+<li><p>传统的机器学习方法根据其特征工程的不同可分为三大类</p>
+<ul>
+<li>词袋模型：将出现的词记为1，否则记为 0，问题是维度高且稀疏性严重</li>
+<li>向量空间模型：根据文档频率、互信息、信息增益、χ²统计量等进行了特征(词语)的选择，同时通过
+tfidf
+值为每个词赋权重；一定程度上缓解了上面提到的词袋模型维度高且稀疏性严重的问题</li>
+<li>主题模型：pLSA/LDA/HDP
+等主题模型将文本表示低维实数向量，类似于深度学习中的 embedding，但是比
+embedding 有更好的解释性</li>
+</ul></li>
+<li><p>fasttext 简单、速度快，是一个非常不错的
+baseline；随着问题复杂性增加可依次尝试 CNN -&gt; RNN -&gt; BERT</p></li>
+<li><p>对于深度学习模型，把模型变得更深更宽更复杂往往能够提升效果；但是当模型复杂到一定程度的时候，提升的效果微乎其微甚至没提升</p></li>
+<li><p>rnn 类模型用双向一般会比单向要好</p></li>
+<li><p>使用 dropout(经验值为 0.5)
+基本都能提升效果，使用的地方包括：embedding 层后、FC层后</p></li>
+<li><p>训练震荡问题：增加随机采样因素尽可能使得数据分布 iid，默认
+shuffle
+机制能使得训练结果更稳定。如果训练模型仍然很震荡，可以考虑调整学习率 或
+<code>mini_batch_size</code></p></li>
+<li><p>采用预训练的 embedding 并进行 finetune 时，在最开始 embedding
+的学习率设为 0，训练到效果较好时才开始 finetune embedding 层</p></li>
+<li><p>学习率的设置考虑以下几个方面</p>
+<ul>
+<li>经验值一般为 1、0.1、0.01、0.001,
+一般从1开始尝试。很少见学习率大于10的</li>
+<li>学习率一般要随着训练进行衰减，衰减系数一般是0.5；衰减时机可以是验证集准确率不再上升，或固定训练
+N 个 epoch 后</li>
+<li>比起自定义的衰减方法，更便捷的方法是使用自适应梯度的办法，例如
+adam,adadelta,rmsprop
+等，这些一般使用相关论文提供的默认值即可，可以避免再费劲调节学习率</li>
+<li>对RNN来说，如果要处理的序列比较长，或者RNN层数比较多，那么learning
+rate一般小一些比较好，否则有可能出现结果不收敛，甚至Nan等问题。</li>
+</ul></li>
+<li><p>超参数的设置经验可参考 <a
+target="_blank" rel="noopener" href="https://arxiv.org/abs/1510.03820">A Sensitivity Analysis of (and
+Practitioners' Guide to) Convolutional Neural Networks for Sentence
+Classification</a></p></li>
+<li><p>模型融合时，差异性越大，融合效果越好，具体可参<a
+target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/28923961">这里</a></p></li>
+</ul>
+<hr />
+<p>参考</p>
+<ul>
+<li><a
+target="_blank" rel="noopener" href="https://www.zhihu.com/question/265357659">在文本分类任务中，有哪些论文中很少提及却对性能有重要影响的tricks？</a></li>
+<li><a
+target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/28923961">知乎看山杯夺冠记</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/25928551">用深度学习（CNN RNN
+Attention）解决大规模文本分类问题 - 综述和实践</a></li>
+<li><a
+target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/24720954">深度学习网络调参技巧</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"># 深度学习</a>
+              <a href="/tags/NLP/" rel="tag"># NLP</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/01/25/MLE%20%E4%B8%8E%20MAP%20%E7%AE%80%E4%BB%8B/" rel="prev" title="MLE 与 MAP 简介">
+      <i class="fa fa-chevron-left"></i> MLE 与 MAP 简介
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/02/18/Effective%20Go%20%E6%91%98%E8%AE%B0/" rel="next" title="Effective Go 摘记">
+      Effective Go 摘记 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%84%E5%A4%84%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">预处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83"><span class="nav-number">2.</span> <span class="nav-text">模型训练</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">248</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.linkedin.com/in/wuliangchao/" title="LinkedIn → https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;wuliangchao&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i>LinkedIn</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

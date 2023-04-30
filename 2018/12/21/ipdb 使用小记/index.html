@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="最近在魔改 loss function，涉及到很多矩阵运算，而矩阵运算中维度的对齐免不了要多次的调试；沿袭着之前的 print 大法弄了一段时间后，不仅代码凌乱不堪，而且心累：每次 import tensorflow as tf 都要十几秒，然后 print 完之后想进一步看其他变量的信息，又要重新执行一遍。后来找到了 ipdb 这个好用的工具，才发现自己过去调试程序的方法是多么的低效和 naiv">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ipdb 使用小记">
+<meta property="og:url" content="https://wulc.me/2018/12/21/ipdb%20%E4%BD%BF%E7%94%A8%E5%B0%8F%E8%AE%B0/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="最近在魔改 loss function，涉及到很多矩阵运算，而矩阵运算中维度的对齐免不了要多次的调试；沿袭着之前的 print 大法弄了一段时间后，不仅代码凌乱不堪，而且心累：每次 import tensorflow as tf 都要十几秒，然后 print 完之后想进一步看其他变量的信息，又要重新执行一遍。后来找到了 ipdb 这个好用的工具，才发现自己过去调试程序的方法是多么的低效和 naiv">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-12-21T04:00:37.000Z">
+<meta property="article:modified_time" content="2023-04-30T05:12:49.146Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="工具使用">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://wulc.me/2018/12/21/ipdb%20%E4%BD%BF%E7%94%A8%E5%B0%8F%E8%AE%B0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>ipdb 使用小记 | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">吴良超的学习笔记</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2018/12/21/ipdb%20%E4%BD%BF%E7%94%A8%E5%B0%8F%E8%AE%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ipdb 使用小记
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-12-21 12:00:37" itemprop="dateCreated datePublished" datetime="2018-12-21T12:00:37+08:00">2018-12-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-30 13:12:49" itemprop="dateModified" datetime="2023-04-30T13:12:49+08:00">2023-04-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/" itemprop="url" rel="index"><span itemprop="name">工具使用</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>最近在魔改 loss
+function，涉及到很多矩阵运算，而矩阵运算中维度的对齐免不了要多次的调试；沿袭着之前的
+print 大法弄了一段时间后，不仅代码凌乱不堪，而且心累：每次
+<code>import tensorflow as tf</code> 都要十几秒，然后 print
+完之后想进一步看其他变量的信息，又要重新执行一遍。后来找到了 <a
+target="_blank" rel="noopener" href="https://pypi.org/project/ipdb/">ipdb</a>
+这个好用的工具，才发现自己过去调试程序的方法是多么的低效和 naive。</p>
+<span id="more"></span>
+<p>python 提供了一个默认的 debugger：<a
+target="_blank" rel="noopener" href="https://docs.python.org/3.5/library/pdb.html">pdb</a>，而 ipdb
+则是 pdb 的增强版，提供了补全、语法高亮等功能，类似于 ipython 与 python
+默认的交互终端的关系，通过 <code>pip install ipdb</code> 即可安装
+ipdb。</p>
+<h2 id="使用方式">使用方式</h2>
+<p>ipdb
+的使用方法一般有两种：<strong>集成到源代码或通过命令交互</strong>。</p>
+<p>集成到源代码可以直接在代码指定位置插入断点。如下所示：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> ipdb</span><br><span class="line">var1 = <span class="number">23</span></span><br><span class="line">ipdb.set_trace()</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>上面的代码会在执行完 <code>var1 = 23</code> 这条语句之后停止，展开
+ipython 环境，之后就可以自由地调试了。</p>
+<p>上面的方式虽然简单，但是存在着两个较为比较明显的问题：</p>
+<ol type="1">
+<li>插入的断点代码会污染原来的代码空间</li>
+<li>每次插入断点都需要修改源码</li>
+</ol>
+<p>因此，相比于上面的方式，交互式的命令式调试方法更加方便。启动命令式调试环境的方法也很简单：</p>
+<p><code>python -m ipdb code.py</code></p>
+<p>接着就是通过一些常用的命令来进行
+debug了，如上面插入断点的样例代码就可以通过以下命令达到同样效果：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$python -m ipdb code.py</span><br><span class="line">ipdb&gt; b <span class="number">3</span></span><br><span class="line">Breakpoint <span class="number">1</span> at /test.py:<span class="number">3</span></span><br><span class="line">ipdb&gt; c</span><br></pre></td></tr></table></figure>
+<p>上面的命令 <code>b 3</code> 表示在第三行设置一个断点，然后通过命令
+<code>c</code> 一直执行至断点处，接着就会展开 ipython
+环境进行调试了。（<code>b</code> 和 <code>c</code> 分别代表了 break 和
+continue，可以用整条命令，也可以只用首字母）</p>
+<h2 id="常用命令">常用命令</h2>
+<p>上面的设置断点和一直执行至断点是比较常见的用法，除此之外，还有其他一些常用命令。</p>
+<h3 id="帮助">帮助</h3>
+<p>通过命令 <code>h</code> 可以列出所有命令，后面跟上具体的命令如
+<code>h command</code>
+则可以显示出这条命令的具体作用，非常有用，依靠这条命令能够节省不少
+google 的次数。</p>
+<h3 id="断点">断点</h3>
+<p>上面提到了断点的一种常见用法，即命令 <code>b line_number</code> 和
+<code>c</code> 的组合，<code>b line_number</code>
+默认是对当前文件设置断点，也可以在 line_number
+前加上其他文件名（比如说要将要引用的其他文件），即
+<code>b file_name:line_number</code>；file_name 需要在
+<code>sys.path</code> 中，当前目录已经默认存在 <code>sys.path</code> ,
+也可通过 <code>..</code> 引用上一层目录的文件。</p>
+<p>另外，<strong>通过 <code>b</code> 设置的断点在重新运行 debug 程序
+(命令 <code>restart</code> 或 <code>run</code>)
+后会依然保留</strong>，如果要忽略这些断点，有两种做法</p>
+<ol type="1">
+<li>通过 <code>disable</code> 关闭这些断点，<code>enable</code>
+打开这些断点</li>
+<li>通过命令 <code>clear</code> 或 <code>cl</code> 清除这些断点</li>
+</ol>
+<p>此外，除了上面那种一直存在的断点，ipdb
+中还有一种<strong>只生效一次的断点，命令为 <code>tbreak</code>,
+使用方法同命令 <code>b</code>。</strong></p>
+<p>上面的断点都是直接指定的，pdb
+中还有一种<strong>条件断点</strong>，即只有当某个条件成立时，才设置断点，其使用命令为
+<code>condition line_num bool_expression</code>, condition
+为关键字，line_num 为设定断点的位置，只有当 expression 为 true 时,
+才会设置这个断点。</p>
+<p>如果需要列出已经设置的所有断点，可以单独使用命令 <code>b</code>。</p>
+<h3 id="逐行执行">逐行执行</h3>
+<p>有两条命令可以进行逐行执行： <code>s</code>（step) 或
+<code>n</code>（next),
+两个命令的主要区别是：<strong>假如当前行调用了某个函数，<code>s</code>
+会进入这个函数，<code>n</code>
+则不会</strong>。因此，如果需要了解函数内部执行的细节，需要
+<code>s</code> 命令进入函数内部进行 debug。</p>
+<p><strong>进入了函数之后</strong>，通过命令 <code>a</code>（argument）
+可列出当前的函数的参数，通过 <code>r</code>（return）则可以直接执行至
+return 语句。</p>
+<h3 id="忽略某段代码">忽略某段代码</h3>
+<p>使用 <code>j line_number</code> 可以忽略某段代码，下一步直接从
+line_number 开始执行。</p>
+<h3 id="查看源码">查看源码</h3>
+<p>通过命令 <code>l</code> 或 <code>ll</code> 可查看源码，
+<code>ll</code> 是查看整个源码文件， <code>l</code>
+可指定需要查看的行数，默认是当前往后 11 行，也可指定具体的范围，如
+<code>l 2,5</code> 是查看第 2-5 行的源码。</p>
+<h3 id="重启或退出-debugger">重启或退出 debugger</h3>
+<p>上面已经提到了重启 debugger 可通过 <code>restart</code> 或
+<code>run</code> 命令，需要注意的是，<strong>重启 debugger
+后断点、debugger 的设置等是会保留的。</strong>如果要一个全新的
+debugger，可通过命令 <code>q</code>、<code>quit</code> 或
+<code>exit</code> 退出 debugger 后进入。</p>
+<h2 id="小结">小结</h2>
+<p>以上就是 ipdb 的一些基本用法, 除此之外，更多的用法可参考 <a
+target="_blank" rel="noopener" href="https://docs.python.org/3.5/library/pdb.html">pdb
+的官方文档</a>，ipdb 的命令跟 pdb 是一样的。另外，gdb
+也是一个类似的命令行 debugger，只是一般用来调试 C/C++
+而已，使用的方法类似，甚至很多命令的名称更 pdb 都一样，具体可参考 <a
+target="_blank" rel="noopener" href="http://wiki.ubuntu.org.cn/%E7%94%A8GDB%E8%B0%83%E8%AF%95%E7%A8%8B%E5%BA%8F">用GDB调试程序</a>。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/python/" rel="tag"># python</a>
+              <a href="/tags/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/" rel="tag"># 工具使用</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/12/17/python%20%E8%AF%AD%E6%B3%95%E6%9D%82%E8%AE%B0--%E7%94%9F%E6%88%90%E5%99%A8%E3%80%81%E8%BF%AD%E4%BB%A3%E5%99%A8%E3%80%81%E4%B8%8A%E4%B8%8B%E6%96%87%E7%AE%A1%E7%90%86%E5%99%A8/" rel="prev" title="python 语法杂记--迭代器、生成器、上下文管理器">
+      <i class="fa fa-chevron-left"></i> python 语法杂记--迭代器、生成器、上下文管理器
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/12/28/LeetCode%20%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A(739,901,907)-%E7%BA%BF%E6%80%A7%E6%97%B6%E9%97%B4%E5%AF%BB%E6%89%BE%E6%95%B0%E7%BB%84%E4%B8%AD%E5%90%84%E4%B8%AA%E5%85%83%E7%B4%A0%E4%BD%9C%E4%B8%BA%E6%9C%80%E5%80%BC%E7%9A%84%E6%9C%80%E5%A4%A7%E8%8C%83%E5%9B%B4/" rel="next" title="LeetCode 解题报告(739,901,907)-线性时间寻找数组中各个元素作为最值的最大范围">
+      LeetCode 解题报告(739,901,907)-线性时间寻找数组中各个元素作为最值的最大范围 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F"><span class="nav-number">1.</span> <span class="nav-text">使用方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-number">2.</span> <span class="nav-text">常用命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%AE%E5%8A%A9"><span class="nav-number">2.1.</span> <span class="nav-text">帮助</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%AD%E7%82%B9"><span class="nav-number">2.2.</span> <span class="nav-text">断点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%90%E8%A1%8C%E6%89%A7%E8%A1%8C"><span class="nav-number">2.3.</span> <span class="nav-text">逐行执行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BF%BD%E7%95%A5%E6%9F%90%E6%AE%B5%E4%BB%A3%E7%A0%81"><span class="nav-number">2.4.</span> <span class="nav-text">忽略某段代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E6%BA%90%E7%A0%81"><span class="nav-number">2.5.</span> <span class="nav-text">查看源码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8D%E5%90%AF%E6%88%96%E9%80%80%E5%87%BA-debugger"><span class="nav-number">2.6.</span> <span class="nav-text">重启或退出 debugger</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">3.</span> <span class="nav-text">小结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">248</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.linkedin.com/in/wuliangchao/" title="LinkedIn → https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;wuliangchao&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i>LinkedIn</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

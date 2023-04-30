@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="前面讲到的随机变量都是一维的，但是某些试验中随机变量可能有多个，这里主要讨论二维的随机变量。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="概率论与数理统计知识整理(2)--二维随机变量的分布">
+<meta property="og:url" content="https://wulc.me/2016/10/08/%E6%A6%82%E7%8E%87%E8%AE%BA%E4%B8%8E%E6%95%B0%E7%90%86%E7%BB%9F%E8%AE%A1%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86(2)--%E4%BA%8C%E7%BB%B4%E9%9A%8F%E6%9C%BA%E5%8F%98%E9%87%8F%E7%9A%84%E5%88%86%E5%B8%83/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="前面讲到的随机变量都是一维的，但是某些试验中随机变量可能有多个，这里主要讨论二维的随机变量。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2016-10-08T12:08:55.000Z">
+<meta property="article:modified_time" content="2023-04-30T05:12:49.024Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="数学">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://wulc.me/2016/10/08/%E6%A6%82%E7%8E%87%E8%AE%BA%E4%B8%8E%E6%95%B0%E7%90%86%E7%BB%9F%E8%AE%A1%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86(2)--%E4%BA%8C%E7%BB%B4%E9%9A%8F%E6%9C%BA%E5%8F%98%E9%87%8F%E7%9A%84%E5%88%86%E5%B8%83/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>概率论与数理统计知识整理(2)--二维随机变量的分布 | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">吴良超的学习笔记</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2016/10/08/%E6%A6%82%E7%8E%87%E8%AE%BA%E4%B8%8E%E6%95%B0%E7%90%86%E7%BB%9F%E8%AE%A1%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86(2)--%E4%BA%8C%E7%BB%B4%E9%9A%8F%E6%9C%BA%E5%8F%98%E9%87%8F%E7%9A%84%E5%88%86%E5%B8%83/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          概率论与数理统计知识整理(2)--二维随机变量的分布
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2016-10-08 20:08:55" itemprop="dateCreated datePublished" datetime="2016-10-08T20:08:55+08:00">2016-10-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-30 13:12:49" itemprop="dateModified" datetime="2023-04-30T13:12:49+08:00">2023-04-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%95%B0%E5%AD%A6/" itemprop="url" rel="index"><span itemprop="name">数学</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>前面讲到的随机变量都是一维的，但是某些试验中随机变量可能有多个，这里主要讨论二维的随机变量。</p>
+<span id="more"></span>
+<h2 id="联合分布函数">联合分布函数</h2>
+<p>假设 <span class="math inline">\(X\)</span> 和 <span
+class="math inline">\(Y\)</span>
+都是随机变量，那么我们定义其分布函数如下：</p>
+<p><span class="math display">\[ F(x,y) = P ((X \le x)\cap(Y \le y))
+=  P (X \le x, Y \le y )\]</span></p>
+<p>上面的 <span class="math inline">\(F(x,y)\)</span>
+称作随机变量(X,Y)的分布函数，也叫作<strong>联合分布函数</strong>。</p>
+<h3 id="离散型随机变量联合分布">离散型随机变量联合分布</h3>
+<p>如果上面的 <span class="math inline">\(X\)</span> 和 <span
+class="math inline">\(Y\)</span>
+都是<strong>离散随机变量</strong>，那么对于 <span
+class="math inline">\((X,Y)\)</span> 的所有取值可记为</p>
+<p><span class="math display">\[P(X=x\_i, Y=y\_i) =
+p\_{ij},i,j=1,2,....\]</span></p>
+<p>上面的所有P的取值为二维离散随机变量的分布律，也叫<strong>联合分布律</strong>。直观用表格表示如下所示</p>
+<p><img
+src="https://wulc.me/imgs/image_1auhgkmh31s46m2u1rkf1uhe16ui13.png" /></p>
+<h3 id="连续型随机变量联合分布">连续型随机变量联合分布</h3>
+<p>类似地，如果上面的X和Y都是<strong>连续随机变量</strong>，那么分布函数可定义为</p>
+<p><span class="math display">\[ F(x,y) =
+\int\_{-\infty}^y\int\_{-\infty}^xf(u,v)dudv \]</span></p>
+<p>其中 <span class="math inline">\(f(x,y)\)</span>
+被称为概率密度函数，也叫<strong>联合概率密度函数</strong>。</p>
+<p>其性质与一维随机变量的概率密度函数非常相似</p>
+<ol type="1">
+<li><p><span class="math display">\[f(x,y) \ge 0\]</span></p></li>
+<li><p><span
+class="math display">\[\int\_{-\infty}^{\infty}\int\_{-\infty}^{\infty}f(x,y)dxdy
+= F(\infty,\infty)\]</span></p></li>
+</ol>
+<p>3.设 <span class="math inline">\(G\)</span> 是 <span
+class="math inline">\(xOy\)</span> 平面上的区域，点 <span
+class="math inline">\((X,Y)\)</span> 落在G内的概率为</p>
+<p><span class="math display">\[P((X,Y)\in G) = \int\int
+f(x,y)dxdy\]</span></p>
+<p>4.若 <span class="math inline">\(f(x,y)\)</span> 在点 <span
+class="math inline">\((x, y)\)</span> 连续，则</p>
+<p><span class="math display">\[\frac{\partial^2F(X,Y)}{\partial x
+\partial y} = f(x, y)\]</span></p>
+<h2 id="边缘分布函数">边缘分布函数</h2>
+<p>二维随机变量 <span class="math inline">\((X,Y)\)</span>
+作为一个整体的时候，其分布函数为联合分布函数，但是 <span
+class="math inline">\(X\)</span> 和 <span
+class="math inline">\(Y\)</span>
+是随机变量，各自也有分布函数，将其分别记为 <span
+class="math inline">\(F\_X(x),F\_Y(y)\)</span>，称为随机变量 <span
+class="math inline">\((X,Y)\)</span> 关于 <span
+class="math inline">\(X\)</span> 和关于 <span
+class="math inline">\(Y\)</span> 的<strong>边缘分布函数</strong>。</p>
+<p><strong>边缘分布函数可通过联合分布函数确定</strong>，关系如下</p>
+<p><span class="math display">\[F\_X(x) = P(X \le x) = P(X \le x,Y \lt
+\infty) = F(x, \infty)\]</span></p>
+<p>即</p>
+<p><span class="math display">\[F\_X(x) = F(x,\infty)\]</span></p>
+<p>也就是说在联合分布函数 <span class="math inline">\(F(x,y)\)</span>
+中令 <span class="math inline">\(y \rightarrow \infty\)</span>
+即可得到边缘分布 <span class="math inline">\(F\_X(x)\)</span>, 同理<span
+class="math display">\[F\_Y(y) = F(\infty, y)\]</span></p>
+<p>下面分别以离散型随机变量和连续性随机基量为例说明</p>
+<h3 id="离散型随机变量边缘分布">离散型随机变量边缘分布</h3>
+<p>假如 <span class="math inline">\(X\)</span> 和 <span
+class="math inline">\(Y\)</span> 是离散型随机变量，那么随机变量 <span
+class="math inline">\((X,Y)\)</span> 关于 <span
+class="math inline">\(X\)</span> 和关于 <span
+class="math inline">\(Y\)</span> 的边缘分布定义下</p>
+<p><span class="math display">\[p\_{i.} = \sum\_{j=1}^{\infty} p\_{ij} =
+P(X = x\_i), i=1,2,3.....n\]</span></p>
+<p><span class="math display">\[p\_{.j} = \sum\_{i=1}^{\infty} p\_{ij} =
+P(Y = y\_j), j=1,2,3.....n\]</span></p>
+<p>上面的式子分别称为随机变量 <span class="math inline">\((X,Y)\)</span>
+关于 <span class="math inline">\(X\)</span> 和关于 <span
+class="math inline">\(Y\)</span> 的<strong>边缘分布率</strong>。</p>
+<h3 id="连续型随机变量边缘分布">连续型随机变量边缘分布</h3>
+<p>假如 <span class="math inline">\(X\)</span> 和 <span
+class="math inline">\(Y\)</span> 分别是连续性随机变量，那么随机变量
+<span class="math inline">\((X,Y)\)</span> 关于 <span
+class="math inline">\(X\)</span>
+的<strong>边缘分布函数</strong>定义为</p>
+<p><span class="math display">\[F\_X(x) = F(x,\infty) =
+\int\_{-\infty}^{x}(\int\_{-\infty}^{\infty}f(x,y)dy)dx\]</span></p>
+<p>而</p>
+<p><span class="math display">\[ f\_X(x) =
+\int\_{-\infty}^{\infty}f(x,y)dy\]</span></p>
+<p>则被称为随机变量 <span class="math inline">\((X,Y)\)</span> 关于
+<span class="math inline">\(Y\)</span> 的
+<strong>边缘概率密度函数</strong></p>
+<h2 id="条件分布">条件分布</h2>
+<p>由条件概率可以比较容易推导出条件分布的含义，其定义如下：</p>
+<h3 id="离散型随机变量的条件分布">离散型随机变量的条件分布</h3>
+<p>对于离散型随机变量，条件分布的定义如下：</p>
+<blockquote>
+<p>设 <span class="math inline">\((X,Y)\)</span>
+是二维离散型随机变量，对于固定的 <span
+class="math inline">\(j\)</span>，若 <span
+class="math inline">\(P(Y=y\_j) \gt 0\)</span>, 则称 <span
+class="math display">\[P(X = x\_i|Y= y\_j) = \frac{P(X = x\_i,
+Y=y\_j)}{P(Y=y\_j)} = \frac{p\_{ij}}{p\_{.j}}, i = 1,2,3\]</span> 为在
+<span class="math inline">\(Y=y\_j\)</span>
+条件下随机变量X的条件分布律。同理，交换 <span
+class="math inline">\(X\)</span> 和 <span
+class="math inline">\(Y\)</span> 的位置得到的是在 <span
+class="math inline">\(X=x\_i\)</span> 条件下随机变量 <span
+class="math inline">\(Y\)</span> 的条件分布律。</p>
+</blockquote>
+<h3 id="连续型随机变量的条件分布">连续型随机变量的条件分布</h3>
+<p>对于连续型的随机变量，条件分布的定义如下：</p>
+<blockquote>
+<p>设二维随机变量 <span class="math inline">\((X,Y)\)</span>
+的概率密度函数为 <span class="math inline">\(f(x,y),(X,Y)\)</span> 关于
+<span class="math inline">\(Y\)</span> 的边缘概率密度为 <span
+class="math inline">\(f\_Y(y)\)</span> .若对于固定的 <span
+class="math inline">\(y，f\_Y(y) &gt;0\)</span> ，则称 <span
+class="math inline">\(\frac{f(x,y)}{f\_Y(y)}\)</span> 为在 <span
+class="math inline">\(Y=y\)</span> 的条件下 <span
+class="math inline">\(X\)</span> 的条件概率密度。记为 <span
+class="math display">\[f\_{X|Y}(x|y) =
+\frac{f(x,y)}{f\_Y(y)}\]</span></p>
+</blockquote>
+<p>有了条件概率密度(就是条件概率密度函数)，我们也可以定义出条件分布函数如下</p>
+<p><span class="math display">\[\int\_{-\infty}^x f\_{X|Y}(x|y)dx =
+\int\_{-\infty}^x \frac{f(x,y)}{f\_Y(y)}dx\]</span></p>
+<p>上面的函数为在 <span class="math inline">\(Y=y\)</span> 的条件下
+<span class="math inline">\(X\)</span> 的条件分布函数，记为</p>
+<p><span class="math inline">\(F\_{X|Y}(x|y) = P(X \le x|
+Y=y)\)</span></p>
+<h2 id="相互独立的随机变量">相互独立的随机变量</h2>
+<p>两个随机变量 <span class="math inline">\(X,Y\)</span>
+相互独立的充要条件如下：</p>
+<p><span class="math inline">\(F(x,y) = F\_X(x)F\_Y(y)\)</span></p>
+<p>上面的 <span class="math inline">\(F(x,y),F\_X(x),F\_Y(y)\)</span>
+分别是二维随机变量的联合分布函数及关于 <span
+class="math inline">\(X\)</span> 和 <span
+class="math inline">\(Y\)</span> 的边缘分布函数。</p>
+<p>除了通过分布函数，对于具体的连续型随机变量或离散型随机变量，还可通过概率密度函数和分布律来定义相互独立的条件。</p>
+<p>对于连续型随机变量，上面的式子等价于</p>
+<p><span class="math inline">\(f(x,y) = f\_X(x)f\_Y(y)\)</span></p>
+<p>式子中的 <span class="math inline">\(f(x,y),f\_X(x),f\_Y(y)\)</span>
+分别为 随机变量 <span class="math inline">\((X,Y)\)</span>
+的条件概率密度函数和边缘概率密度函数。</p>
+<p>对于离散型随机变量则有：</p>
+<p><span class="math inline">\(P(X = x\_i, Y = y\_j) =
+P(X=x\_i)P(Y=y\_j)\)</span></p>
+<h2 id="二维随机变量的函数的分布">二维随机变量的函数的分布</h2>
+<p>在讨论一维随机变量的分布函数的时候，也讨论了一维随机变量的函数的分布函数，同样对于二维随机变量，我们也可以讨论其函数的分布函数。下面主要讨论
+<span class="math inline">\(Z=X+Y\)</span>，<span
+class="math inline">\(Z=XY\)</span>，<span
+class="math inline">\(Z=Y/X\)</span>，<span
+class="math inline">\(M=max(X,Y)\)</span>，<span
+class="math inline">\(N=min(X,Y)\)</span> 这几个函数的分布函数（<span
+class="math inline">\(X，Y\)</span>
+为相互独立的随机变量），这里主要给出具体的公式，证明省略。</p>
+<h3 id="z-x-y-的分布"><span class="math inline">\(Z = X + Y\)</span>
+的分布</h3>
+<p>设 <span class="math inline">\((X,Y)\)</span>
+是二维连续型随机变量，其概率密度函数为 <span
+class="math inline">\(f(x,y)\)</span>， <span class="math inline">\(Z =
+X+Y\)</span>仍然为连续性随机变量，其概率密度函数为</p>
+<p><span class="math display">\[f\_{X+Y}(z) = \int\_{-\infty}^{\infty}
+f(z-y,y)dy\]</span> 或 <span class="math display">\[f\_{X+Y}(z) =
+\int\_{-\infty}^{\infty} f(x,z-x)dx\]</span></p>
+<p>当 <span class="math inline">\(X,Y\)</span>
+相互独立时，其边缘概率密度函数具有以下性质</p>
+<p><span class="math inline">\(f(x,y) = f\_X(x)f\_Y(y)\)</span></p>
+<p>因此上面的式子也可以化成下面的形式</p>
+<p><span class="math display">\[f\_{X+Y}(z) = \int\_{-\infty}^{\infty}
+f\_X(z-y)f\_Y(y)dy\]</span></p>
+<p><span class="math display">\[f\_{X+Y}(z) = \int\_{-\infty}^{\infty}
+f\_X(x)f\_Y(z-x)dx\]</span></p>
+<h3 id="zxy-和-zyx-的分布"><span class="math inline">\(Z=XY\)</span> 和
+<span class="math inline">\(Z=Y/X\)</span> 的分布</h3>
+<p>设 <span class="math inline">\((X,Y)\)</span>
+是二维连续型随机变量，其概率密度函数为 <span
+class="math inline">\(f(x,y)\)</span>， <span class="math inline">\(Z =
+\frac{Y}{X},Z = XY\)</span>仍然为连续性随机变量，其概率密度函数为</p>
+<p><span class="math display">\[f\_{Y/X}(z) = \int\_{-\infty}^{\infty}
+|x|f(x,xz)dx\]</span></p>
+<p><span class="math display">\[f\_{XY}(z) = \int\_{-\infty}^{\infty}
+\frac{1}{|x|}f(x,z/x)dx\]</span></p>
+<p>当 <span class="math inline">\(X,Y\)</span>
+相互独立时，同样有下面的性质</p>
+<p><span class="math display">\[f\_{Y/X}(z) = \int\_{-\infty}^{\infty}
+|x|f\_X(x)f\_Y(xz)dx\]</span></p>
+<p><span class="math display">\[f\_{XY}(z) = \int\_{-\infty}^{\infty}
+\frac{1}{|x|}f\_X(x)f\_Y(z/x)dx\]</span></p>
+<h3 id="m-maxxy-和-n-minxy-的分布"><span class="math inline">\(M =
+max(X,Y)\)</span> 和 <span class="math inline">\(N = min(X,Y)\)</span>
+的分布</h3>
+<p>讨论 <span class="math inline">\(max(X,Y)\)</span> 和 <span
+class="math inline">\(min(X,Y)\)</span> 的分布的时候， 一般假设 <span
+class="math inline">\(X, Y\)</span>
+相互独立，因为这样才有下面的性质。</p>
+<p>对于 <span class="math inline">\(M = max(X,Y)\)</span> 的分布有</p>
+<p><span class="math inline">\(F\_{max}(z) = P(M \le z) = P(X \le z, Y
+\le z) = P(X \le z)P(Y \le z)\)</span></p>
+<p>由于 <span class="math inline">\(X\)</span> 和 <span
+class="math inline">\(Y\)</span> 相互独立，因此有</p>
+<p><span class="math inline">\(F\_{max}(z) = F\_X(z)F\_Y(z)\)</span></p>
+<p>同样对 <span class="math inline">\(N = min(X,Y)\)</span> 有</p>
+<p><span class="math inline">\(F\_{min}(z) = P(N \le z) = 1 - P(N \gt z)
+= 1 - P(X &gt; z)P(Y&gt;z)\)</span></p>
+<p>即</p>
+<p><span class="math inline">\(F\_{min}(z) = 1 - (1 - F\_X(z))(1 -
+F\_Y(z))\)</span></p>
+<p>推广到 <span class="math inline">\(n\)</span>
+个相互独立的随机变量有下面的性质</p>
+<p><span class="math inline">\(M = max \lbrace X\_1,X\_2...,X\_n
+\rbrace\)</span> 及 <span class="math inline">\(N = min\lbrace
+X\_1,X\_2...,X\_n \rbrace\)</span> 的分布函数分别为</p>
+<p><span class="math display">\[F\_{max}(z) =
+F\_{X\_1}(z)F\_{X\_2}(z)...F\_{X\_n}(z)\]</span></p>
+<p><span class="math display">\[F\_{min}(z) = 1 - (1 - F\_{X\_1}(z))(1 -
+F\_{X\_2}(z))...(1 - F\_{X\_n}(z))\]</span></p>
+<p>而当 $ X_1,X_2...,X_n $ 独立同分布的时候，上式变为如下所示</p>
+<p><span class="math display">\[F\_{max}(z) = [F(z)]^n\]</span></p>
+<p><span class="math display">\[F\_{min}(z) = 1 - (1 -
+F(z))^n\]</span></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E5%AD%A6/" rel="tag"># 数学</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2016/10/03/%E6%A6%82%E7%8E%87%E8%AE%BA%E4%B8%8E%E6%95%B0%E7%90%86%E7%BB%9F%E8%AE%A1%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86(1)--%E4%B8%80%E7%BB%B4%E9%9A%8F%E6%9C%BA%E5%8F%98%E9%87%8F%E7%9A%84%E5%88%86%E5%B8%83%E7%B1%BB%E5%9E%8B/" rel="prev" title="概率论与数理统计知识整理(1)--一维随机变量的分布类型">
+      <i class="fa fa-chevron-left"></i> 概率论与数理统计知识整理(1)--一维随机变量的分布类型
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2016/10/12/%E4%B8%AD%E6%96%87%E7%BB%B4%E5%9F%BA%E7%99%BE%E7%A7%91%E7%9A%84%E8%AF%8D%E5%90%91%E9%87%8F%E7%9A%84%E8%AE%AD%E7%BB%83/" rel="next" title="中文维基百科语料库词向量的训练">
+      中文维基百科语料库词向量的训练 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%81%94%E5%90%88%E5%88%86%E5%B8%83%E5%87%BD%E6%95%B0"><span class="nav-number">1.</span> <span class="nav-text">联合分布函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A6%BB%E6%95%A3%E5%9E%8B%E9%9A%8F%E6%9C%BA%E5%8F%98%E9%87%8F%E8%81%94%E5%90%88%E5%88%86%E5%B8%83"><span class="nav-number">1.1.</span> <span class="nav-text">离散型随机变量联合分布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9E%E7%BB%AD%E5%9E%8B%E9%9A%8F%E6%9C%BA%E5%8F%98%E9%87%8F%E8%81%94%E5%90%88%E5%88%86%E5%B8%83"><span class="nav-number">1.2.</span> <span class="nav-text">连续型随机变量联合分布</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BE%B9%E7%BC%98%E5%88%86%E5%B8%83%E5%87%BD%E6%95%B0"><span class="nav-number">2.</span> <span class="nav-text">边缘分布函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A6%BB%E6%95%A3%E5%9E%8B%E9%9A%8F%E6%9C%BA%E5%8F%98%E9%87%8F%E8%BE%B9%E7%BC%98%E5%88%86%E5%B8%83"><span class="nav-number">2.1.</span> <span class="nav-text">离散型随机变量边缘分布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9E%E7%BB%AD%E5%9E%8B%E9%9A%8F%E6%9C%BA%E5%8F%98%E9%87%8F%E8%BE%B9%E7%BC%98%E5%88%86%E5%B8%83"><span class="nav-number">2.2.</span> <span class="nav-text">连续型随机变量边缘分布</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9D%A1%E4%BB%B6%E5%88%86%E5%B8%83"><span class="nav-number">3.</span> <span class="nav-text">条件分布</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A6%BB%E6%95%A3%E5%9E%8B%E9%9A%8F%E6%9C%BA%E5%8F%98%E9%87%8F%E7%9A%84%E6%9D%A1%E4%BB%B6%E5%88%86%E5%B8%83"><span class="nav-number">3.1.</span> <span class="nav-text">离散型随机变量的条件分布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9E%E7%BB%AD%E5%9E%8B%E9%9A%8F%E6%9C%BA%E5%8F%98%E9%87%8F%E7%9A%84%E6%9D%A1%E4%BB%B6%E5%88%86%E5%B8%83"><span class="nav-number">3.2.</span> <span class="nav-text">连续型随机变量的条件分布</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%B8%E4%BA%92%E7%8B%AC%E7%AB%8B%E7%9A%84%E9%9A%8F%E6%9C%BA%E5%8F%98%E9%87%8F"><span class="nav-number">4.</span> <span class="nav-text">相互独立的随机变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E7%BB%B4%E9%9A%8F%E6%9C%BA%E5%8F%98%E9%87%8F%E7%9A%84%E5%87%BD%E6%95%B0%E7%9A%84%E5%88%86%E5%B8%83"><span class="nav-number">5.</span> <span class="nav-text">二维随机变量的函数的分布</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#z-x-y-%E7%9A%84%E5%88%86%E5%B8%83"><span class="nav-number">5.1.</span> <span class="nav-text">\(Z &#x3D; X + Y\)
+的分布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#zxy-%E5%92%8C-zyx-%E7%9A%84%E5%88%86%E5%B8%83"><span class="nav-number">5.2.</span> <span class="nav-text">\(Z&#x3D;XY\) 和
+\(Z&#x3D;Y&#x2F;X\) 的分布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#m-maxxy-%E5%92%8C-n-minxy-%E7%9A%84%E5%88%86%E5%B8%83"><span class="nav-number">5.3.</span> <span class="nav-text">\(M &#x3D;
+max(X,Y)\) 和 \(N &#x3D; min(X,Y)\)
+的分布</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">248</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.linkedin.com/in/wuliangchao/" title="LinkedIn → https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;wuliangchao&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i>LinkedIn</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

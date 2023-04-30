@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="本文主要讲述三种离散型随机变量的分布(伯努利分布,二项分布,泊松分布)和三种连续型随机变量的分布(均匀分布,指数分布,正态分布)。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="概率论与数理统计知识整理(1)--一维随机变量的分布类型">
+<meta property="og:url" content="https://wulc.me/2016/10/03/%E6%A6%82%E7%8E%87%E8%AE%BA%E4%B8%8E%E6%95%B0%E7%90%86%E7%BB%9F%E8%AE%A1%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86(1)--%E4%B8%80%E7%BB%B4%E9%9A%8F%E6%9C%BA%E5%8F%98%E9%87%8F%E7%9A%84%E5%88%86%E5%B8%83%E7%B1%BB%E5%9E%8B/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="本文主要讲述三种离散型随机变量的分布(伯努利分布,二项分布,泊松分布)和三种连续型随机变量的分布(均匀分布,指数分布,正态分布)。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2016-10-03T12:08:55.000Z">
+<meta property="article:modified_time" content="2023-04-30T05:12:49.088Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="数学">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://wulc.me/2016/10/03/%E6%A6%82%E7%8E%87%E8%AE%BA%E4%B8%8E%E6%95%B0%E7%90%86%E7%BB%9F%E8%AE%A1%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86(1)--%E4%B8%80%E7%BB%B4%E9%9A%8F%E6%9C%BA%E5%8F%98%E9%87%8F%E7%9A%84%E5%88%86%E5%B8%83%E7%B1%BB%E5%9E%8B/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>概率论与数理统计知识整理(1)--一维随机变量的分布类型 | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">吴良超的学习笔记</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2016/10/03/%E6%A6%82%E7%8E%87%E8%AE%BA%E4%B8%8E%E6%95%B0%E7%90%86%E7%BB%9F%E8%AE%A1%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86(1)--%E4%B8%80%E7%BB%B4%E9%9A%8F%E6%9C%BA%E5%8F%98%E9%87%8F%E7%9A%84%E5%88%86%E5%B8%83%E7%B1%BB%E5%9E%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          概率论与数理统计知识整理(1)--一维随机变量的分布类型
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2016-10-03 20:08:55" itemprop="dateCreated datePublished" datetime="2016-10-03T20:08:55+08:00">2016-10-03</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-30 13:12:49" itemprop="dateModified" datetime="2023-04-30T13:12:49+08:00">2023-04-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%95%B0%E5%AD%A6/" itemprop="url" rel="index"><span itemprop="name">数学</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本文主要讲述三种离散型随机变量的分布(伯努利分布,二项分布,泊松分布)和三种连续型随机变量的分布(均匀分布,指数分布,正态分布)。</p>
+<span id="more"></span>
+<h2 id="离散型随机变量的分布">离散型随机变量的分布</h2>
+<h3 id="伯努利分布">伯努利分布</h3>
+<p>伯努利分布又名<strong>两点分布</strong>或者<strong>0-1分布</strong>，只能取两种结果，一般记为0或1。设取1的概率为
+<span class="math inline">\(p\)</span>，其分布规律为</p>
+<p><span class="math inline">\(P(X=k) = p^k(1-p)^{1-k}, k = 0,1
+(1&lt;p&lt;1)\)</span></p>
+<p>如果试验E只有两种结果，则称试验E为<strong>伯努利试验</strong>。如果独立的进行
+<span class="math inline">\(n\)</span>
+次试验E，则称为<strong>n重伯努利试验</strong>。</p>
+<h3 id="二项分布">二项分布</h3>
+<p>以 <span class="math inline">\(X\)</span> 表示 <span
+class="math inline">\(n\)</span> 重伯努利试验中事件 A 出现的次数，则
+<span class="math inline">\(X\)</span> 为一个随机变量，令 <span
+class="math inline">\(p\)</span> 为事件 A 出现的概率，则事件 <span
+class="math inline">\(X\)</span> 服从以下分布：</p>
+<p><span class="math inline">\(P(X=k) = C_n^k p^k q^{n-k}, k =
+0,1,2,...,n\)</span></p>
+<p>其中 <span class="math inline">\(q = 1-p\)</span>,则我们称 X
+服从参数为 n,p 的二项分布，记为 <span
+class="math inline">\(X\)</span>~<span
+class="math inline">\(b(n,p)\)</span>。其概率和根据以下公式为1</p>
+<p><span class="math inline">\(\sum\_{k=1}^nP(X=k) = \sum\_{k=1}^nC\_n^k
+p^k q^{n-k} = (p+q)^n = 1\)</span></p>
+<h3 id="泊松分布">泊松分布</h3>
+<p><strong>随机变量 <span class="math inline">\(X\)</span>
+的所有可能取值为 0,1,2,3....,且各个取值的概率为</strong></p>
+<p><span class="math inline">\(P(X=k) = \frac
+{\lambda^ke^{-\lambda}}{k!}, k=0,1,2....\)</span></p>
+<p>则我们称 <span class="math inline">\(X\)</span> 服从参数为 <span
+class="math inline">\(\lambda\)</span> 的泊松分布，记为 <span
+class="math inline">\(X\)</span>~<span
+class="math inline">\(\pi(\lambda)\)</span> 其中 <span
+class="math inline">\(\lambda\)</span> 为 <span
+class="math inline">\(X\)</span> 的期望，即 <span
+class="math inline">\(E(X)\)</span></p>
+<p>其分布规律通过图像直观表示为</p>
+<p><img
+src="https://wulc.me/imgs/image_1aubvjc3aa7i1ogehtl12vn1ger13.png" /></p>
+<p>泊松分布适合于描述<strong>单位时间内随机事件发生的次数的概率分布</strong>。如某一服务设施在一定时间内受到的服务请求的次数，电话交换机接到呼叫的次数、汽车站台的候客人数、机器出现的故障数、自然灾害发生的次数、DNA序列的变异数、放射性原子核的衰变数等等。从上面的图像也可以看出，对于给定泊松分布的强度
+<span class="math inline">\(\lambda\)</span>
+,其在单位时间内发生的次数的概率有一个峰值，也就是说发生的次数很多或很少的可能性都不大，且当强度越大，其最大可能发生的次数的值也越大。</p>
+<p>下面介绍<strong>用泊松分布来逼近二项分布的定理，也就是泊松定理。</strong></p>
+<blockquote>
+<p>泊松定理：设 <span class="math inline">\(\lambda &gt;
+0\)</span>是一个常数，<span class="math inline">\(n\)</span>
+是任意正整数，设 <span class="math inline">\(np =
+\lambda\)</span>,则对于任一非负整数 <span
+class="math inline">\(k\)</span>，有 <span
+class="math display">\[\lim_{n \to \infty} C_n^kp^k(1-p)^{n-k} =
+\frac{\lambda^ke^{-\lambda}}{k!}\]</span></p>
+</blockquote>
+<p>即<strong>当 <span class="math inline">\(n\)</span> 很大且 <span
+class="math inline">\(p\)</span>
+很小的时候，我们可以使用上面公式等号右边部分来逼近左边部分，从而简化计算。</strong></p>
+<h2 id="连续型随机变量的分布">连续型随机变量的分布</h2>
+<h3 id="分布函数和概率密度函数">分布函数和概率密度函数</h3>
+<p>首先需要清楚，<strong>分布函数是针对随机变量的，离散或连续都可以；而概率密度函数是针对连续随机变量的</strong>。下面是这两者的定义以及联系</p>
+<p><strong>分布函数的定义</strong>如下：</p>
+<p><span class="math inline">\(X\)</span> 是一个随机变量，<span
+class="math inline">\(x\)</span> 是任意实数，则 <span
+class="math inline">\(X\)</span> 的分布函数定义为</p>
+<p><span class="math inline">\(F(x) = P(X \le x),
+(-\infty&lt;x&lt;\infty)\)</span></p>
+<p>则对于任意实数 <span class="math inline">\(x\_1,x\_2(x\_1 &lt;
+x\_2)\)</span>,有</p>
+<p><span class="math inline">\(P(x\_1 &lt; X \le x\_2) = p(X \le x\_2) -
+p(X \le x\_1) = F(x\_2) - F(x\_1)\)</span></p>
+<p>即如果我们<strong>知道了 <span class="math inline">\(X\)</span>
+的分布函数，则可以知道 <span class="math inline">\(X\)</span>
+落在任一区间上的概率</strong>，也就是说通过分布函数可以完整描述随机变量的统计规律特性。</p>
+<p><strong>概率密度函数定义</strong>如下：</p>
+<p>对于分布函数 <span class="math inline">\(F(X)\)</span>，假如存在
+<span class="math inline">\(f(x)\)</span> 使得以下公式成立：</p>
+<p><span class="math inline">\(F(x) = \int\_{-\infty}^x f(t)
+dt\)</span></p>
+<p>则 X 为连续型随机变量，<span
+class="math inline">\(f(x)\)</span>为随机变量的概率密度函数。<span
+class="math inline">\(f(x)\)</span> 具有以下性质</p>
+<ol type="1">
+<li><p><span class="math inline">\(f(x) \ge 0\)</span></p></li>
+<li><p><span class="math inline">\(\int\_{-\infty}^{\infty} f(x) dx =
+1\)</span></p></li>
+</ol>
+<p>3.对于任意实数 <span class="math inline">\(x\_1,x\_2(x\_1 &lt;
+x\_2)\)</span>，有<span class="math display">\[P(x\_1&lt; X \le x\_2) =
+F(x\_2) - F(x\_1) = \int\_{x\_1}^{x\_2} f(x) dx\]</span></p>
+<p>且当 <span class="math inline">\(f(x)\)</span> 在点 <span
+class="math inline">\(x\)</span> 连续的时候，有</p>
+<p><span class="math inline">\(F&#39;(x) = f(x)\)</span></p>
+<p>通过上面这个性质可以推导出下面的约等式 <span
+class="math inline">\(P(x &lt;X \le x+\Delta x) \approx f(x)\Delta
+x\)</span></p>
+<p>也就是说<strong>概率密度函数在某点的值的大小一定程度上反映了随机变量落在该点附近的概率的大小</strong>。</p>
+<p>上面讲了<strong>随机变量的分布函数</strong>，下面讲一下<strong>随机变量的函数的分布函数</strong>，例如
+<span class="math inline">\(X\)</span> 为一个随机变量，则 <span
+class="math inline">\(Y = (X-1)^2\)</span> 是随机变量 <span
+class="math inline">\(X\)</span> 的函数，且 <span
+class="math inline">\(Y\)</span> 也是一个随机变量， 因此 <span
+class="math inline">\(Y\)</span>
+也有自己的分布律。下面是两个例子，其中一个是离散型随机变量，一个是连续型随机变量。</p>
+<p><img
+src="https://wulc.me/imgs/image_1aubr4om61a78q7m1kkp1doba8o9.png" /></p>
+<p><img
+src="https://wulc.me/imgs/image_1aubr9bv4jl71ou9cjfh2s1mulm.png" /></p>
+<p>离散型随机变量的函数的分布律容易求，对于连续型随机变量的函数的分布律的求法一般是<strong>先按定义写出
+<span class="math inline">\(Y\)</span> 的分布函数 <span
+class="math inline">\(F(Y&lt;=y)\)</span>, 然后替换成 <span
+class="math inline">\(F(g(X)&lt;=Y)\)</span>, 再转换成 <span
+class="math inline">\(X\)</span> 的分布函数和概率密度函数。</strong></p>
+<h3 id="均匀分布">均匀分布</h3>
+<p>若随机变量 <span class="math inline">\(X\)</span>
+的概率密度函数为</p>
+<p><span class="math display">\[f(x) = \begin{cases}  \frac{1}{b-a}
+&amp;{a&lt;x&lt;b} \\\ 0&amp;{其他}\end{cases}\]</span></p>
+<p>则称X在区间 <span class="math inline">\((a,b)\)</span>
+上服从均匀分布，记为 <span class="math inline">\(X\)</span>~<span
+class="math inline">\(U(a,b)\)</span></p>
+<h3 id="指数分布">指数分布</h3>
+<p>若随机变量 <span class="math inline">\(X\)</span>
+的概率密度函数为</p>
+<p><span class="math display">\[f(x) =
+\begin{cases}  \frac{1}{\theta}e^{-x / \theta} &amp;{x&gt;0} \\\
+0&amp;{其他}\end{cases}\]</span></p>
+<p>则称 <span class="math inline">\(X\)</span> 服从参数为 <span
+class="math inline">\(\theta\)</span> 的指数分布。</p>
+<p>其图像如下所示:</p>
+<p><img
+src="https://wulc.me/imgs/image_1auadnrfm1d6a1s11pfa24rtoh76.png" /></p>
+<p>其分布函数为</p>
+<p><span class="math display">\[F(x) = \begin{cases}  1-e^{-x / \theta}
+&amp;{x&gt;0} \\\ 0&amp;{其他}\end{cases}\]</span></p>
+<p><strong>如果说上面的泊松分布是描述某个时间段内事件发生次数的概率分布，那么指数分布描述的就是事件发生的时间间隔的概率分布</strong>。指数分布是连续的分布，反映在其实际意义上就是时间是连续的。更详细的描述可查看<a
+target="_blank" rel="noopener" href="http://www.ruanyifeng.com/blog/2015/06/poisson-distribution.html">这里</a></p>
+<p>关于指数分布的一个有趣的性质为：</p>
+<p><span class="math inline">\(P(X&gt;s+t | X&gt;s) =
+P(X&gt;t)\)</span></p>
+<p>该性质也称为<strong>无记忆性</strong>，假设 <span
+class="math inline">\(X\)</span>
+是某一原件的寿命，上面的式子表示的就是该元件在使用了 s
+个小时后，至少还能使用 t
+个小时的条件概率。而这一条件概率又等于该元件从刚开始使用的算起至少能使用
+t
+个小时的概率。也就是说原件对使用过的s个小时无记忆性，这个特性与随机过程中的平稳过程非常相似，而这个特性也是指数分布有广泛应用的重要原因。</p>
+<h3 id="正态分布">正态分布</h3>
+<p>正态分布也叫高斯分布，其概率密度函数为</p>
+<p><span class="math display">\[f(x) =
+\frac{1}{\sqrt{2\pi}\sigma}e^{-\frac{(x-\mu)^2}{2\sigma^2}}\]</span></p>
+<p>则称 <span class="math inline">\(X\)</span> 服从参数为 <span
+class="math inline">\(\mu, \sigma\)</span> 的正态分布，记为<span
+class="math inline">\(X\)</span>~<span
+class="math inline">\(N(\mu,\sigma^2)\)</span>，而且 <span
+class="math inline">\(\mu, \sigma\)</span>
+分别是正态分布的期望和标准差。其图像如下所示</p>
+<p><img
+src="https://wulc.me/imgs/image_1auaeaup2fe91u3t15l1i1214il8q.png" /></p>
+<p>从图像可知，当$ X =
+$时，取值最大，也就是说随机变量落在这个值附近的概率最大，而这个值也就是正态分布的期望。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E5%AD%A6/" rel="tag"># 数学</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2016/09/25/LeetCode%20%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A(402,316,321)--%E5%88%A0%E9%99%A4%E5%AD%97%E7%AC%A6%E4%B8%B2k%E4%B8%AA%E5%AD%97%E7%AC%A6%E4%BD%BF%E5%89%A9%E4%BD%99%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%8F%96%E6%9C%80%E5%80%BC/" rel="prev" title="LeetCode 解题报告(402,316,321)--删除字符串k个字符使剩余字符串取最值">
+      <i class="fa fa-chevron-left"></i> LeetCode 解题报告(402,316,321)--删除字符串k个字符使剩余字符串取最值
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2016/10/08/%E6%A6%82%E7%8E%87%E8%AE%BA%E4%B8%8E%E6%95%B0%E7%90%86%E7%BB%9F%E8%AE%A1%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86(2)--%E4%BA%8C%E7%BB%B4%E9%9A%8F%E6%9C%BA%E5%8F%98%E9%87%8F%E7%9A%84%E5%88%86%E5%B8%83/" rel="next" title="概率论与数理统计知识整理(2)--二维随机变量的分布">
+      概率论与数理统计知识整理(2)--二维随机变量的分布 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A6%BB%E6%95%A3%E5%9E%8B%E9%9A%8F%E6%9C%BA%E5%8F%98%E9%87%8F%E7%9A%84%E5%88%86%E5%B8%83"><span class="nav-number">1.</span> <span class="nav-text">离散型随机变量的分布</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%AF%E5%8A%AA%E5%88%A9%E5%88%86%E5%B8%83"><span class="nav-number">1.1.</span> <span class="nav-text">伯努利分布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E9%A1%B9%E5%88%86%E5%B8%83"><span class="nav-number">1.2.</span> <span class="nav-text">二项分布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%8A%E6%9D%BE%E5%88%86%E5%B8%83"><span class="nav-number">1.3.</span> <span class="nav-text">泊松分布</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9E%E7%BB%AD%E5%9E%8B%E9%9A%8F%E6%9C%BA%E5%8F%98%E9%87%8F%E7%9A%84%E5%88%86%E5%B8%83"><span class="nav-number">2.</span> <span class="nav-text">连续型随机变量的分布</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%87%BD%E6%95%B0%E5%92%8C%E6%A6%82%E7%8E%87%E5%AF%86%E5%BA%A6%E5%87%BD%E6%95%B0"><span class="nav-number">2.1.</span> <span class="nav-text">分布函数和概率密度函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9D%87%E5%8C%80%E5%88%86%E5%B8%83"><span class="nav-number">2.2.</span> <span class="nav-text">均匀分布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%87%E6%95%B0%E5%88%86%E5%B8%83"><span class="nav-number">2.3.</span> <span class="nav-text">指数分布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A3%E6%80%81%E5%88%86%E5%B8%83"><span class="nav-number">2.4.</span> <span class="nav-text">正态分布</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">248</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.linkedin.com/in/wuliangchao/" title="LinkedIn → https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;wuliangchao&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i>LinkedIn</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

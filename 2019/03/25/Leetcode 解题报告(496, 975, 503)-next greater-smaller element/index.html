@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="本文主要介绍在 LeetCode 题目 496. Next Greater Element I、975. Odd Even Jump、503. Next Greater Element II 中需要解决的共同问题：next greater element，就是对于一个数组中的每个 element，求出下标和值都比其大的一个 element，根据要求不同，这个问题又可分为 nearest of ne">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Leetcode 解题报告(496, 975, 503)-next greater&#x2F;smaller element">
+<meta property="og:url" content="https://wulc.me/2019/03/25/Leetcode%20%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A(496,%20975,%20503)-next%20greater-smaller%20element/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="本文主要介绍在 LeetCode 题目 496. Next Greater Element I、975. Odd Even Jump、503. Next Greater Element II 中需要解决的共同问题：next greater element，就是对于一个数组中的每个 element，求出下标和值都比其大的一个 element，根据要求不同，这个问题又可分为 nearest of ne">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-03-25T12:38:57.000Z">
+<meta property="article:modified_time" content="2023-04-30T05:12:49.045Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="树">
+<meta property="article:tag" content="动态规划">
+<meta property="article:tag" content="栈">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://wulc.me/2019/03/25/Leetcode%20%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A(496,%20975,%20503)-next%20greater-smaller%20element/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Leetcode 解题报告(496, 975, 503)-next greater/smaller element | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">吴良超的学习笔记</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2019/03/25/Leetcode%20%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A(496,%20975,%20503)-next%20greater-smaller%20element/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Leetcode 解题报告(496, 975, 503)-next greater/smaller element
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-03-25 20:38:57" itemprop="dateCreated datePublished" datetime="2019-03-25T20:38:57+08:00">2019-03-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-30 13:12:49" itemprop="dateModified" datetime="2023-04-30T13:12:49+08:00">2023-04-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本文主要介绍在 LeetCode 题目 <a
+target="_blank" rel="noopener" href="https://leetcode.com/problems/next-greater-element-i/">496. Next
+Greater Element I</a>、<a
+target="_blank" rel="noopener" href="https://leetcode.com/problems/odd-even-jump/">975. Odd Even
+Jump</a>、<a
+target="_blank" rel="noopener" href="https://leetcode.com/problems/next-greater-element-ii/">503. Next
+Greater Element II</a> 中需要解决的共同问题：next greater
+element，就是对于一个数组中的每个 element，求出下标和值都比其大的一个
+element，根据要求不同，这个问题又可分为 nearest of next greater elements
+和 smallest of next greater elements，前者指的是 next greater elements
+中离当前 element 最近的那个，后者指的是 next greater elements
+中值最小的那个。两个问题都可通过 stack 解决，后者也可通过 treemap
+解决。最后会将原来的问题进行的拓展，将原来的数据改成头尾相接的，其解决方法是将来的数组进行
+duplicate, 然后把环解开，详细请看后文。</p>
+<span id="more"></span>
+<h2 id="nearest-of-next-greater-elements">nearest of next greater
+elements</h2>
+<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/next-greater-element-i/">496.
+Next Greater Element I</a> 要解决的就是 nearest of next greater element
+的问题，如果直接进行暴力枚举，那时间复杂度是 <span
+class="math inline">\(O(n^2)\)</span>, 而借助栈，能够让时间复杂度降为
+<span class="math inline">\(O(n)\)</span>,
+其过程如下所示（栈用于存储元素的下标）</p>
+<ol type="1">
+<li>从后往前遍历数组</li>
+<li>对于当前下标，假如其对应的值大于栈顶元素对应的值，则将栈顶元素出栈</li>
+<li>重复步骤 2
+直至栈顶元素对应的值大于等于当前下标对应的值或栈为空，如果是前者，则当前栈顶元素便是当前元素的
+nearest of next greater elements, 如果是后者，这样的 element 不存在</li>
+<li>将当前下标压栈，回到步骤 1</li>
+</ol>
+<p>由于每个元素最多只会出栈一次和入栈一次，因此总体的时间复杂度是 <span
+class="math inline">\(O(n)\)</span>,
+这个方法<strong>减少了时间复杂度的关键点在于出栈，如对当前元素
+e1，经过出栈后小于当前元素 e1 的元素都会出栈，假如下一个元素 e2 大于
+e1，那么 e2 就不需要再跟那些已经出栈的元素进行比较了，因为那些元素小于
+e1，也必定小于 e2。</strong>这样就减少了比较次数，将时间复杂度从原来的
+<span class="math inline">\(O(n^2)\)</span> 降低到了 <span
+class="math inline">\(O(n)\)</span>。</p>
+<p>这里以题目 496. Next Greater Element I 为例，AC 的 pyhton
+代码如下所示，</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># traverse from right to left</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">nextGreaterElement</span>(<span class="params">self, nums1, nums2</span>):</span><br><span class="line">        record, stack =  &#123;&#125;, []</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> xrange(<span class="built_in">len</span>(nums2) - <span class="number">1</span>, -<span class="number">1</span>, -<span class="number">1</span>):</span><br><span class="line">            <span class="keyword">while</span> stack <span class="keyword">and</span> stack[-<span class="number">1</span>] &lt; nums2[i]:</span><br><span class="line">                stack.pop()</span><br><span class="line">            <span class="keyword">if</span> stack:</span><br><span class="line">                record[nums2[i]] = stack[-<span class="number">1</span>]</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                record[nums2[i]] = -<span class="number">1</span></span><br><span class="line">            stack.append(nums2[i])</span><br><span class="line">        <span class="keyword">return</span> [record[num] <span class="keyword">for</span> num <span class="keyword">in</span> nums1]</span><br></pre></td></tr></table></figure>
+<p><strong>除了从后往前遍历，利用栈从前往后遍历也能解决这个问题</strong>，原理类似，AC
+的 python 代码</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># traverse from left to right</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">nextGreaterElement</span>(<span class="params">self, nums1, nums2</span>):</span><br><span class="line">        stack, record = [], &#123;&#125;</span><br><span class="line">        <span class="keyword">for</span> num <span class="keyword">in</span> nums2:</span><br><span class="line">            <span class="keyword">while</span> stack <span class="keyword">and</span> stack[-<span class="number">1</span>] &lt; num:</span><br><span class="line">                record[stack.pop()] = num</span><br><span class="line">            stack.append(num)</span><br><span class="line">        <span class="keyword">for</span> num <span class="keyword">in</span> stack:</span><br><span class="line">            record[num] = -<span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> [record[num] <span class="keyword">for</span> num <span class="keyword">in</span> nums1]</span><br></pre></td></tr></table></figure>
+<h2 id="smallest-of-next-greater-element">smallest of next greater
+element</h2>
+<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/odd-even-jump/">975. Odd Even
+Jump</a> 要解决的是 smallest of next greater element
+这一类问题，题目不是直接求解这个问题，而是结合了动态规划和这个问题。</p>
+<p>动态规划比较容易想到，因为一般这类型是否能到达终点的题目都可以通过动态规划求解，如</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://leetcode.com/problems/jump-game/">55. Jump
+Game</a></li>
+<li><a target="_blank" rel="noopener" href="https://leetcode.com/problems/climbing-stairs/">70.
+Climbing Stairs</a></li>
+<li><a target="_blank" rel="noopener" href="https://leetcode.com/problems/frog-jump/">403. Frog
+Jump</a></li>
+<li><a
+target="_blank" rel="noopener" href="https://leetcode.com/problems/min-cost-climbing-stairs/">746. Min
+Cost Climbing Stairs</a></li>
+<li>.....</li>
+</ul>
+<p>回到题目 975. Odd Even Jump 由于在每个点有两种选择，即 odd jump 或者
+even jump，则可以建立两个 dp 数组，<code>odd_dp</code> 和
+<code>even_dp</code>, <code>odd_dp[i]</code> 表示从 i 以 odd jump
+开始能够跳到终点，<code>even_dp[i]</code> 表示从 i 以 even jump
+开始能够跳到终点。则 dp 递推式就很简单了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">odd_dp[i] = even_dp[smallest of next greater elements of i]</span><br><span class="line">even_dp[i] = odd_dp[greatest of next smaller elements of i]</span><br></pre></td></tr></table></figure>
+<p>最终统计 <code>odd_dp</code> 中为 true 的元素数量即可，
+则问题就变成了 smallest of next greater elements 和 greatest of next
+smaller elements；解决的方法有两种，stack 和
+treemap，两者的时间复杂度均为 <span
+class="math inline">\(O(nlgn)\)</span></p>
+<h3 id="stack">stack</h3>
+<p>利用 stack 求解时,
+不再像前面的问题一样可以直接在原来的数组上进行遍历，而是<strong>将每个元素的值带上其下标组成一个新的
+tuple，然后根据 tuple
+中的元素的值进行从小到大的排序，则此时便将问题转化为了 nearest of next
+greater
+elements</strong>，即只需要在当前元素后面那些元素中找到第一个下标比当前元素下标大的元素即可。排序的时间复杂素是
+<span class="math inline">\(O(nlgn)\)</span>,
+遍历进行动态规划的时间复杂度是 <span
+class="math inline">\(O(n)\)</span>, 因此总体的时间复杂度是 <span
+class="math inline">\(O(nlgn)\)</span>, 求解题目的 python
+代码如下所示</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> deque</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">oddEvenJumps</span>(<span class="params">self, A</span>):</span><br><span class="line">        n = <span class="built_in">len</span>(A)</span><br><span class="line">        sorted_A = <span class="built_in">sorted</span>([(v, i) <span class="keyword">for</span> i, v <span class="keyword">in</span> <span class="built_in">enumerate</span>(A)])</span><br><span class="line">        next_greater, greater_stack = [-<span class="number">1</span>] * n, []</span><br><span class="line">        idx = n - <span class="number">1</span></span><br><span class="line">        <span class="keyword">while</span> idx &gt;= <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">while</span> greater_stack <span class="keyword">and</span> greater_stack[-<span class="number">1</span>] &lt; sorted_A[idx][<span class="number">10</span>]:</span><br><span class="line">                greater_stack.pop()</span><br><span class="line">            <span class="keyword">if</span> greater_stack:</span><br><span class="line">                next_greater[sorted_A[idx][<span class="number">11</span>]] = greater_stack[-<span class="number">1</span>]</span><br><span class="line">            greater_stack.append(sorted_A[idx][<span class="number">12</span>])</span><br><span class="line">            idx -= <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        sorted_A = <span class="built_in">sorted</span>([(v, -i) <span class="keyword">for</span> i, v <span class="keyword">in</span> <span class="built_in">enumerate</span>(A)]) <span class="comment"># -i if for repeated elements</span></span><br><span class="line">        next_smaller, smaller_stack = [-<span class="number">1</span>] * n, []</span><br><span class="line">        idx = <span class="number">0</span></span><br><span class="line">        <span class="keyword">while</span> idx &lt; n:</span><br><span class="line">            <span class="keyword">while</span> smaller_stack <span class="keyword">and</span> smaller_stack[-<span class="number">1</span>] &lt; -<span class="number">1</span>*sorted_A[idx][<span class="number">13</span>]:</span><br><span class="line">                smaller_stack.pop()</span><br><span class="line">            <span class="keyword">if</span> smaller_stack:</span><br><span class="line">                next_smaller[-<span class="number">1</span>*sorted_A[idx][<span class="number">14</span>]] = smaller_stack[-<span class="number">1</span>]</span><br><span class="line">            smaller_stack.append(-<span class="number">1</span>*sorted_A[idx][<span class="number">15</span>])</span><br><span class="line">            idx += <span class="number">1</span></span><br><span class="line">        odd_dp, even_dp = [<span class="literal">False</span>] * n, [<span class="literal">False</span>] * n</span><br><span class="line">        odd_dp[-<span class="number">1</span>], even_dp[-<span class="number">1</span>] = <span class="literal">True</span>, <span class="literal">True</span></span><br><span class="line">        result = <span class="number">1</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> xrange(n - <span class="number">2</span>, -<span class="number">1</span>, -<span class="number">1</span>):</span><br><span class="line">            <span class="keyword">if</span> next_greater[i] &gt;= <span class="number">0</span> <span class="keyword">and</span> even_dp[next_greater[i]]:</span><br><span class="line">                odd_dp[i] = <span class="literal">True</span></span><br><span class="line">                result += <span class="number">1</span></span><br><span class="line">            <span class="keyword">if</span> next_smaller[i] &gt;= <span class="number">0</span> <span class="keyword">and</span> odd_dp[next_smaller[i]]:</span><br><span class="line">                even_dp[i] = <span class="literal">True</span></span><br><span class="line">        <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
+<h3 id="treemap">treemap</h3>
+<p>另一种就是利用 <a
+target="_blank" rel="noopener" href="https://www.geeksforgeeks.org/treemap-in-java/">treemap</a>，treemap
+是通过红黑树实现的一种数据结构, 红黑树是一棵二叉搜索树，因此能够在 <span
+class="math inline">\(O(lgn)\)</span> 时间复杂度内找到 next greater
+element。c++ 中内置的 map 的数据结构便是 treemap，python中没有 treemap
+这种内置的数据结构。因此，对应求解题目的 c++ 代码如下，需要注意的是 map
+的两个方法 <code>lower_bound</code> 和 <code>upper_bound</code>
+含义如下</p>
+<ul>
+<li><code>lower_bound</code> 返回第一个大于等于当前值的 iterator</li>
+<li><code>upper_bound</code> 返回第一个大于当前值的 iterator</li>
+</ul>
+<p>因此，下面的 <code>--smaller</code> 表示将返回的 iterator
+往后移动，找到一个小于等于当前值的数</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;map&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="type">int</span> <span class="title">oddEvenJumps</span><span class="params">(std::vector&lt;<span class="type">int</span>&gt;&amp; A)</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> n = A.<span class="built_in">size</span>();</span><br><span class="line">    <span class="function">std::vector&lt;<span class="type">bool</span>&gt; <span class="title">odd_dp</span><span class="params">(n, <span class="literal">false</span>)</span>, <span class="title">even_dp</span><span class="params">(n, <span class="literal">false</span>)</span></span>;</span><br><span class="line">    std::map&lt;<span class="type">int</span>, <span class="type">int</span>&gt; m;</span><br><span class="line">    odd_dp[n<span class="number">-1</span>] = <span class="literal">true</span>;</span><br><span class="line">    even_dp[n<span class="number">-1</span>] = <span class="literal">true</span>;</span><br><span class="line">    <span class="type">int</span> result = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = n - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">      <span class="keyword">auto</span> greater = m.<span class="built_in">lower_bound</span>(A[i]);</span><br><span class="line">      <span class="keyword">if</span> (greater != m.<span class="built_in">end</span>() &amp;&amp; even_dp[greater-&gt;second]) &#123;</span><br><span class="line">        result++;</span><br><span class="line">        odd_dp[i] = <span class="literal">true</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">auto</span> smaller = m.<span class="built_in">upper_bound</span>(A[i]);</span><br><span class="line">      <span class="keyword">if</span> (smaller != m.<span class="built_in">begin</span>() &amp;&amp; odd_dp[(--smaller)-&gt;second]) even_dp[i] = <span class="literal">true</span>;</span><br><span class="line">      m[A[i]] = i;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="array-to-circle">array to circle</h2>
+<p>最后是 <a
+target="_blank" rel="noopener" href="https://leetcode.com/problems/next-greater-element-ii/">503. Next
+Greater Element II</a>，
+这个题目在第一题基础上将原来的数组首尾相连，并求每个元素的 next
+element，解决方法还是利用栈。</p>
+<p>这种形成 circle 的问题一般都会想办法把 circle 去掉，如 <a
+target="_blank" rel="noopener" href="https://leetcode.com/problems/house-robber-ii/">213. House Robber
+II</a>
+就是通过列举可能的两种情况来把环去掉。而这道题目是通过<strong>首先在栈按原来数组顺序存储整个数组，栈顶元素为原来数组下标为
+0
+的元素，然后按照上面的方法从后往前遍历</strong>，这样做有效的原因是<strong>每个元素最多只能比较一圈回到自己本身，</strong></p>
+<p>对应的 python 代码如下所示 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">nextGreaterElements</span>(<span class="params">self, nums</span>):</span><br><span class="line">        n = <span class="built_in">len</span>(nums)</span><br><span class="line">        result = [-<span class="number">1</span>] * n</span><br><span class="line">        stack = [nums[i] <span class="keyword">for</span> i <span class="keyword">in</span> xrange(n - <span class="number">1</span>, -<span class="number">1</span>, -<span class="number">1</span>)]</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> xrange(n - <span class="number">1</span>, -<span class="number">1</span>, -<span class="number">1</span>):</span><br><span class="line">            <span class="keyword">while</span> stack <span class="keyword">and</span> stack[-<span class="number">1</span>] &lt;= nums[i]:</span><br><span class="line">                stack.pop()</span><br><span class="line">            <span class="keyword">if</span> stack:</span><br><span class="line">                result[i] = stack[-<span class="number">1</span>]</span><br><span class="line">            stack.append(nums[i])</span><br><span class="line">        <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure></p>
+<h2 id="summary">summary</h2>
+<p>综上，本文主要介绍了 next greater element
+问题及其衍生问题的求解方法，最原始的 nearest of next greater elements
+通过 stack 能够在 <span class="math inline">\(O(n)\)</span>
+的时间复杂度内求解；对于 smallest of next greater elements 问题，可通过
+sort+stack 或 treemap 在 <span class="math inline">\(O(nlgn)\)</span>
+的时间复杂度内解决；而如果将原来的 array 首尾相连，则只需要先在 stack
+内存入整个 array
+的元素（从后往前压入栈），因为每个元素最多只能比较一圈后回到自身。上面针对的是
+next greater element 问题，但是 next smaller element
+求解的原理和方法也是类似的，这里不再赘述。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%A0%91/" rel="tag"># 树</a>
+              <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" rel="tag"># 动态规划</a>
+              <a href="/tags/%E6%A0%88/" rel="tag"># 栈</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/03/18/Adam%E9%82%A3%E4%B9%88%E6%A3%92%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E5%AF%B9SGD%E5%BF%B5%E5%BF%B5%E4%B8%8D%E5%BF%98/" rel="prev" title="Adam那么棒，为什么还对SGD念念不忘">
+      <i class="fa fa-chevron-left"></i> Adam那么棒，为什么还对SGD念念不忘
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/04/19/%E9%80%9A%E8%BF%87%20Flask,%20Docker,%20Jenkins%20%E5%92%8C%20Kubernets%20%E9%83%A8%E7%BD%B2%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A8%A1%E5%9E%8B/" rel="next" title="通过 Flask, Docker, Jenkins 和 Kubernets 部署机器学习模型">
+      通过 Flask, Docker, Jenkins 和 Kubernets 部署机器学习模型 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#nearest-of-next-greater-elements"><span class="nav-number">1.</span> <span class="nav-text">nearest of next greater
+elements</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#smallest-of-next-greater-element"><span class="nav-number">2.</span> <span class="nav-text">smallest of next greater
+element</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#stack"><span class="nav-number">2.1.</span> <span class="nav-text">stack</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#treemap"><span class="nav-number">2.2.</span> <span class="nav-text">treemap</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#array-to-circle"><span class="nav-number">3.</span> <span class="nav-text">array to circle</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#summary"><span class="nav-number">4.</span> <span class="nav-text">summary</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">248</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.linkedin.com/in/wuliangchao/" title="LinkedIn → https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;wuliangchao&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i>LinkedIn</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

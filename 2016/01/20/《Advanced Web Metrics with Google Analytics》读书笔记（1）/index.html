@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="《Advanced Web Metrics with Google Analytics》是 Google 一位数据分析专家 Brian Clifton 出版的书，主要介绍了涉及网站分析的一些概念和方法以及如何利用 Google Analytics 进行网站分析。Google Analytics 是 Google 免费提供的一个用于网站分析的工具。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《Advanced Web Metrics with Google Analytics》读书笔记(1)">
+<meta property="og:url" content="https://wulc.me/2016/01/20/%E3%80%8AAdvanced%20Web%20Metrics%20with%20Google%20Analytics%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%EF%BC%881%EF%BC%89/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="《Advanced Web Metrics with Google Analytics》是 Google 一位数据分析专家 Brian Clifton 出版的书，主要介绍了涉及网站分析的一些概念和方法以及如何利用 Google Analytics 进行网站分析。Google Analytics 是 Google 免费提供的一个用于网站分析的工具。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2016-01-20T01:35:52.000Z">
+<meta property="article:modified_time" content="2023-04-30T05:12:49.037Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="Google Analytics">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://wulc.me/2016/01/20/%E3%80%8AAdvanced%20Web%20Metrics%20with%20Google%20Analytics%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%EF%BC%881%EF%BC%89/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>《Advanced Web Metrics with Google Analytics》读书笔记(1) | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">吴良超的学习笔记</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2016/01/20/%E3%80%8AAdvanced%20Web%20Metrics%20with%20Google%20Analytics%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%EF%BC%881%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          《Advanced Web Metrics with Google Analytics》读书笔记(1)
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2016-01-20 09:35:52" itemprop="dateCreated datePublished" datetime="2016-01-20T09:35:52+08:00">2016-01-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-30 13:12:49" itemprop="dateModified" datetime="2023-04-30T13:12:49+08:00">2023-04-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Google-Analytics/" itemprop="url" rel="index"><span itemprop="name">Google Analytics</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>《Advanced Web Metrics with Google Analytics》是 Google
+一位数据分析专家 Brian Clifton
+出版的书，主要介绍了涉及网站分析的一些概念和方法以及如何利用 Google
+Analytics 进行网站分析。Google Analytics 是 Google
+免费提供的一个用于网站分析的工具。 <span id="more"></span>
+本系列文章是笔者在阅读本书过程中总结整理的一些笔记。</p>
+<p><strong>本文是本书中 Chapter
+1的阅读笔记，主要介绍了网站分析的一些概念以及为什么要进行网站分析。</strong></p>
+<h2 id="为什么要进行网站分析">为什么要进行网站分析</h2>
+<p>在进行网站分析前需要考虑的一个问题是<strong>通过网站分析能够给你带来的价值</strong>，这种价值可以表现在商业上，如某家公司的网站是否能够给实际销量带来提升，也可以表现在个人上，如个人网站的访问量、影响力如何。</p>
+<h2 id="网站分析能够获取的信息">网站分析能够获取的信息</h2>
+<p>一般的网站分析均能够获取下面的信息：</p>
+<ul>
+<li>每天的访客人数</li>
+<li>平均转化率（conversion rate），就是销量、注册量和下载量等</li>
+<li>网站上访问最多的页面</li>
+<li>访客的每次平均访问时间和访问的频率</li>
+<li>访客的地理分布</li>
+</ul>
+<p>假如你的网站是商业网站，还能够获取以下信息：</p>
+<ul>
+<li>网站产生的盈利</li>
+<li>网站的顾客来自哪里</li>
+<li>网站最畅销的商品是那些</li>
+</ul>
+<p>随着挖掘的深入还可以获取到以下的信息：</p>
+<ul>
+<li>一个顾客对于网站的价值</li>
+<li>如何量化一个网页的价值</li>
+<li>老顾客和新顾客在使用网站的方式上是否有区别</li>
+<li>访问量以及转化率如何被将顾客引导到本站的外站的影响</li>
+<li>页面跳出率受何影响</li>
+<li>站内搜索是否对转化率有利</li>
+<li>平均需要多长时间才能让一位访客成为一位顾客</li>
+</ul>
+<h2 id="如何利用网站分析得到的结果">如何利用网站分析得到的结果</h2>
+<p>　　从前面的分析可知，网站的分析能够提供很多信息，这些繁杂的信息会让许多初学者感到无从下手。因此，在<strong>进行网站分析前一定要确定希望通过网站分析达到的目标</strong>。
+　　目标根据网站具体类型有所区别，总的来说，<strong>目标就是希望访客在离开网页之前要完成的内容</strong>。如对于购物网站，目标可能是希望顾客购买了产品，对于个人网站而言，可能希望顾客能够对网站留言给出建议等。更进一步说，目标就是在访客好你的网站之间建立起的任何一种关系，而不是仅仅一个PV量，如留言，订阅网站RSS，下载了一个PDF文件等。
+　　有了目标，便可以从复杂繁多的数据中找到所需要的数据。进而分析这些数据，并采取相应的措施。如最简单的购物网站需要判断那种物品销量较好，哪种较差，进而修改相应的进货量；便可商品的购买量、PV量等进行分析。</p>
+<p>上面只是对本书的内容做了一个很笼统的总结，具体的实现方法、原理及注意事项会在后续文章介绍。</p>
+<p>因为这本书主要就是讲述通过Google Analytics
+进行网站分析，所以有必要了解一下Google Analytics
+中的一些专用术语。下面是 Google Analytics 中一些常用的术语，更详细的可见
+<code>http:// www.google.com/support/googleanalytics/bin/topic.py?topic=11285</code></p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">术语</th>
+<th style="text-align: center;">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">Bounced Visitor</td>
+<td
+style="text-align: center;">只在你的网页上浏览过一次的访客，这个数值当然越小越好</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Google Analytics Tracking
+Code（GATC）</td>
+<td style="text-align: center;">Google Analytics
+工具提供的一段js代码，用来追踪网站的访问情况</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Goal Conversion</td>
+<td style="text-align: center;">也可简称为 goal 或
+conversion，表示希望网站达到的一个目标，如购买页面的一次访问量或一次下载</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Funnel</td>
+<td style="text-align: center;">表示达到Goal
+Conversion所需要经过的一个流程</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Landing Page</td>
+<td style="text-align: center;">网站的首页</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Referrer</td>
+<td style="text-align: center;">含有你的网站超链接的页面</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Return On Investment(ROI)</td>
+<td
+style="text-align: center;">检验网站分析效果的一种指标，计算公式：纯利润/支出</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Session</td>
+<td
+style="text-align: center;">也叫会话，指一个访客在网站停留的时间，一个会话在访客关闭页面后结束，也会在访客在一段时间内对网站无任何操作情况下结束</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Site Search</td>
+<td style="text-align: center;">网站的内部搜索功能</td>
+</tr>
+</tbody>
+</table>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Google-Analytics/" rel="tag"># Google Analytics</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2016/01/17/%E9%80%9A%E8%BF%87%20python%20%E5%8F%91%E9%80%81%E9%82%AE%E4%BB%B6%E6%8F%90%E9%86%92%E7%BD%91%E7%AB%99%E7%9A%84%E6%96%B0%E8%AF%84%E8%AE%BA/" rel="prev" title="通过 python 发送邮件提醒网站的新评论">
+      <i class="fa fa-chevron-left"></i> 通过 python 发送邮件提醒网站的新评论
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2016/01/22/%E3%80%8AAdvanced%20Web%20Metrics%20with%20Google%20Analytics%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%EF%BC%882%EF%BC%89/" rel="next" title="《Advanced Web Metrics with Google Analytics》读书笔记(2)">
+      《Advanced Web Metrics with Google Analytics》读书笔记(2) <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E8%BF%9B%E8%A1%8C%E7%BD%91%E7%AB%99%E5%88%86%E6%9E%90"><span class="nav-number">1.</span> <span class="nav-text">为什么要进行网站分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%AB%99%E5%88%86%E6%9E%90%E8%83%BD%E5%A4%9F%E8%8E%B7%E5%8F%96%E7%9A%84%E4%BF%A1%E6%81%AF"><span class="nav-number">2.</span> <span class="nav-text">网站分析能够获取的信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8%E7%BD%91%E7%AB%99%E5%88%86%E6%9E%90%E5%BE%97%E5%88%B0%E7%9A%84%E7%BB%93%E6%9E%9C"><span class="nav-number">3.</span> <span class="nav-text">如何利用网站分析得到的结果</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">248</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.linkedin.com/in/wuliangchao/" title="LinkedIn → https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;wuliangchao&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i>LinkedIn</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

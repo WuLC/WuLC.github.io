@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="随机变量的统计特征主要包括期望，方差，协方差以及相关系数。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="概率论与数理统计知识整理(3)--随机变量的统计特征">
+<meta property="og:url" content="https://wulc.me/2016/10/14/%E6%A6%82%E7%8E%87%E8%AE%BA%E4%B8%8E%E6%95%B0%E7%90%86%E7%BB%9F%E8%AE%A1%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86(3)--%E9%9A%8F%E6%9C%BA%E5%8F%98%E9%87%8F%E7%9A%84%E7%BB%9F%E8%AE%A1%E7%89%B9%E5%BE%81/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="随机变量的统计特征主要包括期望，方差，协方差以及相关系数。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/image_1av0covsgggenrpbhar2ftoj2a.png">
+<meta property="article:published_time" content="2016-10-14T12:08:55.000Z">
+<meta property="article:modified_time" content="2023-04-30T05:12:49.168Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="数学">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/image_1av0covsgggenrpbhar2ftoj2a.png">
+
+<link rel="canonical" href="https://wulc.me/2016/10/14/%E6%A6%82%E7%8E%87%E8%AE%BA%E4%B8%8E%E6%95%B0%E7%90%86%E7%BB%9F%E8%AE%A1%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86(3)--%E9%9A%8F%E6%9C%BA%E5%8F%98%E9%87%8F%E7%9A%84%E7%BB%9F%E8%AE%A1%E7%89%B9%E5%BE%81/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>概率论与数理统计知识整理(3)--随机变量的统计特征 | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">吴良超的学习笔记</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2016/10/14/%E6%A6%82%E7%8E%87%E8%AE%BA%E4%B8%8E%E6%95%B0%E7%90%86%E7%BB%9F%E8%AE%A1%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86(3)--%E9%9A%8F%E6%9C%BA%E5%8F%98%E9%87%8F%E7%9A%84%E7%BB%9F%E8%AE%A1%E7%89%B9%E5%BE%81/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          概率论与数理统计知识整理(3)--随机变量的统计特征
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2016-10-14 20:08:55" itemprop="dateCreated datePublished" datetime="2016-10-14T20:08:55+08:00">2016-10-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-30 13:12:49" itemprop="dateModified" datetime="2023-04-30T13:12:49+08:00">2023-04-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%95%B0%E5%AD%A6/" itemprop="url" rel="index"><span itemprop="name">数学</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>随机变量的统计特征主要包括期望，方差，协方差以及相关系数。</p>
+<span id="more"></span>
+<h3 id="期望">期望</h3>
+<p>离散型随机变量：<span class="math display">\[E(X) = \sum\_{k=1}^{
++\infty}p\_kx\_k\]</span></p>
+<p>连续型随机变量：<span class="math display">\[E(X) = \int\_{-\infty}^{
++\infty} {xf(x)dx} \]</span></p>
+<p>期望有以下性质(C为常数,其他均为随机变量):</p>
+<p><span class="math inline">\(E(C) = C\)</span></p>
+<p><span class="math inline">\(E(CX) = CE(X)\)</span></p>
+<p><span class="math inline">\(E(X+Y) = E(X)+E(Y)\)</span></p>
+<p>$E(XY) = E(X)E(Y) $ （<span class="math inline">\(X,Y\)</span>
+相互独立）</p>
+<p>前面讨论随机变量的分布函数时，同时讨论了随机变量的函数的分布函数，这里同样对于<strong>随机变量
+<span class="math inline">\(X\)</span>
+的函数的期望</strong>进行讨论，其定义及求法如下所示。</p>
+<p>设Y是随机变量X的函数：<span
+class="math inline">\(Y=g(X)\)</span>(g是连续函数)</p>
+<ol type="1">
+<li><p>如果 <span class="math inline">\(X\)</span>
+是离散型随机变量，它的分布律为 <span class="math display">\[P(X=x\_k) =
+p\_k, k = 1,2,...\]</span> 若 $_{k=1}^{}g(x_k)p_k $绝对收敛，则有 <span
+class="math display">\[E(Y) = E[g(X)] = \sum\_{k=1}^{\infty}g(x\_k)p\_k
+\]</span></p></li>
+<li><p>如果 X 是连续型随机变量，它的概率密度函数为 <span
+class="math inline">\(f(x)\)</span>, 若 <span
+class="math inline">\(\int\_{-\infty}^{\infty}g(x)f(x)dx\)</span>
+绝对收敛，则有 <span class="math display">\[E(Y) = E[g(X)] =
+\int\_{-\infty}^{\infty}g(x)f(x)dx\]</span></p></li>
+</ol>
+<p>这个定理的重要意义在于求 <span class="math inline">\(E(Y)\)</span>
+的时候，不用再求 Y 的分布律或概率密度函数，直接利用 X
+的分布律或概率密度函数即可。</p>
+<h3 id="方差">方差</h3>
+<p>方差的原始定义为</p>
+<p><span class="math inline">\(D(X) = E[(X-E(X))^2] = E(X^2) -
+E(X)^2\)</span></p>
+<p>方差有以下性质：</p>
+<p><span class="math inline">\(D(C) = 0\)</span></p>
+<p><span class="math inline">\(D(CX) = C^2D(X)\)</span></p>
+<p>$D(X+Y) = D(X) + D(Y) + 2E([X-E(X)][Y-E(Y)]) $</p>
+<p>如果 <span class="math inline">\(X，Y\)</span>
+是相互独立的，那么<span class="math inline">\(E([X-E(X)][Y-E(Y)]) =
+0\)</span>, 当这一项不为0的时候，称作变量 <span
+class="math inline">\(X,Y\)</span> 的协方差。</p>
+<h3 id="常见分布的期望和方差">常见分布的期望和方差</h3>
+<p>前面我们提到了若干种典型的离散分布和连续分布，下面是这几种分布的期望和方差，记住这些常用的期望和方差能够在使用的时候省去推导过程。</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>分布类型</th>
+<th>概率密度函数</th>
+<th>期望</th>
+<th>方差</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>伯努利分布~<span class="math inline">\(B(1,p)\)</span></td>
+<td><span class="math inline">\(p = p^x(1-p)^{1-x}\)</span></td>
+<td><span class="math inline">\(p\)</span></td>
+<td><span class="math inline">\(p(1-p)\)</span></td>
+</tr>
+<tr class="even">
+<td>二项分布~<span class="math inline">\(B(n,p)\)</span></td>
+<td><span class="math inline">\(p\_i = C\_n^i
+p^i(1-p)^{n-i}(i=1,2,3...)\)</span></td>
+<td><span class="math inline">\(np\)</span></td>
+<td><span class="math inline">\(np(1-p)\)</span></td>
+</tr>
+<tr class="odd">
+<td>泊松分布~<span class="math inline">\(P(\lambda)\)</span></td>
+<td>$p_i = (i = 1,2,3,) <span class="math inline">\(|\)</span><span
+class="math inline">\(|\)</span>$</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>均匀分布~<span class="math inline">\(U(a,b)\)</span></td>
+<td><span class="math inline">\(f(x) = \frac{1}{b-a}\)</span></td>
+<td><span class="math inline">\(\frac{a+b}{2}\)</span></td>
+<td><span class="math inline">\(\frac{(b-a)^2}{12}\)</span></td>
+</tr>
+<tr class="odd">
+<td>正态分布~<span class="math inline">\(N(\mu,\sigma^2)\)</span></td>
+<td><span class="math inline">\(f(x) = \frac{1}{\sqrt{2\pi}\sigma}
+e^{-\frac{(x-\mu)^2}{2\sigma^2}}\)</span></td>
+<td><span class="math inline">\(\mu\)</span></td>
+<td><span class="math inline">\(\sigma^2\)</span></td>
+</tr>
+<tr class="even">
+<td>指数分布~<span class="math inline">\(E(\lambda)\)</span></td>
+<td><span class="math display">\[f(x) = \begin{cases}  \lambda
+e^{-x\lambda} &amp;{x&gt;0} \\\ 0&amp;{其他}\end{cases}\]</span></td>
+<td><span class="math inline">\(\frac{1}{\lambda}\)</span></td>
+<td><span class="math inline">\(\frac{1}{\lambda^2}\)</span></td>
+</tr>
+</tbody>
+</table>
+<h3 id="切比雪夫不等式">切比雪夫不等式</h3>
+<p>切比雪夫不等式的定义如下：</p>
+<blockquote>
+<p>设随机变量 <span class="math inline">\(X\)</span> 具有数学期望 <span
+class="math inline">\(E(X) = \mu\)</span>, 方差 <span
+class="math inline">\(D(X) = \sigma^2\)</span>, 则对于任意正数 <span
+class="math inline">\(\epsilon\)</span>, 下面的不等式成立<span
+class="math display">\[P(|X-\mu|\ge \epsilon) \le
+\frac{\sigma^2}{\epsilon^2}\]</span></p>
+</blockquote>
+<p>从定义可知，切比雪夫不等式也可写成如下的形式：</p>
+<p><span class="math display">\[P(|X-\mu| \le \epsilon) \ge 1 -
+\frac{\sigma^2}{\epsilon^2}\]</span></p>
+<p>切比雪夫不等式的一个重要意义在于<strong>当随机变量 X
+的分布未知，只知道 <span class="math inline">\(E(X)\)</span> 和 <span
+class="math inline">\(D(X)\)</span> 的情况下，对于事件 $(|X-| ) $
+概率的下限的估计</strong>。</p>
+<h3 id="协方差">协方差</h3>
+<p><strong>协方差表达了两个随机变量的相关性，正的协方差表达了正相关性，负的协方差表达了负相关性。协方差为0
+表示两者不相关，对于同样的两个随机变量来说，计算出的协方差的绝对值越大，相关性越强</strong>。</p>
+<p>协方差的定义入下:</p>
+<p><span class="math inline">\(Cov(X,Y) =
+E\{[X-E(X)][Y-E(Y)]\}\)</span></p>
+<p>由定义可以知下面等式成立:</p>
+<p><span class="math inline">\(Cov(X,Y) = Cov(Y,X)\)</span> <span
+class="math inline">\(Cov(X,Y) = E(XY) - E(X)E(Y)\)</span></p>
+<p>协方差有以下性质：</p>
+<p><span class="math inline">\(Cov(aX,bY) =
+abCov(X,Y)\)</span>（a，b是常数）</p>
+<p><span class="math inline">\(Cov(X\_1+X\_2, Y) = Cov(X\_1, Y) +
+Cov(X\_2,Y)\)</span></p>
+<p>假如我们现在有身高和体重这两个未知变量，对于一系列的样本我们算出的的协方差为30，那这究竟是多大的一个量呢？如果我们又发现，身高与鞋号的协方差为5，是否说明，相对于鞋号，身高与体重的的相关性更强呢？</p>
+<p>为了能进行这样的横向对比，我们计算相关系数(correlation coefficient)，
+相关系数相当于是“归一化”的协方差。</p>
+<p><span class="math display">\[\rho\_{XY} =
+\frac{Cov(X,Y)}{\sqrt{D(X)D(Y)}}\]</span></p>
+<p>相关系数是用协方差除以两个随机变量的标准差。<strong>相关系数的大小在-1和1之间变化，等于0表示不相关</strong>。再也不会出现因为计量单位变化，而数值变化较大的情况，而相关系数的大小的含义与协方差是一样的。</p>
+<p>需要注意的是上面提到的<strong>相关</strong>均指<strong>线性相关</strong>，<span
+class="math inline">\(X, Y\)</span> 不相关是指 <span
+class="math inline">\(X,Y\)</span>
+之间不存在线性关系，但是他们还可能存在除线性关系以外的关系。因此，有以下结论:
+<strong><span class="math inline">\(X,Y\)</span> 相互独立则 <span
+class="math inline">\(X,Y\)</span> 一定不相关；反之 <span
+class="math inline">\(X,Y\)</span>
+不相关，两者不一定相互独立。</strong></p>
+<p>简单的证明如下： 当 <span class="math inline">\(X,Y\)</span>
+相互独立的时候有 <span class="math inline">\(E(XY) = E(X)E(Y)\)</span>
+， 根据上面协方差的展开式</p>
+<p><span class="math inline">\(Cov(X,Y) = E(XY) - E(X)E(Y)\)</span></p>
+<p>此时协方差为零，两者不相关。</p>
+<p>而当 <span class="math inline">\(X, Y\)</span>
+不相关的时候举一个反例如下：</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1av0covsgggenrpbhar2ftoj2a.png"
+alt="不相关但是不独立的例子" />
+<figcaption aria-hidden="true">不相关但是不独立的例子</figcaption>
+</figure>
+<p>上面的例子来源于https://www.zhihu.com/question/26583332,
+可知计算出来的协方差为0，即两者不相关，但是 <span
+class="math inline">\(P(XY) \neq P(X)P(Y)\)</span>,即 两者不独立，注意
+<span class="math inline">\(E(XY) = E(X)E(Y)\)</span> 不是 <span
+class="math inline">\(X,Y\)</span> 独立的充分条件。</p>
+<h3 id="矩和协方差矩阵">矩和协方差矩阵</h3>
+<p>下面介绍概率论中几种矩的定义</p>
+<blockquote>
+<p>设 <span class="math inline">\(X,Y\)</span> 为随机变量,则</p>
+<p><span class="math inline">\(E(X^k), k=1,2,3....\)</span> 称为 <span
+class="math inline">\(X\)</span> 的 <strong><span
+class="math inline">\(k\)</span> 阶原点矩</strong>，简称 <span
+class="math inline">\(k\)</span> 阶矩</p>
+<p><span class="math inline">\(E((X-E[X])^k), k=1,2,3....\)</span> 称为
+<span class="math inline">\(X\)</span> 的 <strong><span
+class="math inline">\(k\)</span> 阶中心距</strong></p>
+<p><span class="math inline">\(E(X^kY^l),k,l=1,2,...\)</span> 称为 <span
+class="math inline">\(X\)</span> 和 <span
+class="math inline">\(Y\)</span> 的 <strong><span
+class="math inline">\(k+l\)</span> 阶混合矩</strong></p>
+<p><span
+class="math inline">\(E((X-E[X])^k(Y-E[Y])^l)),k,l=1,2,...\)</span>称为<span
+class="math inline">\(X\)</span> 和 <span
+class="math inline">\(Y\)</span> 的 <strong><span
+class="math inline">\(k+l\)</span> 阶混合中心矩</strong></p>
+</blockquote>
+<p>由以上定义我们可以知道，<strong>随机变量的期望是其一阶原点矩，方差是其二阶中心距，协方差是其二阶混合中心矩。</strong></p>
+<p>除此之外，另外一个常用的概念是协方差矩阵， 其定义如下：</p>
+<p>对于 <span class="math inline">\(n\)</span> 维随机变量 <span
+class="math inline">\((X\_1,X\_2,X\_3...,X\_n)\)</span> 构成的矩阵</p>
+<p><span class="math display">\[C=
+\begin{bmatrix}
+c\_{11} &amp; c\_{12} &amp; \cdots &amp; c\_{1n} \\\
+c\_{21} &amp; c\_{22} &amp; \cdots &amp; c\_{2n} \\\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\\
+c\_{n1} &amp; c\_{n2} &amp; \cdots &amp; c\_{nn} \\\
+\end{bmatrix}
+\]</span></p>
+<p>其中各个元素为<span class="math display">\[c\_{ij} = Cov(X\_i,X\_j) =
+E((X\_i - E[X\_i])(X\_j - E[X\_j]))，i,j=1,2,3..n\]</span></p>
+<p>则称矩阵 <span class="math inline">\(C\)</span>
+为协方差矩阵，由于<span class="math inline">\(c\_{ij} = c\_{ji}\)</span>
+， 因此上面的矩阵为一个对称矩阵。</p>
+<p>协方差矩阵其实是将二维随机变量的协方差一般化后拓展到了 <span
+class="math inline">\(n\)</span>
+维随机变量上的一种表示形式，但是除了作为一种表示形式以外，协方差矩阵还存在着某些性质使得其在多个领域均有应用，如主成成分分析。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E5%AD%A6/" rel="tag"># 数学</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2016/10/12/%E4%B8%AD%E6%96%87%E7%BB%B4%E5%9F%BA%E7%99%BE%E7%A7%91%E7%9A%84%E8%AF%8D%E5%90%91%E9%87%8F%E7%9A%84%E8%AE%AD%E7%BB%83/" rel="prev" title="中文维基百科语料库词向量的训练">
+      <i class="fa fa-chevron-left"></i> 中文维基百科语料库词向量的训练
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2016/10/18/%E6%A6%82%E7%8E%87%E8%AE%BA%E4%B8%8E%E6%95%B0%E7%90%86%E7%BB%9F%E8%AE%A1%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86(4)--%E5%A4%A7%E6%95%B0%E5%AE%9A%E5%BE%8B%E5%92%8C%E4%B8%AD%E5%BF%83%E6%9E%81%E9%99%90%E5%AE%9A%E7%90%86/" rel="next" title="概率论与数理统计知识整理(4)--大数定律和中心极限定理">
+      概率论与数理统计知识整理(4)--大数定律和中心极限定理 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%9F%E6%9C%9B"><span class="nav-number">1.</span> <span class="nav-text">期望</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E5%B7%AE"><span class="nav-number">2.</span> <span class="nav-text">方差</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E5%88%86%E5%B8%83%E7%9A%84%E6%9C%9F%E6%9C%9B%E5%92%8C%E6%96%B9%E5%B7%AE"><span class="nav-number">3.</span> <span class="nav-text">常见分布的期望和方差</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%87%E6%AF%94%E9%9B%AA%E5%A4%AB%E4%B8%8D%E7%AD%89%E5%BC%8F"><span class="nav-number">4.</span> <span class="nav-text">切比雪夫不等式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%8F%E6%96%B9%E5%B7%AE"><span class="nav-number">5.</span> <span class="nav-text">协方差</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9F%A9%E5%92%8C%E5%8D%8F%E6%96%B9%E5%B7%AE%E7%9F%A9%E9%98%B5"><span class="nav-number">6.</span> <span class="nav-text">矩和协方差矩阵</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">248</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.linkedin.com/in/wuliangchao/" title="LinkedIn → https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;wuliangchao&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i>LinkedIn</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

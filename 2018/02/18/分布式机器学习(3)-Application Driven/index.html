@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="本文主要介绍了互联网几项重要业务（在线广告，推荐系统，搜索引擎）背后所需的一项共同技术：语义理解(semantic understanding)，同时介绍了实现语义理解的若干种方法：包括矩阵分解，主题模型(Topic Models)等。原视频见这里，需要自备梯子。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="分布式机器学习(3)-Application Driven">
+<meta property="og:url" content="https://wulc.me/2018/02/18/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0(3)-Application%20Driven/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="本文主要介绍了互联网几项重要业务（在线广告，推荐系统，搜索引擎）背后所需的一项共同技术：语义理解(semantic understanding)，同时介绍了实现语义理解的若干种方法：包括矩阵分解，主题模型(Topic Models)等。原视频见这里，需要自备梯子。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/image_1c76cur5t9ho1kmq11kt1vrn1ekn9.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1c76fe1ok1oi74fs1o481tef1f959.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1c76fpgg11k3t4gt1ruhv9n6csm.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1c76grvnn1n23qjh9clafd2913.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1c76ijipd1ujj13bc14afc6p1gd51g.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1c76ikob013gr1bro18omhtq1mm92d.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1c76k8ff41pkbqmskflklc193j2q.png">
+<meta property="article:published_time" content="2018-02-18T04:00:37.000Z">
+<meta property="article:modified_time" content="2023-04-30T05:12:49.066Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/image_1c76cur5t9ho1kmq11kt1vrn1ekn9.png">
+
+<link rel="canonical" href="https://wulc.me/2018/02/18/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0(3)-Application%20Driven/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>分布式机器学习(3)-Application Driven | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">吴良超的学习笔记</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2018/02/18/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0(3)-Application%20Driven/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          分布式机器学习(3)-Application Driven
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-02-18 12:00:37" itemprop="dateCreated datePublished" datetime="2018-02-18T12:00:37+08:00">2018-02-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-30 13:12:49" itemprop="dateModified" datetime="2023-04-30T13:12:49+08:00">2023-04-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本文主要介绍了互联网几项重要业务（在线广告，推荐系统，搜索引擎）背后所需的一项共同技术：语义理解(semantic
+understanding)，同时介绍了实现语义理解的若干种方法：包括矩阵分解，主题模型(Topic
+Models)等。原视频见<a
+target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=C7k0YSLAyX4&amp;index=3&amp;list=PLFze15KrfxbH2rGxJqcpFAgKp-iZv5uW0">这里</a>，需要自备梯子。</p>
+<span id="more"></span>
+<h2 id="semantic-understanding-支持的业务">semantic understanding
+支持的业务</h2>
+<h3 id="在线广告">在线广告</h3>
+<p>作者以其在腾讯参与开发的 Peacock
+系统为例介绍了在线广告所需的语义理解技术，如下是 peacock 系统对
+“红酒木瓜汤” 这个查询关键词返回的语义理解的结果</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1c76cur5t9ho1kmq11kt1vrn1ekn9.png"
+alt="online advertising" />
+<figcaption aria-hidden="true">online advertising</figcaption>
+</figure>
+<p>最下面的 topics 是从 query 中推断出来的主题，每行为一个 topic，weight
+是 query 属于这个 topic 的概率，topic_words 则是这个 topic
+中的词语，且按照与query的相关度从高到低进行了排序。</p>
+<p>如果将广告主的广告描述生成同样的 topics 分布，则可以将 query
+和广告对应起来。Peacock 系统是基于 <a
+target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Latent_Dirichlet_allocation">LDA(Latent
+Dirichlet allocation)</a> 开发的，发表的具体论文是 <a
+target="_blank" rel="noopener" href="https://dl.acm.org/citation.cfm?id=2700497">Peacock: Learning
+Long-Tail Topic Features for Industrial Applications</a>.</p>
+<p>除了用户的 query，同样可得出用户浏览的内容的 topic
+分布，进而根据用户的浏览内容为其推荐关联的广告。</p>
+<h3 id="推荐系统">推荐系统</h3>
+<p>推荐系统中最耳熟能详的算法是协同过滤，通过 users-items 矩阵中的 user
+向量衡量 users 之间的相似性，通过 item 向量衡量 items
+之间的相似性，具体可参考<a
+href="http://wulc.me/2016/02/22/%E3%80%8AProgramming%20Collective%20Intelligence%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%282%29--%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4/">这篇文章</a>。但是遇到下面这种情况时，协同过滤是无能为力的</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1c76fe1ok1oi74fs1o481tef1f959.png"
+alt="recommendation system" />
+<figcaption aria-hidden="true">recommendation system</figcaption>
+</figure>
+<p>上图所示的状况是不同 user 向量之间没有共同出现的 item，这样无法计算
+user 向量间的近似性；而实际中的数据往往是非常稀疏的，不同用户间相交的
+items 很少，因此协同过滤在推荐系统中几乎不再被使用。</p>
+<p>那么，如何将上面提到的 semantic understanding
+应用到推荐系统中呢？如下图所示，假如将原来的 users-items
+矩阵划分为两个大的 topics，则每个 user 和每个 items 都可以被映射成一个
+topic 向量，这样通过比较 topic 向量即可比较两个 user 或 item
+的相似性</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1c76fpgg11k3t4gt1ruhv9n6csm.png"
+alt="recommendation system 2" />
+<figcaption aria-hidden="true">recommendation system 2</figcaption>
+</figure>
+<p>在实际中用得更多的是矩阵分解这一类方法，即无须事先对 users-items
+矩阵进行划分，而是通过矩阵分解的方式得到每个 user 和每个 item 的 topic
+向量。常见的 SVD、NMF 等都是这一类方法。</p>
+<h3 id="搜索引擎">搜索引擎</h3>
+<p>搜索引擎跟在线广告有点类似，都会根据用户的 query
+返回关联的内容，下图中的 text
+可以理解为用户的搜索关键词和页面的关键词</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1c76grvnn1n23qjh9clafd2913.png"
+alt="search engine 1" />
+<figcaption aria-hidden="true">search engine 1</figcaption>
+</figure>
+<p>图中有几个 topic，最简单的是两个，如下图所示</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1c76ijipd1ujj13bc14afc6p1gd51g.png"
+alt="search engine 2" />
+<figcaption aria-hidden="true">search engine 2</figcaption>
+</figure>
+<p>但是也可以认为有四个，如下图所示</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1c76ikob013gr1bro18omhtq1mm92d.png"
+alt="search engine 2" />
+<figcaption aria-hidden="true">search engine 2</figcaption>
+</figure>
+<p>所以这里有个重要问题，就是应该<strong>学习什么样粒度的 topic</strong>
+？作者的观点是学习更小粒度的语义的好处更多。比如说按照第一种大粒度的语义分法时，第一行和第三行是有关联的；而按照第二种小粒度的语义分法时，第一行和第三行直观上没有联系，但可通过第二行联系起来。即更小粒度的语义能够完成大粒度的语义所完成的事情，但是大粒度的语义未必能完成小粒度语义所完成的事情，如从搜索的精确性考虑，肯定是小粒度的语义比大粒度的语义搜索要来得精准。</p>
+<h2 id="实现-semantic-understanding-的方法">实现 semantic understanding
+的方法</h2>
+<p>实现 semantic understanding 的方法可以分为 unsupervised 和 supervised
+两大类，supervised 其实就是分类（即将上面的 user 或 item 分类），但是
+supervised
+不仅需要人工标注的数据，而且还难以确定准确的类别数；因此实际中往往是采用
+unsupervised 的方法，如下所示是一些 unsupervised 方法</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1c76k8ff41pkbqmskflklc193j2q.png"
+alt="unsupervised method" />
+<figcaption aria-hidden="true">unsupervised method</figcaption>
+</figure>
+<p>Frequent itemset mining 在<a
+href="http://wulc.me/2018/02/11/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%282%29-Infrequent%20Pattern%20Mining%20using%20MapReduce/">上一讲</a>中已经讲过，实际中，Frequent
+itemset mining 和 collaborative filtering 使用得并不多</p>
+<p>LSA(<a
+target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Latent_semantic_analysis">Latent
+semantic analysis</a>)
+实际上是对文本矩阵(每行是一篇文本，每列是一个单词) 进行 SVD
+分解，且得到的 U 矩阵 和 V 矩阵中分别含有每篇文本或每个单词的 topic
+向量。其他矩阵分解类的方法也都是遵循着这个思路。</p>
+<p>NMF(<a
+target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Non-negative_matrix_factorization">Non-negative
+matrix factorization</a>) 是受限的
+SVD，原因是这种方法分解后的矩阵中的元素必须要为正数。</p>
+<p>pLSA(<a
+target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Probabilistic_latent_semantic_analysis">Probabilistic
+latent semantic analysis</a>)
+在LSA的基础上加入了概率，使得结果有可解释性</p>
+<p>LDA(<a
+target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Latent_Dirichlet_allocation">Latent
+Dirichlet allocation</a>) pLSA
+只能解释输入的数据，对于新来的数据无能为力，因此无法做到实时；因此有了
+LDA 的出现，LDA 能够推断出新来的数据的 topic 分布，而smoothed pLSA
+指的是 LDA 在 pLSA 基础上加入了先验概率，具体为狄利赫里先验分布。</p>
+<p>HDP(<a
+target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Hierarchical_Dirichlet_process">Hierarchical
+Dirichlet process</a>) 与 LDA 效果类似，好处就是训练前不需要指定的
+topics 的数量</p>
+<p>作者认为，上面虽然列出了很多模型，但是不少模型之间是等价的，如 NFM 和
+pLSA 的等价性可参考<a
+target="_blank" rel="noopener" href="http://users.cis.fiu.edu/~taoli/pub/NMFpLSIequiv.pdf">这篇文章</a>，pLSA
+和 LDA 之间的等价性可参考<a
+target="_blank" rel="noopener" href="http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.14.6893">这篇文章</a>；</p>
+<p>最后 semantic understanding
+应用在上面所述三个互联网业务(在线广告，推荐系统，搜索引擎)时，基本的步骤是一致的，均为</p>
+<ol type="1">
+<li>Relevance: information retrieval</li>
+<li>Ranking: click-through rate prediction</li>
+</ol>
+<p>第一步就是借助 semantic understanding 找到与 query
+相关的结果，第二步要根据点击率等于具体业务相关的指标对这些相关结果排序。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 机器学习</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/02/11/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0(2)-Infrequent%20Pattern%20Mining%20using%20MapReduce/" rel="prev" title="分布式机器学习(2)-Infrequent Pattern Mining using MapReduce">
+      <i class="fa fa-chevron-left"></i> 分布式机器学习(2)-Infrequent Pattern Mining using MapReduce
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/02/24/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0(4)-Implement%20Your%20MapReduce/" rel="next" title="分布式机器学习(4)-Implement Your MapReduce">
+      分布式机器学习(4)-Implement Your MapReduce <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#semantic-understanding-%E6%94%AF%E6%8C%81%E7%9A%84%E4%B8%9A%E5%8A%A1"><span class="nav-number">1.</span> <span class="nav-text">semantic understanding
+支持的业务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%A8%E7%BA%BF%E5%B9%BF%E5%91%8A"><span class="nav-number">1.1.</span> <span class="nav-text">在线广告</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.2.</span> <span class="nav-text">推荐系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E"><span class="nav-number">1.3.</span> <span class="nav-text">搜索引擎</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0-semantic-understanding-%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">实现 semantic understanding
+的方法</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">248</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.linkedin.com/in/wuliangchao/" title="LinkedIn → https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;wuliangchao&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i>LinkedIn</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

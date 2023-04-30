@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="本文是 Effective Go 中的一些摘记，主要涉及 golang 中的语法、技巧、风格等。为了尽可能保持原文意思，会通过英文记录相关的知识点。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Effective Go 摘记">
+<meta property="og:url" content="https://wulc.me/2019/02/18/Effective%20Go%20%E6%91%98%E8%AE%B0/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="本文是 Effective Go 中的一些摘记，主要涉及 golang 中的语法、技巧、风格等。为了尽可能保持原文意思，会通过英文记录相关的知识点。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-02-18T14:31:17.000Z">
+<meta property="article:modified_time" content="2023-04-30T05:12:49.133Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="go">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://wulc.me/2019/02/18/Effective%20Go%20%E6%91%98%E8%AE%B0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Effective Go 摘记 | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">吴良超的学习笔记</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2019/02/18/Effective%20Go%20%E6%91%98%E8%AE%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Effective Go 摘记
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-02-18 22:31:17" itemprop="dateCreated datePublished" datetime="2019-02-18T22:31:17+08:00">2019-02-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-30 13:12:49" itemprop="dateModified" datetime="2023-04-30T13:12:49+08:00">2023-04-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/go/" itemprop="url" rel="index"><span itemprop="name">go</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本文是 <a target="_blank" rel="noopener" href="https://golang.org/doc/effective_go.html">Effective
+Go</a> 中的一些摘记，主要涉及 golang
+中的语法、技巧、风格等。为了尽可能保持原文意思，会通过英文记录相关的知识点。</p>
+<span id="more"></span>
+<h2 id="formatting">Formatting</h2>
+<ul>
+<li>The gofmt program (also available as <code>go fmt</code>, which
+operates at the package level rather than source file level) reads a Go
+program and emits the source in a standard style of indentation and
+vertical alignment, retaining and if necessary reformatting
+comments.</li>
+</ul>
+<h2 id="commentary">Commentary</h2>
+<ul>
+<li><p><strong>Every package should have a package comment, a block
+comment preceding the package clause.</strong> For multi-file packages,
+the package comment only needs to be present in one file, and any one
+will do. The package comment should introduce the package and provide
+information relevant to the package as a whole, for example
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">Package regexp implements a simple library for regular expressions.</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">The syntax of the regular expressions accepted is:</span></span><br><span class="line"><span class="comment">    .......</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">package</span> regexp</span><br></pre></td></tr></table></figure></p></li>
+<li><p>Doc comments work best as complete sentences, which allow a wide
+variety of automated presentations. <strong>The first sentence should be
+a one-sentence summary that starts with the name being
+declared</strong>. <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Compile parses a regular expression and returns, if successful,</span></span><br><span class="line"><span class="comment">// a Regexp that can be used to match against text.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Compile</span><span class="params">(str <span class="type">string</span>)</span></span> (*Regexp, <span class="type">error</span>) &#123;</span><br></pre></td></tr></table></figure></p></li>
+<li><p><strong>Grouping variables</strong> can indicate relationships
+between items, such as the fact that a set of variables is protected by
+a mutex. <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> (</span><br><span class="line">    countLock   sync.Mutex</span><br><span class="line">    inputCount  <span class="type">uint32</span></span><br><span class="line">    outputCount <span class="type">uint32</span></span><br><span class="line">    errorCount  <span class="type">uint32</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure></p></li>
+</ul>
+<h2 id="names">Names</h2>
+<ul>
+<li><p>By convention, <strong>packages are given lower case, single-word
+names, no need for underscores or mixedCaps</strong></p></li>
+<li><p>Another convention is that <strong>the package name is the base
+name of its source directory</strong>; the package in
+"src/encoding/base64" is imported as "encoding/base64" but has name
+base64, not encoding_base64 and not encodingBase64</p></li>
+<li><p>By convention, <strong>one-method interfaces are named by the
+method name plus an -er suffix</strong> or similar modification to
+construct an agent noun: Reader, Writer, Formatter,
+CloseNotifier</p></li>
+<li><p>the convention in Go is to <strong>use <code>MixedCaps</code> or
+<code>mixedCaps</code> rather than underscores to write multiword
+names</strong></p></li>
+</ul>
+<h2 id="control-structures">Control structures</h2>
+<ul>
+<li><p><code>if</code> and <code>switch</code> accept an
+<strong>optional initialization statement</strong> like that of
+<code>for</code> <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> err := file.Chmod(<span class="number">0664</span>); err != <span class="literal">nil</span> &#123;</span><br><span class="line">    log.Print(err)</span><br><span class="line">    <span class="keyword">return</span> err</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p></li>
+<li><p>In a <code>:=</code> declaration a variable v may appear even if
+it has already been declared, providing that <strong>there is at least
+one other variable in the declaration that is being declared
+anew</strong>, otherwise an error
+<code>no new variables on left side of :=</code> will occur
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// legal for err</span></span><br><span class="line">f, err := os.Open(name)</span><br><span class="line">d, err := f.Stat()</span><br><span class="line"></span><br><span class="line"><span class="comment">// not legal for a</span></span><br><span class="line">a := <span class="number">1</span></span><br><span class="line">a := <span class="number">2</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// not legal for a and b</span></span><br><span class="line">a, b := <span class="number">1</span>, <span class="number">1</span></span><br><span class="line">a, b := <span class="number">2</span>, <span class="number">2</span></span><br></pre></td></tr></table></figure></p></li>
+<li><p><strong>For strings, the <code>range</code> breaks out individual
+Unicode code points</strong> by parsing the UTF-8. Erroneous encodings
+consume one byte and produce the replacement rune U+FFFD, <strong>rune
+is Go terminology for a single Unicode code point</strong>, similar to
+char in other languages <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> pos, char := <span class="keyword">range</span> <span class="string">&quot;日本\x80語&quot;</span> &#123; <span class="comment">// \x80 is an illegal UTF-8 encoding</span></span><br><span class="line">    fmt.Printf(<span class="string">&quot;character %#U starts at byte position %d\n&quot;</span>, char, pos)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* output</span></span><br><span class="line"><span class="comment">character U+65E5 &#x27;日&#x27; starts at byte position 0</span></span><br><span class="line"><span class="comment">character U+672C &#x27;本&#x27; starts at byte position 3</span></span><br><span class="line"><span class="comment">character U+FFFD &#x27;�&#x27; starts at byte position 6</span></span><br><span class="line"><span class="comment">character U+8A9E &#x27;語&#x27; starts at byte position 7</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure></p></li>
+<li><p>if the <code>switch</code>has no expression it switches on true.
+It's therefore possible—and idiomatic—to <strong>write an
+if-else-if-else chain as a switch</strong>. <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">unhex</span><span class="params">(c <span class="type">byte</span>)</span></span> <span class="type">byte</span> &#123;</span><br><span class="line">    <span class="keyword">switch</span> &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">&#x27;0&#x27;</span> &lt;= c &amp;&amp; c &lt;= <span class="string">&#x27;9&#x27;</span>:</span><br><span class="line">        <span class="keyword">return</span> c - <span class="string">&#x27;0&#x27;</span></span><br><span class="line">    <span class="keyword">case</span> <span class="string">&#x27;a&#x27;</span> &lt;= c &amp;&amp; c &lt;= <span class="string">&#x27;f&#x27;</span>:</span><br><span class="line">        <span class="keyword">return</span> c - <span class="string">&#x27;a&#x27;</span> + <span class="number">10</span></span><br><span class="line">    <span class="keyword">case</span> <span class="string">&#x27;A&#x27;</span> &lt;= c &amp;&amp; c &lt;= <span class="string">&#x27;F&#x27;</span>:</span><br><span class="line">        <span class="keyword">return</span> c - <span class="string">&#x27;A&#x27;</span> + <span class="number">10</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p></li>
+</ul>
+<h2 id="functions">Functions</h2>
+<ul>
+<li><p>Deferred functions are executed in <strong>LIFO order(imagine it
+like a stack)</strong>, so the following code will cause 4 3 2 1 0 to be
+printed when the function returns. <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="number">5</span>; i++ &#123;</span><br><span class="line">    <span class="keyword">defer</span> fmt.Printf(<span class="string">&quot;%d &quot;</span>, i)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p></li>
+<li><p>The <strong>arguments to deferred functions are evaluated when
+the defer executes</strong>, not when the function executes
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">trace</span><span class="params">(s <span class="type">string</span>)</span></span> <span class="type">string</span> &#123;</span><br><span class="line">    fmt.Println(<span class="string">&quot;entering:&quot;</span>, s)</span><br><span class="line">    <span class="keyword">return</span> s</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">un</span><span class="params">(s <span class="type">string</span>)</span></span> &#123;</span><br><span class="line">    fmt.Println(<span class="string">&quot;leaving:&quot;</span>, s)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">a</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">defer</span> un(trace(<span class="string">&quot;a&quot;</span>))</span><br><span class="line">    fmt.Println(<span class="string">&quot;in a&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">b</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">defer</span> un(trace(<span class="string">&quot;b&quot;</span>))</span><br><span class="line">    fmt.Println(<span class="string">&quot;in b&quot;</span>)</span><br><span class="line">    a()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    b()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*output</span></span><br><span class="line"><span class="comment">entering: b</span></span><br><span class="line"><span class="comment">in b</span></span><br><span class="line"><span class="comment">entering: a</span></span><br><span class="line"><span class="comment">in a</span></span><br><span class="line"><span class="comment">leaving: a</span></span><br><span class="line"><span class="comment">leaving: b</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure></p></li>
+</ul>
+<h2 id="data">Data</h2>
+<h3 id="new-v.s-make">new v.s make</h3>
+<ul>
+<li><p>Go has two allocation primitives, the built-in functions
+<strong><code>new</code> and <code>make</code></strong></p></li>
+<li><p><code>New</code> does not initialize the memory,
+<strong><code>new(T)</code> allocates zeroed storage for a new item of
+type T and returns its address,</strong> that is a pointer to a newly
+allocated zero value of type T, it's helpful to arrange when designing
+your data structures that the zero value of each type can be used
+without further initialization</p></li>
+<li><p>Sometimes <strong>the zero value isn't good enough and an
+initializing constructor is necessary</strong>, as in this example
+derived from package os <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewFile</span><span class="params">(fd <span class="type">int</span>, name <span class="type">string</span>)</span></span> *File &#123;</span><br><span class="line">    <span class="keyword">if</span> fd &lt; <span class="number">0</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">    &#125;</span><br><span class="line">    f := <span class="built_in">new</span>(File)</span><br><span class="line">    f.fd = fd</span><br><span class="line">    f.name = name</span><br><span class="line">    f.dirinfo = <span class="literal">nil</span></span><br><span class="line">    f.nepipe = <span class="number">0</span></span><br><span class="line">    <span class="keyword">return</span> f</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p></li>
+<li><p>We can simplify it using a <strong>composite literal</strong>,
+which is an expression that creates a new instance each time it is
+evaluated(<code>File&#123;fd, name, nil, 0&#125;</code> in the following code). If
+a composite literal contains no fields at all, it creates a zero value
+for the type. <strong>The expressions <code>new(File)</code> and
+<code>&amp;File&#123;&#125;</code> are equivalent</strong>.
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewFile</span><span class="params">(fd <span class="type">int</span>, name <span class="type">string</span>)</span></span> *File &#123;</span><br><span class="line">    <span class="keyword">if</span> fd &lt; <span class="number">0</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">    &#125;</span><br><span class="line">    f := File&#123;fd, name, <span class="literal">nil</span>, <span class="number">0</span>&#125;</span><br><span class="line">    <span class="keyword">return</span> &amp;f</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p></li>
+<li><p>Note that <strong>unlike in C, it's perfectly OK to return the
+address of a local variable</strong>, the storage associated with the
+variable survives after the function returns</p></li>
+<li><p><code>make(T, args)</code> serves a purpose different from
+new(T), it **creates slices, maps, and channels only, and it returns an
+initialized (not zeroed) value of type T (not *T)**</p></li>
+<li><p>The reason for the distinction is that these three types(slices,
+maps, and channels) represent, under the covers, references to
+<strong>data structures that must be initialized before
+use</strong></p></li>
+</ul>
+<h3 id="array-v.s-slice">array v.s slice</h3>
+<ul>
+<li><p>There are major differences between the ways arrays work in Go
+and C. In Go,</p>
+<ul>
+<li>Arrays are values. <strong>Assigning one array to another copies all
+the elements</strong>.</li>
+<li>In particular, if you <strong>pass an array to a function, it will
+receive a copy of the array, not a pointer to it</strong>.</li>
+<li>The size of an array is part of its type. <strong>The types [10]int
+and [20]int are distinct</strong></li>
+</ul></li>
+<li><p>The value property can be useful but also expensive; <strong>if
+you want C-like behavior and efficiency, you can pass a pointer to the
+array</strong></p></li>
+<li><p>A slice does not store any data, it just describes a section of
+an underlying array, so <strong>if you assign one slice to another, both
+refer to the same array</strong> <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">names := [<span class="number">4</span>]<span class="type">string</span>&#123;</span><br><span class="line">	<span class="string">&quot;John&quot;</span>,</span><br><span class="line">	<span class="string">&quot;Paul&quot;</span>,</span><br><span class="line">	<span class="string">&quot;George&quot;</span>,</span><br><span class="line">	<span class="string">&quot;Ringo&quot;</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a := names[<span class="number">0</span>:<span class="number">2</span>]</span><br><span class="line">b := names[<span class="number">1</span>:<span class="number">3</span>]</span><br><span class="line"></span><br><span class="line">b[<span class="number">0</span>] = <span class="string">&quot;XXX&quot;</span></span><br><span class="line">fmt.Println(a, b)</span><br><span class="line">fmt.Println(names)</span><br><span class="line"><span class="comment">// output</span></span><br><span class="line"><span class="comment">// [John XXX] [XXX George]</span></span><br><span class="line"><span class="comment">// [John XXX George Ringo]</span></span><br></pre></td></tr></table></figure></p></li>
+<li><p>If a function takes a slice argument, <strong>modification of
+elements of the slice will be visible to the caller, but append elements
+won't</strong>, if you want to append elements to slice in function,
+pass the address instead</p></li>
+<li><p>slices are variable-length, for a two-dimensional slice, it is
+possible to <strong>have each inner slice be a different length</strong>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">text := LinesOfText&#123;</span><br><span class="line">	[]<span class="type">byte</span>(<span class="string">&quot;Now is the time&quot;</span>),</span><br><span class="line">	[]<span class="type">byte</span>(<span class="string">&quot;for all good gophers&quot;</span>),</span><br><span class="line">	[]<span class="type">byte</span>(<span class="string">&quot;to bring some fun to the party.&quot;</span>),</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p></li>
+</ul>
+<h3 id="map">map</h3>
+<ul>
+<li><p>For a map in golang like <code>map[KeyType]ValueType</code>,
+<strong>KeyType may be any type that is <a
+target="_blank" rel="noopener" href="https://golang.org/ref/spec#Comparison_operators">comparable</a></strong>
+,such as integers, floating point and complex numbers, strings,
+pointers, interfaces (as long as the dynamic type supports
+equality).Slices cannot be used as map keys, because equality is not
+defined on them, and <strong>ValueType may be any type at all, including
+another map!</strong> <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hits := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="type">string</span>]<span class="keyword">map</span>[<span class="type">string</span>]<span class="type">int</span>)</span><br><span class="line">n := hits[<span class="string">&quot;/doc/&quot;</span>][<span class="string">&quot;au&quot;</span>]</span><br></pre></td></tr></table></figure></p></li>
+<li><p>Like slices, maps hold references to an underlying data
+structure. <strong>If you pass a map to a function that changes the
+contents of the map, the changes will be visible in the
+caller.</strong></p></li>
+<li><p>An attempt to fetch a map value with <strong>a key that is not
+present in the map will return the zero value for the type of the
+entries in the map</strong>.The zero value is:</p>
+<ul>
+<li>0 for numeric types,</li>
+<li>false for the boolean type</li>
+<li>"" (the empty string) for strings.</li>
+</ul></li>
+<li><p>If you need to judge whether a key in map, you can do this
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> val, ok := dict[<span class="string">&quot;foo&quot;</span>]; ok &#123;</span><br><span class="line">    <span class="comment">//do something here</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p></li>
+</ul>
+<h2 id="methods">Methods</h2>
+<ul>
+<li><p>Methods can be defined for any named type (except a pointer or an
+interface); <strong>the receiver does not have to be a struct.</strong>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> ByteSlice []<span class="type">byte</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(slice ByteSlice)</span></span> Append(data []<span class="type">byte</span>) []<span class="type">byte</span> &#123;</span><br><span class="line">    <span class="comment">// Body exactly the same as the Append function defined above.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p></li>
+<li><p>The rule about pointers vs. values for receivers is that
+<strong>value methods can be invoked on pointers and values, but pointer
+methods can only be invoked on pointers</strong>.</p></li>
+</ul>
+<h2 id="interfaces-and-other-types">Interfaces and other types</h2>
+<h3 id="interfaces">Interfaces</h3>
+<ul>
+<li><p>An interface is defined as <strong>a set of method
+signatures</strong>, and a type implements an interface by implementing
+its methods. <strong>A type can implement multiple interfaces</strong>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Sequence []<span class="type">int</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Methods required by sort.Interface.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s Sequence)</span></span> Len() <span class="type">int</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">len</span>(s)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s Sequence)</span></span> Less(i, j <span class="type">int</span>) <span class="type">bool</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> s[i] &lt; s[j]</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s Sequence)</span></span> Swap(i, j <span class="type">int</span>) &#123;</span><br><span class="line">    s[i], s[j] = s[j], s[i]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p></li>
+<li><p>You can define your own interface and <strong>a value of
+interface type can hold any value that implements those
+methods</strong>. <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Abser <span class="keyword">interface</span> &#123;</span><br><span class="line">	Abs() <span class="type">float64</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> MyFloat <span class="type">float64</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(f MyFloat)</span></span> Abs() <span class="type">float64</span> &#123;</span><br><span class="line">	<span class="keyword">if</span> f &lt; <span class="number">0</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="type">float64</span>(-f)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="type">float64</span>(f)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> a Abser</span><br><span class="line">	f := MyFloat(-math.Sqrt2)</span><br><span class="line">	a = f  <span class="comment">// a MyFloat implements Abser</span></span><br><span class="line">	fmt.Println(a.Abs())</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p></li>
+</ul>
+<h2 id="concurrency">Concurrency</h2>
+<h3 id="share-by-communicating">Share by communicating</h3>
+<ul>
+<li><p>Concurrent programming in many environments is made difficult by
+the subtleties required to implement correct access to shared
+variables.</p></li>
+<li><p>Go encourages a different approach in which <strong>shared values
+are passed around on channels and, in fact, never actively shared by
+separate threads of execution，only one goroutine has access to the
+value at any given time</strong>.</p></li>
+<li><p>For example，Reference counts may be best done by putting a mutex
+around an integer variable. But as a high-level approach, using channels
+to control access makes it easier to write clear, correct
+programs.</p></li>
+</ul>
+<h3 id="goroutines">Goroutines</h3>
+<ul>
+<li><p>A goroutine has a simple model: it is a function executing
+concurrently with other goroutines in the <strong>same address
+space</strong>.</p></li>
+<li><p>Prefix a function or method call with the <code>go</code> keyword
+to run the call in a new goroutine. When the call completes, <strong>the
+goroutine exits silently</strong>，don't wait for it.</p></li>
+</ul>
+<h3 id="channels">Channels</h3>
+<ul>
+<li><p>Like maps, channels are allocated with <code>make</code>, and the
+resulting value acts as a <strong>reference to an underlying data
+structure</strong></p></li>
+<li><p>There are lots of nice idioms using channels. For example, if we
+launched a sort in the background and do sth else while waiting for the
+goroutine to finish. A channel allows us to do so
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">c := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="type">int</span>)  <span class="comment">// Allocate a channel.</span></span><br><span class="line"><span class="comment">// Start the sort in a goroutine; when it completes, signal on the channel.</span></span><br><span class="line"><span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">    list.Sort()</span><br><span class="line">    c &lt;- <span class="number">1</span>  <span class="comment">// Send a signal; value does not matter.</span></span><br><span class="line">&#125;()</span><br><span class="line">doSomethingForAWhile()</span><br><span class="line">&lt;-c   <span class="comment">// Wait for sort to finish; discard sent value.</span></span><br></pre></td></tr></table></figure></p></li>
+<li><p>The above code works becase <strong>receivers always block until
+there is data to receive</strong>. As for the sender, if the channel is
+unbuffered, the sender blocks until the receiver has received the value.
+If the channel has a buffer, the sender blocks only until the value has
+been copied to the buffer; if the buffer is full, this means waiting
+until some receiver has retrieved a value.</p></li>
+<li><p><strong>A buffered channel can be used like a semaphore</strong>,
+for instance to limit throughput. In the following example, incoming
+requests are passed to handle, which sends a value into the channel,
+processes the request, and then receives a value from the channel to
+ready the “semaphore” for the next consumer. <strong>The capacity of the
+channel buffer limits the number of simultaneous calls to
+process.</strong> <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> sem = <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="type">int</span>, MaxOutstanding)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">handle</span><span class="params">(r *Request)</span></span> &#123;</span><br><span class="line">    sem &lt;- <span class="number">1</span>    <span class="comment">// Wait for active queue to drain.</span></span><br><span class="line">    process(r)  <span class="comment">// May take a long time.</span></span><br><span class="line">    &lt;-sem       <span class="comment">// Done; enable next request to run.</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Serve</span><span class="params">(queue <span class="keyword">chan</span> *Request)</span></span> &#123;</span><br><span class="line">    <span class="keyword">for</span> &#123;</span><br><span class="line">        req := &lt;-queue</span><br><span class="line">        <span class="keyword">go</span> handle(req)  <span class="comment">// Don&#x27;t wait for handle to finish.</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p></li>
+<li><p>The above design has a problem: Serve creates a new goroutine for
+every incoming request, even though only MaxOutstanding of them can run
+at any moment. As a result, <strong>the program can consume unlimited
+resources if the requests come in too fast</strong>. We can address that
+deficiency by changing Serve to gate the creation of the goroutines.
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Serve</span><span class="params">(queue <span class="keyword">chan</span> *Request)</span></span> &#123;</span><br><span class="line">    <span class="keyword">for</span> req := <span class="keyword">range</span> queue &#123;</span><br><span class="line">        sem &lt;- <span class="number">1</span></span><br><span class="line">        <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">            process(req) <span class="comment">// Buggy; see explanation below.</span></span><br><span class="line">            &lt;-sem</span><br><span class="line">        &#125;()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p></li>
+<li><p>The bug in the above code is that <strong>in a Go
+<code>for</code> loop, the loop variable is reused for each iteration,
+so the req variable is shared across all goroutines</strong>. But we
+need to make sure that req is unique for each goroutine. Here's one way
+to do that, <strong>passing the value of req as an argument to the
+closure in the goroutine</strong>: <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Serve</span><span class="params">(queue <span class="keyword">chan</span> *Request)</span></span> &#123;</span><br><span class="line">    <span class="keyword">for</span> req := <span class="keyword">range</span> queue &#123;</span><br><span class="line">        sem &lt;- <span class="number">1</span></span><br><span class="line">        <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">(req *Request)</span></span> &#123;</span><br><span class="line">            process(req)</span><br><span class="line">            &lt;-sem</span><br><span class="line">        &#125;(req)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p></li>
+<li><p>Another solution is just to create a new variable with the same
+name, like the following code, <code>req := req</code> may seem odd, but
+it's legal and idiomatic in Go to do this. You get a fresh version of
+the variable with the same name <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Serve</span><span class="params">(queue <span class="keyword">chan</span> *Request)</span></span> &#123;</span><br><span class="line">    <span class="keyword">for</span> req := <span class="keyword">range</span> queue &#123;</span><br><span class="line">        req := req <span class="comment">// Create new instance of req for the goroutine.</span></span><br><span class="line">        sem &lt;- <span class="number">1</span></span><br><span class="line">        <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">            process(req)</span><br><span class="line">            &lt;-sem</span><br><span class="line">        &#125;()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p></li>
+<li><p>Another approach that manages resources well is to <strong>start
+a fixed number of handle goroutines all reading from the request
+channel</strong>. The number of goroutines limits the number of
+simultaneous calls to process. <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">handle</span><span class="params">(queue <span class="keyword">chan</span> *Request)</span></span> &#123;</span><br><span class="line">    <span class="keyword">for</span> r := <span class="keyword">range</span> queue &#123;</span><br><span class="line">        process(r)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Serve</span><span class="params">(clientRequests <span class="keyword">chan</span> *Request, quit <span class="keyword">chan</span> <span class="type">bool</span>)</span></span> &#123;</span><br><span class="line">    <span class="comment">// Start handlers</span></span><br><span class="line">    <span class="keyword">for</span> i := <span class="number">0</span>; i &lt; MaxOutstanding; i++ &#123;</span><br><span class="line">        <span class="keyword">go</span> handle(clientRequests)</span><br><span class="line">    &#125;</span><br><span class="line">    &lt;-quit  <span class="comment">// Wait to be told to exit.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p></li>
+</ul>
+<h3 id="channels-of-channels">Channels of channels</h3>
+<ul>
+<li><p>In the example in the previous section, handle was an idealized
+handler for a request but we didn't define the type it was handling.
+<strong>If that type includes a channel on which to reply, each client
+can provide its own path for the answer</strong>.
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Request <span class="keyword">struct</span> &#123;</span><br><span class="line">    args        []<span class="type">int</span></span><br><span class="line">    f           <span class="function"><span class="keyword">func</span><span class="params">([]<span class="type">int</span>)</span></span> <span class="type">int</span></span><br><span class="line">    resultChan  <span class="keyword">chan</span> <span class="type">int</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p></li>
+<li><p>The client provides a function and its arguments, as well as a
+channel inside the request object on which to receive the answer.
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">sum</span><span class="params">(a []<span class="type">int</span>)</span></span> (s <span class="type">int</span>) &#123;</span><br><span class="line">    <span class="keyword">for</span> _, v := <span class="keyword">range</span> a &#123;</span><br><span class="line">        s += v</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">request := &amp;Request&#123;[]<span class="type">int</span>&#123;<span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>&#125;, sum, <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="type">int</span>)&#125;</span><br><span class="line"><span class="comment">// Send request</span></span><br><span class="line">clientRequests &lt;- request</span><br></pre></td></tr></table></figure></p></li>
+<li><p>On the server side, the handler function is the only thing that
+changes. <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">handle</span><span class="params">(queue <span class="keyword">chan</span> *Request)</span></span> &#123;</span><br><span class="line">    <span class="keyword">for</span> req := <span class="keyword">range</span> queue &#123;</span><br><span class="line">        req.resultChan &lt;- req.f(req.args)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p></li>
+</ul>
+<h2 id="errors">Errors</h2>
+<ul>
+<li><p>Library routines must often return some sort of error indication
+to the caller, it is easy to return a detailed error description
+alongside the normal return value with Go's multivalue return
+feature</p></li>
+<li><p>Type <code>error</code> is a simple built-in interface, and
+library writer is free to implement this interface with a richer model
+under the covers, making it possible not only to see the error but also
+to provide some context <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// built-in error interface</span></span><br><span class="line"><span class="keyword">type</span> <span class="type">error</span> <span class="keyword">interface</span> &#123;</span><br><span class="line">    Error() <span class="type">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// custom error</span></span><br><span class="line"><span class="comment">// PathError records an error and the operation and</span></span><br><span class="line"><span class="comment">// file path that caused it.</span></span><br><span class="line"><span class="keyword">type</span> PathError <span class="keyword">struct</span> &#123;</span><br><span class="line">    Op <span class="type">string</span>    <span class="comment">// &quot;open&quot;, &quot;unlink&quot;, etc.</span></span><br><span class="line">    Path <span class="type">string</span>  <span class="comment">// The associated file.</span></span><br><span class="line">    Err <span class="type">error</span>    <span class="comment">// Returned by the system call.</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(e *PathError)</span></span> Error() <span class="type">string</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> e.Op + <span class="string">&quot; &quot;</span> + e.Path + <span class="string">&quot;: &quot;</span> + e.Err.Error()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// PathError&#x27;s Error will generate a string like this:</span></span><br><span class="line"><span class="comment">// open /etc/passwx: no such file or directory</span></span><br></pre></td></tr></table></figure></p></li>
+<li><p>The usual way to report an error to a caller is to return an
+error as an extra return value, but sometimes <strong>the error is
+unrecoverable</strong>, the program simply cannot continue. We can use
+the built-in function <code>panic</code> in this case</p></li>
+<li><p><strong><code>panic</code> function takes a single argument of
+arbitrary type—often a string—to be printed as the program
+dies</strong>. It's also a way to indicate that something impossible has
+happened, for example,it is reasonable to use <code>panic</code> with
+the failure of initialization, <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> user = os.Getenv(<span class="string">&quot;USER&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">init</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">if</span> user == <span class="string">&quot;&quot;</span> &#123;</span><br><span class="line">        <span class="built_in">panic</span>(<span class="string">&quot;no value for $USER&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p></li>
+<li><p>When <code>panic</code> is called, including implicitly for
+run-time errors such as indexing a slice out of bounds or failing a type
+assertion, it immediately <strong>stops execution of the current
+function and begins unwinding the stack of the goroutine, running any
+deferred functions along the way.</strong> If that unwinding reaches the
+top of the goroutine's stack, the program dies. But it is possible to
+<strong>use the built-in function <code>recover</code> to regain control
+of the goroutine and resume normal execution.</strong></p></li>
+<li><p>A call to <code>recover</code> stops the unwinding and returns
+the argument passed to <code>panic</code>. Because the only code that
+runs while unwinding is inside deferred functions,
+<strong><code>recover</code> is only useful inside deferred
+functions.</strong></p></li>
+<li><p><strong>One application of <code>recover</code> is to shut down a
+failing goroutine inside a server without killing the other executing
+goroutines.</strong> In this example, if <code>do(work)</code> panics,
+the result will be logged and the goroutine will exit cleanly without
+disturbing the others <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">server</span><span class="params">(workChan &lt;-<span class="keyword">chan</span> *Work)</span></span> &#123;</span><br><span class="line">    <span class="keyword">for</span> work := <span class="keyword">range</span> workChan &#123;</span><br><span class="line">        <span class="keyword">go</span> safelyDo(work)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">safelyDo</span><span class="params">(work *Work)</span></span> &#123;</span><br><span class="line">    <span class="keyword">defer</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">if</span> err := <span class="built_in">recover</span>(); err != <span class="literal">nil</span> &#123;</span><br><span class="line">            log.Println(<span class="string">&quot;work failed:&quot;</span>, err)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;()</span><br><span class="line">    do(work)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p></li>
+</ul>
+<h2 id="some-syntax">Some Syntax</h2>
+<ul>
+<li><p><code>int(math.Pow(float64(x), float64(count)))</code></p></li>
+<li><p><code>Atoi</code> (string to int) and <code>Itoa</code> (int to
+string). <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">i, err := strconv.Atoi(<span class="string">&quot;-42&quot;</span>)</span><br><span class="line">s := strconv.Itoa(<span class="number">-42</span>)</span><br></pre></td></tr></table></figure></p></li>
+<li><p>concate string <code>s1</code> and <code>s2</code>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">buffer := bytes.NewBufferString(s1)</span><br><span class="line">buffer.WriteString(s2)</span><br><span class="line">buffer.String()</span><br></pre></td></tr></table></figure></p></li>
+<li><p><code>append</code> function <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// append multiple elements</span></span><br><span class="line">x := []<span class="type">int</span>&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>&#125;</span><br><span class="line">x = <span class="built_in">append</span>(x, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// append a slice </span></span><br><span class="line">x := []<span class="type">int</span>&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>&#125;</span><br><span class="line">y := []<span class="type">int</span>&#123;<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>&#125;</span><br><span class="line">x = <span class="built_in">append</span>(x, y...)</span><br></pre></td></tr></table></figure></p></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/go/" rel="tag"># go</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/02/06/%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E4%B8%AD%E7%9A%84%E4%B8%80%E4%BA%9B%E7%BB%8F%E9%AA%8C%E5%92%8C%20tricks/" rel="prev" title="文本分类中的一些经验和 tricks">
+      <i class="fa fa-chevron-left"></i> 文本分类中的一些经验和 tricks
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/03/18/Adam%E9%82%A3%E4%B9%88%E6%A3%92%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E5%AF%B9SGD%E5%BF%B5%E5%BF%B5%E4%B8%8D%E5%BF%98/" rel="next" title="Adam那么棒，为什么还对SGD念念不忘">
+      Adam那么棒，为什么还对SGD念念不忘 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#formatting"><span class="nav-number">1.</span> <span class="nav-text">Formatting</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#commentary"><span class="nav-number">2.</span> <span class="nav-text">Commentary</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#names"><span class="nav-number">3.</span> <span class="nav-text">Names</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#control-structures"><span class="nav-number">4.</span> <span class="nav-text">Control structures</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#functions"><span class="nav-number">5.</span> <span class="nav-text">Functions</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#data"><span class="nav-number">6.</span> <span class="nav-text">Data</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#new-v.s-make"><span class="nav-number">6.1.</span> <span class="nav-text">new v.s make</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#array-v.s-slice"><span class="nav-number">6.2.</span> <span class="nav-text">array v.s slice</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#map"><span class="nav-number">6.3.</span> <span class="nav-text">map</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#methods"><span class="nav-number">7.</span> <span class="nav-text">Methods</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#interfaces-and-other-types"><span class="nav-number">8.</span> <span class="nav-text">Interfaces and other types</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#interfaces"><span class="nav-number">8.1.</span> <span class="nav-text">Interfaces</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#concurrency"><span class="nav-number">9.</span> <span class="nav-text">Concurrency</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#share-by-communicating"><span class="nav-number">9.1.</span> <span class="nav-text">Share by communicating</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#goroutines"><span class="nav-number">9.2.</span> <span class="nav-text">Goroutines</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#channels"><span class="nav-number">9.3.</span> <span class="nav-text">Channels</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#channels-of-channels"><span class="nav-number">9.4.</span> <span class="nav-text">Channels of channels</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#errors"><span class="nav-number">10.</span> <span class="nav-text">Errors</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#some-syntax"><span class="nav-number">11.</span> <span class="nav-text">Some Syntax</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">248</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.linkedin.com/in/wuliangchao/" title="LinkedIn → https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;wuliangchao&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i>LinkedIn</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="《 Advanced Web Metrics with Google Analytics 》是 Google 一位数据分析专家 Brian Clifton 出版的书，主要介绍了涉及网站分析的一些概念和方法以及如何利用 Google Analytics 进行网站分析。Google Analytics 是 Google 免费提供的一个用于网站分析的工具。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《Advanced Web Metrics with Google Analytics》读书笔记(2)">
+<meta property="og:url" content="https://wulc.me/2016/01/22/%E3%80%8AAdvanced%20Web%20Metrics%20with%20Google%20Analytics%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%EF%BC%882%EF%BC%89/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="《 Advanced Web Metrics with Google Analytics 》是 Google 一位数据分析专家 Brian Clifton 出版的书，主要介绍了涉及网站分析的一些概念和方法以及如何利用 Google Analytics 进行网站分析。Google Analytics 是 Google 免费提供的一个用于网站分析的工具。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2016-01-22T01:42:43.000Z">
+<meta property="article:modified_time" content="2023-04-30T05:12:49.026Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="Google Analytics">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://wulc.me/2016/01/22/%E3%80%8AAdvanced%20Web%20Metrics%20with%20Google%20Analytics%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%EF%BC%882%EF%BC%89/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>《Advanced Web Metrics with Google Analytics》读书笔记(2) | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">吴良超的学习笔记</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2016/01/22/%E3%80%8AAdvanced%20Web%20Metrics%20with%20Google%20Analytics%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%EF%BC%882%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          《Advanced Web Metrics with Google Analytics》读书笔记(2)
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2016-01-22 09:42:43" itemprop="dateCreated datePublished" datetime="2016-01-22T09:42:43+08:00">2016-01-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-30 13:12:49" itemprop="dateModified" datetime="2023-04-30T13:12:49+08:00">2023-04-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Google-Analytics/" itemprop="url" rel="index"><span itemprop="name">Google Analytics</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>《 Advanced Web Metrics with Google Analytics 》是 Google
+一位数据分析专家 Brian Clifton
+出版的书，主要介绍了涉及网站分析的一些概念和方法以及如何利用 Google
+Analytics 进行网站分析。Google Analytics 是 Google
+免费提供的一个用于网站分析的工具。</p>
+<span id="more"></span>
+<p>本系列文章是笔者在阅读本书过程中总结整理的一些笔记。</p>
+<p><strong>本文是本书中 Chapter 2
+的阅读笔记，主要介绍了网站分析常用的两种途径以及网站分析的数据的准确性。</strong></p>
+<h2 id="网站分析的两种手段">网站分析的两种手段</h2>
+<p><strong>页面标签（page
+tags）和日志文件（logfiles）是网站分析的两种常用手段</strong>。</p>
+<p>页面标签一般是在html页面中嵌入js代码段，浏览页面时js代码会将浏览记录发送到远端服务器，远端服务器将对浏览页面进行统计，并提供可视
+web 界面，GoogleAnalytics 就是属于这种手段。</p>
+<p>日志文件则是利用 web
+服务器软件（如Apache、Tomcat等）产生的日志文件进行统计，日志文件能够记录访问的ip和页面等信息；然后在本地服务器上统计并生成所需结果。</p>
+<p>除了上面两种途径，还可通过网络流量情况、web服务器软件提供的api等方式进行数据的采集和统计。但是最常用的手段就是上面提到的两种。所以下面详细列出这两种方法的优点点和不足。</p>
+<table>
+<colgroup>
+<col style="width: 38%" />
+<col style="width: 30%" />
+<col style="width: 30%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">方法</th>
+<th style="text-align: left;">Page Tags</th>
+<th style="text-align: left;">Logfiles</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">Advantages</td>
+<td style="text-align: left;">(1)不受代理服务器和缓存服务器的影响
+<br>(2)能够实时处理客户端产生的数据<br>(3)数据采集程序的升级以及数据的存储仅需服务商提供<br></td>
+<td
+style="text-align: left;">(1)能够保留历史数据<br>(2)不会受到防火墙影响<br>(3)跟踪带宽及下载情况，区分完全下载和部分下载<br>(4)能够跟踪网络爬虫的来源<br></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Disadvantage</td>
+<td
+style="text-align: left;">(1)部署的不恰当或导致数据的丢失且无法重新找到<br>(2)防火墙可能会拦截这种方法的流量<br>(3)不能够获取带宽或者下载具体情况，即不能确定是否下载成功<br>(4)不能跟踪网络爬虫的来源</td>
+<td
+style="text-align: left;">(1)代理服务器和缓存服务器会影响数据准确性<br>(2)需要维护服务器的程序正确性以及数据的存储等<br>(3)网络爬虫会使得访问者的数量比实际的大</td>
+</tr>
+</tbody>
+</table>
+<p>从上面的比较分析可以看到，两种方法的优点和缺点几乎是互补的，所以<strong>在实际中不需要局限于一种方法，而可以混合多种方法进行分析。</strong></p>
+<h2 id="cookies-在网站分析中的作用">Cookies 在网站分析中的作用</h2>
+<p>页面标签（page tags）是通过 cookies 来追踪访客的。cookies
+是以文本方式存储在客户端本地的一系列 key-value
+对，用来存储客户端的一些信息，每次客户端请求服务器端的资源时，服务器端都可以获取客户端对应的cookie，不同的
+cookie 根据不同的域名来区分。</p>
+<p>cookies 有几种分类：</p>
+<p>如<strong>根据生存时间</strong>可以分为永久 cookies （persistent
+cookies）和 会话 cookies （session cookies），永久 cookies
+指那些关闭浏览器后再重新打开时依然有效的cookies（前提是客户端不会清理cookies），而
+会话 cookies 则指那些只在浏览网站期间有效的cookies，关闭浏览器后 cookies
+会自动失效。</p>
+<p><strong>根据来源</strong>可以分为第一方 cookie （first-party
+cookie）和第三方 cookie （third-party
+cookie），第一方cookie指你<strong>访问的url
+所属的域名在你的电脑上留下的cookie</strong>，我们之前已经提到过：不同的cookie通过不同的域名进行识别。第三方
+cookie
+则刚好相反，是你<strong>访问一个url后所获得的cookies中，那些不属于这个url所属域名的cookie</strong>，如一些网页中嵌入的一些广告可能会留下cookies，这些cookies不属于所访问的页面所属的域名，这个就可以算为第三方
+cookie。两者的区别在于<strong>第一方 cookie
+只能由设定这个cookie的域名所获取；而第三方 cookie
+则允许列出可以获取这个cookie的所有域名。</strong></p>
+<p>cookies
+在网站分析中的一些常见作用包括：<strong>能够判断访客是否第一次访问这个网站，每隔一定时间会有多少访客再次访问，每位访客具体的访问间隔时间等</strong>。</p>
+<h2 id="数据准确性">数据准确性</h2>
+<p>无论是网页标签（page
+tags），还是日志文件（logfiles），任何一种手段均存在采集数据的不准确性问题。下面分别讲述这两种方法存在一些问题以及解决方法</p>
+<h3 id="日志文件中的数据不准确性">日志文件中的数据不准确性</h3>
+<h4 id="动态分配ip"><strong>动态分配IP</strong></h4>
+<p><strong>动态分配IP会使得统计出来的访客人数比实际要大。</strong>
+现今为家庭提供网络服务的 ISP
+一般都是分配动态IP,美国曾统计过（http://www.comscore.com/Press_Events/Presentations_Whitepapers/2007/Cookie_Deletion_Whitepape）一个家庭平均每个月会使用10.5个IP地址，这会导致通过日志文件统计出来的访客数量要大于实际的。因为日志文件是通过不同IP来区分不同的访客的，按照上面的情况，会将一个访客统计为10个访客，因为这个人在访问网站时IP会变化。
+这类问题可通过cookie 来解决。</p>
+<h4 id="缓存"><strong>缓存</strong></h4>
+<p><strong>缓存会使得统计出来的访客人数比实际要小。</strong>
+缓存又可以分为客户端的缓存和服务器端的缓存。
+客户端的缓存指的是用户在访问网站后，用户使用的浏览器会缓存其访问过的某些页面，使得用户再次访问这个页面时浏览器可以从本地获取，从而加快其访问速度。但是这样服务器的日志文件就无法记录这次的访问信息了。
+服务器端的缓存的作用与客户算的类似，也是将一些常被访问的页面缓存起来，加快客户端的访问速度，我们常听到的CDN就是其中的一种。
+对于这种问题，貌似目前还没有比较好的解决方法。</p>
+<h4 id="网络爬虫"><strong>网络爬虫</strong></h4>
+<p><strong>网络爬虫会使得统计出来的访客人数比实际要大。</strong>
+网络爬虫在搜索引擎等领域使用得非常广泛，可以理解为通过程序获取页面信息。这会产生大量非实际访客访问的PV量，这就导致了统计出来的PV量比实际的要大。
+可以通过追踪爬虫的来源从而在日志中过滤掉这个爬虫的访问记录。但是因为爬虫的数量很多，往往难以完全过滤掉所有爬虫的访问记录。</p>
+<h3 id="网页标签中的数据不准确性">网页标签中的数据不准确性</h3>
+<h4 id="代码部署不全"><strong>代码部署不全</strong></h4>
+<p>因为网页标签（page tags）的方法是通过在网站的每个网页上嵌入一段 JS
+代码实现，所以在一开始部署这段代码的时候有可能会存在部署不全的情况，就是没有在每个网页上部署这段代码。这种情况在一些较大的网站上普遍存在。</p>
+<h4 id="js代码发生错误"><strong>JS代码发生错误</strong></h4>
+<p>除了采集访问信息的js代码外，网页中不可避免会有完成其他功能的js代码，这些js代码假如发生了错误并且在网页源码中的位置处于采集访问信息的js代码前，会导致<strong>浏览器解析脚本引擎停滞工作</strong>，从而在下面的采集访问信息的js代码段将没有执行。</p>
+<h4 id="防火墙的阻挡"><strong>防火墙的阻挡</strong></h4>
+<p>因为网页标签（page
+tags）方法会将数据发送给指定的数据采集服务器，所以防火墙能够阻挡这一动作。除此之外，防火墙还能够阻挡或者自动删除cookies。</p>
+<h3 id="cookies中的数据不准确性">Cookies中的数据不准确性</h3>
+<h4
+id="访客拒绝或删除cookies"><strong>访客拒绝或删除cookies</strong></h4>
+<p>因为cookies是存储在访客本地的电脑的，故可以将已有的cookies删除掉，也可以在浏览器设置中距拒绝cookies。据调查显示，第一方cookies的接受率可达95%，而第三方cookies则常被防火墙或反病毒软件拦截。</p>
+<h4
+id="访客有多台设备或共享一台设备"><strong>访客有多台设备或共享一台设备</strong></h4>
+<p>这里的设备可以指电脑、平板、手机等，现今同一个人同时拥有这几种设备是很常见的事情，同时有些家庭也共用一台电脑，这就导致了下面可能存在的问题。</p>
+<p><strong>同一个访客有多台设备</strong>：用这些设备访问统一网页时均会生成cookies，这样统计时会将同一用户产生的三个cookies当做是不同用户产生的。
+<strong>多个访客共享同一台设备</strong>：这样访问一个同一个网站只会产生一个cookies，但是分析cookies时只会将这个当做一个用户，显然分析结果不合理。</p>
+<p>解决这类问题可以设置用户登录这一步骤，从而在cookies中标记不同的用户区分cookies的来源。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Google-Analytics/" rel="tag"># Google Analytics</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2016/01/20/%E3%80%8AAdvanced%20Web%20Metrics%20with%20Google%20Analytics%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%EF%BC%881%EF%BC%89/" rel="prev" title="《Advanced Web Metrics with Google Analytics》读书笔记(1)">
+      <i class="fa fa-chevron-left"></i> 《Advanced Web Metrics with Google Analytics》读书笔记(1)
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2016/01/24/%E3%80%8AProgramming%20Collective%20Intelligence%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0(1)/" rel="next" title="《Programming Collective Intelligence》读书笔记(1)--梗概">
+      《Programming Collective Intelligence》读书笔记(1)--梗概 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%AB%99%E5%88%86%E6%9E%90%E7%9A%84%E4%B8%A4%E7%A7%8D%E6%89%8B%E6%AE%B5"><span class="nav-number">1.</span> <span class="nav-text">网站分析的两种手段</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cookies-%E5%9C%A8%E7%BD%91%E7%AB%99%E5%88%86%E6%9E%90%E4%B8%AD%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="nav-number">2.</span> <span class="nav-text">Cookies 在网站分析中的作用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%87%86%E7%A1%AE%E6%80%A7"><span class="nav-number">3.</span> <span class="nav-text">数据准确性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6%E4%B8%AD%E7%9A%84%E6%95%B0%E6%8D%AE%E4%B8%8D%E5%87%86%E7%A1%AE%E6%80%A7"><span class="nav-number">3.1.</span> <span class="nav-text">日志文件中的数据不准确性</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E5%88%86%E9%85%8Dip"><span class="nav-number">3.1.1.</span> <span class="nav-text">动态分配IP</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%93%E5%AD%98"><span class="nav-number">3.1.2.</span> <span class="nav-text">缓存</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB"><span class="nav-number">3.1.3.</span> <span class="nav-text">网络爬虫</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E9%A1%B5%E6%A0%87%E7%AD%BE%E4%B8%AD%E7%9A%84%E6%95%B0%E6%8D%AE%E4%B8%8D%E5%87%86%E7%A1%AE%E6%80%A7"><span class="nav-number">3.2.</span> <span class="nav-text">网页标签中的数据不准确性</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E9%83%A8%E7%BD%B2%E4%B8%8D%E5%85%A8"><span class="nav-number">3.2.1.</span> <span class="nav-text">代码部署不全</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#js%E4%BB%A3%E7%A0%81%E5%8F%91%E7%94%9F%E9%94%99%E8%AF%AF"><span class="nav-number">3.2.2.</span> <span class="nav-text">JS代码发生错误</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%98%B2%E7%81%AB%E5%A2%99%E7%9A%84%E9%98%BB%E6%8C%A1"><span class="nav-number">3.2.3.</span> <span class="nav-text">防火墙的阻挡</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cookies%E4%B8%AD%E7%9A%84%E6%95%B0%E6%8D%AE%E4%B8%8D%E5%87%86%E7%A1%AE%E6%80%A7"><span class="nav-number">3.3.</span> <span class="nav-text">Cookies中的数据不准确性</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%BF%E5%AE%A2%E6%8B%92%E7%BB%9D%E6%88%96%E5%88%A0%E9%99%A4cookies"><span class="nav-number">3.3.1.</span> <span class="nav-text">访客拒绝或删除cookies</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%BF%E5%AE%A2%E6%9C%89%E5%A4%9A%E5%8F%B0%E8%AE%BE%E5%A4%87%E6%88%96%E5%85%B1%E4%BA%AB%E4%B8%80%E5%8F%B0%E8%AE%BE%E5%A4%87"><span class="nav-number">3.3.2.</span> <span class="nav-text">访客有多台设备或共享一台设备</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">248</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.linkedin.com/in/wuliangchao/" title="LinkedIn → https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;wuliangchao&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i>LinkedIn</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

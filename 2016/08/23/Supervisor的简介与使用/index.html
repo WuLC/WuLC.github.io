@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Supervisor 是 Linux 下一个进程管理的工具，主要的功能包括让程序自动启动、程序奔溃后自动重启，指定进程的数目等。本文主要讲述Supervisor在Linux下的安装与使用。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Supervisor的简介与使用">
+<meta property="og:url" content="https://wulc.me/2016/08/23/Supervisor%E7%9A%84%E7%AE%80%E4%BB%8B%E4%B8%8E%E4%BD%BF%E7%94%A8/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="Supervisor 是 Linux 下一个进程管理的工具，主要的功能包括让程序自动启动、程序奔溃后自动重启，指定进程的数目等。本文主要讲述Supervisor在Linux下的安装与使用。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2016-08-23T14:06:31.000Z">
+<meta property="article:modified_time" content="2023-04-30T05:12:49.107Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="工具使用">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://wulc.me/2016/08/23/Supervisor%E7%9A%84%E7%AE%80%E4%BB%8B%E4%B8%8E%E4%BD%BF%E7%94%A8/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Supervisor的简介与使用 | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">吴良超的学习笔记</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2016/08/23/Supervisor%E7%9A%84%E7%AE%80%E4%BB%8B%E4%B8%8E%E4%BD%BF%E7%94%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Supervisor的简介与使用
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2016-08-23 22:06:31" itemprop="dateCreated datePublished" datetime="2016-08-23T22:06:31+08:00">2016-08-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-30 13:12:49" itemprop="dateModified" datetime="2023-04-30T13:12:49+08:00">2023-04-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/" itemprop="url" rel="index"><span itemprop="name">工具使用</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><a target="_blank" rel="noopener" href="http://supervisord.org/introduction.html">Supervisor</a> 是
+Linux
+下一个进程管理的工具，主要的功能包括让<strong>程序自动启动、程序奔溃后自动重启，指定进程的数目等</strong>。本文主要讲述Supervisor在Linux下的安装与使用。</p>
+<span id="more"></span>
+<h2 id="安装">安装</h2>
+<p>由于 Supervisor 是用 python 写的，因此推荐利用
+<code>easy_install supervisor</code>或<code>pip install supervisor</code>
+进行安装。除此之外，还可通过 Linux
+的包管理命令进行安装（源中需要包含这个包），如 Centos 下可通过
+<code>yum  install supervisor</code>进行安装，Ubuntu
+下可以通过<code>apt install supervisor</code>安装。</p>
+<h2 id="配置">配置</h2>
+<p>Supervisor
+的配置文件就只有一个，在安装完成后通过<code>echo_supervisord_conf &gt; /etc/supervisord.conf</code>
+将创建一个默认的配置文件<code>/etc/supervisord.conf</code>,当然也可以指定配置文件在其他目录下。配置文件以<code>[]</code>来隔离每部分的配置内容，并且以<code>;</code>为注释符号。</p>
+<p><strong>因为 Supervisor
+由三部分组成：<code>supervisord</code>、<code>supervisorctl</code>、<code>inet_http_server</code>。因此配置文件也分别根据这三部分阐述。需要注意的是<code>supervisorctl</code>、<code>inet_http_server</code>并非是必须要配置的，这两个均是连接supervisord的客户端，用于观察和管理
+supervisord 监控的程序。</strong></p>
+<h3 id="supervisord">supervisord</h3>
+<p><code>supervisord</code>
+是Supervisor的核心，主要用与启动程序，在程序奔溃时自动重启，设定程序的进程数目、输出的日志文件路径等。</p>
+<p><code>supervisored</code>
+有多个参数，下面主要讲述其中几种较为重要的最简配置，每个参数的含义可参考<a
+target="_blank" rel="noopener" href="http://supervisord.org/configuration.html#supervisord-section-settings">官方文档</a>。</p>
+<p>下面就是<code>supervisord</code>配置的一个简单例子 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[supervisord]</span><br><span class="line">logfile=/var/log/supervisor/supervisord.log ;日志文件的目录</span><br><span class="line">pidfile=/var/run/supervisord.pid ; pid文件目录</span><br><span class="line">; logfile_maxbytes = 50MB ;默认的日志文件的大小</span><br><span class="line">; loglevel = info ; 默认的日志的记录等级</span><br><span class="line">; umask = 002; 默认的进程umask</span><br><span class="line">; nodaemon = false ;默认在后台启动，若为true则在前台启动</span><br></pre></td></tr></table></figure>
+上面注释掉的配置项为 <code>supervisord</code>
+的默认配置项，可以不配置。</p>
+<p>除了配置 <code>supervisord</code>
+外，还需要配置被其管理的程序。详细的参数可见<a
+target="_blank" rel="noopener" href="http://supervisord.org/configuration.html#program-x-section-settings">官方文档</a>，下面是一个简单的例子
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[program:robot] ; 标示一个程序[program:XXX],XXX为自定义的程序名称</span><br><span class="line">command = /usr/bin/xvfb-run python /home/amazon/v0/Robot.py;运行程序所需命令</span><br><span class="line">;autostart=true ;默认跟随supervisord启动而启动</span><br><span class="line">autorestart=true ;程序退出后自动重启</span><br><span class="line">; startretries = 3; 程序出错时，连续重启的最大次数，超过该次数后，进程进入FATAL转态</span><br><span class="line">; startsecs = 1; 程序启动后多少秒内认为其启动成功</span><br><span class="line">; numprocs = 1  ;启动的进程数目，默认为1</span><br><span class="line">; priority = 999 ; 程序的优先级，默认为999，该值越小，表示优先级越高</span><br><span class="line">user=root ;程序启动的用户，只用root用户才能指定这一项；不指定时该值为启动supervisord的用户</span><br><span class="line">stdout_logfile = /home/amazon/log/Robot.log ;存储程序标准输出流的文本文件</span><br><span class="line">stderr_logfile = /home/amazon/log/Robot_err.log ; 存储程序出错时错误提示的文件</span><br><span class="line">; stopasgroup = false;以进程组的方式停止进程，默认为false，以上面为例，假如为false时，停止该程序时只会停止 python运行的程序，而不会停止 xvfb 程序</span><br></pre></td></tr></table></figure>
+上面注释的配置项为程序默认的配置，可以不配置。上面给出的<code>supervisord</code>和<code>program</code>为最简配置，仅配置这两项就可以运行supervisor。运行方式为
+<code>supervisord -c /etc/supervisord.conf</code>,
+<code>-c</code>参数指定了配置文件的路径，不指定该参数时会以一定的路径顺序寻找配置文件，并且会抛出warning，因此建议启动时要带有此参数。</p>
+<p>上面的配置虽然能启动这些程序，但是当supervisord管理多个程序时，需要关闭或开启其中的一个程序就必须关闭supervisord，然后修改配置文件并重启。为了单独管理这些程序，并直观看到每个程序的运行状态，就需要配置下面的<code>supervisorctl</code>和<code>inet_http_server</code>。</p>
+<h3 id="inet_http_server">inet_http_server</h3>
+<p><code>inet_http_server</code>是supervisord
+内置的一个http浏览器，用于查看、管理每个程序的运行状态，配置项如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[inet_http_server]</span><br><span class="line">port = 110.64.55.128:9001</span><br><span class="line">username = XXXX</span><br><span class="line">password = XXXX</span><br></pre></td></tr></table></figure>
+<p>上面的配置应该比较容易理解，访问<code>port</code>后输入用户名和密码验证身份后即可观察到程序运行的状态，下图为访问时观察到的效果。</p>
+<p><img
+src="https://wulc.me/imgs/image_1ar80vgub7ge1tr41st9sor6l213.png" /></p>
+<p>上图可以看到每个程序的运行状态，pid以及运行时长，还可以改变程序的运行状态。</p>
+<h3 id="supervisorctl">supervisorctl</h3>
+<p><code>supervisorctl</code>的功能与<code>inet_http_server</code>一样，只是<code>inet_http_server</code>是有界面的，而<code>supervisorctl</code>是在命令行下使用的，配置项如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[supervisorctl]</span><br><span class="line">serverurl = http://110.64.55.128:9001 ;http服务器的地址</span><br><span class="line">username = XXXX ;与 [inet_http_server] 配置项的username相同</span><br><span class="line">password = XXXX ;与 [inet_http_server] 配置项的password相同</span><br></pre></td></tr></table></figure>
+<p>通过
+<code>supervisorctl</code>即可观察到程序运行的状态，如下图所示</p>
+<p><img
+src="https://wulc.me/imgs/image_1ar80udog1img0316rm8ig1i94m.png" /></p>
+<p>同时可以通过
+<code>supervisorctl start|stop|restrt XXX</code>来启动、停止、重启程序XXX，其中XXX为配置<code>[program:XXX]</code>指定的名称。</p>
+<p>下面是综合以上所说的完整的<code>supervisord.conf</code>配置文件
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">[supervisord]</span><br><span class="line">logfile=/var/log/supervisor/supervisord.log  </span><br><span class="line">pidfile=/var/run/supervisord.pid  </span><br><span class="line"></span><br><span class="line">[program:robot] </span><br><span class="line">command = /usr/bin/xvfb-run python /home/amazon/v0/Robot.py</span><br><span class="line">autorestart=true </span><br><span class="line">stdout_logfile = /home/amazon/log/Robot.log </span><br><span class="line">stderr_logfile = /home/amazon/log/Robot_err.log </span><br><span class="line"></span><br><span class="line">[inet_http_server]</span><br><span class="line">port = 110.64.55.128:9001</span><br><span class="line">username = XXXX</span><br><span class="line">password = XXXX</span><br><span class="line"></span><br><span class="line">[supervisorctl]</span><br><span class="line">serverurl = http://110.64.55.128:9001 </span><br><span class="line">username = XXXX </span><br><span class="line">password = XXXX </span><br></pre></td></tr></table></figure></p>
+<p>从上面可知，既然<code>supervisorctl</code>提供的功能和<code>inet_http_server</code>的相同，那么是否可以不启动http服务器，仅仅通过<code>supervisorctl</code>进行观察呢?</p>
+<p>答案是可以的，但是要通过 unix socket 与 supervisord
+通信，将上面的<code>[inet_http_server]</code>部分改成<code>[unix_http_server]</code>，并修改<code>[supervisorctl]</code>的<code>serverurl</code>部分，完整的配置文件如下。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">[supervisord]</span><br><span class="line">logfile=/var/log/supervisor/supervisord.log  </span><br><span class="line">pidfile=/var/run/supervisord.pid  </span><br><span class="line"></span><br><span class="line">[program:robot] </span><br><span class="line">command = /usr/bin/xvfb-run python /home/amazon/v0/Robot.py</span><br><span class="line">autorestart=true </span><br><span class="line">stdout_logfile = /home/amazon/log/Robot.log </span><br><span class="line">stderr_logfile = /home/amazon/log/Robot_err.log </span><br><span class="line"></span><br><span class="line">[unix_http_server]</span><br><span class="line">file=/var/run/supervisor.sock   ; (the path to the socket file)</span><br><span class="line">username = XXXX</span><br><span class="line">password = XXXX</span><br><span class="line"></span><br><span class="line">[supervisorctl]</span><br><span class="line">serverurl = unix:///var/run/supervisor.sock</span><br><span class="line">username = XXXX </span><br><span class="line">password = XXXX </span><br></pre></td></tr></table></figure>
+<h2 id="使用">使用</h2>
+<p>综上，supervisor的一般的使用方法为如下：</p>
+<p>1）配置好需要启动的程序
+2）通过<code>supervisord -c /etc/supervisord.conf</code>启动supervisord
+3）通过<code>supervicorctl</code>和日志文件查看每个程序状态，通过<code>supervicorctl start|stop|restart XXX</code>在不影响其他程序的情况下改变某个程序的运行状态。</p>
+<p>更详细的内容请参考<a
+target="_blank" rel="noopener" href="http://supervisord.org/introduction.html">官方文档</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+              <a href="/tags/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/" rel="tag"># 工具使用</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2016/08/16/MySQL%E7%9A%84%E9%94%81%E6%9C%BA%E5%88%B6/" rel="prev" title="MySQL的锁机制">
+      <i class="fa fa-chevron-left"></i> MySQL的锁机制
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2016/09/01/python%20%E4%B8%AD%E6%98%9F%E5%8F%B7%E5%8F%82%E6%95%B0%E4%BC%A0%E9%80%92/" rel="next" title="python 中 * 与 ** 的参数传递">
+      python 中 * 与 ** 的参数传递 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE"><span class="nav-number">2.</span> <span class="nav-text">配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#supervisord"><span class="nav-number">2.1.</span> <span class="nav-text">supervisord</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#inet_http_server"><span class="nav-number">2.2.</span> <span class="nav-text">inet_http_server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#supervisorctl"><span class="nav-number">2.3.</span> <span class="nav-text">supervisorctl</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8"><span class="nav-number">3.</span> <span class="nav-text">使用</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">248</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.linkedin.com/in/wuliangchao/" title="LinkedIn → https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;wuliangchao&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i>LinkedIn</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

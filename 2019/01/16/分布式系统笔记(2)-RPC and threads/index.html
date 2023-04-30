@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="本系列文章是学习课程 6.824: Distributed Systems 时的一些学习笔记，整个课程的相关材料已整理至 DistributedSystemInGo。本文是 LEC2 的内容，主要介绍了 RPC 的概念并通过 RPC 实现了一个简单的 c&#x2F;s 架构的 kv 数据库；同时介绍了多线程编程并通过两种方式实现了一个多线程爬虫。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="分布式系统笔记(2)-RPC and threads">
+<meta property="og:url" content="https://wulc.me/2019/01/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E7%AC%94%E8%AE%B0(2)-RPC%20and%20threads/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="本系列文章是学习课程 6.824: Distributed Systems 时的一些学习笔记，整个课程的相关材料已整理至 DistributedSystemInGo。本文是 LEC2 的内容，主要介绍了 RPC 的概念并通过 RPC 实现了一个简单的 c&#x2F;s 架构的 kv 数据库；同时介绍了多线程编程并通过两种方式实现了一个多线程爬虫。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/image_1d1aklohvnmj16md1b1cbbtbs219.png">
+<meta property="article:published_time" content="2019-01-16T04:00:37.000Z">
+<meta property="article:modified_time" content="2023-04-30T05:12:49.057Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="go">
+<meta property="article:tag" content="分布式">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/image_1d1aklohvnmj16md1b1cbbtbs219.png">
+
+<link rel="canonical" href="https://wulc.me/2019/01/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E7%AC%94%E8%AE%B0(2)-RPC%20and%20threads/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>分布式系统笔记(2)-RPC and threads | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">吴良超的学习笔记</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2019/01/16/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E7%AC%94%E8%AE%B0(2)-RPC%20and%20threads/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          分布式系统笔记(2)-RPC and threads
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-01-16 12:00:37" itemprop="dateCreated datePublished" datetime="2019-01-16T12:00:37+08:00">2019-01-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-30 13:12:49" itemprop="dateModified" datetime="2023-04-30T13:12:49+08:00">2023-04-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">分布式</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本系列文章是学习课程 <a
+target="_blank" rel="noopener" href="https://pdos.csail.mit.edu/6.824/">6.824: Distributed Systems</a>
+时的一些学习笔记，整个课程的相关材料已整理至 <a
+target="_blank" rel="noopener" href="https://github.com/WuLC/DistributedSystemInGo">DistributedSystemInGo</a>。本文是
+LEC2 的内容，主要介绍了 RPC 的概念并通过 RPC 实现了一个简单的 c/s 架构的
+kv 数据库；同时介绍了多线程编程并通过两种方式实现了一个多线程爬虫。</p>
+<span id="more"></span>
+<p>这门课程采用的语言是 go，原因是 go 对 concurrency、RPC 和 gc
+等有较好的支持，且上手较快，可以把问题集中在分布式系统而不是由于对语言不熟悉而带来的
+bug。因此，上面提到的两个 demo 也是采用 go 实现。</p>
+<h2 id="rpc">RPC</h2>
+<h3 id="rpc-基本概念">RPC 基本概念</h3>
+<p>RPC(Remote Procedure Call)
+的概念很好理解，类比函数调用，只是两个函数不在一个内存空间，不能直接调用，需要通过网络进行远程调用。RPC
+的调用过程如下，图片摘自 <a
+target="_blank" rel="noopener" href="https://www.cs.rutgers.edu/~pxk/417/notes/03-rpc.html">Remote
+Procedure Calls</a></p>
+<figure>
+<img src="https://wulc.me/imgs/image_1d1aklohvnmj16md1b1cbbtbs219.png"
+alt="RPC" />
+<figcaption aria-hidden="true">RPC</figcaption>
+</figure>
+<p>需要明确的一点是 RPC
+只是一个概念，因此广义上任意实现远程调用的方法都可称为 RPC（如
+http），而<strong>区别于各个 RPC 的实现(RPC
+框架)在于其实现的协议的不同</strong>，而最基本的协议包含编码协议和传输协议。</p>
+<p>编码协议表明了该如何将要传递的参数等信息打包好；常见的有基于文本编码的
+xml、 json，也有二进制编码的 protobuf、binpack，也可自定义协议。</p>
+<p>而传输协议则表明如何将打包好的数据传输到远端；如著名的 <a
+target="_blank" rel="noopener" href="https://grpc.io/">gRPC</a> 使用的 http2 协议，也有如 <a
+target="_blank" rel="noopener" href="https://dubbo.incubator.apache.org/en-us/">dubbo</a>
+一类的自定义报文的tcp协议(精简了传输内容)等。</p>
+<p>类似于计算机网络中的各种协议一样，这些协议是比较繁琐的且通用的，因此产生了很多
+RPC
+框架来完成这些协议层面的东西，而除了上面提到的最基本的编码协议和传输协议，成熟的
+rpc 框架还会实现额外的策略,
+如<strong>服务注册发现、错误重试、服务升级的灰度策略，服务调用的负载均衡</strong>等。上面提到的
+gRPC 和 dubbo 就是两个比较有名的 RPC 框架，通过 RPC
+框架，在编码时能够像本地调用一样使用 RPC。</p>
+<p>对于一个 RPC 框架，实现中最关注以下三点 (1) <strong>Call
+ID映射</strong>：即告诉远程服务器要调用的是哪个函数或应用 (2)
+<strong>序列化和反序列化</strong>：即上面的编码协议 (3)
+<strong>网络传输</strong>：即上面的传输协议
+更详细的解析可参考这个回答，<a
+target="_blank" rel="noopener" href="https://www.zhihu.com/question/25536695/answer/221638079">谁能用通俗的语言解释一下什么是
+RPC 框架？ - 洪春涛的回答</a>，</p>
+<h3 id="rpc-in-go">RPC in go</h3>
+<p>go 提供了自己的 <a target="_blank" rel="noopener" href="https://golang.org/pkg/net/rpc/">rpc
+库</a>，这里通过这个库来实现一个简单的 c/s 架构的 kv 数据库</p>
+<p>server 端的核心代码如下，KV 这个 struct 提供了 Put 和 Get
+这两个存取方法，且存取时通过 <code>sysc.Mutex</code>
+进行加锁来保证一致性。通过 go 内置的 rpc 框架启动一个 server 且将 KV
+注册在 1234 端口，网络传输采用的是 tcp 协议；每当 server 与一个 client
+建立一个连接时，server 会启动一个线程(goroutine)
+去处理这个连接对应的请求</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> KV <span class="keyword">struct</span> &#123;</span><br><span class="line">	mu       sync.Mutex</span><br><span class="line">	keyvalue <span class="keyword">map</span>[<span class="type">string</span>]<span class="type">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(kv *KV)</span></span> Get(args *GetArgs, reply *GetReply) <span class="type">error</span> &#123;</span><br><span class="line">	kv.mu.Lock()</span><br><span class="line">	<span class="keyword">defer</span> kv.mu.Unlock()</span><br><span class="line"></span><br><span class="line">	reply.Err = <span class="string">&quot;OK&quot;</span></span><br><span class="line">	val, ok := kv.keyvalue[args.Key]</span><br><span class="line">	<span class="keyword">if</span> ok &#123;</span><br><span class="line">		reply.Err = OK</span><br><span class="line">		reply.Value = val</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		reply.Err = ErrNoKey</span><br><span class="line">		reply.Value = <span class="string">&quot;&quot;</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(kv *KV)</span></span> Put(args *PutArgs, reply *PutReply) <span class="type">error</span> &#123;</span><br><span class="line">	kv.mu.Lock()</span><br><span class="line">	<span class="keyword">defer</span> kv.mu.Unlock()</span><br><span class="line"></span><br><span class="line">	kv.keyvalue[args.Key] = args.Value</span><br><span class="line">	reply.Err = OK</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">server</span><span class="params">()</span></span> &#123;</span><br><span class="line">	kv := <span class="built_in">new</span>(KV)</span><br><span class="line">	kv.keyvalue = <span class="keyword">map</span>[<span class="type">string</span>]<span class="type">string</span>&#123;&#125;</span><br><span class="line">	rpcs := rpc.NewServer()</span><br><span class="line">	rpcs.Register(kv)</span><br><span class="line">	l, e := net.Listen(<span class="string">&quot;tcp&quot;</span>, <span class="string">&quot;ServerIP:1234&quot;</span>)</span><br><span class="line">	<span class="keyword">if</span> e != <span class="literal">nil</span> &#123;</span><br><span class="line">		log.Fatal(<span class="string">&quot;listen error:&quot;</span>, e)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		<span class="keyword">for</span> &#123;</span><br><span class="line">			conn, err := l.Accept()</span><br><span class="line">			<span class="keyword">if</span> err == <span class="literal">nil</span> &#123;</span><br><span class="line">				<span class="keyword">go</span> rpcs.ServeConn(conn)</span><br><span class="line">			&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">				<span class="keyword">break</span></span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		l.Close()</span><br><span class="line">		fmt.Printf(<span class="string">&quot;Server done\n&quot;</span>)</span><br><span class="line">	&#125;()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>client 端的程序如下，client 首先通过 Dial 函数 与 server
+建立连接，Get 和 Put 则分别调用了 server 端对应的 Get 函数和 Put
+函数（在 rpc.Call 中声明), 可以看到，进行 RPC 就如同本地调用一样
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Dial</span><span class="params">()</span></span> *rpc.Client &#123;</span><br><span class="line">	client, err := rpc.Dial(<span class="string">&quot;tcp&quot;</span>, <span class="string">&quot;ServerIP:1234&quot;</span>)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		log.Fatal(<span class="string">&quot;dialing:&quot;</span>, err)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> client</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Get</span><span class="params">(key <span class="type">string</span>)</span></span> <span class="type">string</span> &#123;</span><br><span class="line">	client := Dial()</span><br><span class="line">	args := &amp;GetArgs&#123;<span class="string">&quot;subject&quot;</span>&#125;</span><br><span class="line">	reply := GetReply&#123;<span class="string">&quot;&quot;</span>, <span class="string">&quot;&quot;</span>&#125;</span><br><span class="line">	err := client.Call(<span class="string">&quot;KV.Get&quot;</span>, args, &amp;reply)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		log.Fatal(<span class="string">&quot;error:&quot;</span>, err)</span><br><span class="line">	&#125;</span><br><span class="line">	client.Close()</span><br><span class="line">	<span class="keyword">return</span> reply.Value</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Put</span><span class="params">(key <span class="type">string</span>, val <span class="type">string</span>)</span></span> &#123;</span><br><span class="line">	client := Dial()</span><br><span class="line">	args := &amp;PutArgs&#123;<span class="string">&quot;subject&quot;</span>, <span class="string">&quot;6.824&quot;</span>&#125;</span><br><span class="line">	reply := PutReply&#123;<span class="string">&quot;&quot;</span>&#125;</span><br><span class="line">	err := client.Call(<span class="string">&quot;KV.Put&quot;</span>, args, &amp;reply)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">log.Fatal(<span class="string">&quot;error:&quot;</span>, err)</span><br><span class="line">	&#125;</span><br><span class="line">	client.Close()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>完整的代码可参考<a
+target="_blank" rel="noopener" href="https://github.com/WuLC/DistributedSystemInGo/blob/master/src/LECTURE02/kv.go?1547621819033">这里</a></p>
+<h3 id="failure-in-rpc">failure in RPC</h3>
+<p>上面只是一个简单的 RPC
+例子，没有考虑到这个过程中可能出现的异常情况。而最常见的异常个情况就是
+client 发出 request 后收到不 server 的
+response，引起这种问题的原因有很多：网络断了、server
+宕机了等。针对这个问题有什么解决方法呢？</p>
+<p>最直观也是最简单的方法是让 client 等待一段时间收不到回复后的重新发送
+request，且设置重复发送的次数的上限，如果超过这个上限，则先调用的应用程序返回
+error 异常信息。</p>
+<p>但是，当 client 重复发送请求时，server 有可能已经收到了 client
+的前一个请求，只是网络的延迟使得 client 还没收到 response，那这时候
+server 就会收到重复的 request。如果 client
+发出的是读请求，那么问题不大；但是如果是写操作，server
+端就需要处理这些重复的写请求从而使得最终只有一个被执行。</p>
+<p>这里可针对 server 端采取 <strong>at most once</strong>
+的策略，即同一个 request 最多只能在 server
+端被执行一次，如果收到了重复的
+request，那么就将之前的结果返回。这样需要解决的问题就是为每个 request
+生成一个 unique id，生成 unique id 也有很多方法，比如说可以利用 client
+的 ID 及其 request 编号的组合等方法。</p>
+<p>go 的 RPC 库采用的就是 at most once
+的策略，库已经在传输层进行了过滤重复 request
+的操作，因此在代码中无需体现这一操作。</p>
+<h2 id="threads">threads</h2>
+<p>多线程是 concurrency 的重要手段，在 golang 中的 thread 也被称为
+goroutine，一般多线程都能够充分利用 CPU 的多个核(Python 的 Cpython
+解析器除外，GIL 的限制)</p>
+<p>进行多线程编程时有以下几点值得注意：</p>
+<p>（1）同一个进程内的线程是共享地址空间的，因此在<strong>对共享数据进行写操作时需要加锁</strong>
+（2）当任务间有依赖性，一项任务拆分给多个线程去完成时，线程间往往需要先共完成任务
+A 才能开始任务 B
+（3）要确定线程并行的粒度，比如说多线程爬虫，每个线程是负责一个站点？还是站点下的一个目录？一般粗粒度的实现会很简单，但是并行性不高；而细粒度的并行化程度会更高，但是会更容易出现死锁等问题。</p>
+<p>下面会通过 golang
+实现一个多线程爬虫，分别采用了两种方式，第一种是通过经典的队列方法（<code>channel</code>)，这种防范没有加锁；第二种则通过加锁(<code>mutex</code>)和设定任务完成的
+threshold(<code>waitgroup</code>)；在这个例子中两种方式的并行化粒度均是网页</p>
+<h3 id="channel">channel</h3>
+<p>队列是很常见的多线程编程采用的方式，将需要执行的任务送入队列，然后线程从队列中取出任务执行，并将新的任务入列(在这个例子中就是当前网页所含有的其他网页的链接)，这里还需要额外检查网页是否已经被抓取过原因有两个</p>
+<p>（1）网页间的指向有可能形成闭环，不判断会导致死循环
+（2）效率问题，不希望执行重复工作</p>
+<p>因此，golang 通过 channel 完成的多线程爬虫如下所示, master
+从队列头读出一个网页并判断其是否已经被执行，如果没有执行，就启动一个
+goroutine 来执行 dofetch 任务，dofetch
+会将其当前网页所指向的其他网页入列</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">dofetch</span><span class="params">(url1 <span class="type">string</span>, ch <span class="keyword">chan</span> []<span class="type">string</span>, fetcher Fetcher)</span></span> &#123;</span><br><span class="line">    <span class="comment">// body is content of url1, urls are those to which url1 refer</span></span><br><span class="line">	body, urls, err := fetcher.Fetch(url1)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(err)</span><br><span class="line">		ch &lt;- []<span class="type">string</span>&#123;&#125;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		fmt.Printf(<span class="string">&quot;found: %s %q\n&quot;</span>, url1, body)</span><br><span class="line">		ch &lt;- urls</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">master</span><span class="params">(ch <span class="keyword">chan</span> []<span class="type">string</span>, fetcher Fetcher)</span></span> &#123;</span><br><span class="line">	n := <span class="number">1</span></span><br><span class="line">	fetched := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="type">string</span>]<span class="type">bool</span>)</span><br><span class="line">	<span class="keyword">for</span> urls := <span class="keyword">range</span> ch &#123;</span><br><span class="line">		<span class="keyword">for</span> _, u := <span class="keyword">range</span> urls &#123;</span><br><span class="line">			<span class="keyword">if</span> _, ok := fetched[u]; ok == <span class="literal">false</span> &#123;</span><br><span class="line">				fetched[u] = <span class="literal">true</span></span><br><span class="line">				n += <span class="number">1</span></span><br><span class="line">				<span class="keyword">go</span> dofetch(u, ch, fetcher)</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		n -= <span class="number">1</span></span><br><span class="line">		<span class="keyword">if</span> n == <span class="number">0</span> &#123;</span><br><span class="line">			<span class="keyword">break</span> <span class="comment">// or close(ch)</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">CrawlConcurrentChannel</span><span class="params">(url <span class="type">string</span>, fetcher Fetcher)</span></span> &#123;</span><br><span class="line">	ch := <span class="built_in">make</span>(<span class="keyword">chan</span> []<span class="type">string</span>)</span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		ch &lt;- []<span class="type">string</span>&#123;url&#125;</span><br><span class="line">	&#125;()</span><br><span class="line">	master(ch, fetcher)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>那终止的条件是什么呢？队列为空, 但是在 golang 中没有显示判断 channel
+为空的方法，且<strong>通过 for 遍历 channel 时，只有关闭了 channel
+后循环才能正常退出</strong>，否则会出现 deadlock
+的错误，但是显然无法随意关闭 channel，因为每一个 goroutine
+都不知道是否还有其他的 goroutine 要写入这个
+channel；上面的解决方法是通过 n 来记录当前队列的长度，如果 n == 0 就关闭
+channel 或退出</p>
+<h3 id="mutex-与-waitgroup">mutex 与 waitgroup</h3>
+<p>上面只是在 master 中判断某个 url
+是否已经被访问过了，那么<strong>每个独立的 goroutine 能否自行判断某个
+url 是否别访问过了呢？答案是肯定的，只是需要对存储 url 是否被访问的
+hashmap 进行加锁</strong>，在 golang 中可通过 <code>sys.Mutex</code>
+对某个数据进行加锁和解锁操作</p>
+<p>同样，我们需要设定终止条件。该如何衡量所有任务都完成，这里我们可以<strong>想像一颗多叉树的结构，每个节点表示一个网页，而每个节点的子节点是其网页中指向的其他网页，那么一个节点被判为完成当且仅当其所有的子节点都完成</strong>，这就涉及到了上面提到的任务间的依赖性问题，实际上就是要等待
+goroutines 共同完成当前节点的所有子节点，这要用到
+<code>sys.Waitgroup</code> 实现的具体代码如下</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> fetchState <span class="keyword">struct</span> &#123;</span><br><span class="line">	mu      sync.Mutex</span><br><span class="line">	fetched <span class="keyword">map</span>[<span class="type">string</span>]<span class="type">bool</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(f *fetchState)</span></span> CheckAndMark(url <span class="type">string</span>) <span class="type">bool</span> &#123;</span><br><span class="line">	<span class="keyword">defer</span> f.mu.Unlock()</span><br><span class="line"></span><br><span class="line">	f.mu.Lock()</span><br><span class="line">	<span class="keyword">if</span> f.fetched[url] &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">	&#125;</span><br><span class="line">	f.fetched[url] = <span class="literal">true</span></span><br><span class="line">	<span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">mkFetchState</span><span class="params">()</span></span> *fetchState &#123;</span><br><span class="line">	f := &amp;fetchState&#123;&#125;</span><br><span class="line">	f.fetched = <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="type">string</span>]<span class="type">bool</span>)</span><br><span class="line">	<span class="keyword">return</span> f</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">CrawlConcurrentMutex</span><span class="params">(url <span class="type">string</span>, fetcher Fetcher, f *fetchState)</span></span> &#123;</span><br><span class="line">	<span class="keyword">if</span> f.CheckAndMark(url) &#123;</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	body, urls, err := fetcher.Fetch(url)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(err)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	fmt.Printf(<span class="string">&quot;found: %s %q\n&quot;</span>, url, body)</span><br><span class="line">	<span class="keyword">var</span> done sync.WaitGroup</span><br><span class="line">	<span class="keyword">for</span> _, u := <span class="keyword">range</span> urls &#123;</span><br><span class="line">		done.Add(<span class="number">1</span>)</span><br><span class="line">		<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">(u <span class="type">string</span>)</span></span> &#123;</span><br><span class="line">			<span class="keyword">defer</span> done.Done()</span><br><span class="line">			CrawlConcurrentMutex(u, fetcher, f)</span><br><span class="line">		&#125;(u) <span class="comment">// Without the u argument there is a race</span></span><br><span class="line">	&#125;</span><br><span class="line">	done.Wait()</span><br><span class="line">	<span class="keyword">return</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面可以说是 <code>sync.WaitGroup</code>
+的经典用法，在为每个线程分配任务时通过 <code>done.Add(1)</code>
+增加未完成任务， 在线程完成任务时通过 <code>done.Done()</code>
+表示当前子任务已完成, 通过 <code>done.Wait()</code>
+阻塞直到所有的子任务都完成。</p>
+<h2 id="小结">小结</h2>
+<p>这一课介绍了 RPC 和多线程编程的基本概念，并分别用 go
+语言实现了一个简单的例子，主要是为后面的几个实验做准备。</p>
+<p>RPC 是个广义的概念，RPC
+需要解决最基本的通信协议和编码协议；除此之外，一些高级的 RPC
+框架还帮我们处理了、服务注册发现、错误重试等细节，让远程调用如同本地调用一样。</p>
+<p>关于多线程编程，给出的爬虫例子实现了两种形式的多线程编程，一种是
+Mutex + WaitGroup 的方式，一种则是 Channel
+的方式；需要注意的是，这两种方式不是非此即彼，而是可以混用的，可以参考
+<a
+target="_blank" rel="noopener" href="https://github.com/golang/go/wiki/MutexOrChannel">MutexOrChannel</a>
+的介绍，比如说通过 Mutex 来让每个单独的线程判断某个 url
+是否被访问过，通过 Channel 来将未完成的队列入列，通过 WaitGroup
+来分类下载资源（其实这也涉及到了并行的粒度的划分，即并行地下载某一类的资源）。回想起来，很久之前写的一个爬取几个输入法的词库的程序
+<a target="_blank" rel="noopener" href="https://github.com/WuLC/ThesaurusSpider">ThesaurusSpider</a>
+就是这么做的，只是通过 python 实现而已，有兴趣可参考。</p>
+<hr />
+<p>参考：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/41609070">既然有 HTTP
+请求，为什么还要用 RPC 调用？</a></li>
+<li><a
+target="_blank" rel="noopener" href="https://www.zhihu.com/question/25536695">谁能用通俗的语言解释一下什么是
+RPC 框架？</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/go/" rel="tag"># go</a>
+              <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" rel="tag"># 分布式</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/01/14/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E7%AC%94%E8%AE%B0(1)-MapReduce/" rel="prev" title="分布式系统笔记(1)-MapReduce">
+      <i class="fa fa-chevron-left"></i> 分布式系统笔记(1)-MapReduce
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/01/20/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E7%AC%94%E8%AE%B0(3)-GFS/" rel="next" title="分布式系统笔记(3)-GFS">
+      分布式系统笔记(3)-GFS <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#rpc"><span class="nav-number">1.</span> <span class="nav-text">RPC</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#rpc-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">1.1.</span> <span class="nav-text">RPC 基本概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rpc-in-go"><span class="nav-number">1.2.</span> <span class="nav-text">RPC in go</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#failure-in-rpc"><span class="nav-number">1.3.</span> <span class="nav-text">failure in RPC</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#threads"><span class="nav-number">2.</span> <span class="nav-text">threads</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#channel"><span class="nav-number">2.1.</span> <span class="nav-text">channel</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mutex-%E4%B8%8E-waitgroup"><span class="nav-number">2.2.</span> <span class="nav-text">mutex 与 waitgroup</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">3.</span> <span class="nav-text">小结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">248</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.linkedin.com/in/wuliangchao/" title="LinkedIn → https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;wuliangchao&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i>LinkedIn</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

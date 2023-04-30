@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="可执行程序的类型 Linux系统上有两类不同的Linux可执行程序。  第一类是静态链接的可执行程序。静态可执行程序包含执行所需的所有函数 — 换句话说，它们是“完整的”。因为这一原因，静态可执行程序不依赖任何外部库就可以运行。 第二类是动态链接的可执行程序。动态可执行程序是&quot;不完整&quot;的程序，它依靠外部共享库来提供运行所需的许多函数。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="&#x2F;etc&#x2F;ld.so.conf文件详解">
+<meta property="og:url" content="https://wulc.me/2015/11/21/etc-ld-so-conf%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="可执行程序的类型 Linux系统上有两类不同的Linux可执行程序。  第一类是静态链接的可执行程序。静态可执行程序包含执行所需的所有函数 — 换句话说，它们是“完整的”。因为这一原因，静态可执行程序不依赖任何外部库就可以运行。 第二类是动态链接的可执行程序。动态可执行程序是&quot;不完整&quot;的程序，它依靠外部共享库来提供运行所需的许多函数。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2015-11-21T11:59:40.000Z">
+<meta property="article:modified_time" content="2023-04-30T05:12:49.077Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://wulc.me/2015/11/21/etc-ld-so-conf%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>/etc/ld.so.conf文件详解 | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">吴良超的学习笔记</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2015/11/21/etc-ld-so-conf%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          /etc/ld.so.conf文件详解
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2015-11-21 19:59:40" itemprop="dateCreated datePublished" datetime="2015-11-21T19:59:40+08:00">2015-11-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-30 13:12:49" itemprop="dateModified" datetime="2023-04-30T13:12:49+08:00">2023-04-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="可执行程序的类型"><strong>可执行程序的类型</strong></h2>
+<p>Linux系统上有两类不同的Linux可执行程序。</p>
+<ul>
+<li><p>第一类是<strong>静态链接的可执行程序</strong>。静态可执行程序包含执行所需的所有函数
+—
+换句话说，它们是“完整的”。因为这一原因，静态可执行程序不依赖任何外部库就可以运行。</p></li>
+<li><p>第二类是<strong>动态链接的可执行程序</strong>。动态可执行程序是"不完整"的程序，它依靠外部共享库来提供运行所需的许多函数。
+　　 <span id="more"></span></p></li>
+</ul>
+<h2
+id="静态可执行程序与动态可执行程序比较"><strong>静态可执行程序与动态可执行程序比较</strong></h2>
+<p>我们可以<strong>用 ldd
+命令来确定某一特定可执行程序是否为静态链接</strong>的：</p>
+<pre><code>#ldd /sbin/sln
+not a dynamic executable</code></pre>
+<p>“not a dynamic executable”是 ldd 说明 sln
+是静态链接的一种方式。现在，让我们比较 sln 与其非静态同类 ln
+的大小：</p>
+<pre><code># ls -l /bin/ln /sbin/sln
+　　-rwxr-xr-x    1 root     root        23000 Jan 14 00:36 /bin/ln
+　　-rwxr-xr-x    1 root     root       381072 Jan 14 00:31 /sbin/sln</code></pre>
+<p>sln 的大小超过 ln 十倍。ln比sln小这么多是因为它是动态可执行程序.</p>
+<h2 id="动态链接相关性"><strong>动态链接相关性</strong></h2>
+<p><strong>查看 ln 依赖的所有共享库的列表，可以使用 ldd 命令</strong>：
+　　</p>
+<pre><code># ldd /bin/ln
+　libc.so.6 =&gt; /lib/libc.so.6 (0x40021000)
+　/lib/ld-linux.so.2 =&gt; /lib/ld-linux.so.2 (0x40000000)</code></pre>
+<p>可见，ln
+依赖外部共享库libc.so.6和ld-linux.so.2。通常，动态链接的程序比其静态链接的等价程序小得多。不过，静态链接的程序可以在某些低级维护任务中发挥作用。例如，sln
+是修改位于 /lib中的不同库符号链接的极佳工具。但通常您会发现几乎所有
+Linux 系统上的可执行程序都是某种动态链接的变体。 　　 ##
+<strong>动态装入器</strong></p>
+<p>那么，如果动态可执行程序不包含运行所需的所有函数，Linux
+的哪部分负责将这些程序和所有必需的共享库一起装入，以使它们能正确执行呢？答案是<strong>动态装入器（dynamic
+loader），它实际上是在 ln 的ldd 清单中看到的作为共享库相关性列出的
+ld-linux.so.2
+库。</strong>动态装入器负责装入动态链接的可执行程序运行所需的共享库。那么，<strong>动态装入器如何在系统上找到适当的共享库？</strong></p>
+<p>动态装入器找到共享库要依靠两个文件
+<code>/etc/ld.so.conf 和 /etc/ld.so.cache</code></p>
+<h3 id="etcld.so.conf文件"><strong>/etc/ld.so.conf文件</strong></h3>
+<p>文件进行cat操作，您可能会看到一个与下面类似的清单：</p>
+<pre><code>  $ cat /etc/ld.so.conf
+　　/usr/X11R6/lib
+　　/usr/lib/gcc-lib/i686-pc-linux-gnu/2.95.3
+　　/usr/lib/mozilla
+　　/usr/lib/qt-x11-2.3.1/lib
+　　/usr/local/lib</code></pre>
+<p>ld.so.conf 文件包含一个所有目录（/lib 和 /usr/lib
+除外，它们会自动包含在其中）的清单，动态装入器将在其中查找共享库。 ###
+<strong>/etc/ld.so.cache文件</strong></p>
+<p>在动态装入器能“看到”<code>/etc/ld.so.conf</code>里面的信息之前，必须将它转换到
+<code>ld.so.cache</code>文件中。可以通过运行 <code>ldconfig</code>
+命令做到这一点：</p>
+<pre><code># ldconfig</code></pre>
+<p>当 ldconfig 操作结束时，您会有一个最新的
+<code>/etc/ld.so.cache</code> 文件，它反映对
+<code>/etc/ld.so.conf</code>
+所做的更改。从这一刻起，动态装入器在寻找共享库时会查看在
+<code>/etc/ld.so.conf</code> 中指定的所有新目录。 　　 ###
+<strong>ldconfig 技巧</strong> 　　 要查看 ldconfig
+可以“看到”的所有共享库，可以输入：</p>
+<pre><code># ldconfig -p | less</code></pre>
+<p>还有另一个方便的技巧可以用来配置共享库路径。有时候希望告诉动态装入器在尝试任何
+<code>/etc/ld.so.conf</code>
+路径以前先尝试使用特定目录中的共享库。在运行的较旧的应用程序不能与当前安装的库版本一起工作的情况下，可以通过<code>LD_LIBRARY_PATH</code>这个环境变量来实现，计入需要指示动态装入器首先检查某个目录，需要将
+LD_LIBRARY_PATH
+变量设置成希望搜索的目录。多个路径之间用冒号分隔；例如：</p>
+<pre><code># export LD_LIBRARY_PATH=&quot;/usr/lib/old:/opt/lib&quot;</code></pre>
+<p>执行上面命令后，所有从当前shell启动的动态链接可执行程序都将使用
+<code>/usr/lib/old</code> 或 <code>/opt/lib</code>
+中的库，如果仍不能满足一些共享库相关性要求，则转回到
+<code>/etc/ld.so.conf</code> 中指定的库。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2015/11/21/Linux%20shell%E4%B8%8B%E5%88%A0%E9%99%A4%E6%96%87%E4%BB%B6%E5%90%8D%E4%B9%B1%E7%A0%81%E6%96%87%E4%BB%B6/" rel="prev" title="Linux shell下删除文件名乱码文件">
+      <i class="fa fa-chevron-left"></i> Linux shell下删除文件名乱码文件
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2015/11/21/Linux%E4%B8%8B%E7%9A%84%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/" rel="next" title="Linux下的环境变量">
+      Linux下的环境变量 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AF%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.</span> <span class="nav-text">可执行程序的类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%99%E6%80%81%E5%8F%AF%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F%E4%B8%8E%E5%8A%A8%E6%80%81%E5%8F%AF%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F%E6%AF%94%E8%BE%83"><span class="nav-number">2.</span> <span class="nav-text">静态可执行程序与动态可执行程序比较</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E9%93%BE%E6%8E%A5%E7%9B%B8%E5%85%B3%E6%80%A7"><span class="nav-number">3.</span> <span class="nav-text">动态链接相关性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#etcld.so.conf%E6%96%87%E4%BB%B6"><span class="nav-number">3.1.</span> <span class="nav-text">&#x2F;etc&#x2F;ld.so.conf文件</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">248</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.linkedin.com/in/wuliangchao/" title="LinkedIn → https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;wuliangchao&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i>LinkedIn</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

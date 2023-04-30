@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="机器学习本质上是在学习数据的分布, 其有效性的假设是模型 training 和 serving 时的数据是独立同分布(Independent and Identically Distributed, IID) 的，但是在实际应用中，由于采样有偏、具体场景等约束， training 的样本与 serving 时的样本并不是 IID 的。在广告场景下，最典型的就是训练 cvr 模型时，训练样本都是 p">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Exposure Bias In Machine Learning">
+<meta property="og:url" content="https://wulc.me/2021/04/03/Exposure%20Bias%20In%20Machine%20Learning/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="机器学习本质上是在学习数据的分布, 其有效性的假设是模型 training 和 serving 时的数据是独立同分布(Independent and Identically Distributed, IID) 的，但是在实际应用中，由于采样有偏、具体场景等约束， training 的样本与 serving 时的样本并不是 IID 的。在广告场景下，最典型的就是训练 cvr 模型时，训练样本都是 p">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/BiasInML.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/BiasTableInML.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/ESMM_Model.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/ESMM_EXP.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/ESAMOverview.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/ESAM_L_DA.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/ESAM_Loss1.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/ESAM_Loss2.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/EntropyRegularization.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/ESAM_loss3.jpg">
+<meta property="article:published_time" content="2021-04-03T13:37:39.000Z">
+<meta property="article:modified_time" content="2023-04-30T05:12:49.033Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="计算广告">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/BiasInML.jpg">
+
+<link rel="canonical" href="https://wulc.me/2021/04/03/Exposure%20Bias%20In%20Machine%20Learning/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Exposure Bias In Machine Learning | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">吴良超的学习笔记</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2021/04/03/Exposure%20Bias%20In%20Machine%20Learning/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Exposure Bias In Machine Learning
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-04-03 21:37:39" itemprop="dateCreated datePublished" datetime="2021-04-03T21:37:39+08:00">2021-04-03</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-30 13:12:49" itemprop="dateModified" datetime="2023-04-30T13:12:49+08:00">2023-04-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>机器学习本质上是在学习数据的分布, 其有效性的假设是模型 training 和
+serving 时的数据是独立同分布(Independent and Identically Distributed,
+IID) 的，但是在实际应用中，由于采样有偏、具体场景等约束， training
+的样本与 serving 时的样本并不是 IID 的。在广告场景下，最典型的就是训练
+cvr 模型时，训练样本都是 post clicked 的，但是 serving 时，cvr
+模型面临的是所有被召回的样本；这类问题也被称为 exposure bias 或 sample
+selection bias，除了 exposure bias，position bias 等也是常见的
+bias。</p>
+<p>本文首先会简单介绍一些机器学习中的常见 bias，并着重介绍上面提到的
+exposure bias(也叫 sample selection bias) 的在当前的一些解决思路,
+笔者将其总结为 Data Augmentation、IPS 和 Domain Adaption
+三大类方法。</p>
+<span id="more"></span>
+<h2 id="bias-in-recommender-system">Bias In Recommender System</h2>
+<p>除了本文要重点介绍的 exposure bias，这篇综述 <a
+target="_blank" rel="noopener" href="https://arxiv.org/abs/2010.03240">Bias and Debias in Recommender
+System: A Survey and Future Directions</a>
+描述了当前的推荐系统中存在的若干种 bias，paper 将当前的推荐系统划分为
+User、Data、Model 三个大模块，并将各个模块的 iteraction 导致的 7 种 bias
+归纳成下图</p>
+<figure>
+<img src="https://wulc.me/imgs/BiasInML.jpg" alt="Bias in ML" />
+<figcaption aria-hidden="true">Bias in ML</figcaption>
+</figure>
+<ul>
+<li>User-&gt;Data: 产生训练数据的过程，也是 Bias 的最主要来源
+<ul>
+<li>Position Bias(implicit)：用户更倾向于和位置靠前的物品进行交互</li>
+<li>Exposure/Observation
+Bias(implicit)：带标签的数据都是曝光过的，未曝光的数据无法确定其标签</li>
+<li>Selection
+Bias(explicit)：用户倾向于给自己喜欢或者不喜欢的物品进行打分(导致
+exposure bias 的一个重要原因，不少 paper 将这个 bias 也当做 exposure
+bias)</li>
+<li>Conformity
+Bias(explicit)：用户打分的分数倾向于和群体观点保持一致</li>
+</ul></li>
+<li>Data-&gt;Model: 利用数据训练出模型的过程
+<ul>
+<li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Inductive_bias">Inductive
+Bias</a>: 指的是模型为了泛化性而做出的一些 assumption，如 Occam's
+razor，SVM 假设线性可分的 assumption 等，这个 bias
+没有带来显示的缺陷</li>
+</ul></li>
+<li>Model-&gt;User Interaction: 指的是模型预估的过程
+<ul>
+<li>Popularity
+Bias：指的是长尾效应，热门物品会得到更高的曝光概率，因为模型会更倾向于推荐这些物品（unbalanced
+training data 引起）</li>
+<li>Unfairness: 一些预估结果带有性别歧视、种族歧视等（unbalanced
+training data 引起</li>
+</ul></li>
+</ul>
+<p>上面的各种 bias 的起因、影响以及一些解决思路可归纳为下表</p>
+<figure>
+<img src="https://wulc.me/imgs/BiasTableInML.jpg"
+alt="Bias details Table" />
+<figcaption aria-hidden="true">Bias details Table</figcaption>
+</figure>
+<p>可以看到，上面这些 bias 并不是孤立的，而是相互影响和恶化的，其中
+position bias 和 exposure bias
+又是最为常见且相关研究较多的一个领域，下面主要详细描述一些应对 exposure
+bias 的方法，值得注意的是，这里的 selection bias 跟 exposure bias
+面临的问题是一致的，因此这里的方法也会一并归纳； bias
+相应的方法可以参考上面的 paper。</p>
+<h2 id="solutions-to-exposure-bias">Solutions to Exposure Bias</h2>
+<p>exposure bias 也被称为 Sample Selection Bias(SSB), 本质上是一个
+<strong>training 和 serving
+不一致的问题</strong>。这个问题往往是由于具体业务场景的限制，导致
+training data 中的样本只是其 serving
+时的很小一部分，因为其他的样本没被曝光/点击，导致了无法得到其
+label。</p>
+<p>如文章开头提到的 cvr
+模型，对于那些不被点击的样本是无法得知其是否被转化的；同样地，在 ctr
+模型中，那些没有曝光机会的样本是无法得知其是否被点击的了；但是在 serving
+阶段，ctr/cvr
+模型面对的是所有的样本，而其中有很多是从未曝光过的，因此便导致了一个
+training 与 serving 不一致的问题。</p>
+<p>针对这个问题，当前有以下几种解决思路(不限于上面综述的 paper)</p>
+<ol type="1">
+<li><strong>Data
+Augmentation</strong>：这个是最朴素的想法，就是尽可能将那些没进入训练数据集的样本利用上，因此不少研究也是给
+unobserved/unclicked 的样本打上一个<strong>相对准确的
+label</strong>；而这里面也主要分为下面三类方法</li>
+</ol>
+<ul>
+<li>最粗暴的是把所有未曝光的样本当做 negative
+sample，然后基于不同策略给这些样本不同的权重</li>
+<li>训练一个 imputation model，然后通过 imputation model
+来预估未曝光样本的 label</li>
+<li>通过 multitask 的方式建模，训练使用前一转化目标的全量样本(ESMM)</li>
+</ul>
+<ol start="2" type="1">
+<li><p><strong>IPS(Inverse Propensity Score)</strong>:
+这个方法的假设是样本被<strong>曝光或点击服一个伯努利分布</strong>，然后从概率论推导出：只要给每个曝光的样本加权(权重即为
+inverse propensity
+score)，最终在曝光的样本上求得的期望等于在全量样本上的期望；实际上，这个方法的思想就是
+<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Importance_sampling">importance
+sampling</a></p></li>
+<li><p><strong>Domain Adaption</strong>: 类似 transfer learning
+的思想，将曝光/点击的样本视为 source domain，全部样本视为 target
+domain；通过 domain adaption 的一些方法去进行 debias</p></li>
+</ol>
+<h3 id="data-augmentation">Data Augmentation</h3>
+<p>上面提到了，最朴素的想法是将那些未被观测到的样本利用上，而这里面又可分为三大类方法：all
+nagative with confidence、imputation model 和 multitask learning</p>
+<h4 id="all-nagative-with-confidence">all nagative with confidence</h4>
+<p>第一类方法是将所有未被观测到的样本都当做负样本，而这里的核心是如何给每个样本一个合理的
+confidence，其实就是样本的加权，上面提到的综述中介绍了三种方法，分别是
+<strong>Heuristic、Sampling、Exposure-based model</strong></p>
+<ul>
+<li><p>Heuristic 尝试将 user activity level、user preference、item
+popularity、user-item feature similarity 等作为 (user, item) pair 的
+confidence,
+其思想都是认为用户活跃度越高、商品越热门、用户-商品匹配度越高，该样本的可信度(confidence)
+越高；但是这种方法往往可行性不够高，因为这个 confidence
+实际的值是比较难获取的，其量纲以及需要对庞大的数据集都生成这个
+confidence，难度是很大的。</p></li>
+<li><p>Sampling：TODO</p></li>
+<li><p>Exposure-based mode：TODO</p></li>
+</ul>
+<h4 id="imputation-model">imputation model</h4>
+<p>第二种方法也很直观，就是训练一个 imputation model
+为那些未曝光/点击的样本打上标签，然后基于这些 imputed label
+来训练模型；而 imputation model 可单独训练，也与目标的模型做 joint
+training；这个方法的弊端也很明显，就是生成的 imputed label 缺少绝对的
+ground truth 来衡量其效果，实际上，这个是所有直接为样本生成 label
+的方法的弊端。</p>
+<h4 id="multitask-learning">multitask learning</h4>
+<p>第三种方法是基于 multitask
+的方法，主要思想就是<strong>同时建模当前的任务及其更浅一层的任务，进而间接利用那些没被曝光/点击的数据</strong>；其中为人熟知的是阿里在
+2018 年发表的 ESMM, <a
+target="_blank" rel="noopener" href="https://arxiv.org/pdf/1804.07931.pdf">Entire Space Multi-Task
+Model: An Eﬀective Approach for Estimating Post-Click Conversion
+Rate</a>，这篇 paper 主要针对的是 cvr 模型中缺少未点击的样本带来的
+bias，增加了两个 auxiliary task(CTR 和 CTCVR)
+来缓解这个问题，总体的模型结构如下图所示</p>
+<figure>
+<img src="https://wulc.me/imgs/ESMM_Model.jpg" alt="ESMM" />
+<figcaption aria-hidden="true">ESMM</figcaption>
+</figure>
+<p>训练的 loss function 如下所示(<span class="math inline">\(y\)</span>
+表示点击事件，<span class="math inline">\(z\)</span> 表示转化事件)</p>
+<p><span class="math display">\[\begin{align}
+L(\theta_{ctr},\theta_{cvr}) &amp;=
+\sum_{i=1}^{N}l(y_i,f(x_i;\theta_{ctr})) \notag \\\
+&amp;+\sum_{i=1}^{N}l(y_i\&amp;
+z_i,f(x_i;\theta_{ctr})×f(x_i;\theta_{cvr})) \notag
+\end{align}\]</span></p>
+<p>可以将模型利用的样本视为 (show, click, convert) pair 对，则相比传统
+cvr 模型，ESMM
+能够利用那些曝光未点击的样本(即下表中最后一列，0/1表示对应的中间链路事件是否发生)</p>
+<table>
+<thead>
+<tr class="header">
+<th>show</th>
+<th>click</th>
+<th>convert</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>在预估时，通过如下条件概率公式，能够从统计意义上保证 cvr
+的值是无偏的</p>
+<p><span class="math display">\[p(z=1|y=1,x) =
+\frac{p(y=1,z=1|x)}{p(y=1|x)}\]</span></p>
+<p>实验效果如下，各种方法的具体含义如下</p>
+<figure>
+<img src="https://wulc.me/imgs/ESMM_EXP.jpg" alt="ESMM 效果对比" />
+<figcaption aria-hidden="true">ESMM 效果对比</figcaption>
+</figure>
+<ul>
+<li>BASE: 普通建模 CVR 模型</li>
+<li>AMAN: 对负样本做 negative sampling</li>
+<li>OVERSAMPLING: 对正样本做 over sampling</li>
+<li>UNBIAS: 参考 <a target="_blank" rel="noopener" href="http://wnzhang.net/papers/unbias-kdd.pdf">这篇
+paper</a> 将 pCTR 当做 rejection probability</li>
+<li>DIVISION: 分别建模 pCTR 和 pCTCVR，然后利用上面的公式计算 pCVR</li>
+<li>ESMM-NS: 不 share bottom 的 ESMM</li>
+<li>ESMM: share bottom 的 ESMM</li>
+</ul>
+<h3 id="ipsinverse-propensity-score">IPS(Inverse Propensity Score)</h3>
+<p>Inverse Propensity Score 的做法是为每个有 label 的样本预估一个
+propensity score(倾向性得分)，其含义直观来说就是样本进入训练集(被标记
+label)的概率，如对于 CTR 模型，propensity 就是曝光的概率，对于 CVR
+模型，propensity 就是点击的概率</p>
+<p>IPS 实际上借鉴了 Importance Sampling
+的思想，通过给每个样本一个概率值作为权重，从统计学上证明了基于观测到的数据求得的期望与全量数据的期望是一致，其推导过程可简单描述为如下方式</p>
+<p>记 <span class="math inline">\(L\)</span> 是观测到 label
+的样本数，<span class="math inline">\(L&#39;\)</span>
+则是同时包含了那些没被观测到的样本(<span class="math inline">\(L&#39;
+\gg L\)</span>);则无偏的优化目标应该是 (<span
+class="math inline">\(y_i\)</span>、<span
+class="math inline">\(p_i\)</span> 分别表示 label 与预估值)</p>
+<p><span class="math display">\[\min \sum_{i=1}^{L&#39;} l(y_i, p_i)
+\tag{1}\]</span></p>
+<p>现在令第 <span class="math inline">\(i\)</span>
+个样本的是否被观测到记为 <span class="math inline">\(O_i \in \lbrace 0,
+1 \rbrace\)</span>，则可假设 <span class="math inline">\(O_i\)</span>
+服从一个伯努利分布即 <span class="math inline">\(O_i \sim
+Bern(z_i)\)</span>, 这里的 <span class="math inline">\(z_i\)</span>
+是样本 <span class="math inline">\(i\)</span>
+被观测到的概率，则上面的优化问题可写成如下形式</p>
+<p><span class="math display">\[
+\begin{align}
+Loss &amp;= \sum_{i=1}^{L&#39;} l(y_i, p_i)\notag \\\
+&amp;= \sum_{i=1}^{L&#39;} \frac{l(y_i, p_i)}{z_i} E_{O}(O_i)\notag \\\
+&amp;= E_{O}(\sum_{i=1}^{L&#39;} \frac{l(y_i, p_i)}{z_i} O_i)\notag \\\
+&amp;= \sum_{i=1}^{L} \frac{l(y_i, p_i)}{z_i}\notag
+\end{align}
+\]</span></p>
+<p>则上面问题 (1) 可被写成如下形式,
+即可通过观测到的数据进行模型的训练，而 <span
+class="math inline">\(z_i\)</span> 可利用label
+为是否被观测到的数据进行训练，训练方式可以是单独训练或与这个 task 做
+joint training。</p>
+<p><span class="math display">\[\min \sum_{i=1}^{L} \frac{l(y_i,
+p_i)}{z_i} \tag{2}\]</span></p>
+<p>而如果套用 <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/41217212">importance
+sampling</a> 的方法，其实也能得到上面问题(2)的形式，在观测到的样本中,
+样本 <span class="math inline">\(i\)</span> 被采样的概率是 <span
+class="math inline">\(z_i\)</span>,
+而在全部样本中，由于每个样本都会被采样到，因此其采样概率是
+1，即加权的系数是 <span class="math inline">\(\frac{1}{z_i}\)</span></p>
+<p>此外，也有方法同时融合了第一类方法中的 imputation model 和这里的 IPS
+方法，被称为 <strong>Doubly Robust
+Method</strong>，则其损失函数可写成如下形式（<span
+class="math inline">\(\sigma_i\)</span> 是通过 imputation model 得到的
+label）</p>
+<p><span class="math display">\[\min \sum_{i=1}^{L} (\frac{l(y_i,
+p_i)}{z_i} - l(\sigma_i, p_i)) + \sum_{i=1}^{L&#39;} l(\sigma_i,
+p_i)\]</span></p>
+<p>上述方法在 <a
+target="_blank" rel="noopener" href="https://www.csie.ntu.edu.tw/~cjlin/papers/occtr/ctr_oc.pdf">Improving
+Ad Click Prediction by Considering Non-displayed Events</a>
+有较为详细的描述，可以参考一下</p>
+<h3 id="domain-adaption">Domain Adaption</h3>
+<p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Domain_adaptation">Domain
+Adatption</a> 可以认为是 transfer learning 的一个子领域，根据 wiki
+的说法其目标是</p>
+<blockquote>
+<p>aim at learning from a source data distribution a well performing
+model on a different (but related) target data distribution.</p>
+</blockquote>
+<p>这个说法比较宽泛，实际中用到的方法可分为下面四大类(from <a
+target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Domain_adaptation#Four_algorithmic_principles">wiki</a>)，实际上跟我们上面提到的方法的思想都比较相似</p>
+<ol type="1">
+<li><strong>Reweighting algorithms</strong>: reweight the source labeled
+sample such that it "looks like" the target sample (in terms of the
+error measure considered).</li>
+<li><strong>Iterative algorithms</strong>：iteratively "auto-labeling"
+the target examples</li>
+<li><strong>Search of a common representation space</strong>：construct
+a common representation space for the two domains</li>
+<li><strong>Hierarchical Bayesian Model</strong>：build a factorization
+model to derive domain-dependent latent representations allowing both
+domain-specific and globally shared latent factors</li>
+</ol>
+<p>而在 Exposure Bias 场景下，观测到的数据被当做 source
+domain，全量数据被当做 target domain，利用 domain adaption 解决 exposure
+bias 比较有代表性的 paper 是阿里在 2020 发表的 ESAM，<a
+target="_blank" rel="noopener" href="https://arxiv.org/pdf/2005.10545.pdf">ESAM: Discriminative gDomain
+Adaptation with Non-Displayed Items to Improve Long-Tail
+Performance</a></p>
+<p>ESAM(Entire Space Adaption Modelling) 跟上面提到的 ESMM(Entire Space
+Multi-Task Model) 名字很相似，要解决的问题也很相似，但是前者是召回场景,
+后者是 cvr 场景；</p>
+<p>ESAM
+总体如下所示，各符号含义如下（基本上就是向量化召回的涉及到的概念）</p>
+<ul>
+<li><span class="math inline">\(q\)</span>: query</li>
+<li><span class="math inline">\(d^s\)</span>: 有曝光的 item</li>
+<li><span class="math inline">\(d^t\)</span>: 没有曝光的 item</li>
+<li><span class="math inline">\(f_q\)</span>, <span
+class="math inline">\(f_d\)</span>: 将 query 和 item 映射成 embedding
+的函数</li>
+<li><span class="math inline">\(v_{q}\)</span>, <span
+class="math inline">\(v_{d}\)</span>: query 和 item 被 <span
+class="math inline">\(f_q\)</span>, <span
+class="math inline">\(f_d\)</span> 映射出来的 embedding</li>
+<li><span class="math inline">\(f_s\)</span>: 计算 <span
+class="math inline">\(v_{q}\)</span>, <span
+class="math inline">\(v_{d}\)</span> 相似性的函数，常见的是內积</li>
+<li><span class="math inline">\(L_s\)</span>: 基于 <span
+class="math inline">\(f_s\)</span> 吐出的预估值 <span
+class="math inline">\(S_{c_{q,d^s}}\)</span> 计算的损失函数，常见的有
+point-wise、pair-wise、list-wise 三大类</li>
+<li><span class="math inline">\(L_{DA}\)</span>、<span
+class="math inline">\(L_{DC}^{c}\)</span>、<span
+class="math inline">\(L_{DC}^{p}\)</span>: paper 中提出的缓解 exposure
+bias 的三种途径，以 loss 形式叠加在原始的 <span
+class="math inline">\(L_s\)</span> 上，也是下文要重点展开描述的部分</li>
+</ul>
+<figure>
+<img src="https://wulc.me/imgs/ESAMOverview.jpg" alt="ESAMOverview" />
+<figcaption aria-hidden="true">ESAMOverview</figcaption>
+</figure>
+<p>ESAM 的核心在于叠加在原始损失函数 <span
+class="math inline">\(L_s\)</span> 上的三项：<span
+class="math inline">\(L_{DA}\)</span>、<span
+class="math inline">\(L_{DC}^{c}\)</span>、<span
+class="math inline">\(L_{DC}^{p}\)</span>，下面会分别描述这三项的含义和计算方式</p>
+<h4
+id="l_dadomain-adaptation-with-attribute-correlation-alignment"><span
+class="math inline">\(L_{DA}\)</span>：Domain Adaptation with Attribute
+Correlation Alignment</h4>
+<p>这个 loss 项的出发点是两个特征在 source domain 和 target domain
+中的相关性是保持一致的，如下图所示，左边的图认为 price 跟 brand
+是具有强相关的、brand 跟 material 中度相关、price 跟 material 弱相关，而
+<span class="math inline">\(L_{DA}\)</span>
+这个损失项是基于下面两个假设产生的</p>
+<ol type="1">
+<li>相关性在 source domain 和 target domain 都是一致的</li>
+<li>原始的特征(即 price、brand、material)会被映射到 embedding
+中某一维或几维</li>
+</ol>
+<figure>
+<img src="https://wulc.me/imgs/ESAM_L_DA.jpg" alt="L_DA" />
+<figcaption aria-hidden="true">L_DA</figcaption>
+</figure>
+<p>因此，可以设计 loss 项<strong>令两个特征的相关性在 source domain 和
+target domain 尽可能保持一致</strong>, 而这里的相关性可采用协方差</p>
+<p>因此，<span class="math inline">\(L_DA\)</span> 项计算方式如下，令
+<span class="math inline">\(D^{s} = \lbrack v_{d_1^s};v_{d_2^s};\dots
+v_{d_n^s} \rbrack \in \mathbb{R}^{n×L}\)</span> 为 n 个 source domain
+样本映射出来的 embedding matrix，而 <span class="math inline">\(D^{s} =
+\lbrack v_{d_1^t};v_{d_2^t};\dots v_{d_n^t} \rbrack \in
+\mathbb{R}^{n×L}\)</span> 则是 n 个 target domain 样本映射出来的
+embedding matrix, 每个 <span class="math inline">\(v\)</span>
+是一个长度为 <span class="math inline">\(L\)</span> 的向量</p>
+<p>如果将每个 embedding 相同的维度提取出来作为一个 vector <span
+class="math inline">\(h\)</span>，则 <span
+class="math inline">\(D^{s}\)</span> 和 <span
+class="math inline">\(D^{t}\)</span> 也可写成如下形式，每个 <span
+class="math inline">\(h\)</span> 是一个长度为 <span
+class="math inline">\(n\)</span> 的向量</p>
+<p><span class="math inline">\(D^{s}=\lbrack h_{1}^{s},h_{2}^{s};\dots
+h_{L}^{s} \rbrack \in \mathbb{R}^{n×L}\)</span> <span
+class="math inline">\(D^{t}=\lbrack h_{1}^{t},h_{2}^{t};\dots h_{L}^{t}
+\rbrack \in \mathbb{R}^{n×L}\)</span></p>
+<p>则 <span class="math inline">\(L_{DA}\)</span> 计算方式如下</p>
+<p><span class="math display">\[\begin{align}
+L_{DA} &amp;= \frac{1}{L^2}\sum_{(j,k)}({h_j^s}^T{h_k^s} -
+{h_j^t}^T{h_k^t})^2 \notag  \\\
+&amp;= \frac{1}{L^2} ||Cov(D^s) - Cov(D^t)||_F^2 \notag
+\end{align}\]</span></p>
+<p>上式中的 <span class="math inline">\(Cov(D^s) \in
+\mathbb{R}^{L×L}\)</span> 和 <span class="math inline">\(Cov(D^t) \in
+\mathbb{R}^{L×L}\)</span> 分别代表 source domain 和 target domain 的
+covariance matrix，此外，笔者认为上面的公式其实表达不完全准确，因为 <a
+target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Covariance">covariance</a>
+计算还需要减去均值的，上面并没有这么做</p>
+<p>加上改了这一项后，可以认为 source domain 和 target domain
+在向量空间中的分布变化如下</p>
+<figure>
+<img src="https://wulc.me/imgs/ESAM_Loss1.jpg" alt="ESAM_L1" />
+<figcaption aria-hidden="true">ESAM_L1</figcaption>
+</figure>
+<h4 id="l_dcccenter-wise-clustering-for-source-clustering."><span
+class="math inline">\(L_{DC}^{c}\)</span>：Center-Wise Clustering for
+Source Clustering.</h4>
+<p>第二项 loss <span class="math inline">\(L_{DC}^{c}\)</span> <span
+class="math inline">\(L_{DC}^{c}\)</span>跟人脸识别中最早提出的 <a
+target="_blank" rel="noopener" href="https://link.springer.com/chapter/10.1007/978-3-319-46478-7_31">center
+loss</a>
+很相似，就是让相同类型的样本在向量空间中尽可能接近，在广告的场景下这个类型可以是
+click、non-click、purchase等；此外，还会令不同类型的样本在向量空间中的距离尽可能远；这个思想比较好理解</p>
+<p>而为了定义出距离，会为每一个类型定义出一个聚类中心，聚类中心会被参数化；具体计算方式如下</p>
+<p><span class="math display">\[\begin{align}
+L_{DC}^{c} &amp;= \sum_{j=1}^{n} \max(0,
+||\frac{v_{d_j^s}}{||v_{d_j^s}||} - c_{q}^{y_j^s}||_{2}^{2} -
+m_1)  \notag \\\
+&amp;+ \sum_{k=1}^{n_y} \sum_{u=k+1}^{n_y} \max(0, m2 - ||c_{q}^{k} -
+c_{q}^{u}||_{2}^{2})\notag
+\end{align}\]</span></p>
+<p>上面的公式中 <span class="math inline">\(m_1\)</span> 和 <span
+class="math inline">\(m_2\)</span> 分别是两个
+margin，表示样本距离其类簇距离小于 <span
+class="math inline">\(m_1\)</span> 和 类簇之间的距离大于 <span
+class="math inline">\(m_2\)</span> 的情况下无需优化；同时假设所有样本有
+<span class="math inline">\(n_y\)</span> 种类型, 第 <span
+class="math inline">\(k\)</span> 种类型(即样本 label 为 <span
+class="math inline">\(Y_k\)</span>)样本的 center 是 <span
+class="math inline">\(c_{q}^{k}\)</span>，其定义为当前训练样本中类型为
+<span class="math inline">\(k\)</span>
+的样本的向量的中心，表示如下(<span
+class="math inline">\(\delta(cond)\)</span> 函数的值为 1(cond=true) 或
+0(cond=false))</p>
+<p><span class="math display">\[c_q^k = \frac{\sum_{j=1}^{n}
+\delta(y_j^s = Y_k)\frac{v_{d_j^s}}{||v_{d_j^s}||}}{\sum_{j=1}^{n}
+\delta(y_j^s = Y_k)}\]</span></p>
+<p>则加入 <span class="math inline">\(L_{DC}^{c}\)</span>
+这一项后，source domain 和 target domain
+在向量空间中的分布变化如下，可以看到，<strong>虽然 target domain
+中的样本具有高内聚性，但是其聚类的簇可能是错误，其原因是对于 target
+domain 中的样本，目前为止都没有加入 label 信息</strong>，而这便是下一项
+loss <span class="math inline">\(L_{DC}^{p}\)</span> 要解决的问题</p>
+<figure>
+<img src="https://wulc.me/imgs/ESAM_Loss2.jpg" alt="ESAM_Loss2" />
+<figcaption aria-hidden="true">ESAM_Loss2</figcaption>
+</figure>
+<h4 id="l_dcpself-training-for-target-clustering."><span
+class="math inline">\(L_{DC}^{p}\)</span>：Self-Training for Target
+Clustering.</h4>
+<p>从这项 loss 的描述中的 <strong>self
+training</strong>，可以猜测其做法是为 target domain 中 unlabeled
+的样本打上标签用于训练模型，这是 semi supervised learning 中常见做法，而
+paper 中并<strong>没有直接为 unlabeled 的样本打上标签，而是通过 loss
+<span class="math inline">\(L_{DC}^{p}\)</span>
+较为巧妙地实现了这一点</strong>，其表达如下</p>
+<p><span class="math display">\[L_{DC}^{p} = -\frac{\sum_{j=1}^{n}
+\delta(S_{c_{q,d^t}} &lt; p_1 | S_{c_{q,d^t}} &gt; p_2)S_{c_{q,d^t}}
+\log S_{c_{q,d^t}}} {\sum_{j=1}^{n} \delta(S_{c_{q,d^t}} &lt; p_1 |
+S_{c_{q,d^t}} &gt; p_2)}\]</span></p>
+<p>其中 <span class="math inline">\(p_1\)</span> 和 <span
+class="math inline">\(p_2\)</span>
+是两个阈值，表示含义是样本的<strong>置信度达到一定程度才认为其是负样本/正样本，则这个
+loss 的目标会让预估值小于 <span class="math inline">\(p_1\)</span>
+的样本预估值更接近 0，预估值大于 <span
+class="math inline">\(p_2\)</span> 的样本的预估值更接近
+1</strong>，原因见可以看下面画出的 <span class="math inline">\(-p(x)
+\log p(x)\)</span> 的函数，直接令这一项最小即可达到 self-training
+的目标</p>
+<figure>
+<img src="https://wulc.me/imgs/EntropyRegularization.jpg"
+alt="Entropy regularization" />
+<figcaption aria-hidden="true">Entropy regularization</figcaption>
+</figure>
+<p>加入 <span class="math inline">\(L_{DC}^{p}\)</span> 这一项后，source
+domain 和 target domain 在向量空间中的分布变化如下, 也是 ESAM
+的最终形态</p>
+<figure>
+<img src="https://wulc.me/imgs/ESAM_loss3.jpg" alt="ESAM_Loss3" />
+<figcaption aria-hidden="true">ESAM_Loss3</figcaption>
+</figure>
+<p>则最终的 loss 为下式所示，其中 <span
+class="math inline">\(\lambda_1\)</span>, <span
+class="math inline">\(\lambda_2\)</span>, <span
+class="math inline">\(\lambda_3\)</span> 是三个超参, 通过 gradient
+descent 即可求解</p>
+<p><span class="math display">\[L_{all} = L_s + \lambda_1 L_{DA} +
+\lambda_2 L_{DC}^{c} + \lambda_3 L_{DC}^{p}\]</span></p>
+<h2 id="summary">Summary</h2>
+<p>综上，本文主要针对 exposure bias 介绍了三大类方法，分别是 Data
+Augmentation、IPS 和 Domain Adaption，三类方法主要思想如下</p>
+<ol type="1">
+<li>Data Augmentation: 即利用那些 unlabeled
+的样本，方法较多，如将所有样本都当做负样本、训练一个 imputation model
+来给 unlabeled 的样本打上标签、通过 multitask 方式利用等</li>
+<li>IPS：只利用曝光的样本，从概率论推导出给曝光样本进行合适的加权后，基于曝光的样本求的期望是无偏的</li>
+<li>Domain Adaption：利用了 unlabeled 的样本，主要分析了 ESAM 这篇
+paper, 同时通过在 loss 上添加了三项，能够令曝光和未曝光的 item
+训练得到的向量空间尽可能保持一致，这三项的 loss
+背后的思想也值得参考</li>
+</ol>
+<p>此外，上面的一些方法虽然从理论上看起来比较
+fancy，但是根据笔者当前的工作经验，实际中应用这些方法，还需要考虑到模型的迭代效率、、理论的假设是否符合实际等等；比如说
+data augmentation/ESAM
+方法会导致数据量增加不止一个量级，而这会势必会导致训练时长增加，即使这个方法有效果，也要考虑带来的收益以及牺牲的迭代效率和机器资源等兑换是否划算,
+或者考虑如何改进采样策略尽可能打平样本量。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A/" rel="tag"># 计算广告</a>
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 机器学习</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/01/02/2020%E5%B0%8F%E7%BB%93/" rel="prev" title="2020 小结">
+      <i class="fa fa-chevron-left"></i> 2020 小结
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/05/05/An%20Overview%20Of%20Ad%20System/" rel="next" title="An Overview Of An Ad System">
+      An Overview Of An Ad System <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#bias-in-recommender-system"><span class="nav-number">1.</span> <span class="nav-text">Bias In Recommender System</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#solutions-to-exposure-bias"><span class="nav-number">2.</span> <span class="nav-text">Solutions to Exposure Bias</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#data-augmentation"><span class="nav-number">2.1.</span> <span class="nav-text">Data Augmentation</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#all-nagative-with-confidence"><span class="nav-number">2.1.1.</span> <span class="nav-text">all nagative with confidence</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#imputation-model"><span class="nav-number">2.1.2.</span> <span class="nav-text">imputation model</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#multitask-learning"><span class="nav-number">2.1.3.</span> <span class="nav-text">multitask learning</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ipsinverse-propensity-score"><span class="nav-number">2.2.</span> <span class="nav-text">IPS(Inverse Propensity Score)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#domain-adaption"><span class="nav-number">2.3.</span> <span class="nav-text">Domain Adaption</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#l_dadomain-adaptation-with-attribute-correlation-alignment"><span class="nav-number">2.3.1.</span> <span class="nav-text">\(L_{DA}\)：Domain Adaptation with Attribute
+Correlation Alignment</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#l_dcccenter-wise-clustering-for-source-clustering."><span class="nav-number">2.3.2.</span> <span class="nav-text">\(L_{DC}^{c}\)：Center-Wise Clustering for
+Source Clustering.</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#l_dcpself-training-for-target-clustering."><span class="nav-number">2.3.3.</span> <span class="nav-text">\(L_{DC}^{p}\)：Self-Training for Target
+Clustering.</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#summary"><span class="nav-number">3.</span> <span class="nav-text">Summary</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">248</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.linkedin.com/in/wuliangchao/" title="LinkedIn → https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;wuliangchao&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i>LinkedIn</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

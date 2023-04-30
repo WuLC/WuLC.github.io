@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="本文主要介绍 《Machine Learning with Spark》这本书各章节的主要内容，以及提供该书各章节对应的 python 代码。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Machine Learning with Spark 简介">
+<meta property="og:url" content="https://wulc.me/2017/11/05/MachineLearning%20with%20Spark%20%E7%AE%80%E4%BB%8B/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="本文主要介绍 《Machine Learning with Spark》这本书各章节的主要内容，以及提供该书各章节对应的 python 代码。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2017-11-05T14:15:20.000Z">
+<meta property="article:modified_time" content="2023-04-30T05:12:49.140Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="分布式">
+<meta property="article:tag" content="spark">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://wulc.me/2017/11/05/MachineLearning%20with%20Spark%20%E7%AE%80%E4%BB%8B/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Machine Learning with Spark 简介 | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">吴良超的学习笔记</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2017/11/05/MachineLearning%20with%20Spark%20%E7%AE%80%E4%BB%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Machine Learning with Spark 简介
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-11-05 22:15:20" itemprop="dateCreated datePublished" datetime="2017-11-05T22:15:20+08:00">2017-11-05</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-30 13:12:49" itemprop="dateModified" datetime="2023-04-30T13:12:49+08:00">2023-04-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本文主要介绍 《<a
+target="_blank" rel="noopener" href="https://www.amazon.com/Machine-Learning-Spark-Powerful-Algorithms/dp/1783288515/ref=sr_1_sc_1?ie=UTF8&amp;qid=1509631766&amp;sr=8-1-spell&amp;keywords=macine%20learning%20with%20spark">Machine
+Learning with
+Spark</a>》这本书各章节的主要内容，以及提供该书各章节对应的 python
+代码。</p>
+<span id="more"></span>
+<p>这本书主要介绍了如何通过 spark
+处理大规模的数据，以及利用这些处理过的数据通过 MLlib
+进行模型的训练。全书共分为10章，涵盖了数据的预处理，推荐模型，分类模型，回归模型，聚类模型，数据降维，文本处理以及
+Spark 流式处理等内容。</p>
+<p>书中的代码大部分是 scala， 某些章节是 python，这里全部通过 python
+重写，全部代码参见 <a
+target="_blank" rel="noopener" href="https://github.com/WuLC/MachineLearningWithSpark">github</a>，为了便于交互，采用了
+Jupyter Notebook 的形式，且通过 HDFS
+存储数据文件，关于环境的搭建可参考<a
+href="http://wulc.me/2017/09/13/Spark%20%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E5%92%8C%20Jupyter%20Notebook%20%E9%85%8D%E7%BD%AE%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/">这篇文章</a>。</p>
+<p>下面简单介绍各个章节的内容（从第三章开始），更多细节可参考具体代码</p>
+<h2
+id="chapter-3obtaining-processing-and-preparing-data-with-spark">Chapter
+3：Obtaining, Processing, and Preparing Data with Spark</h2>
+<p>这章主要介绍了如何通过 spark 提供的 API
+从原始数据中提取特征，如一些常用的函数 <code>map</code>,
+<code>filter</code>, <code>reduceByKey</code> 等，以及如何通过 spark
+进行特征的归一化和处理以下几种 feature</p>
+<ol type="1">
+<li><strong>category feature</strong>：one-hot 编码</li>
+<li><strong>text feature</strong>：抽取文本 -&gt; 分词 -&gt;
+创建字典，为每个单词分配一个唯一的id -&gt; 将文本转为向量</li>
+<li><strong>derived
+feature</strong>：这个主要是指从非结构化的特征中抽取出结构化的特征，如给出一个日期，可以提取出其中的小时部分，然后进行分段，分为
+morning，noon，afternoon，evening四个阶段，然后再进行 one-hot 编码</li>
+</ol>
+<h2 id="chapter-4building-a-recommendataion-engine-with-spark">Chapter
+4：Building a Recommendataion Engine with Spark</h2>
+<p>这一章主要介绍如何通过 spark 构建一个推荐系统，采用了电影评分数据集
+<a
+target="_blank" rel="noopener" href="http://files.grouplens.org/datasets/%20movielens/ml-100k.zip">MovieLens
+100k</a>，使用的是经典的协同过滤技术，而 spark 的 MLlib 则提供了
+alternating least squares (ALS)
+这种基于矩阵分解的方法用于求解协同过滤问题，通过
+ALS对用户-物品评分矩阵进行分解，能够为每个用户或物品推荐 top k
+个最相似的用户或物品。度量 ALS 算法效果的指标为 MSE，RMSE等。</p>
+<h2 id="chapter-5building-a-classifcation-model-with-spark">Chapter
+5：Building a Classifcation Model with Spark</h2>
+<p>这一章主要介绍分类模型，采用了 <a
+target="_blank" rel="noopener" href="http://www.kaggle.com/c/stumbleupon/data">Kaggle
+上的一个数据集</a>，通过 MLlib 提供的
+LogisticsRegression，SVM，NaiveBayes，DecisionTree
+等分类器对其进行分类，并且比较了进行 feature standardization
+前后的效果。</p>
+<h2 id="chapter-6building-a-regression-model-with-spark">Chapter
+6：Building a Regression Model with Spark</h2>
+<p>这一章主要介绍了回归模型，采用了 <a
+target="_blank" rel="noopener" href="http://archive.ics.uci.edu/ml/%20datasets/Bike+Sharing+Dataset">bike
+sharing 数据集</a>，主要通过 MLlib 提供的回归模型 Linear Regression 和
+Decision
+Tree进行了预测，并且对目标变量进行了log变换，目的是让目标变量更加接近
+正态分布，因为像 Linear Regression
+这一类模型对目标函数值的分布做了正态分布的假设。</p>
+<h2 id="chapter-7building-a-clustering-model-with-spark">Chapter
+7：Building a Clustering Model with Spark</h2>
+<p>这一章主要介绍了聚类模型，采用的是前面提到的 MovieLens 100k
+数据集，通过 ALS
+进行矩阵分解，为每个用户(物品)提取出一个隐含属性向量作为用户(物品)的特征向量。然后通过
+K-Means 进行聚类。</p>
+<p>聚类结果的评估有两种方法：一种是 Internal
+evaluation，也就是只用数据本身进行评估，一般通过 <a
+target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/K-means_clustering">WCSS</a>
+(within-cluster sums of squares) 评估；第二种则是 External
+evaluation，即还通过数据的标签进行评估，评估的方法就是常见的准确率等指标。由于聚类往往是无监督方法，因此数据往往是不带标签的，
+因此第一种评估方法比较常见。</p>
+<h2 id="chapter-8dimensionality-reduction-with-spark">Chapter
+8：Dimensionality Reduction with Spark</h2>
+<p>这一章主要介绍了spark中的降维技术，采用了 <a
+target="_blank" rel="noopener" href="http://vis-www.cs.umass.edu/lfw/%20lfw-a.tgz">LFW</a>（Labeled
+Faces in the Wild）
+人脸数据集，因此也介绍了图像处理的一些基本操作(基于python的opencv库)，然后通过两种方法：PCA和SVD，进行了数据的降维，实际上这两种方法的关系非常密切，且可以达到相同的效果。同时介绍了
+Eigenface
+的概念，Eigenface实际上就是PCA提取出来的特征向量再变为人脸图像。</p>
+<h2 id="chapter-9advanced-text-processing-with-spark">Chapter
+9：Advanced Text Processing with Spark</h2>
+<p>这一章主要介绍了 Spark 中的文本处理技术，采用了 <a
+target="_blank" rel="noopener" href="http://qwone.com/~jason/20Newsgroups">20 Newsgroups
+数据集</a>，介绍了文本处理的基本操作</p>
+<ol type="1">
+<li>分词</li>
+<li>过滤停止词，低频词</li>
+<li>构建词典</li>
+<li>基于词典为每篇文本构造一个向量</li>
+</ol>
+<p>在向量的基础上加上 TF-IDF 便可算出表示文本的 TF-IDF 向量，基于这个
+TF-IDF 向量可做文本相似性的比较，而如果文本本身是有标签的，可以将 TF-IDF
+向量作为文本特征，进而训练一个分类模型。</p>
+<p>最后这章还简单介绍了 Word2Vec 模型及其简单应用。</p>
+<h2
+id="chapter-10real-time-machine-learning-with-spark-streaming">Chapter
+10：Real-time Machine Learning with Spark Streaming</h2>
+<p>这章主要介绍了用于处理实时流的 Spark Streaming, 模拟了产生实时流的
+producer ，通过 Spark Streaming 处理这些信息流后训练了一个 streaming
+regression 模型，并通过 online 的方式评估了这个模型的效果。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 机器学习</a>
+              <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" rel="tag"># 分布式</a>
+              <a href="/tags/spark/" rel="tag"># spark</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/10/12/LeetCode%20%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A(684,685,721)-%E5%B9%B6%E6%9F%A5%E9%9B%86%E4%BB%8B%E7%BB%8D%E5%8F%8A%E5%BA%94%E7%94%A8/" rel="prev" title="LeetCode 解题报告(684,685,721)-并查集介绍及应用">
+      <i class="fa fa-chevron-left"></i> LeetCode 解题报告(684,685,721)-并查集介绍及应用
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/11/18/%E5%88%86%E6%89%B9%E8%AE%AD%E7%BB%83%E8%BF%87%E5%A4%A7%E7%9A%84%E6%95%B0%E6%8D%AE%E9%9B%86/" rel="next" title="分批训练过大的数据集">
+      分批训练过大的数据集 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#chapter-3obtaining-processing-and-preparing-data-with-spark"><span class="nav-number">1.</span> <span class="nav-text">Chapter
+3：Obtaining, Processing, and Preparing Data with Spark</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#chapter-4building-a-recommendataion-engine-with-spark"><span class="nav-number">2.</span> <span class="nav-text">Chapter
+4：Building a Recommendataion Engine with Spark</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#chapter-5building-a-classifcation-model-with-spark"><span class="nav-number">3.</span> <span class="nav-text">Chapter
+5：Building a Classifcation Model with Spark</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#chapter-6building-a-regression-model-with-spark"><span class="nav-number">4.</span> <span class="nav-text">Chapter
+6：Building a Regression Model with Spark</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#chapter-7building-a-clustering-model-with-spark"><span class="nav-number">5.</span> <span class="nav-text">Chapter
+7：Building a Clustering Model with Spark</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#chapter-8dimensionality-reduction-with-spark"><span class="nav-number">6.</span> <span class="nav-text">Chapter
+8：Dimensionality Reduction with Spark</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#chapter-9advanced-text-processing-with-spark"><span class="nav-number">7.</span> <span class="nav-text">Chapter
+9：Advanced Text Processing with Spark</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#chapter-10real-time-machine-learning-with-spark-streaming"><span class="nav-number">8.</span> <span class="nav-text">Chapter
+10：Real-time Machine Learning with Spark Streaming</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">248</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.linkedin.com/in/wuliangchao/" title="LinkedIn → https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;wuliangchao&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i>LinkedIn</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

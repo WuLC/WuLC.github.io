@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Real-time Personalization using Embeddings for Search Ranking at Airbnb 是 KDD 2018 的 best paper, 整篇文章读下来，初看好像只是套了 word2vec 来生成 user embedding 和 item embedding；但是细读下来，会发现其中有不少细节值得考究，这种风格跟 youtube 在 201">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《Real-time Personalization using Embeddings for Search Ranking at Airbnb》 阅读笔记">
+<meta property="og:url" content="https://wulc.me/2020/06/20/%E3%80%8AReal-time%20Personalization%20using%20Embeddings%20for%20Search%20Ranking%20at%20Airbnb%E3%80%8B%20%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="Real-time Personalization using Embeddings for Search Ranking at Airbnb 是 KDD 2018 的 best paper, 整篇文章读下来，初看好像只是套了 word2vec 来生成 user embedding 和 item embedding；但是细读下来，会发现其中有不少细节值得考究，这种风格跟 youtube 在 201">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/skip_gram_model.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/global_context.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/id2type_mapping_rule.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/user_type_list_type_skipgram.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/reject_signal_skip_gram.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/list_embedding_clustering.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/listing_embedding_item_simi.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/list_embedding_similarity.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/EmbeddingEvaluation.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/AirbnbFeatureList.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/featureImportance.jpg">
+<meta property="article:published_time" content="2020-06-20T13:37:39.000Z">
+<meta property="article:modified_time" content="2023-04-30T05:12:49.104Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="深度学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/skip_gram_model.jpg">
+
+<link rel="canonical" href="https://wulc.me/2020/06/20/%E3%80%8AReal-time%20Personalization%20using%20Embeddings%20for%20Search%20Ranking%20at%20Airbnb%E3%80%8B%20%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>《Real-time Personalization using Embeddings for Search Ranking at Airbnb》 阅读笔记 | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">吴良超的学习笔记</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2020/06/20/%E3%80%8AReal-time%20Personalization%20using%20Embeddings%20for%20Search%20Ranking%20at%20Airbnb%E3%80%8B%20%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          《Real-time Personalization using Embeddings for Search Ranking at Airbnb》 阅读笔记
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-06-20 21:37:39" itemprop="dateCreated datePublished" datetime="2020-06-20T21:37:39+08:00">2020-06-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-30 13:12:49" itemprop="dateModified" datetime="2023-04-30T13:12:49+08:00">2023-04-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><a
+target="_blank" rel="noopener" href="https://dl.acm.org/doi/pdf/10.1145/3219819.3219885">Real-time
+Personalization using Embeddings for Search Ranking at Airbnb</a> 是 KDD
+2018 的 best paper, 整篇文章读下来，初看好像只是套了 word2vec 来生成
+user embedding 和 item
+embedding；但是细读下来，会发现其中有不少细节值得考究，这种风格跟
+youtube 在 2016 年发表的那篇 <a
+target="_blank" rel="noopener" href="https://static.googleusercontent.com/media/research.google.com/zh-CN//pubs/archive/45530.pdf">Deep
+Neural Networks for YouTube Recommendations</a>
+很像，两篇都是实践性很强的 paper，非常值得看。而且两篇文章分别代表着
+deep learning 中生成 embedding
+的两大流派：无监督和有监督。本文主要讲的是 Airbnb 的这篇 paper
+的基本做法和一些细节。</p>
+<span id="more"></span>
+<p>Airbnb 的这项工作的业务背景是：用户在其租房 app
+上搜索时，需要返回一个 list 的推荐结果,在 paper 中提到了 Airbnb
+用的是业界比较主流的 Learning To Rank 技术，关于 LTR
+的技术细节可参考微软的 <a
+target="_blank" rel="noopener" href="https://www.microsoft.com/en-us/research/uploads/prod/2016/02/MSR-TR-2010-82.pdf">From
+RankNet to LambdaRank to LambdaMART: An Overview</a>，Airbnb 用的也是
+pairwise 模式下的 LambdaRank，而这篇 paper 主要描述的是如何通过 word2vec
+的方式生成 user embedding 和 item embedding 作为 feature
+供排序模型使用（文章中也将 item 称为
+listing，所以后文中这两个词的含义是一样的）。</p>
+<p>这篇文章的主要亮点如下</p>
+<p><strong>1. 将正反馈（用户最终下单，作为 global
+context）和负反馈（商家拒接接单，作为额外的一个data set）的信号加入到
+skip-gram 中进行训练</strong> <strong>2. 做 negative sampling
+时，考虑到具体业务不仅仅在全集上做负采样</strong> <strong>3. 同一个 uid
+的样本较为稀疏，因此 user embedding 从 uid 粒度变为 user type
+粒度，避免样本过于稀疏 embedding 学习不充分</strong></p>
+<p>这 3
+点其实都是作者在考虑到具体业务场景下，所做出的改进，也是笔者认为这篇paper最值得学习的地方：<strong>不要盲目地套算法，而是要充分考虑到当前具体业务然后做出相应的适配和改进</strong></p>
+<h2 id="离线训练">离线训练</h2>
+<p>paper 中的离线训练可分为两大部分：short-term interest 和 long-term
+interest</p>
+<p>对于短期(short-term)兴趣, <strong>利用了 800 billion 个 click session
+来训练了 listing embedding</strong></p>
+<p>对于长期(long-term)兴趣，<strong>利用了 50 million 个用户的 booked
+listings 来训练 user type embedding 和 listing type
+embedding</strong></p>
+<p>具体的训练方法基本就是 word2vec 中的
+skip-gram，下面会分别描述这两部分的具体训练细节</p>
+<h3 id="listing-embedding">listing embedding</h3>
+<p>在 short-term insterest 中只生成 item embedding，训练的样本就是 click
+session（类比 nlp 中的一个 sentence），在 paper
+中共的定义就是用户一系列的点击事件；在构建这个训练数据集时，核心就是<strong>如何定义session
+的长度</strong>，在paper中定义<strong>当用户的两次点击超过 30
+分钟时，那这两次点击应该属于两个 session</strong>。</p>
+<p>假设总体训练集为 <span class="math inline">\(S\)</span>, 每个 session
+为 <span class="math inline">\(s=(l\_1,l\_2...l\_M) \in S\)</span>,
+则通过 word2vec 中的 skip-gram 可写出 loss 如下</p>
+<p><span class="math display">\[L=\sum\_{s \in S}\sum\_{l\_i \in
+s}(\sum\_{-m \le j \le m,j \ne 0}^M \log
+p(l\_{i+j}|l\_i))\tag{1}\]</span></p>
+<p>上面的 m 是个超参，表示 skip-gram
+训练时窗口的大小，且上式的概率可通过 embedding 向量和 softmax
+表示成如下形式</p>
+<p><span class="math display">\[p(l\_{i+j}|l\_i) =
+\frac{\exp(v\_{l\_j}^T
+v\_{l\_{i+j}}^{&#39;})}{\sum\_{l=1}^{|V|}\exp(v\_{l\_i}^Tv\_{l}^{&#39;})}\tag{2}\]</span></p>
+<p>上式中的 <span class="math inline">\(|V|\)</span> 是所有 item
+的集合， <span class="math inline">\(v\)</span> 和 <span
+class="math inline">\(v&#39;\)</span> 分表表示 input vector 和 output
+vetor，其实就是同一个 item 在 skip gram
+模型中两个参数矩阵的表示，即如下图所示的参数矩阵 W 和 W'；具体可参考讲义
+<a
+target="_blank" rel="noopener" href="https://web.stanford.edu/class/cs224n/readings/cs224n-2019-notes01-wordvecs1.pdf">CS224n:
+Natural Language Processing with Deep Learning</a></p>
+<figure>
+<img src="https://wulc.me/imgs/skip_gram_model.jpg" alt="skip gram" />
+<figcaption aria-hidden="true">skip gram</figcaption>
+</figure>
+<p>类似 word2vec
+由于这个集合一般很大，算一次公式（2）的概率时分母的累加的耗时会非常长，为了加速训练，word2vec
+中提出了 <strong>negative sampling</strong>
+的策略，简单来说，就是对于每个 session 内的每个 clicked item，从其窗口 m
+内选择一些 positive pairs <span class="math inline">\((l,
+c)\)</span>作为 positive set（记为<span
+class="math inline">\(D\_p\)</span>）,同时从整个 item 集合 <span
+class="math inline">\(|V|\)</span> 中随机选一些 negative pairs <span
+class="math inline">\((l, c)\)</span>取一些 item 作为 negative
+set(记为<span class="math inline">\(D\_n\)</span>), 不用 softmax 而是用
+sigmoid 的方式将要求解的参数写成如下形式</p>
+<p><span class="math display">\[ \arg\max\_{\theta} \sum\_{(l,c) \in
+D\_p} \log\frac{1}{1+e^{-v\_{c}^{&#39;}v\_l}} + \sum\_{(l,c) \in D\_n}
+\log\frac{1}{1+e^{v\_{c}^{&#39;}v\_l}} \tag{3}\]</span></p>
+<p>上式中要求解的参数 <span class="math inline">\(\theta\)</span> 就是
+每个 item 的 embedding <span
+class="math inline">\(v\_l\)</span>，基本就是原始 word2vec 中的
+skip-gram 算法了，下面文章中的几个点可以认为是作者根据业务对 word2vec
+的一些改动，也是非常值得借鉴的</p>
+<p><strong>(1)利用监督信号作为 global context</strong></p>
+<p>在 airbnb 的业务中，上面的 session
+实际上可分为两大类，分别是最终有下单的 session 和没有下单的
+session，paper 中分别称其为 booked session 和 exploratory
+sessions，这两个实际上都是监督信号，而在 paper
+中<strong>只使用了第一个监督信号</strong>，则公式(3）可写成如下形式</p>
+<p><span class="math display">\[ \arg\max\_{\theta} \sum\_{(l,c) \in
+D\_p} \log\frac{1}{1+e^{-v\_{c}^{&#39;}v\_l}} + \sum\_{(l,c) \in D\_n}
+\log\frac{1}{1+e^{v\_{c}^{&#39;}v\_l}} + \\\
+\log \frac{1}{1+e^{-v\_{l\_b}v\_l}}\tag{4}\]</span></p>
+<p>公式（4）中的 <span class="math inline">\(v\_{l\_b}\)</span>
+表示的是被下单的 item <span class="math inline">\(l\_b\)</span> 的
+embedding，下图则是更直观地显示了这个监督信号是如何起作用的,
+可以看到，<strong>每个 centeral listing/item 更新时都会与 booked
+listing/item 一起算一次概率，因此称这个 listing 为 global
+context</strong>，其效果相当于加强用户在购买前点击的所有 item
+和最终下单的 item 的联系</p>
+<figure>
+<img src="https://wulc.me/imgs/global_context.jpg"
+alt="global context" />
+<figcaption aria-hidden="true">global context</figcaption>
+</figure>
+<p><strong>(2)控制 negative sampling 的采样空间</strong></p>
+<p>上面提到 negative sampling 会随机从全集中抽取 n 个 item
+作为负例，但是在 airbnb 的业务中，一个用户往往只会在一个
+market(也就是旅游地点) 中下单，而上面做 negative sampling
+得到的结果往往是， <span class="math inline">\(D\_p\)</span>
+里的候选都是同一个 market 的，<span class="math inline">\(D\_n\)</span>
+里的候选往往都不是同一个 market 的，paper 称这样的 imbalanced
+并不是最优的，笔者猜测原始是<strong>在做预估时候候选的 item
+基本都是同一个 market 的，而这样 <span
+class="math inline">\(D\_n\)</span> 的随机性使得同一个 market 内的正负
+item 区分度并不高</strong>，因此，在原始的 nagative sampling
+基础上增加了一项在同一 market 下随机选取负样本的 <span
+class="math inline">\(D\_{m\_n}\)</span>, 因此，最终的 loss 形式如下</p>
+<p><span class="math display">\[
+\arg\max\_{\theta} \sum\_{(l,c) \in D\_p}
+\log\frac{1}{1+e^{-v\_{c}^{&#39;}v\_l}} + \sum\_{(l,c) \in D\_p}
+\log\frac{1}{1+e^{v\_{c}^{&#39;}v\_l}} + \\\
+\log \frac{1}{1+e^{-v\_{l\_b}v\_l}}+\sum\_{(l,m\_n) \in D\_{m\_n}}
+\log\frac{1}{1+e^{v\_{m\_n}^{&#39;}v\_l}}\tag{5}
+\]</span></p>
+<p><strong>(3)冷启动的 item embedding</strong></p>
+<p>在推荐系统中，每天都会有很多新的 item 加入，还有一些 item 压根没有
+click session，无法通过上面的 word2vec 训练出对应的
+embedding；对于这些处于冷启动的item，paper
+中用了一种比较常见且有效的手段来处理：<strong>根据冷启动的 item
+的属性选取 k 个与其最相似且有 embedding 的 item 然后做 mean
+pooling</strong>，选取的方法则是根据 item 的一些 meta-data，如
+price，listing type 等</p>
+<h3 id="user_typelisting_type-embeddings">user_type/listing_type
+embeddings</h3>
+<p>上面的训练方法中只用了 click session，且只生成了 listing
+embedding，paper 中认为这个是 <strong>short-term
+interest</strong>，其实这从上面对 session
+的划分规则就体现了这一点，即两次点击间隔超过 30 min 就认为是两个不同的
+session，在这种划分规则下，捕获的就是用户的短期兴趣，且一个 session
+内所有的 item 基本上都是同一个 market 的了</p>
+<p>为了<strong>（1）捕获用户更长周期的兴趣（2）捕获 cross-market 的
+listing embedding 的关联</strong>，paper 中通过 skip-gram 训练出 user
+embedding + listing embedding, 且相对于前面只训练出 listing embedding 的
+short-term interest，paper 称这个为 long-term interest。</p>
+<p>前面的训练数据是 <strong>800 billion 个 click
+session</strong>，而这里捕获 long-term interest 的训练则 <strong>利用了
+50 million 个用户的 booked listings</strong></p>
+<p>假设总体训练集为 <span class="math inline">\(S\_b\)</span>, 每个
+booked listing 为 <span
+class="math inline">\(s\_b=(l\_{b1},l\_{b2}...l\_{bM}) \in S\)</span>,
+表示<strong>某个用户的历史下单的所有 lisitng（按时间排序）</strong></p>
+<p>比起上面较为丰富的 click
+session，这个问题更为严峻，主要体现在下面几个方面</p>
+<ol type="1">
+<li>数据更为稀疏，前面的是点击事件，这里则是转化事件</li>
+<li>某些用户的 booked listing 的长度可能只有 1，这样没法直接用 skip-gram
+来训练</li>
+<li>对于每个 entity, 如果需要较充分地学习出其 embedding，<strong>每个
+entity 至少要出现 5-10 次</strong>，而实际上不少 listing
+被下单的次数是没有 5 次的</li>
+</ol>
+<p>其中，问题 2 和 3 实际上都是问题 1 的具体表现，因此，paper
+中解决上面的三个问题方法就是<strong>将 id 转为 type，本质上就是将 id
+特征转为一个更泛化的特征</strong>，基本的装换方法就是根据 user/listing
+的一些 meta 信息映射成一个 type，然后用这个 type 来代替 user/listing 的
+id，映射表如下图所示</p>
+<figure>
+<img src="https://wulc.me/imgs/id2type_mapping_rule.jpg"
+alt="id2type" />
+<figcaption aria-hidden="true">id2type</figcaption>
+</figure>
+<p>解决上面的数据稀疏问题后，还剩下的一个问题是<strong>如何通过 word2vec
+训练出处于同一向量空间的 user_type embedding 和 listing_type
+embedding</strong>？因为最原始的 word2vec 中的 sequence
+往往都是同一属性的 item 的</p>
+<p>paper 中解决这个问题的方法也和直接，就是将前面提到的每个 user
+的booked listing <span
+class="math inline">\(s\_b=(l\_{b1},l\_{b2}...l\_{bM}) \in S\)</span>
+变为 <span
+class="math inline">\(s\_b=(u\_{type1},l\_{type1}...u\_{typeM},
+l\_{typeM}) \in S\)</span>, 值得注意的是，<strong>虽然每个 session 的
+sequence 表示的是同一个user_id，但是其 user_type
+是会随时间变化而变化的，但是 paper 中并没有提到改变 user_type
+的时间窗口，猜测是一旦发生变化就改变，然后插入到上面的 booked listing
+对应的时间位置上</strong>，（这里有个问题，这样做似乎是没法解决那些
+booked listing 长度为 1 的数据）</p>
+<figure>
+<img src="https://wulc.me/imgs/user_type_list_type_skipgram.jpg"
+alt="type-skipgram" />
+<figcaption aria-hidden="true">type-skipgram</figcaption>
+</figure>
+<p>做了 negative sampling 后，loss 跟公式 3 是一样的, 如下是 central
+item 是 user type 的情况（listing type 同理）</p>
+<p><span class="math display">\[ \arg\max\_{\theta} \sum\_{(u\_t,c) \in
+D\_{book}} \log\frac{1}{1+e^{-v\_{c}^{&#39;}v\_{u\_t}}} +
+\sum\_{(u\_t,c) \in D\_{neg}}
+\log\frac{1}{1+e^{v\_{c}^{&#39;}v\_{u\_t}}} \tag{6}\]</span></p>
+<p><strong>相比于前面在训练 listing embedding 在做 negative sampling
+对同一个 market 中的 item做额外的负采样，但是这里并没有做，原因是这里的
+booked session 中对应的 item 已经是包含了不同 market
+的，因此没必要做额外的处理</strong></p>
+<p>此外，airbnb
+的这个业务背景中也有商家的反馈数据，即可能会存在<strong>某些用户下单但是商家不接单的情况（可能的原因是用户信息不完整、评分低等）</strong>，这些负反馈信息对于
+user_type embedding 的学习是有好处的，对于这些负反馈信号，airbnb
+是按照如下方法加入到模型中的</p>
+<p>对于每个 central item，训练的数据除了上面的做 negative sampling
+得到的 <span class="math inline">\(D\_{book}\)</span> 和 <span
+class="math inline">\(D\_{neg}\)</span>，还定义了一个 <span
+class="math inline">\(D\_{rej}\)</span>, 其中包含了 user 历史上被拒绝的
+pair <span class="math inline">\((u\_t, l\_t)\)</span>, 则当前的 central
+item 是 user（listing 同理） 时， loss 可写成如下形式，</p>
+<p><span class="math display">\[ \arg\max\_{\theta} \sum\_{(u\_t,c) \in
+D\_{book}} \log\frac{1}{1+e^{-v\_{c}^{&#39;}v\_{u\_t}}} +
+\sum\_{(u\_t,c) \in D\_{neg}}
+\log\frac{1}{1+e^{v\_{c}^{&#39;}v\_{u\_t}}} + \\\
+\sum\_{(u\_t,l\_t) \in D\_{neg}} \log\frac{1}{1+e^{v\_{l\_t}v\_{u\_t}}}
+\tag{7}\]</span></p>
+<p>则加入了这个监督信号后的 skip gram 则如下图所示</p>
+<figure>
+<img src="https://wulc.me/imgs/reject_signal_skip_gram.jpg"
+alt="reject skip-gram" />
+<figcaption aria-hidden="true">reject skip-gram</figcaption>
+</figure>
+<h3 id="训练细节">训练细节</h3>
+<p>上面讲的只是大致的训练过程，但是其中的一些训练细节也是非常重要的，尤其是这种有具体业务背景的工作,
+paper 中只讲了训练 listing embedding 的一些细节</p>
+<p>训练数据细节</p>
+<ul>
+<li>如前文所说，用了 800 million 的 click
+session，划分的标准就是同一个用户的连续两次点击如果超过 30min
+就划分为两个 session，</li>
+<li><strong>去掉了一些无效点击（定义为点击后在页面停留时长小于 30s
+的）</strong></li>
+<li><strong>对于 booked session 做了 5 倍的 upsampling</strong></li>
+</ul>
+<p>训练细节</p>
+<ul>
+<li>天级更新，按照时间滑动窗口从当前时间往前取几个月的训练数据</li>
+<li><strong>每天都重新训练 listing
+embedding</strong>（随机初始化），而不是在之前训练好的基础上做
+finetune，paper 称这样的效果比做 finetune 的要好</li>
+<li>embedding 的维度是 32（做了效果和资源的 trade-off），skipgram
+的时间窗口是 5，训练 10 个 iteration 的效果是最好的</li>
+</ul>
+<p><strong>值得注意的是，上面之所以每天能重新训练 listing embedding，
+是因为 Airbnb 没有直接把 embedding 作为一个 feature 输入到模型中，而是将
+embedding 计算出来的 similarity 作为 feature 输入模型；而如果需要把
+user/listing embedding 作为 feature 落入样本中，重新训练 listing
+embedding 应该是不行的</strong>， 原因分析如下</p>
+<p>因为通过 embedding 计算出来的 user/item <strong>similarity 是由
+user/item
+在训练数据集中的相对位置决定了</strong>，这个信息在每天的训练数据中的变动其实是比较小的；但是每次重新训练
+embedding 的时候是随机初始化的，这很容易导致同一个训练集两次训练出来的
+embedding 所处的向量空间是不一样的，而如果将embedding 直接作为 feature
+输入一个 nn 模型，容易导致同一个 user/item
+在昨天和今天的向量差别很大，对于一个feature
+来说这样来讲显然是不合理的</p>
+<h3 id="embedding-有效性校验">embedding 有效性校验</h3>
+<p>embedding
+训练出来后，怎么判断其有效性是个值得探讨的问题，尤其是在深度学习缺乏可解释性的情况下，paper
+中用到了以下几种方法，都比较值得借鉴</p>
+<ol type="1">
+<li>可视化</li>
+<li>计算 listing embedding 之间的cosine similarity</li>
+<li>根据 embedding similarity 对历史日志中的 item 重新排序，看 booked
+item 的位置（越小越好）</li>
+</ol>
+<p>方法（1）是可视化，也是评估 embedding
+有效性常用的方法；通常做法是聚类然后看每个类里面的 item
+的相关性，对于上面训练的 listing embedding，通过 k-means 聚成 100
+个类，且由于 airbnb 中每个 item 可以对应于地图上的某个点，因此 paper
+中做了两种可视化，第一种是将不同类的点用不同的颜色在地图上进行可视化，如下图所示，paper
+称这样聚类的结果对于重新为每个 travel market
+定义其范围也是有好处的，</p>
+<figure>
+<img src="https://wulc.me/imgs/list_embedding_clustering.jpg"
+alt="visulization" />
+<figcaption aria-hidden="true">visulization</figcaption>
+</figure>
+<p>第二种可视化则是对于特定的 listing embedding，选取 k-nearest listing
+embedding，直观地看这些 listing 对应的房屋的相似性，如下图所示,
+可以看到房屋的相似性还是比较高的</p>
+<figure>
+<img src="https://wulc.me/imgs/listing_embedding_item_simi.jpg"
+alt="item visulization" />
+<figcaption aria-hidden="true">item visulization</figcaption>
+</figure>
+<p>方法（2）是计算 embedding 的 cosine 相似性,如下面两个表中，根据item
+的一些 meta 信息来划分 listing embedding，然后计算这些划分好的各个类中的
+item embedding 与其他各个 item embedding 的 cos
+相似性的均值，从结果可知，<strong>价格、房屋类型越相似的 item，其对应的
+listing embedding 的 cos 相似性越高</strong>, 因此这些信息是可以被学习到
+listing embedding 中的</p>
+<figure>
+<img src="https://wulc.me/imgs/list_embedding_similarity.jpg"
+alt="similarity" />
+<figcaption aria-hidden="true">similarity</figcaption>
+</figure>
+<p>方法（3）是 paper 根据业务去设计的一种评估 embedding 优劣的方法，其
+motivation 是：<strong>利用 embedding 信息来对历史的 search session
+重新排序，并与 search rank model 的历史排序效果做比较</strong>。</p>
+<p>基本的做法就是：选取用户某个 booked item 所出现过的所有历史 serach
+session, 每个 search session 会包含其他的 candidate
+items；根据用户历史的 clicked items 对应的 embedding，<strong>计算每个
+candidate item 的 embedding与这些 clicked items 的 embedding 的
+similarity，并根据similarity 重新排序，观察 booked item
+的排序</strong>（越小越靠前）</p>
+<p>因为是历史的 session，所以对于 candidate items 已经被 Airbnb 的
+search rank 排过序了，因此可作为 baseline，paper 中选取了每个 user 最近
+17 次的点击来计算相似性，效果如图所示，</p>
+<figure>
+<img src="https://wulc.me/imgs/EmbeddingEvaluation.jpg"
+alt="embedding evaluation" />
+<figcaption aria-hidden="true">embedding evaluation</figcaption>
+</figure>
+<p>上图中各项含义如下</p>
+<ul>
+<li>search ranking：排序的后验，即历史 search session 的真正排序</li>
+<li>d32: 公式(3) 训练出来的 embedding, 即原始的 word2vec 方法</li>
+<li>d32 book: 公式(4) 训练出来的 embedding，即加上 booked item 作为
+global context 训练出来的 embedding</li>
+<li>d32 book+neg: 公式(5)训练出来的 embedding，即做 nagative sampling
+的时候专门考虑与 item 处于同一个 market 的 nagative samples</li>
+</ul>
+<p>从上图可知，d32 book+neg 的效果是最好的</p>
+<h2 id="在线-serving">在线 serving</h2>
+<p>上面训练好的 embedding，在 serving 的时候怎么用？paper
+中主要用到了两个地方</p>
+<ol type="1">
+<li>Search Ranking: 用户搜索的排序模型</li>
+<li>Similar Listing Recommemdation：物品页面中相似物品动态的推荐</li>
+</ol>
+<h3 id="search-ranking">Search Ranking</h3>
+<p>对于 NN 模型，可以直接把 embedding 当做一个 feature
+输进去，但是airbnb 的 ranking model 并不是 NN 模型，而是基于树模型的
+LambdaRank，这个模型的细节就不在这里展开了，感兴趣的同学可参考 paper
+中的 4.4 节。</p>
+<p><strong>使用树模型意味着 embedding
+不能直接输入模型，需要构造一些连续值特征</strong>。下面主要讲的是这些特征是如何构建以及线上效果</p>
+<p>paper 中主要基于 embedding
+间计算出来的相似性作为连续值特征，构造的特征列表如下图所示</p>
+<figure>
+<img src="https://wulc.me/imgs/AirbnbFeatureList.jpg"
+alt="featureList" />
+<figcaption aria-hidden="true">featureList</figcaption>
+</figure>
+<p>上图中的一些符号含义如下</p>
+<ul>
+<li><span class="math inline">\(H\_c\)</span>: 用户过去两周点击过的
+listing ids</li>
+<li><span class="math inline">\(H\_{lc}\)</span>:
+用户点击过且停留时长超过 60s 的 listing ids</li>
+<li><span class="math inline">\(H\_s\)</span>: 用户点击的某个 listing
+时跳过的其他的 listing ids（如点击了排序第 4 的，就跳过了前 3 个
+listing）</li>
+<li><span class="math inline">\(H\_w\)</span>:
+用户过去两周添加到心愿单的 listing ids</li>
+<li><span class="math inline">\(H\_i\)</span>:
+用户过去两周联系过但是没有下单的 listing ids</li>
+<li><span class="math inline">\(H\_b\)</span>: 用户过去两周下单过的
+listing ids</li>
+</ul>
+<p>因此，上面的列表中的前 6 个 Feature 表示的都是当前 candidate
+与用户在历史发生过交互的 lisitng 的一些相似性。除此之外，paper
+还<strong>对 feature 做了 market 的划分</strong>，比如对于 <span
+class="math inline">\(H\_c\)</span>, 将其划分为 <span
+class="math inline">\(H\_c(market1)\)</span>, <span
+class="math inline">\(H\_c(market2)\)</span>..., 然后对同一个 market
+内的所有 listing id 的 embedding 做一个 mean-pooling, 称为 market-level
+embedding，然后计算 candidate listing 跟各个 market-level embedding 的
+similarity 并取最大那个，即对于 candidate <span
+class="math inline">\(l\_c\)</span>, 上面第一个 feature 的计算如下</p>
+<p><span class="math display">\[EmbClickSim(l\_c, H\_c) = \max\_{m \in
+M} cos(v\_{l\_i}, \sum\_{l\_h \in m, l\_h \in
+H\_c}v\_{l\_h})\]</span></p>
+<p>笔者这里有个疑惑，<strong>为什么要取 max
+操作而不是把所有的特征都加进去</strong>？因为上面的做法相当于将 market
+和 simlarity 这两个 feature 做了交叉，如果把所有 feature
+输进去也能扩大原始的feature 的数量。paper
+中并没有针对这一点作出解释，可能是都交叉的时候很多交叉特征的值都为空？</p>
+<p>上面 table 后的这两个 feature 计算方法类似，只是没有再分 market
+计算，因为这里的并不像前面提到的 listing 有明确的 market 概念，
+EmbLastLongClickSim 这个 feature 是为了捕获用户最近的兴趣了，而
+UserTypeListingTypeSim 这个 feature
+则是为了捕获用户长期更泛化的一些兴趣</p>
+<p>上面的特征都攒了 30
+天，下面是特征的覆盖度和重要性（通过树模型训练结果获取），airbnb
+中的模型有 104 个特征，从图中可知，有 5 个 feature 进入了 top20 的重要
+feature；其中有几个点值得关注</p>
+<ul>
+<li>EmbClickSum 的重要性是这些 embedding 构造出来的 feature
+中最重要的，反映了用户短期内的兴趣</li>
+<li>描述<strong>下单的特征中，用户的长期兴趣比用户的短期兴趣更好</strong>（UserTypeListingTypeSim重要性高于
+EmbBookSim），笔者猜测另一个原因可能是计算 EmbBookSim
+数据会更为稀疏，因为一般对于一个用户来说两周内下单一次的频率是很低的</li>
+</ul>
+<figure>
+<img src="https://wulc.me/imgs/featureImportance.jpg"
+alt="featureimportance" />
+<figcaption aria-hidden="true">featureimportance</figcaption>
+</figure>
+<p>此外，标题中的 Real-time 体现在哪里, 其实就是 Table 6 中的几个
+feature 会随着用户的行为的实时变化而变化。</p>
+<h3 id="similar-listing-recommemdation">Similar Listing
+Recommemdation</h3>
+<p>Similar Listing Recommemdation 做的事情就是在每个 listing
+详情页里推荐相似物品，这里主要利用的就是 listing embeddings 的 cos
+similarity 来选出 top-k 个最相似的物品， paper 将当前 airbnb
+的相似物品推荐策略与这个基于 embedding 的方法作比较，线上的 AB
+实验显示这个方法相比与当前的方法 ctr 提升了约 21%，cvr 提升了约 4.9%</p>
+<h2 id="小结">小结</h2>
+<p>笔者认为这篇 paper 介绍了三个方面的内容</p>
+<ol type="1">
+<li>如何训练生成 embedding</li>
+<li>怎么评估训练出来的 embedding 的有效性</li>
+<li>线上怎么使用这些embedding</li>
+</ol>
+<p>训练方法是用了 word2vec 中的 skip-gram 方法，训练数据用了用户历史的
+click session 和 book session，且根据具体业务在 skip-gram
+做了一些改动，如做 market-level 的 negative sampling、将用户预定的
+listing 作为 global
+context、将被商家拒绝的订单作为负例等；同时在转化数据系数情况下，将 id
+embedding 转为 type embedding，缓解了数据系数情况下 embedding
+无法学得很好的问题。除此之外，一些训练细节也值得参考</p>
+<p>评估生成的 embedding 的有效性时，除了最常用的可视化方法，paper
+还用了另外两种值得参考方法，第一种是确定某些维度后，比较这些不同维度上的
+listing embedding 的相似性，第二种则是根据 listing embedding
+相似性对历史排序结果重新排序，同时看最终被下单的 listing
+在重新排序后的结果</p>
+<p>线上使用 embedding 时，由于 Airbnb 使用的是树模型，不能直接将
+embedding 作为 feature 输入模型，paper 中是通过计算出 embedding
+间的相似性作为连续值特征输入模型的</p>
+<p>最后，知乎上<a
+target="_blank" rel="noopener" href="https://www.zhihu.com/question/302288216">如何评价Airbnb的Real-time
+Personalization获得2018 kdd最佳论文？</a>也有很多值对这篇 paper
+的解读，都值得一看，推荐看下<a
+target="_blank" rel="noopener" href="https://www.zhihu.com/question/302288216/answer/532712103">这个回答</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 机器学习</a>
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"># 深度学习</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/06/14/%E7%A8%8B%E5%BA%8F%E7%9A%84%E8%A1%A8%E7%A4%BA%E3%80%81%E8%BD%AC%E6%8D%A2%E4%B8%8E%E9%93%BE%E6%8E%A5-week5%E3%80%816/" rel="prev" title="程序的表示、转换与链接-week5、6">
+      <i class="fa fa-chevron-left"></i> 程序的表示、转换与链接-week5、6
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/07/04/%E7%A8%8B%E5%BA%8F%E7%9A%84%E8%A1%A8%E7%A4%BA%E3%80%81%E8%BD%AC%E6%8D%A2%E4%B8%8E%E9%93%BE%E6%8E%A5-week7/" rel="next" title="程序的表示、转换与链接-week7">
+      程序的表示、转换与链接-week7 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A6%BB%E7%BA%BF%E8%AE%AD%E7%BB%83"><span class="nav-number">1.</span> <span class="nav-text">离线训练</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#listing-embedding"><span class="nav-number">1.1.</span> <span class="nav-text">listing embedding</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#user_typelisting_type-embeddings"><span class="nav-number">1.2.</span> <span class="nav-text">user_type&#x2F;listing_type
+embeddings</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%AD%E7%BB%83%E7%BB%86%E8%8A%82"><span class="nav-number">1.3.</span> <span class="nav-text">训练细节</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#embedding-%E6%9C%89%E6%95%88%E6%80%A7%E6%A0%A1%E9%AA%8C"><span class="nav-number">1.4.</span> <span class="nav-text">embedding 有效性校验</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%A8%E7%BA%BF-serving"><span class="nav-number">2.</span> <span class="nav-text">在线 serving</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#search-ranking"><span class="nav-number">2.1.</span> <span class="nav-text">Search Ranking</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#similar-listing-recommemdation"><span class="nav-number">2.2.</span> <span class="nav-text">Similar Listing
+Recommemdation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">3.</span> <span class="nav-text">小结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">248</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.linkedin.com/in/wuliangchao/" title="LinkedIn → https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;wuliangchao&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i>LinkedIn</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="《Budget Pacing for Targeted Online Advertisements at LinkedIn》 是 LinkedIn 在 2014 年发表的一篇关于预算控制的论文，里面的预算控制的策略并不复杂，并且具有很强的实践性和工程性。本文主要是根据论文总结了这个方法的基本原理、工程实现以及实验效果。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《Budget Pacing for Targeted Online Advertisements at LinkedIn》 阅读笔记">
+<meta property="og:url" content="https://wulc.me/2018/10/25/%E3%80%8ABudget%20Pacing%20for%20Targeted%20Online%20Advertisements%20at%20LinkedIn%E3%80%8B%20%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="《Budget Pacing for Targeted Online Advertisements at LinkedIn》 是 LinkedIn 在 2014 年发表的一篇关于预算控制的论文，里面的预算控制的策略并不复杂，并且具有很强的实践性和工程性。本文主要是根据论文总结了这个方法的基本原理、工程实现以及实验效果。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/image_1cquneeh317desbn1f7gd651fl09.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1cqus9euh1e21bdslma1v85t3jm.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1cqutctu84f72db1rj6177a1ah133.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1cquteetoe1r441vp86lf15r450.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1cqutoq7r1bd31bbkrst4pe1s3o5d.png">
+<meta property="article:published_time" content="2018-10-25T13:37:39.000Z">
+<meta property="article:modified_time" content="2023-04-30T05:12:49.022Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="计算广告">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/image_1cquneeh317desbn1f7gd651fl09.png">
+
+<link rel="canonical" href="https://wulc.me/2018/10/25/%E3%80%8ABudget%20Pacing%20for%20Targeted%20Online%20Advertisements%20at%20LinkedIn%E3%80%8B%20%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>《Budget Pacing for Targeted Online Advertisements at LinkedIn》 阅读笔记 | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">吴良超的学习笔记</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2018/10/25/%E3%80%8ABudget%20Pacing%20for%20Targeted%20Online%20Advertisements%20at%20LinkedIn%E3%80%8B%20%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          《Budget Pacing for Targeted Online Advertisements at LinkedIn》 阅读笔记
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-10-25 21:37:39" itemprop="dateCreated datePublished" datetime="2018-10-25T21:37:39+08:00">2018-10-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-30 13:12:49" itemprop="dateModified" datetime="2023-04-30T13:12:49+08:00">2023-04-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A/" itemprop="url" rel="index"><span itemprop="name">计算广告</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>《<a
+target="_blank" rel="noopener" href="https://github.com/wzhe06/Ad-papers/blob/master/Budget%20Control/Budget%20Pacing%20for%20Targeted%20Online%20Advertisements%20at%20LinkedIn.pdf">Budget
+Pacing for Targeted Online Advertisements at LinkedIn</a>》 是 LinkedIn
+在 2014
+年发表的一篇关于预算控制的论文，里面的预算控制的策略并不复杂，并且具有很强的实践性和工程性。本文主要是根据论文总结了这个方法的基本原理、工程实现以及实验效果。</p>
+<span id="more"></span>
+<p>顾名思义，预算控制（budget
+control）在广告系统中的作用就是该<strong>如何合理花掉广告主的预算</strong>。在实际中经常会出现广告主预算消耗过快的问题，这会导致广告主早早退出竞价，不仅会影响广告主体验，也会导致整个广告生态的竞争力下降（因为那些有竞争力的广告主消耗早早就花光了），在二价的机制下，直接影响了平台的收入。论文为了解决这个问题，提出了一个
+budget pacing 的算法。</p>
+<h2 id="原理">原理</h2>
+<p>算法的主要思想就是<strong>令每个
+campaign（推广计划）的消耗趋势与其曝光变化趋势基本保持一致，以天为时间单位，campaign
+为预算控制单位</strong>，首先为每个 campaign
+预测出其在当天的曝光情况；然后基于其曝光情况，在当前时间片，假如
+<code>已消耗/当天预算</code> 的比例大于 <code>已曝光/预测的总曝光</code>
+的比例，则说明预算已经消耗过快，需要减小消耗的速度，反之则要加快消耗的速度。</p>
+<p>下面详细讲述这个算法的原理</p>
+<p>对于某个 campaign <span class="math inline">\(i\)</span>，记其出价为
+<span class="math inline">\(b\_i\)</span>，当天预算为 <span
+class="math inline">\(d\_i\)</span>。一天的时间被划分为 <span
+class="math inline">\(T\)</span> 个时间窗口， <span
+class="math inline">\(s\_{i,t}(0 \le t \lt T)\)</span> 表示截止到第
+<span class="math inline">\(t\)</span> 个时间窗口开始时的累积预算，<span
+class="math inline">\(f\_{i,t}\)</span> 与 <span
+class="math inline">\(s\_{i,t}\)</span> 对应，表示截止到第 <span
+class="math inline">\(t\)</span> 个时间窗口开始时的累积曝光(<span
+class="math inline">\(f\_{i,t}\)</span> 是预测出来的，下式的 <span
+class="math inline">\(f\_{i,T}\)</span> 表示预测出来 campaign <span
+class="math inline">\(i\)</span> 在当天的总曝光)。则在时间窗口 <span
+class="math inline">\(t\)</span> 开始时，有</p>
+<p><span class="math display">\[a\_{it} := \frac{f\_{i, t}}{f\_{i,
+T}}d\_i\]</span></p>
+<p>根据上面的比例，<strong>在每次竞价开始时，为 campaign <span
+class="math inline">\(i\)</span> 算出其参与这次竞价的概率 <span
+class="math inline">\(p\_{i,t}\)</span></strong>，论文称这个概率为
+PTR（pass through rate）, 计算方式如下</p>
+<p><span class="math display">\[p\_{i,t} =
+\begin{cases} p\_{i, t-1}\*(1 + r\_t)&amp; s\_{i, t} \le a\_{i, t}\\\
+p\_{i, t-1}\*(1 - r\_t)&amp; s\_{i, t} \gt a\_{i, t}
+\end{cases}\]</span></p>
+<p>上式中的 <span class="math inline">\(r\_t(0 &lt; r\_t &lt;
+1)\)</span> 称作调整速率（adjustment rate）。</p>
+<p>对于 campaign <span class="math inline">\(i\)</span> , <span
+class="math inline">\(a\_{it}\)</span> 在当天开始已经确定，因为 <span
+class="math inline">\(f\_{i,t}\)</span> 是预测出来的,
+因此控制预算就完全是针对 <span class="math inline">\(s\_{i,t}\)</span>
+的变化进行。</p>
+<p>除了这种调整 campaign
+参与竞价概率的控制方式，某些文献也建议通过调整出价的方式进行干预，如下所示是论文
+[1] 提出的调价方式</p>
+<p><span class="math display">\[b\_i^* = b\_i \psi(s\_{i,
+t}/d\_i)\]</span></p>
+<p>其中 <span class="math inline">\(\psi(x) = 1 - e^{x-1}\)</span>，但是
+LinkedIn
+这篇论文的作者不建议采用这种方式，原因是对于那些快耗尽预算的campaign，bid
+修改的幅度很小，且出价一般存在着保留价（reserve
+price），因此可调整的幅度很小。论文也对这种方式做了实验，结果显示该方式对提升
+campaign 的预算消耗时长无帮助。</p>
+<p>整个算法就是这么简单，下面主要说一下具体的实现细节。</p>
+<h2 id="实现细节">实现细节</h2>
+<h3 id="更新-ptr-频率">更新 PTR 频率</h3>
+<p>更新 PTR 频率设置成每分钟一次，也就是说<strong>时间窗口的大小为 1
+min</strong>，实验证明这个更新频率使得整个系统更快达到一个稳定状态。</p>
+<h3 id="预估曝光量">预估曝光量</h3>
+<p>上面预估某个 campaign
+的曝光量可以说是整个算法至为关键的地方，论文并没有针对这一点提出自己的方法，而是采用了论文
+[2] 里面的方法，这篇论文是 Yahoo
+在做保量的合约广告时提出的预估流量的方法。这里不详细展开了，会另外写一篇博客加以阐释。</p>
+<h3 id="调整速率的设置">调整速率的设置</h3>
+<p>调整速率也就是上面的 <span
+class="math inline">\(r\_t\)</span>，目的是控制 PTR
+变化的快慢，论文将这个值设置为固定的
+10%，这不仅实现简单，鲁棒性也很强。另外一种更复杂的设置方法就是将这个值设置成
+<span class="math inline">\(s\_{i,t}\)</span> 的变化率，也就是 <span
+class="math inline">\(\partial s\_{i,t}/\partial t\)</span>,
+表示消耗过快的 campaign
+其对应的调整速率也应该较大。然后论文还是选择了固定的 10%
+的值，原因有两个</p>
+<p>1）<span class="math inline">\(s\_{i,t}\)</span>
+表示的曲线并不光滑（一系列离散的点），尤其是对于 CPC
+这种有了点击才会扣费的广告，这时候的 <span
+class="math inline">\(s\_{i,t}\)</span> 波动会比较大，从而使得计算出来的
+<span class="math inline">\(\partial s\_{i,t}/\partial t\)</span> 会比较
+noisy 2）PTR 的更新频率比较频繁，因此即使当前 PTR
+不在最合适的位置（<span class="math inline">\(\partial s\_{i,t}/\partial
+t\)</span>），也能够很快更新到理想位置</p>
+<h3 id="设置-ptr-初始值slow-start">设置 PTR 初始值（Slow Start）</h3>
+<p>论文将每个 campaign 的 PTR 初始值设置为 10%，并将这种方式称为 slow
+start，因为这个初始值较小。设置较小的初始值给予系统以时间来调整每个
+campaign 的 PTR，反之若 PTR
+一开始就设置得很高，会导致预算很快被花光。</p>
+<p>同样，更合理的方式是为每个 campaign 设置一个
+PTR，但是论文并没有针对这一点进行深度的探讨。</p>
+<h3 id="fast-finish">Fast Finish</h3>
+<p>由于系统存在统计偏差，使得 PTR
+的值偏低，这会导致当天预算没法完全花出去，而 fast finish
+就是针对这个问题的一种解决方法。具体的做法就是修改上面预测的 <span
+class="math inline">\(f\_{i,t}\)</span> (allocation
+curve)，令最后两个小时的曝光量为 0，这样会导致 budget pacing
+这个算法每天会尝试在 22 小时内花光预算。</p>
+<h3 id="工程上的设计">工程上的设计</h3>
+<p>下图是 LinkedIn 的广告系统概览图，advertiser action
+是指广告主的行为，包括创建 campaign、修改 bid 或 budget 等；ad requests
+则是指用户浏览而触发的广告请求。在 ad sever 中的 campaign index
+记录着每个 campaign 当前的状态（曝光，消耗等情况），pacing module
+会根据预设的更新频率从 database 中获取最新的数据来更新 campaign
+index。</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1cquneeh317desbn1f7gd651fl09.png"
+alt="engineering design" />
+<figcaption aria-hidden="true">engineering design</figcaption>
+</figure>
+<p>需要注意的是，pacing module
+的更新并不是一次立刻完成，而是采用了较为平缓的方式，上文提到了 pacing
+的更新频率为每分钟一次，因此在实际更新是大概<strong>每 7s 更新 12%
+的campaign</strong>；这种更新频率能够让系统的负载较为均匀，也能够较快达到一个稳定状态。</p>
+<h2 id="实验的设计与效果">实验的设计与效果</h2>
+<p>由于以上的 pacing 方式是以 campaign 为单位的，因此实验会将所有的
+campaign
+等分为两部分，分别作为实验组和对照组（当然，也可以采用灰度而不是全量的方式）。</p>
+<p>为了避免时间因素（weekly，seasonality）的影响，论文认为设计的实验至少要持续两周，如下图所示是一个
+campaign 的实验设置情况，其中 On 表示采用上述的 pacing 算法，Off
+表示不采用。</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1cqus9euh1e21bdslma1v85t3jm.png"
+alt="design of experiment" />
+<figcaption aria-hidden="true">design of experiment</figcaption>
+</figure>
+<p>则采用 pacing 的效果是标为 On
+的那些天的效果的均值，那么该<strong>采用哪些指标来评估效果</strong>？</p>
+<p>首先我们要认识到，<strong>在线广告是一个广告主、平台和用户的三方博弈过程</strong>，因此在考虑任意机制带来的收益或损失时都要同时考虑到这三方的利益；论文也是同时考虑了这三方的利益，设置了以下指标</p>
+<ol type="1">
+<li><strong>广告主的利益</strong>
+<ul>
+<li>Campain life time：预算消耗 95% 所消耗的时间</li>
+<li>Unique impressions per spend：单位消耗给广告主带来的unique
+user数量，计算方式 <code>number of unique user/total spend</code></li>
+<li>Number of campaigns：表示当天平台服务的 campaign 的数量</li>
+</ul></li>
+<li><strong>平台的收益</strong>
+<ul>
+<li>Cost per request：每次请求的平均收益，计算方式
+<code>total revenue/number of requests</code></li>
+<li>Over delivery: 超扣的金额占预算的比例</li>
+</ul></li>
+<li><strong>用户体验</strong>
+<ul>
+<li>Unique campaings served: 用户看到的所有广告中有几个 unique
+campaign，表示用户看到的广告的多样性，论文认为这个值越大越好</li>
+</ul></li>
+</ol>
+<p>论文在 LinkedIn 的两种广告（Direct Ads 和 Sponsored Status
+Updates）上分别做了这个实验，结果如下，带加号 <code>+</code> 的指标表示
+On 在 oFF 的基础上的变化比例；根据下表，在各个指标上均有较高提升</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1cqutctu84f72db1rj6177a1ah133.png"
+alt="effect 1" />
+<figcaption aria-hidden="true">effect 1</figcaption>
+</figure>
+<figure>
+<img src="https://wulc.me/imgs/image_1cquteetoe1r441vp86lf15r450.png"
+alt="effect 2" />
+<figcaption aria-hidden="true">effect 2</figcaption>
+</figure>
+<p>且根据 cost per click
+指标，可在一定程度上了解目前系统的竞争力情况，该值越大，表示系统竞争越激烈，论文也根据这个指标对比了采用这个策略前后系统的竞争力，如下图所示，可以看到，采用
+pacing 后前期的竞争有所缓和（slow
+start导致的），而后期的竞争力比原来有所提升，原因是 campaign life time
+变长了，因此有竞争力的 campaign 不会早早就退出了竞价环境。</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1cqutoq7r1bd31bbkrst4pe1s3o5d.png"
+alt="competition" />
+<figcaption aria-hidden="true">competition</figcaption>
+</figure>
+<hr />
+<p>论文参考文献</p>
+<p>[1] A. Mehta, A. Saberi, U. Vazirani, and V. Vazirani.Adwords and
+generalized on-line matching. Journal of the ACM, 54(5):Article no. 22,
+October 2007 [2] D. Agarwal, D. Chen, L.-j. Lin, J. Shanmugasundaram,
+and E. Vee. Forecasting high-dimensional data. In Proceedings of the
+2010 ACM SIGMOD International Conference on Management of Data, SIGMOD
+’10, pages 1003–1012, New York, NY, USA, 2010. ACM.</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A/" rel="tag"># 计算广告</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/10/18/Code%20Complete%20%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0-%E5%88%9B%E5%BB%BA%E9%AB%98%E8%B4%A8%E9%87%8F%E7%9A%84%E4%BB%A3%E7%A0%81(1)/" rel="prev" title="Code Complete 阅读笔记-创建高质量的代码(1)">
+      <i class="fa fa-chevron-left"></i> Code Complete 阅读笔记-创建高质量的代码(1)
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/10/31/Code%20Complete%20%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0-%E5%88%9B%E5%BB%BA%E9%AB%98%E8%B4%A8%E9%87%8F%E7%9A%84%E4%BB%A3%E7%A0%81(2)/" rel="next" title="Code Complete 阅读笔记-创建高质量的代码(2)">
+      Code Complete 阅读笔记-创建高质量的代码(2) <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8E%9F%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82"><span class="nav-number">2.</span> <span class="nav-text">实现细节</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9B%B4%E6%96%B0-ptr-%E9%A2%91%E7%8E%87"><span class="nav-number">2.1.</span> <span class="nav-text">更新 PTR 频率</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%84%E4%BC%B0%E6%9B%9D%E5%85%89%E9%87%8F"><span class="nav-number">2.2.</span> <span class="nav-text">预估曝光量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B0%83%E6%95%B4%E9%80%9F%E7%8E%87%E7%9A%84%E8%AE%BE%E7%BD%AE"><span class="nav-number">2.3.</span> <span class="nav-text">调整速率的设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE-ptr-%E5%88%9D%E5%A7%8B%E5%80%BCslow-start"><span class="nav-number">2.4.</span> <span class="nav-text">设置 PTR 初始值（Slow Start）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#fast-finish"><span class="nav-number">2.5.</span> <span class="nav-text">Fast Finish</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%A5%E7%A8%8B%E4%B8%8A%E7%9A%84%E8%AE%BE%E8%AE%A1"><span class="nav-number">2.6.</span> <span class="nav-text">工程上的设计</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E7%9A%84%E8%AE%BE%E8%AE%A1%E4%B8%8E%E6%95%88%E6%9E%9C"><span class="nav-number">3.</span> <span class="nav-text">实验的设计与效果</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">248</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.linkedin.com/in/wuliangchao/" title="LinkedIn → https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;wuliangchao&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i>LinkedIn</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="这里的 Google 图片爬虫指的是爬取在 Google 上通过关键词搜索得到的图片，由于最近需要一些特定领域的图片，而且现有的数据库满足不了要求，因此就想通过 Google 搜索筛选出这些特定领域的图片，然后下载下来后再进行人工筛选。这里采用了两种方法，区别在于是否需要解析网页端的 JS 代码。该项目的代码已经放到了 Github 上，详细代码参见这里。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Google 图片爬虫">
+<meta property="og:url" content="https://wulc.me/2017/09/23/Google%20%E5%9B%BE%E7%89%87%E7%88%AC%E8%99%AB/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="这里的 Google 图片爬虫指的是爬取在 Google 上通过关键词搜索得到的图片，由于最近需要一些特定领域的图片，而且现有的数据库满足不了要求，因此就想通过 Google 搜索筛选出这些特定领域的图片，然后下载下来后再进行人工筛选。这里采用了两种方法，区别在于是否需要解析网页端的 JS 代码。该项目的代码已经放到了 Github 上，详细代码参见这里。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2017-09-23T03:08:18.000Z">
+<meta property="article:modified_time" content="2023-04-30T05:12:49.170Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="爬虫">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://wulc.me/2017/09/23/Google%20%E5%9B%BE%E7%89%87%E7%88%AC%E8%99%AB/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Google 图片爬虫 | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">吴良超的学习笔记</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2017/09/23/Google%20%E5%9B%BE%E7%89%87%E7%88%AC%E8%99%AB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Google 图片爬虫
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-09-23 11:08:18" itemprop="dateCreated datePublished" datetime="2017-09-23T11:08:18+08:00">2017-09-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-30 13:12:49" itemprop="dateModified" datetime="2023-04-30T13:12:49+08:00">2023-04-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/%E7%88%AC%E8%99%AB/" itemprop="url" rel="index"><span itemprop="name">爬虫</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>这里的 Google 图片爬虫指的是爬取在 Google
+上通过关键词搜索得到的图片，由于最近需要一些特定领域的图片，而且现有的数据库满足不了要求，因此就想通过
+Google
+搜索筛选出这些特定领域的图片，然后下载下来后再进行人工筛选。这里采用了两种方法，区别在于是否需要解析网页端的
+JS 代码。该项目的代码已经放到了 Github 上，详细代码参见<a
+target="_blank" rel="noopener" href="https://github.com/WuLC/GoogleImagesDownloader">这里</a>。</p>
+<span id="more"></span>
+<p>整体的思路就是先获取 Google 搜索结果页面的 html
+代码，然后从中提取出图片的真实 URL，因为实际上 Google
+也是通过爬虫来爬取这些图片的地址以及根据描述归类，所以图片并不存储在
+Google 的服务器中。</p>
+<p>这个过程中的一个关键点就是通过关键词 <code>search_query</code>
+搜索得到的页面可直接通过下面这个 url 访问</p>
+<p><code>https://www.google.com/search?q=search_query&amp;source=lnms&amp;tbm=isch</code></p>
+<p>将 <code>search_query</code> 换成需要搜索的关键词即可。</p>
+<p>这样便可以直接获取这个页面的源码，然后通过正则表达式解析出所有的图片的链接，这个方法只需要
+python 的 urllib 库即可，对应的源码文件为 <a
+target="_blank" rel="noopener" href="https://github.com/WuLC/GoogleImagesDownloader/blob/master/download_with_urllib.py">download_with_urllib.py</a></p>
+<p>上面是第一种方法，这种方法比较简单，当时有一个问题就是每个关键词最多只能下载
+100 张图片，原因是 访问上面的链接返回的 HTTP Response
+中限制了最多只有前100张图片的URL，如果需要显示更多，则需要在解析页面中相应的
+JS 代码，这就是接下来要介绍的第二种方法。</p>
+<p>所谓解析 JS
+代码，其实就是浏览器的滚动条向下滚动时，浏览器引擎解析了页面的 JS
+代码，从而向 Google
+的服务器发出新的请求，从而返回更多的图片，当向下滚动时到底时，会出现一个显示为
+<code>Show more results</code>需要点击的按钮，只有点击后才能加载更多的图片，这些操作要通过浏览器完成，而
+python 提供了一个 <code>selenium</code>
+库，这个库通过相应的浏览器驱动来启动浏览器（不同的浏览器对应于不同的驱动），并在代码中制定具体的浏览器操作。</p>
+<p>这里采用的是 FireFox 浏览器，对应的驱动为 <a
+target="_blank" rel="noopener" href="https://github.com/mozilla/geckodriver/releases">geckodriver</a>，具体的安装步骤就是先安装
+FireFox 浏览器，然后<a
+target="_blank" rel="noopener" href="https://github.com/mozilla/geckodriver/releases">在这里</a>下载与浏览器版本相应的
+geckodriver，并且在环境变量 <code>PATH</code> 中添加 geckodriver
+的路径。</p>
+<p>第二种方法对应的源码文件为 <a
+target="_blank" rel="noopener" href="https://github.com/WuLC/GoogleImagesDownloader/blob/master/download_with_selenium.py">download_with_selenium.py</a></p>
+<p>第二种方法的源码中主要有两个方法:
+<code>get_image_links</code>和，，第一个方法是获取所有图片链接并写入到文件中，第二个方法则是下载第一个方法获取的文件中的图片；在测试时，第二个方法常常会卡住，原因可能是网络的不稳定，也可能是图片服务器那边的反爬虫机制，代码中没有捕获到
+<code>Exception</code>,
+因此后面对第二个方法进行了改进，并将新的方法写到文件 <a
+target="_blank" rel="noopener" href="https://github.com/WuLC/GoogleImagesDownloader/blob/master/download_images_with_time_limit.py">download_images_with_time_limit.py</a></p>
+<p>新的方法主要是限制 HTTP
+请求的最大耗时，超过这个时间就会抛出异常，实现是通过系统的 <a
+target="_blank" rel="noopener" href="https://docs.python.org/2/library/signal.html">signal</a>
+来中断进程的，并且用了 <code>SIGALRM</code> 这个信号，而这个信号只在
+unix-like 系统中，因此 Windows 无法运行这个脚本。</p>
+<p>而 <code>SIGALRM</code> 在 python 中的用法如下：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> signal, os</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">handler</span>(<span class="params">signum, frame</span>):</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&#x27;Signal handler called with signal&#x27;</span>, signum</span><br><span class="line">    <span class="keyword">raise</span> IOError(<span class="string">&quot;Couldn&#x27;t open device!&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="comment"># Set the signal handler and a 5-second alarm</span></span><br><span class="line">    signal.signal(signal.SIGALRM, handler)</span><br><span class="line">    signal.alarm(<span class="number">5</span>)</span><br><span class="line">exception IOERROR:</span><br><span class="line">    <span class="comment"># This open() may hang indefinitely</span></span><br><span class="line">    fd = os.<span class="built_in">open</span>(<span class="string">&#x27;/dev/ttyS0&#x27;</span>, os.O_RDWR)</span><br><span class="line"><span class="keyword">finally</span>:</span><br><span class="line">    signal.alarm(<span class="number">0</span>)          <span class="comment"># Disable the alarm</span></span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/python/" rel="tag"># python</a>
+              <a href="/tags/%E7%88%AC%E8%99%AB/" rel="tag"># 爬虫</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/09/13/Spark%20%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E5%92%8C%20Jupyter%20Notebook%20%E9%85%8D%E7%BD%AE%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/" rel="prev" title="Spark 集群部署和 Jupyter Notebook 配置注意事项">
+      <i class="fa fa-chevron-left"></i> Spark 集群部署和 Jupyter Notebook 配置注意事项
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/10/12/LeetCode%20%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A(684,685,721)-%E5%B9%B6%E6%9F%A5%E9%9B%86%E4%BB%8B%E7%BB%8D%E5%8F%8A%E5%BA%94%E7%94%A8/" rel="next" title="LeetCode 解题报告(684,685,721)-并查集介绍及应用">
+      LeetCode 解题报告(684,685,721)-并查集介绍及应用 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">248</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.linkedin.com/in/wuliangchao/" title="LinkedIn → https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;wuliangchao&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i>LinkedIn</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

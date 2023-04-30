@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="排序是非常常见的操作，常见的排序算法的时间复杂度一般为\(O(n^2)\)（冒泡、选择、插入）或\(O(nlogn)\)(快排、归并等)。虽然这些算法对于编程人员来说是基础，但是在实际工程中往往会使用语言内置的排序函数，主要是考虑到编程效率和自己编写排序函数时涵盖情况不全的问题。因此本文主要讲述python中的内置函数。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python内置的排序函数">
+<meta property="og:url" content="https://wulc.me/2016/07/23/python%E5%86%85%E7%BD%AE%E7%9A%84%E6%8E%92%E5%BA%8F%E5%87%BD%E6%95%B0/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="排序是非常常见的操作，常见的排序算法的时间复杂度一般为\(O(n^2)\)（冒泡、选择、插入）或\(O(nlogn)\)(快排、归并等)。虽然这些算法对于编程人员来说是基础，但是在实际工程中往往会使用语言内置的排序函数，主要是考虑到编程效率和自己编写排序函数时涵盖情况不全的问题。因此本文主要讲述python中的内置函数。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2016-07-23T13:53:19.000Z">
+<meta property="article:modified_time" content="2023-04-30T05:12:49.017Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="python">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://wulc.me/2016/07/23/python%E5%86%85%E7%BD%AE%E7%9A%84%E6%8E%92%E5%BA%8F%E5%87%BD%E6%95%B0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>python内置的排序函数 | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">吴良超的学习笔记</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2016/07/23/python%E5%86%85%E7%BD%AE%E7%9A%84%E6%8E%92%E5%BA%8F%E5%87%BD%E6%95%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          python内置的排序函数
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2016-07-23 21:53:19" itemprop="dateCreated datePublished" datetime="2016-07-23T21:53:19+08:00">2016-07-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-30 13:12:49" itemprop="dateModified" datetime="2023-04-30T13:12:49+08:00">2023-04-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/%E8%AF%AD%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">语法</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>排序是非常常见的操作，常见的排序算法的时间复杂度一般为<span
+class="math inline">\(O(n^2)\)</span>（冒泡、选择、插入）或<span
+class="math inline">\(O(nlogn)\)</span>(快排、归并等)。虽然这些算法对于编程人员来说是基础，但是在实际工程中往往会使用语言内置的排序函数，主要是考虑到编程效率和自己编写排序函数时涵盖情况不全的问题。因此本文主要讲述python中的内置函数。</p>
+<span id="more"></span>
+<p>python内置的排序函数主要有两个：<code>sort</code>和<code>sorted</code>，两者主要以下几点区别
+<strong>（1）针对的数据类型不同，sort只能对list类型排序，sorted可对list、tuple、dictionary以及自定义的类等数据类型排序
+（2）sort会修改原来的list，sorted不会修改原来的数据结构，而是将排好序的结果以list形式返回,因此sorted才能对不可变的数据类型tuple进行排序
+（3）语法不同，sort的使用方法是list.sort(),sorted的使用方法是sorted(list|tuple|dict)</strong></p>
+<p>除此之外，两者的参数完全一致，都含有<code>reverse，key，cmp</code>这几个参数，这几个参数的用法在两个函数中一致，下面以<code>sorted</code>为例分别讲述这几个参数的作用。</p>
+<h2 id="reverse-参数">reverse 参数</h2>
+<p>reverse参数的作用是决定从小到大还是从大到小排列结果，默认情况下<code>reverse=False</code>，从小到大排列结果。如果要从大到小排列结果，添加<code>reverse=True</code>参数即可。示例如下所示：
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>a = [<span class="string">&#x27;a&#x27;</span>,<span class="string">&#x27;A&#x27;</span>,<span class="string">&#x27;b&#x27;</span>,<span class="string">&#x27;B&#x27;</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">sorted</span>(a)</span><br><span class="line">[<span class="string">&#x27;A&#x27;</span>, <span class="string">&#x27;B&#x27;</span>, <span class="string">&#x27;a&#x27;</span>, <span class="string">&#x27;b&#x27;</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>a</span><br><span class="line">[<span class="string">&#x27;a&#x27;</span>, <span class="string">&#x27;A&#x27;</span>, <span class="string">&#x27;b&#x27;</span>, <span class="string">&#x27;B&#x27;</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>a = [<span class="string">&#x27;abundunt&#x27;</span>,<span class="string">&#x27;Array&#x27;</span>,<span class="string">&#x27;bunch&#x27;</span>,<span class="string">&#x27;</span></span><br><span class="line"><span class="string">&gt;&gt;&gt; sorted(a, reverse = True)</span></span><br><span class="line"><span class="string">[&#x27;</span>bunch<span class="string">&#x27;, &#x27;</span>abundunt<span class="string">&#x27;, &#x27;</span>But<span class="string">&#x27;, &#x27;</span>Array<span class="string">&#x27;]</span></span><br></pre></td></tr></table></figure></p>
+<p>数字大小的判断很容易理解，这里比较的是字符串的大小，比较时会根据<strong>字符串首字符的ASCII码的大小</strong>进行排序。</p>
+<h2 id="key-参数">key 参数</h2>
+<p>上面的例子是根据单个元素来排序的，假如需要对多个元素组合而成的元素来排序（如<code>b = [(2,1),(1,3),(4,2)]</code>），就需要用key来指定以哪个元素作为排序的依据。</p>
+<p>下面是对tuple组成的tuple的排序 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>b = ((<span class="number">2</span>,<span class="number">1</span>),(<span class="number">1</span>,<span class="number">3</span>),(<span class="number">4</span>,<span class="number">2</span>))</span><br><span class="line"><span class="comment"># 不用key参数时也不会报错，这时排序依据默认是组合元素中的第一个元素，但是为了程序的清晰性，还是建议使用key参数</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">sorted</span>(b) </span><br><span class="line">[(<span class="number">1</span>, <span class="number">3</span>), (<span class="number">2</span>, <span class="number">1</span>), (<span class="number">4</span>, <span class="number">2</span>)]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">sorted</span>(b, key = <span class="keyword">lambda</span> x:x[<span class="number">0</span>])</span><br><span class="line">[(<span class="number">1</span>, <span class="number">3</span>), (<span class="number">2</span>, <span class="number">1</span>), (<span class="number">4</span>, <span class="number">2</span>)]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">sorted</span>(b, key = <span class="keyword">lambda</span> x:x[<span class="number">1</span>])</span><br><span class="line">[(<span class="number">2</span>, <span class="number">1</span>), (<span class="number">4</span>, <span class="number">2</span>), (<span class="number">1</span>, <span class="number">3</span>)]</span><br></pre></td></tr></table></figure>
+给key参数传进去的是一个函数，上面使用<code>lambda</code>实现，<strong>传入的是需要排序的组合元素，返回的是根据组合元素中哪个元素排序，从下标0开始计算</strong>。</p>
+<p>对于字典的key或value排序也是如此，但此时的下标就只有0和1了，分别代表key和value。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>d = &#123;<span class="number">2</span>:<span class="number">1</span>, <span class="number">4</span>:<span class="number">3</span>, <span class="number">1</span>:<span class="number">6</span>&#125;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">sorted</span>(d.items(), key = <span class="keyword">lambda</span> x:x[<span class="number">0</span>])</span><br><span class="line">[(<span class="number">1</span>, <span class="number">6</span>), (<span class="number">2</span>, <span class="number">1</span>), (<span class="number">4</span>, <span class="number">3</span>)]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>d</span><br><span class="line">&#123;<span class="number">1</span>: <span class="number">6</span>, <span class="number">2</span>: <span class="number">1</span>, <span class="number">4</span>: <span class="number">3</span>&#125;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">sorted</span>(d.items(), key = <span class="keyword">lambda</span> x:x[<span class="number">1</span>])</span><br><span class="line">[(<span class="number">2</span>, <span class="number">1</span>), (<span class="number">4</span>, <span class="number">3</span>), (<span class="number">1</span>, <span class="number">6</span>)]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>d</span><br><span class="line">&#123;<span class="number">1</span>: <span class="number">6</span>, <span class="number">2</span>: <span class="number">1</span>, <span class="number">4</span>: <span class="number">3</span>&#125;</span><br></pre></td></tr></table></figure>
+<p>除了内部的list、tuple等数据类型，key还可以针对自定义的数据类型进行排序。实例如下
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">class</span> <span class="title class_">Student</span>:</span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, name, grade, age</span>):</span><br><span class="line">                self.name = name</span><br><span class="line">                self.grade = grade</span><br><span class="line">                self.age = age</span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">__repr__</span>(<span class="params">self</span>):</span><br><span class="line">                <span class="keyword">return</span> <span class="built_in">repr</span>((self.name, self.grade, self.age))</span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">weighted_grade</span>(<span class="params">self</span>):</span><br><span class="line">                <span class="keyword">return</span> <span class="string">&#x27;CBA&#x27;</span>.index(self.grade) / <span class="built_in">float</span>(self.age)</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>student_objects = [</span><br><span class="line">        Student(<span class="string">&#x27;john&#x27;</span>, <span class="string">&#x27;A&#x27;</span>, <span class="number">15</span>),</span><br><span class="line">        Student(<span class="string">&#x27;jane&#x27;</span>, <span class="string">&#x27;B&#x27;</span>, <span class="number">12</span>),</span><br><span class="line">        Student(<span class="string">&#x27;dave&#x27;</span>, <span class="string">&#x27;B&#x27;</span>, <span class="number">10</span>),</span><br><span class="line">]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">sorted</span>(student_objects, key=<span class="keyword">lambda</span> student: student.age)   <span class="comment"># sort by age</span></span><br><span class="line">[(<span class="string">&#x27;dave&#x27;</span>, <span class="string">&#x27;B&#x27;</span>, <span class="number">10</span>), (<span class="string">&#x27;jane&#x27;</span>, <span class="string">&#x27;B&#x27;</span>, <span class="number">12</span>), (<span class="string">&#x27;john&#x27;</span>, <span class="string">&#x27;A&#x27;</span>, <span class="number">15</span>)]</span><br></pre></td></tr></table></figure></p>
+<h2 id="cmp-参数">cmp 参数</h2>
+<p>利用上面两个参数已经能解决大部分的问题了，还有一些较特殊的排序需要编写特定的排序函数，这时就需要利用<code>cmp</code>参数。</p>
+<p>如LeetCode上的这道题目<a
+target="_blank" rel="noopener" href="https://leetcode.com/problems/largest-number/">179. Largest
+Number</a>，就是一道排序的题目，且排序的要求是对于两个字符串s1，s2
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">排序规则如下：</span><br><span class="line">(1)假如 s1+s2 &gt; s2+s1,则 s1 &gt; s2</span><br><span class="line">(2)假如 s1+s2 &lt; s2+s1,则 s1 &lt; s2</span><br><span class="line">(3)以上两种情况均不符合，则s1 = s2</span><br></pre></td></tr></table></figure></p>
+<p>这种情况下上面所提到的两种方法都无法实现，因为上面的两个参数都是针对单个元素的特性的，而这种方法则是针对两个元素之间的关系。因此需要定义自己的排序函数。
+不指定cmp参数的时候，<code>cmp = lambda x,y: cmp(x, y)</code>，这里需要注意第一个cmp是sort函数的参数，第二个cmp则是python的一个内置函数。其定义如下：
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>cmp(<span class="number">1</span>,<span class="number">2</span>)</span><br><span class="line">-<span class="number">1</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>cmp(<span class="number">2</span>,<span class="number">1</span>)</span><br><span class="line"><span class="number">1</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>cmp(<span class="number">2</span>,<span class="number">2</span>)</span><br><span class="line"><span class="number">0</span></span><br></pre></td></tr></table></figure> 对于<code>cmp(x, y)</code>,当 x 大于、等于、小于 y
+时，分别会返回
+1,0,-1。这个默认的cmp函数也可以写成<code>cmp = lambda x,y: x-y</code>,这种情况下是从小到大排序的，那么从大到小的排序可以写成<code>cmp = lambda x,y: y-x</code>。这等价于<code>reverse = True</code>。</p>
+<p>回到题目<a target="_blank" rel="noopener" href="https://leetcode.com/problems/largest-number/">179.
+Largest
+Number</a>上，利用内置的sorted函数，我们可以写出下面较为简洁的代码</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="comment"># @param &#123;integer[]&#125; nums</span></span><br><span class="line">    <span class="comment"># @return &#123;string&#125;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">largestNumber</span>(<span class="params">self, nums</span>):</span><br><span class="line">        snums = [<span class="built_in">str</span>(num) <span class="keyword">for</span> num <span class="keyword">in</span> nums]</span><br><span class="line">        snums.sort(cmp=<span class="keyword">lambda</span> x,y: cmp(y+x,x+y))</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;&#x27;</span>.join(snums).lstrip(<span class="string">&#x27;0&#x27;</span>) <span class="keyword">or</span> <span class="string">&#x27;0&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>关键点在<code>snums.sort(cmp=lambda x,y: cmp(y+x,x+y))</code>这句话，首先是<code>cmp(y+x,x+y)</code>,当
+<code>y+x &gt; x+y</code>时, <code>y&gt;x</code>,
+此时<code>cmp(y+x,x+y)</code>返回1，而由上面的知识可知这是从大到小的排序。</p>
+<p>上面可以说是比较抽象的代码，下面是通过自己实现的快排解决上面的题目，跟上面的答案一样能够AC。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="comment"># @param &#123;integer[]&#125; nums</span></span><br><span class="line">    <span class="comment"># @return &#123;string&#125;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">largestNumber</span>(<span class="params">self, nums</span>):</span><br><span class="line">        snums = [<span class="built_in">str</span>(num) <span class="keyword">for</span> num <span class="keyword">in</span> nums]</span><br><span class="line">        self.quick_sort(<span class="number">0</span>, <span class="built_in">len</span>(snums)-<span class="number">1</span>, snums)</span><br><span class="line">        tmp = <span class="string">&#x27;&#x27;</span>.join(snums).lstrip(<span class="string">&#x27;0&#x27;</span>)</span><br><span class="line">        <span class="keyword">return</span> tmp <span class="keyword">if</span> tmp <span class="keyword">else</span> <span class="string">&#x27;0&#x27;</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">quick_sort</span>(<span class="params">self, left, right, nums</span>):</span><br><span class="line">        <span class="keyword">if</span> left &gt; right:</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        pivot, start, end = left, left, right</span><br><span class="line">        <span class="keyword">while</span> left &lt; right:</span><br><span class="line">            <span class="keyword">while</span> left &lt; right <span class="keyword">and</span> nums[right]+nums[pivot] &lt;= nums[pivot]+nums[right]:</span><br><span class="line">                right -= <span class="number">1</span></span><br><span class="line">            <span class="keyword">while</span> left &lt; right <span class="keyword">and</span> nums[left]+nums[pivot] &gt;= nums[pivot]+nums[left]:</span><br><span class="line">                left += <span class="number">1</span></span><br><span class="line">            <span class="keyword">if</span> left &lt; right:</span><br><span class="line">                nums[left], nums[right] =nums[right], nums[left]</span><br><span class="line">        <span class="keyword">if</span> left == right:</span><br><span class="line">            nums[pivot], nums[left] = nums[left], nums[pivot]</span><br><span class="line">        self.quick_sort(start, left-<span class="number">1</span>, nums)</span><br><span class="line">        self.quick_sort(left+<span class="number">1</span>, end, nums)</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/python/" rel="tag"># python</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2016/07/20/LeetCode%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A(105.%20106)--%E6%A0%91%E7%9A%84%E9%87%8D%E6%9E%84/" rel="prev" title="LeetCode解题报告(105. 106)--树的重构">
+      <i class="fa fa-chevron-left"></i> LeetCode解题报告(105. 106)--树的重构
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2016/07/27/LeetCode%20%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A(207,210)--%E6%8B%93%E6%89%91%E6%8E%92%E5%BA%8F/" rel="next" title="LeetCode 解题报告(207,210)--拓扑排序(Topological Sort)">
+      LeetCode 解题报告(207,210)--拓扑排序(Topological Sort) <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#reverse-%E5%8F%82%E6%95%B0"><span class="nav-number">1.</span> <span class="nav-text">reverse 参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#key-%E5%8F%82%E6%95%B0"><span class="nav-number">2.</span> <span class="nav-text">key 参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cmp-%E5%8F%82%E6%95%B0"><span class="nav-number">3.</span> <span class="nav-text">cmp 参数</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">248</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.linkedin.com/in/wuliangchao/" title="LinkedIn → https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;wuliangchao&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i>LinkedIn</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="本文主要介绍机器学习中的一种集成学习的方法 stacking，本文首先介绍 stacking 这种方法的思想，然后提供一种实现 stacking 的思路，能够简单地拓展 stacking 中的基本模型。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="stacking 的基本思想及代码实现">
+<meta property="og:url" content="https://wulc.me/2018/01/21/stacking%20%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3%E5%8F%8A%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="本文主要介绍机器学习中的一种集成学习的方法 stacking，本文首先介绍 stacking 这种方法的思想，然后提供一种实现 stacking 的思路，能够简单地拓展 stacking 中的基本模型。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/image_1c4c8nmgvru315ci15f8ia4f3m9.png">
+<meta property="article:published_time" content="2018-01-21T13:53:19.000Z">
+<meta property="article:modified_time" content="2023-04-30T05:12:49.161Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="python">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/image_1c4c8nmgvru315ci15f8ia4f3m9.png">
+
+<link rel="canonical" href="https://wulc.me/2018/01/21/stacking%20%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3%E5%8F%8A%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>stacking 的基本思想及代码实现 | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">吴良超的学习笔记</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2018/01/21/stacking%20%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3%E5%8F%8A%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          stacking 的基本思想及代码实现
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-01-21 21:53:19" itemprop="dateCreated datePublished" datetime="2018-01-21T21:53:19+08:00">2018-01-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-30 13:12:49" itemprop="dateModified" datetime="2023-04-30T13:12:49+08:00">2023-04-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本文主要介绍机器学习中的一种集成学习的方法 stacking，本文首先介绍
+stacking 这种方法的思想，然后提供一种实现 stacking
+的思路，能够简单地拓展 stacking 中的基本模型。</p>
+<span id="more"></span>
+<h2 id="stacking-的基本思想">stacking 的基本思想</h2>
+<p>stacking
+就是将一系列模型（也称基模型）的输出结果作为新特征输入到其他模型，这种方法由于实现了模型的层叠，即第一层的模型输出作为第二层模型的输入，第二层模型的输出作为第三层模型的输入，依次类推，最后一层模型输出的结果作为最终结果。本文会以两层的
+stacking 为例进行说明。</p>
+<p>stacking
+的思想也很好理解，这里以论文审稿为例，首先是三个审稿人分别对论文进行审稿，然后分别返回审稿意见给总编辑，总编辑会结合审稿人的意见给出最终的判断，即是否录用。对应于stacking，这里的三个审稿人就是第一层的模型，其输出（审稿人意见）会作为第二层模型（总编辑）的输入，然后第二层模型会给出最终的结果。</p>
+<p>stacking
+的思想很好理解，但是在实现时需要注意<strong>不能有泄漏（leak）的情况，也就是说对于训练样本中的每一条数据，基模型输出其结果时并不能用这条数据来训练</strong>。否则就是用这条数据来训练，同时用这条数据来测试，这样会造成最终预测时的过拟合现象，即经过stacking后在训练集上进行验证时效果很好，但是在测试集上效果很差。</p>
+<p>为了解决这个泄漏的问题，需要通过 K-Fold
+方法分别输出各部分样本的结果，这里以 5-Fold 为例，具体步骤如下</p>
+<ol type="1">
+<li>将数据划分为 5 部分，每次用其中 1 部分做验证集，其余 4
+部分做训练集，则共可训练出 5 个模型</li>
+<li>对于训练集，每次训练出一个模型时，通过该模型对没有用来训练的验证集进行预测，将预测结果作为验证集对应的样本的第二层输入，则依次遍历5次后，每个训练样本都可得到其输出结果作为第二层模型的输入</li>
+<li>对于测试集，每次训练出一个模型时，都用这个模型对其进行预测，则最终测试集的每个样本都会有5个输出结果，对这些结果取平均作为该样本的第二层输入</li>
+</ol>
+<p>上述过程图示如下</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1c4c8nmgvru315ci15f8ia4f3m9.png"
+alt="stacking" />
+<figcaption aria-hidden="true">stacking</figcaption>
+</figure>
+<p>除此之外，用 stacking 或者说 ensemble
+这一类方法时还需要注意以下两点：</p>
+<ol type="1">
+<li>Base Model 之间的相关性要尽可能的小，从而能够互补模型间的优势</li>
+<li>Base Model 之间的性能表现不能差距太大，太差的模型会拖后腿</li>
+</ol>
+<h2 id="代码实现">代码实现</h2>
+<p>由于需要 stacking
+中每个基模型都需要对数据集进行划分后进行交叉训练，如果为每个模型都写这部分的代码会显得非常冗余，因此这里提供一种简便实现
+stacking 的思路。</p>
+<p><strong>具体做法就是先实现一个父类，父类中实现了交叉训练的方法，因为这个方法对所有模型都是一致的，然后声明两个方法：<code>train</code>
+和
+<code>predict</code>，由于采用的基模型不同，这两个方法的具体实现也不同，因此需要在子类中实现。</strong>下面以
+python 为例进行讲解</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> KFold</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">BasicModel</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Parent class of basic models&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">train</span>(<span class="params">self, x_train, y_train, x_val, y_val</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;return a trained model and eval metric of validation data&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">predict</span>(<span class="params">self, model, x_test</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;return the predicted result of test data&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">get_oof</span>(<span class="params">self, x_train, y_train, x_test, n_folds = <span class="number">5</span></span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;K-fold stacking&quot;&quot;&quot;</span></span><br><span class="line">        num_train, num_test = x_train.shape[<span class="number">0</span>], x_test.shape[<span class="number">0</span>]</span><br><span class="line">        oof_train = np.zeros((num_train,)) </span><br><span class="line">        oof_test = np.zeros((num_test,))</span><br><span class="line">        oof_test_all_fold = np.zeros((num_test, n_folds))</span><br><span class="line">        aucs = []</span><br><span class="line">        KF = KFold(n_splits = n_folds, random_state=<span class="number">2017</span>)</span><br><span class="line">        <span class="keyword">for</span> i, (train_index, val_index) <span class="keyword">in</span> <span class="built_in">enumerate</span>(KF.split(x_train)):</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&#x27;&#123;0&#125; fold, train &#123;1&#125;, val &#123;2&#125;&#x27;</span>.<span class="built_in">format</span>(i, </span><br><span class="line">                                                        <span class="built_in">len</span>(train_index),</span><br><span class="line">                                                        <span class="built_in">len</span>(val_index)))</span><br><span class="line">            x_tra, y_tra = x_train[train_index], y_train[train_index]</span><br><span class="line">            x_val, y_val = x_train[val_index], y_train[val_index]</span><br><span class="line">            model, auc = self.train(x_tra, y_tra, x_val, y_val)</span><br><span class="line">            aucs.append(auc)</span><br><span class="line">            oof_train[val_index] = self.predict(model, x_val)</span><br><span class="line">            oof_test_all_fold[:, i] = self.predict(model, x_test)</span><br><span class="line">        oof_test = np.mean(oof_test_all_fold, axis=<span class="number">1</span>)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;all aucs &#123;0&#125;, average &#123;1&#125;&#x27;</span>.<span class="built_in">format</span>(aucs, np.mean(aucs)))</span><br><span class="line">        <span class="keyword">return</span> oof_train, oof_test</span><br></pre></td></tr></table></figure>
+<p>上面最重要的就是进行 K-fold 训练的 <code>get_oof</code>
+方法，<strong>该方法最终返回训练集和测试集在基模型上的预测结果，也就是两个一维向量，长度分别是训练集和测试集的样本数。</strong></p>
+<p>下面以两个基模型为例进行 stacking，分别是 xgboost 和
+lightgbm，这两个模型都只需要实现 <code>BasicModel</code> 中的
+<code>train</code> 和 <code>predict</code> 方法</p>
+<p>第一个基模型 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> xgboost <span class="keyword">as</span> xgb</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">XGBClassifier</span>(<span class="title class_ inherited__">BasicModel</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;set parameters&quot;&quot;&quot;</span></span><br><span class="line">        self.num_rounds=<span class="number">1000</span></span><br><span class="line">        self.early_stopping_rounds = <span class="number">15</span></span><br><span class="line">        self.params = &#123;</span><br><span class="line">            <span class="string">&#x27;objective&#x27;</span>: <span class="string">&#x27;binary:logistic&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;eta&#x27;</span>: <span class="number">0.1</span>,</span><br><span class="line">            <span class="string">&#x27;max_depth&#x27;</span>: <span class="number">8</span>,</span><br><span class="line">            <span class="string">&#x27;eval_metric&#x27;</span>: <span class="string">&#x27;auc&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;seed&#x27;</span>: <span class="number">0</span>,</span><br><span class="line">            <span class="string">&#x27;silent&#x27;</span> : <span class="number">0</span></span><br><span class="line">         &#125;</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">train</span>(<span class="params">self, x_train, y_train, x_val, y_val</span>):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;train with xgb model&#x27;</span>)</span><br><span class="line">        xgbtrain = xgb.DMatrix(x_train, y_train)</span><br><span class="line">        xgbval = xgb.DMatrix(x_val, y_val)</span><br><span class="line">        watchlist = [(xgbtrain,<span class="string">&#x27;train&#x27;</span>), (xgbval, <span class="string">&#x27;val&#x27;</span>)]</span><br><span class="line">        model = xgb.train(self.params, </span><br><span class="line">                          xgbtrain, </span><br><span class="line">                          self.num_rounds)</span><br><span class="line">                          watchlist,</span><br><span class="line">                          early_stopping_rounds = self.early_stopping_rounds)</span><br><span class="line">        <span class="keyword">return</span> model, <span class="built_in">float</span>(model.<span class="built_in">eval</span>(xgbval).split()[<span class="number">1</span>].split(<span class="string">&#x27;:&#x27;</span>)[<span class="number">1</span>])</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">predict</span>(<span class="params">self, model, x_test</span>):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;test with xgb model&#x27;</span>)</span><br><span class="line">        xgbtest = xgb.DMatrix(x_test)</span><br><span class="line">        <span class="keyword">return</span> model.predict(xgbtest)</span><br></pre></td></tr></table></figure></p>
+<p>第二个基模型</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> lightgbm <span class="keyword">as</span> lgb</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">LGBClassifier</span>(<span class="title class_ inherited__">BasicModel</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        self.num_boost_round = <span class="number">2000</span></span><br><span class="line">        self.early_stopping_rounds = <span class="number">15</span></span><br><span class="line">        self.params = &#123;</span><br><span class="line">            <span class="string">&#x27;task&#x27;</span>: <span class="string">&#x27;train&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;boosting_type&#x27;</span>: <span class="string">&#x27;dart&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;objective&#x27;</span>: <span class="string">&#x27;binary&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;metric&#x27;</span>: &#123;<span class="string">&#x27;auc&#x27;</span>, <span class="string">&#x27;binary_logloss&#x27;</span>&#125;,</span><br><span class="line">            <span class="string">&#x27;num_leaves&#x27;</span>: <span class="number">80</span>,</span><br><span class="line">            <span class="string">&#x27;learning_rate&#x27;</span>: <span class="number">0.05</span>,</span><br><span class="line">            <span class="comment"># &#x27;scale_pos_weight&#x27;: 1.5,</span></span><br><span class="line">            <span class="string">&#x27;feature_fraction&#x27;</span>: <span class="number">0.5</span>,</span><br><span class="line">            <span class="string">&#x27;bagging_fraction&#x27;</span>: <span class="number">1</span>,</span><br><span class="line">            <span class="string">&#x27;bagging_freq&#x27;</span>: <span class="number">5</span>,</span><br><span class="line">            <span class="string">&#x27;max_bin&#x27;</span>: <span class="number">300</span>,</span><br><span class="line">            <span class="string">&#x27;is_unbalance&#x27;</span>: <span class="literal">True</span>,</span><br><span class="line">            <span class="string">&#x27;lambda_l2&#x27;</span>: <span class="number">5.0</span>,</span><br><span class="line">            <span class="string">&#x27;verbose&#x27;</span> : -<span class="number">1</span></span><br><span class="line">            &#125;</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">train</span>(<span class="params">self, x_train, y_train, x_val, y_val</span>):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;train with lgb model&#x27;</span>)</span><br><span class="line">        lgbtrain = lgb.Dataset(x_train, y_train)</span><br><span class="line">        lgbval = lgb.Dataset(x_val, y_val)</span><br><span class="line">        model = lgb.train(self.params, </span><br><span class="line">                          lgbtrain,</span><br><span class="line">                          valid_sets = lgbval,</span><br><span class="line">                          verbose_eval = self.num_boost_round,</span><br><span class="line">                          num_boost_round = self.num_boost_round)</span><br><span class="line">                          early_stopping_rounds = self.early_stopping_rounds)</span><br><span class="line">        <span class="keyword">return</span> model, model.best_score[<span class="string">&#x27;valid_0&#x27;</span>][<span class="string">&#x27;auc&#x27;</span>]</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">predict</span>(<span class="params">self, model, x_test</span>):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;test with lgb model&#x27;</span>)</span><br><span class="line">        <span class="keyword">return</span> model.predict(x_test, num_iteration=model.best_iteration)</span><br></pre></td></tr></table></figure>
+<p>下一个步骤就是将这两个基模型的输出作为第二层模型的输入，这里选用的第二层模型是
+<code>LogisticsRegression</code>，</p>
+<p>首先需要将各个基模型的输出 <code>reshape</code> 和
+<code>concatenate</code> 成合适的大小</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">lgb_classifier = LGBClassifier()</span><br><span class="line">lgb_oof_train, lgb_oof_test = lgb_classifier.get_oof(x_train, y_train, x_test)</span><br><span class="line">   </span><br><span class="line">xgb_classifier = XGBClassifier()</span><br><span class="line">xgb_oof_train, xgb_oof_test = xgb_classifier.get_oof(x_train, y_train, x_test)</span><br><span class="line"></span><br><span class="line">input_train = [xgb_oof_train, lgb_oof_train] </span><br><span class="line">input_test = [xgb_oof_test, lgb_oof_test]</span><br><span class="line"></span><br><span class="line">stacked_train = np.concatenate([f.reshape(-<span class="number">1</span>, <span class="number">1</span>) <span class="keyword">for</span> f <span class="keyword">in</span> input_train], axis=<span class="number">1</span>)</span><br><span class="line">stacked_test = np.concatenate([f.reshape(-<span class="number">1</span>, <span class="number">1</span>) <span class="keyword">for</span> f <span class="keyword">in</span> input_test], axis=<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<p>然后用第二层模型进行训练和预测 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LinearRegression</span><br><span class="line"></span><br><span class="line">final_model = LinearRegression()</span><br><span class="line">final_model.fit(stacked_train, y_train)</span><br><span class="line">test_prediction = final_model.predict(stacked_test)</span><br></pre></td></tr></table></figure></p>
+<p>上述实现的完整代码见下面的链接</p>
+<p>https://github.com/WuLC/MachineLearningAlgorithm/blob/master/python/Stacking.py</p>
+<p>如有错漏，欢迎交流指正</p>
+<hr />
+<p>参考</p>
+<p><a
+target="_blank" rel="noopener" href="https://www.kaggle.com/arthurtok/introduction-to-ensembling-stacking-in-python">Introduction
+to Ensembling/Stacking in Python</a> <a
+target="_blank" rel="noopener" href="https://dnc1994.com/2016/04/rank-10-percent-in-first-kaggle-competition/">如何在
+Kaggle 首战中进入前 10%</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 机器学习</a>
+              <a href="/tags/python/" rel="tag"># python</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/01/15/%E9%80%9A%E8%BF%87%20word2vec%20%E4%B8%8E%20CNN-RNN%20%E5%AF%B9%E5%8A%A8%E4%BD%9C%E5%BA%8F%E5%88%97%E5%BB%BA%E6%A8%A1/" rel="prev" title="通过 word2vec 与 CNN/RNN 对动作序列建模">
+      <i class="fa fa-chevron-left"></i> 通过 word2vec 与 CNN/RNN 对动作序列建模
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/02/08/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0(1)-A%20New%20Era/" rel="next" title="分布式机器学习(1)-A New Era">
+      分布式机器学习(1)-A New Era <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#stacking-%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3"><span class="nav-number">1.</span> <span class="nav-text">stacking 的基本思想</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.</span> <span class="nav-text">代码实现</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">248</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.linkedin.com/in/wuliangchao/" title="LinkedIn → https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;wuliangchao&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i>LinkedIn</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

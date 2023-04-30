@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="这篇文章是当时在新浪云上搭建博客的时候写的，后来因为新浪云收费了，把网站迁移到了github上。这里还是把文章贴出来，做个记录。 最近在写本站的评论提醒功能的时候，需要通过 python 发送邮件提醒具体哪些文章有了新评论，采用邮件的方式便于在特定时间处理所有的评论，比如说在第二天早上7点检查网站昨天是否有新的评论，假如有就会发送邮件显示那些有新评论的文章。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="通过 python 发送邮件提醒网站的新评论">
+<meta property="og:url" content="https://wulc.me/2016/01/17/%E9%80%9A%E8%BF%87%20python%20%E5%8F%91%E9%80%81%E9%82%AE%E4%BB%B6%E6%8F%90%E9%86%92%E7%BD%91%E7%AB%99%E7%9A%84%E6%96%B0%E8%AF%84%E8%AE%BA/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="这篇文章是当时在新浪云上搭建博客的时候写的，后来因为新浪云收费了，把网站迁移到了github上。这里还是把文章贴出来，做个记录。 最近在写本站的评论提醒功能的时候，需要通过 python 发送邮件提醒具体哪些文章有了新评论，采用邮件的方式便于在特定时间处理所有的评论，比如说在第二天早上7点检查网站昨天是否有新的评论，假如有就会发送邮件显示那些有新评论的文章。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/2016-01-17_200124.png">
+<meta property="article:published_time" content="2016-01-17T13:03:03.000Z">
+<meta property="article:modified_time" content="2023-04-30T05:12:49.112Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="python">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/2016-01-17_200124.png">
+
+<link rel="canonical" href="https://wulc.me/2016/01/17/%E9%80%9A%E8%BF%87%20python%20%E5%8F%91%E9%80%81%E9%82%AE%E4%BB%B6%E6%8F%90%E9%86%92%E7%BD%91%E7%AB%99%E7%9A%84%E6%96%B0%E8%AF%84%E8%AE%BA/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>通过 python 发送邮件提醒网站的新评论 | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">吴良超的学习笔记</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2016/01/17/%E9%80%9A%E8%BF%87%20python%20%E5%8F%91%E9%80%81%E9%82%AE%E4%BB%B6%E6%8F%90%E9%86%92%E7%BD%91%E7%AB%99%E7%9A%84%E6%96%B0%E8%AF%84%E8%AE%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          通过 python 发送邮件提醒网站的新评论
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2016-01-17 21:03:03" itemprop="dateCreated datePublished" datetime="2016-01-17T21:03:03+08:00">2016-01-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-30 13:12:49" itemprop="dateModified" datetime="2023-04-30T13:12:49+08:00">2023-04-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>这篇文章是当时在新浪云上搭建博客的时候写的，后来因为新浪云收费了，把网站迁移到了github上。这里还是把文章贴出来，做个记录。</p>
+<p>最近在写本站的评论提醒功能的时候，需要通过 python
+发送邮件提醒具体哪些文章有了新评论，采用邮件的方式便于在特定时间处理所有的评论，比如说在第二天早上7点检查网站昨天是否有新的评论，假如有就会发送邮件显示那些有新评论的文章。</p>
+<span id="more"></span>
+<p>实现思路如下：<strong>先检查数据库中是否有新的评论，假如有新的评论就发送邮件，否则不发送。</strong></p>
+<p>如何检查新评论？在存储评论的表中有一个字段表示添加该评论的时间（datetime类型），利用这个字段能够在今天判断昨天是否有新的评论，现假设评论表为<code>comment</code>,表示评论添加时间的字段为<code>created_date</code>,采用的SQL语句如下：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> comment  <span class="keyword">where</span> <span class="type">date</span>(created_date) <span class="operator">=</span>( <span class="keyword">select</span> date_sub(curdate(),<span class="type">interval</span> <span class="number">1</span> <span class="keyword">day</span>)</span><br></pre></td></tr></table></figure>
+<p>假如查询的语句不为空，那么说明有了新的评论，可以将关于评论的具体内容以邮件形式发送给管理员。下面是python发送邮件的实现方法之一：</p>
+<p>PS：虽然新浪云提供了用于发送邮件的Mail服务，当时对于普通用户每天好像会限定发送的次数，而且最严重的问题是<strong>邮件的延迟非常严重</strong>，建议还是使用smtplib模块。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#encoding:utf-8</span></span><br><span class="line"><span class="keyword">import</span> smtplib <span class="comment">#用于发送邮件</span></span><br><span class="line"><span class="keyword">import</span> string  <span class="comment">#用于将要发送的内容格式化成邮件标准格式</span></span><br><span class="line"><span class="keyword">from</span> email.mime.text <span class="keyword">import</span> MIMEText</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">send_email</span>(<span class="params">content</span>): <span class="comment">#content为发送邮件的正文内容，这里只涉及到文本</span></span><br><span class="line">    HOST=<span class="string">&quot;smtp.XXX.com&quot;</span><span class="comment">#发送邮件smtp服务器</span></span><br><span class="line">    FROM=<span class="string">&quot;XXX@XXX.com&quot;</span> <span class="comment">#发送邮件的邮箱</span></span><br><span class="line">    PASSWORD=<span class="string">&quot;&quot;</span>        <span class="comment">#发送邮件的邮箱的密码</span></span><br><span class="line">    TO=<span class="string">&quot;XXX@XXX.com&quot;</span>   <span class="comment">#接收邮件的邮箱</span></span><br><span class="line">    SUBJECT=<span class="string">&quot;New Comments on your Website&quot;</span> <span class="comment">#邮件主题</span></span><br><span class="line">    </span><br><span class="line">    msg=MIMEText(content,<span class="string">&#x27;plain&#x27;</span>,<span class="string">&#x27;utf-8&#x27;</span>)  <span class="comment">#邮件内容及编码方式</span></span><br><span class="line">    msg[<span class="string">&#x27;Subject&#x27;</span>]=SUBJECT</span><br><span class="line">    msg[<span class="string">&#x27;From&#x27;</span>]=FROM</span><br><span class="line">    msg[<span class="string">&#x27;To&#x27;</span>]=TO</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        s=smtplib.SMTP()</span><br><span class="line">        s.connect(HOST)</span><br><span class="line">        s.login(FROM,PASSWORD)</span><br><span class="line">        s.sendmail(FROM,[TO],msg.as_string())</span><br><span class="line">        s.quit()</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">    <span class="keyword">except</span> EXception,e:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br></pre></td></tr></table></figure>
+<p>下面提到的几点有助于更好地理解上面的代码</p>
+<ol type="1">
+<li><p>通过免费提供的邮箱（如163邮箱，新浪邮箱）发送邮件的过程是先将邮件发送到对应邮箱的smtp服务器，然后由smtp服务器将邮件帮你发送到你要发送的邮箱。一般来说，邮箱对应的服务器都跟其名称有关，如163邮箱对应的是smtp服务器是<code>smtp.163.com</code>,新浪邮箱对应的smtp服务器是<code>smtp.sina.com</code>；其他的邮箱相应可以从设置中找到。</p></li>
+<li><p><code>smtplib</code>和<code>MIMEText</code>是python自带的库，不用另外安装，比较方便，其中smtplib负责发送邮件，MIMEText则负责将要发送的<strong>文本内容</strong>统一成邮件的标准模式，加入要加入一些附件，需要<code>MIMEMultipart</code>这个模块。</p></li>
+</ol>
+<p>需要注意的是<strong>发送邮件的邮箱需要开启smtp服务</strong>,一般能够在邮箱的设置中开启。因为有些有些邮箱是不开启这个功能的，比如说新浪邮箱。</p>
+<p>发送邮件的效果图如下所示：</p>
+<p><img src="https://wulc.me/imgs/2016-01-17_200124.png" /></p>
+<p>能够发送邮件后，要考虑的问题就是如何自动化执行了，总不能每天手动执行一遍脚本吧，在Linux下可通过crontab来设置计划任务，同样新浪云也提供了类似的cron的服务，这样便可在每天的早上检查昨天是否有新评论在决定是否要发送邮件了。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/python/" rel="tag"># python</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2016/01/17/%E7%82%92%E8%82%A1%E6%8D%9F%E5%A4%B1%E7%9A%84%E4%B8%8D%E4%BB%85%E6%98%AF%E9%92%B1-%E5%B9%B4%E8%BD%BB%E4%BA%BA%E8%AF%B7%E8%BF%9C%E7%A6%BB%E8%82%A1%E5%B8%82/" rel="prev" title="炒股损失的不仅是钱,年轻人请远离股市">
+      <i class="fa fa-chevron-left"></i> 炒股损失的不仅是钱,年轻人请远离股市
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2016/01/20/%E3%80%8AAdvanced%20Web%20Metrics%20with%20Google%20Analytics%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%EF%BC%881%EF%BC%89/" rel="next" title="《Advanced Web Metrics with Google Analytics》读书笔记(1)">
+      《Advanced Web Metrics with Google Analytics》读书笔记(1) <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">248</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.linkedin.com/in/wuliangchao/" title="LinkedIn → https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;wuliangchao&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i>LinkedIn</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

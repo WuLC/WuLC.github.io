@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="本文是刘鹏老师的计算广告学中的一些笔记。本文是第四章: 竞价广告系统。主要介绍竞价系统理论，广告网络的概念，以及点击率预测设计到的一些技术。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计算广告笔记(4)--竞价广告系统">
+<meta property="og:url" content="https://wulc.me/2017/05/07/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A%E7%AC%94%E8%AE%B0(4)--%E7%AB%9E%E4%BB%B7%E5%B9%BF%E5%91%8A%E7%B3%BB%E7%BB%9F/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="本文是刘鹏老师的计算广告学中的一些笔记。本文是第四章: 竞价广告系统。主要介绍竞价系统理论，广告网络的概念，以及点击率预测设计到的一些技术。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/image_1bf0nmt3b1ommui91hkvt1pja9.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1bfgdlkaf1qak17g091h7k61is8m.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1bfgds6l21a3612tjrdcjim14cd13.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1bfgdu07595q1lcnob94if14lu1t.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1bfgdudgo3bnqsqmv01luqt7i2a.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1bfge9mqrt061s24esg10381b8i2n.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1bf8gbr9c1bqd13151j4d1nsid829.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1bf8lhie51q4h1rc6eftmgf1n352n.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1bf8ibdkh1enm1sdn6gh6udjdf13.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1bf8ilp9l7m41pga1opf1vf83ku1g.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1bf8jl7lr10uq196pjs4s0hacs1t.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1bf8jnibpk3o14g81cj1fqnna2a.png">
+<meta property="article:published_time" content="2017-05-07T13:37:39.000Z">
+<meta property="article:modified_time" content="2023-04-30T05:12:49.076Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="计算广告">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/image_1bf0nmt3b1ommui91hkvt1pja9.png">
+
+<link rel="canonical" href="https://wulc.me/2017/05/07/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A%E7%AC%94%E8%AE%B0(4)--%E7%AB%9E%E4%BB%B7%E5%B9%BF%E5%91%8A%E7%B3%BB%E7%BB%9F/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>计算广告笔记(4)--竞价广告系统 | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">吴良超的学习笔记</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2017/05/07/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A%E7%AC%94%E8%AE%B0(4)--%E7%AB%9E%E4%BB%B7%E5%B9%BF%E5%91%8A%E7%B3%BB%E7%BB%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          计算广告笔记(4)--竞价广告系统
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-05-07 21:37:39" itemprop="dateCreated datePublished" datetime="2017-05-07T21:37:39+08:00">2017-05-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-30 13:12:49" itemprop="dateModified" datetime="2023-04-30T13:12:49+08:00">2023-04-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A/" itemprop="url" rel="index"><span itemprop="name">计算广告</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本文是刘鹏老师的<a
+target="_blank" rel="noopener" href="http://study.163.com/course/courseMain.htm?courseId=321007">计算广告学</a>中的一些笔记。本文是第四章:
+竞价广告系统。主要介绍竞价系统理论，广告网络的概念，以及点击率预测设计到的一些技术。</p>
+<span id="more"></span>
+<p>合约广告系统两个核心问题：在线分配和受众定向。</p>
+<p>竞价广告系统是广告系统发展的里程碑。从搜索引擎的关键词
+的竞价延伸到展示广告，标签精细化的必然发展。</p>
+<p>不保量，但是保质，量由 demand 端的 agency 保证。</p>
+<h2 id="竞价系统理论">竞价系统理论</h2>
+<p>竞价广告系统可以被描述成一个位置拍卖问题(Position
+auctions)，该问题描述如下</p>
+<ol type="1">
+<li>该问题要解决的是将广告对象 $ a = , 2, … A $ 排放到位置 $ s = , 2, …,
+S $，这里的位置主要针对搜索广告而言</li>
+<li>假设对象 <span class="math inline">\(a\)</span> 的出价(bid)为 <span
+class="math inline">\(b\_a\)</span> , 而其对位置 <span
+class="math inline">\(s\)</span> 的计价为 <span
+class="math inline">\(u\_{as} = v\_ax\_s ,(x\_1&gt;x\_2
+&gt;…&gt;x\_S)\)</span>， <span class="math inline">\(v\_a\)</span>
+视为点击价值，<span class="math inline">\(x\_s\)</span>
+视为点击率，该模型可近似描述广告系统竞价问题(对显示广告，可以认为S =
+1，但是与搜索广告的不同点在于搜索广告可以一个都不出，而显示广告至少要出一个)</li>
+<li>可以将问题描述成一个对称纳什均衡(Symmetric Nash equilibrium)
+其目标是 $(v_s – p_s)x_s &gt;= (v_s – p_t)x_t $, 其中 <span
+class="math inline">\(p\_t = b\_{s+1}\)</span>,这里的 <span
+class="math inline">\(p\_s\)</span>
+表示根据广告的位置实际的收费情况，<span
+class="math inline">\(b\_{s+1}\)</span> 在位置 <span
+class="math inline">\(s+1\)</span>
+的广告的出价；寻找收入最大化且稳定的纳什均衡状态是竞价系统设计的关键</li>
+</ol>
+<p>上面的问题建模比较复杂，需要较多的数学推导，这里主要关注上面问题建模求解以后得到的结论：就是定价机制该如何设置。这里讲的定价机制有两种：<strong>VCG(Vickrey–Clarke–Groves)机制和广义第二高价(Generalized
+second pricing)机制</strong>。</p>
+<p>从理论上来讲，VCG 机制是最优的，VCG
+认为某对象的收费应等于给他人带来的价值损害，而且其有一个很好的性质：整体市场是truth-telling的，也就是每个广告主只需要根据自己真实想法出价，避免广告主间的博弈。</p>
+<p>但是实际的定价机制是广义第二高价，就是每个位置收取的费用是其下一个位置的出价加1（比下一个位置高即可）即
+<span class="math display">\[p\_s = b\_{s+1} + 1\]</span>
+这种做法看似会降低收益，但是实际上与VCG机制相比，会收取广告主更多的费用。关于原因，视频讲解时给了一个例子
+&gt;假如说现在第一高价的广告是5块，第二高价的是3块。
+&gt;假如采用第一高价的机制，那么出了第一高价的广告主就会设法调低自己的价格，比如说调到3块1毛，因为这时候仍然可以拿到第一位且支出更少，而如果再来一个人要第一的广告位，那么他可能就会调到3块2；
+&gt;而采用第二高价的时候，出了第一高价的广告主不会设法调低自己的价格，因为收取的是第二高价的价格，而此时如果来了一个想要第一的广告位的广告主，那么他出的价格必须要在5元以上了</p>
+<p>广义第二高价的整体市场不是truth-telling的，从上面的例子也可看到，商家之间会存在着博弈，但是由于其简单易行，为在线广告系统广泛采用，而VCG则用得较少</p>
+<h2 id="广告网络ad-network">广告网络(Ad Network)</h2>
+<p>维基百科对广告网络的定义如下： &gt;Connects advertisers to web sites
+that want to host advertisements</p>
+<p>在竞价广告系统中，其主要的特征有：</p>
+<ul>
+<li>竞价系统(Auction system)</li>
+<li>淡化广告位概念：卖的是人群，而不是媒体，媒体已经变成了一个载体</li>
+<li>最合适的计价方式为CPC（Cost Per Click）:
+非实时竞价方式，广告网络估计CTR，广告主估计每个广告的价值</li>
+<li>不足：不易支持定制化用户划分：广告主只能购买广告网络指定的关键词</li>
+</ul>
+<p>广告网络的系统架构示意如下</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1bf0nmt3b1ommui91hkvt1pja9.png"
+alt="广告网络架构" />
+<figcaption aria-hidden="true">广告网络架构</figcaption>
+</figure>
+<p>该架构的工作原理大致如下： 1. <code>User</code>
+开始浏览某个页面时，<code>Ad retrieval</code> 根据 <code>User</code> 的
+<code>User Attributes</code> 和页面的 <code>Page Attributes</code> 从
+<code>Ad Index</code>
+中找到相关的广告(如果有广告主将广告新加进来时，也要通过
+<code>Real-time indexing</code> 将广告加入 <code>Ad Index</code> 中) 2.
+对相关广告根据 eCPM 进行排序，由于点击的 value
+已经由广告主决定，这时只需要预估点击率即可。 3.
+进行排序后需要将排序的结果及其用户后续的点击行为记录到日志中，从而便于改进点击率预估模型，同时通过流式计算平台进行反作弊监测以及对广告主收费（如果用户有点击行为的话）。</p>
+<p>下面要介绍以上广告网络中提到的一些技术，</p>
+<h2 id="广告检索ad-index">广告检索(Ad Index)</h2>
+<p>规模较大的时候才用。检索是一种搜索技术，这里主要介绍<strong>两个重点：布尔表达式检索和长Query情况下的相关性检索</strong>。</p>
+<p><strong>布尔表达式检索</strong>
+将每篇文档看做一个布尔表达式，同时将每个查询也看做一个布尔表达式。</p>
+<p>如下面是一个表示文档的布尔表达式</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1bfgdlkaf1qak17g091h7k61is8m.png"
+alt="boolean" />
+<figcaption aria-hidden="true">boolean</figcaption>
+</figure>
+<p>只有当文档满足查询的布尔表达式条件时，才能出这个广告，为了加快这个检索过程，布尔表达式检索通过建立两层索引来实现加速。其涉及到的一些概念和具体方法如下(摘自PPT）</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1bfgds6l21a3612tjrdcjim14cd13.png"
+alt="b1" />
+<figcaption aria-hidden="true">b1</figcaption>
+</figure>
+<figure>
+<img src="https://wulc.me/imgs/image_1bfgdu07595q1lcnob94if14lu1t.png"
+alt="b2" />
+<figcaption aria-hidden="true">b2</figcaption>
+</figure>
+<figure>
+<img src="https://wulc.me/imgs/image_1bfgdudgo3bnqsqmv01luqt7i2a.png"
+alt="b3" />
+<figcaption aria-hidden="true">b3</figcaption>
+</figure>
+<p>长 Query
+情况下的相关性检索指的是当查询的布尔表达式中的条件较多时，如果采用传统的搜索引擎的搜索方法，会导致计算量非常大，这里提供的思路是：<strong>在查找候选文档的过程中做一个近似的评估，切掉那些理论上不需要再考虑的文档，只对进候选的文档进行相关性计算，比Top-N最小堆最小值大的插入</strong></p>
+<p>采用的具体算法是WAND算法，其细节如下（摘自PPT）</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1bfge9mqrt061s24esg10381b8i2n.png"
+alt="WAND" />
+<figcaption aria-hidden="true">WAND</figcaption>
+</figure>
+<h2 id="一致性问题">一致性问题</h2>
+<h3 id="zookeeper">Zookeeper</h3>
+<p>Zookeeper
+是在基于消息传递通信模型的分布式环境下解决一致性问题的基础服务</p>
+<p>用层次式Namespace维护同步需要的状态空间</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1bf8gbr9c1bqd13151j4d1nsid829.png"
+alt="zk1" />
+<figcaption aria-hidden="true">zk1</figcaption>
+</figure>
+<p>保证实现特性：Sequential Consistency, Atomicity, Single System Image,
+Reliability,
+Timeliness，较复杂的同步模式需要利用API编程实现。Zookeeper的实现利用了Paxos算法。</p>
+<h3 id="paxos-算法概念">Paxos 算法概念</h3>
+<p>目的是解决分布式环境下，怎么分布式地决策某些状态使得所有机器都处于一致性。</p>
+<p><strong>节点角色</strong>： P(roposer): (提出提案(n, value)),
+A(cceptor), L(earner)</p>
+<p><strong>三个约束</strong>： 1. value只有在被提出后才能被批准 2.
+在一次算法的执行实例中，只批准一个value 3.
+learners只能获得被批准的value</p>
+<p><strong>准备阶段</strong> 1. P选择某提案编号n并将
+prepare请求发给A中的某多数派； 2.
+A收到消息后，若n大于它已经回复的所有消息，则将自己上次接受的提案回复给P，并承诺不再回复小于n的提案；</p>
+<p><strong>批准阶段</strong>： 1.
+当P收到了多数A回复后，进入批准阶段。它要向回复请求的 A发送 accept
+请求，包括编号 n 和根据约束决定的 value 2.
+在不违背向其他P的承诺的前提下，A收到请求后即接受。</p>
+<h2 id="点击率预测">点击率预测</h2>
+<p>从广告检索出相关的广告后，需要根据 eCPM
+对相关广告进行排序，由于出价由广告主决定，因此实际中需要估算的往往是广告的点击率。</p>
+<p>基于统计的模型</p>
+<p><span class="math display">\[ u(a,u,c) = p(click|a,u,c)\]</span></p>
+<p>在这个问题上，Regression比Ranking合适一些，因为广告的实际排序是根据eCPM，而eCPM由点击率和出价相乘决定，因此需要尽可能准确估计CTR，而不仅仅是各候选的CTR排序正确</p>
+<p>冷启动问题：指的是新的广告非常多，这种情况下利用广告层级结构(creative,
+solution, campaign, advertiser)，以及广告标签对新广告点击率做估计</p>
+<p><strong>捕获点击率的动态特性</strong>，两种方案： 动态特征:
+快速调整特征 在线学习: 快速调整模型</p>
+<h2 id="逻辑回归">逻辑回归</h2>
+<p>逻辑回归是工程中常用的点击率预估方法。</p>
+<h3 id="动态特征">动态特征</h3>
+<p>在线广告的三个维度 <span class="math inline">\((u,a,c)\)</span>
+上均有不同的特征，可以通过组合这些特征构造高纬特征</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1bf8lhie51q4h1rc6eftmgf1n352n.png"
+alt="三个维度上的特征" />
+<figcaption aria-hidden="true">三个维度上的特征</figcaption>
+</figure>
+<p>上面的组合特征均为静态特征，如果在这些组合的静态特征上加上这个特征的历史数据就变成了动态特征，和某个静态特征为“年龄为25~35且为男性”，如果这个特征的取值为在某段时间的下单量而不是单纯的0或1，那么这个特征就是一个动态特征。因此动态特征即在标签组合维度上聚合点击反馈统计作为CTR预测的特征。</p>
+<p><strong>优势</strong> 1. 工程架构扩展性强，变 features 不变
+model(与在线学习相比) 2. 对新 <span class="math inline">\((a, u,
+c)\)</span> 组合有较强back-off能力</p>
+<p>缺点 1. 在线特征的存储量大，更新要求高</p>
+<p>组合维度举例:</p>
+<ul>
+<li>cookie(u) and creative(a)</li>
+<li>gender(u) and topic(c)</li>
+<li>location(u) and advertiser(a)</li>
+<li>Category(a) and category(u)</li>
+<li>cookie(u)</li>
+<li>creative(a)</li>
+<li>gender(u)</li>
+</ul>
+<h3 id="优化方法">优化方法</h3>
+<h4 id="l-bfgs"><strong>L-BFGS</strong></h4>
+<p>基于梯度的方法在工程上的收敛性不好，因为工程上的问题总是<strong>病态的</strong>。用二阶的方法，一般用
+Quasi-Newton 方法。</p>
+<p>BFGS (Broyden, Fletcher, Goldfarb, and Shanno)
+是Quasi-Newton方法的一种，
+思路为用函数值和特征的变化量来<strong>近似Hession矩阵，以保证正定性</strong>，并减少计算量。</p>
+<p>BFGS方法Hession计算公式如下 (空间复杂度为 <span
+class="math inline">\(O(n^2)\)</span> )：</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1bf8ibdkh1enm1sdn6gh6udjdf13.png"
+alt="BFGS" />
+<figcaption aria-hidden="true">BFGS</figcaption>
+</figure>
+<p>L(imited memory)-BFGS 是为了解决 BFGS 的空间复杂度问题。将 nxn
+的Hession阵用下图方式加以近似(<span class="math inline">\(B\_k\)</span>
+为Hession近似)</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1bf8ilp9l7m41pga1opf1vf83ku1g.png"
+alt="Hessian近似" />
+<figcaption aria-hidden="true">Hessian近似</figcaption>
+</figure>
+<p>这样的方法将空间复杂度降为 <span
+class="math inline">\(O(nk)\)</span>, 在特征量大时比BFGS实用</p>
+<p>可以非常容易地用 map/reduce
+实现分布式求解，这种方法也适用于梯度法：mapper
+求部分数据上的梯度，reducer 求和并更新参数</p>
+<h4 id="admm"><strong>ADMM</strong></h4>
+<p>Alternating Direction Method of Multipliers 的形式</p>
+<p><span class="math display">\[\min f(x)+g(z)\\\
+s.t. Ax + Bz = c\]</span></p>
+<p>Augmented Lagrangian及迭代解法如下</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1bf8jl7lr10uq196pjs4s0hacs1t.png"
+alt="ADMM" />
+<figcaption aria-hidden="true">ADMM</figcaption>
+</figure>
+<p>上面的迭代方法也可以用下面的迭代公式描述，其效果是一致的，但是下面的描述更加简便，而且在实际中也更常用</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1bf8jnibpk3o14g81cj1fqnna2a.png"
+alt="ADMM 更一般表示方法" />
+<figcaption aria-hidden="true">ADMM 更一般表示方法</figcaption>
+</figure>
+<p>ADMM这种迭代的解法能够很容易地通过 MapReduce 模式迭代进行求解。</p>
+<p>下面介绍逻辑回归的ADMM分布式解法，这种方法将将样本划分为 N 份，每个
+mapper 负责一份，其描述的最优化问题如下</p>
+<p><span class="math display">\[\min \sum\_{i=1}^{N}\sigma
+(w\_ix\_i)+r(z)\\\
+s.t. w - z = 0\]</span></p>
+<p>分布式的迭代解法入下:</p>
+<p><span class="math display">\[w\_i^{k+1} \leftarrow \arg \min\_{w\_i}
+(\sigma(w\_ix\_i) + \frac{\rho}{2}||w\_i - z^k + \mu\_i^k||\_2^2)\\\
+z^{k+1} \leftarrow \arg \min\_{z} (r(z) + \frac{N\rho}{2}||z^k -
+\overline w^{k+1}+ \overline \mu\_k||\_2^2)\\\
+\mu\_i^{k+1} \leftarrow \mu\_i^k + w\_i^{k+1} - z^{k+1}
+\]</span></p>
+<h2 id="探索与利用explore-and-exploit-ee">探索与利用(Explore and
+exploit， E&amp;E)</h2>
+<p>这一问题主要是为<strong>长尾</strong>的 <span
+class="math inline">\((a, u, c)\)</span>
+组合创造合适的展示机会以积累统计量，从而更准确地估计其CTR</p>
+<p>原因是真实的环境中，数据总是长尾的，总体集没法通过采样获得，实际上大批广告主的广告是没有机会展示，为了让更多的广告主的广告能够得到恰当的展示，需要做一些探索（即不选择当前出价最高的广告，而是选择一些符合要求的长尾广告），但是最终的目的仍是提升整体的广告收入，即需要严格控制探索的量和有效性</p>
+<p><strong>基本方法思路</strong> 1. 通常描述为 Multi-arm Bandit (MAB)
+问题: 有限个 arms(或称收益提供者) <span
+class="math inline">\(a\)</span>, 每个有确定有限的期望收益 <span
+class="math inline">\(E(r_{t,a})\)</span> 2.
+在每个时刻t,我们必须从arms中选择一个,最终目标是优化整体收益 基本方法为
+<span class="math inline">\(\epsilon\)</span>–greedy: 将 <span
+class="math inline">\(\epsilon\)</span> 比例的小部分流量用于随机探索</p>
+<p>上面的方法应用在广告中的主要挑战有：</p>
+<ol type="1">
+<li>海量的组合空间需要被探索</li>
+<li>各个arm的期望收益是动态变化的</li>
+</ol>
+<p>因此提出了以下两个思路， UCB 和 Contextual Bandit</p>
+<p><strong>UCB</strong>
+在时刻t，通过以往的观测值以及某种概率模型,计算每个arm的期望收益的upper
+confidence bound (UCB)，并选择UCB最大的arm。</p>
+<p>实际上是将每个arm的收入看作一个分布，选择所有分布中可能达到最大的那个arm作为最终的选择。</p>
+<p>我们不可能一直选择非最优的arm, 原因是我们选择的此arm次数越多,
+其UCB就越接近于其期望收益</p>
+<p>具体UCB策略有以下两种：</p>
+<ol type="1">
+<li>β-UCB策略: 依一个很大的概率, 我们选择非最优arms的次数存在着一个上界,
+该上界与总的选择次数无关</li>
+<li>UCB-tuned策略: 我们已选择的次数越多,
+就越可以自信地抛弃不太有前途(但仍有可能最优)的arm.</li>
+</ol>
+<p><strong>Contextual Bandit</strong></p>
+<p>解决 arm 数目过多问题，降维，映射到另外的特征空间</p>
+<ul>
+<li>对每次展示，每个 arm (广告) <span class="math inline">\(a\)</span>
+有一个对应的特征矢量 <span class="math inline">\(x(u,a)\)</span></li>
+<li>用此特征矢量代替 arm 本身进行 Bandit 决策</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A/" rel="tag"># 计算广告</a>
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 机器学习</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/04/28/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A%E7%AC%94%E8%AE%B0(3)--%E5%8F%97%E4%BC%97%E5%AE%9A%E5%90%91/" rel="prev" title="计算广告笔记(3)--受众定向">
+      <i class="fa fa-chevron-left"></i> 计算广告笔记(3)--受众定向
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/05/10/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A%E7%AC%94%E8%AE%B0(5)--%E6%90%9C%E7%B4%A2%E5%B9%BF%E5%91%8A%E4%B8%8E%E5%B9%BF%E5%91%8A%E7%BD%91%E7%BB%9CDemand%E6%8A%80%E6%9C%AF/" rel="next" title="计算广告笔记(5)--搜索广告与广告网络Demand技术">
+      计算广告笔记(5)--搜索广告与广告网络Demand技术 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AB%9E%E4%BB%B7%E7%B3%BB%E7%BB%9F%E7%90%86%E8%AE%BA"><span class="nav-number">1.</span> <span class="nav-text">竞价系统理论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B9%BF%E5%91%8A%E7%BD%91%E7%BB%9Cad-network"><span class="nav-number">2.</span> <span class="nav-text">广告网络(Ad Network)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B9%BF%E5%91%8A%E6%A3%80%E7%B4%A2ad-index"><span class="nav-number">3.</span> <span class="nav-text">广告检索(Ad Index)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E8%87%B4%E6%80%A7%E9%97%AE%E9%A2%98"><span class="nav-number">4.</span> <span class="nav-text">一致性问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#zookeeper"><span class="nav-number">4.1.</span> <span class="nav-text">Zookeeper</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#paxos-%E7%AE%97%E6%B3%95%E6%A6%82%E5%BF%B5"><span class="nav-number">4.2.</span> <span class="nav-text">Paxos 算法概念</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%82%B9%E5%87%BB%E7%8E%87%E9%A2%84%E6%B5%8B"><span class="nav-number">5.</span> <span class="nav-text">点击率预测</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92"><span class="nav-number">6.</span> <span class="nav-text">逻辑回归</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E7%89%B9%E5%BE%81"><span class="nav-number">6.1.</span> <span class="nav-text">动态特征</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E6%96%B9%E6%B3%95"><span class="nav-number">6.2.</span> <span class="nav-text">优化方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#l-bfgs"><span class="nav-number">6.2.1.</span> <span class="nav-text">L-BFGS</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#admm"><span class="nav-number">6.2.2.</span> <span class="nav-text">ADMM</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%A2%E7%B4%A2%E4%B8%8E%E5%88%A9%E7%94%A8explore-and-exploit-ee"><span class="nav-number">7.</span> <span class="nav-text">探索与利用(Explore and
+exploit， E&amp;E)</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">248</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.linkedin.com/in/wuliangchao/" title="LinkedIn → https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;wuliangchao&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i>LinkedIn</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

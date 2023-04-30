@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="《Programming Collective Intelligence》（中文名为《集体智慧编程》），是一本关于数据挖掘的书籍，每一章都会通过一个实际的例子来讲述某个机器学习算法，同时会涉及到数据的采集和处理等，是一本实践性很强的书籍。 本文是本书的第三章 Discovering Groups的读书笔记 ,主要介绍了对文本进行聚类以及对聚类后的结果进行可视化。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《Programming Collective Intelligence》读书笔记(3)--聚类">
+<meta property="og:url" content="https://wulc.me/2017/01/25/%E3%80%8AProgramming%20Collective%20Intelligence%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0(3)--%E8%81%9A%E7%B1%BB/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="《Programming Collective Intelligence》（中文名为《集体智慧编程》），是一本关于数据挖掘的书籍，每一章都会通过一个实际的例子来讲述某个机器学习算法，同时会涉及到数据的采集和处理等，是一本实践性很强的书籍。 本文是本书的第三章 Discovering Groups的读书笔记 ,主要介绍了对文本进行聚类以及对聚类后的结果进行可视化。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b8ue970m4gnksh14q83vd1jir9.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b8uejmpl1iikcki1nj510ds1aj4m.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b92sg3ts1epk1v1g1tkd2j5m9rp.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b8uejmpl1iikcki1nj510ds1aj4m.png">
+<meta property="og:image" content="https://wulc.me/imgs/clusters.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/mds2d.jpg">
+<meta property="article:published_time" content="2017-01-25T14:31:17.000Z">
+<meta property="article:modified_time" content="2023-04-30T05:12:49.047Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="集体智慧编程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/image_1b8ue970m4gnksh14q83vd1jir9.png">
+
+<link rel="canonical" href="https://wulc.me/2017/01/25/%E3%80%8AProgramming%20Collective%20Intelligence%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0(3)--%E8%81%9A%E7%B1%BB/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>《Programming Collective Intelligence》读书笔记(3)--聚类 | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">吴良超的学习笔记</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2017/01/25/%E3%80%8AProgramming%20Collective%20Intelligence%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0(3)--%E8%81%9A%E7%B1%BB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          《Programming Collective Intelligence》读书笔记(3)--聚类
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-01-25 22:31:17" itemprop="dateCreated datePublished" datetime="2017-01-25T22:31:17+08:00">2017-01-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-30 13:12:49" itemprop="dateModified" datetime="2023-04-30T13:12:49+08:00">2023-04-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%9B%86%E4%BD%93%E6%99%BA%E6%85%A7%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">集体智慧编程</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>《Programming Collective
+Intelligence》（中文名为《集体智慧编程》），是一本关于数据挖掘的书籍，每一章都会通过一个实际的例子来讲述某个机器学习算法，同时会涉及到数据的采集和处理等，是一本实践性很强的书籍。</p>
+<p><strong>本文是本书的第三章 Discovering Groups的读书笔记
+,主要介绍了对文本进行聚类以及对聚类后的结果进行可视化。</strong></p>
+<span id="more"></span>
+<p>聚类就是将相似的数据聚合在一起，形成一类，与分类比较相似，但是又有不同。一般来说聚类没有明确的类别数目，而分类根据具体的问题在一开始就确定了所有分类的可能，而且一般用于聚类的数据不需要标签,
+属于无监督算法，而用于分类的数据则需要，属于有监督的算法。常见的聚类算法有KMeans，SOM（Self-Organized
+Feature
+Map）等，常见的分类算法则更多，如逻辑回归，朴素贝叶斯，SVM等。</p>
+<p>本文主要讲逐层聚类(Hierarchical
+Clustering)和KMeans聚类这两个聚类算法,依然会通过一个例子来阐述算法的具体实现。文中所有的数据和代码可从<a
+target="_blank" rel="noopener" href="https://github.com/WuLC/MachineLearningAlgorithm/tree/master/python/Clustering">这里</a>获取。</p>
+<h2 id="获取数据">获取数据</h2>
+<p>本文使用的数据为博客文本数据，通过分析博客文本之间的相似性，从而将相似的博客聚类在一起。</p>
+<p>通过博客的 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/RSS">RSS</a>
+源可以获取博客所有的文本数据，python中提供了 <code>feedparser</code>
+这个第三方 package 来实现这个功能，如下代码实现的功能就是获取一个博客的
+RSS 中的所有文章的summary
+并进行分词统计，注意本文使用的均是英文文本。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> feedparser</span><br><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">parse_rss</span>(<span class="params">target_url</span>):</span><br><span class="line">    rss = feedparser.parse(target_url)</span><br><span class="line">    word_count = defaultdict(<span class="built_in">int</span>)</span><br><span class="line">    <span class="comment"># traverse all passages of the blog</span></span><br><span class="line">    <span class="keyword">for</span> entry <span class="keyword">in</span> rss.entries:  </span><br><span class="line">        <span class="keyword">if</span> <span class="string">&#x27;summary&#x27;</span> <span class="keyword">in</span> entry:</span><br><span class="line">            summary = entry.summary <span class="comment"># su</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            summary = entry.description</span><br><span class="line">        words = extract_words(entry.title+<span class="string">&#x27; &#x27;</span>+summary)</span><br><span class="line">        <span class="keyword">for</span> word <span class="keyword">in</span> words:</span><br><span class="line">            word_count[word] += <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> rss.feed.get(<span class="string">&#x27;title&#x27;</span>, <span class="string">&#x27;empty title&#x27;</span>), word_count  <span class="comment"># title can be empty sometimes</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">extract_words</span>(<span class="params">content</span>):</span><br><span class="line">    <span class="comment"># remove tag in the form of &lt;XXXX&gt;</span></span><br><span class="line">    txt = re.<span class="built_in">compile</span>(<span class="string">r&#x27;&lt;[^&gt;]+&gt;&#x27;</span>).sub(<span class="string">&#x27;&#x27;</span>,content)  </span><br><span class="line">    <span class="comment"># split words by all non-alpha characters</span></span><br><span class="line">    words = re.<span class="built_in">compile</span>(<span class="string">r&#x27;[^A-Z^a-z]+&#x27;</span>).split(content) </span><br><span class="line">    <span class="comment"># turn all words into lowercase</span></span><br><span class="line">    <span class="keyword">return</span> [word.lower() <span class="keyword">for</span> word <span class="keyword">in</span> words <span class="keyword">if</span> word != <span class="string">&#x27;&#x27;</span>] </span><br></pre></td></tr></table></figure>
+<p>上面的 <code>parse_rss</code> 函数实现的功能就是从 RSS
+的url中提取出所有文本的summary（或description），然后通过<code>extract_words</code>函数剔除html标签并分词，进而统计出该
+RSS 源中各个词语所出现的次数。</p>
+<p>由于聚类需要多个博客的数据，本文使用了原书提供的100个博客的RSS作为原始数据，并通过原始数据构造一个
+<code>blog-word</code>
+矩阵，行表示博客，列表示各个具体的词语，矩阵中的值表示某个词语在某个博客中出现的总次数。由于词语数目过多，因此这里会限制出现在矩阵的列的词语必须要在原始数据中出现的频率在一定的百分比。得到
+<code>blog-word</code>
+矩阵需要一定的运算量，因此将其写入到文件中进行持久化，方便下次的读取。下面就是实现上面功能的代码。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">get_content_from_feedlist</span>(<span class="params">feed_list, data_file</span>):</span><br><span class="line">    word_appear_count = defaultdict(<span class="built_in">int</span>) <span class="comment"># count thow many blogs does a word appear in</span></span><br><span class="line">    blog_word_count = &#123;&#125; <span class="comment"># words of each blog</span></span><br><span class="line">    empty_title_count = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> rss_url <span class="keyword">in</span> file(feed_list):</span><br><span class="line">        title, wc = parse_rss(rss_url.strip())</span><br><span class="line">        <span class="keyword">if</span> title == <span class="string">&#x27;empty title&#x27;</span>:  <span class="comment"># cannot get title of some rss</span></span><br><span class="line">            empty_title_count += <span class="number">1</span></span><br><span class="line">            title = title+<span class="string">&#x27; %s&#x27;</span>%empty_title_count</span><br><span class="line">        blog_word_count[title] = wc</span><br><span class="line">        <span class="keyword">for</span> word, count <span class="keyword">in</span> wc.items():</span><br><span class="line">            word_appear_count[word] += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># caculate the appearing percentage of each word</span></span><br><span class="line">    <span class="comment"># record those words that appear within maximum and minimum percentage </span></span><br><span class="line">    minimum, maximum = <span class="number">0.1</span>, <span class="number">0.5</span></span><br><span class="line">    word_list = []</span><br><span class="line">    total_blog = <span class="built_in">len</span>(blog_word_count)</span><br><span class="line">    <span class="keyword">for</span> word, count <span class="keyword">in</span> word_appear_count.items():</span><br><span class="line">        <span class="keyword">if</span> minimum &lt;= count*<span class="number">1.0</span>/total_blog &lt;= maximum:</span><br><span class="line">            word_list.append(word)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># write data into data_file </span></span><br><span class="line">    <span class="keyword">with</span> io.<span class="built_in">open</span>(data_file, mode = <span class="string">&#x27;w&#x27;</span>, encoding = <span class="string">&#x27;utf8&#x27;</span>) <span class="keyword">as</span> wf:</span><br><span class="line">        wf.write(<span class="string">&#x27;Blog&#x27;</span>.decode(<span class="string">&#x27;utf8&#x27;</span>))</span><br><span class="line">        <span class="keyword">for</span> word <span class="keyword">in</span> word_list:</span><br><span class="line">            wf.write((<span class="string">&#x27;\t%s&#x27;</span>%word).decode(<span class="string">&#x27;utf8&#x27;</span>))</span><br><span class="line">        wf.write(<span class="string">&#x27;\n&#x27;</span>.decode(<span class="string">&#x27;utf8&#x27;</span>))</span><br><span class="line">        <span class="comment"># words of each blog</span></span><br><span class="line">        <span class="keyword">for</span> blog_title, blog_words <span class="keyword">in</span> blog_word_count.items():</span><br><span class="line">            wf.write(blog_title.decode(<span class="string">&#x27;utf8&#x27;</span>))</span><br><span class="line">            <span class="keyword">for</span> word <span class="keyword">in</span> word_list:</span><br><span class="line">                <span class="keyword">if</span> word <span class="keyword">in</span> blog_words:</span><br><span class="line">                    wf.write((<span class="string">&#x27;\t%s&#x27;</span>%blog_words[word]).decode(<span class="string">&#x27;utf8&#x27;</span>))</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    wf.write((<span class="string">&#x27;\t&#x27;</span>+<span class="string">&#x27;0&#x27;</span>).decode(<span class="string">&#x27;utf8&#x27;</span>))</span><br><span class="line">            wf.write(<span class="string">&#x27;\n&#x27;</span>.decode(<span class="string">&#x27;utf8&#x27;</span>))</span><br></pre></td></tr></table></figure>
+<p>上面的 <code>get_content_from_feedlist</code>中通过获取了
+<code>feed_list</code>(每行一个rss源的url)中所有博客的文本，并将那些出现频率在
+0.1 到 0.5 间的词语作为 <code>blog-word</code>
+矩阵的列，出现频率的计算方法为
+<code>词语出现的博客数/总的博客数</code>。然后将<code>blog-word</code>
+矩阵写入到 <code>data_file</code> 文件中。至此完成了获取数据的步骤。</p>
+<h2 id="聚类">聚类</h2>
+<p>下面将讲述两种方法对上面获取的博客数据进行聚类：逐层聚类（Hierarchical
+Clustering） 和 KMeans聚类（KMeans Clustering）。</p>
+<h3 id="逐层聚类hierarchical-clustering">逐层聚类（Hierarchical
+Clustering）</h3>
+<p>逐层聚类的思想很简单，每次将距离最近的两个cluster进行聚类，组成一个新的类，然后重复此过程直到只剩下一个最大的cluster。整个过程如下图所示：</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1b8ue970m4gnksh14q83vd1jir9.png"
+alt="逐层聚类" />
+<figcaption aria-hidden="true">逐层聚类</figcaption>
+</figure>
+<p>这种聚类方法的具体过程如同构造一棵树，其中每个叶子节点表示一个单一的实例，而其他节点表示由多个实例聚成的cluster。</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1b8uejmpl1iikcki1nj510ds1aj4m.png"
+alt="逐层聚类树状图" />
+<figcaption aria-hidden="true">逐层聚类树状图</figcaption>
+</figure>
+<p>算法的思路比较简单，但是有个关键问题就是如何判断cluster 与
+cluster之间的距离。这里采用皮尔逊系数，皮尔逊系数在<a
+href="http://wulc.me/2016/02/22/%E3%80%8AProgramming%20Collective%20Intelligence%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%282%29/">这篇文章</a>中有比较详细的描述，这里就不详细展开了，实际上皮尔逊系数就是概率论中常用的相关系数，用于表示两者的相关性，范围在
+[-1,
+1]之间，其中正值表示正相关，负值表示负相关，且绝对值越大，相关性越强，这里的距离越短，表示两个的正相关性越强，因此采用
+<code>1-皮尔逊系数</code> 作为距离的值。实现的代码如下所示：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">pearson</span>(<span class="params">v1,v2</span>):</span><br><span class="line">	<span class="comment"># Simple sums</span></span><br><span class="line">	sum1=<span class="built_in">sum</span>(v1)</span><br><span class="line">	sum2=<span class="built_in">sum</span>(v2)</span><br><span class="line">	<span class="comment"># Sums of the squares</span></span><br><span class="line">	sum1Sq=<span class="built_in">sum</span>([<span class="built_in">pow</span>(v,<span class="number">2</span>) <span class="keyword">for</span> v <span class="keyword">in</span> v1])</span><br><span class="line">	sum2Sq=<span class="built_in">sum</span>([<span class="built_in">pow</span>(v,<span class="number">2</span>) <span class="keyword">for</span> v <span class="keyword">in</span> v2])</span><br><span class="line">	<span class="comment"># Sum of the products</span></span><br><span class="line">	pSum=<span class="built_in">sum</span>([v1[i]*v2[i] <span class="keyword">for</span> i <span class="keyword">in</span> xrange(<span class="built_in">len</span>(v1))])</span><br><span class="line">	<span class="comment"># Calculate r (Pearson score)</span></span><br><span class="line">	num=pSum-(sum1*sum2/<span class="built_in">len</span>(v1))</span><br><span class="line">	den=sqrt((sum1Sq-<span class="built_in">pow</span>(sum1,<span class="number">2</span>)/<span class="built_in">len</span>(v1))*(sum2Sq-<span class="built_in">pow</span>(sum2,<span class="number">2</span>)/<span class="built_in">len</span>(v1)))</span><br><span class="line">	<span class="keyword">if</span> den==<span class="number">0</span>: <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">	<span class="keyword">return</span> <span class="number">1.0</span>-num/den</span><br></pre></td></tr></table></figure>
+<p>另外一个问题就是如何在 python
+中表示一个cluster，从上面的算法过程可知，一个cluster包括了它的两个子cluster（最开始的单实例没有），cluster的中心值等，在
+python
+并没有符合这种要求的数据结构，因此可以创建一个python类这个cluster。</p>
+<p>创建的cluster类如下所示： <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">hcluster</span>:</span><br><span class="line">	<span class="string">&quot;&quot;&quot;describe a cluster as a node in a tree&quot;&quot;&quot;</span></span><br><span class="line">	<span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, <span class="built_in">id</span>, vector, distance=<span class="number">0</span>, left = <span class="literal">None</span>, right = <span class="literal">None</span></span>):</span><br><span class="line"></span><br><span class="line">		self.<span class="built_in">id</span> = <span class="built_in">id</span></span><br><span class="line">		self.vector = vector</span><br><span class="line">		self.distance = distance</span><br><span class="line">		self.left = left</span><br><span class="line">		self.right = right</span><br></pre></td></tr></table></figure></p>
+<p>各个变量及其含义如下所示</p>
+<table>
+<thead>
+<tr class="header">
+<th>变量</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>id</td>
+<td>cluster的唯一标示号</td>
+</tr>
+<tr class="even">
+<td>vector</td>
+<td>cluster的值，即cluster的中心点</td>
+</tr>
+<tr class="odd">
+<td>distance</td>
+<td>组成cluster的两个子clusters的距离，叶子节点为0</td>
+</tr>
+<tr class="even">
+<td>left，right</td>
+<td>组成cluster的两个子clusters，叶子节点为None</td>
+</tr>
+</tbody>
+</table>
+<p>通过各个 cluster 的唯一标示号 id 可以方便进行 cluster
+的合并和删除，而存储 distance
+以及子clusters的便于后面对聚类结果的可视化。下面是逐层聚类的过程的代码</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">hierarchicalClustering</span>(<span class="params">blog_data, distance = pearson</span>):</span><br><span class="line">	<span class="comment"># initi clusters, each node is a cluster</span></span><br><span class="line">	clusters = [hcluster(<span class="built_in">id</span> = i, vector = blog_data[i]) <span class="keyword">for</span> i <span class="keyword">in</span> xrange(<span class="built_in">len</span>(blog_data))] </span><br><span class="line">	<span class="comment"># use negativ number to represent cluster with more than one node</span></span><br><span class="line">	clust_id = -<span class="number">1</span></span><br><span class="line">	<span class="comment"># use distance to store caculated results</span></span><br><span class="line">	distances = &#123;&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">while</span> <span class="built_in">len</span>(clusters) &gt; <span class="number">1</span>:</span><br><span class="line">		similar_pairs = (<span class="number">0</span>,<span class="number">1</span>)</span><br><span class="line">		closest_distance = distance(clusters[<span class="number">0</span>].vector, clusters[<span class="number">1</span>].vector)</span><br><span class="line"></span><br><span class="line">		<span class="keyword">for</span> i <span class="keyword">in</span> xrange(<span class="built_in">len</span>(clusters)):</span><br><span class="line">			<span class="keyword">for</span> j <span class="keyword">in</span> xrange(i+<span class="number">1</span>, <span class="built_in">len</span>(clusters)):</span><br><span class="line">				<span class="keyword">if</span> (clusters[i].<span class="built_in">id</span>, clusters[j].<span class="built_in">id</span>) <span class="keyword">not</span> <span class="keyword">in</span> distances:</span><br><span class="line">					distances[(clusters[i].<span class="built_in">id</span>, clusters[j].<span class="built_in">id</span>)] = distance(clusters[i].vector, clusters[j].vector)</span><br><span class="line">				d = distances[(clusters[i].<span class="built_in">id</span>, clusters[j].<span class="built_in">id</span>)]</span><br><span class="line">				<span class="keyword">if</span> closest_distance &gt; d:</span><br><span class="line">					closest_distance = d</span><br><span class="line">					similar_pairs = (i, j)</span><br><span class="line"></span><br><span class="line">		merged_vector = [(clusters[similar_pairs[<span class="number">0</span>]].vector[i] + clusters[similar_pairs[<span class="number">1</span>]].vector[i])/<span class="number">2.0</span> </span><br><span class="line">						   <span class="keyword">for</span> i <span class="keyword">in</span> xrange(<span class="built_in">len</span>(clusters[similar_pairs[<span class="number">0</span>]].vector))]</span><br><span class="line"></span><br><span class="line">		new_cluster = hcluster(<span class="built_in">id</span> = clust_id, vector = merged_vector, distance = closest_distance, </span><br><span class="line">								left = clusters[similar_pairs[<span class="number">0</span>]], right = clusters[similar_pairs[<span class="number">1</span>]])</span><br><span class="line"></span><br><span class="line">		<span class="comment"># must delete elements from higher index to lower index</span></span><br><span class="line">		<span class="keyword">del</span> clusters[similar_pairs[<span class="number">1</span>]]</span><br><span class="line">		<span class="keyword">del</span> clusters[similar_pairs[<span class="number">0</span>]]</span><br><span class="line"></span><br><span class="line">		clusters.append(new_cluster)</span><br><span class="line">		clust_id -= <span class="number">1</span></span><br><span class="line">	<span class="keyword">return</span> clusters[<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
+<p>上面的代码重复
+<code>合并两个最邻近cluster为新cluster-&gt;调整新cluster的位置</code>的操作，直到只剩下一个cluster并将该cluster返回。</p>
+<h3 id="kmeans-聚类">KMeans 聚类</h3>
+<p>KMeans 聚类的思想是一开始就确认了最终需要聚类成 k 个
+clusters，然后在训练数据的范围内随机选择 k 个初始点作为初始 k 个 cluster
+的中心，并将每个实例聚类到离其最近的一个cluster，所有的点都分到离其最近的cluster后，根据各个cluster中的点重新调整这个cluster的中心。重复这个过程直到每个cluster中的点不变为止。如下图为KMeans的过程</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1b92sg3ts1epk1v1g1tkd2j5m9rp.png"
+alt="KMeans聚类过程" />
+<figcaption aria-hidden="true">KMeans聚类过程</figcaption>
+</figure>
+<p>这里度量距离的方式仍采用皮尔逊系数，下面是实现以上功能的代码：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">kMeans</span>(<span class="params">blog_data, distance = pearson, k = <span class="number">5</span></span>):</span><br><span class="line">	m, n = <span class="built_in">len</span>(blog_data), <span class="built_in">len</span>(blog_data[<span class="number">0</span>])</span><br><span class="line">	max_value = [<span class="number">0</span> <span class="keyword">for</span> i <span class="keyword">in</span> xrange(n)]</span><br><span class="line">	min_value = [<span class="number">0</span> <span class="keyword">for</span> i <span class="keyword">in</span> xrange(n)]</span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> xrange(m):</span><br><span class="line">		<span class="keyword">for</span> j <span class="keyword">in</span> xrange(n):</span><br><span class="line">			max_value[j] = <span class="built_in">max</span>(max_value[j], blog_data[i][j])</span><br><span class="line">			min_value[j] = <span class="built_in">min</span>(min_value[j], blog_data[i][j])</span><br><span class="line"></span><br><span class="line">    <span class="comment"># initial random clusters</span></span><br><span class="line">	clusters = []</span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> xrange(k):</span><br><span class="line">		clusters.append([min_value[j] + random.random()*(max_value[j] - min_value[j]) <span class="keyword">for</span> j <span class="keyword">in</span> xrange(n)])</span><br><span class="line"></span><br><span class="line">	count = <span class="number">0</span></span><br><span class="line">	previous_cluster_nodes = <span class="literal">None</span></span><br><span class="line">	<span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">		count += <span class="number">1</span></span><br><span class="line">		<span class="built_in">print</span> <span class="string">&#x27;iteration count %s&#x27;</span>%count</span><br><span class="line">		curr_cluster_nodes = [[] <span class="keyword">for</span> i <span class="keyword">in</span> xrange(k)]</span><br><span class="line">		<span class="keyword">for</span> i <span class="keyword">in</span> xrange(m):</span><br><span class="line">			closest_distance = distance(blog_data[i], clusters[<span class="number">0</span>])</span><br><span class="line">			cluster = <span class="number">0</span></span><br><span class="line">			<span class="keyword">for</span> j <span class="keyword">in</span> xrange(<span class="number">1</span>, k):</span><br><span class="line">				d = distance(blog_data[i], clusters[j])</span><br><span class="line">				<span class="keyword">if</span> closest_distance &gt; d:</span><br><span class="line">					closest_distance = d</span><br><span class="line">					cluster = j</span><br><span class="line">			curr_cluster_nodes[cluster].append(i)</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> curr_cluster_nodes == previous_cluster_nodes:</span><br><span class="line">			<span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">		previous_cluster_nodes = curr_cluster_nodes</span><br><span class="line">		<span class="comment"># modify the core of each cluster</span></span><br><span class="line">		<span class="keyword">for</span> i <span class="keyword">in</span> xrange(k):</span><br><span class="line">			tmp = [<span class="number">0</span> <span class="keyword">for</span> _ <span class="keyword">in</span> xrange(n)]</span><br><span class="line">			<span class="keyword">for</span> node <span class="keyword">in</span> curr_cluster_nodes[i]:</span><br><span class="line">				<span class="keyword">for</span> j <span class="keyword">in</span> xrange(n):</span><br><span class="line">					tmp[j] += blog_data[node][j] </span><br><span class="line">			clusters[i] = [<span class="built_in">float</span>(tmp[j])/<span class="built_in">len</span>(curr_cluster_nodes) <span class="keyword">for</span> j <span class="keyword">in</span> xrange(n)]</span><br><span class="line">	<span class="keyword">return</span> clusters, curr_cluster_nodes</span><br></pre></td></tr></table></figure>
+<p>上面的代码最终返回k个cluster的中心点的值，以及各个cluster中所包含的点（实例）。需要注意的是由于每次选择的初始点是随机的，因此每次运行所获得的结果不一定相同。</p>
+<h2 id="可视化">可视化</h2>
+<p>下面介绍如何将上面两种聚类算法得到的结果进行可视化，可视化通过python中的
+python image library(PIL) 实现。</p>
+<h3 id="逐层聚类结果可视化">逐层聚类结果可视化</h3>
+<p>从上面的算法描述可知，逐层距离每次将两个cluster聚合在一起，从构造过程来看，实际上最终是构造了一颗二叉树，因此这里会以二叉树的形式将聚类的结果可视化。由于二叉树叶子节点过多，为了便于展示，将二叉树横着放，如下图就是二叉树的放置方式</p>
+<figure>
+<img src="https://wulc.me/imgs/image_1b8uejmpl1iikcki1nj510ds1aj4m.png"
+alt="逐层聚类树状图" />
+<figcaption aria-hidden="true">逐层聚类树状图</figcaption>
+</figure>
+<p><strong>要将这课二叉树可视化，首先需要知道这这棵树以上图放置时的高度和宽度(深度)，然后根据图片的大小进行相应的缩放。</strong></p>
+<p>回想上面在逐层聚类中定义的下面的类表示一个cluster <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">hcluster</span>:</span><br><span class="line">	<span class="string">&quot;&quot;&quot;describe a cluster as a node in a tree&quot;&quot;&quot;</span></span><br><span class="line">	<span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, <span class="built_in">id</span>, vector, distance=<span class="number">0</span>, left = <span class="literal">None</span>, right = <span class="literal">None</span></span>):</span><br><span class="line">		self.<span class="built_in">id</span> = <span class="built_in">id</span></span><br><span class="line">		self.vector = vector</span><br><span class="line">		self.distance = distance</span><br><span class="line">		self.left = left</span><br><span class="line">		self.right = right</span><br></pre></td></tr></table></figure></p>
+<p>通过 <code>self.left</code> 和 <code>self.right</code>
+属性可以访问当前cluster的两个子cluster，而 <code>self.distance</code>
+则表示两个子cluster的距离的大小，该属性在图中表现为当前cluster到两个子cluster的线段的长短，假如<code>self.distance</code>的值越大，那么这个cluster到两个子cluster的线段也越长。因此可以通过distance的值来获取二叉树的最长深度来作为图片的宽度。获取二叉树深度代码如下所示</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">get_depth</span>(<span class="params">cluster</span>):</span><br><span class="line">    <span class="comment"># The distance of an endpoint is 0.0</span></span><br><span class="line">    <span class="keyword">if</span> cluster.left==<span class="literal">None</span> <span class="keyword">and</span> cluster.right==<span class="literal">None</span>: <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">max</span>(get_depth(cluster.left),get_depth(cluster.right))+cluster.distance</span><br></pre></td></tr></table></figure>
+<p>通过递归的方式将两棵字数中最长的深度加上当前节点到两棵子树的长度，便是以当前节点为根节点的树的深度。</p>
+<p>同样地，树的高度也可以通过递归方式获取，由上面的二叉树的放置方法可知，整棵树的高度就是其两棵子树的高度之和。下面便是获取高度的代码</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">get_height</span>(<span class="params">cluster</span>):</span><br><span class="line">    <span class="keyword">if</span> cluster.left==<span class="literal">None</span> <span class="keyword">and</span> cluster.right==<span class="literal">None</span>:  <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> get_height(cluster.left)+get_height(cluster.right)</span><br></pre></td></tr></table></figure>
+<p>整个二叉树中有两种节点：一种是叶子节点，表示一个单一实例，另外的非叶子结点的表示有多个叶子节点组成的cluster。对于叶子节点，只需要在图片上显示其内容即可，而对于非叶子节点则需要画出其两棵子树的分支，通过
+<code>self.id</code>
+属性可以区分节点是否为叶子节点。下面便是具体的实现代码,（注意这里需要用到PIL了，关于PIL的具体用法可参考<a
+target="_blank" rel="noopener" href="http://effbot.org/imagingbook/pil-index.htm">这里</a>）</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image,ImageDraw</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">draw_node</span>(<span class="params">draw,cluster,x,y,scaling,blog_names</span>):</span><br><span class="line">    <span class="keyword">if</span> cluster.<span class="built_in">id</span> &lt; <span class="number">0</span>:</span><br><span class="line">        h1=get_height(cluster.left)*<span class="number">20</span></span><br><span class="line">        h2=get_height(cluster.right)*<span class="number">20</span></span><br><span class="line">        top=y-(h1+h2)/<span class="number">2</span></span><br><span class="line">        bottom=y+(h1+h2)/<span class="number">2</span></span><br><span class="line">        <span class="comment"># Line length</span></span><br><span class="line">        ll=cluster.distance*scaling</span><br><span class="line">        <span class="comment"># Vertical line from this cluster to children    </span></span><br><span class="line">        draw.line((x,top+h1/<span class="number">2</span>,x,bottom-h2/<span class="number">2</span>),fill=(<span class="number">255</span>,<span class="number">0</span>,<span class="number">0</span>))    </span><br><span class="line"></span><br><span class="line">        <span class="comment"># Horizontal line to left item</span></span><br><span class="line">        draw.line((x,top+h1/<span class="number">2</span>,x+ll,top+h1/<span class="number">2</span>),fill=(<span class="number">255</span>,<span class="number">0</span>,<span class="number">0</span>))    </span><br><span class="line"></span><br><span class="line">        <span class="comment"># Horizontal line to right item</span></span><br><span class="line">        draw.line((x,bottom-h2/<span class="number">2</span>,x+ll,bottom-h2/<span class="number">2</span>),fill=(<span class="number">255</span>,<span class="number">0</span>,<span class="number">0</span>))        </span><br><span class="line"></span><br><span class="line">        <span class="comment"># Call the function to draw the left and right nodes    </span></span><br><span class="line">        draw_node(draw,cluster.left,x+ll,top+h1/<span class="number">2</span>,scaling,blog_names)</span><br><span class="line">        draw_node(draw,cluster.right,x+ll,bottom-h2/<span class="number">2</span>,scaling,blog_names)</span><br><span class="line">    <span class="keyword">else</span>:   </span><br><span class="line">        <span class="comment"># If this is an endpoint, draw the item label</span></span><br><span class="line">        draw.text((x+<span class="number">5</span>,y-<span class="number">7</span>),blog_names[cluster.<span class="built_in">id</span>],(<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>))</span><br></pre></td></tr></table></figure>
+<p>上面的 <code>scaling</code>
+参数是根据树的深度和图片的宽度的比例得到的缩放因子，在开始画图前需要通过树的深度和图片预定义的宽度获取。下面的代码便是在作图前的需要准备的参数以及调用上面定义好的函数进行作图的过程。
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">draw_cluster</span>(<span class="params">cluster, blog_names, jpeg_path</span>):</span><br><span class="line">    <span class="comment"># height and width</span></span><br><span class="line">    h=get_height(cluster)*<span class="number">20</span></span><br><span class="line">    w=<span class="number">1200</span></span><br><span class="line">    depth=get_depth(cluster)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># width is fixed, so scale distances accordingly</span></span><br><span class="line">    scaling=<span class="built_in">float</span>(w-<span class="number">150</span>)/depth</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Create a new image with a white background</span></span><br><span class="line">    img=Image.new(<span class="string">&#x27;RGB&#x27;</span>,(w,h),(<span class="number">255</span>,<span class="number">255</span>,<span class="number">255</span>))</span><br><span class="line">    draw=ImageDraw.Draw(img)</span><br><span class="line"></span><br><span class="line">    draw.line((<span class="number">0</span>,h/<span class="number">2</span>,<span class="number">10</span>,h/<span class="number">2</span>),fill=(<span class="number">255</span>,<span class="number">0</span>,<span class="number">0</span>))    </span><br><span class="line"></span><br><span class="line">    <span class="comment"># Draw the first node</span></span><br><span class="line">    draw_node(draw,cluster,<span class="number">10</span>,h/<span class="number">2</span>,scaling,blog_names)</span><br><span class="line">    img.save(jpeg_path,<span class="string">&#x27;JPEG&#x27;</span>)</span><br></pre></td></tr></table></figure> 上面完整的代码可从<a
+target="_blank" rel="noopener" href="https://github.com/WuLC/MachineLearningAlgorithm/blob/master/python/Clustering/HierarchicalClustering.py">这里</a>获取</p>
+<p>作图的结果如下所示：</p>
+<figure>
+<img src="https://wulc.me/imgs/clusters.jpg" alt="逐层层聚类的可视化" />
+<figcaption aria-hidden="true">逐层层聚类的可视化</figcaption>
+</figure>
+<h3 id="kmeans聚类结果可视化">KMeans聚类结果可视化</h3>
+<p>原书并没有给出KMeans聚类结果的可视化操作，只是提供了一种<a
+target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Multidimensional_scaling">多维缩放(Multidimensional
+scaling, MDS)</a>的技术,
+用于将高维的数据转换为二维，同时保留数据间的距离关系，这样便可通过图片对其进行可视化。实际上，
+MDS 与 PCA 都是一种基于线性变换而进行降维的方法。</p>
+<p>MDS的思想是通过点的原始距离矩阵 <span
+class="math inline">\(D\)</span>,
+计算出变换到新的维度空间中的点的距离矩阵 <span
+class="math inline">\(B\)</span>, 然后对 <span
+class="math inline">\(B\)</span> 做特征值分解，选取前 <span
+class="math inline">\(n\)</span> 个特征值(<span
+class="math inline">\(n\)</span>
+为所变换到的维度空间的维度值)及其对应的特征向量矩阵，便可得到新的维度空间中各点的坐标。具体的推导过程可以参考周志华的<a
+target="_blank" rel="noopener" href="https://book.douban.com/subject/26708119/">机器学习</a>中第十章的内容或<a
+target="_blank" rel="noopener" href="http://blog.csdn.net/Dark_Scope/article/details/53229427#t2">这篇博客</a>，这里不详细展开论述了。</p>
+<p>但是该书给出的方案并不是上面讲述的方法，而是先在二维空间中随机初始化
+<span class="math inline">\(m\)</span>
+个点作为m个实例的初始点，然后根据其在二维空间的距离与高维空间中实际的距离的误差来调整点的位置，是一种迭代的方法。其具体实现如下所示：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">scale_dowm</span>(<span class="params">blog_data,distance=pearson,rate=<span class="number">0.01</span></span>):</span><br><span class="line">    n=<span class="built_in">len</span>(blog_data)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># The real distances between every pair of items</span></span><br><span class="line">    real_list=[[distance(blog_data[i],blog_data[j]) <span class="keyword">for</span> j <span class="keyword">in</span> xrange(n)] </span><br><span class="line">             <span class="keyword">for</span> i <span class="keyword">in</span> xrange(n)]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Randomly initialize the starting points of the locations in 2D</span></span><br><span class="line">    loc=[[random.random(), random.random()] <span class="keyword">for</span> i <span class="keyword">in</span> xrange(n)]</span><br><span class="line">    fake_list=[[<span class="number">0.0</span> <span class="keyword">for</span> j <span class="keyword">in</span> xrange(n)] <span class="keyword">for</span> i <span class="keyword">in</span> xrange(n)]</span><br><span class="line"></span><br><span class="line">    lasterror=<span class="literal">None</span></span><br><span class="line">    <span class="keyword">for</span> m <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>,<span class="number">1000</span>):</span><br><span class="line">        <span class="comment"># Find projected distances</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">          <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">            fake_list[i][j]=sqrt(<span class="built_in">sum</span>([<span class="built_in">pow</span>(loc[i][x]-loc[j][x],<span class="number">2</span>) </span><br><span class="line">                                     <span class="keyword">for</span> x <span class="keyword">in</span> xrange(<span class="built_in">len</span>(loc[i]))]))</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Move points</span></span><br><span class="line">        grad=[[<span class="number">0.0</span>,<span class="number">0.0</span>] <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n)]</span><br><span class="line"></span><br><span class="line">        totalerror=<span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">          <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">            <span class="keyword">if</span> j==k <span class="keyword">or</span> real_list[j][k] == <span class="number">0</span>: <span class="keyword">continue</span>  <span class="comment"># acoid the case when real_list[j][k] == 0.0</span></span><br><span class="line">            <span class="comment"># The error is percent difference between the distances</span></span><br><span class="line">            error_term=(fake_list[j][k]-real_list[j][k])/real_list[j][k]</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># Each point needs to be moved away from or towards the other</span></span><br><span class="line">            <span class="comment"># point in proportion to how much error it has</span></span><br><span class="line">            grad[k][<span class="number">0</span>] += ((loc[k][<span class="number">0</span>]-loc[j][<span class="number">0</span>])/fake_list[j][k])*error_term</span><br><span class="line">            grad[k][<span class="number">14</span>] += ((loc[k][<span class="number">15</span>]-loc[j][<span class="number">16</span>])/fake_list[j][k])*error_term</span><br><span class="line"></span><br><span class="line">            <span class="comment"># Keep track of the total error</span></span><br><span class="line">            totalerror+=<span class="built_in">abs</span>(error_term)</span><br><span class="line">        <span class="comment"># print &#x27;curr error &#123;0&#125;&#x27;.format(totalerror)</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># If the answer got worse by moving the points, we are done</span></span><br><span class="line">        <span class="keyword">if</span> lasterror <span class="keyword">and</span> lasterror&lt;totalerror: <span class="keyword">break</span></span><br><span class="line">        lasterror=totalerror</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Move each of the points by the learning rate times the gradient</span></span><br><span class="line">        <span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">          loc[k][<span class="number">0</span>] -= rate*grad[k][<span class="number">0</span>]</span><br><span class="line">          loc[k][<span class="number">17</span>] -= rate*grad[k][<span class="number">18</span>]</span><br><span class="line">    <span class="keyword">return</span> loc</span><br></pre></td></tr></table></figure>
+<p>上面的<code>scale_dowm</code>函数传入原始的博客数据
+<code>blog_data</code>,然后进行迭代计算，最终返回这些数据在二维空间中对应的向量。每次的迭代时，根据每个点与其他各个点的距离误差调整该点的距离，并且计算出一个总体误差，当本次调整后的误差比上一次要大或者迭代次数达到最大，就跳出循环。</p>
+<p>上面返回了各个高纬向量在二维空间中的坐标，因此通过PIL
+可以很自然地作出图。原书讲到这里就结束了，但是结合我们KMeans聚类的结果可知，每个聚类中心的向量长度与博客数据的长度一样，因此可以将KMeans聚类得到的聚类中心一并传入到<code>scale_dowm</code>函数中，然后得到聚类中心在二维空间中的坐标，然后以其为中心，连线到其聚类中的各个点。</p>
+<p>作图的实现的代码如下所示： <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">draw_clusters</span>(<span class="params">blog_data, clusters, cluster_nodes, blog_names, jpeg_path = <span class="string">&#x27;Clustering_data/mds2d.jpg&#x27;</span></span>):</span><br><span class="line">    img=Image.new(<span class="string">&#x27;RGB&#x27;</span>,(<span class="number">2000</span>,<span class="number">2000</span>),(<span class="number">255</span>,<span class="number">255</span>,<span class="number">255</span>))</span><br><span class="line">    draw=ImageDraw.Draw(img)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> xrange(<span class="built_in">len</span>(clusters)):</span><br><span class="line">        <span class="keyword">for</span> node <span class="keyword">in</span> cluster_nodes[i]:</span><br><span class="line">            c_x,c_y = (clusters[i][<span class="number">0</span>] + <span class="number">0.5</span>)*<span class="number">1000</span>, (clusters[i][<span class="number">19</span>] + <span class="number">0.5</span>)*<span class="number">1000</span></span><br><span class="line">            x, y =(blog_data[node][<span class="number">0</span>]+<span class="number">0.5</span>)*<span class="number">1000</span>, (blog_data[node][<span class="number">20</span>]+<span class="number">0.5</span>)*<span class="number">1000</span></span><br><span class="line">            draw.line((c_x, c_y, x, y),fill=(<span class="number">255</span>,<span class="number">0</span>,<span class="number">0</span>))</span><br><span class="line">            draw.text((x,y),blog_names[node],(<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>))   </span><br><span class="line">    img.save(jpeg_path ,<span class="string">&#x27;JPEG&#x27;</span>) </span><br></pre></td></tr></table></figure></p>
+<p>完整的代码可参见 <a
+target="_blank" rel="noopener" href="https://github.com/WuLC/MachineLearningAlgorithm/blob/master/python/Clustering/KMeansClustering.py">这里</a></p>
+<p>当类别数为3时，上面可视化得到的结果为：</p>
+<figure>
+<img src="https://wulc.me/imgs/mds2d.jpg" alt="KMeans可视化结果" />
+<figcaption aria-hidden="true">KMeans可视化结果</figcaption>
+</figure>
+<p>除了博客数据，原书还用了 Zebo
+网站上的数据进行了聚类，但是采用的聚类算法仍是我们上面提到的两个聚类算法。只是采用度量距离的标准不同，上面博客数据采用的是皮尔逊系数，而从Zebo
+网站上获取的数据的值仅仅是0和1，不宜采用皮尔逊系数，而是采用了 <a
+target="_blank" rel="noopener" href="https://docs.tibco.com/pub/spotfire/6.5.3/doc/html/hc/hc_tanimoto_coefficient.htm">Tanimoto
+coefficient</a>, 该系数用于表示两者的重合程度。对于两个长度为 <span
+class="math inline">\(m\)</span> ,值为0或1的向量 <span
+class="math inline">\(A,B\)</span>，其Tanimoto
+coefficient计算公式如下：</p>
+<p><span
+class="math display">\[\frac{\sum\_{i=1}^{m}a\_ib\_i}{\sum\_{i=1}^{m}(a\_i
++ b\_i + a\_ib\_i)}\]</span></p>
+<p>计算出来的值得范围为 [ 0.0, 1.0 ],
+且值越大，表示两者相似性越强。下面是求解Tanimoto coefficient
+的代码，注意为了用 Tanimoto coefficient 表示距离，最后返回的是 1 -
+Tanimoto coefficient，表示距离值越小，两者越相似。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">tanamoto</span>(<span class="params">v1,v2</span>):</span><br><span class="line">        c1,c2,shr=<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(v1)):</span><br><span class="line">        <span class="keyword">if</span> v1[i]!=<span class="number">0</span>: c1+=<span class="number">1</span> <span class="comment"># in v1</span></span><br><span class="line">        <span class="keyword">if</span> v2[i]!=<span class="number">0</span>: c2+=<span class="number">1</span> <span class="comment"># in v2</span></span><br><span class="line">        <span class="keyword">if</span> v1[i]!=<span class="number">0</span> <span class="keyword">and</span> v2[i]!=<span class="number">0</span>: shr+=<span class="number">1</span> <span class="comment"># in both</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">1.0</span>-(<span class="built_in">float</span>(shr)/(c1+c2-shr))</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 机器学习</a>
+              <a href="/tags/%E9%9B%86%E4%BD%93%E6%99%BA%E6%85%A7%E7%BC%96%E7%A8%8B/" rel="tag"># 集体智慧编程</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/01/16/%E4%BD%BF%E7%94%A8sklearn%E4%BC%98%E9%9B%85%E5%9C%B0%E8%BF%9B%E8%A1%8C%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/" rel="prev" title="使用sklearn优雅地进行数据挖掘">
+      <i class="fa fa-chevron-left"></i> 使用sklearn优雅地进行数据挖掘
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/02/01/%E6%9C%80%E4%BC%98%E5%8C%96%E8%AE%A1%E7%AE%97%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/" rel="next" title="最优化计算课程总结">
+      最优化计算课程总结 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E6%95%B0%E6%8D%AE"><span class="nav-number">1.</span> <span class="nav-text">获取数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%81%9A%E7%B1%BB"><span class="nav-number">2.</span> <span class="nav-text">聚类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%90%E5%B1%82%E8%81%9A%E7%B1%BBhierarchical-clustering"><span class="nav-number">2.1.</span> <span class="nav-text">逐层聚类（Hierarchical
+Clustering）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#kmeans-%E8%81%9A%E7%B1%BB"><span class="nav-number">2.2.</span> <span class="nav-text">KMeans 聚类</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AF%E8%A7%86%E5%8C%96"><span class="nav-number">3.</span> <span class="nav-text">可视化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%90%E5%B1%82%E8%81%9A%E7%B1%BB%E7%BB%93%E6%9E%9C%E5%8F%AF%E8%A7%86%E5%8C%96"><span class="nav-number">3.1.</span> <span class="nav-text">逐层聚类结果可视化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#kmeans%E8%81%9A%E7%B1%BB%E7%BB%93%E6%9E%9C%E5%8F%AF%E8%A7%86%E5%8C%96"><span class="nav-number">3.2.</span> <span class="nav-text">KMeans聚类结果可视化</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">248</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.linkedin.com/in/wuliangchao/" title="LinkedIn → https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;wuliangchao&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i>LinkedIn</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="一直对以 C&#x2F;C++ 为代表的的编译型语言的编译、运行的原理了解不多，最近正好看到这本由国人写的书 链接、装载与库，书名已经比较言简意赅的介绍了书里相关内容，而且写得挺通俗的，值得一看。这里是书里第一、二部分内容的一些笔记，主要讲了操作系统的一些基本概念，编译生成的目标文件格式和静态链接的过程；由于笔者只摘录一些不太了解的内容，因此总体内容可能不是非常成体系，建议读原书。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《链接、装载与库》 阅读笔记(1)-基本概念与静态链接">
+<meta property="og:url" content="https://wulc.me/2020/05/31/%E3%80%8A%E9%93%BE%E6%8E%A5%E3%80%81%E8%A3%85%E8%BD%BD%E4%B8%8E%E5%BA%93%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0(1)-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E4%B8%8E%E9%9D%99%E6%80%81%E9%93%BE%E6%8E%A5/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="一直对以 C&#x2F;C++ 为代表的的编译型语言的编译、运行的原理了解不多，最近正好看到这本由国人写的书 链接、装载与库，书名已经比较言简意赅的介绍了书里相关内容，而且写得挺通俗的，值得一看。这里是书里第一、二部分内容的一些笔记，主要讲了操作系统的一些基本概念，编译生成的目标文件格式和静态链接的过程；由于笔者只摘录一些不太了解的内容，因此总体内容可能不是非常成体系，建议读原书。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/objdump_result.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/ObjectFile.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/SourceCode.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/link_objdump.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/link_rearrange.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/Disassembly.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/Disassembly1.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/RelocationTable.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/charTable.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/staticLibrary.jpg">
+<meta property="article:published_time" content="2020-05-31T13:37:39.000Z">
+<meta property="article:modified_time" content="2023-04-30T05:12:49.074Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="读书">
+<meta property="article:tag" content="链接、装载与库">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/objdump_result.jpg">
+
+<link rel="canonical" href="https://wulc.me/2020/05/31/%E3%80%8A%E9%93%BE%E6%8E%A5%E3%80%81%E8%A3%85%E8%BD%BD%E4%B8%8E%E5%BA%93%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0(1)-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E4%B8%8E%E9%9D%99%E6%80%81%E9%93%BE%E6%8E%A5/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>《链接、装载与库》 阅读笔记(1)-基本概念与静态链接 | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">吴良超的学习笔记</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2020/05/31/%E3%80%8A%E9%93%BE%E6%8E%A5%E3%80%81%E8%A3%85%E8%BD%BD%E4%B8%8E%E5%BA%93%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0(1)-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E4%B8%8E%E9%9D%99%E6%80%81%E9%93%BE%E6%8E%A5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          《链接、装载与库》 阅读笔记(1)-基本概念与静态链接
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-05-31 21:37:39" itemprop="dateCreated datePublished" datetime="2020-05-31T21:37:39+08:00">2020-05-31</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-30 13:12:49" itemprop="dateModified" datetime="2023-04-30T13:12:49+08:00">2023-04-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%93%BE%E6%8E%A5%E3%80%81%E8%A3%85%E8%BD%BD%E4%B8%8E%E5%BA%93/" itemprop="url" rel="index"><span itemprop="name">链接、装载与库</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>一直对以 C/C++
+为代表的的编译型语言的编译、运行的原理了解不多，最近正好看到这本由国人写的书
+<a
+target="_blank" rel="noopener" href="https://book.douban.com/subject/3652388/">链接、装载与库</a>，书名已经比较言简意赅的介绍了书里相关内容，而且写得挺通俗的，值得一看。这里是书里第一、二部分内容的一些笔记，主要讲了操作系统的一些基本概念，编译生成的目标文件格式和静态链接的过程；由于笔者只摘录一些不太了解的内容，因此总体内容可能不是非常成体系，建议读原书。</p>
+<span id="more"></span>
+<h2 id="操作系统基本概念">操作系统基本概念</h2>
+<p>这部分主要讲了一些与操作系统相关的基本概念，了解这些基本概念是了解书中后面内容的基础</p>
+<ul>
+<li>增加中间层解决问题
+<ul>
+<li>避免直接访问磁盘，增加中间层: 文件系统
+<ul>
+<li>磁盘以扇区作为基本单位，一个文件会被存储在多个扇区上，文件系统保存了这些数据结构</li>
+</ul></li>
+<li>避免直接访问物理地址的方法，增加中间层：虚拟地址
+<ul>
+<li>操作系统保留了从物理地址到虚拟地址的映射(MMU)</li>
+<li>segmentation：把一段物理地址映射到一段虚拟地址，解决了物理地址不隔离的问题</li>
+<li>paging：将物理/虚拟地址切成小块(page)再分配，避免程序占据了整块连续物理地址;
+某些小块可能当前用不着，先存到磁盘中，需要用的时候再取出来，这就是虚拟内存</li>
+</ul></li>
+</ul></li>
+<li>多线程
+<ul>
+<li>线程共享代码段，进程数据，打开的文件等资源。但是有自己的私有空间：即寄存器和栈</li>
+<li>进程内部默认有一个主线程</li>
+<li>可抢占式线程(preemption)与不可抢占线程,
+即是否能强行中断当前线程分配资源给其他线程</li>
+<li>对Linux 来说，线程不是一个通用概念
+<ul>
+<li>所有执行实体都被称为一个task，task间可共享内存空间；如fork就是创建了一个任务（COW机制，copy
+on write，即只有在新的 task 改动内存时才为新的 task 创建内存</li>
+</ul></li>
+<li><strong>线程不安全的原因：代码的一个操作在被编译成汇编指令后不止一条，因此可能还行一半就被打断，不会被打断的指令也称为原子（atomic）指令</strong>，为了达到线程安全，需要同步与锁
+<ul>
+<li>信号量-semaphore: 允许 N 个线程并发访问一个资源</li>
+<li>互斥锁-mutex：仅允许一个进程访问，与 semaphore 不同点在于 mutex
+可由不同的线程来 release lock，但是 semaphore 只能由原来的线程释放</li>
+</ul></li>
+<li>编译器优化时可能会造成多线程的加了锁也有问题</li>
+<li>用户态 v.s
+内核态：用户实际使用的线程是用户态的，真正执行的线程是内核态的，这种情况下有几种模式（1）一对一（2）一对多（线程内可能会阻塞）
+（3）多对多</li>
+</ul></li>
+<li><strong>堆栈内存区域</strong>（C中还有静态区域，用来存储 static
+变量和全局变量)
+<ul>
+<li>堆可以理解为当前可以使用的空闲内存，但是其申请和释放都要程序员自己写代码管理。如果只申请不释放就会造成内存泄露</li>
+<li>栈是程序运行时自动拥有的一小块内存，大小在编译期时由编译器参数决定，用于<strong>局部变量的存放或者函数调用栈的保存</strong></li>
+<li>栈的另一个作用则是保存函数调用栈，这时和数据结构的栈就有关系了。在函数调用过程中，常常会多层甚至递归调用。每一个函数调用都有各自的局部变量值和返回值，每一次函数调用其实是先将当前函数的状态压栈，然后在栈顶开辟新空间用于保存新的函数状态，接下来才是函数执行。当函数执行完毕之后，栈先进后出的特性使得后调用的函数先返回，这样可以保证返回值的有序传递，也保证函数现场可以按顺序恢复</li>
+<li><strong>操作系统的栈在内存中高地址向低地址增长，也即低地址为栈顶，高地址为栈底。这就导致了栈的空间有限制，一旦局部变量申请过多（例如开个超大数组），或者函数调用太深（例如递归太多次），那么就会导致栈溢出（Stack
+Overflow），操作系统这时候就会直接把你的程序杀掉</strong>。</li>
+</ul></li>
+</ul>
+<h2 id="编译与链接概述">编译与链接概述</h2>
+<p>编译的过程(预编译-&gt;编译-&gt;汇编-&gt;链接) - 预编译（生成
+<code>.i</code> 文件）：主要是处理 <code>#</code>
+开头的语句，如进行宏展开、将被 include
+的文件插入到对应的地方（递归执行） - 编译（生成 <code>.s</code>
+文件）：将代码编译成汇编代码，包括词法分析、语法分析、语义分析和生成汇编代码的优化；虽然不同语言都可通过
+gcc 来统一编译，但是 gcc
+对于对于不同的语言调用了不同的编译程序（如c是cc1，c++是cclplus，java是jc1）
+-
+汇编（生成<code>.o</code>文件）：将汇编代码逐条转换成机器指令（有查找表）
+- 链接（生成可执行文件）：静态链接与动态链接</p>
+<p>其中编译这个步骤常常涉及到以下几个过程 -
+词法分析：将源码分割成一系列的token，利用
+lex，编译器开发者只需要定义词法规则 - 语法分析：生成语法树，利用
+yacc，编译器开发者只需要定义语法规则 -
+语义分析：确定语句是否合法（编译器只能分析静态语义），为语法树中的每个节点标记出其类型</p>
+<p>编译器的前端和后端 -
+前端：生成与机器无关的中间代码（即前面的词法和语法分析步骤） -
+后端：将中间代码转换成目标机器代码 -
+跨平台编译器，使用同一个前端和不同后端</p>
+<p>关于编译器的架构可参考这篇文章：<a
+target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/102250532">LLVM概述——基础架构</a></p>
+<p>链接基本概念 -
+处理各模块间的相互引用（如引用了其他模块的函数，需要在运行时知道这个函数的地址）
+-
+<strong>从原理上来说，链接就是把一些指令对于其他符号的地址的引用加以修正</strong>
+- 库是一些常用代码被编译成目标文件后打包存放</p>
+<h2 id="目标文件的格式">目标文件的格式</h2>
+<ul>
+<li>目标文件就是源代码编译后但是未进行链接的那些中间文件（windows 的
+<code>.obj</code> 和 linux 下的 <code>.o</code>,
+它跟可执行文件的内容基本一样，所以两类文件使用同一种格式存储（windows
+下的 PE-COFF 和 Linux 下的 ELF）</li>
+<li><strong>除了目标文件,动态库(windows 的 <code>.dll</code> 和 linux
+下的<code>.so</code>)和静态库(windows 的 <code>.lib</code> 和 linux
+下的<code>.a</code>)</strong>都是按照可执行文件格式存储</li>
+<li>ELF
+文件格式可归为如下四类（linux下可通过file格式来显示文件格式）</li>
+</ul>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>ELF 文件类型</th>
+<th>说明</th>
+<th>实例</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>可重定位文件(Relocatable File)</td>
+<td>包含代码和数据，可用来被链接为可执行文件或共享目标文件，静态链接库也可归为这一类</td>
+<td>Linux 的 <code>.o</code>, Windows 的 <code>.obj</code></td>
+</tr>
+<tr class="even">
+<td>可执行文件(Executable File)</td>
+<td>包含了可以直接执行的文件，在Linux下一般都没有拓展名</td>
+<td>Linux 的 /bin/bash, windows下的 <code>.exe</code></td>
+</tr>
+<tr class="odd">
+<td>共享目标文件(shared object file)</td>
+<td>包含代码和数据，可以（1）被链接器将其与可重定位文件和共享目标文件进行链接,产生新的目标文件
+（2）<strong>动态链接器可将几个共享目标文件与可执行文件结合</strong>，作为进程映像的一部分来运行</td>
+<td>Linux 的 <code>.so</code>, Windows 的 <code>.dll</code></td>
+</tr>
+<tr class="even">
+<td>核心存储文件(Core Dump File)</td>
+<td>进程意外终止是，系统将进程的地址空间和终止时的一些其他信息转储到核心存储文件下</td>
+<td>Linux 下的 core dump文件</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><p>目标文件组成主要分为两部分：<strong>程序指令和程序数据</strong>；顾名思义，程度指令就是存放代码，程序数据用来存放代码中的数据，分局数据中的类型又可分为几种段</p></li>
+<li><p>数据和指令代码分开存放的好处</p>
+<ul>
+<li>数据是可以读写的，但是代码指令是只读的</li>
+<li><strong>系统中运行着该程序的多个副本运行时（多进程，多线程），只需要保存一份指令代码/只读数据即可，可节省大量内存</strong></li>
+<li>可提高缓存命中率</li>
+</ul></li>
+<li><p><code>objdump</code>
+可被用来分析目标文件中所包含的各个段（代码段，数据段，bss段）的一些信息(如下图所示），<code>size</code>
+则可被用来查看对应的各个段的大小</p></li>
+</ul>
+<figure>
+<img src="https://wulc.me/imgs/objdump_result.jpg" alt="objdump" />
+<figcaption aria-hidden="true">objdump</figcaption>
+</figure>
+<p>从上图可知,
+目标文件中有好几个类型的数据段，但是其中某些段是不占空间如<code>.bss</code>
+段，用于表示未初始化的全局变量和局部静态变量(更准确地说是为这些变量预留了空间)，已初始化的保存在
+<code>.data</code>；因此在内存中的占位如下所示</p>
+<figure>
+<img src="https://wulc.me/imgs/ObjectFile.jpg" alt="obj file" />
+<figcaption aria-hidden="true">obj file</figcaption>
+</figure>
+<p>各个段的含义如下</p>
+<ul>
+<li><code>.text</code>: 存储汇编后的机器指令，通过
+<code>objdump -d</code>
+反汇编可看到代码段的机器指令机器和对应的汇编代码</li>
+<li><code>.data</code>:
+存储<strong>已经初始化的全局变量和局部静态变量</strong></li>
+<li><code>.bss</code>:
+存储<strong>未初始化的局部变量和局部静态变量</strong></li>
+<li><code>.rodata</code>: 存储只读数据段，一般用来存储 <strong>const
+常量和字符常量</strong></li>
+</ul>
+<p>可将一个二进制的文件通过 <code>objcopy</code> copy 到目标文件中</p>
+<p>除了上面介绍的各个段，ELF 文件还有下面几个比较重要的结构</p>
+<ul>
+<li>文件头：描述整个文件属性（如文件版本、目标机器型号、程序入口地址等）</li>
+<li>段表：描述上面提到的各个段的基本属性，编译器，链接器和装载器都是依赖段表来定位和访问各个段的属性</li>
+<li>符号表：管理代码中的符号（函数名和变量名），用于进行链接，因为链接的接口就是符号名</li>
+</ul>
+<p><strong>实际上，无论是可执行文件、目标文件或库，实际上都是一样基于段的
+ELF
+文件或者是这种文件的集合；源代码经过编译后，按照代码和数据分别存放到相应的段中；除此之外，编译器还会将一些辅助性的信息（符号表，重定位表等）放到目标文件中。下面就是怎么把这些目标文件组装起来了，这就是链接要解决的事情。</strong></p>
+<h2 id="静态链接的过程">静态链接的过程</h2>
+<p>问题：合并目标文件时，对于多个目标文件中的多个段，链接器如何将它们各个段合并到输出文件；或者说<strong>链接器怎么为目标文件分配地址和空间</strong></p>
+<p>先说结论，链接可简单地分为两步（two-pass linking)</p>
+<ol type="1">
+<li><strong>空间地址与分配</strong>：扫描输入文件，合并相同类型的段，输出合并后的段的长度与位置</li>
+<li><strong>符号解析与重定位</strong>：利用第一步搜集到的信息，进行符号解析与重定位、调整代码中的地址等；这一步是链接过程的核心，尤其是重定位部分</li>
+</ol>
+<p>上面提到的“链接器怎么为目标文件分配地址和空间”中的“地址和空间”实际包括两方面:
+(1)输出的可执行文件中的空间 (2)装载后的虚拟地址中的虚拟地址空间;
+对于目标文件中像 <code>.text</code> 和 <code>.data</code>
+的段这两方面都要考虑，但是对于 <code>.bss</code>
+的段只需要考虑虚拟地址空间，因为 <code>.bss</code>
+不在可执行文件中占用空间，<strong>后面说的分配也着重于虚拟地址空间的分配</strong></p>
+<p>这里以下面两个源文件 <code>a.c</code> 和 <code>b.c</code> 说明</p>
+<figure>
+<img src="https://wulc.me/imgs/SourceCode.jpg" alt="source code" />
+<figcaption aria-hidden="true">source code</figcaption>
+</figure>
+<h3 id="空间地址与分配">空间地址与分配</h3>
+<p>链接前后使用的虚拟地址（VMA，Virtual Memory Address）
+已经是程序在进程中的虚拟地址（通过 objdump 可看到目标文件中各个段的
+VMA）；如下图所示是将两个目标文件 <code>a.o</code> 和 <code>b.o</code>
+链接成一个可执行文件 <code>ab</code>（通过命令
+<code>ld a.o b.o -e main -o ab</code> 可生成可执行文件 <code>ab</code>,
+其入口为函数 <code>main</code>【通过 -e 参数指定，ld 链接器默认的入口为
+<code>_start</code>】）</p>
+<p>通过 <code>objdump</code> 可分析出目标文件与可执行文件中 VMA
+的变化</p>
+<figure>
+<img src="https://wulc.me/imgs/link_objdump.jpg" alt="link_ojbdump" />
+<figcaption aria-hidden="true">link_ojbdump</figcaption>
+</figure>
+<p>从上面可以看到，<strong>链接前目标文件的 VMA
+都是0，因为虚拟空间还没有被分配，等链接后，可执行文件中的各个段都被分配到了相应的虚拟地址</strong></p>
+<p>下图展示了将两个目标文件 <code>a.o</code> 和 <code>b.o</code>
+链接成可执行文件 <code>ab</code>
+后<strong>目标文件与可执行文件各个段的映射关系，以及可执行文件与虚拟地址的映射关系</strong></p>
+<figure>
+<img src="https://wulc.me/imgs/link_rearrange.jpg"
+alt="link_rearrange" />
+<figcaption aria-hidden="true">link_rearrange</figcaption>
+</figure>
+<p>在确定了各个段的地址后，由于<strong>符号地址在本来段内就是确定的</strong>（从前面的
+objdump
+命令输出结构可知），因此可以根据各个段的地址偏移确定各个符号的地址</p>
+<h3 id="符号解析与重定位">符号解析与重定位</h3>
+<p>完成空间地址分配后,进入到了符号的解析与重定位,这也是静态编译的重点</p>
+<p>首先,通过 <code>objdump -d</code> 可以看到 <code>a.o</code>
+代码的反汇编结果如下图所示</p>
+<figure>
+<img src="https://wulc.me/imgs/Disassembly.jpg" alt="obj Disassembly" />
+<figcaption aria-hidden="true">obj Disassembly</figcaption>
+</figure>
+<p>从上图输出可知，目标文件 <code>a.o</code> 中定义了一个函数
+<code>main</code>, 其起始地址是
+0x00000000，这是因为<strong>在程序代码里使用的都是虚拟地址，且在空间地址与分配之前，目标文件中的起始地址是
+0x00000000</strong>，等到空间分配完成后，各个函数才会确定自己在虚拟地址空间的地址。</p>
+<p>此外，上图中命令的输出中的 main 函数下面每行都是一条指令,
+从左到右依次是指令的偏移量、指令的机器码, 右边是指令对应的汇编代码。</p>
+<p>因此，上图中的 main 函数共占了 0x33 个字节， 17 条指令，其中 0x18
+的指令占了两行，<strong>加粗的两条指令分别对应于 <code>a.c</code>
+中引用的 shared 和 swap</strong>,</p>
+<p>对于 shared 的引用是偏移为 0x18 的 mov 指令，这条指令共 8 个字节，前
+4 个字节是指令吗，后面 4 个字节是 shared 的地址, 从图中看到这个地址为全
+0，这是因为 <code>a.c</code> 被编译成目标文件时，并不知道 shared 和 swap
+的地址，因此暂时用全 0 来表示</p>
+<p>对于 swap 的引用则是偏移为 0x26 的 call 指令，这条指令共 5
+个字节，其作用就是调用另一条指令，后面四个字节就是要调用的下一条指令的偏移量（地址），同样地，在链接前这个地址是一个
+mock 的地址。</p>
+<p>由上面描述可知，目标文件中的地址都是临时的 mock
+地址，<strong>真实地址的分配与调整是由链接器来完成的</strong>，因为经过第一步的“空间地址与分配”
+后，链接器已经能够确定所有符号的地址了。同样地通过
+<code>objdump -d</code> 我们可以看到可执行文件 ab 的反汇编的结果如下</p>
+<figure>
+<img src="https://wulc.me/imgs/Disassembly1.jpg"
+alt="exec Disassembly" />
+<figcaption aria-hidden="true">exec Disassembly</figcaption>
+</figure>
+<p>从上图可知，main 函数地址确定了下来，同时 shared 和 swap
+的地址也确定了，</p>
+<p><strong>链接器是怎么知道哪些指令是要被调整的？</strong>在 ELF
+文件中有一个叫<strong>重定位表（Relocation
+Table</strong>）的结构来专门保存与重定位相关信息，重定位表实际上也是一个
+ELF 文件中的一个段（重定位段），通过 <code>objdump -r</code>
+可以看到目标文件中的重定位段，如下图所示</p>
+<figure>
+<img src="https://wulc.me/imgs/RelocationTable.jpg"
+alt="RelocationTable" />
+<figcaption aria-hidden="true">RelocationTable</figcaption>
+</figure>
+<p>上图展示了 <code>a.o</code> 里面要重定位的地方，即 <code>a.o</code>
+所有引用到外部符号的地址，对照前面 <code>objdump -d a.o</code>
+的结果可知，上图中的偏移的值就是 shared 和 swap
+在目标文件中的机器指令的后四个字节所在地址</p>
+<p>那<strong>在上面重定位的过程中，链接器怎么知道 a.o
+里面需要的符号在哪去查找</strong>？这就涉及到链接器是如何进行符号解析的了，实际中，链接器会查找<strong>所有输入目标文件的符号表组成的全局符号表</strong>，找到相应的符号然后重定位。我们在编译过程中常碰到的找不到符号，或者符号冲突，其实都是发生在这个过程中</p>
+<p>通过 <code>readelf -s</code> 可以看到目标文件中的符号表，如下是
+<code>a.o</code> 的符号表，可以看到 shared 和 swap 都是
+UND(undefined）的</p>
+<figure>
+<img src="https://wulc.me/imgs/charTable.jpg" alt="charTable" />
+<figcaption aria-hidden="true">charTable</figcaption>
+</figure>
+<h3 id="commom-块">COMMOM 块</h3>
+<p><strong>强符号与弱符号</strong>：在 C
+语言中，函数和初始化的全局变量是强符号，未初始化的全局变量是弱符号</p>
+<p>在链接<strong>中一个符号可能会出现在多个目标文件</strong>中，因此可能会出现下面几种情况</p>
+<ol type="1">
+<li>两个或两个以上的强符号，类型不一致</li>
+<li>两个或两个以上弱符号，类型不一致</li>
+<li>有一个强符号，其他都是弱符号，类型不一致</li>
+</ol>
+<p>第一种情况是非法的，因为<strong>不能定义多个强符号，链接器会报多重定义错误</strong>，链接器要处理的就是后两种情况，处理的方式就是下面提到的
+COMMON 块(Commom block)机制，简单来说，COMMON
+块记录了对应的符号的空间大小</p>
+<p>对于第二种情况，会从多个弱符号中选择一个空间最大的，比如说两个弱符号，一个是
+int 型，一个是 double 类型，则最终会选择 double 类型的</p>
+<p>对于第三种情况，会选择强符号，但是如果有弱符号的空间大于强符号的，最终会报如下的
+warning:</p>
+<p><code>ld: warning: alignment 4 of symbol global in a.o is smaller than 8 in b.o</code></p>
+<p>因此，使 COMMOM
+模块的原因是因为编译器和链接器允许不同类型的弱符号存在，同时链接器不支持符号类型，即连机器无法判断各个符号类型是否一致。</p>
+<h3 id="静态库">静态库</h3>
+<p>一种语言的开发环境往往会带有语言库（Language
+Library），这些库就是对操作系统的 API
+的包装；<strong>一个静态库可以看做是一组目标文件的集合</strong></p>
+<p>通过 <code>ar</code> 可以看到一个静态库中有哪些目标文件</p>
+<figure>
+<img src="https://wulc.me/imgs/staticLibrary.jpg" alt="library" />
+<figcaption aria-hidden="true">library</figcaption>
+</figure>
+<p>值得注意的是，<strong>静态库里的一个目标文件只包含一个函数</strong>，这是是为了是的在链接过程中只链接那些使用到的函数对应的目标文件，如果很多函数都放在同一个目标文件中，会导致很多没用的函数都被遗弃链接进了输出结果中。</p>
+<h2 id="小结">小结</h2>
+<p>综上，本文主要介绍了操作系统的一些基本概念，以及静态链接的基本过程，主要关注一下几个方面</p>
+<ul>
+<li>目标文件由各种段组成，基本可分为代码段和数据段两大类</li>
+<li>目标文件被链接成最终的可执行文件时，输入的目标文件中的各个段是如何被合并到输出文件中的</li>
+<li>链接器如何为合并后的段分配在空间和地址（包含输出文件和进程虚拟地址空间）</li>
+<li>地址确定后如何进行符号的解析与重定位，使得每个段中的指令和数据都指向正确的位置</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/C/" rel="tag"># C++</a>
+              <a href="/tags/%E8%AF%BB%E4%B9%A6/" rel="tag"># 读书</a>
+              <a href="/tags/%E9%93%BE%E6%8E%A5%E3%80%81%E8%A3%85%E8%BD%BD%E4%B8%8E%E5%BA%93/" rel="tag"># 链接、装载与库</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/05/30/%E7%A8%8B%E5%BA%8F%E7%9A%84%E8%A1%A8%E7%A4%BA%E3%80%81%E8%BD%AC%E6%8D%A2%E4%B8%8E%E9%93%BE%E6%8E%A5-week1/" rel="prev" title="程序的表示、转换与链接-week1">
+      <i class="fa fa-chevron-left"></i> 程序的表示、转换与链接-week1
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/06/06/%E7%A8%8B%E5%BA%8F%E7%9A%84%E8%A1%A8%E7%A4%BA%E3%80%81%E8%BD%AC%E6%8D%A2%E4%B8%8E%E9%93%BE%E6%8E%A5-week2/" rel="next" title="程序的表示、转换与链接-week2">
+      程序的表示、转换与链接-week2 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">1.</span> <span class="nav-text">操作系统基本概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E4%B8%8E%E9%93%BE%E6%8E%A5%E6%A6%82%E8%BF%B0"><span class="nav-number">2.</span> <span class="nav-text">编译与链接概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E6%A0%87%E6%96%87%E4%BB%B6%E7%9A%84%E6%A0%BC%E5%BC%8F"><span class="nav-number">3.</span> <span class="nav-text">目标文件的格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%99%E6%80%81%E9%93%BE%E6%8E%A5%E7%9A%84%E8%BF%87%E7%A8%8B"><span class="nav-number">4.</span> <span class="nav-text">静态链接的过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A9%BA%E9%97%B4%E5%9C%B0%E5%9D%80%E4%B8%8E%E5%88%86%E9%85%8D"><span class="nav-number">4.1.</span> <span class="nav-text">空间地址与分配</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%A6%E5%8F%B7%E8%A7%A3%E6%9E%90%E4%B8%8E%E9%87%8D%E5%AE%9A%E4%BD%8D"><span class="nav-number">4.2.</span> <span class="nav-text">符号解析与重定位</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#commom-%E5%9D%97"><span class="nav-number">4.3.</span> <span class="nav-text">COMMOM 块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%99%E6%80%81%E5%BA%93"><span class="nav-number">4.4.</span> <span class="nav-text">静态库</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">小结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">248</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.linkedin.com/in/wuliangchao/" title="LinkedIn → https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;wuliangchao&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i>LinkedIn</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
