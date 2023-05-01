@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="这一讲主要介绍了挖掘频繁项集中的经典方法 FP-growth，以及如何通过 MapReduce 实现这个算法，通过MapReduce实现的 FP-growth 也称为 PFP，这个方法不仅能够挖掘频繁项集，还能够挖掘非频繁项集。原视频在这里，需要自备梯子。">
@@ -92,6 +93,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -190,6 +192,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -264,7 +267,7 @@ target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=eCrhaUCqiiE
 <p>频繁项集挖掘（Frequent Itemset
 Mining）指的是将那些共同出现较为频繁的项集找出来，其中一个经典的例子就是啤酒和尿布。下图展示了频繁项挖掘中的一些基本概念</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1c5s43rc91en7uks12ji49518fs9.png"
+<img data-src="https://wulc.me/imgs/image_1c5s43rc91en7uks12ji49518fs9.png"
 alt="基本概念" />
 <figcaption aria-hidden="true">基本概念</figcaption>
 </figure>
@@ -288,13 +291,13 @@ transaction 中的 items
 <p>由于原始的 items 已经按照items名称排序，因此这里直接按照构建prefix
 tree 的方法构建 FP-tree 即可，如下图所示是读入前两条记录的构建结果</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1c6h1582b13lr1h1f14v46fhd1u13.png"
+<img data-src="https://wulc.me/imgs/image_1c6h1582b13lr1h1f14v46fhd1u13.png"
 alt="prefix tree 1" />
 <figcaption aria-hidden="true">prefix tree 1</figcaption>
 </figure>
 <p>按照这种方法可以构建出整棵 FP-tree 如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1c6h170i0v2jhn6v871v7g1dvj1g.png"
+<img data-src="https://wulc.me/imgs/image_1c6h170i0v2jhn6v871v7g1dvj1g.png"
 alt="prefix tree 2" />
 <figcaption aria-hidden="true">prefix tree 2</figcaption>
 </figure>
@@ -315,14 +318,14 @@ Conditional FP-tree，所谓的 Conditional FP-Tree，就是与该 item
 <p>首先需要找到以 e 为叶子节点的所有 branch 组成的 tree，如下图 (a)
 所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1c6hdlsfq1hvc126tsvlfarno11t.png"
+<img data-src="https://wulc.me/imgs/image_1c6hdlsfq1hvc126tsvlfarno11t.png"
 alt="conditional FP-tree 1" />
 <figcaption aria-hidden="true">conditional FP-tree 1</figcaption>
 </figure>
 <p>接着更新父节点的计数为子节点的计数之和，并且去掉 e
 这个叶子节点，如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1c6hds4av12hr1j421m2gk8h1dmg2a.png"
+<img data-src="https://wulc.me/imgs/image_1c6hds4av12hr1j421m2gk8h1dmg2a.png"
 alt="conditional FP-tree 2" />
 <figcaption aria-hidden="true">conditional FP-tree 2</figcaption>
 </figure>
@@ -330,7 +333,7 @@ alt="conditional FP-tree 2" />
 min-support 为2，,则由于上图中的 b 的support 数只有 1，需要去掉 b 这个
 item，如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1c6he1m4fk03eo412dro4m1ain2n.png"
+<img data-src="https://wulc.me/imgs/image_1c6he1m4fk03eo412dro4m1ain2n.png"
 alt="conditional FP-tree 3" />
 <figcaption aria-hidden="true">conditional FP-tree 3</figcaption>
 </figure>
@@ -352,7 +355,7 @@ MapReduce，下面讲述的是这个方法实现的细节。</p>
 key-value pairs, 中间的 shuffling 过程目的就是要将 key 相同的 pairs
 交给同一个 worker 处理。</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1c5saqi2j1is3156872reg9rdam.png"
+<img data-src="https://wulc.me/imgs/image_1c5saqi2j1is3156872reg9rdam.png"
 alt="mapreduce" />
 <figcaption aria-hidden="true">mapreduce</figcaption>
 </figure>
@@ -368,7 +371,7 @@ conditional FP-tree 即可，因此可以分别交给两个 worker 进行处理�
 过程，能够从 transaction 中输出各个 item 对应的 conditional
 transaction</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1c6hmpeev1f601ocpg0o17me1q4j34.png"
+<img data-src="https://wulc.me/imgs/image_1c6hmpeev1f601ocpg0o17me1q4j34.png"
 alt="PFP map" />
 <figcaption aria-hidden="true">PFP map</figcaption>
 </figure>
@@ -378,7 +381,7 @@ transaction，作为 map output 输入到 reduce 过程中，reduce
 过程如下图所示，reduce 能够将相同的 key(item) 的conditional transactions
 聚合在一起，进而构建出这个 item 对应的conditional FP-tree。</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1c6hn2fhsikv18ok1pccnbj1m4g3h.png"
+<img data-src="https://wulc.me/imgs/image_1c6hn2fhsikv18ok1pccnbj1m4g3h.png"
 alt="PFP reduce" />
 <figcaption aria-hidden="true">PFP reduce</figcaption>
 </figure>
@@ -407,6 +410,25 @@ Tree算法原理总结</a></p>
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -549,7 +571,7 @@ Tree算法原理总结</a></p>
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -572,6 +594,10 @@ Tree算法原理总结</a></p>
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

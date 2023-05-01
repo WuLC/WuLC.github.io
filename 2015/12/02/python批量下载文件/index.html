@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="最近感觉要练练口语了，所以就上普特逛逛有哪些资源比较好的，发现美国惯用语板块挺好的,但是点进去想下载音频时，发现浏览器已经解释了这个MP3格式的音频文件；要下载就只能右键另存为，总共有900多个，这么点来点去岂不是要点一天才能下完。">
@@ -84,6 +85,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -182,6 +184,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -251,7 +254,7 @@ target="_blank" rel="noopener" href="http://www.putclub.com/">普特</a>逛逛�
 target="_blank" rel="noopener" href="http://www.putclub.com/html/course/middleIdioms/index.html">美国惯用语板块</a>挺好的,但是点进去想下载音频时，发现浏览器已经解释了这个MP3格式的音频文件；要下载就只能右键另存为，总共有900多个，这么点来点去岂不是要点一天才能下完。
 　　 <span id="more"></span></p>
 <p>　　正当蛋疼之时，忽然发现了播放MP3文件的url格式比较统一，比如说下面这几个
-　　<img src="https://wulc.me/imgs/2015-12-28_192255.jpg" /> 　　<img
+　　<img data-src="https://wulc.me/imgs/2015-12-28_192255.jpg" /> 　　<img
 src="https://wulc.me/imgs/2015-12-28_192318.jpg" /> 　　<img
 src="https://wulc.me/imgs/2015-12-28_192345.jpg" />
 　　前面的前缀都是相同的，可以推测在服务器上这些音频文件都是放到同一个文件夹下，而且会依据数字来加上前缀来命名，这就为脚本自动下载提供了一个很好的条件。
@@ -271,6 +274,25 @@ src="https://wulc.me/imgs/2015-12-30_101519.jpg" /></p>
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -412,7 +434,7 @@ src="https://wulc.me/imgs/2015-12-30_101519.jpg" /></p>
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -435,6 +457,10 @@ src="https://wulc.me/imgs/2015-12-30_101519.jpg" /></p>
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

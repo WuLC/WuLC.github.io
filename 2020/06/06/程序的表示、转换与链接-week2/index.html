@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="本文的内容主要是 程序的表示、转换与链接 这门课第二周的内容，主要介绍了浮点数和整数在机器内如何编码和存储(大端和小端)的，了解这些细节后，能够更好地理解代码中进行数值计算和比较时出现的违反直觉的结果，同时也能避免出现这样的问题。">
@@ -93,6 +94,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -191,6 +193,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -266,7 +269,7 @@ target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E4%BA%8C%E8%
 <p>下图中的后面带 <code>U</code>
 的数字表示这是个无符号的整数，反之就是有符号的，其中标红的就是结果不符合直觉的例子</p>
 <figure>
-<img src="https://wulc.me/imgs/signVSunsigned.jpg"
+<img data-src="https://wulc.me/imgs/signVSunsigned.jpg"
 alt="signedVSunsigned" />
 <figcaption aria-hidden="true">signedVSunsigned</figcaption>
 </figure>
@@ -286,21 +289,21 @@ class="math inline">\(-2^{31}\)</span></li>
 <p>同理，在 printf 时通过 <code>%u</code> 和 <code>%d</code>
 分别将整数解析成无符号和带符号的，因此也会出现如下结果</p>
 <figure>
-<img src="https://wulc.me/imgs/signVSunsigned1.jpg"
+<img data-src="https://wulc.me/imgs/signVSunsigned1.jpg"
 alt="此处输入链接的描述" />
 <figcaption aria-hidden="true">此处输入链接的描述</figcaption>
 </figure>
 <h2 id="浮点数表示">浮点数表示</h2>
 <p>在介绍浮点数之前，先介绍一些移码的含义，因为在浮点数的表示中用到了这个概念</p>
 <figure>
-<img src="https://wulc.me/imgs/ExcessNotion.jpg" alt="ExcessNotion" />
+<img data-src="https://wulc.me/imgs/ExcessNotion.jpg" alt="ExcessNotion" />
 <figcaption aria-hidden="true">ExcessNotion</figcaption>
 </figure>
 <p>整数的通过 01
 表示很好理解，那小数中的小数点该如何在计算机中表示？采用的<strong>基本思想就是用科学计数法来表示小数，然后将科学计数法中不同部分(包括正负、尾数部分和指数部分三大部分)分段存储在
 01 序列中</strong>，如下是详细的描述</p>
 <figure>
-<img src="https://wulc.me/imgs/float.jpg" alt="float" />
+<img data-src="https://wulc.me/imgs/float.jpg" alt="float" />
 <figcaption aria-hidden="true">float</figcaption>
 </figure>
 <p>上面提到了任何实数都能通过科学计数法表示成 <span
@@ -313,7 +316,7 @@ class="math inline">\(0.11×2^4\)</span>，则可以得出s=0，M=0.11，R=2，E
 且由于 M
 的小数点后第一位总是1，可以将其省略掉，则对于浮点数有以下的表示方式</p>
 <figure>
-<img src="https://wulc.me/imgs/FloatPoint.jpg" alt="floatpoint" />
+<img data-src="https://wulc.me/imgs/FloatPoint.jpg" alt="floatpoint" />
 <figcaption aria-hidden="true">floatpoint</figcaption>
 </figure>
 <p>而在通用的 <strong>IEEE754 标准下，定点小数 M 是一个值在 1-2
@@ -322,17 +325,17 @@ class="math inline">\(0.11×2^4\)</span>，则可以得出s=0，M=0.11，R=2，E
 class="math inline">\(1.1×2^3\)</span>，则可以得出s=0，M=1.1，R=2，E=3；而对于十进制的-12.0，相当于-1.1×2^3吗，则
 s=1，M=1.1，R=2，E=3，因此 IEEE745 的标准跟上面的很类似，具体如下</p>
 <figure>
-<img src="https://wulc.me/imgs/IEEE745.jpg" alt="IEEE754" />
+<img data-src="https://wulc.me/imgs/IEEE745.jpg" alt="IEEE754" />
 <figcaption aria-hidden="true">IEEE754</figcaption>
 </figure>
 <p>如下是通过 IEEE754 标准来存储和解析浮点数的两个简单的例子</p>
 <figure>
-<img src="https://wulc.me/imgs/IEEE754_example.jpg"
+<img data-src="https://wulc.me/imgs/IEEE754_example.jpg"
 alt="机器数-&gt;真值" />
 <figcaption aria-hidden="true">机器数-&gt;真值</figcaption>
 </figure>
 <figure>
-<img src="https://wulc.me/imgs/IEEE754_example1.jpg"
+<img data-src="https://wulc.me/imgs/IEEE754_example1.jpg"
 alt="真值-&gt;机器数" />
 <figcaption aria-hidden="true">真值-&gt;机器数</figcaption>
 </figure>
@@ -366,19 +369,19 @@ class="math inline">\(+\infty+(-\infty)\)</span> 等都是非数</p>
 <p>而 Denorms 则是被用来标识前面通过 IEEE754 标准中最小正数到 0
 之间的这段距离</p>
 <figure>
-<img src="https://wulc.me/imgs/Denorms.jpg" alt="denoms" />
+<img data-src="https://wulc.me/imgs/Denorms.jpg" alt="denoms" />
 <figcaption aria-hidden="true">denoms</figcaption>
 </figure>
 <p>从上面的描述中可知，<strong>并非每个浮点数都可以用 01
 精确表示</strong>，对于那些无法找到精确表示的浮点数，只能进行舍入来进行近似,如下图所示是一个例子</p>
 <figure>
-<img src="https://wulc.me/imgs/float_sheru.jpg" alt="float sheru" />
+<img data-src="https://wulc.me/imgs/float_sheru.jpg" alt="float sheru" />
 <figcaption aria-hidden="true">float sheru</figcaption>
 </figure>
 <h2 id="大端与小端">大端与小端</h2>
 <p>大端与小端其实就是数据的字节在地址中是如何排列的：大端指的是 MSB
 所在的地址是数的地址，小端指的是 LSB 所在的地址是数的地址</p>
-<p><img src="https://wulc.me/imgs/byteStore.jpg" /></p>
+<p><img data-src="https://wulc.me/imgs/byteStore.jpg" /></p>
 <h2 id="小结">小结</h2>
 <p>week2
 的内容很多细节，但是比较重点的就是整数和浮点数是如何在计算中表示和存储的，其中整数都是以补码来表示的，同时要注意同一个补码会根据上下文被解析成
@@ -393,6 +396,25 @@ unsigned，而这会导致一些违反直觉的情况出现；而浮点数通过
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -534,7 +556,7 @@ unsigned，而这会导致一些违反直觉的情况出现；而浮点数通过
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -557,6 +579,10 @@ unsigned，而这会导致一些违反直觉的情况出现；而浮点数通过
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

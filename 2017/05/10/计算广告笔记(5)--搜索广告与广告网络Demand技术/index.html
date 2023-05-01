@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="本文是刘鹏老师的计算广告学中的一些笔记。本文是第五章: 搜索广告与广告网络Demand技术。主要介绍搜索广告中的几个典型问题以及广告网络中demand端需要用到的技术">
@@ -85,6 +86,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -183,6 +185,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -262,7 +265,7 @@ target="_blank" rel="noopener" href="http://study.163.com/course/courseMain.htm?
 </ul>
 <p>搜索广告是一种典型的位置竞价模式，如下是搜索广告中常见的三种位置</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bgt5kq0e1ona1hsp1m1a1mr214g1m.png"
+<img data-src="https://wulc.me/imgs/image_1bgt5kq0e1ona1hsp1m1a1mr214g1m.png"
 alt="搜索广告中的位置" />
 <figcaption aria-hidden="true">搜索广告中的位置</figcaption>
 </figure>
@@ -310,7 +313,7 @@ id="用户相关的搜索广告决策"><strong>用户相关的搜索广告决策
 区别在<strong>调度数据而非调度计算</strong>，其拓扑及任务分配如下（spout
 是输入，根据输入的 key 分发到不同的 Bolt 上处理，最后将结果组成）</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bgt781vpmed2b61k9hrkrd41g.png"
+<img data-src="https://wulc.me/imgs/image_1bgt781vpmed2b61k9hrkrd41g.png"
 alt="storm" />
 <figcaption aria-hidden="true">storm</figcaption>
 </figure>
@@ -346,6 +349,25 @@ Optimization</a>，原是金融领域内的一个优化算法，目前正在向�
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -489,7 +511,7 @@ Expansion)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" h
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -512,6 +534,10 @@ Expansion)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" h
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

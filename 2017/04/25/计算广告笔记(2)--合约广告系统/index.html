@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="本系列文章是刘鹏老师的计算广告学中的一些记录。本文是第二章:合约广告系统，主要介绍了广告系统中一些常用的开源工具，合约广告系统的概念以及在线分配问题的建模与求解。">
@@ -90,6 +91,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -188,6 +190,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -258,7 +261,7 @@ target="_blank" rel="noopener" href="http://study.163.com/course/courseMain.htm?
 <h2 id="常用广告系统开源工具">常用广告系统开源工具</h2>
 <p>广告系统中常用的工具有以下这些</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1begf63m7ar31mth7jb143bm2n9.png"
+<img data-src="https://wulc.me/imgs/image_1begf63m7ar31mth7jb143bm2n9.png"
 alt="常用广告系统开源工具" />
 <figcaption aria-hidden="true">常用广告系统开源工具</figcaption>
 </figure>
@@ -328,7 +331,7 @@ class="math inline">\(I\)</span>,
 如果供给节点的受众标签能够满足某个需求节点的要求时，就在相应的两个节点之间建立一条连接边，所有边的连接记为集合
 <span class="math inline">\(E\)</span>。</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bhbevjhb1h4lp9g5p317n11k8a9.png"
+<img data-src="https://wulc.me/imgs/image_1bhbevjhb1h4lp9g5p317n11k8a9.png"
 alt="在线分配" />
 <figcaption aria-hidden="true">在线分配</figcaption>
 </figure>
@@ -429,7 +432,7 @@ using a compact allocation plan</a> 提出的 HWM（High Water MArk）
 <h2 id="合约广告系统主要模块">合约广告系统主要模块</h2>
 <p>在前面提到的广告提供架构图中，合约广告系统主要表示为以下模块</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1behcsvao1se81fl1jub1j6s1bh0m.png"
+<img data-src="https://wulc.me/imgs/image_1behcsvao1se81fl1jub1j6s1bh0m.png"
 alt="合约广告系统" />
 <figcaption aria-hidden="true">合约广告系统</figcaption>
 </figure>
@@ -466,7 +469,7 @@ DataNode 的后再去对文件进行具体操作。</p>
 过程，该过程主要是将经过map操作后 key
 相同的那些记录聚合到一起，已进行后面的reduce操作。其过程如下图示：</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b5or34n01nrhp533c31evp9939.png"
+<img data-src="https://wulc.me/imgs/image_1b5or34n01nrhp533c31evp9939.png"
 alt="MapReduce" />
 <figcaption aria-hidden="true">MapReduce</figcaption>
 </figure>
@@ -486,7 +489,7 @@ Analysis (PLSI)等。</p>
 我们使用上一个迭代的统计量更新模型。</p>
 <p>而一般的 ML 和 EM 算法能够通过 MapReduce 过程较好地刻画</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1belf793j11fo1or618tno6ufs9.png"
+<img data-src="https://wulc.me/imgs/image_1belf793j11fo1or618tno6ufs9.png"
 alt="MapReduce与EM" />
 <figcaption aria-hidden="true">MapReduce与EM</figcaption>
 </figure>
@@ -515,13 +518,13 @@ Key和value之间用<code>\t</code>分隔,如生成大量文本上的字典可�
 来写 MapReduce 程序的话，会非常冗长，如下所示是实现相同功能的 MR
 代码</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1belg5n9m11kd1pni1krdb6d1220m.png"
+<img data-src="https://wulc.me/imgs/image_1belg5n9m11kd1pni1krdb6d1220m.png"
 alt="naive java code" />
 <figcaption aria-hidden="true">naive java code</figcaption>
 </figure>
 <p>pig 常用的一些语句如下所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1belga1ij1tn01nov1ota1kmr9a1g.png"
+<img data-src="https://wulc.me/imgs/image_1belga1ij1tn01nov1ota1kmr9a1g.png"
 alt="pig常用语句" />
 <figcaption aria-hidden="true">pig常用语句</figcaption>
 </figure>
@@ -535,6 +538,25 @@ Oozie使用hPDL(一种XML流程语言)
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -677,7 +699,7 @@ Oozie使用hPDL(一种XML流程语言)
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -700,6 +722,10 @@ Oozie使用hPDL(一种XML流程语言)
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="由于最近需要在几台电脑上配置相同的环境，几台电脑的操作系统不一样，而且配置一台所需要的步骤是比较繁琐的，因此就想到了用 docker，下面是使用 docker 构造镜像并且在不同的电脑上使用这个镜像的记录。">
@@ -86,6 +87,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -184,6 +186,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -274,7 +277,7 @@ python:3.5
 <p>首先原来的容器不能退出，另开一个终端，通过 <code>docker ps</code>
 命令获得修改过的容器的 id ，如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bvnbnvk51b0p3qv1h1a45k16qf9.png"
+<img data-src="https://wulc.me/imgs/image_1bvnbnvk51b0p3qv1h1a45k16qf9.png"
 alt="docker ps" />
 <figcaption aria-hidden="true">docker ps</figcaption>
 </figure>
@@ -284,7 +287,7 @@ alt="docker ps" />
 <p>如下所示是将前面的容器另存为镜像 <code>modified_python</code>,
 并且通过 <code>docker images</code> 查看到该创建的镜像的时间和大小。</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bvnbsfev34m1c34r6r7of1434m.png"
+<img data-src="https://wulc.me/imgs/image_1bvnbsfev34m1c34r6r7of1434m.png"
 alt="docker commit" />
 <figcaption aria-hidden="true">docker commit</figcaption>
 </figure>
@@ -297,7 +300,7 @@ alt="docker commit" />
 的书写规则同上。如下是将上面配置过的 python 环境导出到
 <code>ubuntu_python.tar</code></p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bvncsf1a14h9mmvbg843f1f6913.png"
+<img data-src="https://wulc.me/imgs/image_1bvncsf1a14h9mmvbg843f1f6913.png"
 alt="docker export" />
 <figcaption aria-hidden="true">docker export</figcaption>
 </figure>
@@ -305,7 +308,7 @@ alt="docker export" />
 <code>cat tar_file | docker import image_name</code> 即可将
 <code>tar_file</code> 导入为 <code>image_name</code> 镜像</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bvnd0dlg1s231lkmriu6k1v1v1g.png"
+<img data-src="https://wulc.me/imgs/image_1bvnd0dlg1s231lkmriu6k1v1v1g.png"
 alt="docker import" />
 <figcaption aria-hidden="true">docker import</figcaption>
 </figure>
@@ -330,6 +333,25 @@ target="_blank" rel="noopener" href="https://yeasy.gitbooks.io/docker_practice/c
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -470,7 +492,7 @@ target="_blank" rel="noopener" href="https://yeasy.gitbooks.io/docker_practice/c
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -493,6 +515,10 @@ target="_blank" rel="noopener" href="https://yeasy.gitbooks.io/docker_practice/c
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

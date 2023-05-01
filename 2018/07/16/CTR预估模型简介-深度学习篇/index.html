@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="本文主要介绍 CTR 预估中一些深度学习模型，包括 FNN、Wide&amp;Deep、PNN、DIN、 Deep&amp;Cross等。每个模型会简单介绍其原理、论文出处以及其一些开源实现。">
@@ -94,6 +95,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -192,6 +194,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -266,7 +269,7 @@ supported Neural Network)</h2>
 <h3 id="模型结构"><strong>模型结构</strong></h3>
 <p>FNN 是伦敦大学于 2016 在一篇论文中发表的，模型的结构如下</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1chv050jnp9ada415od111t1ae39.png"
+<img data-src="https://wulc.me/imgs/image_1chv050jnp9ada415od111t1ae39.png"
 alt="FNN" />
 <figcaption aria-hidden="true">FNN</figcaption>
 </figure>
@@ -296,7 +299,7 @@ PNN 的实现代码。</p>
 模型，也有 Deep 的 NN 模型。</p>
 <p>其结构如下所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1ce0lvnsf1pdvp3r3gfg0n1ltv33.png"
+<img data-src="https://wulc.me/imgs/image_1ce0lvnsf1pdvp3r3gfg0n1ltv33.png"
 alt="model structure" />
 <figcaption aria-hidden="true">model structure</figcaption>
 </figure>
@@ -314,7 +317,7 @@ generalization；memorization
 不同，连续特征可以直接作为 Wide 部分或 Deep 部分的输入而无需 embedding
 的映射，具体如下图所示。</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1ce0lpmmdcus1aa7upklnatjg9.png"
+<img data-src="https://wulc.me/imgs/image_1ce0lpmmdcus1aa7upklnatjg9.png"
 alt="input feature" />
 <figcaption aria-hidden="true">input feature</figcaption>
 </figure>
@@ -336,7 +339,7 @@ Networks)</h2>
 的关系，类似于 LR 和 FM 的关系，只是 FNN 和 PNN 均是对原始特征进行了
 embedding 映射。PNN 模型的结构如下所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1chv5blf02te19u2qo0a1721i19.png"
+<img data-src="https://wulc.me/imgs/image_1chv5blf02te19u2qo0a1721i19.png"
 alt="PNN" />
 <figcaption aria-hidden="true">PNN</figcaption>
 </figure>
@@ -361,7 +364,7 @@ target="_blank" rel="noopener" href="https://github.com/Atomu2014/product-nets">
 其实就是模仿 Wide&amp;Deep，只是将 Wide 部分替换成了
 FM，所以创新性并不算大。其结构如下所示，</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1ceiplk5lcfkbn9cia1p5j12pc2m.png"
+<img data-src="https://wulc.me/imgs/image_1ceiplk5lcfkbn9cia1p5j12pc2m.png"
 alt="DeepFM" />
 <figcaption aria-hidden="true">DeepFM</figcaption>
 </figure>
@@ -382,13 +385,13 @@ DIN 的论文认为这个操作损失了大量的信息，于是引入了 attent
 机制(其实就是一种加权求和)。</p>
 <p>DIN 是阿里妈妈在 2017 年提出的，其模型的结构如下所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1ci11abueoek1so1rhpeo2a3639.png"
+<img data-src="https://wulc.me/imgs/image_1ci11abueoek1so1rhpeo2a3639.png"
 alt="Deep Interest Network" />
 <figcaption aria-hidden="true">Deep Interest Network</figcaption>
 </figure>
 <p>Activation Unit 的结构如下所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1ci11cdgs9ol13jn1iv113icqpc3m.png"
+<img data-src="https://wulc.me/imgs/image_1ci11cdgs9ol13jn1iv113icqpc3m.png"
 alt="Activation Unit" />
 <figcaption aria-hidden="true">Activation Unit</figcaption>
 </figure>
@@ -404,7 +407,7 @@ network 的计算公式如下， <span class="math inline">\(V_u\)</span>
 是 Activation Unit 的逻辑，论文中提出了一种如上图的 Activation Unit
 所示，当然也可自行设计新的 Activation 方法。</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1cfp1c0l61j781euse3uul14mh13.png"
+<img data-src="https://wulc.me/imgs/image_1cfp1c0l61j781euse3uul14mh13.png"
 alt="DIN" />
 <figcaption aria-hidden="true">DIN</figcaption>
 </figure>
@@ -424,18 +427,18 @@ target="_blank" rel="noopener" href="https://github.com/zhougr1993/DeepInterestN
 Wide&amp;Deep，模型也是由两部分组成，分别是 Deep network 和 Cross
 network，该模型结构如下所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1cdm0f6me1dn61p6l2i511kqerd9.png"
+<img data-src="https://wulc.me/imgs/image_1cdm0f6me1dn61p6l2i511kqerd9.png"
 alt="Deep &amp; Cross" />
 <figcaption aria-hidden="true">Deep &amp; Cross</figcaption>
 </figure>
 <p><span class="math inline">\(x_i\)</span> 表示可由如下公式确定</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1ci130kk62821o3t1r4t7d6ojc43.png"
+<img data-src="https://wulc.me/imgs/image_1ci130kk62821o3t1r4t7d6ojc43.png"
 alt="x0" />
 <figcaption aria-hidden="true">x0</figcaption>
 </figure>
 <figure>
-<img src="https://wulc.me/imgs/image_1ci1318p11e2v15q8agn12c1po24g.png"
+<img data-src="https://wulc.me/imgs/image_1ci1318p11e2v15q8agn12c1po24g.png"
 alt="xl" />
 <figcaption aria-hidden="true">xl</figcaption>
 </figure>
@@ -462,6 +465,25 @@ Deep&amp;Cross 的 tensorflow 实现，可供参考。</p>
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -606,7 +628,7 @@ Networks)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a cl
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -629,6 +651,10 @@ Networks)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a cl
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

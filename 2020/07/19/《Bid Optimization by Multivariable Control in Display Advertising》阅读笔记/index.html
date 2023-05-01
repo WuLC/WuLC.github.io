@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="推荐与广告可以说是很多互联网公司的两个重要业务，其中推荐是为了 DAU 的增长，或者说流量的增长，而广告则是利用这些流量进行变现。两者的要解决的问题也很相似，都是在每条流量到来的时候，要从一个庞大的候选集中选出 topk 个候选返回，基本都采用 召回+精排 的架构，中间还可能插入粗排，本质上都是在效果与工程之间做 trade-off。 如果说两者技术上最大的 diff，笔者认为是出价，因为在广告场">
@@ -97,6 +98,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -195,6 +197,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -292,7 +295,7 @@ truth, 我们能拿到的是点击/转化与否，但是要预估的则是点击
 <p>paper
 中要解决的场景是在保住点击成本和预算时，最大化广告主的在所有参竞价值(value)，因此这个优化问题可写成如下形式</p>
 <figure>
-<img src="https://wulc.me/imgs/bid_optimization_LP1.jpg" alt="LP1" />
+<img data-src="https://wulc.me/imgs/bid_optimization_LP1.jpg" alt="LP1" />
 <figcaption aria-hidden="true">LP1</figcaption>
 </figure>
 <p>上式中的各个符号含义如下</p>
@@ -320,7 +323,7 @@ href="http://wulc.me/2017/02/01/%E6%9C%80%E4%BC%98%E5%8C%96%E8%AE%A1%E7%AE%97%E8
 target="_blank" rel="noopener" href="https://sites.math.washington.edu/~burke/crs/407/notes/section4.pdf">Duality
 Theory</a> 这个讲义</p>
 <figure>
-<img src="https://wulc.me/imgs/bid_optimization_dual_problem_LP2.jpg"
+<img data-src="https://wulc.me/imgs/bid_optimization_dual_problem_LP2.jpg"
 alt="LP2" />
 <figcaption aria-hidden="true">LP2</figcaption>
 </figure>
@@ -348,7 +351,7 @@ class="math inline">\(v\_i = bid\_i - wp\_i\)</span>,
 将公式（6）代入这个式子，再将 <span class="math inline">\(v\_i\)</span>
 代入上图中的公式(8)，可得到下面的公式（10）及其分类讨论的结果</p>
 <figure>
-<img src="https://wulc.me/imgs/bid_optimization_classify_situation.jpg"
+<img data-src="https://wulc.me/imgs/bid_optimization_classify_situation.jpg"
 alt="分类讨论结果" />
 <figcaption aria-hidden="true">分类讨论结果</figcaption>
 </figure>
@@ -397,7 +400,7 @@ bid，这似乎就成了一个先有鸡还是先有蛋的问题了</strong>，�
 <p>回到公式(6)的最优出价公式，如果将其写成 <code>c_bid * ctr</code>
 的形式，有如下公式</p>
 <figure>
-<img src="https://wulc.me/imgs/bid_optimization_cbid.jpg"
+<img data-src="https://wulc.me/imgs/bid_optimization_cbid.jpg"
 alt="click bid" />
 <figcaption aria-hidden="true">click bid</figcaption>
 </figure>
@@ -406,7 +409,7 @@ alt="click bid" />
 低但是 ctr 高的流量也是可以拿的；此外，c_bid 的直线会过两个定点： (-qC,
 0) 和 (pC, C), 后面在控制器中会详细描述这两个点的具体含义。</p>
 <figure>
-<img src="https://wulc.me/imgs/bid_optimization_cbid_graph.jpg"
+<img data-src="https://wulc.me/imgs/bid_optimization_cbid_graph.jpg"
 alt="bid_optimization_cbid_graph" />
 <figcaption aria-hidden="true">bid_optimization_cbid_graph</figcaption>
 </figure>
@@ -426,7 +429,7 @@ class="math inline">\(r(t)\)</span> 与 <span
 class="math inline">\(y(t)\)</span> 尽可能接近，调控的变量是 <span
 class="math inline">\(x(t)\)</span>。</p>
 <figure>
-<img src="https://wulc.me/imgs/bid_optimization_pid_controller.jpg"
+<img data-src="https://wulc.me/imgs/bid_optimization_pid_controller.jpg"
 alt="pid" />
 <figcaption aria-hidden="true">pid</figcaption>
 </figure>
@@ -466,7 +469,7 @@ class="math inline">\(C\)</span>，第二项则是为了达到 <span
 class="math inline">\(\max v=CTR×CVR\)</span>的目标</li>
 </ul>
 <figure>
-<img src="https://wulc.me/imgs/bid_optimization_controll_qfixed.jpg"
+<img data-src="https://wulc.me/imgs/bid_optimization_controll_qfixed.jpg"
 alt="q fixed" />
 <figcaption aria-hidden="true">q fixed</figcaption>
 </figure>
@@ -488,7 +491,7 @@ v=CTR×CVR\)</span>的目标，同时通过 <span
 class="math inline">\(q\)</span> 来控制预算</li>
 </ul>
 <figure>
-<img src="https://wulc.me/imgs/bid_optimization_controll_pfixed.jpg"
+<img data-src="https://wulc.me/imgs/bid_optimization_controll_pfixed.jpg"
 alt="p fixed" />
 <figcaption aria-hidden="true">p fixed</figcaption>
 </figure>
@@ -500,7 +503,7 @@ alt="p fixed" />
 class="math inline">\(p\)</span> 和 <span
 class="math inline">\(q\)</span>，调控的目标则是预算和点击成本。如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/bid_optimization_independent_pid.jpg"
+<img data-src="https://wulc.me/imgs/bid_optimization_independent_pid.jpg"
 alt="independent pid" />
 <figcaption aria-hidden="true">independent pid</figcaption>
 </figure>
@@ -517,7 +520,7 @@ non-linear RTB environment is costly and even impratical</strong>"；
 的关系</strong>(即原文的model the bidding environment with respect to
 cost and CPC）具体的做法如下</p>
 <figure>
-<img src="https://wulc.me/imgs/bid_optimization_multivar_control.jpg"
+<img data-src="https://wulc.me/imgs/bid_optimization_multivar_control.jpg"
 alt="multi-var control" />
 <figcaption aria-hidden="true">multi-var control</figcaption>
 </figure>
@@ -573,7 +576,7 @@ class="math inline">\(\beta\)</span>
 是从训练集中获取的(详见下面的实验效果环节)</p>
 <p>因此，根据公式(19), 总体的调控系统变为</p>
 <figure>
-<img src="https://wulc.me/imgs/bid_optimization_related_pid.jpg"
+<img data-src="https://wulc.me/imgs/bid_optimization_related_pid.jpg"
 alt="related pid" />
 <figcaption aria-hidden="true">related pid</figcaption>
 </figure>
@@ -597,7 +600,7 @@ class="math inline">\(\le 1\)</span>)</li>
 的权值都是一样的，其加权方法如下公式(21)所示，而前一章提到的 <span
 class="math inline">\(u\_{q}(t)\)</span> 计算方式如公式(22)所示</p>
 <figure>
-<img src="https://wulc.me/imgs/bid_optimization_weighted_pid_err.jpg"
+<img data-src="https://wulc.me/imgs/bid_optimization_weighted_pid_err.jpg"
 alt="weighted_pid_err" />
 <figcaption aria-hidden="true">weighted_pid_err</figcaption>
 </figure>
@@ -624,7 +627,7 @@ class="math inline">\(q\)</span> 作为其初始值</strong></li>
 是成本情况，同时左边的图是实时指标，右边的图是累积指标；从图中可知，budget
 消耗的幅度无论是实时还是累积都拟合得比较好，而点击成本虽然在实时上由波动，但是累积的成本是比较稳定的。</p>
 <figure>
-<img src="https://wulc.me/imgs/bid_optimization_performance.jpg"
+<img data-src="https://wulc.me/imgs/bid_optimization_performance.jpg"
 alt="performance" />
 <figcaption aria-hidden="true">performance</figcaption>
 </figure>
@@ -634,7 +637,7 @@ I-PID 和 M-PID 是本文提出的方法，分别表示 PID
 中的出价公式且考虑控制变量的关系的调价方式的效果是最好的，也印证了我们前面提到的<strong>两个完全独立的
 PID 并不是最优的选择, 而是在控制中要考虑两个变量相互的影响</strong></p>
 <figure>
-<img src="https://wulc.me/imgs/bid_optimization_evaluation_result.jpg"
+<img data-src="https://wulc.me/imgs/bid_optimization_evaluation_result.jpg"
 alt="evaluation result" />
 <figcaption aria-hidden="true">evaluation result</figcaption>
 </figure>
@@ -651,6 +654,25 @@ paper 中的总体建模思路还是非常值得学习的，可以作为一个 p
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -793,7 +815,7 @@ paper 中的总体建模思路还是非常值得学习的，可以作为一个 p
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -816,6 +838,10 @@ paper 中的总体建模思路还是非常值得学习的，可以作为一个 p
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

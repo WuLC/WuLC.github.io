@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="本文主要讲述内部网关协议中两个著名的协议RIP和OSPF。">
@@ -100,6 +101,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -198,6 +200,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -287,14 +290,14 @@ circuits（虚电路）</strong>：穿越网络建立链接及状态，使用链
 </ul>
 <p>还可以通过管理距离配置备份路由（也称为浮动静态路由），如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4uspd50dec1ssb1v7j1aunb379.png"
+<img data-src="https://wulc.me/imgs/image_1b4uspd50dec1ssb1v7j1aunb379.png"
 alt="备份路由" />
 <figcaption aria-hidden="true">备份路由</figcaption>
 </figure>
 <h2 id="动态路由">动态路由</h2>
 <p>动态路由就是通过协议动态地学习到路由信息，据其作用域的不同，又可分为内部网管协议(IGP)和边界网络协议(BGP)；内部网关协议有RIP，OSPF，IGRP，EIGRP等，其在网络中的位置入下</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4v3ecpin8p1qibhum18j814n05i.png"
+<img data-src="https://wulc.me/imgs/image_1b4v3ecpin8p1qibhum18j814n05i.png"
 alt="路由协议在协议层中的位置" />
 <figcaption aria-hidden="true">路由协议在协议层中的位置</figcaption>
 </figure>
@@ -314,7 +317,7 @@ class="math inline">\(d\_{i1}\)</span>：从节点i 到节点1 的时延向量 <
 class="math inline">\(S\_{i1}\)</span>：从节点i到节点1的一条最小时延路径上的下一个节点
 n ：网络中的节点数</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4uts4rn1k9cm5n1a4scrg1q4213.png"
+<img data-src="https://wulc.me/imgs/image_1b4uts4rn1k9cm5n1a4scrg1q4213.png"
 alt="距离矢量" />
 <figcaption aria-hidden="true">距离矢量</figcaption>
 </figure>
@@ -322,7 +325,7 @@ alt="距离矢量" />
 RIP路由更新广播默认周期为30秒。</p>
 <p>下图是RIP的一个简单例子</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4uulq6n1c0m1fmi1o8qk0pvlc1g.png"
+<img data-src="https://wulc.me/imgs/image_1b4uulq6n1c0m1fmi1o8qk0pvlc1g.png"
 alt="RIP工作原理" />
 <figcaption aria-hidden="true">RIP工作原理</figcaption>
 </figure>
@@ -337,7 +340,7 @@ CIDR 和 VLSM。</p>
 40.0.0.0 的距离不断增大，直到距离超过15才将网络40.0.0.0
 标记为不可达。</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4uv2n5vcbvshosde131fuv51t.png"
+<img data-src="https://wulc.me/imgs/image_1b4uv2n5vcbvshosde131fuv51t.png"
 alt="路由环路" />
 <figcaption aria-hidden="true">路由环路</figcaption>
 </figure>
@@ -354,7 +357,7 @@ alt="路由环路" />
 <p>但是分析可知，B必须经由C方可到达网络40.0.0.0，所以B不可能向C提供任何有价值的路由信息。因此可以修改B对C提供的路由，禁止B向C提供关于此信宿的路由信息，具体操作就是<strong>B告诉C一条在正常情况下不真实的消息：网络40.0.0.0不可达（距离为无穷大，实际中记为16即可）。</strong></p>
 <p>通过水平分割可以使得上面的情况的收敛速度加快，如下所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4uvpghh12mfool1fd3rtq4go2a.png"
+<img data-src="https://wulc.me/imgs/image_1b4uvpghh12mfool1fd3rtq4go2a.png"
 alt="水平分割" />
 <figcaption aria-hidden="true">水平分割</figcaption>
 </figure>
@@ -364,7 +367,7 @@ alt="水平分割" />
 <p>而毒性逆转的方法就是指当C
 发现网络40.0.0.0发生故障时，主动将到达信宿的距离改为无穷大（实际中改为16即可），收敛过程如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4v183kjv0lpi11m0g16be10p32n.png"
+<img data-src="https://wulc.me/imgs/image_1b4v183kjv0lpi11m0g16be10p32n.png"
 alt="毒性逆转收敛" />
 <figcaption aria-hidden="true">毒性逆转收敛</figcaption>
 </figure>
@@ -401,7 +404,7 @@ src="https://wulc.me/imgs/image_1b4v277qo80a1b811qtburvkel3h.png"
 alt="RIPng报文" /></p>
 <p>RIPv2 的报文格式为</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4v26h5i5v98cq14m015ttk0234.png"
+<img data-src="https://wulc.me/imgs/image_1b4v26h5i5v98cq14m015ttk0234.png"
 alt="RIPv2报文" />
 <figcaption aria-hidden="true">RIPv2报文</figcaption>
 </figure>
@@ -411,13 +414,13 @@ alt="RIPv2报文" />
 <h4 id="配置">配置</h4>
 <p>RIP的配置的主要工作就是启动RIP进程并声明路由器所连接的网络。如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4v2k08qtla1dgv8j515s0q733u.png"
+<img data-src="https://wulc.me/imgs/image_1b4v2k08qtla1dgv8j515s0q733u.png"
 alt="RIP配置" />
 <figcaption aria-hidden="true">RIP配置</figcaption>
 </figure>
 <p>默认是RIPv1，如果要配置RIPv2,需要<code>version 2</code>的命令，如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4v2or8m2qr1k8qflp1go5er74b.png"
+<img data-src="https://wulc.me/imgs/image_1b4v2or8m2qr1k8qflp1go5er74b.png"
 alt="RIPv2配置" />
 <figcaption aria-hidden="true">RIPv2配置</figcaption>
 </figure>
@@ -450,7 +453,7 @@ advertisement,
 DR是由所有路由器选举出来的，<strong>目的是减少路由器间同步的次数</strong>，所有路由器只需要和选举出来的DR进行同步即可，原理如下图所示，BDR是DR的备份路由器。</li>
 </ul>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4vf3po2etc1ila1pv3cto3qa6p.png"
+<img data-src="https://wulc.me/imgs/image_1b4vf3po2etc1ila1pv3cto3qa6p.png"
 alt="选举DR的必要性" />
 <figcaption aria-hidden="true">选举DR的必要性</figcaption>
 </figure>
@@ -507,7 +510,7 @@ id；DR一旦当选，除非路由器故障，否则不会更换；DR选出的�
 </ul>
 <p>结合路由器的状态，OSPF建立毗邻关系的步骤如下</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4v54o4s1a2h1s6d1umht3q1suq5v.png"
+<img data-src="https://wulc.me/imgs/image_1b4v54o4s1a2h1s6d1umht3q1suq5v.png"
 alt="OSPF建立毗邻关系" />
 <figcaption aria-hidden="true">OSPF建立毗邻关系</figcaption>
 </figure>
@@ -556,7 +559,7 @@ Number），而Router-ID大的那个OSPF路由器的接口将会成为Master（�
 <p><strong>5）</strong>当所有的DD报文传输完后，假如从路由器通过DD报文发现了自己所没有的信息后，会发送LSR报文给主路由器，随后主路由器会发送LSU报文给从路由器。从路由器将该信息合并到它的本地链路状态数据库中。从路由器会回应一个LSAck包给主路由器。此时两者处于<code>loading</code>状态。</p>
 <p><strong>6）</strong>两者的链路数据库一致，达到了<code>full</code>状态。</p>
 <p>其状态转移图如下所示，图中的稳态有三种(<code>Down</code>,<code>Two-way</code>,<code>Full</code>)
-<img src="https://wulc.me/imgs/image_1b4v5vjpmrpf1chc1dbt1898o8u6c.png"
+<img data-src="https://wulc.me/imgs/image_1b4v5vjpmrpf1chc1dbt1898o8u6c.png"
 alt="OSPF状态转移图" /></p>
 <h4 id="其他概念">其他概念</h4>
 <p><strong>克服路由自环</strong>
@@ -575,7 +578,7 @@ OSPF能够克服路由自环的原因有以下几个</p>
 </ul>
 <p>针对该问题，常用的解决方法是对OSPF划分区域</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4vjo5c2cn367e1m23130j17d87j.png"
+<img data-src="https://wulc.me/imgs/image_1b4vjo5c2cn367e1m23130j17d87j.png"
 alt="ospf划分区域" />
 <figcaption aria-hidden="true">ospf划分区域</figcaption>
 </figure>
@@ -589,7 +592,7 @@ alt="ospf划分区域" />
 路由器至少有一个接口不属于本自治域(AS).</li>
 </ul>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4vjsatj1ugu3lj11tpcfn9rp80.png"
+<img data-src="https://wulc.me/imgs/image_1b4vjsatj1ugu3lj11tpcfn9rp80.png"
 alt="路由器类型" />
 <figcaption aria-hidden="true">路由器类型</figcaption>
 </figure>
@@ -629,7 +632,7 @@ scope），AS范围（AS scope）</p>
 <h4 id="配置-1">配置</h4>
 <p><strong>单区域配置</strong></p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4vnobbs1k02iu81fso1u1832j8d.png"
+<img data-src="https://wulc.me/imgs/image_1b4vnobbs1k02iu81fso1u1832j8d.png"
 alt="OSPF单区域配置" />
 <figcaption aria-hidden="true">OSPF单区域配置</figcaption>
 </figure>
@@ -640,14 +643,14 @@ alt="OSPF单区域配置" />
 <p>注意：IOS 的某些早期版本无法识别 router-id
 命令；因此，为这些路由器设置路由器 ID 的最佳方法是使用环回接口</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4vo37b6lffipr137u7emv5u8q.png"
+<img data-src="https://wulc.me/imgs/image_1b4vo37b6lffipr137u7emv5u8q.png"
 alt="配置router-id" />
 <figcaption aria-hidden="true">配置router-id</figcaption>
 </figure>
 <p><strong>配置优先级</strong>
 优先级的取值范围为0~255，优先级为0的路由器不能被选举为DR</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4vo4iql9lsc6v13qleu16ku97.png"
+<img data-src="https://wulc.me/imgs/image_1b4vo4iql9lsc6v13qleu16ku97.png"
 alt="优先级配置" />
 <figcaption aria-hidden="true">优先级配置</figcaption>
 </figure>
@@ -662,6 +665,25 @@ alt="优先级配置" />
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -803,7 +825,7 @@ alt="优先级配置" />
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -826,6 +848,10 @@ alt="优先级配置" />
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

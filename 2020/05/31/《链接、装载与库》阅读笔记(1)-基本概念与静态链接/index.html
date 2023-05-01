@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="一直对以 C&#x2F;C++ 为代表的的编译型语言的编译、运行的原理了解不多，最近正好看到这本由国人写的书 链接、装载与库，书名已经比较言简意赅的介绍了书里相关内容，而且写得挺通俗的，值得一看。这里是书里第一、二部分内容的一些笔记，主要讲了操作系统的一些基本概念，编译生成的目标文件格式和静态链接的过程；由于笔者只摘录一些不太了解的内容，因此总体内容可能不是非常成体系，建议读原书。">
@@ -94,6 +95,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -192,6 +194,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -403,7 +406,7 @@ target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/102250532">LLV
 则可被用来查看对应的各个段的大小</p></li>
 </ul>
 <figure>
-<img src="https://wulc.me/imgs/objdump_result.jpg" alt="objdump" />
+<img data-src="https://wulc.me/imgs/objdump_result.jpg" alt="objdump" />
 <figcaption aria-hidden="true">objdump</figcaption>
 </figure>
 <p>从上图可知,
@@ -411,7 +414,7 @@ target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/102250532">LLV
 段，用于表示未初始化的全局变量和局部静态变量(更准确地说是为这些变量预留了空间)，已初始化的保存在
 <code>.data</code>；因此在内存中的占位如下所示</p>
 <figure>
-<img src="https://wulc.me/imgs/ObjectFile.jpg" alt="obj file" />
+<img data-src="https://wulc.me/imgs/ObjectFile.jpg" alt="obj file" />
 <figcaption aria-hidden="true">obj file</figcaption>
 </figure>
 <p>各个段的含义如下</p>
@@ -451,7 +454,7 @@ ELF
 不在可执行文件中占用空间，<strong>后面说的分配也着重于虚拟地址空间的分配</strong></p>
 <p>这里以下面两个源文件 <code>a.c</code> 和 <code>b.c</code> 说明</p>
 <figure>
-<img src="https://wulc.me/imgs/SourceCode.jpg" alt="source code" />
+<img data-src="https://wulc.me/imgs/SourceCode.jpg" alt="source code" />
 <figcaption aria-hidden="true">source code</figcaption>
 </figure>
 <h3 id="空间地址与分配">空间地址与分配</h3>
@@ -465,7 +468,7 @@ VMA）；如下图所示是将两个目标文件 <code>a.o</code> 和 <code>b.o<
 <p>通过 <code>objdump</code> 可分析出目标文件与可执行文件中 VMA
 的变化</p>
 <figure>
-<img src="https://wulc.me/imgs/link_objdump.jpg" alt="link_ojbdump" />
+<img data-src="https://wulc.me/imgs/link_objdump.jpg" alt="link_ojbdump" />
 <figcaption aria-hidden="true">link_ojbdump</figcaption>
 </figure>
 <p>从上面可以看到，<strong>链接前目标文件的 VMA
@@ -474,7 +477,7 @@ VMA）；如下图所示是将两个目标文件 <code>a.o</code> 和 <code>b.o<
 链接成可执行文件 <code>ab</code>
 后<strong>目标文件与可执行文件各个段的映射关系，以及可执行文件与虚拟地址的映射关系</strong></p>
 <figure>
-<img src="https://wulc.me/imgs/link_rearrange.jpg"
+<img data-src="https://wulc.me/imgs/link_rearrange.jpg"
 alt="link_rearrange" />
 <figcaption aria-hidden="true">link_rearrange</figcaption>
 </figure>
@@ -486,7 +489,7 @@ objdump
 <p>首先,通过 <code>objdump -d</code> 可以看到 <code>a.o</code>
 代码的反汇编结果如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/Disassembly.jpg" alt="obj Disassembly" />
+<img data-src="https://wulc.me/imgs/Disassembly.jpg" alt="obj Disassembly" />
 <figcaption aria-hidden="true">obj Disassembly</figcaption>
 </figure>
 <p>从上图输出可知，目标文件 <code>a.o</code> 中定义了一个函数
@@ -510,7 +513,7 @@ mock 的地址。</p>
 后，链接器已经能够确定所有符号的地址了。同样地通过
 <code>objdump -d</code> 我们可以看到可执行文件 ab 的反汇编的结果如下</p>
 <figure>
-<img src="https://wulc.me/imgs/Disassembly1.jpg"
+<img data-src="https://wulc.me/imgs/Disassembly1.jpg"
 alt="exec Disassembly" />
 <figcaption aria-hidden="true">exec Disassembly</figcaption>
 </figure>
@@ -522,7 +525,7 @@ Table</strong>）的结构来专门保存与重定位相关信息，重定位表
 ELF 文件中的一个段（重定位段），通过 <code>objdump -r</code>
 可以看到目标文件中的重定位段，如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/RelocationTable.jpg"
+<img data-src="https://wulc.me/imgs/RelocationTable.jpg"
 alt="RelocationTable" />
 <figcaption aria-hidden="true">RelocationTable</figcaption>
 </figure>
@@ -536,7 +539,7 @@ alt="RelocationTable" />
 <code>a.o</code> 的符号表，可以看到 shared 和 swap 都是
 UND(undefined）的</p>
 <figure>
-<img src="https://wulc.me/imgs/charTable.jpg" alt="charTable" />
+<img data-src="https://wulc.me/imgs/charTable.jpg" alt="charTable" />
 <figcaption aria-hidden="true">charTable</figcaption>
 </figure>
 <h3 id="commom-块">COMMOM 块</h3>
@@ -564,7 +567,7 @@ Library），这些库就是对操作系统的 API
 的包装；<strong>一个静态库可以看做是一组目标文件的集合</strong></p>
 <p>通过 <code>ar</code> 可以看到一个静态库中有哪些目标文件</p>
 <figure>
-<img src="https://wulc.me/imgs/staticLibrary.jpg" alt="library" />
+<img data-src="https://wulc.me/imgs/staticLibrary.jpg" alt="library" />
 <figcaption aria-hidden="true">library</figcaption>
 </figure>
 <p>值得注意的是，<strong>静态库里的一个目标文件只包含一个函数</strong>，这是是为了是的在链接过程中只链接那些使用到的函数对应的目标文件，如果很多函数都放在同一个目标文件中，会导致很多没用的函数都被遗弃链接进了输出结果中。</p>
@@ -582,6 +585,25 @@ Library），这些库就是对操作系统的 API
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -725,7 +747,7 @@ Library），这些库就是对操作系统的 API
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -748,6 +770,10 @@ Library），这些库就是对操作系统的 API
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

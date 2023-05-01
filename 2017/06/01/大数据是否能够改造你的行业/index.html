@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="本文内容主要来源于该知乎 live，主要介绍了深度学习为什么能在大数据的环境下有效，并描述了大数据的三个特点：行为数据、全量加工和自动化应用。">
@@ -92,6 +93,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -190,6 +192,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -256,7 +259,7 @@ live</a>，主要介绍了深度学习为什么能在大数据的环境下有效
 <span id="more"></span>
 <h2 id="深度学习为何有效">深度学习为何有效</h2>
 <figure>
-<img src="https://wulc.me/imgs/image_1bibon900cpa18bnft25jm1v1l9.png"
+<img data-src="https://wulc.me/imgs/image_1bibon900cpa18bnft25jm1v1l9.png"
 alt="机器学习的发展" />
 <figcaption aria-hidden="true">机器学习的发展</figcaption>
 </figure>
@@ -267,7 +270,7 @@ alt="机器学习的发展" />
 GPU 的出现，相当于图中的水管的出现
 3）能够获取的数据量变得更大（水源）</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1biboqno31et14vufm3jqanogm.png"
+<img data-src="https://wulc.me/imgs/image_1biboqno31et14vufm3jqanogm.png"
 alt="深度学习模型" />
 <figcaption aria-hidden="true">深度学习模型</figcaption>
 </figure>
@@ -277,7 +280,7 @@ alt="深度学习模型" />
 <h3 id="行为数据-v.s-交易数据"><strong>行为数据 v.s
 交易数据</strong></h3>
 <figure>
-<img src="https://wulc.me/imgs/image_1bibpk6le148m1kbm1cobs68lpi1g.png"
+<img data-src="https://wulc.me/imgs/image_1bibpk6le148m1kbm1cobs68lpi1g.png"
 alt="交易数据和行为数据" />
 <figcaption aria-hidden="true">交易数据和行为数据</figcaption>
 </figure>
@@ -286,7 +289,7 @@ alt="交易数据和行为数据" />
 采样加工</strong></h3>
 <p>问题属性决定采用哪种加工</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bibq50b31boak2s1ntfktrmf41t.png"
+<img data-src="https://wulc.me/imgs/image_1bibq50b31boak2s1ntfktrmf41t.png"
 alt="采样分析和全量加工" />
 <figcaption aria-hidden="true">采样分析和全量加工</figcaption>
 </figure>
@@ -298,7 +301,7 @@ alt="采样分析和全量加工" />
 <p>洞察指的是根据大量数据生成报表，然后通过人观察这些报表并作出决策</p>
 <p>全自动化指的是数据的产生，加工，交易形成闭环</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bibqfpl114vp1h9s15nak9t1ftq2a.png"
+<img data-src="https://wulc.me/imgs/image_1bibqfpl114vp1h9s15nak9t1ftq2a.png"
 alt="全自动化应用" />
 <figcaption aria-hidden="true">全自动化应用</figcaption>
 </figure>
@@ -307,17 +310,17 @@ alt="全自动化应用" />
 3）如何做到自动化</p>
 <p>下面是根据大数据的三个特点介绍的三个应用场景，其中广告行业是已经发展的比较成熟的了，而保险行业和医疗行业则是未来有这种发展趋势的</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bibr8ek9gd7cecftn1fm3mqg2n.png"
+<img data-src="https://wulc.me/imgs/image_1bibr8ek9gd7cecftn1fm3mqg2n.png"
 alt="广告行业" />
 <figcaption aria-hidden="true">广告行业</figcaption>
 </figure>
 <figure>
-<img src="https://wulc.me/imgs/image_1bibreoiq1c3cm561ausnqpvc534.png"
+<img data-src="https://wulc.me/imgs/image_1bibreoiq1c3cm561ausnqpvc534.png"
 alt="保险行业" />
 <figcaption aria-hidden="true">保险行业</figcaption>
 </figure>
 <figure>
-<img src="https://wulc.me/imgs/image_1bibsfvk3100ns471bdd3abq023h.png"
+<img data-src="https://wulc.me/imgs/image_1bibsfvk3100ns471bdd3abq023h.png"
 alt="大数据医疗行业" />
 <figcaption aria-hidden="true">大数据医疗行业</figcaption>
 </figure>
@@ -326,13 +329,13 @@ alt="大数据医疗行业" />
 <p>这个系统的分解以及各部分的作用如下所示，更详细的可参考<a
 href="http://wulc.me/2017/04/20/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A%E7%AC%94%E8%AE%B0%281%29--%E5%B9%BF%E5%91%8A%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86/">这里</a></p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bibuiuc31d6h77k188415gs16m23u.png"
+<img data-src="https://wulc.me/imgs/image_1bibuiuc31d6h77k188415gs16m23u.png"
 alt="自动化系统一般框架" />
 <figcaption aria-hidden="true">自动化系统一般框架</figcaption>
 </figure>
 <p>由于开源软件的发展，搭建这样的系统难度不大，开源软件的几个优势和顾虑如下所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bibusqjp1ud23h118qaqdes0t4b.png"
+<img data-src="https://wulc.me/imgs/image_1bibusqjp1ud23h118qaqdes0t4b.png"
 alt="搭建系统" />
 <figcaption aria-hidden="true">搭建系统</figcaption>
 </figure>
@@ -344,6 +347,25 @@ alt="搭建系统" />
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -488,7 +510,7 @@ alt="搭建系统" />
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -511,6 +533,10 @@ alt="搭建系统" />
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

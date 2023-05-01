@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="最近由于课程需要去调研了一下遗传算法，本文是调研结果的总结，主要介绍遗传算法的背景、基本流程、理论基础、变种及其应用。">
@@ -92,6 +93,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -190,6 +192,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -263,7 +266,7 @@ href="http://wulc.me/2017/02/01/%E6%9C%80%E4%BC%98%E5%8C%96%E8%AE%A1%E7%AE%97%E8
 <p>相对于连续优化的另外一种优化是<a
 target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Combinatorial_optimization">组合优化</a>，组合优化的变量是离散的，也就是变量的空间只有有限多个的可行解。比如说经典的背包问题就是一个组合优化问题</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bdg4f1vg1h34mb1qq18p063p9.png"
+<img data-src="https://wulc.me/imgs/image_1bdg4f1vg1h34mb1qq18p063p9.png"
 alt="背包问题" />
 <figcaption aria-hidden="true">背包问题</figcaption>
 </figure>
@@ -339,7 +342,7 @@ operators such as mutation, crossover and selection。</p>
 <p>遗传算法是一个迭代算法，在进行初始化后按照 “选择，交叉，变异”
 的顺序进行迭代，当满足设定的结束条件(例如达到一定的代数)，便将得到的解作为问题的解。其流程如下所示</p>
 <figure>
-<img src="https://wulc.me/imgs/4.jpg" alt="算法流程" />
+<img data-src="https://wulc.me/imgs/4.jpg" alt="算法流程" />
 <figcaption aria-hidden="true">算法流程</figcaption>
 </figure>
 <h3 id="算法流程">算法流程</h3>
@@ -358,13 +361,13 @@ f\_j}\]</span></p>
 <h4 id="交叉crossover">交叉(crossover)</h4>
 <p>交叉跟生物上的杂交是一样的，只是生物中是双螺旋结构，而遗传算法中只有一条链。原始的遗传算法只会选择一个点进行交叉，如下如所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bcv2juh21eff12veprb1m3pdjh9.png"
+<img data-src="https://wulc.me/imgs/image_1bcv2juh21eff12veprb1m3pdjh9.png"
 alt="Single-point crossover" />
 <figcaption aria-hidden="true">Single-point crossover</figcaption>
 </figure>
 <p>而假如对遗传算法进行改进，也可以在多个点进行交叉的操作</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bcv2m08s8vh10efqmli9s1v9bm.png"
+<img data-src="https://wulc.me/imgs/image_1bcv2m08s8vh10efqmli9s1v9bm.png"
 alt="Two-point crossover" />
 <figcaption aria-hidden="true">Two-point crossover</figcaption>
 </figure>
@@ -375,7 +378,7 @@ target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Crossover_%28
 <p>变异（<a
 target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Mutation_%28genetic_algorithm%29">mutation</a>）跟生物中的变异也一样，随机改变染色体中的某一位，如下所示就是一个变异的示例</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bdglnnd9r1j1h1r1lsc714am5p.png"
+<img data-src="https://wulc.me/imgs/image_1bdglnnd9r1j1h1r1lsc714am5p.png"
 alt="mutation.jpg" />
 <figcaption aria-hidden="true">mutation.jpg</figcaption>
 </figure>
@@ -417,7 +420,7 @@ x\_i \in \lbrace 0,1 \rbrace\]</span></p>
 <p><strong>初始化</strong>
 由于有15个物品，而每个物品只有两个状态，因此用一个长度为15的01字符串表示一个解，0表示不拿该物品，1表示那该物品。随机产生10个候选解如下所示，这里要注意每个候选解必须要满足约束条件</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bdgqufc4nnn1gqt1g431jm11gp1i.png"
+<img data-src="https://wulc.me/imgs/image_1bdgqufc4nnn1gqt1g431jm11gp1i.png"
 alt="initialize" />
 <figcaption aria-hidden="true">initialize</figcaption>
 </figure>
@@ -432,7 +435,7 @@ class="math display">\[p\_i =
 \frac{V\_i}{\sum\_{j=1}^{15}V\_j}\]</span></p>
 <p>如下为模拟的过程，注意一个个体可能会被选择多次</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bdgqvll710hjeh190011vt1r8a1v.png"
+<img data-src="https://wulc.me/imgs/image_1bdgqvll710hjeh190011vt1r8a1v.png"
 alt="selection" />
 <figcaption aria-hidden="true">selection</figcaption>
 </figure>
@@ -440,14 +443,14 @@ alt="selection" />
 <p>对选择出来的个体重新进行编号，然后进行交叉的操作，按照设定的交叉概率选择个体进行交叉的操作，交叉的位置也是随机产生的，如下所示是设定交叉概率为
 0.5 后的交叉结果</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bdgr0g2dd7mig01mki1qom12g22c.png"
+<img data-src="https://wulc.me/imgs/image_1bdgr0g2dd7mig01mki1qom12g22c.png"
 alt="crossover" />
 <figcaption aria-hidden="true">crossover</figcaption>
 </figure>
 <p><strong>变异</strong></p>
 <p>变异也是按照变异概率选择个体来进行的，被选中的个体变异的位数可以是一位也可以是多位，如下图所示是设定变异概率为0.2的编译过程</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bdgsa177is3q4i1rs114kvl436.png"
+<img data-src="https://wulc.me/imgs/image_1bdgsa177is3q4i1rs114kvl436.png"
 alt="mutation" />
 <figcaption aria-hidden="true">mutation</figcaption>
 </figure>
@@ -465,7 +468,7 @@ target="_blank" rel="noopener" href="https://www.zhihu.com/question/23293449/ans
 \in [0,9]\]</span></p>
 <p>这个函数的图像如下所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bdgsl05t1qu513751btg2mh1v133j.png"
+<img data-src="https://wulc.me/imgs/image_1bdgsl05t1qu513751btg2mh1v133j.png"
 alt="连续优化例子" />
 <figcaption aria-hidden="true">连续优化例子</figcaption>
 </figure>
@@ -701,6 +704,25 @@ and Cybernetics, 1994, 24(4): 656-667.</p>
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -842,7 +864,7 @@ and Cybernetics, 1994, 24(4): 656-667.</p>
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -865,6 +887,10 @@ and Cybernetics, 1994, 24(4): 656-667.</p>
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

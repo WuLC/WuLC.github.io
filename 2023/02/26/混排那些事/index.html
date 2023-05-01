@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="混排，往往是的推荐系统的最后一个环节，在这个阶段，自然内容（后面简称item）需要与营销内容（后面简称 ad）进行混合，生成最终推送给用户的 list 如果以 Long Term Value(LTV)的视角来看,这是个在 LT 和 V 之间做 trade-off 的过程，ad 如果出得过多，必然会挤压 item 的数量和位置，进而影响用户体验和留存即 LT，但相应的广告收入，或者说 Average">
@@ -91,6 +92,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -189,6 +191,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -280,7 +283,7 @@ paper 的建模方法，然后讨论下计算 item 和 ad
 <h2 id="建模方案">建模方案</h2>
 <p>paper
 把问题建模成如下图最优化问题（单次请求的最优，目前不考虑请求间的优化）</p>
-<p><img src="https://wulc.me/imgs/Rerank_optimize.png" height="30%" width="30%"></p>
+<p><img data-src="https://wulc.me/imgs/Rerank_optimize.png" height="30%" width="30%"></p>
 <p>各符号含义如下</p>
 <ul>
 <li><span class="math inline">\(i\)</span>: 一次请求中位置的 index</li>
@@ -303,16 +306,16 @@ class="math inline">\(\alpha\)</span>
 称其为 “shadow bid”，作用是把 engagement utility 的 scale 变换至 revenue
 utility 的 scale；则最终在位置 i 插入 ad 或 item 的价值如下图表 1
 所示</p>
-<p><img src="https://wulc.me/imgs/Rerank_solution.png" height="40%" width="40%"></p>
+<p><img data-src="https://wulc.me/imgs/Rerank_solution.png" height="40%" width="40%"></p>
 <p>上面的最优化问题的约束只是总体 list 的 engagement utility
 要大于特定预制，但混排往往还有一些硬约束，在paper中提到的是：top slot 和
 min gap
 ，分别表示第一个广告的位置约束，两个广告最小间隔的约束；除了这两个约束，一些常见的约束还有
 showtime gap 约束（出现广告的评率）、adload
 约束等(广告出现比例的约束)</p>
-<p><img src="https://wulc.me/imgs/Rerank_constraint.png" height="30%" width="30%"></p>
+<p><img data-src="https://wulc.me/imgs/Rerank_constraint.png" height="30%" width="30%"></p>
 <p>这两个约束并没有直接体现在最优化的建模里，而是体现在最后的混排算法里，整个算法流程如下</p>
-<p><img src="https://wulc.me/imgs/Rerank_algorithm.png" height="40%" width="40%"></p>
+<p><img data-src="https://wulc.me/imgs/Rerank_algorithm.png" height="40%" width="40%"></p>
 <h2 id="建模关键问题讨论">建模关键问题讨论</h2>
 <p>上面的建模虽然比较直观，但涉及到的一些需要解决的关键问题，</p>
 <h3 id="shadow-bid-alpha-的计算">shadow bid <span
@@ -324,7 +327,7 @@ target="_blank" rel="noopener" href="https://www.zhihu.com/question/23510001">�
 <p>这里的影子价格 <span class="math inline">\(\alpha\)</span> 是一个关于
 <span class="math inline">\(C\)</span> 的函数，paper
 提到获取这个值的三种方法，</p>
-<p><img src="https://wulc.me/imgs/Rerank_shadowbid.png" height="40%" width="40%"></p>
+<p><img data-src="https://wulc.me/imgs/Rerank_shadowbid.png" height="40%" width="40%"></p>
 <p>从上图可知，基本思路是 （1）确定 <span
 class="math inline">\(C\)</span> 的值之后求解原问题，得到 <span
 class="math inline">\(\alpha\)</span> （2）通过在线 ab
@@ -384,7 +387,7 @@ score</p>
 大小也会影响 ad 的 ctr 等，如下图所示，ad 的 gap 之间如果过小，ad
 的点击率会过低，但 item 不会出现这种情况，本质上还是因为 ad
 的密集度过高，即使前面提到了有min-gap 这一类硬规则</p>
-<p><img src="https://wulc.me/imgs/Rerank_gap_effect.jpg" height="40%" width="40%"></p>
+<p><img data-src="https://wulc.me/imgs/Rerank_gap_effect.jpg" height="40%" width="40%"></p>
 <p>paper 提出的做法是给增加一个 gap 特征来捕捉这个信息，paper
 做了如下推导，最终生效的形式跟 position_discount 有点像，等价于在原来的
 ctr 基础上乘上一个 gap_discount, 下图中的 <span
@@ -393,9 +396,9 @@ target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Logit">Logit 
 class="math inline">\(y_{ij}\)</span> 表示是否发生点击（还可进一步把
 <span class="math inline">\(\beta\)</span>
 参数化，做成个性化的参数）</p>
-<p><img src="https://wulc.me/imgs/Rerank_gap_effect_logit.jpg" height="40%" width="40%"></p>
+<p><img data-src="https://wulc.me/imgs/Rerank_gap_effect_logit.jpg" height="40%" width="40%"></p>
 <p>而如果在上面的混排算法上加上 gap effect 的影响，会有如下的流程</p>
-<p><img src="https://wulc.me/imgs/Rerank_gap_effect_algo.jpg" height="40%" width="40%"></p>
+<p><img data-src="https://wulc.me/imgs/Rerank_gap_effect_algo.jpg" height="40%" width="40%"></p>
 <h2 id="item-与-ad-价值度量的另一种思路">item 与 ad
 价值度量的另一种思路</h2>
 <p>paper 认为 item 价值是 engagement utility，ad 的价值是 engagement
@@ -464,6 +467,25 @@ engagement utility 和 revenue utility
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -607,7 +629,7 @@ engagement utility 和 revenue utility
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -630,6 +652,10 @@ engagement utility 和 revenue utility
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

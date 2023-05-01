@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="这篇文章的内容主要来源于 该知乎live，主要介绍了利用数据获取了用户后如何运营，从而能够尽可能长时间地留存用户，介绍了这方面的三个具体方法：建立用户转化漏斗、通过多维报表找到问题和建立实验框架。">
@@ -91,6 +92,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -189,6 +191,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -254,7 +257,7 @@ target="_blank" rel="noopener" href="https://www.zhihu.com/lives/778742419016400
 <span id="more"></span>
 <p>本文主要关注下图左半部分，利用了别人的数据和流量获取了用户后该怎么运营以留存用户。</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1biqbrl8q1lqd1q2q1t2kuji31k9.png"
+<img data-src="https://wulc.me/imgs/image_1biqbrl8q1lqd1q2q1t2kuji31k9.png"
 alt="商业闭环" />
 <figcaption aria-hidden="true">商业闭环</figcaption>
 </figure>
@@ -267,14 +270,14 @@ alt="商业闭环" />
 <h2 id="建立用户转化漏斗">建立用户转化漏斗</h2>
 <p>把商业目标转化为用户转化的一系列步骤，下面是两个具体例子</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1biqd74p4ege1ulu20ata85p6m.png"
+<img data-src="https://wulc.me/imgs/image_1biqd74p4ege1ulu20ata85p6m.png"
 alt="用户转化漏斗" />
 <figcaption aria-hidden="true">用户转化漏斗</figcaption>
 </figure>
 <p>每一步都有一定的损失，且需要关注的点是前后两步的用户的比率，因为通过比率更容易看到具体的变化</p>
 <p><strong>漏斗设计的原则与作用：整个漏斗过程用于优化一个唯一的目标，并将该目标分解为若干比率的乘积，便于发现问题并优化</strong>，下面是一个优化总用户时长的例子</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1biqdjogq1b941ie019kfab1us113.png"
+<img data-src="https://wulc.me/imgs/image_1biqdjogq1b941ie019kfab1us113.png"
 alt="总用户时长漏斗设计" />
 <figcaption aria-hidden="true">总用户时长漏斗设计</figcaption>
 </figure>
@@ -290,7 +293,7 @@ View)</strong>：所有浏览量 <strong>页面停留时长</strong>：页面浏
 Rate)</strong>：指单页会话（用户打开了网站上的一个网页，然后就退出了网站）次数在所有会话次数中所占的比例，也就是用户在您网站上仅查看一个网页的会话次数所占的百分比
 网站热力图：热力图是指以特殊高亮的形式显示访客热衷的页面区域和访客所在的地理区域的图示，简单来说就是分析出一个页面内各个部位的点击情况，如下是一个热力点击图</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1biqfc1gtrti4991d2p1m7l1bqh2a.png"
+<img data-src="https://wulc.me/imgs/image_1biqfc1gtrti4991d2p1m7l1bqh2a.png"
 alt="热力点击图" />
 <figcaption aria-hidden="true">热力点击图</figcaption>
 </figure>
@@ -312,12 +315,12 @@ Analytics</a> 描述如下：</p>
 <p>因此，总结上面的过程为：<strong>建立漏斗并利用分析工具将漏斗的每一步的数据找出来</strong></p>
 <p>下面是一个通过漏斗分析的页游的例子</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1biqfsg2sj8um1b1edgi2f1no82n.png"
+<img data-src="https://wulc.me/imgs/image_1biqfsg2sj8um1b1edgi2f1no82n.png"
 alt="转化漏斗" />
 <figcaption aria-hidden="true">转化漏斗</figcaption>
 </figure>
 <figure>
-<img src="https://wulc.me/imgs/image_1biqftdj9h8dlrs1m5k1cumj0034.png"
+<img data-src="https://wulc.me/imgs/image_1biqftdj9h8dlrs1m5k1cumj0034.png"
 alt="多维度报表" />
 <figcaption aria-hidden="true">多维度报表</figcaption>
 </figure>
@@ -327,14 +330,14 @@ chrome 浏览器上的不兼容导致了注册率的较低。</p>
 <p>上面的例子中统计各个浏览器的注册率时已经涉及到了多维报表查询的问题，因为除了从浏览器，还可能从地域、时间段、时间段和浏览器组合等其他维度去统计，这时候就需要一个灵活的查询统计工具来提供这样的多维度报表，这个工具就是<strong>数据仓库（Data
 Warehouse）</strong></p>
 <figure>
-<img src="https://wulc.me/imgs/image_1biqh4tkk1narkvt10crs121p5h3h.png"
+<img data-src="https://wulc.me/imgs/image_1biqh4tkk1narkvt10crs121p5h3h.png"
 alt="数据仓库" />
 <figcaption aria-hidden="true">数据仓库</figcaption>
 </figure>
 <p>OLAP (Online Analytical Processing) 和 OLTP(Online Transaction
 Processing)</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1biqhflcf1rllu3lfi8p01m283u.png"
+<img data-src="https://wulc.me/imgs/image_1biqhflcf1rllu3lfi8p01m283u.png"
 alt="OLAP v.s OLTP" />
 <figcaption aria-hidden="true">OLAP v.s OLTP</figcaption>
 </figure>
@@ -349,7 +352,7 @@ alt="OLAP v.s OLTP" />
 测试中的一个重要方法是分层实验框架，其目的是为了能够在同样的流量情况下容纳更多的
 A/B 测试</strong>，下面以一个简单的例子讲解</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1c5d1791udab13dogtp1ljq1nbq9.png"
+<img data-src="https://wulc.me/imgs/image_1c5d1791udab13dogtp1ljq1nbq9.png"
 alt="分层实验框架" />
 <figcaption aria-hidden="true">分层实验框架</figcaption>
 </figure>
@@ -374,6 +377,25 @@ A/B
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -515,7 +537,7 @@ A/B
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -538,6 +560,10 @@ A/B
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

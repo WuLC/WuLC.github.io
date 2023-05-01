@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="本文的表情识别指的是给出一张图片，检测其中人脸的表情（如果含有人脸的话）。所有可能的表情种类往往事先约定好,粗分可以分为 positive、negative、neutral 三种，细分可以分为 neutral, angry, surprise, disgust, fear, happy, sad 7种或者更多种，这里的类别可根据具体采用的数据集进行调整，从机器学习的角度来说，这实际上就是一个多分类">
@@ -90,6 +91,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -188,6 +190,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -286,7 +289,7 @@ softmax 变换得到样本属于各个分类的概率分布。如下是 AlexNet
 的网络结构图</p>
 <h3 id="alexnet">AlexNet</h3>
 <figure>
-<img src="https://wulc.me/imgs/image_1bqkulor8935til84914bc3ar9.png"
+<img data-src="https://wulc.me/imgs/image_1bqkulor8935til84914bc3ar9.png"
 alt="AlexNet" />
 <figcaption aria-hidden="true">AlexNet</figcaption>
 </figure>
@@ -306,7 +309,7 @@ http://arxiv.org/abs/1602.07261</p>
 <p>Inception 的结构与前面的 AlexNet 的大同小异，其核心是多了 Inception
 模块，而 Inception 模块的结构如下</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bqkuvvjd5qp1383rtm1qnu1kic1g.png"
+<img data-src="https://wulc.me/imgs/image_1bqkuvvjd5qp1383rtm1qnu1kic1g.png"
 alt="Inception moule" />
 <figcaption aria-hidden="true">Inception moule</figcaption>
 </figure>
@@ -315,7 +318,7 @@ alt="Inception moule" />
 concate 送到下一层。</p>
 <p>如下是 Inception V3 的结构</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bqkvqgl5rojlbnodhtsg89e37.png"
+<img data-src="https://wulc.me/imgs/image_1bqkvqgl5rojlbnodhtsg89e37.png"
 alt="Inception V3" />
 <figcaption aria-hidden="true">Inception V3</figcaption>
 </figure>
@@ -325,7 +328,7 @@ alt="Inception V3" />
 ImageNet 比赛上取得了非常好的结果。VGG
 主要工作是证明了增加网络的深度能够在一定程度上影响网络最终的性能，越深的网络能够容纳更多数据的信息，对于更大的数据具有更好的效果，VGG整个网络的结构如下</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bqkvpc901ufv189f19r6h4q1h1p2q.png"
+<img data-src="https://wulc.me/imgs/image_1bqkvpc901ufv189f19r6h4q1h1p2q.png"
 alt="VGG" />
 <figcaption aria-hidden="true">VGG</figcaption>
 </figure>
@@ -337,7 +340,7 @@ gradient）问题，深层的网络很难训练。因为梯度反向传播到前
 引入一个“身份捷径连接”（identity shortcut
 connection），直接跳过一层或多层，如下图所示：</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bql06cuj1ket1mhveme1l4fvsu3k.png"
+<img data-src="https://wulc.me/imgs/image_1bql06cuj1ket1mhveme1l4fvsu3k.png"
 alt="ResNet" />
 <figcaption aria-hidden="true">ResNet</figcaption>
 </figure>
@@ -357,7 +360,7 @@ ResNet 最开始的只是建单地将更前面几层的 x 直接加到当前层�
 进行了处理，如通过卷积层等操作，但是其核心思想还是跨层连接从而获得更多的信息。</p>
 <p>最开始提出的 ResNet 的结构如下</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bqmnubbv1pvf68s1cemeqa1plo41.png"
+<img data-src="https://wulc.me/imgs/image_1bqmnubbv1pvf68s1cemeqa1plo41.png"
 alt="ResNet" />
 <figcaption aria-hidden="true">ResNet</figcaption>
 </figure>
@@ -369,7 +372,7 @@ CNN 与 RNN 进行结合对时序图片列进行预测。在表情识别中</p>
 结合起来的一种模型，其基本结构如下，图片出自<a
 target="_blank" rel="noopener" href="https://arxiv.org/pdf/1411.4389v4.pdf">该论文</a></p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bqmosh7oqcsbfa1ksp56de2d4e.png"
+<img data-src="https://wulc.me/imgs/image_1bqmosh7oqcsbfa1ksp56de2d4e.png"
 alt="cnn-lstm" />
 <figcaption aria-hidden="true">cnn-lstm</figcaption>
 </figure>
@@ -420,6 +423,25 @@ ImageNet
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -562,7 +584,7 @@ ImageNet
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -585,6 +607,10 @@ ImageNet
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

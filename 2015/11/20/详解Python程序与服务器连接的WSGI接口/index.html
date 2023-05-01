@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="文章为转载，原文见这里，侵删 这篇文章主要介绍了Python程序与服务器连接的WSGI接口,是Python网络编程学习当中的重要内容,需要的朋友可以参考下 了解了HTTP协议和HTML文档，我们其实就明白了一个Web应用的本质就是： 　　 1.浏览器发送一个HTTP请求; 2.服务器收到请求，生成一个HTML文档; 3.服务器把HTML文档作为HTTP响应的Body发送给浏览器; 4.浏览器收到H">
@@ -87,6 +88,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -185,6 +187,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -288,20 +291,20 @@ web!将作为<strong>HTTP响应的Body</strong>发送给浏览器。</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># server.py</span></span><br><span class="line"><span class="comment"># 从wsgiref模块导入:</span></span><br><span class="line"><span class="keyword">from</span> wsgiref.simple_server <span class="keyword">import</span> make_server</span><br><span class="line"><span class="comment"># 导入我们自己编写的application函数:</span></span><br><span class="line"><span class="keyword">from</span> hello <span class="keyword">import</span> application</span><br><span class="line"> </span><br><span class="line"><span class="comment"># 创建一个服务器，IP地址为空，端口是8000，处理函数是application:</span></span><br><span class="line">httpd = make_server(<span class="string">&#x27;&#x27;</span>, <span class="number">8000</span>, application)</span><br><span class="line"><span class="built_in">print</span> <span class="string">&quot;Serving HTTP on port 8000...&quot;</span></span><br><span class="line"> <span class="comment"># 开始监听HTTP请求:</span></span><br><span class="line">httpd.serve_forever()</span><br></pre></td></tr></table></figure>
 <p>确保以上两个文件在同一个目录下，然后在命令行输入<code>python server.py</code>来启动WSGI服务</p>
 <figure>
-<img src="https://wulc.me/imgs/2016-01-09_102745.png"
+<img data-src="https://wulc.me/imgs/2016-01-09_102745.png"
 alt="启动server" />
 <figcaption aria-hidden="true">启动server</figcaption>
 </figure>
 <p>启动成功后，打开浏览器，输入
 <code>http://localhost:8000/</code>，就可以看到结果了</p>
 <figure>
-<img src="https://wulc.me/imgs/2016-01-09_103107.png"
+<img data-src="https://wulc.me/imgs/2016-01-09_103107.png"
 alt="浏览器观察" />
 <figcaption aria-hidden="true">浏览器观察</figcaption>
 </figure>
 <p>再看看刚刚打开的cmd窗口，会输出请求的如下所示</p>
 <figure>
-<img src="https://wulc.me/imgs/2016-01-09_103748.png" alt="请求情况" />
+<img data-src="https://wulc.me/imgs/2016-01-09_103748.png" alt="请求情况" />
 <figcaption aria-hidden="true">请求情况</figcaption>
 </figure>
 <p>可以看到总共有两个请求源，其中<code>LC-PC</code>是通过电脑浏览器输入<code>localhost</code>访问,而<code>192.168.1.109</code>是通过手机浏览器访问的（电脑和手机在同一局域网下）；输出的内容包括请求的ip，时间和http请求头。</p>
@@ -314,6 +317,25 @@ alt="浏览器观察" />
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -456,7 +478,7 @@ alt="浏览器观察" />
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -479,6 +501,10 @@ alt="浏览器观察" />
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

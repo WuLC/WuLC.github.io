@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="本文主要介绍强化学习的一些基本概念：包括MDP、Bellman方程等, 并且讲述了如何从 MDP 过渡到 Reinforcement Learning。">
@@ -86,6 +87,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -184,6 +186,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -261,7 +264,7 @@ class="math inline">\(a_t\)</span> 执行。环境则根据 agent 的动作给 a
 反馈一个 reward <span class="math inline">\(r_t\)</span>，同时 agent
 进入一个新的状态。</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1ccqng08l1lvo11kge3157hfgj9.png"
+<img data-src="https://wulc.me/imgs/image_1ccqng08l1lvo11kge3157hfgj9.png"
 alt="RL" />
 <figcaption aria-hidden="true">RL</figcaption>
 </figure>
@@ -384,7 +387,7 @@ class="math inline">\(i\)</span>
 <p>计算的出收敛的价值函数后，通过公式1就能够得出策略函数 <span
 class="math inline">\(\pi\)</span> 了，其迭代过程如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1cctfljjh1bv918u91j9g1fgs1ln89.png"
+<img data-src="https://wulc.me/imgs/image_1cctfljjh1bv918u91j9g1fgs1ln89.png"
 alt="Value Iteration" />
 <figcaption aria-hidden="true">Value Iteration</figcaption>
 </figure>
@@ -404,7 +407,7 @@ class="math inline">\(\pi\)</span>)产生新的样本，然后使用新的样本
 class="math inline">\(V(s)\)</span>)，然后利用策略的价值更新策略，然后不断反复。理论可以证明最终策略将收敛到最优</p>
 <p>具体的算法流程如下所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1cctgird1rv11gljv1f72esim.png"
+<img data-src="https://wulc.me/imgs/image_1cctgird1rv11gljv1f72esim.png"
 alt="Policy Iteration" />
 <figcaption aria-hidden="true">Policy Iteration</figcaption>
 </figure>
@@ -461,6 +464,25 @@ target="_blank" rel="noopener" href="https://morvanzhou.github.io/tutorials/mach
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -604,7 +626,7 @@ Learning</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a cla
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -627,6 +649,10 @@ Learning</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a cla
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

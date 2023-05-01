@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="《Programming Collective Intelligence》（中文名为《集体智慧编程》），是一本关于数据挖掘的书籍，每一章都会通过一个实际的例子来讲述某个机器学习算法，同时会涉及到数据的采集和处理等，是一本实践性很强的书籍。 本文是本书的第三章 Discovering Groups的读书笔记 ,主要介绍了对文本进行聚类以及对聚类后的结果进行可视化。">
@@ -89,6 +90,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -187,6 +189,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -293,13 +296,13 @@ Clustering） 和 KMeans聚类（KMeans Clustering）。</p>
 Clustering）</h3>
 <p>逐层聚类的思想很简单，每次将距离最近的两个cluster进行聚类，组成一个新的类，然后重复此过程直到只剩下一个最大的cluster。整个过程如下图所示：</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b8ue970m4gnksh14q83vd1jir9.png"
+<img data-src="https://wulc.me/imgs/image_1b8ue970m4gnksh14q83vd1jir9.png"
 alt="逐层聚类" />
 <figcaption aria-hidden="true">逐层聚类</figcaption>
 </figure>
 <p>这种聚类方法的具体过程如同构造一棵树，其中每个叶子节点表示一个单一的实例，而其他节点表示由多个实例聚成的cluster。</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b8uejmpl1iikcki1nj510ds1aj4m.png"
+<img data-src="https://wulc.me/imgs/image_1b8uejmpl1iikcki1nj510ds1aj4m.png"
 alt="逐层聚类树状图" />
 <figcaption aria-hidden="true">逐层聚类树状图</figcaption>
 </figure>
@@ -353,7 +356,7 @@ python
 clusters，然后在训练数据的范围内随机选择 k 个初始点作为初始 k 个 cluster
 的中心，并将每个实例聚类到离其最近的一个cluster，所有的点都分到离其最近的cluster后，根据各个cluster中的点重新调整这个cluster的中心。重复这个过程直到每个cluster中的点不变为止。如下图为KMeans的过程</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b92sg3ts1epk1v1g1tkd2j5m9rp.png"
+<img data-src="https://wulc.me/imgs/image_1b92sg3ts1epk1v1g1tkd2j5m9rp.png"
 alt="KMeans聚类过程" />
 <figcaption aria-hidden="true">KMeans聚类过程</figcaption>
 </figure>
@@ -366,7 +369,7 @@ python image library(PIL) 实现。</p>
 <h3 id="逐层聚类结果可视化">逐层聚类结果可视化</h3>
 <p>从上面的算法描述可知，逐层距离每次将两个cluster聚合在一起，从构造过程来看，实际上最终是构造了一颗二叉树，因此这里会以二叉树的形式将聚类的结果可视化。由于二叉树叶子节点过多，为了便于展示，将二叉树横着放，如下图就是二叉树的放置方式</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b8uejmpl1iikcki1nj510ds1aj4m.png"
+<img data-src="https://wulc.me/imgs/image_1b8uejmpl1iikcki1nj510ds1aj4m.png"
 alt="逐层聚类树状图" />
 <figcaption aria-hidden="true">逐层聚类树状图</figcaption>
 </figure>
@@ -390,7 +393,7 @@ target="_blank" rel="noopener" href="http://effbot.org/imagingbook/pil-index.htm
 target="_blank" rel="noopener" href="https://github.com/WuLC/MachineLearningAlgorithm/blob/master/python/Clustering/HierarchicalClustering.py">这里</a>获取</p>
 <p>作图的结果如下所示：</p>
 <figure>
-<img src="https://wulc.me/imgs/clusters.jpg" alt="逐层层聚类的可视化" />
+<img data-src="https://wulc.me/imgs/clusters.jpg" alt="逐层层聚类的可视化" />
 <figcaption aria-hidden="true">逐层层聚类的可视化</figcaption>
 </figure>
 <h3 id="kmeans聚类结果可视化">KMeans聚类结果可视化</h3>
@@ -422,7 +425,7 @@ target="_blank" rel="noopener" href="http://blog.csdn.net/Dark_Scope/article/det
 target="_blank" rel="noopener" href="https://github.com/WuLC/MachineLearningAlgorithm/blob/master/python/Clustering/KMeansClustering.py">这里</a></p>
 <p>当类别数为3时，上面可视化得到的结果为：</p>
 <figure>
-<img src="https://wulc.me/imgs/mds2d.jpg" alt="KMeans可视化结果" />
+<img data-src="https://wulc.me/imgs/mds2d.jpg" alt="KMeans可视化结果" />
 <figcaption aria-hidden="true">KMeans可视化结果</figcaption>
 </figure>
 <p>除了博客数据，原书还用了 Zebo
@@ -447,6 +450,25 @@ Tanimoto coefficient，表示距离值越小，两者越相似。</p>
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -590,7 +612,7 @@ Clustering）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -613,6 +635,10 @@ Clustering）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

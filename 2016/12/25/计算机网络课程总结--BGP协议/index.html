@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="路由器工作在IP层，其作用是根据IP地址将数据包传输到正确的目的地，因此路由器必须要知道网络的“地图”才能正确投递，而这个网络的“地图”就是存储在路由表中的路由规则，简称为路由。 根据获得路由的方式可以将其分为静态路由和动态路由，静态路由就是管理员静态配置的路由，动态路由则是路由器通过算法动态地学习和调整而得到的路由。而常说的路由协议就是指这些动态路由的学习算法，根据其作用域的不同，又可分为内部网">
@@ -100,6 +101,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -198,6 +200,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -264,7 +267,7 @@
 <span id="more"></span>
 <p>当网络过大的时候，也会导致路由表过大而难以维护，这时候采用分治的方法，将一个大网络划分为若干个小网络，这些小网络称为自治系统(AS)，BGP的诞生就是用于自治系统间的通信。其在网络中的位置如下</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4prb5s1hkr1g1e10ct6m31tbi9.png"
+<img data-src="https://wulc.me/imgs/image_1b4prb5s1hkr1g1e10ct6m31tbi9.png"
 alt="BGP在网络中的作用" />
 <figcaption aria-hidden="true">BGP在网络中的作用</figcaption>
 </figure>
@@ -275,26 +278,26 @@ alt="BGP在网络中的作用" />
 的ASN扩展为32位空间。</p>
 <p>AS根据其位置的不同，也被分为为不同类型的AS。</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4priggn1jm11lenathpn3ksfm.png"
+<img data-src="https://wulc.me/imgs/image_1b4priggn1jm11lenathpn3ksfm.png"
 alt="AS类型" />
 <figcaption aria-hidden="true">AS类型</figcaption>
 </figure>
 <p>一般来说，AS号码只是在一家ISP与至少两家ISP做对等互联，交换路由的时候才需要用到，也就是说一个国家的AS号码的数量实际上是跟大中型ISP的数量有关。</p>
 <p>BGP 是运行在TCP协议上的，与其他路由协议对比如下</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4ps6iif7jivkb1c48ba08gh13.png"
+<img data-src="https://wulc.me/imgs/image_1b4ps6iif7jivkb1c48ba08gh13.png"
 alt="BGP与其他路由协议所在位置对比" />
 <figcaption
 aria-hidden="true">BGP与其他路由协议所在位置对比</figcaption>
 </figure>
 <p>BGP
 是一种距离矢量路由协议，但避免了环路；其避免环路的策略是不仅仅记录路径代价，还记录下全路径信息。如下图所示
-<img src="https://wulc.me/imgs/image_1b4pt0mcc2f1rg51ql8j0p1iad1g.png"
+<img data-src="https://wulc.me/imgs/image_1b4pt0mcc2f1rg51ql8j0p1iad1g.png"
 alt="BGP避免环路" /></p>
 <p>BGP有两种邻居，其中运行在同一个AS内的BGP邻居称为IBGP(Interior
 BGP),不同AS间的邻居称为EBGP(Exterior
 BGP)，注意无论是IBGP或者EBGP，上面都必须运行着BGP协议，也就是说与BGP路由器直连的内部路由器不一定是它的IBGP，如下图所示
-<img src="https://wulc.me/imgs/image_1b4ptstpf1kfkdiqc3fe561i561t.png"
+<img data-src="https://wulc.me/imgs/image_1b4ptstpf1kfkdiqc3fe561i561t.png"
 alt="BGP的邻居类型" /></p>
 <p>注意：BGP邻居不是自动发现的，而是手动配置的，原因有以下两点：
 1）可以<strong>与对端设备用任何IP地址建立邻居，而不限于某个固定的接口IP</strong>。这样，当两台
@@ -321,14 +324,14 @@ alt="BGP的邻居类型" /></p>
 <p>一张是存放普通路由的路由表，被称为<strong>IGP路由表</strong>，就时平时我们使用命令<code>show ip route</code>看到的路由表，IGP路由表的路由信息只能从<strong>IGP协议和手工配置</strong>获得，并且只能传递给IGP协议；另外一张就是运行BGP之后创建的路由表，称为<strong>BGP路由表</strong>，需要通过命令<code>show ip bgp</code>才能查看，<strong>BGP路由表的路由信息只能传递给BGP协议，如果两台BGP邻居的BGP路由表为空，就不会有任何路由传递。</strong></p>
 <p>在初始状态下，BGP的路由表为空，没有任何路由，要让BGP传递相应的路由，只能先<strong>将该路由注入BGP路由表，之后才能在BGP邻居之间传递。</strong>注入的方式有多种，如
 1）<strong>动态注入</strong>：将IGP(如OSPF)发现的路由纯动态地注入到BGP路由表中，这种方式配置简单，但操控性差，可能不稳定。具体过程及配置如下图所示：
-<img src="https://wulc.me/imgs/image_1b4pvi3j614k817qs426jfc1v22a.png"
+<img data-src="https://wulc.me/imgs/image_1b4pvi3j614k817qs426jfc1v22a.png"
 alt="动态注入" />
 2）<strong>半动态路由注入</strong>：通过IGP协议(如OSPF)学习到的路由，再通过
 network 发布到BGP中。具体过程及配置如下图所示： <img
 src="https://wulc.me/imgs/image_1b4pvj0ts61dfimft2m4k7q2n.png"
 alt="半动态路由" /></p>
 <p>3）<strong>静态路由注入</strong>：工配置的静态路由，再由network发布到BGP中。具体过程及配置如下图所示：
-<img src="https://wulc.me/imgs/image_1b4pvlkhvvb1uai1l5smuc1eks34.png"
+<img data-src="https://wulc.me/imgs/image_1b4pvlkhvvb1uai1l5smuc1eks34.png"
 alt="静态路由注入" /></p>
 <p>在BGP路由表注入路由后，BGP路由器之间会将这些路由在BGP路由器间进行<strong>通告</strong>。通告要遵守以下规则</p>
 <ul>
@@ -366,7 +369,7 @@ Incomplete 其中，IGP优先级比Incomplete的要高。</p>
 <p>描述了该路由经过的AS组成的路径，AS路径中不能算上自己的AS，从离自己最近的AS开始，以目的网络的AS结束。下图为
 AS5 到 AS1 的路由的AS Path属性</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4r0qskcqgv7k8qt21502gjo9.png"
+<img data-src="https://wulc.me/imgs/image_1b4r0qskcqgv7k8qt21502gjo9.png"
 alt="as path属性" />
 <figcaption aria-hidden="true">as path属性</figcaption>
 </figure>
@@ -375,7 +378,7 @@ Path属性中含有自己AS的路由的时候丢弃该路由。</p>
 <p>在选路的时候，优先选<code>AS PATH</code>最短的那条，如果<code>AS PATH</code>距离相等，则优选本AS内到出口路由器最短的那根，如果还相等，则选择Router_ID（发送路由的路由器）最小的那根</p>
 <p>但是要注意，这种选择并不总是明智的，如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4r18fev79qqsg1pin9r7lt1m.png"
+<img data-src="https://wulc.me/imgs/image_1b4r18fev79qqsg1pin9r7lt1m.png"
 alt="as path选路并非最优" />
 <figcaption aria-hidden="true">as path选路并非最优</figcaption>
 </figure>
@@ -383,25 +386,25 @@ alt="as path选路并非最优" />
 <p>指示下一个AS的路由器入口的网段，同一个AS内Next
 hop的值不变,如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4r1jbg51jo0ncd1uc81i4p14mi13.png"
+<img data-src="https://wulc.me/imgs/image_1b4r1jbg51jo0ncd1uc81i4p14mi13.png"
 alt="next hop 属性" />
 <figcaption aria-hidden="true">next hop 属性</figcaption>
 </figure>
 <h3 id="local-pref属性"><strong>local pref属性</strong></h3>
 <p>可选的属性，用于引导流量，local pref的缺省值是100，如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4r1m0rh1h0etab7ha14ih38q1t.png"
+<img data-src="https://wulc.me/imgs/image_1b4r1m0rh1h0etab7ha14ih38q1t.png"
 alt="local pref 属性" />
 <figcaption aria-hidden="true">local pref 属性</figcaption>
 </figure>
 <h3 id="medmulti-exit-distiguisher属性"><strong>MED(Multi Exit
 Distiguisher)属性</strong></h3>
 <p>当AS有多个出口的时候，告诉上游的AS如何选最优的路，MED值越小，优先级越高
-<img src="https://wulc.me/imgs/image_1b4r21j0o1shtjj51ljoksef3j2a.png"
+<img data-src="https://wulc.me/imgs/image_1b4r21j0o1shtjj51ljoksef3j2a.png"
 alt="MED属性" /></p>
 <p>BGP 选路的策略为</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4r2bo1e1g9ff12lu21kf6sr52n.png"
+<img data-src="https://wulc.me/imgs/image_1b4r2bo1e1g9ff12lu21kf6sr52n.png"
 alt="BGP选路策略" />
 <figcaption aria-hidden="true">BGP选路策略</figcaption>
 </figure>
@@ -417,7 +420,7 @@ alt="BGP选路策略" />
 <p><strong>BGP聚合</strong>
 由于BGP路由器的路由表庞大，往往超过10万条，通过BGP聚合(BGP支持CIDR)解决这个问题，如下图AS100先将内部的路由聚合再通告给AS200</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4r3gu921kqn1b8b1nab3i31btbm.png"
+<img data-src="https://wulc.me/imgs/image_1b4r3gu921kqn1b8b1nab3i31btbm.png"
 alt="BGP聚合" />
 <figcaption aria-hidden="true">BGP聚合</figcaption>
 </figure>
@@ -425,13 +428,13 @@ alt="BGP聚合" />
 从前面的描述可知，从IBGP收到的路由不会通告给其他的IBGP（避免环路），所以AS内部的IBGP必须全连接。但是IBGP相邻体过多，逻辑全链接不现实，实际中通过BGP联盟和反射解决这个问题。</p>
 <p>BGP联盟就是将大的AS分割成小的AS，从而减少全连接的数目。</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4r3o8geqal133vuvp1i0ij251j.png"
+<img data-src="https://wulc.me/imgs/image_1b4r3o8geqal133vuvp1i0ij251j.png"
 alt="BGP联盟" />
 <figcaption aria-hidden="true">BGP联盟</figcaption>
 </figure>
 <p>BGP反射是通过将网络内的路由器划分为客户机，非客户机以及路由反射器的角色，从而减少IBGP间的连接，如下图所示：</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4r4ha631mpv1dhu1hb355dpl420.png"
+<img data-src="https://wulc.me/imgs/image_1b4r4ha631mpv1dhu1hb355dpl420.png"
 alt="BGP反射" />
 <figcaption aria-hidden="true">BGP反射</figcaption>
 </figure>
@@ -449,13 +452,13 @@ BGP衰减是为了处理不稳定的路由（如路由频繁更新），避免�
 <p>通常在路由器配置BGP需要开启BGP进程，指定AS号码，指定邻居(EBGP或IBGP)并注入BGP路由，如下是一个简单的例子
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">//开启BGP进程，指定AS号</span><br><span class="line">Router(config)#router bgp as-number  </span><br><span class="line">//注入BGP路由</span><br><span class="line">Router(config-router)#network network-number [mask network-mask] </span><br><span class="line">//指定EBGP或IBGP(as-number 决定)</span><br><span class="line">Router(config-router)#neighbor ip-address remote-as as-number</span><br></pre></td></tr></table></figure> 下图是一个简单的例子：</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4r55j8612a01umq1ker16cbdbm2d.png"
+<img data-src="https://wulc.me/imgs/image_1b4r55j8612a01umq1ker16cbdbm2d.png"
 alt="BGP配置" />
 <figcaption aria-hidden="true">BGP配置</figcaption>
 </figure>
 <p>除此以外，还有一些检查BGP工作情况的命令如下所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4r58c36qjn1b7s18001rsmq762q.png"
+<img data-src="https://wulc.me/imgs/image_1b4r58c36qjn1b7s18001rsmq762q.png"
 alt="检查BGP配置" />
 <figcaption aria-hidden="true">检查BGP配置</figcaption>
 </figure>
@@ -465,6 +468,25 @@ alt="检查BGP配置" />
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -607,7 +629,7 @@ Distiguisher)属性</span></a></li></ol></li><li class="nav-item nav-level-2"><a
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -630,6 +652,10 @@ Distiguisher)属性</span></a></li></ol></li><li class="nav-item nav-level-2"><a
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="本文是 程序的表示、转换与链接 中第 7 周的内容，主要介绍了 C 语言程序中过程调用、也就是函数调用对应的机器级表示， 包括如何传递参数，如何将控制转移到被调用过程， 寄存器使用约定，递归函数的实现等等。 通过了解这些内容，能够更清楚机器执行的详细过程，同时也能更清楚函数调用过程中栈空间是如何变化的；课程选用的指令系统是前面介绍过的IA-32指令系统。">
@@ -96,6 +97,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -194,6 +196,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -278,7 +281,7 @@ target="_blank" rel="noopener" href="https://www.coursera.org/learn/jisuanji-xit
 <p>关于第二个问题，参数是通过栈传递的，即在调用的时候会把参数压栈，如下所示是进程的虚拟地址(也叫)空间分布的情况，其中<strong>栈是从高地址往低地址增长的，指向栈顶的指针也叫
 ESP 指针</strong></p>
 <figure>
-<img src="https://wulc.me/imgs/exec2virtualaddress.jpg"
+<img data-src="https://wulc.me/imgs/exec2virtualaddress.jpg"
 alt="exec2virtualaddress" />
 <figcaption aria-hidden="true">exec2virtualaddress</figcaption>
 </figure>
@@ -288,7 +291,7 @@ alt="exec2virtualaddress" />
 过程做的则是保存现场、执行被调用函数，恢复现场并返回调用函数；其中<strong>现场指的是共享的通用寄存器</strong>，因为是共享的，因此被
 Q 使用时需要先保存 P 之前在上面的值，后面再恢复</p>
 <figure>
-<img src="https://wulc.me/imgs/procedure_call_process.jpg"
+<img data-src="https://wulc.me/imgs/procedure_call_process.jpg"
 alt="过程调用机器执行过程" />
 <figcaption aria-hidden="true">过程调用机器执行过程</figcaption>
 </figure>
@@ -307,13 +310,13 @@ EAX、EDX 和 ECX 这几个寄存器</strong></p>
 是帧指寄存器和栈指寄存器，分别用来指向当前栈帧的底部和顶部</strong></p>
 <p>因此，过程 P 调用过程 Q 时栈和栈帧的变化如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/stackAndStackFrame.jpg"
+<img data-src="https://wulc.me/imgs/stackAndStackFrame.jpg"
 alt="stackAndStackFrame" />
 <figcaption aria-hidden="true">stackAndStackFrame</figcaption>
 </figure>
 <p>上面简单介绍了过程调用的一些基本操作，下图则是基于上面的例子更详细地描述其对应的汇编指令和栈的变化</p>
 <figure>
-<img src="https://wulc.me/imgs/procedure_example.jpg"
+<img data-src="https://wulc.me/imgs/procedure_example.jpg"
 alt="procedure example" />
 <figcaption aria-hidden="true">procedure example</figcaption>
 </figure>
@@ -338,13 +341,13 @@ movl，起作用便是形成栈底</p>
 </ul>
 <p>因此，一个 C 过程的大致结构如下</p>
 <figure>
-<img src="https://wulc.me/imgs/procedure_summary.jpeg" alt="summary" />
+<img data-src="https://wulc.me/imgs/procedure_summary.jpeg" alt="summary" />
 <figcaption aria-hidden="true">summary</figcaption>
 </figure>
 <h2 id="过程调用的参数传递">过程调用的参数传递</h2>
 <p>这里讲了一个比较经典的例子，就是按地址传参和按值传参带来的会带来不同结果，其中的原因就是这两种方式最终对应的机器指令是不一样的</p>
 <figure>
-<img src="https://wulc.me/imgs/swap_compare.jpg" alt="swap compare" />
+<img data-src="https://wulc.me/imgs/swap_compare.jpg" alt="swap compare" />
 <figcaption aria-hidden="true">swap compare</figcaption>
 </figure>
 <p>下面是上面分别按地址传递和按照参数传递对应的汇编指令，从中可知，两者的一些关键区别有</p>
@@ -357,18 +360,18 @@ movl，起作用便是形成栈底</p>
 个寄存器，只是对入口的参数进行交换</li>
 </ul>
 <figure>
-<img src="https://wulc.me/imgs/swap_address_val.jpg"
+<img data-src="https://wulc.me/imgs/swap_address_val.jpg"
 alt="swap address" />
 <figcaption aria-hidden="true">swap address</figcaption>
 </figure>
 <figure>
-<img src="https://wulc.me/imgs/swap_value_val.jpg" alt="swap val" />
+<img data-src="https://wulc.me/imgs/swap_value_val.jpg" alt="swap val" />
 <figcaption aria-hidden="true">swap val</figcaption>
 </figure>
 <h2 id="递归过程调用">递归过程调用</h2>
 <p>下图是一个简单的递归过程对应的机器指令，假定这个过程是通过P调用的</p>
 <figure>
-<img src="https://wulc.me/imgs/recursive_call_compilation_code.jpg"
+<img data-src="https://wulc.me/imgs/recursive_call_compilation_code.jpg"
 alt="recursive compile code" />
 <figcaption aria-hidden="true">recursive compile code</figcaption>
 </figure>
@@ -386,7 +389,7 @@ L2
 </ul>
 <p>因此，递归过程的总体执行流程如下</p>
 <figure>
-<img src="https://wulc.me/imgs/recursive_call.jpg" alt="recursive" />
+<img data-src="https://wulc.me/imgs/recursive_call.jpg" alt="recursive" />
 <figcaption aria-hidden="true">recursive</figcaption>
 </figure>
 <p>递归调用中有很多额外的开销，这种额外的开销体现在</p>
@@ -399,7 +402,7 @@ L2
 <h2 id="选择结构的机器级指令">选择结构的机器级指令</h2>
 <p>if-else, 用了条件转移指令 jbe 和无条件转移指令 jmp</p>
 <figure>
-<img src="https://wulc.me/imgs/if_else_compilation_code.jpg"
+<img data-src="https://wulc.me/imgs/if_else_compilation_code.jpg"
 alt="if-else" />
 <figcaption aria-hidden="true">if-else</figcaption>
 </figure>
@@ -407,21 +410,21 @@ alt="if-else" />
 其跳转到的目标实际上是通过基址加比例变址加位移量的方式来找到的。这个跳转表实际上是在在后面讲到的目标文件中(可重定位目标文件或者是可执行目标文件)。
 在这些文件当中都有相应的一个段，叫只读数据节，rodata。</p>
 <figure>
-<img src="https://wulc.me/imgs/switch_compilation.jpg"
+<img data-src="https://wulc.me/imgs/switch_compilation.jpg"
 alt="swithc compilation" />
 <figcaption aria-hidden="true">swithc compilation</figcaption>
 </figure>
 <h2 id="循环结构的机器级指令">循环结构的机器级指令</h2>
 <p>循环结构的逻辑及其机器级表示如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/cycle_structure.jpg"
+<img data-src="https://wulc.me/imgs/cycle_structure.jpg"
 alt="cycle structure" />
 <figcaption aria-hidden="true">cycle structure</figcaption>
 </figure>
 <p>下面是 for
 循环语句的机器代码及其分析，其他循环结构的机器指令结构类似，从中可知，实现同样功能，循环比起递归要节省时间和空间，因此优先使用循环方式去实现</p>
 <figure>
-<img src="https://wulc.me/imgs/for_compilation.jpg"
+<img data-src="https://wulc.me/imgs/for_compilation.jpg"
 alt="for compilation" />
 <figcaption aria-hidden="true">for compilation</figcaption>
 </figure>
@@ -434,6 +437,25 @@ alt="for compilation" />
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -575,7 +597,7 @@ alt="for compilation" />
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -598,6 +620,10 @@ alt="for compilation" />
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

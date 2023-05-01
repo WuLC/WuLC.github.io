@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="最近需要频繁切换使用台式机和笔记本，但是我的小桌子上实在没法同时放得下一个键盘和笔记本 （≧0≦）。哪怕凑合挤下，还得不停在两台电脑之间切换键鼠，因此就想着有没有共享键鼠的方案，结果在网上找到了 Synergy，试了几天后发现这真的是一个共享键鼠的神器。">
@@ -88,6 +89,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -186,6 +188,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -268,14 +271,14 @@ Client 应该在同一局域网内</p>
 <p>Server 端的配置过程如下</p>
 <p>首先在下图点击<code>设置服务器</code></p>
 <figure>
-<img src="https://wulc.me/imgs/server_stat.png"
+<img data-src="https://wulc.me/imgs/server_stat.png"
 alt="server_stat.png-87.8kB" />
 <figcaption aria-hidden="true">server_stat.png-87.8kB</figcaption>
 </figure>
 <p>出现下图后从右上角将电脑图标拖入网格内，有几台clinet就拖几台，然后进行命名（下图我拖了一台client
 并命名为 435LC）这里的命名保持和客户端一致即可。</p>
 <figure>
-<img src="https://wulc.me/imgs/server.png" alt="server.png-53.7kB" />
+<img data-src="https://wulc.me/imgs/server.png" alt="server.png-53.7kB" />
 <figcaption aria-hidden="true">server.png-53.7kB</figcaption>
 </figure>
 <h3 id="client">Client</h3>
@@ -284,7 +287,7 @@ alt="server_stat.png-87.8kB" />
 中的屏幕名一致，接着点击启动即可，下面的console 会输出相应的 log
 信息</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1c9tm4g7acg5k0pph1fdt16061p.png"
+<img data-src="https://wulc.me/imgs/image_1c9tm4g7acg5k0pph1fdt16061p.png"
 alt="client" />
 <figcaption aria-hidden="true">client</figcaption>
 </figure>
@@ -296,13 +299,13 @@ ctrl+c/v</p>
 <p>如下是打开系统偏好设置-&gt;键盘后的界面，通过 +
 号添加相应的快捷键即可</p>
 <figure>
-<img src="https://wulc.me/imgs/key_binding.png" alt="key binding" />
+<img data-src="https://wulc.me/imgs/key_binding.png" alt="key binding" />
 <figcaption aria-hidden="true">key binding</figcaption>
 </figure>
 <p>需要注意的是上面的<strong>快捷键的名称需要与你系统保持一致</strong>，具体可通过任意窗口的菜单中的编辑项查询，如下就是我所用的
 mbp 的一个快捷键的名称，比如撤消不能写成撤销，否则快捷键不生效。</p>
 <figure>
-<img src="https://wulc.me/imgs/keyname.png" alt="key name" />
+<img data-src="https://wulc.me/imgs/keyname.png" alt="key name" />
 <figcaption aria-hidden="true">key name</figcaption>
 </figure>
 <h2 id="文件传输">文件传输</h2>
@@ -314,7 +317,7 @@ mbp 的一个快捷键的名称，比如撤消不能写成撤销，否则快捷�
 <p>最后祭上一张我的工作台的图片，不得不说 mbp
 的触摸板就是好用，有效预防鼠标手 ～(￣▽￣～)(～￣▽￣)～</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1c9tnc61g13g21jab9dpvp1lau26.png"
+<img data-src="https://wulc.me/imgs/image_1c9tnc61g13g21jab9dpvp1lau26.png"
 alt="work desk" />
 <figcaption aria-hidden="true">work desk</figcaption>
 </figure>
@@ -324,6 +327,25 @@ alt="work desk" />
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -465,7 +487,7 @@ alt="work desk" />
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -488,6 +510,10 @@ alt="work desk" />
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

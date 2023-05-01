@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="从互联网搜集的一些比较有趣的题目，通过python实现，换成其他语言大多也能实现。题目会尽量保持更新,如果您有好的项目推荐，欢迎在评论区留言。 github地址:https:&#x2F;&#x2F;github.com&#x2F;WuLC&#x2F;show-me-the-code  Talk is cheap. Show me the code.--Linus Torvalds">
@@ -88,6 +89,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -186,6 +188,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -257,7 +260,7 @@
 头像（或者微博头像）右上角加上红色的数字，类似于微信未读信息数量那种提示效果。
 类似于图中效果</p>
 <figure>
-<img src="https://wulc.me/imgs/result1.jpg" alt="头像" />
+<img data-src="https://wulc.me/imgs/result1.jpg" alt="头像" />
 <figcaption aria-hidden="true">头像</figcaption>
 </figure>
 <p><strong>第 0001 题：</strong>做为 Apple Store App
@@ -284,7 +287,7 @@ txt，为了避免分词的问题，假设内容都是英文，请统计出你�
 <p><strong>第 0010 题：</strong>使用 Python
 生成类似于下图中的<strong>字母验证码图片</strong>,同时写出识别验证码的程序。</p>
 <figure>
-<img src="https://wulc.me/imgs/aVhbegV.jpg" alt="字母验证码" />
+<img data-src="https://wulc.me/imgs/aVhbegV.jpg" alt="字母验证码" />
 <figcaption aria-hidden="true">字母验证码</figcaption>
 </figure>
 <ul>
@@ -320,7 +323,7 @@ target="_blank" rel="noopener" href="https://www.zhihu.com/question/24340705">�
 &#125;</code></pre>
 <p>请将上述内容写到 student.xls 文件中，如下图所示：</p>
 <figure>
-<img src="https://wulc.me/imgs/nPDlpme.jpg" alt="student.xls" />
+<img data-src="https://wulc.me/imgs/nPDlpme.jpg" alt="student.xls" />
 <figcaption aria-hidden="true">student.xls</figcaption>
 </figure>
 <ul>
@@ -337,7 +340,7 @@ target="_blank" rel="noopener" href="http://www.cnblogs.com/skynet/archive/2013/
 &#125;</code></pre>
 <p>请将上述内容写到 city.xls 文件中，如下图所示：</p>
 <figure>
-<img src="https://wulc.me/imgs/rOHbUzg.png" alt="city.xls" />
+<img data-src="https://wulc.me/imgs/rOHbUzg.png" alt="city.xls" />
 <figcaption aria-hidden="true">city.xls</figcaption>
 </figure>
 <p><strong>第 0016 题：</strong> 纯文本文件 numbers.txt,
@@ -349,7 +352,7 @@ target="_blank" rel="noopener" href="http://www.cnblogs.com/skynet/archive/2013/
 ]</code></pre>
 <p>请将上述内容写到 numbers.xls 文件中，如下图所示：</p>
 <figure>
-<img src="https://wulc.me/imgs/iuz0Pbv.png" alt="numbers.xls" />
+<img data-src="https://wulc.me/imgs/iuz0Pbv.png" alt="numbers.xls" />
 <figcaption aria-hidden="true">numbers.xls</figcaption>
 </figure>
 <p><strong>第 0017 题：</strong> 将第 0014 题中的 student.xls
@@ -425,7 +428,7 @@ database</a></p></li>
 Web 框架</a></p>
 <ul>
 <li><figure>
-<img src="https://wulc.me/imgs/image_1aoqu2cj46e018hhp4g27d1fs19.png"
+<img data-src="https://wulc.me/imgs/image_1aoqu2cj46e018hhp4g27d1fs19.png"
 alt="留言簿参考" />
 <figcaption aria-hidden="true">留言簿参考</figcaption>
 </figure></li>
@@ -440,6 +443,25 @@ src="https://wulc.me/imgs/image_1atfr8u7f180e1lm61ns91321qsr9.png" /></p>
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -580,7 +602,7 @@ src="https://wulc.me/imgs/image_1atfr8u7f180e1lm61ns91321qsr9.png" /></p>
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -603,6 +625,10 @@ src="https://wulc.me/imgs/image_1atfr8u7f180e1lm61ns91321qsr9.png" /></p>
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="本系列文章是学习课程 6.824: Distributed Systems 时的一些学习笔记，整个课程的相关材料已整理至 DistributedSystemInGo。本文是 LEC3 的内容，介绍了分布式文件系统 GFS，GFS 为 MapReduce 提供了存储，同样是出自 Google，同样是年代久远，但是其中的一些设计思想同样值得我们参考。">
@@ -89,6 +90,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -187,6 +189,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -274,7 +277,7 @@ write 也支持，但是不是优化的目标</li>
 <h2 id="系统结构">系统结构</h2>
 <p>GFS 总体的系统结构如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/GFS_Architecture.png" alt="GFS" />
+<img data-src="https://wulc.me/imgs/GFS_Architecture.png" alt="GFS" />
 <figcaption aria-hidden="true">GFS</figcaption>
 </figure>
 <p>整个系统包括一个 master 和若干个 chunkservers，master
@@ -371,7 +374,7 @@ master 请求这些信息</li>
 secondary，primary 用于确定数据写入这个 chunk 的顺序，secondary 则复制
 primary 的写入顺序即可</strong>，下图是一个写操作的流程</p>
 <figure>
-<img src="https://wulc.me/imgs/gfs_write_operation.png"
+<img data-src="https://wulc.me/imgs/gfs_write_operation.png"
 alt="gfs_write" />
 <figcaption aria-hidden="true">gfs_write</figcaption>
 </figure>
@@ -465,7 +468,7 @@ atomicity；而对于修改 metadata 的 concurrent operation，operation log
 <p>因此这里的一致性着重讨论的是文件的一致性，GFS
 针对文件定义了以下的一致性状态</p>
 <figure>
-<img src="https://wulc.me/imgs/gfs_consistent_state.png"
+<img data-src="https://wulc.me/imgs/gfs_consistent_state.png"
 alt="consistent state" />
 <figcaption aria-hidden="true">consistent state</figcaption>
 </figure>
@@ -486,7 +489,7 @@ target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/28155582">这�
 串行更新时时，客户端自己知道写入文件范围以及写入数据内容，且本次写入在数据服务器的多副本上均执行成功。因此，本次写结果对于客户端来说就是明确的，且多副本上数据一致，故而结果是
 <strong>defined</strong>。如下图：</p>
 <figure>
-<img src="https://wulc.me/imgs/gfs_defined_write.png"
+<img data-src="https://wulc.me/imgs/gfs_defined_write.png"
 alt="gfs-defined" />
 <figcaption aria-hidden="true">gfs-defined</figcaption>
 </figure>
@@ -497,7 +500,7 @@ primary
 才能决定谁先写谁后写），因此，即使写入成功，客户端仍无法确定在并发写入时交叉部分最终写入结果，但是因为写入成功，所以多副本数据必然一致，
 如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/gfs_consistent_undefined_write.png"
+<img data-src="https://wulc.me/imgs/gfs_consistent_undefined_write.png"
 alt="consistent_undefined" />
 <figcaption aria-hidden="true">consistent_undefined</figcaption>
 </figure>
@@ -523,13 +526,13 @@ inconsistent，必然也是undefined。</p>
 根据当前文件大小决定写入offset，在写入成功后将该offset返回给客户端。因此，<strong>客户端能够根据offset
 确切知道写入结果，无论是串行写入还是并发写入，其行为是defined</strong>。如下所示</p>
 <figure>
-<img src="https://wulc.me/imgs/gfs_defined_append.png"
+<img data-src="https://wulc.me/imgs/gfs_defined_append.png"
 alt="defined append" />
 <figcaption aria-hidden="true">defined append</figcaption>
 </figure>
 <p>假设上面的append经历了一次重试，那可能实际chunk的布局如下</p>
 <figure>
-<img src="https://wulc.me/imgs/gfs_inconsistent_append.png"
+<img data-src="https://wulc.me/imgs/gfs_inconsistent_append.png"
 alt="inconsistent append" />
 <figcaption aria-hidden="true">inconsistent append</figcaption>
 </figure>
@@ -561,6 +564,25 @@ GFS</a></li>
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -702,7 +724,7 @@ GFS</a></li>
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -725,6 +747,10 @@ GFS</a></li>
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

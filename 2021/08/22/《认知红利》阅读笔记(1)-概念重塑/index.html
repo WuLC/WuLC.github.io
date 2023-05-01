@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="最近在看《认知红利》，提到认知，笔者第一时间想到的是认知的四个阶段：不知道自己不知道 -&gt; 知道自己不知道 -&gt; 知道自己知道 -&gt; 不知道自己知道；以及《三体》里那句有名的 “弱小和无知不是生存的障碍，傲慢才是”，而笔者觉得傲慢的原因正是因为“不知道自己不知道”且不愿意去了解，如同井底之蛙一样的看不到更先进的技术，一如闭关锁国的清末，三体里被水滴几乎团灭的人类太空舰队。 回到这">
@@ -91,6 +92,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -189,6 +191,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -346,7 +349,7 @@ target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%BF%83%E6%
 <p><strong>3.重复与耐性</strong></p>
 <p>复利效应天然有个缺陷，就是在初期很漫长的一个时间段里，增效都非常低，低到你几乎感觉不到它在增长。当你已经走到50%的位置的时候，甚至怀疑它的存在</p>
 <p>这个时候绝大多数人可能会放弃，因为大部分人对于世界的理解度是线性的，但更多情况下，事物却是以漫长的潜伏震荡后爆发突破的形式发展的，如果明确你做的事情是有复利效应时，当你想要放弃的时候，不妨回来看看这张图，找找自己所在的位置，然后你相信，你的未来一定是这样的一条曲线，只是现在还没走到“里程碑”这个位置而已</p>
-<p><img src="https://wulc.me/imgs/%E5%A4%8D%E5%88%A9%E6%95%88%E5%BA%94.jpg" height="50%" width="50%"></p>
+<p><img data-src="https://wulc.me/imgs/%E5%A4%8D%E5%88%A9%E6%95%88%E5%BA%94.jpg" height="50%" width="50%"></p>
 <h2 id="重新理解自我">重新理解自我</h2>
 <h3 id="角色化与去角色化">角色化与去角色化</h3>
 <p>人在社会中都会被角色化(或者说标签化)，比如一个人在单位是员工的领导，在家里是孩子的父亲...那么人为什么会被角色化？书里的观点是便于管理和协作，当每个角色都有其规则时，其行为可以被预期，而预判会让协作变得更加高效。</p>
@@ -473,7 +476,7 @@ target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%BF%83%E6%
 渠道问题:线下门店是目前唯一的渠道。</p>
 <p>如果是处在“能力层”的人，他就会胡子眉毛一把抓，针对这些问题提出各种解决办法，比如针对团队问题，他可能会给出一整套员工激励方案;面对营销问题，他可能会增加户外广告，再运营一个公众号;而面对渠道单一的问题，他就会建议也去开个淘宝店......</p>
 <p>如果是处在“BVR层”的人会思考，那么多问题，其中到底哪个才是最关键的问题?经过一番思考，他画出了一个关系图
-<img src="https://wulc.me/imgs/BVR_graph.jpg" height="50%" width="50%">
+<img data-src="https://wulc.me/imgs/BVR_graph.jpg" height="50%" width="50%">
 原来，一切的罪魁祸首，都是因为互联网的连接效率变高，导致了原本市场上的交易结构发生了变化，淘宝店家短路掉了中间的总代、省代、区代......等等这些价值传递的环节，让商品可以用更短的距离来到消费者的面前，所以价格才能那么低。由此导致了后面的一连串反应......
 因此，可以制定出如下战略 (1)短路经济:
 既然淘宝店家能短路掉中间的环节，我实体店为什么 不可以? (2)体验经济:
@@ -494,7 +497,7 @@ target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%BF%83%E6%
 也许这个就能成为你的人生使命，然后再去思考，什么样的身份能够更好地帮你完成这个使命?你就能想清楚身份层次的问题了。</p>
 </blockquote>
 <p>关于方法论部分，即如何成为顶级人才，书里给的方法不是一级级往上打怪升级，而是直接让自己成为一流人才或者顶级人才，对你的人生做个“<strong>顶层设计</strong>”，从精神层开始往下规划，如下图所示</p>
-<p><img src="https://wulc.me/imgs/genius_level.jpg" height="50%" width="50%"></p>
+<p><img data-src="https://wulc.me/imgs/genius_level.jpg" height="50%" width="50%"></p>
 <h3 id="元认知">元认知</h3>
 <p>元认知就是你对自己思考过程的认知与理解。其一般模式是</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">发生了事件A......</span><br><span class="line">→你有了反应B;</span><br><span class="line">→我为什么会有反应B?反应B是对的吗?</span><br><span class="line">→C好像是更适合的反应;</span><br><span class="line">→于是，你有了反应C。</span><br></pre></td></tr></table></figure>
@@ -521,7 +524,7 @@ b. <strong>价值观</strong>:
 <strong>思维方式</strong>: 不同问题的思考方法。 d.
 <strong>方法论</strong>: 专项问题的已知最优解法。 结合前面说的理解问题的
 6 个层次，可画出下图
-<img src="https://wulc.me/imgs/meta_knowledge.jpg" height="50%" width="50%"></p>
+<img data-src="https://wulc.me/imgs/meta_knowledge.jpg" height="50%" width="50%"></p>
 <p>(3)<strong>对问题或者任务:处理</strong>
 你大脑里可能储存了很多套思考方式，当不同的任务、不同的问题进入大脑之后，你得先判断，它属于哪种问题、什么任务、目的是什么，然后启动不同的“思考方式”“方法论”来处理这些信息</p>
 </blockquote>
@@ -596,7 +599,7 @@ b.看到好的公司直接买买买</p>
 “线”可以拥有效率势能和认知势能，势能比“面”小一个数量级,
 比“点”高一个数量级
 规模势能和引力势能是“面”和“体”独有的，而“体”的势能比“面”高出一个数量级
-<img src="https://wulc.me/imgs/potential_energy.jpg" height="30%" width="30%"></p>
+<img data-src="https://wulc.me/imgs/potential_energy.jpg" height="30%" width="30%"></p>
 </blockquote>
 <p>而站上势能高点的具体方法，书里给了 2
 个：<strong>成为和赋能</strong></p>
@@ -646,7 +649,7 @@ ROI，书里提出了四个维度来进行这个估值：<strong>客户终生价
 <p>风险成本, 就是你的项目如果失败了，一分钱没挣到，最多会损失多少?</p>
 <p>综合以上点，可对想法进行如下的估值,
 而最终的公式是：<strong>项目估值=(客户终生价值-获客成本)×用户规模-风险成本</strong></p>
-<p><img src="https://wulc.me/imgs/idea_value.jpg" height="50%" width="50%"></p>
+<p><img data-src="https://wulc.me/imgs/idea_value.jpg" height="50%" width="50%"></p>
 <p>上面只是从四方面为想法估值，真正执行的时候还需要考虑趋势、合作的团队等隐私，书里对这部分只是简单概括，这里也不详细展开了。</p>
 <h3 id="镜像世界">镜像世界</h3>
 <p>笔者觉得这部分的内容跟<a
@@ -654,7 +657,7 @@ href="http://wulc.me/2015/11/20/%E6%88%91%E4%BB%AC%E8%BF%99%E4%B8%80%E4%BB%A3%E4
 <p>书里根据左侧和右侧、光明与黑暗将事情划分为如下图所示的四个象限，其中左侧与右侧、光明与黑暗的含义是</p>
 <p><strong>左侧与右侧</strong>：越靠近左侧，因果关系就越强，达成目标主要靠技术，运气的空间很小；越往右侧，因果关系就越弱，行为和结果之间存在很多不确定因素，也就是我们常说的运气成分偏多
 <strong>光明与黑暗</strong>：光明指那些你已知的事情，黑暗指那些你还不知道的事情，包括其他人已知，而你不知道，以及所有人都不知道的事情</p>
-<p><img src="https://wulc.me/imgs/four_filed.jpg" height="50%" width="50%"></p>
+<p><img data-src="https://wulc.me/imgs/four_filed.jpg" height="50%" width="50%"></p>
 <p>而对于每个领域的事情，都要有不同的策略</p>
 <p><strong>1.掌控域：已知、确定</strong></p>
 <p>总结来说就是要<strong>积极努力，刻意练习，提高技能水平</strong>；因为技能在这个域内的占比很大，想要获得成功，你就得不断提升技能水平。</p>
@@ -732,7 +735,7 @@ href="http://wulc.me/2015/11/20/%E6%88%91%E4%BB%AC%E8%BF%99%E4%B8%80%E4%BB%A3%E4
 文件也可以从<a
 target="_blank" rel="noopener" href="https://github.com/WuLC/resources/blob/master/%E8%AE%A4%E7%9F%A5%E7%BA%A2%E5%88%A9_%E6%A6%82%E5%BF%B5%E9%87%8D%E5%A1%91.xmind">github</a>下载</p>
 <figure>
-<img src="https://wulc.me/imgs/concept_rebuild.png"
+<img data-src="https://wulc.me/imgs/concept_rebuild.png"
 alt="concept rebuild" />
 <figcaption aria-hidden="true">concept rebuild</figcaption>
 </figure>
@@ -742,6 +745,25 @@ alt="concept rebuild" />
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -884,7 +906,7 @@ alt="concept rebuild" />
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -907,6 +929,10 @@ alt="concept rebuild" />
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

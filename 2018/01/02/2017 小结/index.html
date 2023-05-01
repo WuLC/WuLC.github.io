@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="一个多月没写文章了，这个月主要是被各种焦头烂额的事情所烦扰：比赛、数据的采集与筛选、各种无聊的报告等等。一眨眼就踏入了2018，本来也不打算写年度总结，但是后来想想还是做一下简单的记录，一是因为自己本来就有总结的习惯，要不也不会一直在写这个博客；二是因为不总结下，都不知道自己这一年过得有多烂（捂脸）。言归正传，下面主要写一下在这一年里干了啥。">
@@ -85,6 +86,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -183,6 +185,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -287,7 +290,7 @@ content type
 能够替换掉原位置上的数据，如果将图像一帧一帧地传过来，便可达到动态视频的效果。</p>
 <p>下面是具体效果</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1c4dltqj0t9o1h31jiq1gp01strp.png"
+<img data-src="https://wulc.me/imgs/image_1c4dltqj0t9o1h31jiq1gp01strp.png"
 alt="FER demo" />
 <figcaption aria-hidden="true">FER demo</figcaption>
 </figure>
@@ -299,7 +302,7 @@ KDEF等)上的效果很好，但是人肉测试时效果并不好，因此就考
 <p>https://github.com/WuLC/GoogleImagesDownloader</p>
 <p>通过这个工具搜集了一定数量的图片，通过预处理和人工筛选后得到最终的图片，其中人工筛选过这个步骤由于每个人的标准都不一样，因此最后出现某些类别很少的情况。但是在一定程度上也算是扩充了原有的数据集（7种类别仅有2000多张图片）</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1c4dokvsa113g1so6urgcradc29.png"
+<img data-src="https://wulc.me/imgs/image_1c4dokvsa113g1so6urgcradc29.png"
 alt="图片数量" />
 <figcaption aria-hidden="true">图片数量</figcaption>
 </figure>
@@ -312,7 +315,7 @@ target="_blank" rel="noopener" href="http://www.emotibot.com/zh-cn/face_detectio
 python 写了一个采集程序，去采集一个人的 7
 种表情，并以视频形式存储。下图是采集的页面</p>
 <figure>
-<img src="https://wulc.me/imgs/446475948.jpg" alt="采集程序" />
+<img data-src="https://wulc.me/imgs/446475948.jpg" alt="采集程序" />
 <figcaption aria-hidden="true">采集程序</figcaption>
 </figure>
 <p>采集完了需要将视频转为图像帧序列，然后人工选出若干帧作为表情变化序列进行后续操作。不得不说人工筛选就是累。</p>
@@ -356,6 +359,25 @@ Top5 的成绩去了江苏答辩，最后第四名，也算是收获了一个奖
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -497,7 +519,7 @@ Top5 的成绩去了江苏答辩，最后第四名，也算是收获了一个奖
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -520,6 +542,10 @@ Top5 的成绩去了江苏答辩，最后第四名，也算是收获了一个奖
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

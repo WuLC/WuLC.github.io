@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="程序并行化的形式 程序并行化有以下三种形式，分别是：并发编程（Concurrent Programming）、并行编程（Parallel Programming ）、分布式编程(Distributed Programming)">
@@ -86,6 +87,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -184,6 +186,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -256,17 +259,17 @@ Programming)</strong></p>
 <h3 id="并发编程concurrent-programming">并发编程（Concurrent
 Programming）</h3>
 <p>并发编程（Concurrent Programming）的模型图如下所示：</p>
-<p><img src="https://wulc.me/imgs/concurrent_programming.png" /></p>
+<p><img data-src="https://wulc.me/imgs/concurrent_programming.png" /></p>
 <p>从图中可知，并发编程类似操作系统中的<strong>伪并行</strong>，任一时刻只有一个进程占用CPU，通过调度控制不同的进程在不同时刻访问CPU。</p>
 <h3 id="并行编程parallel-programming">并行编程（Parallel Programming
 ）</h3>
 <p>并行编程的模型图如下所示：</p>
-<p><img src="https://wulc.me/imgs/parallel_programming.png" /></p>
+<p><img data-src="https://wulc.me/imgs/parallel_programming.png" /></p>
 <p>并行编程指在<strong>多核环境</strong>中，同一时间每个核都可以允许一个进程运行，这可以认为是真正意义上的并行</p>
 <h3 id="分布式编程distributed-programming">分布式编程(Distributed
 Programming)</h3>
 <p>分布式编程的模型图如下所示：</p>
-<p><img src="https://wulc.me/imgs/distribute_programming.png" /></p>
+<p><img data-src="https://wulc.me/imgs/distribute_programming.png" /></p>
 <p>分布式编程指在不同机器上同时完成同一项任务，是物理上的隔离。如Hadoop中的MapReduce就是分布式编程的一个典型例子。</p>
 <h2 id="并行化编程的通信方式">并行化编程的通信方式</h2>
 <p>由于并行化后的进程要完成的是同一项任务，所以程序间的通信是必须的。程序的通信方式一般有以下两种：<strong>共享状态（shared
@@ -331,6 +334,25 @@ Python</a>模块，具有运行过程调整进程数目、动态负载平衡的�
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -476,7 +498,7 @@ Programming)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class=
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -499,6 +521,10 @@ Programming)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class=
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

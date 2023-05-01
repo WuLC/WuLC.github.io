@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="《Programming Collective Intelligence》（中文名为《集体智慧编程》），是一本关于数据挖掘的书籍，每一章都会通过一个实际的例子来讲述某个机器学习算法，同时会涉及到数据的采集和处理等，是一本实践性很强的书籍。 本文是关于本书的第二章 Making Recommendations 的前半部分。主要讲述了寻找用户相似性和物品相似性的方法，并在这个基础上讲述如何为用户推荐物">
@@ -85,6 +86,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -183,6 +185,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -319,7 +322,7 @@ class="math inline">\(Y\)</span> ，上面的皮尔逊系数的表达式其实�
 class="math display">\[\frac{X和Y的协方差}{X的标准差\*Y的标准差}\]</span>，而这就是概率论中对相关系数的定义。<strong>实际上概率论中的相关系数就是皮尔逊提出的这个皮尔逊相关系数率</strong>(这里需要注意的是，对于不同测量尺度的变数，有不同的相关系数可用，而我们接触到的概率论教材里，大多是都是讲皮尔逊相关系数，实际上还有<a
 target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E7%9B%B8%E5%85%B3">其他的相关系数</a>)。</p>
 <p>用图像直观表示皮尔逊相关系数如下所示，假设r为互相关系数：</p>
-<p><img src="https://wulc.me/imgs/pearson-2-small.png" /></p>
+<p><img data-src="https://wulc.me/imgs/pearson-2-small.png" /></p>
 <p>且一般认为r值范围和相关性的对应关系如下，0表示两者无关：</p>
 <table>
 <thead>
@@ -425,7 +428,7 @@ I\_{ij}}(R\_{i,c} - \overline{R\_i})(R\_{j,c} -
 <p>实现思路如下：为A找出了若干位相似用户，每个用户都有一个相似度系数（就是上面的皮尔森系数），找出他们看过而A没看过电影集合T。将每个用户的相似度乘上用户对集合T中某部电影的评分便可作为这部电影的得分，得分越高，代表推荐性越强。这乍一看还比较合理。但是一分析也存在一个问题，就是假如一部电影实际上都符合这一批用户的，但是看过的人很少，其他一些不太符合的电影因为看过的人多而的得分高。这就导致了误判。怎么解决呢？</p>
 <p><strong>这里需要引入一个因子来调和这种不平衡性，使得结果能够合理，既然这种不平衡是由于评分的人数不同而引起的，那么就可以从这里着手。将上面相加得到的总分除以对这部电影有评分的所有用户的相似性。</strong></p>
 <p>例如下图就是为上面Toby推荐的结果：</p>
-<p><img src="https://wulc.me/imgs/2016-03-01_220750.png" /></p>
+<p><img data-src="https://wulc.me/imgs/2016-03-01_220750.png" /></p>
 <p>实现的代码如下： <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 给用户推荐物品，物品的评分采用与其他用户的相似度乘上其他用户的实际评分</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">recommendItem</span>(<span class="params">scores,user</span>):</span><br><span class="line">    userSimilarity = findSimilarUsers(scores, user)</span><br><span class="line">    swapUserSimilarity = &#123;v:k <span class="keyword">for</span> k, v <span class="keyword">in</span> userSimilarity&#125; <span class="comment"># 交换键值，将存储kv对的列表转换为字典，交换后为无序</span></span><br><span class="line">    allMovies = []</span><br><span class="line">    <span class="keyword">for</span> (k,v) <span class="keyword">in</span> critics.items():</span><br><span class="line">        <span class="keyword">for</span> movie <span class="keyword">in</span> v:</span><br><span class="line">            <span class="keyword">if</span> movie <span class="keyword">not</span> <span class="keyword">in</span> allMovies:</span><br><span class="line">                allMovies.append(movie)</span><br><span class="line">    itemScore = []</span><br><span class="line">    <span class="keyword">for</span> movie <span class="keyword">in</span> allMovies:</span><br><span class="line">        scoreSum = <span class="number">0</span></span><br><span class="line">        similaritySum = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> similarity, otherUser <span class="keyword">in</span> userSimilarity:</span><br><span class="line">            <span class="keyword">if</span> critics[otherUser].has_key(movie):</span><br><span class="line">                scoreSum += critics[otherUser][movie] * similarity</span><br><span class="line">                similaritySum += swapUserSimilarity[otherUser]</span><br><span class="line">        itemScore.append((scoreSum/similaritySum, movie))</span><br><span class="line"></span><br><span class="line">    itemScore.sort(reverse=<span class="literal">True</span>)</span><br><span class="line">    recommend_movies = [] <span class="comment"># 为user推荐的电影</span></span><br><span class="line">    <span class="built_in">print</span> <span class="string">&#x27;all movies ranking:&#x27;</span></span><br><span class="line">    <span class="keyword">for</span> i,j <span class="keyword">in</span> itemScore:</span><br><span class="line">        <span class="built_in">print</span> i,j</span><br><span class="line">        <span class="keyword">if</span> j <span class="keyword">not</span> <span class="keyword">in</span> critics[user]:</span><br><span class="line">            recommend_movies.append(j)</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&#x27;recommended movies for %s:%s&#x27;</span> %(user, recommend_movies)</span><br></pre></td></tr></table></figure></p>
 <h2 id="寻找物品间的相似性"><strong>寻找物品间的相似性</strong></h2>
 <p>上面的推荐方法是通过寻找相似用户进行推荐，是一种“A喜欢这个物品，跟他相似的B也可能喜欢这件物品”思想；除此之外，还有一种思想就是“A喜欢物品1，也可能喜欢相似的物品2”。在这里判断1和2的相似性就成了关键，也就是如何寻找物品间的相似性。</p>
@@ -441,6 +444,25 @@ target="_blank" rel="noopener" href="https://github.com/WuLC/MachineLearningAlgo
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -583,7 +605,7 @@ target="_blank" rel="noopener" href="https://github.com/WuLC/MachineLearningAlgo
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -606,6 +628,10 @@ target="_blank" rel="noopener" href="https://github.com/WuLC/MachineLearningAlgo
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

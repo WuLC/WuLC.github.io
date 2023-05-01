@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="在数理统计中，常常需要通过样本来估计总体的参数，估计可划分为两大类：点估计和区间估计。点估计就是估计总体中某个参数的值，而区间估计是估计总体的某个参数落在某个区间的概率大小。本文主要讲述点估计中的矩估计法和最大似然估计法，以及针对服从正态分布的期望和方差进行区间估计。">
@@ -88,6 +89,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -186,6 +188,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -291,7 +294,7 @@ class="math inline">\(A\_k\)</span> 代替 <span
 class="math inline">\(\mu\_k\)</span>,进而得出估计的 <span
 class="math inline">\(\theta\)</span> 的值。下面是一个简单的例子</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bbtqbjdvkhlh8raho11oihu79.png"
+<img data-src="https://wulc.me/imgs/image_1bbtqbjdvkhlh8raho11oihu79.png"
 alt="矩估计法的例子" />
 <figcaption aria-hidden="true">矩估计法的例子</figcaption>
 </figure>
@@ -315,7 +318,7 @@ class="math inline">\(L(\theta)\)</span>
 似然函数求导便可求得其最大值对应的 <span
 class="math inline">\(\theta\)</span>。如下是一个简单的例子</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bbtrksj91lu411vmcbu1ncb11u4m.png"
+<img data-src="https://wulc.me/imgs/image_1bbtrksj91lu411vmcbu1ncb11u4m.png"
 alt="离散型极大似然估计" />
 <figcaption aria-hidden="true">离散型极大似然估计</figcaption>
 </figure>
@@ -342,7 +345,7 @@ class="math inline">\(L(\theta)\)</span>
 被称为似然函数，极大化也是通过求导来解决。</p>
 <p>下面是一个连续型总体进行极大似然估计的例子</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bbtt8so0bb71rpm16dh1ces19u13.png"
+<img data-src="https://wulc.me/imgs/image_1bbtt8so0bb71rpm16dh1ces19u13.png"
 alt="正态分布" />
 <figcaption aria-hidden="true">正态分布</figcaption>
 </figure>
@@ -442,7 +445,7 @@ href="http://wulc.me/2016/11/18/%E6%A6%82%E7%8E%87%E8%AE%BA%E4%B8%8E%E6%95%B0%E7
 \mu}{\sqrt{\sigma^2/n}} | &lt; z\_{\alpha/2}) = 1 - \alpha\]</span></p>
 <p>从概率密度函数上直观看为：</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bc2bajjf1jgrove10r6tah1ub19.png"
+<img data-src="https://wulc.me/imgs/image_1bc2bajjf1jgrove10r6tah1ub19.png"
 alt="正态分布分位点" />
 <figcaption aria-hidden="true">正态分布分位点</figcaption>
 </figure>
@@ -479,7 +482,7 @@ class="math display">\[P(|\frac{\overline X - \mu}{S/\sqrt{n}}| &lt;
 t\_{\alpha/2}(n-1)) = 1 - \alpha\]</span></p>
 <p>其对应的概率密度函数如下所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bc2de1u91i7gd9q1shjm7spnam.png"
+<img data-src="https://wulc.me/imgs/image_1bc2de1u91i7gd9q1shjm7spnam.png"
 alt="t分布的概率密度函数" />
 <figcaption aria-hidden="true">t分布的概率密度函数</figcaption>
 </figure>
@@ -530,7 +533,7 @@ class="math inline">\(\chi^2\)</span>
 class="math inline">\(t\)</span>
 分布那样是对称的。其对应的概率密度函数如下所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bc2g7o8u16mbarpd82nmie6h13.png"
+<img data-src="https://wulc.me/imgs/image_1bc2g7o8u16mbarpd82nmie6h13.png"
 alt="卡方分布的概率密度函数" />
 <figcaption aria-hidden="true">卡方分布的概率密度函数</figcaption>
 </figure>
@@ -683,6 +686,25 @@ class="math display">\[P(\theta &gt; \theta&#39;) = 1 -
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -824,7 +846,7 @@ class="math display">\[P(\theta &gt; \theta&#39;) = 1 -
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -847,6 +869,10 @@ class="math display">\[P(\theta &gt; \theta&#39;) = 1 -
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

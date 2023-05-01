@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="转化是有延迟的，即在点击发生后过一段时间用户可能才会发生转化，且往往转化漏斗越深，延迟的时间越长；在计算广告中，delayed feedback 主要影响下面两个场景  CVR 模型的训练 基于后验的调价策略  对于场景1，影响体现在（1）过早把样本送入模型，把最终会转化但是还没回传 label 的事件当做负例，导致模型低估（2）过晚把样本送入模型，即让所有样本都等待一个足够长的时间才送入模型，导">
@@ -94,6 +95,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -192,6 +194,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -301,7 +304,7 @@ target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Nonparametric
 意思的含义。</p>
 <p>基本符号定义跟第一篇 paper 差不多</p>
 <figure>
-<img src="https://wulc.me/imgs/SurvivalAnalytics.jpg" alt="notion" />
+<img data-src="https://wulc.me/imgs/SurvivalAnalytics.jpg" alt="notion" />
 <figcaption aria-hidden="true">notion</figcaption>
 </figure>
 <p>Paper 中主要通过 <a
@@ -315,7 +318,7 @@ in biological organisms and failure in mechanical systems.</p>
 </blockquote>
 <p>Paper 中使用到的 survival analysis 概念和推论如下</p>
 <figure>
-<img src="https://wulc.me/imgs/SA_assumption.jpg" alt="assumption" />
+<img data-src="https://wulc.me/imgs/SA_assumption.jpg" alt="assumption" />
 <figcaption aria-hidden="true">assumption</figcaption>
 </figure>
 <p>第一篇 paper 其实也用了上面的推论，<span
@@ -335,7 +338,7 @@ class="math inline">\(L\)</span>个 pseudo-points）</p>
 \sum\_{l=1}^{L}\alpha\_l(x\_i;V)k(t\_l, d\_i)\]</span></p>
 <p>下图更直观地描述了这种形式是如何拟合任意分布的</p>
 <figure>
-<img src="https://wulc.me/imgs/SAKDE.jpg" alt="KDE" />
+<img data-src="https://wulc.me/imgs/SAKDE.jpg" alt="KDE" />
 <figcaption aria-hidden="true">KDE</figcaption>
 </figure>
 <p>上面中的 <span class="math inline">\(\alpha\_l,
@@ -353,7 +356,7 @@ class="math inline">\(V\_l\)</span>的 gradient）</p>
 \exp(-\frac{(t\_l-\tau)^2}{2h^2})\]</span></p>
 <p>写出了 hazard function 后，根据公式（2）有</p>
 <figure>
-<img src="https://wulc.me/imgs/survivalFunction.jpg"
+<img data-src="https://wulc.me/imgs/survivalFunction.jpg"
 alt="survival function" />
 <figcaption aria-hidden="true">survival function</figcaption>
 </figure>
@@ -361,12 +364,12 @@ alt="survival function" />
 <p><span class="math display">\[p(d\_i|x\_i, c\_i = 1) = s(d\_i; x\_i, V
 )h(d\_i; x\_i, V)\]</span></p>
 <figure>
-<img src="https://wulc.me/imgs/nonparametricf2.jpg" alt="probability" />
+<img data-src="https://wulc.me/imgs/nonparametricf2.jpg" alt="probability" />
 <figcaption aria-hidden="true">probability</figcaption>
 </figure>
 <p>训练的算法就跟 paper1 中的 EM 算法一样</p>
 <figure>
-<img src="https://wulc.me/imgs/nonparametric_EM.jpg" alt="EM" />
+<img data-src="https://wulc.me/imgs/nonparametric_EM.jpg" alt="EM" />
 <figcaption aria-hidden="true">EM</figcaption>
 </figure>
 <p>上面这种形式是借鉴了 KDE 的思想，KDE 可以理解为一种可写出任意分布的
@@ -402,7 +405,7 @@ class="math inline">\(b\)</span> 上对样本进行加权 <span
 class="math inline">\(w(x,y) = \frac{p(x,y)}{b(x,y)}\)</span>，则 loss
 function 可写成如下形式</p>
 <figure>
-<img src="https://wulc.me/imgs/FakeNegativeWeightedLoss.jpg"
+<img data-src="https://wulc.me/imgs/FakeNegativeWeightedLoss.jpg"
 alt="loss func" />
 <figcaption aria-hidden="true">loss func</figcaption>
 </figure>
@@ -419,7 +422,7 @@ class="math inline">\(b\)</span> 中的正样本加的权重为<span
 class="math inline">\(1+p(y=1|x)\)</span>, 负样本的权重为 <span
 class="math inline">\(p(y=0|x)(1+p(y=1|x))\)</span></p>
 <figure>
-<img src="https://wulc.me/imgs/FakeNegativeWeightedLoss1.jpg"
+<img data-src="https://wulc.me/imgs/FakeNegativeWeightedLoss1.jpg"
 alt="loss func1" />
 <figcaption aria-hidden="true">loss func1</figcaption>
 </figure>
@@ -492,7 +495,7 @@ p(s = 1|y = 1)\)</span></p>
 </blockquote>
 <p>基于上面的 assumption 有</p>
 <figure>
-<img src="https://wulc.me/imgs/PUAsumption.jpg" alt="assumption" />
+<img data-src="https://wulc.me/imgs/PUAsumption.jpg" alt="assumption" />
 <figcaption aria-hidden="true">assumption</figcaption>
 </figure>
 <blockquote>
@@ -513,12 +516,12 @@ class="math inline">\(\frac{1}{n}\sum\_{x \in P}g(x)\)</span></p>
 </blockquote>
 <p>求解环节，所有样本的 期望/likelihook 可写成如下形式</p>
 <figure>
-<img src="https://wulc.me/imgs/PUMLE.jpg" alt="MLE" />
+<img data-src="https://wulc.me/imgs/PUMLE.jpg" alt="MLE" />
 <figcaption aria-hidden="true">MLE</figcaption>
 </figure>
 <p>则最终的 loss 函数形式如下</p>
 <figure>
-<img src="https://wulc.me/imgs/PU_finalloss.jpg" alt="pu-loss" />
+<img data-src="https://wulc.me/imgs/PU_finalloss.jpg" alt="pu-loss" />
 <figcaption aria-hidden="true">pu-loss</figcaption>
 </figure>
 <h2 id="总结">总结</h2>
@@ -534,6 +537,25 @@ training 和 serving 不一致（正负样本比例不一致），对此 paper
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -681,7 +703,7 @@ prediction(2019)</span></a><ol class="nav-child"><li class="nav-item nav-level-3
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -704,6 +726,10 @@ prediction(2019)</span></a><ol class="nav-child"><li class="nav-item nav-level-3
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

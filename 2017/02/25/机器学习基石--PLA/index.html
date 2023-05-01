@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="本文是《机器学习基石》第二讲 Learning to Answer Yes&#x2F;No 课程的笔记。主要介绍了机器学习的基本概念，以及感知机及其训练算法 PLA。">
@@ -89,6 +90,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -187,6 +189,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -265,7 +268,7 @@ class="math inline">\(H\)</span>
 实际上也确定了(例如目标函数是线性或非线性的)。</p>
 <p>下图展示了上面提到的过程</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bchr55ih1ie1u9e8tjqi1ttv9.png"
+<img data-src="https://wulc.me/imgs/image_1bchr55ih1ie1u9e8tjqi1ttv9.png"
 alt="机器学习基本概念" />
 <figcaption aria-hidden="true">机器学习基本概念</figcaption>
 </figure>
@@ -279,13 +282,13 @@ Regression）等模型也非常类似，是一种非常典型的线性模型。<
 class="math inline">\(d\)</span>
 个特征，但是每个特征的重要性不一样，因此各个特征的权重也不一样，对其进行加权后得到的总和假如大于某个阈值则认为归为其中一类，反之归为另一类。如在信用卡的例子中，通过感知机有如下的结果</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bchsh08i1b382mv1la0qnbrd4m.png"
+<img data-src="https://wulc.me/imgs/image_1bchsh08i1b382mv1la0qnbrd4m.png"
 alt="感知机的信用卡发放问题" />
 <figcaption aria-hidden="true">感知机的信用卡发放问题</figcaption>
 </figure>
 <p>将上面的化为常数项，即可将得到更一般的表达形式如下</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bchsm6t3q8812aes38a7327513.png"
+<img data-src="https://wulc.me/imgs/image_1bchsm6t3q8812aes38a7327513.png"
 alt="感知机更一般表示" />
 <figcaption aria-hidden="true">感知机更一般表示</figcaption>
 </figure>
@@ -305,13 +308,13 @@ class="math inline">\(w\)</span> 正确预测。</p>
 <p>对于某个被预测错误的样本点，参数 <span
 class="math inline">\(w\)</span> 更新的过程如下所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bci20m5k1riicdhcvefunsm1g.png"
+<img data-src="https://wulc.me/imgs/image_1bci20m5k1riicdhcvefunsm1g.png"
 alt="参数w在错误点的更新" />
 <figcaption aria-hidden="true">参数w在错误点的更新</figcaption>
 </figure>
 <p>注意上面的算法的前提是所有的样本点都必须线性可分，假如样本点线性不可分，那么PLA按照上面的规则会陷入死循环中。如下是线性可分与线性不可分的例子)</p>
 <figure>
-<img src="https://wulc.me/imgs/2017-03-29_231245.png"
+<img data-src="https://wulc.me/imgs/2017-03-29_231245.png"
 alt="线性可分与不可分的例子" />
 <figcaption aria-hidden="true">线性可分与不可分的例子</figcaption>
 </figure>
@@ -320,7 +323,7 @@ alt="线性可分与不可分的例子" />
 PLA 算法的收敛性。</p>
 <p>建议中通过下面两页PPT来说明PLA的收敛性</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bci2dhjhiped441fb616lk1pbi1t.png"
+<img data-src="https://wulc.me/imgs/image_1bci2dhjhiped441fb616lk1pbi1t.png"
 alt="PLA收敛性1" />
 <figcaption aria-hidden="true">PLA收敛性1</figcaption>
 </figure>
@@ -328,7 +331,7 @@ alt="PLA收敛性1" />
 的更新，<span class="math inline">\(w\_f^Tw\_{t+1}\)</span>
 的值越来越大，也就是两者越来越相似（衡量两个向量相似性的一种方法就是考虑他们的内积，值越大，代表两者约接近，但是这里还没对向量归一化，所以证明并不严格，但是已经说明了两者具有这个趋势，下面是更严格的过程）</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bci2ebjrhvl5tchtk3er1qej2a.png"
+<img data-src="https://wulc.me/imgs/image_1bci2ebjrhvl5tchtk3er1qej2a.png"
 alt="PLA收敛性2" />
 <figcaption aria-hidden="true">PLA收敛性2</figcaption>
 </figure>
@@ -389,6 +392,25 @@ class="math inline">\(w\)</span>
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -530,7 +552,7 @@ class="math inline">\(w\)</span>
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -553,6 +575,10 @@ class="math inline">\(w\)</span>
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

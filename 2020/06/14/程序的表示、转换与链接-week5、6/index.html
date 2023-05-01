@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="本文是 程序的表示、转换与链接 中第 5、6 周的内容，主要介绍了程序和指令的关系，目标文件的基本格式，并详细地介绍了 IA-32 体系下的指令系统，包括各种指令的类型、指令执行的基本流程，通过以上内容可以对计算机内部如何执行程序有一个感性的认识。">
@@ -100,6 +101,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -198,6 +200,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -277,7 +280,7 @@ href="http://wulc.me/2020/05/30/%E7%A8%8B%E5%BA%8F%E7%9A%84%E8%A1%A8%E7%A4%BA%E3
 <p>从计算机的执行角度来看，程序可认为是由指令和数据组成的，它们都是存放在存储器里面的，
 指令和数据都是用二进制的01进行编码的，<strong>在指令执行过程当中，指令和数据从存储器要取到CPU，然后存放在CPU的寄存器里面</strong>，两者的关系如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/instructionAndData.jpg"
+<img data-src="https://wulc.me/imgs/instructionAndData.jpg"
 alt="instructionAndData" />
 <figcaption aria-hidden="true">instructionAndData</figcaption>
 </figure>
@@ -296,7 +299,7 @@ href="http://wulc.me/2020/05/31/%E3%80%8A%E9%93%BE%E6%8E%A5%E3%80%81%E8%A3%85%E8
 阅读笔记(1)-基本概念与静态链接</a>
 有描述，因此这里只做简单的记录，下图描述了编译的过程，即如何从源文件生成目标文件</p>
 <figure>
-<img src="https://wulc.me/imgs/compile.jpg" alt="compile" />
+<img data-src="https://wulc.me/imgs/compile.jpg" alt="compile" />
 <figcaption aria-hidden="true">compile</figcaption>
 </figure>
 <p>上图中的 <code>.c</code> 表示 C 语言的源文件、<code>.i</code>
@@ -310,13 +313,13 @@ href="http://wulc.me/2020/05/31/%E3%80%8A%E9%93%BE%E6%8E%A5%E3%80%81%E8%A3%85%E8
 href="http://wulc.me/2020/05/31/%E3%80%8A%E9%93%BE%E6%8E%A5%E3%80%81%E8%A3%85%E8%BD%BD%E4%B8%8E%E5%BA%93%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0%281%29-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E4%B8%8E%E9%9D%99%E6%80%81%E9%93%BE%E6%8E%A5/">文章</a>，从下图中可知，可执行目标文件中的地址不再是从
 0 开始的, 而是一个确切的地址</p>
 <figure>
-<img src="https://wulc.me/imgs/ObjectFileCompare.jpg"
+<img data-src="https://wulc.me/imgs/ObjectFileCompare.jpg"
 alt="objectFilesCompared" />
 <figcaption aria-hidden="true">objectFilesCompared</figcaption>
 </figure>
 <p>这个确切的地址是什么地址呢？实际上是一个虚拟地址，它是在一个虚拟地址空间里面的，其实就是进程的虚拟地址空间，如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/object_file_mapping.jpg"
+<img data-src="https://wulc.me/imgs/object_file_mapping.jpg"
 alt="object file mapping" />
 <figcaption aria-hidden="true">object file mapping</figcaption>
 </figure>
@@ -327,7 +330,7 @@ alt="object file mapping" />
 因为这些架构后面都带有86，所以就称为x86，Intel
 处理器中涉及的产品如下</p>
 <figure>
-<img src="https://wulc.me/imgs/IntelProcess.jpg" alt="IntelProcessor" />
+<img data-src="https://wulc.me/imgs/IntelProcess.jpg" alt="IntelProcessor" />
 <figcaption aria-hidden="true">IntelProcessor</figcaption>
 </figure>
 <p>Intel把32位的x86架构的名称 x86-32 改为IA -32，IA 实际上是Intel
@@ -336,7 +339,7 @@ Architecture的缩写
 <p>IA-32 体系结构规定了寄存器的个数、
 各自指令功能以及寄存器的宽度、存储空间等；整体体系结构大致如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/IA-32.jpg" alt="IA-32" />
+<img data-src="https://wulc.me/imgs/IA-32.jpg" alt="IA-32" />
 <figcaption aria-hidden="true">IA-32</figcaption>
 </figure>
 <p>从上图可知，IA-32的体系结构的一些特点如下</p>
@@ -348,7 +351,7 @@ Architecture的缩写
 </ul>
 <p>随着体系结构从8位的机器，逐渐扩展到16位、32位的机器，寄存器的宽度也在不断地扩展，如下图所示是</p>
 <figure>
-<img src="https://wulc.me/imgs/IA32Register.jpg" alt="IA32-Register" />
+<img data-src="https://wulc.me/imgs/IA32Register.jpg" alt="IA32-Register" />
 <figcaption aria-hidden="true">IA32-Register</figcaption>
 </figure>
 <p>后面的80位的寄存器和120位的寄存器在后面的内容中会有介绍。</p>
@@ -362,13 +365,13 @@ Architecture的缩写
 </ul>
 <p>详细如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/SearchAddress.jpg" alt="searchAdd" />
+<img data-src="https://wulc.me/imgs/SearchAddress.jpg" alt="searchAdd" />
 <figcaption aria-hidden="true">searchAdd</figcaption>
 </figure>
 <p>下面是高级语言中的一个寻址例子，描述了声明变量时，内存的分配情况以及访问变量时的寻址方法（以
 Windows 为例）</p>
 <figure>
-<img src="https://wulc.me/imgs/CSearchAddress.jpg"
+<img data-src="https://wulc.me/imgs/CSearchAddress.jpg"
 alt="CSearchAddress" />
 <figcaption aria-hidden="true">CSearchAddress</figcaption>
 </figure>
@@ -376,7 +379,7 @@ alt="CSearchAddress" />
 中的指令是怎么组织然后坐到这一点的呢?
 下面是关于这个指令的一张详细的图，比较复杂，这里不展开讨论了</p>
 <figure>
-<img src="https://wulc.me/imgs/MachineCode.jpg" alt="MachineCode" />
+<img data-src="https://wulc.me/imgs/MachineCode.jpg" alt="MachineCode" />
 <figcaption aria-hidden="true">MachineCode</figcaption>
 </figure>
 <h2 id="ia-32-常用指令类型">IA-32 常用指令类型</h2>
@@ -393,13 +396,13 @@ alt="CSearchAddress" />
 的值(相当于是基址值)加上eax的值(相当于是变址值),
 基址加变址，这样两个寄存的内容加起来，这样就是一个有效地址</p>
 <figure>
-<img src="https://wulc.me/imgs/TransformInstruction.jpg"
+<img data-src="https://wulc.me/imgs/TransformInstruction.jpg"
 alt="Transform Instruction" />
 <figcaption aria-hidden="true">Transform Instruction</figcaption>
 </figure>
 <p>如下如所示是一个程序通过反汇编得到的指令，标红的是就是数据传送指令；实际执行时会从上到下依次执行</p>
 <figure>
-<img src="https://wulc.me/imgs/Program2Instruction.jpg"
+<img data-src="https://wulc.me/imgs/Program2Instruction.jpg"
 alt="program2instruction" />
 <figcaption aria-hidden="true">program2instruction</figcaption>
 </figure>
@@ -430,26 +433,26 @@ EIP 加1，继续执行下一条指令</li>
 </ol>
 <p>下图是上面步骤 1~2 步骤的执行过程和结果</p>
 <figure>
-<img src="https://wulc.me/imgs/mov_instruction_exec.jpg"
+<img data-src="https://wulc.me/imgs/mov_instruction_exec.jpg"
 alt="step1-2" />
 <figcaption aria-hidden="true">step1-2</figcaption>
 </figure>
 <p>下图是上面步骤 3 步骤的执行过程和结果</p>
 <figure>
-<img src="https://wulc.me/imgs/mov_instruction_exec1.jpg" alt="step3" />
+<img data-src="https://wulc.me/imgs/mov_instruction_exec1.jpg" alt="step3" />
 <figcaption aria-hidden="true">step3</figcaption>
 </figure>
 <h3 id="定点运算指令">定点运算指令</h3>
 <p>常用的定点运算指令包括下面这些，可以有个大概的认识，这里就不详细展开讲了</p>
 <figure>
-<img src="https://wulc.me/imgs/fixednum_instruction.jpg"
+<img data-src="https://wulc.me/imgs/fixednum_instruction.jpg"
 alt="fixed num" />
 <figcaption aria-hidden="true">fixed num</figcaption>
 </figure>
 <h3 id="逻辑运算指令">逻辑运算指令</h3>
 <p>常用的逻辑运算指令包括下面这些，同样地可以有个大概的认识，不详细展开讲了</p>
 <figure>
-<img src="https://wulc.me/imgs/logic_instruction.jpg"
+<img data-src="https://wulc.me/imgs/logic_instruction.jpg"
 alt="logic instruction" />
 <figcaption aria-hidden="true">logic instruction</figcaption>
 </figure>
@@ -457,7 +460,7 @@ alt="logic instruction" />
 <p><strong>指令的执行有两种顺序</strong>，一种是按顺序执行，还有一种是跳转到一个转移目标指令处执行，也称为条件转移指令</p>
 <p>条件转移指令也可以根据是否要满足条件来跳转分为以下几种</p>
 <figure>
-<img src="https://wulc.me/imgs/jump_instruction.jpg"
+<img data-src="https://wulc.me/imgs/jump_instruction.jpg"
 alt="jump instruction" />
 <figcaption aria-hidden="true">jump instruction</figcaption>
 </figure>
@@ -481,7 +484,7 @@ RET。这两个指令会通过调用函数的地址关联起来，其实就是�
 当中有一个非常重要的寄存器就是标志寄存器，如下图所示，这些标志信息
 实际上是用来进行判断条件是否满足的一些信息</p>
 <figure>
-<img src="https://wulc.me/imgs/flag_register.jpg" alt="flag register" />
+<img data-src="https://wulc.me/imgs/flag_register.jpg" alt="flag register" />
 <figcaption aria-hidden="true">flag register</figcaption>
 </figure>
 <p>在C语言里面规定，在一个表达式当中
@@ -518,6 +521,25 @@ RET。这两个指令会通过调用函数的地址关联起来，其实就是�
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -660,7 +682,7 @@ RET。这两个指令会通过调用函数的地址关联起来，其实就是�
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -683,6 +705,10 @@ RET。这两个指令会通过调用函数的地址关联起来，其实就是�
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

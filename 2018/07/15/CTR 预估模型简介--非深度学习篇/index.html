@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="本文主要介绍 CTR 预估中常用的一些模型，主要是非深度学习模型，包括 LR、GBDT+LR、FM&#x2F;FFM、MLR。每个模型会简单介绍其原理、论文出处以及其一些开源实现。">
@@ -90,6 +91,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -188,6 +190,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -408,7 +411,7 @@ Linear Models from Large Scale Data for Ad Click Prediction</a>
 是一个线性模型，模型会在数据空间中生成一个线性分割平面，但是对于非线性可分的数据，这一个线性分割面显然无法正确分割这些数据。以下图为例（摘自上面的论文），A）为一组非线性训练数据的正负样本分布；对于该问题，LR会生成
 B）中的分割平面，C) 图展示的 LS-PLM 模型 则取得了较好的效果。</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1cdhkuov7q2413hf3n14ecse0c.png"
+<img data-src="https://wulc.me/imgs/image_1cdhkuov7q2413hf3n14ecse0c.png"
 alt="LS-PIC" />
 <figcaption aria-hidden="true">LS-PIC</figcaption>
 </figure>
@@ -529,7 +532,7 @@ CART 来拟合这组样本。下面我们来讲一下 GBDT 中的 “GB” 部�
 xgb 的论文：<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1603.02754.pdf">XGBoost: A
 Scalable Tree Boosting System</a>)</p>
 <figure>
-<img src="https://wulc.me/imgs/gbdt.png" alt="xgboost" />
+<img data-src="https://wulc.me/imgs/gbdt.png" alt="xgboost" />
 <figcaption aria-hidden="true">xgboost</figcaption>
 </figure>
 <p>下式就是叠加了 <span class="math inline">\(T\)</span> 个 <span
@@ -557,7 +560,7 @@ class="math inline">\(x\)</span>
 在第一棵树中落入第一个叶子节点，在第二棵树种落入第二个叶子节点，那么输入
 LR 的特征为 [1, 0, 0, 0, 1].</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1cdjf062nsovu4v1d3bbsn1rk49.png"
+<img data-src="https://wulc.me/imgs/image_1cdjf062nsovu4v1d3bbsn1rk49.png"
 alt="GBDT + LR" />
 <figcaption aria-hidden="true">GBDT + LR</figcaption>
 </figure>
@@ -574,7 +577,7 @@ one-hot
 进行离散化和特征组合输出 one-hot 编码的特征，最后结合这两种 one-hot
 特征直接输入到 LR。大致框架如下所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1cdk1jok51p5u13mgv2d1p6d1hll4c.png"
+<img data-src="https://wulc.me/imgs/image_1cdk1jok51p5u13mgv2d1p6d1hll4c.png"
 alt="Real GBDT" />
 <figcaption aria-hidden="true">Real GBDT</figcaption>
 </figure>
@@ -593,14 +596,14 @@ gradient，其实前面<strong>拟合残差时已经用到了 gradient
 都是对某个参数进行的，或者说是在参数空间中进行的，但是除了参数空间，还可以在函数空间中进行。如下图所示对比了两种方式(下面两张图均摘自<a
 target="_blank" rel="noopener" href="http://wepon.me/files/gbdt.pdf">GBDT算法原理与系统设计简介</a>)</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1cdjtahckkop2e81umc1l651lgi32.png"
+<img data-src="https://wulc.me/imgs/image_1cdjtahckkop2e81umc1l651lgi32.png"
 alt="gredient descent v.s. gradient boosting" />
 <figcaption aria-hidden="true">gredient descent v.s. gradient
 boosting</figcaption>
 </figure>
 <p>在函数空间中，是对函数直接进行求导的，因此 GBDT 算法的流程如下</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1cdkhqh8gpjrb9n1mi11o6b16tj56.png"
+<img data-src="https://wulc.me/imgs/image_1cdkhqh8gpjrb9n1mi11o6b16tj56.png"
 alt="GBDT" />
 <figcaption aria-hidden="true">GBDT</figcaption>
 </figure>
@@ -677,7 +680,7 @@ class="math inline">\(w\_{ij}\)</span>
 user-item 矩阵进行矩阵分解，从而每个 user 和每个 item
 都会得到一个隐向量。如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1cdkb5qkk2ie1njv17ekj5s131k4p.png"
+<img data-src="https://wulc.me/imgs/image_1cdkb5qkk2ie1njv17ekj5s131k4p.png"
 alt="matrix" />
 <figcaption aria-hidden="true">matrix</figcaption>
 </figure>
@@ -801,6 +804,25 @@ Learning)的一种;但是，没有免费午餐的，特征工程的便利性带�
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -946,7 +968,7 @@ Factorization Machine)</span></a><ol class="nav-child"><li class="nav-item nav-l
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -969,6 +991,10 @@ Factorization Machine)</span></a><ol class="nav-child"><li class="nav-item nav-l
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

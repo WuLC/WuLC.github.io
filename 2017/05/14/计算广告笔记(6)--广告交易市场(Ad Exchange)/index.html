@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="本文是刘鹏老师的计算广告学中的一些笔记。本文是第六章: 广告交易市场(Ad Exchange)。主要介绍目前最常见的实时竞价的广告交易模式，分别介绍了这一模式下的供给方平台(SSP) 和 需求方平台(DSP), 并且重点介绍了 DSP， 因为在这一交易模式下，DSP 负责了绝大多数的关键任务。">
@@ -90,6 +91,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -188,6 +190,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -266,7 +269,7 @@ Exchange)。主要介绍目前最常见的实时竞价的广告交易模式，�
 DSP 展示目前的 context，让各个 DSP
 通过竞价的方式获取这次展示的机会。其流程如下</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bh52n8jlgdtn59np2hgqlao9.png"
+<img data-src="https://wulc.me/imgs/image_1bh52n8jlgdtn59np2hgqlao9.png"
 alt="RTB 过程" />
 <figcaption aria-hidden="true">RTB 过程</figcaption>
 </figure>
@@ -301,7 +304,7 @@ DSP ，然后进行竞价拍卖选出出价最高的那个
 DSP。其难点在于系统的吞吐量大且对 latency
 的要求严格。其系统架构图如下</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bh54herr190014ap1tqr16c4km4m.png"
+<img data-src="https://wulc.me/imgs/image_1bh54herr190014ap1tqr16c4km4m.png"
 alt="Ad Exchange 系统架构" />
 <figcaption aria-hidden="true">Ad Exchange 系统架构</figcaption>
 </figure>
@@ -317,7 +320,7 @@ ranking） 4）Adx 在日志中记录该广告的展示记录</p>
 mapping，第二个例子是 DMP 与媒体的 cookie mapping。</p>
 <p>下面是 DSP 与 Adx 的 cookie mapping 的过程</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bh5a836ap321v1pm491hi1l5n13.png"
+<img data-src="https://wulc.me/imgs/image_1bh5a836ap321v1pm491hi1l5n13.png"
 alt="DSP与Adx" />
 <figcaption aria-hidden="true">DSP与Adx</figcaption>
 </figure>
@@ -336,7 +339,7 @@ beacon 并记录下 <strong>Adx 方的 cookie（xcd） 与己方的 cookie（dck
 的对应关系。</strong></p>
 <p>下面是媒体与 DMP 的 cookie mapping 的过程</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bh5a917b1a32h00pij1f2u1no1g.png"
+<img data-src="https://wulc.me/imgs/image_1bh5a917b1a32h00pij1f2u1no1g.png"
 alt="DMP与媒体" />
 <figcaption aria-hidden="true">DMP与媒体</figcaption>
 </figure>
@@ -393,7 +396,7 @@ data exchange</strong> accounts through one interface.</p>
 <h3 id="dsp-的架构">DSP 的架构</h3>
 <p>DSP 的架构示意图如下</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bh6jcr5hpcd190f1umf1kk1h6s9.png"
+<img data-src="https://wulc.me/imgs/image_1bh6jcr5hpcd190f1umf1kk1h6s9.png"
 alt="DSP" />
 <figcaption aria-hidden="true">DSP</figcaption>
 </figure>
@@ -424,7 +427,7 @@ variance，以达到稳定估计的目的
 <p>什么是重定向呢？假如有一个电商网站，每天有几千人访问。当然，这几千人里面大部分当时并没有买东西就离开了。而重定向就是说这些人到了别的网站，就在该网站的广告位上投放该电商的广告，这样一来，用户点击广告和进而下单购买的比例都会相当高。</p>
 <p>如下是一个重定向的例子</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bh73cv05tlrughefn1mh41qenm.png"
+<img data-src="https://wulc.me/imgs/image_1bh73cv05tlrughefn1mh41qenm.png"
 alt="retargeting" />
 <figcaption aria-hidden="true">retargeting</figcaption>
 </figure>
@@ -452,7 +455,7 @@ bias 与 variance 的平衡，以适应问题的数据的稀疏性。</strong></
 <p>目前为止介绍了多种广告流量的交易形式，可以说交易的方式发展趋势为：合约广告-&gt;竞价广告-&gt;实时竞价广告，对应着下图从右到左的顺序。而发展到竞价广告之后，更加强调了
 supply 端和 demand 端的分工的专业化。</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bh76incp1j3j1kg6oa11idl12nk13.png"
+<img data-src="https://wulc.me/imgs/image_1bh76incp1j3j1kg6oa11idl12nk13.png"
 alt="广告流量交易方式" />
 <figcaption aria-hidden="true">广告流量交易方式</figcaption>
 </figure>
@@ -470,6 +473,25 @@ network）和实时竞价广告（Adx），其对应的 supply 端和 demand
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -614,7 +636,7 @@ Platform）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a 
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -637,6 +659,10 @@ Platform）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a 
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

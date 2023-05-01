@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="本文是《机器学习基石》第四讲 Feasibility of Learning 的课程笔记。通过 Hoeffding 不等式，引出了机器学习中学习的可行性。">
@@ -86,6 +87,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -184,6 +186,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -319,7 +322,7 @@ class="math inline">\(E\_{out}(h)\)</span>
 class="math inline">\(E\_{in}(h)\)</span>和 <span
 class="math inline">\(E\_{out}(h)\)</span> 的差距较大。</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bi8c9bsjveuio7id2ile1fo59.png"
+<img data-src="https://wulc.me/imgs/image_1bi8c9bsjveuio7id2ile1fo59.png"
 alt="bad data for h" />
 <figcaption aria-hidden="true">bad data for h</figcaption>
 </figure>
@@ -332,7 +335,7 @@ class="math inline">\(E\_{out}(h)\)</span>
 很大，可以说是过拟合了抽样的数据。</p>
 </blockquote>
 <figure>
-<img src="https://wulc.me/imgs/gaussian_distribution.png"
+<img data-src="https://wulc.me/imgs/gaussian_distribution.png"
 alt="gaussian_distribution.png-32.7kB" />
 <figcaption
 aria-hidden="true">gaussian_distribution.png-32.7kB</figcaption>
@@ -340,7 +343,7 @@ aria-hidden="true">gaussian_distribution.png-32.7kB</figcaption>
 <p>回到讨论的话题，如果对于 <span class="math inline">\(M\)</span>
 个hypothesis 呢？上图可以改为如下形式</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bi8cdsrpdstglac2pbkl1jqim.png"
+<img data-src="https://wulc.me/imgs/image_1bi8cdsrpdstglac2pbkl1jqim.png"
 alt="bad data for many h" />
 <figcaption aria-hidden="true">bad data for many h</figcaption>
 </figure>
@@ -376,7 +379,7 @@ class="math inline">\(E\_{out}(h)\)</span>
 <p>当然有一个大前提就是训练样本和测试样本必须要在同一分布下产生，否则学习无从谈起。</p>
 <p>上面的内容可通过下图进行描述</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bibltpvd144k7me1e2b1elinct18.png"
+<img data-src="https://wulc.me/imgs/image_1bibltpvd144k7me1e2b1elinct18.png"
 alt="模型图" />
 <figcaption aria-hidden="true">模型图</figcaption>
 </figure>
@@ -388,6 +391,25 @@ alt="模型图" />
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -531,7 +553,7 @@ hypothesis</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" h
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -554,6 +576,10 @@ hypothesis</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" h
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

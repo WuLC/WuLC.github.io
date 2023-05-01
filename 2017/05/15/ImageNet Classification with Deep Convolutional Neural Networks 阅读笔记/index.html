@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="ImageNet Classification with Deep Convolutional Neural Networks 这篇论文可以说是多层CNN用在图像领域的首次尝试（此前的LeNet也将CNN用在手写数字的识别上，但是没有用到连续多层CNN）。文中提出的网络模型 AlexNet(设计者的名字叫 Alex) 在 ImageNet 2010、2012 年的比赛上取得的效果远远地优于传统方法">
@@ -96,6 +97,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -194,6 +196,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -289,7 +292,7 @@ feed-forward network，特点是无环，以区别于贝叶斯网络这种有环
 名称的来源，卷积层里面有几个重要概念：核（kernel/filter)、卷积（convolution）、输出（activation
 map）。对照下图可以比较清晰的理解</p>
 <figure>
-<img src="https://wulc.me/imgs/single%20channel.gif"
+<img data-src="https://wulc.me/imgs/single%20channel.gif"
 alt="convolutional layer" />
 <figcaption aria-hidden="true">convolutional layer</figcaption>
 </figure>
@@ -301,7 +304,7 @@ kernel 覆盖的区域）可以用更少的数据来概括这部分的特征。<
 <p>上面的图像只用了一个
 kernel，我们将其看做是一个人观察这张图片得到的信息，那假如有更多的人观察这张图片，并将所有人观察到的信息综合起来，得到的信息是否会更加完备呢?答案是肯定的，这就涉及到了多个kernel的情况，具体如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/multiple_kernel.jpg"
+<img data-src="https://wulc.me/imgs/multiple_kernel.jpg"
 alt="multiple_kernel.jpg-16.2kB" />
 <figcaption aria-hidden="true">multiple_kernel.jpg-16.2kB</figcaption>
 </figure>
@@ -309,7 +312,7 @@ alt="multiple_kernel.jpg-16.2kB" />
 只有一个channel，但是实际中用于分类的图片往往是 RGB
 图片，有3个channel，分别是red， blue，green，如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bglhhknu1e7jni414k7g2v1ip11d.png"
+<img data-src="https://wulc.me/imgs/image_1bglhhknu1e7jni414k7g2v1ip11d.png"
 alt="RGB channels" />
 <figcaption aria-hidden="true">RGB channels</figcaption>
 </figure>
@@ -317,7 +320,7 @@ alt="RGB channels" />
 去进行卷积的时候，过程会如下图所示（<a
 target="_blank" rel="noopener" href="http://cs231n.github.io/convolutional-networks/#conv">来源</a>）</p>
 <figure>
-<img src="https://wulc.me/imgs/multiple%20channel.gif"
+<img data-src="https://wulc.me/imgs/multiple%20channel.gif"
 alt="convolutional network" />
 <figcaption aria-hidden="true">convolutional network</figcaption>
 </figure>
@@ -333,7 +336,7 @@ kernel 最终只产生一个 activation map。</p>
 目的是要较少参数数量和计算量，如下所示是一个 max polling
 的例子，其步长（stride）为2，kernel 为 2 X 2。</p>
 <figure>
-<img src="https://wulc.me/imgs/max_pooling.gif" alt="max pooling" />
+<img data-src="https://wulc.me/imgs/max_pooling.gif" alt="max pooling" />
 <figcaption aria-hidden="true">max pooling</figcaption>
 </figure>
 <p>max pooling 指的是每次取 kernel 中的最大值最为输出，除了 max
@@ -342,7 +345,7 @@ pooling，还有 average pooling
 <p>当上面的步长改为1后，kernel 移动过的区域会有重叠，我们称之为
 overlapping pooling，如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bglieks0s4d1r5kklrdf7qg426.png"
+<img data-src="https://wulc.me/imgs/image_1bglieks0s4d1r5kklrdf7qg426.png"
 alt="overlapping pooling" />
 <figcaption aria-hidden="true">overlapping pooling</figcaption>
 </figure>
@@ -351,7 +354,7 @@ alt="overlapping pooling" />
 只是一个激活函数，而不能称之为一个层。其函数表达式为 <span
 class="math inline">\(f(x) = max(0, x)\)</span>，其图像如下所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bglikg561ica1iq811mf1aduhd2j.png"
+<img data-src="https://wulc.me/imgs/image_1bglikg561ica1iq811mf1aduhd2j.png"
 alt="ReLU" />
 <figcaption aria-hidden="true">ReLU</figcaption>
 </figure>
@@ -361,7 +364,7 @@ alt="ReLU" />
 layer)</h3>
 <p>全连接层就是我们常见的神经网络中的网络层，每个神经元都与前面或后面的各个神经元有连接，如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bglj2kqt1mluolk8vjhfv7f430.png"
+<img data-src="https://wulc.me/imgs/image_1bglj2kqt1mluolk8vjhfv7f430.png"
 alt="fully connected layer" />
 <figcaption aria-hidden="true">fully connected layer</figcaption>
 </figure>
@@ -373,7 +376,7 @@ layer，下面介绍论文中的 CNN 网络的结构及其特点。</p>
 <h3 id="网络结构总览">网络结构总览</h3>
 <p>文中提出的 CNN 网络结构如下</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bgljihpe1q911dbdib71phbop3d.png"
+<img data-src="https://wulc.me/imgs/image_1bgljihpe1q911dbdib71phbop3d.png"
 alt="Alexnet" />
 <figcaption aria-hidden="true">Alexnet</figcaption>
 </figure>
@@ -401,7 +404,7 @@ Nonlinearity、Local Response Normalization 和 Overlapping Pooling。</p>
 <p>要解释这个原因首先需要看看这三个函数的图像（ReLU
 的图像上面已经给出）</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bglkiiou130110g4ola16hkni3q.png"
+<img data-src="https://wulc.me/imgs/image_1bglkiiou130110g4ola16hkni3q.png"
 alt="tanh 和 sigmoid" />
 <figcaption aria-hidden="true">tanh 和 sigmoid</figcaption>
 </figure>
@@ -514,7 +517,7 @@ top-1 error 降低了1%。</p>
 <p>droupout 指的是每个神经元每次传递值时只有 50%
 的概率工作，如下图所示，灰色的神经元指的是该神经元并没有工作。</p>
 <figure>
-<img src="https://wulc.me/imgs/dropout.gif" alt="dropout" />
+<img data-src="https://wulc.me/imgs/dropout.gif" alt="dropout" />
 <figcaption aria-hidden="true">dropout</figcaption>
 </figure>
 <p>这种方法的好处是降低了神经元间的依赖性，使得每个神经元更加
@@ -528,7 +531,7 @@ Large-Scale Visual Recognition Challenge(ILSVRC)
 年和2012年比赛中的表现结果，结果如下所示</p>
 <p>2010年</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bglq20231k02ek11q8lesb7i850.png"
+<img data-src="https://wulc.me/imgs/image_1bglq20231k02ek11q8lesb7i850.png"
 alt="2010" />
 <figcaption aria-hidden="true">2010</figcaption>
 </figure>
@@ -558,7 +561,7 @@ target="_blank" rel="noopener" href="https://arxiv.org/abs/1611.03530">Understan
 requires rethinking generalization</a>指出，下图是从这篇论文的
 presentation 中抽取的一张图片。</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bglsl8l91sjp1k7bide1f5bbhc9.png"
+<img data-src="https://wulc.me/imgs/image_1bglsl8l91sjp1k7bide1f5bbhc9.png"
 alt="4 networks" />
 <figcaption aria-hidden="true">4 networks</figcaption>
 </figure>
@@ -574,6 +577,25 @@ dimension”，而这一工作将会是未来深度学习发展中非常重要�
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -717,7 +739,7 @@ layer)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-l
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -740,6 +762,10 @@ layer)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-l
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="本文内容主要来源于该知乎 live，主要介绍了受众定向（用户画像）的分类和方法、具体介绍标签体系建立以及如何进行行为定向。">
@@ -95,6 +96,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -193,6 +195,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -262,7 +265,7 @@ live</a>，主要介绍了受众定向（用户画像）的分类和方法、具
 <p>受众定向与常听到的用户画像的差别不大，均是研究如何描述用户，为用户打上标签，两者只是在着重点上有细微区别</p>
 <p>受众定向重点是可优化，也就是跟侧重于效果，而用户画像则更侧重于可解释性，然而在实际中对用户的描述往往是两者混合的，如对广告主需要可解释性强的标签，而对于模型则更侧重那些有效的标签（可解释性不一定好）</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1big2mr861guqdgv1s9j1qpqttk9.png"
+<img data-src="https://wulc.me/imgs/image_1big2mr861guqdgv1s9j1qpqttk9.png"
 alt="受众定向与用户画像" />
 <figcaption aria-hidden="true">受众定向与用户画像</figcaption>
 </figure>
@@ -276,7 +279,7 @@ class="math inline">\(t(a,u)\)</span>，描述用户在某个广告主下的特�
 <p>实际中需要为广告打上标签 <span
 class="math inline">\(t(a)\)</span>，用于描述广告的固有属性，从而与用户匹配</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1big3052b1vspafe19832q11iajm.png"
+<img data-src="https://wulc.me/imgs/image_1big3052b1vspafe19832q11iajm.png"
 alt="受众定向方法分类" />
 <figcaption aria-hidden="true">受众定向方法分类</figcaption>
 </figure>
@@ -285,7 +288,7 @@ alt="受众定向方法分类" />
 <p>同样以计算广告为例，下图展示了受众定向常用的方法，左边表示广告的生命周期，右边表示各个阶段的受众定向的方法和效果，其中越往左效果越好，具体方式的含义可参考<a
 href="http://wulc.me/2017/04/28/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A%E7%AC%94%E8%AE%B0%283%29--%E5%8F%97%E4%BC%97%E5%AE%9A%E5%90%91/">这里</a></p>
 <figure>
-<img src="https://wulc.me/imgs/image_1big3f0l5ki915va17ss1ba0oum13.png"
+<img data-src="https://wulc.me/imgs/image_1big3f0l5ki915va17ss1ba0oum13.png"
 alt="常见受众定向的方式" />
 <figcaption aria-hidden="true">常见受众定向的方式</figcaption>
 </figure>
@@ -295,7 +298,7 @@ hyper-local 表示根据更精细的位置做定向(移动端)</p>
 <p>上面讲述了该在那些方面建立标签体系以及建立标签体系的方法，下面要讲一个重点的内容，就是该建立怎样的标签体系</p>
 <p>如下图所示，标签体系可以分为两大类，其中一类是结构化标签，可以认为这一类的标签是一个大的树状结构；另外一类则是非结构化的，也就是根据效果和需求驱动的标签体系，关键词就是一个典型的非结构化标签体系。</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bigfp0riv981j2p138p1tb31ru89.png"
+<img data-src="https://wulc.me/imgs/image_1bigfp0riv981j2p138p1tb31ru89.png"
 alt="受众定向标签体系" />
 <figcaption aria-hidden="true">受众定向标签体系</figcaption>
 </figure>
@@ -303,13 +306,13 @@ alt="受众定向标签体系" />
 <p>结构化的标签体系的一个典型例子是雅虎的 GD
 系统的标签体系，这个标签体系根据主观的判断来分类标签，并没有结合广告主的具体需求，在实际的效果并不好</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1biguif851ctjdsm5v41aq21rqr9.png"
+<img data-src="https://wulc.me/imgs/image_1biguif851ctjdsm5v41aq21rqr9.png"
 alt="结构化标签" />
 <figcaption aria-hidden="true">结构化标签</figcaption>
 </figure>
 <p>下面的标签体系中虽然形式上类似于结构化标签，但是是根据各个广告主的需求来定制各个标签的，因此是非结构化的，也更实用</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1biguqfu0mjn1rboe71e031snfm.png"
+<img data-src="https://wulc.me/imgs/image_1biguqfu0mjn1rboe71e031snfm.png"
 alt="非结构化标签" />
 <figcaption aria-hidden="true">非结构化标签</figcaption>
 </figure>
@@ -320,20 +323,20 @@ alt="非结构化标签" />
 <h3 id="行为定向">行为定向</h3>
 <p>下面讲述受众定向中的一个重点：行为定向，就<strong>是根据用户的历史行为给用户打标签。</strong></p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bigvjnbjb1e1lhs1i2s1g761vfi13.png"
+<img data-src="https://wulc.me/imgs/image_1bigvjnbjb1e1lhs1i2s1g761vfi13.png"
 alt="行为定向的定义" />
 <figcaption aria-hidden="true">行为定向的定义</figcaption>
 </figure>
 <p>行为定向首先要<strong>将用户的各种行为转化为标签，同时对各种行为进行加权</strong>，如下图所示就是通过三种行为（广告点击，搜索，浏览）为用户打标签，其过程都是根据用户操作对象的具体内容提取出标签（关键词，主题等）并进行叠加。</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bii2e03km0h1muifn416ji16i89.png"
+<img data-src="https://wulc.me/imgs/image_1bii2e03km0h1muifn416ji16i89.png"
 alt="行为定向的特征选择过程" />
 <figcaption aria-hidden="true">行为定向的特征选择过程</figcaption>
 </figure>
 <p>上面采用的方法并不复杂，其中一个很重要的原因就是行为定向的实时性要求，因为用户的行为的有效期一般不长，即从关注到最终的购买所持续的时间往往并不长，其次是因为要处理的用户的量级非常大。</p>
 <p>此外，由于各种行为所反映的用户的意图不一，因此需要对不同行为进行加权，而且对于不同的标签，加权的方式还不完全一样，如下是对不同标签的不同行为加权的一种方法</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bii2qh9547r13917u91pg1136hm.png"
+<img data-src="https://wulc.me/imgs/image_1bii2qh9547r13917u91pg1136hm.png"
 alt="加权方式" />
 <figcaption aria-hidden="true">加权方式</figcaption>
 </figure>
@@ -356,7 +359,7 @@ class="math inline">\(w\_{tn}\)</span>
 <p>上图中将各类行为变为具体的标签方法有以下几种，主要思路是找到用户的行为对应的内容（一般是具体文本），然后借助
 NLP 技术将内容转为标签</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bii37vdnie4rjrtci1lce1ve913.png"
+<img data-src="https://wulc.me/imgs/image_1bii37vdnie4rjrtci1lce1ve913.png"
 alt="行为变为标签的方法" />
 <figcaption aria-hidden="true">行为变为标签的方法</figcaption>
 </figure>
@@ -372,7 +375,7 @@ Session log。Session log 中一行表示一个用户的数据，这样通过 Ma
 过程，也就是下图中的局部计算。</p>
 <p>除此之外，行为定向中往往要用到用户过去一段时间的数据（7的整数倍，避免周六日带来的偏差），处理的数据是一个时间序列数据，处理的方法有以下两种：滑动窗口和时间衰减。</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bii44dj0nksliuc6pqo0jeu1g.png"
+<img data-src="https://wulc.me/imgs/image_1bii44dj0nksliuc6pqo0jeu1g.png"
 alt="处理时间序列的行为数据" />
 <figcaption aria-hidden="true">处理时间序列的行为数据</figcaption>
 </figure>
@@ -384,7 +387,7 @@ alt="处理时间序列的行为数据" />
 <h3 id="人口属性定向">人口属性定向</h3>
 <p><strong>人口属性定向中主要是要预测性别和年龄阶段</strong>，实际上就是分类问题</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bii4v7su11nof3v1ndj12vsiq634.png"
+<img data-src="https://wulc.me/imgs/image_1bii4v7su11nof3v1ndj12vsiq634.png"
 alt="人口属性定向" />
 <figcaption aria-hidden="true">人口属性定向</figcaption>
 </figure>
@@ -392,7 +395,7 @@ alt="人口属性定向" />
 <p>上述的受众定向的过程其实就是依据某个用户的各种历史行为，为该用户在所有的标签上打出一个分数，然后线上设定分数阈值，大于这个阈值则判断用户是这个标签的人群。因此一般来说阈值越大，标签人群越少，但是结果也会越可信。</p>
 <p>下图展示了该如何评测受众定向的有效性，横轴表示被打上标签的人群的比例，纵轴表示被打上标签的人群对广告的点击率，一般来说，某个标签圈定的人数越少，效果越好，也就是点击率越高，违反了这一变化规律则说明受众定向不起作用。</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bii4aqnn1evf16gbpjdgd5rok1t.png"
+<img data-src="https://wulc.me/imgs/image_1bii4aqnn1evf16gbpjdgd5rok1t.png"
 alt="受众定向评测" />
 <figcaption aria-hidden="true">受众定向评测</figcaption>
 </figure>
@@ -412,6 +415,25 @@ alt="受众定向评测" />
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -553,7 +575,7 @@ alt="受众定向评测" />
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -576,6 +598,10 @@ alt="受众定向评测" />
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

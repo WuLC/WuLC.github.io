@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="Highlight Detection，直译过来就是高光检测，一般应用在图像或视频里，本文主要关注视频场景，其任务就是从一段长视频里找到某个“高光”的片段。这里的“高光”是一个非常宽泛的定义，不像 ctr&#x2F;cvr 有明确的含义，不同场景下对“高光”的定义不一样：比如说对于带货直播，高光片段也许是 gmv 最高的时间段；对于非带货直播，高光的片段也许是观看人数或者刷礼物最多的时间段。 Highlig">
@@ -94,6 +95,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -192,6 +194,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -286,7 +289,7 @@ E-Commerce</a></p>
 提出的一个方法，总体的模型结构图如下图所示，模型不复杂，左边是抽取多模态特征部分，右边则是基于抽取出来的特征和
 score，通过 GCN 做 finetune，损失函数由两部分组成，即
 <code>Loss_reg</code> 和 <code>Loss_ag</code></p>
-<p><img src="https://wulc.me/imgs/TaoHighlight_CAM.jpg" height="70%" width="70%"></p>
+<p><img data-src="https://wulc.me/imgs/TaoHighlight_CAM.jpg" height="70%" width="70%"></p>
 <p>特征工程部分，visual information 通过 I3D+BiGRU 提取，比较常规；text
 information 提出了一个 QFGA(Query-Focus Graph Aggregation), 一个基于
 graph 抽取特征的模块</p>
@@ -296,9 +299,9 @@ Module</strong>，这个模块主要作用是融合多模态特征（即 visual 
 机制, 对于下面左边的 block，<span class="math inline">\(v\)</span>
 相当于 query, <span class="math inline">\(s\)</span> 相当于 key 和
 value</p>
-<p><img src="https://wulc.me/imgs/TaoHighlight_coattention.jpg" height="50%" width="50%"></p>
+<p><img data-src="https://wulc.me/imgs/TaoHighlight_coattention.jpg" height="50%" width="50%"></p>
 <p>其计算逻辑如下图所示</p>
-<p><img src="https://wulc.me/imgs/TaoHighlight_Coattention_compute.jpg" height="50%" width="50%"></p>
+<p><img data-src="https://wulc.me/imgs/TaoHighlight_Coattention_compute.jpg" height="50%" width="50%"></p>
 <p><strong>Graph-based Fine-tuning</strong>:
 这部分主要是为了减少抽取出来的特征里的 noise；paper 里是这么说的:
 <code>Due to the presence of visual and text noises in multi-modal video highlight detection, we propose a graph based fine-tuning module to improve the accuracy of our model.</code>，但是也没进一步说明原因</p>
@@ -352,9 +355,9 @@ class="math inline">\(c_j\)</span> 表示两个 video 的中心位置</li>
 frame作为固定的高光片段</p>
 <p>实验评估的效果指标就是看各种 IoU 的占比，数据集是 taobao 提供的包含 5
 个大分类的数据，整个 dataset 的信息如下</p>
-<p><img src="https://wulc.me/imgs/TaoHighlight_dataset.jpg" height="60%" width="60%"></p>
+<p><img data-src="https://wulc.me/imgs/TaoHighlight_dataset.jpg" height="60%" width="60%"></p>
 <p>paper 做了消融实验，结果如下图所示</p>
-<p><img src="https://wulc.me/imgs/TaoHighlight_ablation.jpg" height="50%" width="50%"></p>
+<p><img data-src="https://wulc.me/imgs/TaoHighlight_ablation.jpg" height="50%" width="50%"></p>
 <p>各符号含义如下，可以看到文本特征，Graph-based Fine-tuning
 以及损失函数中的 <span class="math inline">\(L_{ag}\)</span>
 项作用还是不小的</p>
@@ -423,7 +426,7 @@ pair 上，<span class="math inline">\(w_{ij}\)</span> 可能会更小</p>
 class="math inline">\(\mathcal{P_1}\)</span> 到 <span
 class="math inline">\(\mathcal{P_t}\)</span> 可认为是 <span
 class="math inline">\(t\)</span> 个 batch，每个 batch 有 n 个 pair</p>
-<p><img src="https://wulc.me/imgs/HighlightDetection_LessIsMore.jpg" height="50%" width="50%"></p>
+<p><img data-src="https://wulc.me/imgs/HighlightDetection_LessIsMore.jpg" height="50%" width="50%"></p>
 <p>上面也提到，<span
 class="math inline">\(w_{ij}\)</span>实际的生效是通过分 batch +
 softmax，即上面的损失函数最终会改成如下形式，<span
@@ -452,8 +455,8 @@ href="https://wulc.me/2018/06/16/ROC%20%E6%9B%B2%E7%BA%BF%E4%B8%8E%20PR%20%E6%9B
 TVSum，数据集里对视频做了分类(domain)，因此也尝试了总体建模（下图的
 Ours-A）和分 domain 建模（下图的
 Ours-S），效果还是挺不错的，也超过了一些 supervised 的方法</p>
-<p><img src="https://wulc.me/imgs/HighlightDetection_LessIsMore_result1.jpg" height="50%" width="50%"></p>
-<p><img src="https://wulc.me/imgs/HighlightDetection_LessIsMore_result2.jpg" height="50%" width="50%"></p>
+<p><img data-src="https://wulc.me/imgs/HighlightDetection_LessIsMore_result1.jpg" height="50%" width="50%"></p>
+<p><img data-src="https://wulc.me/imgs/HighlightDetection_LessIsMore_result2.jpg" height="50%" width="50%"></p>
 <p>文章也做了消融实验，主要是 2 部分</p>
 <p>（1）针对上面的binary latent variable <span
 class="math inline">\(w_{ij}\)</span>，对比了去掉 <span
@@ -461,9 +464,9 @@ class="math inline">\(w_{ij}\)</span> （下图中的Ranking-D）和通过 EM
 来更新 <span class="math inline">\(w_{ij}\)</span> （下图中的
 Ranking-EM）的效果，效果是 joint training &gt; EM &gt; 去掉 <span
 class="math inline">\(w_{ij}\)</span></p>
-<p><img src="https://wulc.me/imgs/HighlightDetection_LessIsMore_ablation1.jpg" height="50%" width="50%"></p>
+<p><img data-src="https://wulc.me/imgs/HighlightDetection_LessIsMore_ablation1.jpg" height="50%" width="50%"></p>
 <p>（2）对比了数据集大小的影响，随着数据集增大，准确率逐渐上升并减缓，比较常规的结论</p>
-<p><img src="https://wulc.me/imgs/HighlightDetection_LessIsMore_ablation2.jpg" height="50%" width="50%"></p>
+<p><img data-src="https://wulc.me/imgs/HighlightDetection_LessIsMore_ablation2.jpg" height="50%" width="50%"></p>
 <h2 id="小结">小结</h2>
 <p>关于 highlight detection 的 paper
 不少，这里主要挑选了两篇有针对性的，两篇 paper 的一些核心点如下</p>
@@ -503,6 +506,25 @@ trade-off</strong></li>
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -646,7 +668,7 @@ trade-off</strong></li>
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -669,6 +691,10 @@ trade-off</strong></li>
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

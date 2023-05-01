@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="当前的推荐或广告系统基本都是做到请求级别的预估和优化，在效果最大化的同时带来的问题是机器成本的上升；而流量分布的不均匀使得这个问题更为严峻，比如说对于抖音或美团，一天内流量往往有两个峰：午高峰和晚高峰，因为这两个时间点餐、刷手机的人数会陡增，而其他时间段流量会下降比较多，如下图所示  这意味着如果准备足以抗住高峰的机器，那在其他时间段大部分机器是空转的，或者说 roi 很低，因此往往在高峰的时候都">
@@ -97,6 +98,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -195,6 +197,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -260,7 +263,7 @@
 
       
         <p>当前的推荐或广告系统基本都是做到请求级别的预估和优化，在效果最大化的同时带来的问题是机器成本的上升；而流量分布的不均匀使得这个问题更为严峻，比如说对于抖音或美团，一天内流量往往有两个峰：午高峰和晚高峰，因为这两个时间点餐、刷手机的人数会陡增，而其他时间段流量会下降比较多，如下图所示</p>
-<p><img src="https://wulc.me/imgs/unbalanced_traffic.jpg" height="30%" width="30%"></p>
+<p><img data-src="https://wulc.me/imgs/unbalanced_traffic.jpg" height="30%" width="30%"></p>
 <p>这意味着如果准备足以抗住高峰的机器，那在其他时间段大部分机器是空转的，或者说
 roi
 很低，因此往往在高峰的时候都需要扩容或降级。降级一般是指指降低请求数，按比例
@@ -335,7 +338,7 @@ Allocation Framework for Online Serving System</a>，paper
 <h3 id="dcaf">DCAF</h3>
 <h4 id="问题建模">问题建模</h4>
 <p>paper 很自然把算力分配建模成如下的问题</p>
-<p><img src="https://wulc.me/imgs/DCAF_formulation.jpg" height="50%" width="50%"></p>
+<p><img data-src="https://wulc.me/imgs/DCAF_formulation.jpg" height="50%" width="50%"></p>
 <p>上面相关符号含义如下</p>
 <ul>
 <li><span class="math inline">\(i\)</span>: 请求的 index</li>
@@ -371,7 +374,7 @@ qps 会比较大</p>
 href="https://wulc.me/2017/05/20/%E5%87%B8%E4%BC%98%E5%8C%96%E6%80%BB%E7%BB%93/">凸优化总结</a>
 里面的拉格朗日对偶部分,
 根据理论可以写出上面的最优化问题的拉格朗日对偶问题如图下式子（3）所示</p>
-<p><img src="https://wulc.me/imgs/lagrange_dual.jpg" height="50%" width="50%"></p>
+<p><img data-src="https://wulc.me/imgs/lagrange_dual.jpg" height="50%" width="50%"></p>
 <p>与 bidding 中的推导不同，<strong>在 bidding
 中只需要获取最优出价公式而不需要具体的解</strong>，因此可以最变量直接求导数为
 0 推导出最优出价的公式，这部分详细过程可以参考<a
@@ -382,7 +385,7 @@ Advertising》阅读笔记</a> 中的另一种推导方法</p>
 <code>i</code> 中应该选择哪个 action，即需要让哪个 <span
 class="math inline">\(x_{ij}\)</span> 的值为
 1，所以需要求解这个问题，paper 的推导过程如下</p>
-<p><img src="https://wulc.me/imgs/problem_derived.jpg" height="50%" width="50%"></p>
+<p><img data-src="https://wulc.me/imgs/problem_derived.jpg" height="50%" width="50%"></p>
 <p>下面是笔者对上面推导步骤的理解</p>
 <p>1）只有当 <span class="math inline">\(-Q_{ij} + \lambda q_j + \mu_i
 \ge 0\)</span>
@@ -397,7 +400,7 @@ class="math inline">\(x_{ij}\)</span> 的值为
 class="math inline">\(x_{ij}(-Q_{ij} + \lambda q_j + \mu_i)\)</span>
 这一项为 0，这个其实跟推导拉格朗日对偶的过程有点像，如下图所示（<a
 target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1HP4y1Y79e/?share_source=copy_web&amp;vd_source=7b70e0a98d81aba8b5e293a7324c3e2a">来源</a>）</p>
-<p><img src="https://wulc.me/imgs/lagrange_dual_derive.jpg" height="50%" width="50%"></p>
+<p><img data-src="https://wulc.me/imgs/lagrange_dual_derive.jpg" height="50%" width="50%"></p>
 <p>3）取消掉 min 约束后，剩下的 max 问题的变量就是 <span
 class="math inline">\(\lambda\)</span> 和 <span
 class="math inline">\(\mu\)</span>, 从约束条件 <span
@@ -446,11 +449,11 @@ x_{ij}q_j\)</span> 会随着 <span class="math inline">\(\lambda\)</span>
 class="math inline">\(\lambda\)</span> 使得消耗的算力刚好接近总体的算力
 quota <span class="math inline">\(C\)</span>，算法如下图所示，11
 行的符号应该是写反了</p>
-<p><img src="https://wulc.me/imgs/DCAF_calc_lambda.jpg" height="50%" width="50%"></p>
+<p><img data-src="https://wulc.me/imgs/DCAF_calc_lambda.jpg" height="50%" width="50%"></p>
 <h4 id="系统设计">系统设计</h4>
 <p>DCAF 的总体框架如下图所示，左边部分主要是建模 <span
 class="math inline">\(Q_{ij}\)</span>, 右边部分则是在线 serving 系统</p>
-<p><img src="https://wulc.me/imgs/DCAF_system.jpg" height="50%" width="50%"></p>
+<p><img data-src="https://wulc.me/imgs/DCAF_system.jpg" height="50%" width="50%"></p>
 <p>左半部分比较好理解，这里着重讲下右半部分，其中右上角的 Information
 Collection and Monitoring
 部分，会实时搜集当前系统负载的各项数据，如错误率，超时率等，并通过 PID
@@ -459,14 +462,14 @@ Collection and Monitoring
 MaxPower，可理解为<strong>根据系统的实时负载调整每次请求的候选数的上限</strong></p>
 <p>这部分在实验设置里也能体现出来，即随着系统负载 qps 增加，MaxPower
 会自动下调，保证整体系统的稳定性，如下图所示</p>
-<p><img src="https://wulc.me/imgs/DCAF_maxpower_exp.jpg" height="40%" width="40%"></p>
+<p><img data-src="https://wulc.me/imgs/DCAF_maxpower_exp.jpg" height="40%" width="40%"></p>
 <p><span class="math inline">\(\lambda\)</span>
 则是根据上面的二分搜索算法，利用采样一段时间的数据实时计算 <span
 class="math inline">\(\lambda\)</span> 的最优值，算法中的容量 <span
 class="math inline">\(C\)</span> 则是根据 QPS
 做了兑换计算，如下是离线计算 <span
 class="math inline">\(\lambda\)</span> 的过程</p>
-<p><img src="https://wulc.me/imgs/DCAF_lambda_offline.jpg" height="50%" width="50%"></p>
+<p><img data-src="https://wulc.me/imgs/DCAF_lambda_offline.jpg" height="50%" width="50%"></p>
 <h4 id="实验设计">实验设计</h4>
 <p>实验部分做了 2 个实验，离线和在线的</p>
 <p>离线实验主要是做了流量回放，<span
@@ -499,12 +502,12 @@ class="math inline">\(\lambda\)</span> 的过程是一致的，因为
 <span class="math inline">\(\lambda\)</span>
 时就是要截断的候选数，也就是 <span class="math inline">\(q_j\)</span>
 具体的值</p>
-<p><img src="https://wulc.me/imgs/DCAF_offline_exp.jpg" height="50%" width="50%"></p>
+<p><img data-src="https://wulc.me/imgs/DCAF_offline_exp.jpg" height="50%" width="50%"></p>
 <p>虽然离线实验显示打平算力 ecpm+3.7%, 打平 ecpm
 机器成本-49%，但毕竟是离线环境，比较稳定，选择的 action
 也不会影响环境，所以如果开线上实验，效果一般会打个折扣，paper
 里的在线实验也显示了这一点</p>
-<p><img src="https://wulc.me/imgs/DCAF_online_exp.jpg" height="50%" width="50%"></p>
+<p><img data-src="https://wulc.me/imgs/DCAF_online_exp.jpg" height="50%" width="50%"></p>
 <h3 id="流量价值与算力建模">流量价值与算力建模</h3>
 <p>DCAF 这篇 paper
 着重讲了分配策略，但是对流量价值和算力的建模讲得比较少，只提到了 <span
@@ -525,7 +528,7 @@ class="math inline">\(Q_{ij}\)</span> 同理, 所以可以把 <span
 class="math inline">\(Q_{ij}\)</span> 和 <span
 class="math inline">\(q_j\)</span> 都写成 <span
 class="math inline">\(f(候选数)\)</span> 的函数形式</p>
-<p><img src="https://wulc.me/imgs/computational_resource.jpg" height="50%" width="50%"></p>
+<p><img data-src="https://wulc.me/imgs/computational_resource.jpg" height="50%" width="50%"></p>
 <p>美团在这篇文章中也描述了其对 DCAF 的一个改进，<a
 target="_blank" rel="noopener" href="https://tech.meituan.com/2021/06/17/waimai-ai-advertisement.html">美团外卖广告智能算力的探索与实践</a>，其中就包括了对这两部分的详细的建模，下面会大概讲一下美团的做法，并讨论一下其他可能的做法</p>
 <h4 id="流量价值建模">流量价值建模</h4>
@@ -538,7 +541,7 @@ class="math inline">\(ReLU(pred_{j}-pred_{j+1})\)</span>
 来让预估值尽量保序，但这也不能完全保证预估是有序的</p>
 <p>针对这个问题，上面的美团的文章的做法是<strong>预估整条流量的价值，然后通过每个广告的预估分来估算不同档位的价值</strong>（即下图的档位价值预估），这样理论上能够计算所有可能的
 action，相比于 multi-head 的做法要更加灵活和轻量级</p>
-<p><img src="https://wulc.me/imgs/DCFA_meituan_value.jpg" height="50%" width="50%"></p>
+<p><img data-src="https://wulc.me/imgs/DCFA_meituan_value.jpg" height="50%" width="50%"></p>
 <p>而价值预估上，为了保证在线的效率，美团采用的是“离线预估，在线查询”的方法，即离线通过对特征分桶来划分流量，然后通过
 xgb 预估每个桶里的流量价值并写入外部 kv；在线时通过实时查询 kv
 和插值的方法来
@@ -559,7 +562,7 @@ class="math inline">\(b\)</span>
 <p>离线先做特征分桶，然后在桶里建模条数和算力的关系，每个桶的建模采用了分段线性拟合，与上面的价值建模不同的点在于，这里没有插值的过程（就是默认所有流量都能找到对饮的桶？）</p>
 <p>而相比于 DCAF 原文采用条数来衡量算力，这里采用了 CPU
 的耗时来衡量算力，总体方法如下</p>
-<p><img src="https://wulc.me/imgs/DCAF_meituan_computation.jpg" height="50%" width="50%"></p>
+<p><img data-src="https://wulc.me/imgs/DCAF_meituan_computation.jpg" height="50%" width="50%"></p>
 <p>而另一种思路跟上面提到的利用 <span
 class="math inline">\(\log(ax)+b\)</span>
 形式作为先验比较相似，也是需要考虑在特定维度去拟合 a, b 这两个参数</p>
@@ -578,6 +581,25 @@ class="math inline">\(\log(ax)+b\)</span>
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -720,7 +742,7 @@ class="math inline">\(\log(ax)+b\)</span>
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -743,6 +765,10 @@ class="math inline">\(\log(ax)+b\)</span>
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

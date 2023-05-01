@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="本文是链接、装载与库中关于可执行文件装载的过程，主要描述了进程在被装载时虚拟空间是如何分布的，物理内存空间与虚拟地址空间是如何映射的，同时描述了 Linux 系统下装载一个可执行文件的基本过程。">
@@ -95,6 +96,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -193,6 +195,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -282,7 +285,7 @@ Linux 下会出现 segment fault 的错误</strong></p>
 就是把内存切成小块（page）再分配，当有新的空间申请时，按照一定算法驱逐已分配内存的空间（如
 FIFO、LUR）,如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/pageLoad.jpg" alt="pageload" />
+<img data-src="https://wulc.me/imgs/pageLoad.jpg" alt="pageload" />
 <figcaption aria-hidden="true">pageload</figcaption>
 </figure>
 <h2 id="从操作系统看可执行文件的装载">从操作系统看可执行文件的装载</h2>
@@ -309,7 +312,7 @@ VMA ，属性为只读，在虚拟空间的地址为
 0x08048000-0x08049000，这个大小就是32 位 IntelIA32 的一个页的大小，哪怕
 <code>.text</code> 的数据没这么多也会占用掉一个页的大小</p>
 <figure>
-<img src="https://wulc.me/imgs/virtualaddressspace.jpg"
+<img data-src="https://wulc.me/imgs/virtualaddressspace.jpg"
 alt="virtual addr" />
 <figcaption aria-hidden="true">virtual addr</figcaption>
 </figure>
@@ -318,7 +321,7 @@ alt="virtual addr" />
 把控制权交给操作系统，操作系统查询进程的
 VMA，计算出相应页面在可执行文件中的位置，进而在物理内存中分配一个物理页，将进程中改虚拟页与物理页简历映射关系，再把控制权交给进程。如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/pageFault.jpg" alt="pageFault" />
+<img data-src="https://wulc.me/imgs/pageFault.jpg" alt="pageFault" />
 <figcaption aria-hidden="true">pageFault</figcaption>
 </figure>
 <h2 id="进程虚拟空间分布">进程虚拟空间分布</h2>
@@ -329,7 +332,7 @@ VMA，计算出相应页面在可执行文件中的位置，进而在物理内�
 segment</strong>，如下图所示是将两个 <code>.text</code>
 段合并成一个，从而使得原来需要分配三个页的物理内存变成只需要分配两个页</p>
 <figure>
-<img src="https://wulc.me/imgs/mergeELFsegment.jpg"
+<img data-src="https://wulc.me/imgs/mergeELFsegment.jpg"
 alt="mergeSection" />
 <figcaption aria-hidden="true">mergeSection</figcaption>
 </figure>
@@ -338,7 +341,7 @@ ELF 文件中原始的“段”被称为 section，虚拟空间地址后被称�
 segment，实际上，这是看待 ELF 文件的两个视角，如下图所示，左边的 section
 会被合并成右边的 segment</p>
 <figure>
-<img src="https://wulc.me/imgs/segmentVSsection.jpg"
+<img data-src="https://wulc.me/imgs/segmentVSsection.jpg"
 alt="segmentVSsection" />
 <figcaption aria-hidden="true">segmentVSsection</figcaption>
 </figure>
@@ -348,12 +351,12 @@ section，通过 <code>readelf -l</code> 则可看到 elf 文件的 segment,
 如下图是一个简单例子，有 20+的 section，但是只有 5 个 segment，且
 segment 中只有类型为 LOAD 的两个段才需要被映射到物理内存中</p>
 <figure>
-<img src="https://wulc.me/imgs/readelfSection.jpg"
+<img data-src="https://wulc.me/imgs/readelfSection.jpg"
 alt="section memory" />
 <figcaption aria-hidden="true">section memory</figcaption>
 </figure>
 <figure>
-<img src="https://wulc.me/imgs/readelfSegment.jpg"
+<img data-src="https://wulc.me/imgs/readelfSegment.jpg"
 alt="segment memory" />
 <figcaption aria-hidden="true">segment memory</figcaption>
 </figure>
@@ -363,7 +366,7 @@ alt="segment memory" />
 目标文件不需要被装载，所以没有程序表头</strong></p>
 <p>程序表头的结构体即各个字段的含义如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/programHeader.jpg" alt="programHeader" />
+<img data-src="https://wulc.me/imgs/programHeader.jpg" alt="programHeader" />
 <figcaption aria-hidden="true">programHeader</figcaption>
 </figure>
 <h3 id="堆与栈">堆与栈</h3>
@@ -371,7 +374,7 @@ alt="segment memory" />
 VMA 形式存在的</strong>，在 Linux 下，可通过查看 <code>/proc</code>
 来查看进程的虚拟空间分布，如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/proc.jpg" alt="proc" />
+<img data-src="https://wulc.me/imgs/proc.jpg" alt="proc" />
 <figcaption aria-hidden="true">proc</figcaption>
 </figure>
 <p>上面结果中主要关注的是几列表示的含义如下：第一列是 VMA
@@ -384,7 +387,7 @@ VMA 中的 stack VMA）</p>
 <code>PATH=/usr/bin</code>, 如下图运行命令 <code>prog 1234</code>
 后，进程的栈分布如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/StackInitialize.jpg"
+<img data-src="https://wulc.me/imgs/StackInitialize.jpg"
 alt="stackInitialize" />
 <figcaption aria-hidden="true">stackInitialize</figcaption>
 </figure>
@@ -409,7 +412,7 @@ VMA</strong>，一个进程基本可映射成以下几个 VMA（segment）</p>
 </ul>
 <p>因此，一个进程的虚拟地址空间如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/executable2virtualspace.jpg"
+<img data-src="https://wulc.me/imgs/executable2virtualspace.jpg"
 alt="executable2virtualaddress" />
 <figcaption aria-hidden="true">executable2virtualaddress</figcaption>
 </figure>
@@ -471,6 +474,25 @@ ELF 文件，这个入口就是 ELF 文件的文件头中 <code>e_entry</code>
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -615,7 +637,7 @@ ELF 文件，这个入口就是 ELF 文件的文件头中 <code>e_entry</code>
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -638,6 +660,10 @@ ELF 文件，这个入口就是 ELF 文件的文件头中 <code>e_entry</code>
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

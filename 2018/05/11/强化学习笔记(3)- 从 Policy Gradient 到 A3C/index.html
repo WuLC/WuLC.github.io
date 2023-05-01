@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="在之前的文章 强化学习笔记(2)-从 Q-Learning 到 DQN 中，我们已经知道 Q-Learning 系列方法是基于 value 的方法， 也就是通过计算每一个状态动作的价值，然后选择价值最大的动作执行。这是一种间接的做法，那有没有更直接的做法呢？有！那就是直接更新策略。本文要介绍的 Policy Gradient 就是这类 policy-based 的方法， 除此之外，还会介绍结合了">
@@ -90,6 +91,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -188,6 +190,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -299,7 +302,7 @@ class="math inline">\(f(x)\)</span> 也就是 <span
 class="math inline">\(f(s, a)\)</span>
 的期望，可以看到，最后的结果跟上面的目标函数是一致的。</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1cd6euujcj611hh21ih71fa38mlm.png"
+<img data-src="https://wulc.me/imgs/image_1cd6euujcj611hh21ih71fa38mlm.png"
 alt="max f(s,a)" />
 <figcaption aria-hidden="true">max f(s,a)</figcaption>
 </figure>
@@ -311,7 +314,7 @@ alt="max f(s,a)" />
 control using generalized advantage estimation</a>
 里就对比了若干种评价指标。</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1cd4k6vg5g78tcq1dg6gasrss9.png"
+<img data-src="https://wulc.me/imgs/image_1cd4k6vg5g78tcq1dg6gasrss9.png"
 alt="select judge function" />
 <figcaption aria-hidden="true">select judge function</figcaption>
 </figure>
@@ -342,7 +345,7 @@ target="_blank" rel="noopener" href="http://202.38.196.91/cache/5/03/www0.cs.ucl
 Silver 的 Policy Gradient 课件</a> ，这种方法也叫 Monte-Carlo Policy
 Gradient</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1cd6dk9spft51pi59smheenb89.png"
+<img data-src="https://wulc.me/imgs/image_1cd6dk9spft51pi59smheenb89.png"
 alt="Policy Gradient Update" />
 <figcaption aria-hidden="true">Policy Gradient Update</figcaption>
 </figure>
@@ -396,7 +399,7 @@ class="math inline">\(a\)</span> 输入 Critic 网络，输出的是 Q
 值，目标函数就是极大化 Q 值，但是更新的方法两者又有一些区别。论文中显示
 DDPG 算法流程如下</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1cd5bb8ke1d9b1e1d1qcq1ta410f9m.png"
+<img data-src="https://wulc.me/imgs/image_1cd5bb8ke1d9b1e1d1qcq1ta410f9m.png"
 alt="DDPG" />
 <figcaption aria-hidden="true">DDPG</figcaption>
 </figure>
@@ -409,7 +412,7 @@ target="_blank" rel="noopener" href="https://blog.csdn.net/jinzhuojun/article/de
 跟之前提到的 DQN 有点类似，但是这里的输入是 state + action，输出是一个 Q
 值而不是各个动作的 Q 值。</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1cd6k6nr7c9mqcc1bthhs4ibs13.png"
+<img data-src="https://wulc.me/imgs/image_1cd6k6nr7c9mqcc1bthhs4ibs13.png"
 alt="network visulization" />
 <figcaption aria-hidden="true">network visulization</figcaption>
 </figure>
@@ -435,7 +438,7 @@ Function(即A值) 而不是 DDPG 中单纯的 Q 值。</p>
 <p>整体的结构如下所示，图片摘自<a
 target="_blank" rel="noopener" href="https://blog.csdn.net/jinzhuojun/article/details/72851548">这篇文章</a>。</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1cd746v6om9cmoh1nul1io01fg19.png"
+<img data-src="https://wulc.me/imgs/image_1cd746v6om9cmoh1nul1io01fg19.png"
 alt="A3C" />
 <figcaption aria-hidden="true">A3C</figcaption>
 </figure>
@@ -444,7 +447,7 @@ alt="A3C" />
 可以作为离散动作值的概率输出，因此能够同时解决前面提到的两类问题。</p>
 <p>两个网络的更新公式如下</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1cd7766d16uk2l812unadu2gt9.png"
+<img data-src="https://wulc.me/imgs/image_1cd7766d16uk2l812unadu2gt9.png"
 alt="A3C update" />
 <figcaption aria-hidden="true">A3C update</figcaption>
 </figure>
@@ -479,6 +482,25 @@ introduction</a></li>
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -623,7 +645,7 @@ Actor-Critic(A3C)</span></a></li></ol></div>
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -646,6 +668,10 @@ Actor-Critic(A3C)</span></a></li></ol></div>
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

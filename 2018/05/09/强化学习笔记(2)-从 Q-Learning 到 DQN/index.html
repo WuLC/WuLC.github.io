@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="在上一篇文章强化学习笔记(1)-概述中，介绍了通过 MDP 对强化学习的问题进行建模，但是由于强化学习往往不能获取 MDP 中的转移概率，解决 MDP 的 value iteration 和 policy iteration 不能直接应用到解决强化学习的问题上，因此出现了一些近似的算法来解决这个问题，本文要介绍的就是基于 value iteration 而发展出来的 Q-Learning 系列方法">
@@ -86,6 +87,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -184,6 +186,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -340,7 +343,7 @@ class="math inline">\(\epsilon\)</span> 的概率是选择当前 Q-Table
 <p>Q-Learning 算法的流程如下，图片摘自<a
 target="_blank" rel="noopener" href="https://morvanzhou.github.io/tutorials/machine-learning/ML-intro/4-03-q-learning/">这里</a></p>
 <figure>
-<img src="https://wulc.me/imgs/image_1cd24g4og10s14pd133n3cvunnm.png"
+<img data-src="https://wulc.me/imgs/image_1cd24g4og10s14pd133n3cvunnm.png"
 alt="Q-Learning" />
 <figcaption aria-hidden="true">Q-Learning</figcaption>
 </figure>
@@ -368,7 +371,7 @@ Sarsa
 值；说的好像很绕，但是看一下下面的流程便可知道这两者的具体差异了，图片摘自<a
 target="_blank" rel="noopener" href="https://morvanzhou.github.io/tutorials/machine-learning/ML-intro/4-04-sarsa/">这里</a></p>
 <figure>
-<img src="https://wulc.me/imgs/image_1cd24f88k2ae10911ipacg01cv49.png"
+<img data-src="https://wulc.me/imgs/image_1cd24f88k2ae10911ipacg01cv49.png"
 alt="Q-Learning vs Sarsa" />
 <figcaption aria-hidden="true">Q-Learning vs Sarsa</figcaption>
 </figure>
@@ -417,7 +420,7 @@ Q-Learning 的训练算法非常相似，需要利用 Q 估计和 Q
 target="_blank" rel="noopener" href="https://www.cs.toronto.edu/~vmnih/docs/dqn.pdf">Playing atari with
 deep reinforcement learning</a> 中的算法流程图</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1cd2kiaol19ft2kb1dr4ricnorm.png"
+<img data-src="https://wulc.me/imgs/image_1cd2kiaol19ft2kb1dr4ricnorm.png"
 alt="DQN" />
 <figcaption aria-hidden="true">DQN</figcaption>
 </figure>
@@ -495,6 +498,25 @@ introduction</a></li>
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -637,7 +659,7 @@ introduction</a></li>
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -660,6 +682,10 @@ introduction</a></li>
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

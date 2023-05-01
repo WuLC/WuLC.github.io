@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="本文是刘鹏老师的计算广告学中的一些笔记。本文是第四章: 竞价广告系统。主要介绍竞价系统理论，广告网络的概念，以及点击率预测设计到的一些技术。">
@@ -95,6 +96,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -193,6 +195,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -312,7 +315,7 @@ that want to host advertisements</p>
 </ul>
 <p>广告网络的系统架构示意如下</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bf0nmt3b1ommui91hkvt1pja9.png"
+<img data-src="https://wulc.me/imgs/image_1bf0nmt3b1ommui91hkvt1pja9.png"
 alt="广告网络架构" />
 <figcaption aria-hidden="true">广告网络架构</figcaption>
 </figure>
@@ -332,23 +335,23 @@ alt="广告网络架构" />
 将每篇文档看做一个布尔表达式，同时将每个查询也看做一个布尔表达式。</p>
 <p>如下面是一个表示文档的布尔表达式</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bfgdlkaf1qak17g091h7k61is8m.png"
+<img data-src="https://wulc.me/imgs/image_1bfgdlkaf1qak17g091h7k61is8m.png"
 alt="boolean" />
 <figcaption aria-hidden="true">boolean</figcaption>
 </figure>
 <p>只有当文档满足查询的布尔表达式条件时，才能出这个广告，为了加快这个检索过程，布尔表达式检索通过建立两层索引来实现加速。其涉及到的一些概念和具体方法如下(摘自PPT）</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bfgds6l21a3612tjrdcjim14cd13.png"
+<img data-src="https://wulc.me/imgs/image_1bfgds6l21a3612tjrdcjim14cd13.png"
 alt="b1" />
 <figcaption aria-hidden="true">b1</figcaption>
 </figure>
 <figure>
-<img src="https://wulc.me/imgs/image_1bfgdu07595q1lcnob94if14lu1t.png"
+<img data-src="https://wulc.me/imgs/image_1bfgdu07595q1lcnob94if14lu1t.png"
 alt="b2" />
 <figcaption aria-hidden="true">b2</figcaption>
 </figure>
 <figure>
-<img src="https://wulc.me/imgs/image_1bfgdudgo3bnqsqmv01luqt7i2a.png"
+<img data-src="https://wulc.me/imgs/image_1bfgdudgo3bnqsqmv01luqt7i2a.png"
 alt="b3" />
 <figcaption aria-hidden="true">b3</figcaption>
 </figure>
@@ -356,7 +359,7 @@ alt="b3" />
 情况下的相关性检索指的是当查询的布尔表达式中的条件较多时，如果采用传统的搜索引擎的搜索方法，会导致计算量非常大，这里提供的思路是：<strong>在查找候选文档的过程中做一个近似的评估，切掉那些理论上不需要再考虑的文档，只对进候选的文档进行相关性计算，比Top-N最小堆最小值大的插入</strong></p>
 <p>采用的具体算法是WAND算法，其细节如下（摘自PPT）</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bfge9mqrt061s24esg10381b8i2n.png"
+<img data-src="https://wulc.me/imgs/image_1bfge9mqrt061s24esg10381b8i2n.png"
 alt="WAND" />
 <figcaption aria-hidden="true">WAND</figcaption>
 </figure>
@@ -366,7 +369,7 @@ alt="WAND" />
 是在基于消息传递通信模型的分布式环境下解决一致性问题的基础服务</p>
 <p>用层次式Namespace维护同步需要的状态空间</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bf8gbr9c1bqd13151j4d1nsid829.png"
+<img data-src="https://wulc.me/imgs/image_1bf8gbr9c1bqd13151j4d1nsid829.png"
 alt="zk1" />
 <figcaption aria-hidden="true">zk1</figcaption>
 </figure>
@@ -403,7 +406,7 @@ solution, campaign, advertiser)，以及广告标签对新广告点击率做估�
 <p>在线广告的三个维度 <span class="math inline">\((u,a,c)\)</span>
 上均有不同的特征，可以通过组合这些特征构造高纬特征</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bf8lhie51q4h1rc6eftmgf1n352n.png"
+<img data-src="https://wulc.me/imgs/image_1bf8lhie51q4h1rc6eftmgf1n352n.png"
 alt="三个维度上的特征" />
 <figcaption aria-hidden="true">三个维度上的特征</figcaption>
 </figure>
@@ -432,7 +435,7 @@ Quasi-Newton 方法。</p>
 <p>BFGS方法Hession计算公式如下 (空间复杂度为 <span
 class="math inline">\(O(n^2)\)</span> )：</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bf8ibdkh1enm1sdn6gh6udjdf13.png"
+<img data-src="https://wulc.me/imgs/image_1bf8ibdkh1enm1sdn6gh6udjdf13.png"
 alt="BFGS" />
 <figcaption aria-hidden="true">BFGS</figcaption>
 </figure>
@@ -440,7 +443,7 @@ alt="BFGS" />
 的Hession阵用下图方式加以近似(<span class="math inline">\(B\_k\)</span>
 为Hession近似)</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bf8ilp9l7m41pga1opf1vf83ku1g.png"
+<img data-src="https://wulc.me/imgs/image_1bf8ilp9l7m41pga1opf1vf83ku1g.png"
 alt="Hessian近似" />
 <figcaption aria-hidden="true">Hessian近似</figcaption>
 </figure>
@@ -455,13 +458,13 @@ class="math inline">\(O(nk)\)</span>, 在特征量大时比BFGS实用</p>
 s.t. Ax + Bz = c\]</span></p>
 <p>Augmented Lagrangian及迭代解法如下</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bf8jl7lr10uq196pjs4s0hacs1t.png"
+<img data-src="https://wulc.me/imgs/image_1bf8jl7lr10uq196pjs4s0hacs1t.png"
 alt="ADMM" />
 <figcaption aria-hidden="true">ADMM</figcaption>
 </figure>
 <p>上面的迭代方法也可以用下面的迭代公式描述，其效果是一致的，但是下面的描述更加简便，而且在实际中也更常用</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bf8jnibpk3o14g81cj1fqnna2a.png"
+<img data-src="https://wulc.me/imgs/image_1bf8jnibpk3o14g81cj1fqnna2a.png"
 alt="ADMM 更一般表示方法" />
 <figcaption aria-hidden="true">ADMM 更一般表示方法</figcaption>
 </figure>
@@ -523,6 +526,25 @@ confidence bound (UCB)，并选择UCB最大的arm。</p>
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -666,7 +688,7 @@ exploit， E&amp;E)</span></a></li></ol></div>
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -689,6 +711,10 @@ exploit， E&amp;E)</span></a></li></ol></div>
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

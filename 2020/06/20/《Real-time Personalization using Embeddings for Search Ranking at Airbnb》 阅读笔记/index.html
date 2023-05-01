@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="Real-time Personalization using Embeddings for Search Ranking at Airbnb 是 KDD 2018 的 best paper, 整篇文章读下来，初看好像只是套了 word2vec 来生成 user embedding 和 item embedding；但是细读下来，会发现其中有不少细节值得考究，这种风格跟 youtube 在 201">
@@ -94,6 +95,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -192,6 +194,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -326,7 +329,7 @@ vetor，其实就是同一个 item 在 skip gram
 target="_blank" rel="noopener" href="https://web.stanford.edu/class/cs224n/readings/cs224n-2019-notes01-wordvecs1.pdf">CS224n:
 Natural Language Processing with Deep Learning</a></p>
 <figure>
-<img src="https://wulc.me/imgs/skip_gram_model.jpg" alt="skip gram" />
+<img data-src="https://wulc.me/imgs/skip_gram_model.jpg" alt="skip gram" />
 <figcaption aria-hidden="true">skip gram</figcaption>
 </figure>
 <p>类似 word2vec
@@ -366,7 +369,7 @@ listing/item 一起算一次概率，因此称这个 listing 为 global
 context</strong>，其效果相当于加强用户在购买前点击的所有 item
 和最终下单的 item 的联系</p>
 <figure>
-<img src="https://wulc.me/imgs/global_context.jpg"
+<img data-src="https://wulc.me/imgs/global_context.jpg"
 alt="global context" />
 <figcaption aria-hidden="true">global context</figcaption>
 </figure>
@@ -433,7 +436,7 @@ entity 至少要出现 5-10 次</strong>，而实际上不少 listing
 的一些 meta 信息映射成一个 type，然后用这个 type 来代替 user/listing 的
 id，映射表如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/id2type_mapping_rule.jpg"
+<img data-src="https://wulc.me/imgs/id2type_mapping_rule.jpg"
 alt="id2type" />
 <figcaption aria-hidden="true">id2type</figcaption>
 </figure>
@@ -453,7 +456,7 @@ sequence 表示的是同一个user_id，但是其 user_type
 对应的时间位置上</strong>，（这里有个问题，这样做似乎是没法解决那些
 booked listing 长度为 1 的数据）</p>
 <figure>
-<img src="https://wulc.me/imgs/user_type_list_type_skipgram.jpg"
+<img data-src="https://wulc.me/imgs/user_type_list_type_skipgram.jpg"
 alt="type-skipgram" />
 <figcaption aria-hidden="true">type-skipgram</figcaption>
 </figure>
@@ -485,7 +488,7 @@ D\_{book}} \log\frac{1}{1+e^{-v\_{c}^{&#39;}v\_{u\_t}}} +
 \tag{7}\]</span></p>
 <p>则加入了这个监督信号后的 skip gram 则如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/reject_signal_skip_gram.jpg"
+<img data-src="https://wulc.me/imgs/reject_signal_skip_gram.jpg"
 alt="reject skip-gram" />
 <figcaption aria-hidden="true">reject skip-gram</figcaption>
 </figure>
@@ -541,7 +544,7 @@ item 的位置（越小越好）</li>
 称这样聚类的结果对于重新为每个 travel market
 定义其范围也是有好处的，</p>
 <figure>
-<img src="https://wulc.me/imgs/list_embedding_clustering.jpg"
+<img data-src="https://wulc.me/imgs/list_embedding_clustering.jpg"
 alt="visulization" />
 <figcaption aria-hidden="true">visulization</figcaption>
 </figure>
@@ -549,7 +552,7 @@ alt="visulization" />
 embedding，直观地看这些 listing 对应的房屋的相似性，如下图所示,
 可以看到房屋的相似性还是比较高的</p>
 <figure>
-<img src="https://wulc.me/imgs/listing_embedding_item_simi.jpg"
+<img data-src="https://wulc.me/imgs/listing_embedding_item_simi.jpg"
 alt="item visulization" />
 <figcaption aria-hidden="true">item visulization</figcaption>
 </figure>
@@ -560,7 +563,7 @@ item embedding 与其他各个 item embedding 的 cos
 listing embedding 的 cos 相似性越高</strong>, 因此这些信息是可以被学习到
 listing embedding 中的</p>
 <figure>
-<img src="https://wulc.me/imgs/list_embedding_similarity.jpg"
+<img data-src="https://wulc.me/imgs/list_embedding_similarity.jpg"
 alt="similarity" />
 <figcaption aria-hidden="true">similarity</figcaption>
 </figure>
@@ -577,7 +580,7 @@ similarity，并根据similarity 重新排序，观察 booked item
 search rank 排过序了，因此可作为 baseline，paper 中选取了每个 user 最近
 17 次的点击来计算相似性，效果如图所示，</p>
 <figure>
-<img src="https://wulc.me/imgs/EmbeddingEvaluation.jpg"
+<img data-src="https://wulc.me/imgs/EmbeddingEvaluation.jpg"
 alt="embedding evaluation" />
 <figcaption aria-hidden="true">embedding evaluation</figcaption>
 </figure>
@@ -608,7 +611,7 @@ LambdaRank，这个模型的细节就不在这里展开了，感兴趣的同学�
 <p>paper 中主要基于 embedding
 间计算出来的相似性作为连续值特征，构造的特征列表如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/AirbnbFeatureList.jpg"
+<img data-src="https://wulc.me/imgs/AirbnbFeatureList.jpg"
 alt="featureList" />
 <figcaption aria-hidden="true">featureList</figcaption>
 </figure>
@@ -663,7 +666,7 @@ EmbBookSim），笔者猜测另一个原因可能是计算 EmbBookSim
 数据会更为稀疏，因为一般对于一个用户来说两周内下单一次的频率是很低的</li>
 </ul>
 <figure>
-<img src="https://wulc.me/imgs/featureImportance.jpg"
+<img data-src="https://wulc.me/imgs/featureImportance.jpg"
 alt="featureimportance" />
 <figcaption aria-hidden="true">featureimportance</figcaption>
 </figure>
@@ -709,6 +712,25 @@ target="_blank" rel="noopener" href="https://www.zhihu.com/question/302288216/an
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -853,7 +875,7 @@ Recommemdation</span></a></li></ol></li><li class="nav-item nav-level-2"><a clas
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -876,6 +898,10 @@ Recommemdation</span></a></li></ol></li><li class="nav-item nav-level-2"><a clas
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

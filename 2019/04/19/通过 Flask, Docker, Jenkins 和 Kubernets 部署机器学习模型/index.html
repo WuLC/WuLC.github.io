@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="本文主要介绍部署机器学习模型的一种自动化方式，如题所示，通过 Flask，Docker, Jenkins 和 Kubernets 实现。基本原理就是通过 Flask 提供 RESTful API 接收客户端的 predict 请求，然后将这个服务打包成一个 docker image 便于部署和迁移，当代码或模型更新时通过 Jenkins 触发自动构建新的 docker image，而通过 kube">
@@ -110,6 +111,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -208,6 +210,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -301,7 +304,7 @@ virtual box 中的 ubuntu 16.04 进行以下的实验。</p>
 with Flask, Docker, and
 Jenkins，从中可以看到清晰看到整个部署和访问的流程</p>
 <figure>
-<img src="https://wulc.me/imgs/deploy_ml_model.png"
+<img data-src="https://wulc.me/imgs/deploy_ml_model.png"
 alt="deploy model" />
 <figcaption aria-hidden="true">deploy model</figcaption>
 </figure>
@@ -432,14 +435,14 @@ either with <code>$variable_name</code> or
 Dockerfile 中每条命令都是运行时的一个 step，在构建时不会运行
 <code>CMD</code> 的命令，而是通过 <code>docker run</code> 时才执行</p>
 <figure>
-<img src="https://wulc.me/imgs/deploy_ml_model_build_image.png"
+<img data-src="https://wulc.me/imgs/deploy_ml_model_build_image.png"
 alt="build" />
 <figcaption aria-hidden="true">build</figcaption>
 </figure>
 <p>构建完成后可以看到系统中的多了 <code>deploy_ml_model</code> 这个
 image</p>
 <figure>
-<img src="https://wulc.me/imgs/deploy_ml_model_images_after_built.png"
+<img data-src="https://wulc.me/imgs/deploy_ml_model_images_after_built.png"
 alt="after build" />
 <figcaption aria-hidden="true">after build</figcaption>
 </figure>
@@ -449,20 +452,20 @@ alt="after build" />
 <code>docker run -p 8000:5000 deploy_ml_model</code> 可通过运行 docker
 的机器的 8000 端口访问 container 内部提供的 api，如下所示</p>
 <figure>
-<img src="https://wulc.me/imgs/deploy_ml_model_run_container.png"
+<img data-src="https://wulc.me/imgs/deploy_ml_model_run_container.png"
 alt="run container" />
 <figcaption aria-hidden="true">run container</figcaption>
 </figure>
 <p>将上面的客户端的代码的端口改成 8000 便是 <code>client.py</code>
 源文件了，运行 <code>client.py</code> 结果如下所示，</p>
 <figure>
-<img src="https://wulc.me/imgs/deploy_ml_model_client_response.png"
+<img data-src="https://wulc.me/imgs/deploy_ml_model_client_response.png"
 alt="response" />
 <figcaption aria-hidden="true">response</figcaption>
 </figure>
 <p>此时的 server 接收到一个 POST 请求，输出的日志如下</p>
 <figure>
-<img src="https://wulc.me/imgs/deploy_ml_model_server_log.png"
+<img data-src="https://wulc.me/imgs/deploy_ml_model_server_log.png"
 alt="server log" />
 <figcaption aria-hidden="true">server log</figcaption>
 </figure>
@@ -471,7 +474,7 @@ container 的 id 即可， container id
 并不需要全输入，只需要输入能系统能区分不同 container
 的程度即可。该过程如下所示</p>
 <figure>
-<img src="https://wulc.me/imgs/deploy_ml_model_stop_container.png"
+<img data-src="https://wulc.me/imgs/deploy_ml_model_stop_container.png"
 alt="stop container" />
 <figcaption aria-hidden="true">stop container</figcaption>
 </figure>
@@ -499,26 +502,26 @@ Jenkins</a>，这里不再赘述</p>
 请求并触发其重新构建的功能，其配置流程如下，首先新建一个自由风格的项目，并配置其为
 Github 项目，管理源码的方式为 git，如下所示</p>
 <figure>
-<img src="https://wulc.me/imgs/deploy_ml_model_jenkins_git_config.png"
+<img data-src="https://wulc.me/imgs/deploy_ml_model_jenkins_git_config.png"
 alt="configure" />
 <figcaption aria-hidden="true">configure</figcaption>
 </figure>
 <p>然后配置触发方式和构建的命令如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/deploy_ml_model_jenkins_trigger.png"
+<img data-src="https://wulc.me/imgs/deploy_ml_model_jenkins_trigger.png"
 alt="configure" />
 <figcaption aria-hidden="true">configure</figcaption>
 </figure>
 <p>配置并保存后便可直接 “立即构建” 进行项目的构建，jenkins
 会自动下载仓库并进行构建，通过控制台输出可以看到构建过程，该过程如下所示</p>
 <figure>
-<img src="https://wulc.me/imgs/deploy_ml_model_build_with_jenkins.png"
+<img data-src="https://wulc.me/imgs/deploy_ml_model_build_with_jenkins.png"
 alt="build" />
 <figcaption aria-hidden="true">build</figcaption>
 </figure>
 <p>点击控制台输出后显示的日志</p>
 <figure>
-<img src="https://wulc.me/imgs/deploy_ml_model_jenkins_log.png"
+<img data-src="https://wulc.me/imgs/deploy_ml_model_jenkins_log.png"
 alt="log" />
 <figcaption aria-hidden="true">log</figcaption>
 </figure>
@@ -537,7 +540,7 @@ public url 如下所示，可以看到生成了 http 和 https
 两个类型的地址；最下面显示的是最近的请求情况，可以看到 github
 发送了3个更新的 POST 请求</p>
 <figure>
-<img src="https://wulc.me/imgs/deploy_ml_model_ngrok_public_address.png"
+<img data-src="https://wulc.me/imgs/deploy_ml_model_ngrok_public_address.png"
 alt="ngrok" />
 <figcaption aria-hidden="true">ngrok</figcaption>
 </figure>
@@ -548,7 +551,7 @@ github 项目的地址，点击 setting 进行设置，设置如下所示，Payl
 target="_blank" rel="noopener" href="https://github.com/spinnaker/spinnaker/issues/2067">403 No valid
 crumb was included in the request</a> 的错误</p>
 <figure>
-<img src="https://wulc.me/imgs/deploy_ml_model_github_webhook.png"
+<img data-src="https://wulc.me/imgs/deploy_ml_model_github_webhook.png"
 alt="webhook" />
 <figcaption aria-hidden="true">webhook</figcaption>
 </figure>
@@ -560,7 +563,7 @@ alt="webhook" />
 会被挂起，直到前一个build 被终止（通过 <code>docker stop</code>)
 关掉服务</p>
 <figure>
-<img src="https://wulc.me/imgs/deploy_ml_model_rebuild_block.png"
+<img data-src="https://wulc.me/imgs/deploy_ml_model_rebuild_block.png"
 alt="trigger build" />
 <figcaption aria-hidden="true">trigger build</figcaption>
 </figure>
@@ -612,7 +615,7 @@ are Docker <code>&lt;none&gt;:&lt;none&gt;</code> images?</a>。</p>
 <p>同样需要通过 ngrok 映射本地的 http server 到一个 public url 并将
 public url 添加到 github 项目的 webhook 中，如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/deploy_ml_model_ngrok_script.png"
+<img data-src="https://wulc.me/imgs/deploy_ml_model_ngrok_script.png"
 alt="ngrok script" />
 <figcaption aria-hidden="true">ngrok script</figcaption>
 </figure>
@@ -626,7 +629,7 @@ alt="script github webhook" />
 是否有新的 commit，如果有，则触发运行 <code>build_and_run.sh</code>
 脚本，其过程如下所示</p>
 <figure>
-<img src="https://wulc.me/imgs/deploy_ml_model_trigger_with_script.png"
+<img data-src="https://wulc.me/imgs/deploy_ml_model_trigger_with_script.png"
 alt="script trigger run" />
 <figcaption aria-hidden="true">script trigger run</figcaption>
 </figure>
@@ -654,7 +657,7 @@ node 通过 <strong>Kubelet</strong> 这个 agent 与 master
 通信，除此之外，node 中还要有容器运行环境如 Docker 或
 rkt。基本架构如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/deploy_ml_model_kubernets_structure.png"
+<img data-src="https://wulc.me/imgs/deploy_ml_model_kubernets_structure.png"
 alt="basic structure" />
 <figcaption aria-hidden="true">basic structure</figcaption>
 </figure>
@@ -666,7 +669,7 @@ kubectl 获取通过 Minikube 启动的 Kubernets 集群的一些信息</p>
 <li>kubectl nodes：显示所有的 nodes 的信息</li>
 </ul>
 <figure>
-<img src="https://wulc.me/imgs/deploy_ml_model_kubernets_info.png"
+<img data-src="https://wulc.me/imgs/deploy_ml_model_kubernets_info.png"
 alt="basic info" />
 <figcaption aria-hidden="true">basic info</figcaption>
 </figure>
@@ -678,7 +681,7 @@ alt="basic info" />
 <code>kubectl get deployments</code>
 可以看到当前部署的应用，如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/deploy_ml_model_kubernets_deploy.png"
+<img data-src="https://wulc.me/imgs/deploy_ml_model_kubernets_deploy.png"
 alt="deploy with run" />
 <figcaption aria-hidden="true">deploy with run</figcaption>
 </figure>
@@ -689,7 +692,7 @@ alt="deploy with run" />
 这个命令，相当于把Cluster内部的地址映射到本地机器，启动之后可通过本机访问
 Kubernets cluser 内部 的应用。如下图所示是访问上面启动的应用</p>
 <figure>
-<img src="https://wulc.me/imgs/deploy_ml_model_kubernets_proxy.png"
+<img data-src="https://wulc.me/imgs/deploy_ml_model_kubernets_proxy.png"
 alt="kubectl proxy" />
 <figcaption aria-hidden="true">kubectl proxy</figcaption>
 </figure>
@@ -714,7 +717,7 @@ image version or specific ports to use</li>
 值得是一个应用中有若干个联系紧密的 container 协作，这些 containers
 具有相同的IP。</p>
 <figure>
-<img src="https://wulc.me/imgs/deploy_ml_model_kubernets_pod.png"
+<img data-src="https://wulc.me/imgs/deploy_ml_model_kubernets_pod.png"
 alt="pod" />
 <figcaption aria-hidden="true">pod</figcaption>
 </figure>
@@ -725,7 +728,7 @@ alt="pod" />
 </ul>
 <p>如下是通过这两条命令获取前面部署的应用的 pod 信息</p>
 <figure>
-<img src="https://wulc.me/imgs/deploy_ml_model_kubernets_pod_info.png"
+<img data-src="https://wulc.me/imgs/deploy_ml_model_kubernets_pod_info.png"
 alt="pod info" />
 <figcaption aria-hidden="true">pod info</figcaption>
 </figure>
@@ -753,7 +756,7 @@ replicas 的数量是 3，那么就会有 3 个相互独立的 pods，每个 pod
 ip，，而 service 就是这些 pods 的集合。Service 管理着这些 pod
 的失败重启等，从而向上提供 Pod 的抽象；service 的概念如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/deploy_ml_model_kubernets_service.png"
+<img data-src="https://wulc.me/imgs/deploy_ml_model_kubernets_service.png"
 alt="service" />
 <figcaption aria-hidden="true">service</figcaption>
 </figure>
@@ -808,7 +811,7 @@ pod；区分同一个 pod 的不同版本等。</strong></p>
 <code>kubectl get</code> 查看 pod 或 services 的信息时通过
 <code>-l</code> 参数指定具体的 pod 或 service，如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/deploy_ml_model_kubernets_pod_label.png"
+<img data-src="https://wulc.me/imgs/deploy_ml_model_kubernets_pod_label.png"
 alt="see label" />
 <figcaption aria-hidden="true">see label</figcaption>
 </figure>
@@ -830,7 +833,7 @@ alt="delete service" />
 <h3 id="伸缩性scaling">伸缩性(scaling)</h3>
 <p>伸缩性就是改变运行同一个 image 的 pods 的数量，如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/deploy_ml_model_kubernets_scale.png"
+<img data-src="https://wulc.me/imgs/deploy_ml_model_kubernets_scale.png"
 alt="pod" />
 <figcaption aria-hidden="true">pod</figcaption>
 </figure>
@@ -840,7 +843,7 @@ pod 的 deployment 拓展到 4 个 pod， 从
 <code>kubectl get deployments</code> 可以看到当前 deployment 可用的 pod
 的数量</p>
 <figure>
-<img src="https://wulc.me/imgs/deploy_ml_model_kubernets_scale_pods.png"
+<img data-src="https://wulc.me/imgs/deploy_ml_model_kubernets_scale_pods.png"
 alt="scale pod" />
 <figcaption aria-hidden="true">scale pod</figcaption>
 </figure>
@@ -892,7 +895,7 @@ ErrImagePull，通过 <code>kubectl rollout undo</code>
 v2，如果再进行一次 <code>kubectl rollout undo</code>，那么 image
 版本就变为 v1 了。</p>
 <figure>
-<img src="https://wulc.me/imgs/deploy_ml_model_kubernets_rollback.png"
+<img data-src="https://wulc.me/imgs/deploy_ml_model_kubernets_rollback.png"
 alt="rollback" />
 <figcaption aria-hidden="true">rollback</figcaption>
 </figure>
@@ -914,6 +917,25 @@ Kubernets 则可以较好地解决这个问题，只需要提供打包好的镜�
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -1056,7 +1078,7 @@ Kubernets 则可以较好地解决这个问题，只需要提供打包好的镜�
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -1079,6 +1101,10 @@ Kubernets 则可以较好地解决这个问题，只需要提供打包好的镜�
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

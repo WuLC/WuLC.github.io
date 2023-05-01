@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="最近在 coursera 上发现一门不错的课程，程序的表示、转换与链接，内容是类似《深入理解计算机系统》这本书的，说来惭愧，虽然在上学时零星上过一些相关的课程，但是却没有系统地将这些内容串起来理解。本着算法工程师首先得是个工程的原则，觉得还是有必要去了解一下这块内容;而且课程内容讲得挺通俗的，值得一听。 本文的内容主要是 week1 的内容，较为宏观地介绍了如何从冯·诺依曼体系结构演进至现代计算机">
@@ -93,6 +94,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -191,6 +193,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -263,13 +266,13 @@ PPT
 <p>冯-诺依曼结构主要思想是<strong>存储程序的工作方式</strong>，即让计算机完成的任何的一项工作，事先要编写成程序，然后把这个程序以及程序处理的这个数据先要送到主存，然后启动运行，运行以后，计算机就可以自动的取出一条一条指令，并且取出来进行执行，就是取出指令，执行。然后再取下条指令再执行，这样按部就班的取出指令并执行</p>
 <p>按照上面的描述，计算机应该有如下的组成部分</p>
 <figure>
-<img src="https://wulc.me/imgs/VonNeumannarchitecture.jpg"
+<img data-src="https://wulc.me/imgs/VonNeumannarchitecture.jpg"
 alt="Von Neumann architecture" />
 <figcaption aria-hidden="true">Von Neumann architecture</figcaption>
 </figure>
 <p>更抽象一点的结构如下</p>
 <figure>
-<img src="https://wulc.me/imgs/VonNeumannarchitecture1.jpg"
+<img data-src="https://wulc.me/imgs/VonNeumannarchitecture1.jpg"
 alt="Von Neumann architecture1" />
 <figcaption aria-hidden="true">Von Neumann architecture1</figcaption>
 </figure>
@@ -291,7 +294,7 @@ id="现代计算机的模型结构和工作原理">现代计算机的模型结�
 <p>现代计算机采用的基本就是前面提到的冯-诺依曼结构，更深入地看 CPU
 的基本组成如下图所示，</p>
 <figure>
-<img src="https://wulc.me/imgs/VonNeumannarchitecture2.jpg"
+<img data-src="https://wulc.me/imgs/VonNeumannarchitecture2.jpg"
 alt="Von Neumann architecture2" />
 <figcaption aria-hidden="true">Von Neumann architecture2</figcaption>
 </figure>
@@ -314,12 +317,12 @@ memory -&gt; MDR
 -&gt;IR/GPR</strong>(同时会有一些控制信号，即图中的红色虚线）</p>
 <p>下面是以做菜的例子更详细描述计算机是如何工作的</p>
 <figure>
-<img src="https://wulc.me/imgs/CookVSProgram1.jpg"
+<img data-src="https://wulc.me/imgs/CookVSProgram1.jpg"
 alt="cookVSprogram1" />
 <figcaption aria-hidden="true">cookVSprogram1</figcaption>
 </figure>
 <figure>
-<img src="https://wulc.me/imgs/CookVSProgram2.jpg"
+<img data-src="https://wulc.me/imgs/CookVSProgram2.jpg"
 alt="cookVSprogram2" />
 <figcaption aria-hidden="true">cookVSprogram2</figcaption>
 </figure>
@@ -332,7 +335,7 @@ alt="cookVSprogram2" />
 </ul>
 <p>因此，高级语言(这里以c为例）需要执行如下步骤才能最终被计算机执行</p>
 <figure>
-<img src="https://wulc.me/imgs/compile2link.jpg"
+<img data-src="https://wulc.me/imgs/compile2link.jpg"
 alt="compile&amp;link1" />
 <figcaption aria-hidden="true">compile&amp;link1</figcaption>
 </figure>
@@ -350,7 +353,7 @@ gcc 来统一编译，但是 gcc
 </ol>
 <p>下面是一个简单的例子</p>
 <figure>
-<img src="https://wulc.me/imgs/compile2link1.jpg"
+<img data-src="https://wulc.me/imgs/compile2link1.jpg"
 alt="compile&amp;link2" />
 <figcaption aria-hidden="true">compile&amp;link2</figcaption>
 </figure>
@@ -364,20 +367,20 @@ alt="compile&amp;link2" />
 <p>计算机简单可分为软件和硬件两个层次，而在这两个层次内又可以做更细的划分，连接着两层的则是指令集(ISA)
 如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/ComputerLevel.jpg" alt="level" />
+<img data-src="https://wulc.me/imgs/ComputerLevel.jpg" alt="level" />
 <figcaption aria-hidden="true">level</figcaption>
 </figure>
 <p>作为软件和硬件的桥梁，ISA 具体做了些啥，简单来说，ISA
 规定了如何使用硬件；类似于一个协议，其细节如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/ISA.jpg" alt="ISA" />
+<img data-src="https://wulc.me/imgs/ISA.jpg" alt="ISA" />
 <figcaption aria-hidden="true">ISA</figcaption>
 </figure>
 <p><strong>计算机组成也被称为微体系结构(<a
 target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Microarchitecture">Microarchitecture</a>)</strong>，微体系结构跟ISA的关系不是一一对应的，不同的
 ISA 定义了不同的指令集，同一个 ISA 可对应于多个微体系结构</p>
 <figure>
-<img src="https://wulc.me/imgs/ISAandMicroarchitecture.jpg"
+<img data-src="https://wulc.me/imgs/ISAandMicroarchitecture.jpg"
 alt="Microarchitecture v.s ISA" />
 <figcaption aria-hidden="true">Microarchitecture v.s ISA</figcaption>
 </figure>
@@ -386,7 +389,7 @@ alt="Microarchitecture v.s ISA" />
 的内容比较宏观地介绍了冯·诺依曼结构的计算机系统层次结构、程序在计算机系统内运行的基本原理、高级语言如何转换为机器语言、ISA
 的概念等基本内容，课程总共有12周，后面的课程当于是对上述的相关部分内容进行展开。</p>
 <figure>
-<img src="https://wulc.me/imgs/content.jpg" alt="content" />
+<img data-src="https://wulc.me/imgs/content.jpg" alt="content" />
 <figcaption aria-hidden="true">content</figcaption>
 </figure>
 
@@ -395,6 +398,25 @@ alt="Microarchitecture v.s ISA" />
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -536,7 +558,7 @@ alt="Microarchitecture v.s ISA" />
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -559,6 +581,10 @@ alt="Microarchitecture v.s ISA" />
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

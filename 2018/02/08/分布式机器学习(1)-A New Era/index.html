@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="这个分布式机器学习系列是由王益分享的，讲的是分布式机器学习。正如作者在分享中所说，分布式机器学习与我们今天常听到的机器学习存在比较大的差异，因此分享中的很多观点跟我们从教课书上学到的机器学习是背道而驰的。作者在这方面具有丰富的经验，虽然是三年前的分享，或许分享中提到的部分技术改变了，但是其中的一些观点还是具有一定参考价值的。 笔者对于分享中的一些观点也是存在疑惑的，这里还是按照分享中作者表达的意思">
@@ -89,6 +90,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -187,6 +189,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -261,7 +264,7 @@ target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=dqE50moCwno
 <h2 id="机器学习与分布式机器学习">机器学习与分布式机器学习</h2>
 <p>机器学习最重要的是数学知识，而这里的分布式机器学习更关注的是工程技法。且一般的机器学习模型假设数据是指数簇分布，而实际的数据是长尾分布的，分布式机器学习需要去对长尾的数据进行建模，对于这点，后面会有详细的描述。</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1c5pmmntgsgd1a1k1p1516kp1i7g16.png"
+<img data-src="https://wulc.me/imgs/image_1c5pmmntgsgd1a1k1p1516kp1i7g16.png"
 alt="ml and distributed ml" />
 <figcaption aria-hidden="true">ml and distributed ml</figcaption>
 </figure>
@@ -269,7 +272,7 @@ alt="ml and distributed ml" />
 <p>根据<a
 target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E9%95%BF%E5%B0%BE">维基百科</a>，<strong>长尾指的是指那些原来不受到重视的销量小但种类多的产品或服务由于总量巨大，累积起来的总收益超过主流产品的现象</strong>。在互联网领域，长尾效应尤为显著。下图所示黄色的部分就是长尾部分，之所以要关注长尾的数据，是因为长尾的数据的量并不小，蕴含着重要的价值</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1c5q3h20158g1ftjllk1t421uh349.png"
+<img data-src="https://wulc.me/imgs/image_1c5q3h20158g1ftjllk1t421uh349.png"
 alt="长尾" />
 <figcaption aria-hidden="true">长尾</figcaption>
 </figure>
@@ -278,7 +281,7 @@ alt="长尾" />
 target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/Delicious">Delicious</a>
 的网页中挖掘出的一些频繁项集，最左边便是这个频繁项集，最右边表示这个频繁项集在所有网页（数亿）中出现的次数，可以看到这些频繁项集是长尾的数据了，然而，这些数据都是有具体意义的。</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1c5pn2u281gq6u811g4k17qg12aq2v.png"
+<img data-src="https://wulc.me/imgs/image_1c5pn2u281gq6u811g4k17qg12aq2v.png"
 alt="long tail" />
 <figcaption aria-hidden="true">long tail</figcaption>
 </figure>
@@ -304,7 +307,7 @@ MapReduce，MPI容许进程间在任意时刻互相通信，MapReduce则只允�
 <h2 id="一些坑">一些坑</h2>
 <p>这里是作者认为一些需要避开的坑， 下面选择几个展开说明</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1c5pm0hpjvv41gru1ne1h5l11plp.png"
+<img data-src="https://wulc.me/imgs/image_1c5pm0hpjvv41gru1ne1h5l11plp.png"
 alt="坑" />
 <figcaption aria-hidden="true">坑</figcaption>
 </figure>
@@ -330,7 +333,7 @@ model，如果大家尝试着把训练语料中的低频词去掉，会发现训
 这种矩阵分解的方法也做了高斯分布的假设，而像Linear Regression
 这类方法，从损失函数可以看到也倾向于优化数量多的样本。</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1c5pnprn71fnbjj73m87s26fd3f.png"
+<img data-src="https://wulc.me/imgs/image_1c5pnprn71fnbjj73m87s26fd3f.png"
 alt="model pitfall" />
 <figcaption aria-hidden="true">model pitfall</figcaption>
 </figure>
@@ -355,7 +358,7 @@ process</a> 是一个可能的新方向。</p>
 过大，进而出现 out of memeory
 的情况。<strong>因此，并不能通过一个通用的计算框架来解决所有问题。</strong></p>
 <figure>
-<img src="https://wulc.me/imgs/image_1c5po2i6f1e341p1i7930k1f563s.png"
+<img data-src="https://wulc.me/imgs/image_1c5po2i6f1e341p1i7930k1f563s.png"
 alt="existing model" />
 <figcaption aria-hidden="true">existing model</figcaption>
 </figure>
@@ -396,6 +399,25 @@ target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/19901994">描�
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -539,7 +561,7 @@ in papers and textbooks</span></a></li><li class="nav-item nav-level-3"><a class
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -562,6 +584,10 @@ in papers and textbooks</span></a></li><li class="nav-item nav-level-3"><a class
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

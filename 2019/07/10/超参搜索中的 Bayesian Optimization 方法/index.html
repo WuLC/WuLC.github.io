@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="机器学习中存在着众多的超参数，如 model 中的超参，optimizer 中的超参，loss function 中的各种超参等，这些超参需要使用者根据经验设定，并根据训练结果进行调整，因为这些超参的最优值跟不同任务、不同数据集相关, 没有一个非常通用的经验值。 这一步骤往往繁琐耗时，为了简化这一过程，有了 Hyperparameter optimization 的研究，其目的是自动搜索最优的超参">
@@ -88,6 +89,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -186,6 +188,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -305,7 +308,7 @@ class="math inline">\(f\_1、f\_2、f\_3\)</span>，由于假设所有的 y
 服从一个均值为 0 的多维联合高斯分布，因此可写成如下形式(下面图片摘自<a
 target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1353538">这篇文章</a>）</p>
 <figure>
-<img src="https://wulc.me/imgs/multi_gaussian.png" alt="多维高斯分布" />
+<img data-src="https://wulc.me/imgs/multi_gaussian.png" alt="多维高斯分布" />
 <figcaption aria-hidden="true">多维高斯分布</figcaption>
 </figure>
 <p>现在问题关键是模型的协方差矩阵 K
@@ -341,7 +344,7 @@ x\_2||\_2^2}{2\sigma^2})\]</span></p>
 的函数，因此，下图中的 <span class="math inline">\(K\)</span> 和 <span
 class="math inline">\(K\_\*\)</span>都可计算出来</p>
 <figure>
-<img src="https://wulc.me/imgs/multi_gaussian1.png"
+<img data-src="https://wulc.me/imgs/multi_gaussian1.png"
 alt="多维高斯分布1" />
 <figcaption aria-hidden="true">多维高斯分布1</figcaption>
 </figure>
@@ -355,7 +358,7 @@ x\_2), k(x\_\*, x\*_\*3)]^T\]</span></p>
 的联合分布，根据多维高斯分布的性质，可计算出 <span
 class="math inline">\(f^\*\)</span> 的分布如下，即</p>
 <figure>
-<img src="https://wulc.me/imgs/multi_gaussian3.png" alt="inference" />
+<img data-src="https://wulc.me/imgs/multi_gaussian3.png" alt="inference" />
 <figcaption aria-hidden="true">inference</figcaption>
 </figure>
 <p>从上面的计算过程可知，GPR 的效果非常依赖于衡量两个 <span
@@ -398,7 +401,7 @@ Optimization in the Bandit Setting: No Regret and Experimental
 Design</a> 中最早提出了一种应用在GPR 中的 UCB 方法, 也称为
 GP-UCB，其方法的流程如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/GP-UCB.png" alt="GP-UCB" />
+<img data-src="https://wulc.me/imgs/GP-UCB.png" alt="GP-UCB" />
 <figcaption aria-hidden="true">GP-UCB</figcaption>
 </figure>
 <p>上面的算法流程中每次迭代都是选择出一个 <span
@@ -410,7 +413,7 @@ class="math inline">\(\beta\_t\)</span> 的选择跟 regret bound（MAB
 中的概念） 有关，上面的 paper
 中证明了这一点，具体证明过程可参考原文，这里只给出最终的结论</p>
 <figure>
-<img src="https://wulc.me/imgs/GP-UCB-beta.png" alt="GP-UCB-beta" />
+<img data-src="https://wulc.me/imgs/GP-UCB-beta.png" alt="GP-UCB-beta" />
 <figcaption aria-hidden="true">GP-UCB-beta</figcaption>
 </figure>
 <p>即 <span class="math inline">\(\beta =
@@ -425,7 +428,7 @@ Exploration–Exploitation Tradeoffs with Gaussian Process Bandit
 Optimization</a> 中对GP-UCB 进行了简单的改进，每次能够选择多个 <span
 class="math inline">\(x\)</span> 并行进行试验，其算法流程如下</p>
 <figure>
-<img src="https://wulc.me/imgs/GP-BUCB.png" alt="GP-BUCB" />
+<img data-src="https://wulc.me/imgs/GP-BUCB.png" alt="GP-BUCB" />
 <figcaption aria-hidden="true">GP-BUCB</figcaption>
 </figure>
 <p>上面的 fb 函数定义为 <span class="math inline">\(fb[t] = \lfloor
@@ -472,6 +475,25 @@ EE tradeoff 部分。</p>
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -613,7 +635,7 @@ EE tradeoff 部分。</p>
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -636,6 +658,10 @@ EE tradeoff 部分。</p>
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

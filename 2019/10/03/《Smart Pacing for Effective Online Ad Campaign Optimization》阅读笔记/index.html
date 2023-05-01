@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="《Smart Pacing for Effective Online Ad Campaign Optimization》是 Yahoo 在 2015 发表的一篇关于 budget pacing 的论文，与之前写过的 Budget Pacing for Targeted Online Advertisements at LinkedIn 相似，目标也是把预算均匀花完，但是除了这个目标，这篇论文还提出">
@@ -88,6 +89,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -186,6 +188,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -409,7 +412,7 @@ class="math inline">\(\hat{C}^{(t)}\)</span> 能否花完</strong>。则当
 <span class="math inline">\(R &gt; 0\)</span> 时，需要提高当前时间片的
 pacing rate，反之需要降低 这一时间片的 pacing rate</p>
 <figure>
-<img src="https://wulc.me/imgs/AdjustWithoutPerformanceGoal.png"
+<img data-src="https://wulc.me/imgs/AdjustWithoutPerformanceGoal.png"
 alt="AdjustWithoutPerformanceGoal" />
 <figcaption aria-hidden="true">AdjustWithoutPerformanceGoal</figcaption>
 </figure>
@@ -449,7 +452,7 @@ r\_j^{(t)}}{r\_j^{(t-1)}e\_j}}\]</span></p>
 之和，分母可理解为各层在当前时间片的点击数之和，因此总体就是当前的时间片所有层的联合期望成本</p>
 <p>则成本约束的 budget pacing 控制算法过程如下所示</p>
 <figure>
-<img src="https://wulc.me/imgs/AdjustWithPerformanceGoal.png"
+<img data-src="https://wulc.me/imgs/AdjustWithPerformanceGoal.png"
 alt="AdjustWithPerformanceGoal" />
 <figcaption aria-hidden="true">AdjustWithPerformanceGoal</figcaption>
 </figure>
@@ -506,19 +509,19 @@ pattern</p>
 目标也就是成本约束的，而计划 2 的 ecpc
 为2.5，从结果来看也能较好地满足成本约束</p>
 <figure>
-<img src="https://wulc.me/imgs/SmartPacingExp1.png" alt="exp1" />
+<img data-src="https://wulc.me/imgs/SmartPacingExp1.png" alt="exp1" />
 <figcaption aria-hidden="true">exp1</figcaption>
 </figure>
 <p>除此之外，还对比了两种方法在保证成本约束的效果，结果如下图所示，从结果来看，分层处理后能够有效降低成本，同时花费不变</p>
 <figure>
-<img src="https://wulc.me/imgs/SmartPacingExp2.png" alt="exp2" />
+<img data-src="https://wulc.me/imgs/SmartPacingExp2.png" alt="exp2" />
 <figcaption aria-hidden="true">exp2</figcaption>
 </figure>
 <p>同时文章与另外一篇论文 Budget Pacing for Targeted Online
 Advertisements at LinkedIn 中的 budget pacing
 方法进行了对比，结果如下所示</p>
 <figure>
-<img src="https://wulc.me/imgs/SmartPacingExp3.png" alt="exp3" />
+<img data-src="https://wulc.me/imgs/SmartPacingExp3.png" alt="exp3" />
 <figcaption aria-hidden="true">exp3</figcaption>
 </figure>
 <p>从结果来看，相比于 Budget Pacing for Targeted Online Advertisements
@@ -531,7 +534,7 @@ message queue(如 kafka) 搜集后验数据，用于更新 in-memory data source
 中各层的 pacing rate；右边的 Controller 则会利用 in-memory data source
 中的 pacing rate 进行 budget pacing</p>
 <figure>
-<img src="https://wulc.me/imgs/SmartPacingArchitecture.png"
+<img data-src="https://wulc.me/imgs/SmartPacingArchitecture.png"
 alt="architecture" />
 <figcaption aria-hidden="true">architecture</figcaption>
 </figure>
@@ -550,6 +553,25 @@ performance 的原因。</p>
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -693,7 +715,7 @@ Goals</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-li
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -716,6 +738,10 @@ Goals</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-li
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

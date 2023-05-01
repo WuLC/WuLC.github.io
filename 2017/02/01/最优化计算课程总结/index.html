@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="本文主要是最优化计算这门课程的课程总结，参考的教材为《最优化计算》，主要讲述的内容是函数优化，相对于函数优化的另外一种优化是组合优化，两者的主要区别是前者的可行解是连续的，后者的可行解是离散的，或者说前者的可行解是无限的，而后者是有限的。">
@@ -103,6 +104,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -201,6 +203,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -296,7 +299,7 @@ K\)</span>,其中<span class="math inline">\(\alpha \in [0,1])\)</span>,则
 </ul>
 <p>凸集直观的图像表示如下</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b55a6bct1je4lutpsi11781a1d9.png"
+<img data-src="https://wulc.me/imgs/image_1b55a6bct1je4lutpsi11781a1d9.png"
 alt="凸集" />
 <figcaption aria-hidden="true">凸集</figcaption>
 </figure>
@@ -304,7 +307,7 @@ alt="凸集" />
 <h3 id="数学模型与基本概念">数学模型与基本概念</h3>
 <p>线性规划就是<strong>目标函数和约束条件都是线性的</strong>最优化问题，且一般都是带约束的，线性规划的一般模型如下所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b54otaeai4918ffi8k2p51v009.png"
+<img data-src="https://wulc.me/imgs/image_1b54otaeai4918ffi8k2p51v009.png"
 alt="线性规划模型" />
 <figcaption aria-hidden="true">线性规划模型</figcaption>
 </figure>
@@ -322,7 +325,7 @@ class="math inline">\(\ge\)</span>
 注意：松弛变量、剩余变量在目标函数中的价值系数为0。</p>
 <p>如下为一个简单的例子</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b5fmb0if1gatjc1hsq9q41bh16c.png"
+<img data-src="https://wulc.me/imgs/image_1b5fmb0if1gatjc1hsq9q41bh16c.png"
 alt="化标准型" />
 <figcaption aria-hidden="true">化标准型</figcaption>
 </figure>
@@ -338,7 +341,7 @@ class="math inline">\(A\_j = (a\_{1j},a\_{2j},···,a\_{mj})^T\)</span>
 则称<span
 class="math inline">\(x\_1,x\_2,···,x\_m\)</span>为<strong>基变量</strong>，其它为<strong>非基变量</strong>。如下所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b5fmv3ah1td1jqoafc1h3i1pnh6p.png"
+<img data-src="https://wulc.me/imgs/image_1b5fmv3ah1td1jqoafc1h3i1pnh6p.png"
 alt="基变量和非基变量" />
 <figcaption aria-hidden="true">基变量和非基变量</figcaption>
 </figure>
@@ -347,7 +350,7 @@ alt="基变量和非基变量" />
 C\_n^m\)</span>。但是基本解不一定满足约束条件，满足约束条件的基本解称为<strong>基本可行解</strong>，而基本可行解对应的基变量称为<strong>可行基</strong>。</p>
 <p>基本解，基本可行解，可行解，非可行解的关系如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b5fn6nh4pkqkcmble1e9lpga76.png"
+<img data-src="https://wulc.me/imgs/image_1b5fn6nh4pkqkcmble1e9lpga76.png"
 alt="基本解，基本可行解，可行解，非可行解的关系" />
 <figcaption
 aria-hidden="true">基本解，基本可行解，可行解，非可行解的关系</figcaption>
@@ -367,13 +370,13 @@ aria-hidden="true">基本解，基本可行解，可行解，非可行解的关�
 <p>在实际运算的时候，一般通过单纯形表实现。其求解过程如下所示</p>
 <p>对于下面已经化为标准型的线性规划问题</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b5fp2b1n14s01l3ks6ql0v1fiu9.png"
+<img data-src="https://wulc.me/imgs/image_1b5fp2b1n14s01l3ks6ql0v1fiu9.png"
 alt="标准型" />
 <figcaption aria-hidden="true">标准型</figcaption>
 </figure>
 <p>其单纯形表为</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b5fp3m7v15iac4nl1ro5o1thrm.png"
+<img data-src="https://wulc.me/imgs/image_1b5fp3m7v15iac4nl1ro5o1thrm.png"
 alt="单纯形表" />
 <figcaption aria-hidden="true">单纯形表</figcaption>
 </figure>
@@ -407,7 +410,7 @@ class="math inline">\(x\_l\)</span>后，用入基变量替换出基变量，通
 class="math inline">\(x\_k\)</span>对应系数矩阵A的一列成为原单位矩阵中<span
 class="math inline">\(x\_l\)</span>对应的那列，其他的值做相应的计算(见下图)，画出的新的单纯形表如下所示：</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b5fp6uvg1p191fa812h388tjjm1g.png"
+<img data-src="https://wulc.me/imgs/image_1b5fp6uvg1p191fa812h388tjjm1g.png"
 alt="新的单纯形表" />
 <figcaption aria-hidden="true">新的单纯形表</figcaption>
 </figure>
@@ -586,26 +589,26 @@ f(x)\)</span>在S上处处正定，则<span
 class="math inline">\(f(x)\)</span>为严格凸函数，但是反过来不成立。</p>
 <p>关于正定、半正定、负定的定义及判断方法如下所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b59d8iqoc1pt3ti7q1lrnud31t.png"
+<img data-src="https://wulc.me/imgs/image_1b59d8iqoc1pt3ti7q1lrnud31t.png"
 alt="正定矩阵和负定矩阵" />
 <figcaption aria-hidden="true">正定矩阵和负定矩阵</figcaption>
 </figure>
 <p>而<strong>顺序主子式</strong>的定义如下</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b59dq06e1c8h1htb14upmi1ofe2a.png"
+<img data-src="https://wulc.me/imgs/image_1b59dq06e1c8h1htb14upmi1ofe2a.png"
 alt="顺序主子式" />
 <figcaption aria-hidden="true">顺序主子式</figcaption>
 </figure>
 <p>通过海塞矩阵判断凸函数例子如下</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b59faio2c971vrblfcr119t2n.png"
+<img data-src="https://wulc.me/imgs/image_1b59faio2c971vrblfcr119t2n.png"
 alt="海塞矩阵判断凸函数" />
 <figcaption aria-hidden="true">海塞矩阵判断凸函数</figcaption>
 </figure>
 <h4 id="凸规划">凸规划</h4>
 <p>凸规划指<strong>可行域为凸集，目标函数为凸函数</strong>的规划问题。其具体形式如下</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b59g47ljve7tj11j5m1mm55nn34.png"
+<img data-src="https://wulc.me/imgs/image_1b59g47ljve7tj11j5m1mm55nn34.png"
 alt="凸规划模型" />
 <figcaption aria-hidden="true">凸规划模型</figcaption>
 </figure>
@@ -686,7 +689,7 @@ class="math inline">\(P\_2(x)\)</span>的稳定点<span
 class="math inline">\(\overline x =
 -\frac{b}{2a}\)</span>。而这个方法的命名也源于其原理，通过三个点用二次函数去逼近原函数。其图像直观表示如下</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b5ahksco5j451bsl31mcl18fs4b.png"
+<img data-src="https://wulc.me/imgs/image_1b5ahksco5j451bsl31mcl18fs4b.png"
 alt="三点二次插值" />
 <figcaption aria-hidden="true">三点二次插值</figcaption>
 </figure>
@@ -694,7 +697,7 @@ alt="三点二次插值" />
 class="math inline">\(\overline x\)</span>
 可能位于给定区间之外或误差太大，见下图</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b5ahphsk1adrtr6o46fjd1er34o.png"
+<img data-src="https://wulc.me/imgs/image_1b5ahphsk1adrtr6o46fjd1er34o.png"
 alt="三点二次插值不符合" />
 <figcaption aria-hidden="true">三点二次插值不符合</figcaption>
 </figure>
@@ -731,7 +734,7 @@ class="math inline">\(\epsilon\)</span>为很小的正数)。</p>
 <p><strong>坐标轮换法是每次搜索只允许一个变量变化，其余变量保持不变，即沿坐标方向轮流进行搜索的寻优方法。</strong>它把多变量的优化问题轮流地转化成单变量（其余变量视为常量）的优化问题，因此又称这种方法为变量轮换法。此种方法只需目标函数的数值信息而不需要目标函数的导数。</p>
 <p>如下图为只有两个变量时进行坐标轮换的搜索过程，可以看到，每一个的移动都只在一个方向上改变</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b5bvj4d8kv01hn8h9hlu6d4b55.png"
+<img data-src="https://wulc.me/imgs/image_1b5bvj4d8kv01hn8h9hlu6d4b55.png"
 alt="坐标轮换法" />
 <figcaption aria-hidden="true">坐标轮换法</figcaption>
 </figure>
@@ -775,7 +778,7 @@ class="math inline">\(||\nabla f(x^{(k)})|| \lt \epsilon\)</span></p>
 <p>在最速下降法中相邻的两个迭代点的梯度是彼此正交的。也即在梯度的迭代过程中，相邻的搜索方向相互垂直。</p>
 <p>因此最速下降法向极小点的逼近路径是锯齿形路线，越接近极小点，锯齿越细，前进速度越慢。这是因为梯度是函数的局部性质，从局部上看，在该点附近函数的下降最快，但从总体上看则走了许多弯路，因此函数值的下降并不快。其示意图如下所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b5hob0l72fu68dl2l1hun1g32u.png"
+<img data-src="https://wulc.me/imgs/image_1b5hob0l72fu68dl2l1hun1g32u.png"
 alt="最速下降法示意图" />
 <figcaption aria-hidden="true">最速下降法示意图</figcaption>
 </figure>
@@ -852,7 +855,7 @@ class="math inline">\(A\_k\)</span>奇异，而使数值稳定性方面不够理
 <h5 id="共轭梯度法">共轭梯度法</h5>
 <p>共轭梯度法的搜索方向采用<strong>梯度法基础上的共轭方向</strong>，如图所示，</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b5i1mliksbh1nks1d5a185o14643b.png"
+<img data-src="https://wulc.me/imgs/image_1b5i1mliksbh1nks1d5a185o14643b.png"
 alt="共轭梯度法" />
 <figcaption aria-hidden="true">共轭梯度法</figcaption>
 </figure>
@@ -974,7 +977,7 @@ g\_j(x))]^2\]</span></p>
 \sum\_j^l [min(0, g\_j(x))]^2)\]</span></p>
 <p>求解时只需要用无约束问题的求解方法求解惩罚函数的最小点即可，如下为一个求解的例子</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b5m40a01f1rqtv1n8h1r01a0im.png"
+<img data-src="https://wulc.me/imgs/image_1b5m40a01f1rqtv1n8h1r01a0im.png"
 alt="外点法求解例子" />
 <figcaption aria-hidden="true">外点法求解例子</figcaption>
 </figure>
@@ -982,7 +985,7 @@ alt="外点法求解例子" />
 即可得到最优解为 <span class="math inline">\(x =(2,1)^T\)</span>。
 但是假如让M逐步变化，可以得到以下表格</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b5m43kp7qnn1mm31dd4polenv13.png"
+<img data-src="https://wulc.me/imgs/image_1b5m43kp7qnn1mm31dd4polenv13.png"
 alt="外点法渐变过程" />
 <figcaption aria-hidden="true">外点法渐变过程</figcaption>
 </figure>
@@ -1017,7 +1020,7 @@ class="math inline">\(x\)</span>
 靠近这些边界的时候，障碍项会变得很大，从而使得其不满足障碍函数最小。</p>
 <p>其求解的一个例子如下</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b5m65o8q1don3qn14u0hp57nq1g.png"
+<img data-src="https://wulc.me/imgs/image_1b5m65o8q1don3qn14u0hp57nq1g.png"
 alt="内点法求解例子" />
 <figcaption aria-hidden="true">内点法求解例子</figcaption>
 </figure>
@@ -1061,7 +1064,7 @@ class="math inline">\(\overrightarrow \lambda\)</span> 收敛。</p>
 不必趋于无穷大，只要足够大，就可以通过极小化乘子罚函数，得到原来约束问题的局部最优解，而这避免了罚函数法中的病态问题。实践证明，乘子法优于罚函数法,使用范围比罚函数要广。</p>
 <p>下面为一个求解的简单例子</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b5mc6mvkgkess9b9c1lou1tdu2a.png"
+<img data-src="https://wulc.me/imgs/image_1b5mc6mvkgkess9b9c1lou1tdu2a.png"
 alt="乘子法的例子" />
 <figcaption aria-hidden="true">乘子法的例子</figcaption>
 </figure>
@@ -1122,6 +1125,25 @@ alt="有效集计算步骤2" /></p>
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -1263,7 +1285,7 @@ alt="有效集计算步骤2" /></p>
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -1286,6 +1308,10 @@ alt="有效集计算步骤2" /></p>
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

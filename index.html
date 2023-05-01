@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="盈亏同源，享受生活的随机性">
@@ -78,6 +79,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -176,6 +178,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -591,7 +594,7 @@ target="_blank" rel="noopener" href="https://book.douban.com/series/45353">“�
 
       
           <p>当前的推荐或广告系统基本都是做到请求级别的预估和优化，在效果最大化的同时带来的问题是机器成本的上升；而流量分布的不均匀使得这个问题更为严峻，比如说对于抖音或美团，一天内流量往往有两个峰：午高峰和晚高峰，因为这两个时间点餐、刷手机的人数会陡增，而其他时间段流量会下降比较多，如下图所示</p>
-<p><img src="https://wulc.me/imgs/unbalanced_traffic.jpg" height="30%" width="30%"></p>
+<p><img data-src="https://wulc.me/imgs/unbalanced_traffic.jpg" height="30%" width="30%"></p>
 <p>这意味着如果准备足以抗住高峰的机器，那在其他时间段大部分机器是空转的，或者说
 roi
 很低，因此往往在高峰的时候都需要扩容或降级。降级一般是指指降低请求数，按比例
@@ -876,7 +879,7 @@ paper，可以重点关注<strong>高光的监督信号的定义，损失函数�
 35 岁危机从何而来？只有互联网才有这个危机么？普通人只能眼巴巴地等待着 35
 岁到来然后被裁掉？我们能做些什么？</p>
 <p>当我最开始问出自己这一串问题时，焦虑中带着点绝望，因为前方的路虽然处于迷雾，却又似乎一眼能望到头；但是准备写这篇文章，心里又平静了很多，也许是经过这一个多月的调研和自我教育，看到了生活的可能性和随机性，接受了与焦虑为伴这个事实。本文算是写给自己的心理按摩，文章可能会有点发散，祝开卷有益。</p>
-<p><img src="https://wulc.me/imgs/fog.jpg" height="70%" width="70%"></p>
+<p><img data-src="https://wulc.me/imgs/fog.jpg" height="70%" width="70%"></p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2022/07/31/%E4%BB%8E%E7%84%A6%E8%99%91%E8%B0%88%E8%B5%B7%EF%BC%8C%E8%81%8A%E8%81%8A%E7%94%9F%E6%B4%BB%E7%9A%84%E5%8F%AF%E8%83%BD%E6%80%A7%E4%B8%8E%E9%9A%8F%E6%9C%BA%E6%80%A7/#more" rel="contents">
@@ -1195,7 +1198,7 @@ href="https://wulc.me/2022/05/04/%E6%8A%95%E8%B5%84%E8%BF%99%E4%BB%B6%E4%BA%8B%2
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -1218,6 +1221,10 @@ href="https://wulc.me/2022/05/04/%E6%8A%95%E8%B5%84%E8%BF%99%E4%BB%B6%E4%BA%8B%2
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

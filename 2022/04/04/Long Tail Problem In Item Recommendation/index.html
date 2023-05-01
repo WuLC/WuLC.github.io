@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="长尾问题在推荐&#x2F;广告系统是一个较为常见的问题(这里主要针对 item 的长尾)，原因可能比较多，笔者理解的主要原因是由于系统存在 feedback loop(即训练数据由模型产生，同时又会被模型用于训练) 的特性，在没有外部干预的情况下，马太效应会天然导致头部效应的现象比较严重，少部分的 item 主导了整个系统。 比如说推荐系统中，很多视频&#x2F;文章并没有展示机会，在训练集中压根没出现过，高热的视频">
@@ -94,6 +95,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -192,6 +194,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -286,12 +289,12 @@ tail item 的 representation 与 head item 的尽可能接近，这里的
 representation 其实就是上面提到的 few-shot model 和 many-shot model
 吐出来的 embedding，因此 paper 提出的总体框架如下如所示</p>
 <figure>
-<img src="https://wulc.me/imgs/DualTransfer_MIRec.jpg" alt="MIRec" />
+<img data-src="https://wulc.me/imgs/DualTransfer_MIRec.jpg" alt="MIRec" />
 <figcaption aria-hidden="true">MIRec</figcaption>
 </figure>
 <p>上图中的一些符号含义如下</p>
 <!-- ![notation][3] -->
-<p><img src="https://wulc.me/imgs/DualTransfer_Notataion.jpg" height="50%" width="50%"></p>
+<p><img data-src="https://wulc.me/imgs/DualTransfer_Notataion.jpg" height="50%" width="50%"></p>
 <p>从上图中可以看到，根据样本量分为了 many-shot model 和 few-shot model
 两个模型来分别建模，核心是 meta-level knowledge transfer 和 curriculum
 transfer，分别对应前面的 model-level 和 item-level, 下面分别介绍</p>
@@ -304,12 +307,12 @@ parameter 接近，最终作用方式是在 loss 上</p>
 class="math inline">\(r(u,i)\)</span> 取值为 1/0 表示是否有 feedback(如
 click 等)</p>
 <!-- ![base learner][4] -->
-<p><img src="https://wulc.me/imgs/DualTransfer_baselearner.jpg" height="50%" width="50%"></p>
+<p><img data-src="https://wulc.me/imgs/DualTransfer_baselearner.jpg" height="50%" width="50%"></p>
 <p>meta learner <span class="math inline">\(\mathcal{F}\)</span>
 则是采用了 mse 的 loss，并且作为一个 regularization 项加到 few-shot
 model 原始的 loss 上，则最终 few-shot model 的 loss 如下公式(5)所示</p>
 <!-- ![meta learner][5] -->
-<p><img src="https://wulc.me/imgs/DualTransfer_metalearner.jpg" height="50%" width="50%"></p>
+<p><img data-src="https://wulc.me/imgs/DualTransfer_metalearner.jpg" height="50%" width="50%"></p>
 <p>meta learner <span class="math inline">\(\mathcal{F}\)</span>
 具体的结构有很多种，这里采用的是简单的 fully connected layer</p>
 <h3 id="item-level">item-level</h3>
@@ -329,14 +332,14 @@ processing etc.</p>
 dataset：<span class="math inline">\(\Omega^{*}\)</span> 和 <span
 class="math inline">\(\Omega(k)\)</span></p>
 <!-- ![many-shot dataset][7] -->
-<p><img src="https://wulc.me/imgs/DualTransfer_manyshot_dataset.jpg" height="50%" width="50%"></p>
+<p><img data-src="https://wulc.me/imgs/DualTransfer_manyshot_dataset.jpg" height="50%" width="50%"></p>
 <p><span class="math inline">\(\Omega(k)\)</span>
 的构造方法如下，这部分样本包含 2 部分 item，一部分是 <span
 class="math inline">\(I_{h}(k)\)</span> 中那些刚好有 k 个sample 的
 item，另一部分则是 <span class="math inline">\(I_{t}(k)\)</span>
 中的全部 sample</p>
 <!-- ![few-shot dataset][8] -->
-<p><img src="https://wulc.me/imgs/DualTransfer_fewshot_dataset.jpg" height="50%" width="50%"></p>
+<p><img data-src="https://wulc.me/imgs/DualTransfer_fewshot_dataset.jpg" height="50%" width="50%"></p>
 <p>paper 里称这么做主要有以下 2 个原因，但是笔者觉得核心还是把 long tail
 item 的样本单独出来，不至于被 head item dominate</p>
 <blockquote>
@@ -355,11 +358,11 @@ tail items that brings by the new distribution</li>
 model，阶段二则是通过 many-shot model 的 parameter 和 meta learner
 来训练 few-shot model</p>
 <!-- ![train][9] -->
-<p><img src="https://wulc.me/imgs/DualTransfer_training.jpg" height="50%" width="50%"></p>
+<p><img data-src="https://wulc.me/imgs/DualTransfer_training.jpg" height="50%" width="50%"></p>
 <p>而最终模型 serving 时，则是会对两个 model 输出的 score
 做一个常规的加权</p>
 <!-- ![serving][10] -->
-<p><img src="https://wulc.me/imgs/DualTransfer_prediction.jpg" height="50%" width="50%"></p>
+<p><img data-src="https://wulc.me/imgs/DualTransfer_prediction.jpg" height="50%" width="50%"></p>
 <h3 id="experiment">experiment</h3>
 <p>paper 里的实验用了 2 个公开的数据集，MovieLens1M 和
 Bookcrossing，采用的评估指标是Hit Ratio at top K (HR@K) 和 NDCG at top K
@@ -402,7 +405,7 @@ first two rows</li>
 </ol>
 </blockquote>
 <figure>
-<img src="https://wulc.me/imgs/DualTransfer_CL_compare.jpg"
+<img data-src="https://wulc.me/imgs/DualTransfer_CL_compare.jpg"
 alt="CL compare" />
 <figcaption aria-hidden="true">CL compare</figcaption>
 </figure>
@@ -428,7 +431,7 @@ the proposed framework.</p>
 <p>paper 提出的总体的 framework
 如下图所示，基本符号的含义都在图片下方的注释里，</p>
 <!-- ![ssl framework][13] -->
-<p><img src="https://wulc.me/imgs/SelfSupervisedLearningFramework.jpg" height="50%" width="50%"></p>
+<p><img data-src="https://wulc.me/imgs/SelfSupervisedLearningFramework.jpg" height="50%" width="50%"></p>
 <p>而上图中的 <span class="math inline">\(x_i\)</span>、<span
 class="math inline">\(x_j\)</span> 表示训练时一个 batch
 中的两条样本(推荐中的样本往往有三种含义，query/item/query-item
@@ -513,7 +516,7 @@ x_i)/\tau)}{\sum_{j=1}^{N}\exp(s(q_i, x_j)/\tau)}\]</span></p>
 \alpha \mathcal{L}\_{self}\]</span></p>
 <p>则最终的模型如下所示，注意这里的 3 个 item twoer 的参数是共享的</p>
 <figure>
-<img src="https://wulc.me/imgs/SelfSupervisedTraining.jpg"
+<img data-src="https://wulc.me/imgs/SelfSupervisedTraining.jpg"
 alt="train" />
 <figcaption aria-hidden="true">train</figcaption>
 </figure>
@@ -573,6 +576,25 @@ cv 的要多得多)，具体在业务的应用也不确定，这里就不详细�
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -717,7 +739,7 @@ Framework</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a cl
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -740,6 +762,10 @@ Framework</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a cl
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

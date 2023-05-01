@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="这一讲主要介绍了受众定向的概念和若干种定向的方法。 受众定向概念 受众定向是目前广告系统的核心部分，要做的就是根据人群划分进行广告售卖和优化。 受众定向可以认为是为 AUC（Ad，User，Context）打标签的过程，上下文标签可以认为是即时受众标签，如下所示是AUC上的标签类别">
@@ -97,6 +98,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -195,6 +197,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -266,7 +269,7 @@
 AUC（Ad，User，Context）打标签的过程，上下文标签可以认为是即时受众标签，如下所示是AUC上的标签类别</p>
 <span id="more"></span>
 <figure>
-<img src="https://wulc.me/imgs/image_1bemrnn561kk85bhka521jii9.png"
+<img data-src="https://wulc.me/imgs/image_1bemrnn561kk85bhka521jii9.png"
 alt="AUC上的标签系统" />
 <figcaption aria-hidden="true">AUC上的标签系统</figcaption>
 </figure>
@@ -275,7 +278,7 @@ alt="AUC上的标签系统" />
 2. 为各估计模块(如CTR预测)提供原始特征</p>
 <p>下图的定向方式从右到左效果逐渐变好，从上到下表示不同阶段的定向方式；</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bi17ii0n2qr1s3169rersvho1t.png"
+<img data-src="https://wulc.me/imgs/image_1bi17ii0n2qr1s3169rersvho1t.png"
 alt="定向方式" />
 <figcaption aria-hidden="true">定向方式</figcaption>
 </figure>
@@ -295,7 +298,7 @@ class="math inline">\(f(a)\)</span>
 2）用人工的方式归类</p>
 <p>除此之外，各种定向方式中的数字表示该方式有利于某个个阶段需要遵循的原则，各个阶段及其需要遵循原则如下所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bi0joe626h46ri1vhc137216o9m.png"
+<img data-src="https://wulc.me/imgs/image_1bi0joe626h46ri1vhc137216o9m.png"
 alt="各阶段主要原则" />
 <figcaption aria-hidden="true">各阶段主要原则</figcaption>
 </figure>
@@ -338,7 +341,7 @@ class="math inline">\(t^{(i)}(u)\)</span>表示用户 <span
 class="math inline">\(u\)</span> 在标签 <span
 class="math inline">\(i\)</span> 上的强度)</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1ben0lcj01qsn1j1m2ji1o9a11ao1g.png"
+<img data-src="https://wulc.me/imgs/image_1ben0lcj01qsn1j1m2ji1o9a11ao1g.png"
 alt="定向行为计算" />
 <figcaption aria-hidden="true">定向行为计算</figcaption>
 </figure>
@@ -359,7 +362,7 @@ class="math inline">\(f\)</span> 为 long-term 标签，下标为日期</p>
 <p><span class="math display">\[f\_d^{(i)}(u) = \sum\_{j=0}^T
 t\_{d-j}^{(i)}(u)\]</span></p>
 <figure>
-<img src="https://wulc.me/imgs/image_1ben1h50a2kf1kou1rea1qad1l7e1t.png"
+<img data-src="https://wulc.me/imgs/image_1ben1h50a2kf1kou1rea1qad1l7e1t.png"
 alt="滑动窗口方式" />
 <figcaption aria-hidden="true">滑动窗口方式</figcaption>
 </figure>
@@ -369,7 +372,7 @@ class="math inline">\(t\)</span></p>
 <p><span class="math display">\[f\_d^{(i)}(u) = t\_{d}^{(i)}(u) + \alpha
 f\_{d-1}^{(i)}(u)\]</span></p>
 <figure>
-<img src="https://wulc.me/imgs/image_1ben1i4ub15gve341f251kp89b92a.png"
+<img data-src="https://wulc.me/imgs/image_1ben1i4ub15gve341f251kp89b92a.png"
 alt="指数衰减方式" />
 <figcaption aria-hidden="true">指数衰减方式</figcaption>
 </figure>
@@ -381,7 +384,7 @@ class="math inline">\(T\)</span>
 <p><strong>如何评判为用户打的标签？</strong></p>
 <p>受众定向评测可以借助Reach/CTR曲线，该曲线如下所示，横轴表示reach到的用户，纵轴表示广告点击率</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1ben1to0fpsr1unj1aao66qu232n.png"
+<img data-src="https://wulc.me/imgs/image_1ben1to0fpsr1unj1aao66qu232n.png"
 alt="Reach/CTR曲线" />
 <figcaption aria-hidden="true">Reach/CTR曲线</figcaption>
 </figure>
@@ -403,7 +406,7 @@ url
 返回其对应的标签。在广告系统中，可以通过<strong>半在线(Near-line)上下文定向系统</strong>实现这个事情，如下就是一个
 Near-line 上下文定向系统</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1ben5m1qh1idkc571i9v1n21u3p34.png"
+<img data-src="https://wulc.me/imgs/image_1ben5m1qh1idkc571i9v1n21u3p34.png"
 alt="near-line 上下文定向系统" />
 <figcaption aria-hidden="true">near-line 上下文定向系统</figcaption>
 </figure>
@@ -454,7 +457,7 @@ Analysis)可以说是概率化了的LSA，但是采用的方法与 LSA 完全不
 M 篇文档，每篇文档有 N 个词，则生成这 M
 篇文档的过程通过有向图模型表示如下</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bi41ptsp1junofgd5satp1d3dm.png"
+<img data-src="https://wulc.me/imgs/image_1bi41ptsp1junofgd5satp1d3dm.png"
 alt="PLSA" />
 <figcaption aria-hidden="true">PLSA</figcaption>
 </figure>
@@ -480,7 +483,7 @@ PLSA 就变为了GaP(Gamma-Poisson)模型。</p>
 分布，原因是更多是数学上的便利性，因为Dirichelet 是 multinational
 的共轭先验，容易求解。</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bi59lp0fpu112r111hoq6m1d702a.png"
+<img data-src="https://wulc.me/imgs/image_1bi59lp0fpu112r111hoq6m1d702a.png"
 alt="LDA" />
 <figcaption aria-hidden="true">LDA</figcaption>
 </figure>
@@ -514,7 +517,7 @@ Bayes</a>)</h3>
 <p>如下图模型, 如何确定hyperparameter <span
 class="math inline">\(\eta\)</span>?</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bep1f616m1h1k4e1jtl1tp61jrn13.png"
+<img data-src="https://wulc.me/imgs/image_1bep1f616m1h1k4e1jtl1tp61jrn13.png"
 alt="经验贝叶斯" />
 <figcaption aria-hidden="true">经验贝叶斯</figcaption>
 </figure>
@@ -562,7 +565,7 @@ MapReduce 效率更高</p>
 <h2 id="数据加工和交易">数据加工和交易</h2>
 <p>精准的广告业务是什么？下面的图将数据的加工过程类比于石油的加工和提炼的过程，在这个过程中，实际上与媒体的关系已经不大了。</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1ben9omrm1ko71qrkp2kl6u13bc4o.png"
+<img data-src="https://wulc.me/imgs/image_1ben9omrm1ko71qrkp2kl6u13bc4o.png"
 alt="精准广告业务" />
 <figcaption aria-hidden="true">精准广告业务</figcaption>
 </figure>
@@ -628,7 +631,7 @@ Management Platform)</h3>
 </ul>
 <p>DMP的系统架构示意图如下所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1benb74qa1au91vh21t2b1kifi55.png"
+<img data-src="https://wulc.me/imgs/image_1benb74qa1au91vh21t2b1kifi55.png"
 alt="DMP架构" />
 <figcaption aria-hidden="true">DMP架构</figcaption>
 </figure>
@@ -641,7 +644,7 @@ HDFS，利用Thrift实现底层服务</li>
 <li>类似工具: Flume, Chukwa</li>
 </ul>
 <figure>
-<img src="https://wulc.me/imgs/image_1bep5kb521id3iav1vlo7dcl3a9.png"
+<img data-src="https://wulc.me/imgs/image_1bep5kb521id3iav1vlo7dcl3a9.png"
 alt="scribe" />
 <figcaption aria-hidden="true">scribe</figcaption>
 </figure>
@@ -661,6 +664,25 @@ exchange对外售卖</li>
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -805,7 +827,7 @@ Management Platform)</span></a></li></ol></li></ol></div>
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -828,6 +850,10 @@ Management Platform)</span></a></li></ol></li></ol></div>
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

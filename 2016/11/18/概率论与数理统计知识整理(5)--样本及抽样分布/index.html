@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="前面几部分主要总结了概率论中的一些知识，后面主要讲述与数理统计相关的知识。 概率论与数理统计的主要区别为，在概率论中所研究的随机变量，其分布都是假设已知的，在这一前提下去研究它的性质（数字特征，分布函数等）；而在数理统计中研究的随机变量其分布是未知的，通过对所研究的随机变量进行重复独立的试验和观察，得到许多观察值，再对观察值进行分析，从而对所研究的随机变量的分布做出各种推断。">
@@ -86,6 +87,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -184,6 +186,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -343,7 +346,7 @@ class="math inline">\(\chi^2\)</span> 分布</p>
 1}{e^t} dt\]</span></p>
 <p><span class="math inline">\(f(y)\)</span> 的图像如下所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b2b76hpl42rb2o8ig1aki11kq2q.png"
+<img data-src="https://wulc.me/imgs/image_1b2b76hpl42rb2o8ig1aki11kq2q.png"
 alt="卡方分布的概率密度函数" />
 <figcaption aria-hidden="true">卡方分布的概率密度函数</figcaption>
 </figure>
@@ -389,7 +392,7 @@ class="math inline">\(t\)</span> 分布, 记为 <span
 class="math inline">\(t \sim t(n)\)</span></p>
 <p>其概率密度函数和对应的图像如下所示：</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b2b8il5d15avfccade13di1o3062.png"
+<img data-src="https://wulc.me/imgs/image_1b2b8il5d15avfccade13di1o3062.png"
 alt="t分布的概率密度函数和图像" />
 <figcaption aria-hidden="true">t分布的概率密度函数和图像</figcaption>
 </figure>
@@ -415,7 +418,7 @@ class="math inline">\(F\)</span>分布，记为<span class="math inline">\(F
 &amp;{y&gt;0} \\\ 0&amp;{其他}\end{cases}\]</span></p>
 <p>概率密度函数的图像如下所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b2b92aidk0hul81ehmbr01jjq7m.png"
+<img data-src="https://wulc.me/imgs/image_1b2b92aidk0hul81ehmbr01jjq7m.png"
 alt="F分布的概率密度函数" />
 <figcaption aria-hidden="true">F分布的概率密度函数</figcaption>
 </figure>
@@ -423,7 +426,7 @@ alt="F分布的概率密度函数" />
 F\_a(n\_1,n\_2)) = \int\_{F\_a(n\_1,n\_2)}^{\infty}\psi(y)dy=
 a\]</span></p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b2b9718u1s8hg3h1m6v10fqs8l83.png"
+<img data-src="https://wulc.me/imgs/image_1b2b9718u1s8hg3h1m6v10fqs8l83.png"
 alt="F分布的分为点" />
 <figcaption aria-hidden="true">F分布的分为点</figcaption>
 </figure>
@@ -558,6 +561,25 @@ class="math inline">\(F\)</span>主要解决期望未知时两个正态分布的
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -699,7 +721,7 @@ class="math inline">\(F\)</span>主要解决期望未知时两个正态分布的
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -722,6 +744,10 @@ class="math inline">\(F\)</span>主要解决期望未知时两个正态分布的
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

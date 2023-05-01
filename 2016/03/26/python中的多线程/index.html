@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="本文主要讲述了python中多线程的使用、线程锁以及多线程在python中是否能够提高效率。 多线程的概念 进程的相信大家都听说过，而线程可以理解为比进程更小一级的概念，一个进程内至少有一个线程,如果有多个线程，那么他们就共享进程的资源，共同完成进程的任务。 使用多线程一般有两个不同的目的： 一是把程序细分成几个功能相对独立的模块，防止其中一个功能模块阻塞导致整个程序假死（GUI程序是典型） 另一">
@@ -88,6 +89,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -186,6 +188,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -274,13 +277,13 @@ target="_blank" rel="noopener" href="https://docs.python.org/2/library/thread.ht
 <p>继承threading.Thread类<strong>只能重写（override）<code>__init__</code>函数和<code>run()</code>函数</strong>，<code>__init__</code>函数就是构造函数，<code>run()</code>函数就是创建线程后线程需要执行的任务。下面是一个简单的demo
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># encoding:utf-8</span></span><br><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">sleepThread</span>(threading.Thread):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        threading.Thread.__init__(self)</span><br><span class="line">        <span class="built_in">print</span> self.name+ <span class="string">&#x27; is created!&#x27;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">run</span>(<span class="params">self</span>):</span><br><span class="line">        randomTime = random.randint(<span class="number">1</span>,<span class="number">9</span>) <span class="comment"># 生成 1~9的随机整数</span></span><br><span class="line">        time.sleep(randomTime)</span><br><span class="line">        <span class="built_in">print</span> self.name+ <span class="string">&#x27; slept for &#x27;</span>+<span class="built_in">str</span>(randomTime)+<span class="string">&#x27; seconds&#x27;</span> </span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    threads = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>):  <span class="comment"># 创建5个进程</span></span><br><span class="line">        th = sleepThread()</span><br><span class="line">        threads.append(th)</span><br><span class="line">        th.start()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> t <span class="keyword">in</span> threads:</span><br><span class="line">        t.join() </span><br><span class="line">        </span><br><span class="line">    <span class="built_in">print</span> <span class="string">&#x27;all threads finished&#x27;</span></span><br><span class="line">    </span><br></pre></td></tr></table></figure></p>
 <p>在上面的例子中，我们编写了自己的线程类<code>sleepThread</code>,然后创建了5个线程，用<code>start()</code>启动了各个线程，<code>start()</code>实际上是执行了线程类的<code>run()</code>函数。这时输出如下所示：</p>
-<p><img src="https://wulc.me/imgs/1.png" /></p>
+<p><img data-src="https://wulc.me/imgs/1.png" /></p>
 <p>其中，默认线程的名称是<code>Thread-i</code>，i就是创建的第i个线程。<code>join()</code>函数的作用是等待线程执行完成再执行下面任务,实际的应用场景比如说进程要合并多个线程的处理结果，那么这时候<code>join()</code>函数就必不可少了。假如没有<code>join()</code>函数，即主函数改成下面的样子。
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>):  <span class="comment"># 创建5个进程</span></span><br><span class="line">        th = sleepThread()</span><br><span class="line">        th.start()  </span><br><span class="line">    <span class="built_in">print</span> <span class="string">&#x27;all threads finished&#x27;</span></span><br></pre></td></tr></table></figure> 那么输出就像下面所示：</p>
-<p><img src="https://wulc.me/imgs/2.png" /></p>
+<p><img data-src="https://wulc.me/imgs/2.png" /></p>
 <p>那为什么不在<code>thread.start()</code>后执行join()呢？即主函数改成以下样子。
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">  </span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>):  <span class="comment"># 创建5个进程</span></span><br><span class="line">        th = sleepThread()</span><br><span class="line">        th.start()  </span><br><span class="line">        th.join()</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&#x27;all threads finished&#x27;</span></span><br></pre></td></tr></table></figure> 这样输出的结果就像下面一样：</p>
-<p><img src="https://wulc.me/imgs/3.png" /></p>
+<p><img data-src="https://wulc.me/imgs/3.png" /></p>
 <p>原因是线程join()后会阻塞后面线程的创建，导致线程无法并行，这样多线程就没有意义了。</p>
 <h3
 id="将需要线程执行的函数传入线程构造函数中">将需要线程执行的函数传入线程构造函数中</h3>
@@ -288,12 +291,12 @@ id="将需要线程执行的函数传入线程构造函数中">将需要线程�
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">sleepThread</span>(<span class="params">threadName</span>):</span><br><span class="line">    randomTime = random.randint(<span class="number">1</span>,<span class="number">9</span>) <span class="comment"># 生成 1~9的随机整数</span></span><br><span class="line">    time.sleep(randomTime)</span><br><span class="line">    <span class="built_in">print</span> threadName+ <span class="string">&#x27; slept for &#x27;</span>+<span class="built_in">str</span>(randomTime)+<span class="string">&#x27; seconds&#x27;</span> </span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    threads = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>):</span><br><span class="line">        th = threading.Thread(target=sleepThread,args=(<span class="string">&#x27;Thread-&#x27;</span>+<span class="built_in">str</span>(i),))</span><br><span class="line">        threads.append(th)</span><br><span class="line">        th.start()</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> t <span class="keyword">in</span> threads:</span><br><span class="line">        t.join()</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&#x27;all threads finished&#x27;</span></span><br></pre></td></tr></table></figure>
 利用了<code>threading.Thread</code>自身的构造函数，传入的target参数作为线程的<code>run</code>函数,args参数则为传入的run函数的参数。</p>
 <p>输出结果如下所示：</p>
-<p><img src="https://wulc.me/imgs/2016-03-26_210528.png" /></p>
+<p><img data-src="https://wulc.me/imgs/2016-03-26_210528.png" /></p>
 <p>线程还有比较常用的方法比如说setdaemon(True),字面上的意思是设为守护线程，但是这个守护线程跟守护进程有很大的区别，<strong>实际上setdaemon(True)的作用是保证主线程（就是任何进程最开始的那个线程）退出时，派生出来的线程也必须退出。</strong>详细例子见http://stackoverflow.com/questions/5127401/setdaemon-function-in-thread</p>
 <h2 id="线程锁">线程锁</h2>
 <p>因为多线程共享一个进程内的资源，所以<strong>多个线程同时修改同一个变量时会发生冲突。这时候就需要线程锁</strong>了。比如说下面这段代码;
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">count = <span class="number">10</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">modifyThread</span>(<span class="params">num</span>):</span><br><span class="line">    <span class="keyword">global</span> count</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1000</span>):</span><br><span class="line">        count -= num</span><br><span class="line">        count += num</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    threads = []</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&#x27;before modifying, count=%s &#x27;</span>%count</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>):</span><br><span class="line">        th = threading.Thread(target=modifyThread,args=(i,))</span><br><span class="line">        threads.append(th)</span><br><span class="line">        th.start()</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> t <span class="keyword">in</span> threads:</span><br><span class="line">        t.join()</span><br><span class="line">        </span><br><span class="line">    <span class="built_in">print</span> <span class="string">&#x27;after modifying, count=%s &#x27;</span>%count</span><br><span class="line"></span><br></pre></td></tr></table></figure> 执行的的时候每次输出结果都不一样，例如下图：</p>
-<p><img src="https://wulc.me/imgs/5.png" /></p>
+<p><img data-src="https://wulc.me/imgs/5.png" /></p>
 <p>这是因为count是被多个线程同时修改了，解决方法就是利用线程锁<code>threading.Lock()</code>,每次需要修改count时先获取线程锁，修改完再释放。实例代码如下所示：
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">count = <span class="number">10</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">modifyThread</span>(<span class="params">num</span>):</span><br><span class="line">    <span class="keyword">global</span> count</span><br><span class="line">    threadLock.acquire()</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1000</span>):</span><br><span class="line">            count -= num</span><br><span class="line">            count += num</span><br><span class="line">    <span class="keyword">finally</span>:</span><br><span class="line">        threadLock.release()</span><br><span class="line">    </span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    threads = []</span><br><span class="line">    threadLock = threading.Lock()</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&#x27;before modifying, count=%s &#x27;</span>%count</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>):</span><br><span class="line">        th = threading.Thread(target=modifyThread,args=(i,))</span><br><span class="line">        threads.append(th)</span><br><span class="line">        th.start()</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> t <span class="keyword">in</span> threads:</span><br><span class="line">        t.join()</span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span> <span class="string">&#x27;after modifying, count=%s &#x27;</span>%count</span><br></pre></td></tr></table></figure>
 当多个线程同时执行threadLock.acquire()时，只有一个线程能成功地获取锁，然后继续执行代码，其他线程就继续等待直到获得锁为止。</p>
@@ -339,6 +342,25 @@ target="_blank" rel="noopener" href="http://www.liaoxuefeng.com/wiki/00137473812
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -481,7 +503,7 @@ target="_blank" rel="noopener" href="http://www.liaoxuefeng.com/wiki/00137473812
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -504,6 +526,10 @@ target="_blank" rel="noopener" href="http://www.liaoxuefeng.com/wiki/00137473812
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

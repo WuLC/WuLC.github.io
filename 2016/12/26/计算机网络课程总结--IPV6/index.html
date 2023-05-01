@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="本文主要讲述 IPV6 的一些基础知识，包括 IPV6 的术语，地址，一些基本协议以及从IPV4过渡到IPV6的的一些技术等。">
@@ -111,6 +112,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -209,6 +211,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -285,7 +288,7 @@
 <p>其中最主要的就是地址不足。</p>
 <p>在介绍IPV6的具体知识前，首先了解IPV6中的一些基本术语</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4sbuojv11kt1t3q1kv16iuglfm.png"
+<img data-src="https://wulc.me/imgs/image_1b4sbuojv11kt1t3q1kv16iuglfm.png"
 alt="IPV6基本属于" />
 <figcaption aria-hidden="true">IPV6基本属于</figcaption>
 </figure>
@@ -306,7 +309,7 @@ alt="IPV6基本属于" />
 </ul>
 <p>每个地址被划分为网路地址和主机地址两部分。地址可分为ABCD四类，每一类的地址范围如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4scnmhp153gv0dimp1puc1f5c13.png"
+<img data-src="https://wulc.me/imgs/image_1b4scnmhp153gv0dimp1puc1f5c13.png"
 alt="IPV4地址" />
 <figcaption aria-hidden="true">IPV4地址</figcaption>
 </figure>
@@ -314,7 +317,7 @@ alt="IPV4地址" />
 <p>IPV6
 地址长度是<strong>128位</strong>，通过冒分16进制表示，冒分16进制将128位划分为8组，组与组之间通过冒号隔开，每一组16位，用四个16进制数表示，如下所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4sd4ro61uug13818dl84g1bcj1g.png"
+<img data-src="https://wulc.me/imgs/image_1b4sd4ro61uug13818dl84g1bcj1g.png"
 alt="IPV6 地址" />
 <figcaption aria-hidden="true">IPV6 地址</figcaption>
 </figure>
@@ -323,7 +326,7 @@ alt="IPV6 地址" />
 2）忽略全0，用双冒号代替，注意一个地址最多只能有一个双冒号</p>
 <p>如下是运用了这两条规则的一个简单例子</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4sdak1jc5j5n8l8m16e11ril1t.png"
+<img data-src="https://wulc.me/imgs/image_1b4sdak1jc5j5n8l8m16e11ril1t.png"
 alt="IPV6简便书写的规则" />
 <figcaption aria-hidden="true">IPV6简便书写的规则</figcaption>
 </figure>
@@ -352,13 +355,13 @@ IPV6
 <p>支持 IPV6 的主机在<strong>启动时自动创建</strong> IPV6
 链路本地地址。链路本地地址格式为 <code>FE80::/64</code> ，如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4sf3pvl180k10k7b0cm8g1trb2a.png"
+<img data-src="https://wulc.me/imgs/image_1b4sf3pvl180k10k7b0cm8g1trb2a.png"
 alt="链路本地地址" />
 <figcaption aria-hidden="true">链路本地地址</figcaption>
 </figure>
 <p>链路本地地址前64位为<code>FE80:0:0:0</code>，后64位为EUI-64地址，EUI-64地址通过mac地址变换过来，变换规则如下所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4sgcgl0lgr1l5ha1c11bb1prk2n.png"
+<img data-src="https://wulc.me/imgs/image_1b4sgcgl0lgr1l5ha1c11bb1prk2n.png"
 alt="EUI-64地址变换过程" />
 <figcaption aria-hidden="true">EUI-64地址变换过程</figcaption>
 </figure>
@@ -397,7 +400,7 @@ alt="本地链路地址的生成" /></p>
 <code>001</code>
 标识，设计目标是聚合或汇总该地址以便产生有效的路由基础结构</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4sjdh5h1h1a3rqe3315pp1pje3u.png"
+<img data-src="https://wulc.me/imgs/image_1b4sjdh5h1h1a3rqe3315pp1pje3u.png"
 alt="可聚合全球单播地址" />
 <figcaption aria-hidden="true">可聚合全球单播地址</figcaption>
 </figure>
@@ -408,7 +411,7 @@ alt="可聚合全球单播地址" />
 <p>IPV6中没有广播的概念，IPV6中通过组播代替广播。</p>
 <p>IPV6中组播地址前八位均为1，因此组播地址总是以<code>ff</code>开头，具体的组播地址格式如下</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4sjrjjcs81a9sfmu29avan4b.png"
+<img data-src="https://wulc.me/imgs/image_1b4sjrjjcs81a9sfmu29avan4b.png"
 alt="IPV6组播格式" />
 <figcaption aria-hidden="true">IPV6组播格式</figcaption>
 </figure>
@@ -421,7 +424,7 @@ alt="IPV6组播格式" />
 </ul>
 <p>一些众所周知的组播地址如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4sndbb88pa17l8r291rrhb669.png"
+<img data-src="https://wulc.me/imgs/image_1b4sndbb88pa17l8r291rrhb669.png"
 alt="众所周知的组播地址" />
 <figcaption aria-hidden="true">众所周知的组播地址</figcaption>
 </figure>
@@ -431,7 +434,7 @@ alt="众所周知的组播地址" />
 <strong>后24位</strong>：单播地址的后24位</p>
 <p>凡是单播地址后24位相同的接口会自动加入相应的请求节点组播组，如下为一个实例</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4snpafi1q9d1jd96ph150gj69m.png"
+<img data-src="https://wulc.me/imgs/image_1b4snpafi1q9d1jd96ph150gj69m.png"
 alt="请求组播组地址实例" />
 <figcaption aria-hidden="true">请求组播组地址实例</figcaption>
 </figure>
@@ -487,7 +490,7 @@ Discovery,邻居发现)协议</strong>实现，主要包括如何自动获取地
 Solicitation)由主机发出，作用是促使路由器发送RA(Router
 advertisment)消息,RA消息中包含了路由器前缀等信息，主机会利用路由器的前缀加上自己的EUI-64地址作为自己的IPV6地址。这两种消息都是以<strong>ICMPv6报文</strong>的形式出现，也是5种ND协议消息中的两种。具体过程如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4svnst0154e1l8a1dcn1kfb1ras9.png"
+<img data-src="https://wulc.me/imgs/image_1b4svnst0154e1l8a1dcn1kfb1ras9.png"
 alt="RS和RA消息" />
 <figcaption aria-hidden="true">RS和RA消息</figcaption>
 </figure>
@@ -495,7 +498,7 @@ alt="RS和RA消息" />
 <p>因此为了避免RS泛滥，节点启动时<strong>最多只能发送3个RS</strong>，而路由器也会主动周期性地发送RA（默认值200秒）。主机在收到路由器的RA之后，自动设置默认路由器，建立默认路由器列表、前缀列表及其它参数。</p>
 <p>需要注意的是，<strong>自动配置的IPV6地址在系统中有一个生存周期</strong>，跟优先时间和有效时间有关，对应着以下4种状态</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4t02ipn1eu11vja1ht04pcuujm.png"
+<img data-src="https://wulc.me/imgs/image_1b4t02ipn1eu11vja1ht04pcuujm.png"
 alt="IPV6地址生存时间" />
 <figcaption aria-hidden="true">IPV6地址生存时间</figcaption>
 </figure>
@@ -516,7 +519,7 @@ Advertisment)消息，就证明地址重复 3.
 如果尝试若干次发送请求，都没有收到邻居通告，即可启用该地址</p>
 <p>过程如下所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4t1koot79sakbke432p9b9.png"
+<img data-src="https://wulc.me/imgs/image_1b4t1koot79sakbke432p9b9.png"
 alt="NS和NA" />
 <figcaption aria-hidden="true">NS和NA</figcaption>
 </figure>
@@ -527,7 +530,7 @@ alt="NS和NA" />
 将放弃使用这个试验地址</p>
 <p>结合上面的RS和RA，4中ND消息交互入下</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4t28ah47ooa731b0n13ce76am.png"
+<img data-src="https://wulc.me/imgs/image_1b4t28ah47ooa731b0n13ce76am.png"
 alt="四种ND消息交互" />
 <figcaption aria-hidden="true">四种ND消息交互</figcaption>
 </figure>
@@ -571,7 +574,7 @@ src="https://wulc.me/imgs/image_1b4t3ot285554is49mbi11al913.png"
 alt="DHCPv6" /></p>
 <p>当客户端已经记录了地址和其他配置信息，只需要DNS server、NTP
 server等信息的时候，可以通过DHCPv6快速配置来快速获得所需地址。这个过程只需要两个消息的交互，过程如下所示：
-<img src="https://wulc.me/imgs/image_1b4t40s8m1h0t17u11pqfs2idac1g.png"
+<img data-src="https://wulc.me/imgs/image_1b4t40s8m1h0t17u11pqfs2idac1g.png"
 alt="DHCPv6快速配置" /></p>
 <h2 id="ipv6报文">IPV6报文</h2>
 <p>IPV6的报文主要由三部分组成 1.
@@ -580,13 +583,13 @@ alt="DHCPv6快速配置" /></p>
 <h3 id="基本头与v4对比">基本头(与v4对比)</h3>
 <p>v4与v6的报文对比如下所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4t4g51f1uca1vd8ua31u80pea1t.png"
+<img data-src="https://wulc.me/imgs/image_1b4t4g51f1uca1vd8ua31u80pea1t.png"
 alt="v4与v6报文对比" />
 <figcaption aria-hidden="true">v4与v6报文对比</figcaption>
 </figure>
 <p>且v4的报文的具体字段如下所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4t4igjcvm0umj1ofm1gvc1tch2a.png"
+<img data-src="https://wulc.me/imgs/image_1b4t4igjcvm0umj1ofm1gvc1tch2a.png"
 alt="v4报文具体字段" />
 <figcaption aria-hidden="true">v4报文具体字段</figcaption>
 </figure>
@@ -666,7 +669,7 @@ alt="ICMPv6 package" /></p>
 </table>
 <p>每一个基本报头和扩展报头的<code>NextHeader</code>字段标识后面紧接的内容，如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4t5t1qn1g6dmthhs71fps19rl3h.png"
+<img data-src="https://wulc.me/imgs/image_1b4t5t1qn1g6dmthhs71fps19rl3h.png"
 alt="拓展报头" />
 <figcaption aria-hidden="true">拓展报头</figcaption>
 </figure>
@@ -674,7 +677,7 @@ alt="拓展报头" />
 <p>ICMPv6协议与回声请求、抑制消息、重定向、参数错误等功能相关，相关的命令为<code>ping</code>、<code>traceroute</code></p>
 <p>ICMP报文格式为<code>Type+Code+CheckSum</code>,其报文的格式以及在整个分组的位置如下所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4t7ujoi1s0010q511td1fjir5s9.png"
+<img data-src="https://wulc.me/imgs/image_1b4t7ujoi1s0010q511td1fjir5s9.png"
 alt="ICMPv6分组格式和位置" />
 <figcaption aria-hidden="true">ICMPv6分组格式和位置</figcaption>
 </figure>
@@ -698,7 +701,7 @@ alt="ICMPv6分组格式和位置" />
 5)源机向目的机发送MTU=1300字节的IPV6数据包
 6)此后，该路径的MTU都使用1300字节</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4t9h85q1q6t1jeo2ae131517n2m.png"
+<img data-src="https://wulc.me/imgs/image_1b4t9h85q1q6t1jeo2ae131517n2m.png"
 alt="PMTU发现" />
 <figcaption aria-hidden="true">PMTU发现</figcaption>
 </figure>
@@ -717,7 +720,7 @@ alt="IPV4路由过程" /></p>
 <p>ND协议在我们介绍无状态地址自动配置的时候已经介绍过，但是除了无状态地址自动配置外，ND协议还被用于<strong>地址解析和路由重定向</strong>。</p>
 <p>ND协议共有五种报文，五种报文都是以<strong>ICMPv6报文</strong>的形式出现，如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4td6gl71s651ddh5p5rr1e8cm.png"
+<img data-src="https://wulc.me/imgs/image_1b4td6gl71s651ddh5p5rr1e8cm.png"
 alt="NS五种报文" />
 <figcaption aria-hidden="true">NS五种报文</figcaption>
 </figure>
@@ -738,7 +741,7 @@ alt="IPV6地址解析" /></p>
 <p>如果查询到的目的地址是on-link的，将目的地址本身加入DC表的nexthop域；如果目的地址是off-link的，将路由表中的下一跳加入DC的nexthop域。</p>
 <p>在这个过程中，会涉及到重定向的问题，重定向的作用其实就是给主机发送更好的路由。下图为一个简单的例子</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4teq8bo15gdtnoni61hme8701t.png"
+<img data-src="https://wulc.me/imgs/image_1b4teq8bo15gdtnoni61hme8701t.png"
 alt="路由重定向" />
 <figcaption aria-hidden="true">路由重定向</figcaption>
 </figure>
@@ -775,7 +778,7 @@ alt="路由重定向" />
 <h2 id="过渡技术">过渡技术</h2>
 <p>从IPV4到IPV6的过渡被认为要经过三个阶段</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4tjslmh14gp1unf16qg9un4ot2n.png"
+<img data-src="https://wulc.me/imgs/image_1b4tjslmh14gp1unf16qg9un4ot2n.png"
 alt="v4到v6的过渡" />
 <figcaption aria-hidden="true">v4到v6的过渡</figcaption>
 </figure>
@@ -797,28 +800,28 @@ alt="v4到v6的过渡" />
 </ul>
 <p>IPV6分组通过IPV4网络时，IPV6分组作为数据部分搭载到IPV4分组中，在这种情形下，IPV4分组头部的<code>protocol=41</code>，如下图所示。</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4tkj09h1l3jg7bobd1f5i1mq834.png"
+<img data-src="https://wulc.me/imgs/image_1b4tkj09h1l3jg7bobd1f5i1mq834.png"
 alt="v6 over v4" />
 <figcaption aria-hidden="true">v6 over v4</figcaption>
 </figure>
 <p>根据IPV4网络位置的不同，在不同的位置建立</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4tkrng6qbl1flp1r7en9a1h9q4b.png"
+<img data-src="https://wulc.me/imgs/image_1b4tkrng6qbl1flp1r7en9a1h9q4b.png"
 alt="隧道1" />
 <figcaption aria-hidden="true">隧道1</figcaption>
 </figure>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4tkrvd51b29vs517np1jk0b9a4o.png"
+<img data-src="https://wulc.me/imgs/image_1b4tkrvd51b29vs517np1jk0b9a4o.png"
 alt="隧道2" />
 <figcaption aria-hidden="true">隧道2</figcaption>
 </figure>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4tks9g21uhsuga1dsh1riecji55.png"
+<img data-src="https://wulc.me/imgs/image_1b4tks9g21uhsuga1dsh1riecji55.png"
 alt="隧道3" />
 <figcaption aria-hidden="true">隧道3</figcaption>
 </figure>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4tksuvu3n41oc8onl1u01rtp5i.png"
+<img data-src="https://wulc.me/imgs/image_1b4tksuvu3n41oc8onl1u01rtp5i.png"
 alt="隧道4" />
 <figcaption aria-hidden="true">隧道4</figcaption>
 </figure>
@@ -826,7 +829,7 @@ alt="隧道4" />
 <h3 id="翻译转换">翻译/转换</h3>
 <p>翻译/转换就是从IPV4转换到IPV6，或反过来，不仅发生在网络层，还有传输层和应用层。如下图所示是一个翻译/转换的例子。</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1b4tl0vca1bva1d5f1t04qer189s6c.png"
+<img data-src="https://wulc.me/imgs/image_1b4tl0vca1bva1d5f1t04qer189s6c.png"
 alt="翻译/转换" />
 <figcaption aria-hidden="true">翻译/转换</figcaption>
 </figure>
@@ -837,6 +840,25 @@ alt="翻译/转换" />
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -978,7 +1000,7 @@ alt="翻译/转换" />
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -1001,6 +1023,10 @@ alt="翻译/转换" />
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="本文主要介绍了互联网几项重要业务（在线广告，推荐系统，搜索引擎）背后所需的一项共同技术：语义理解(semantic understanding)，同时介绍了实现语义理解的若干种方法：包括矩阵分解，主题模型(Topic Models)等。原视频见这里，需要自备梯子。">
@@ -89,6 +90,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -187,6 +189,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -259,7 +262,7 @@ target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=C7k0YSLAyX4
 系统为例介绍了在线广告所需的语义理解技术，如下是 peacock 系统对
 “红酒木瓜汤” 这个查询关键词返回的语义理解的结果</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1c76cur5t9ho1kmq11kt1vrn1ekn9.png"
+<img data-src="https://wulc.me/imgs/image_1c76cur5t9ho1kmq11kt1vrn1ekn9.png"
 alt="online advertising" />
 <figcaption aria-hidden="true">online advertising</figcaption>
 </figure>
@@ -280,7 +283,7 @@ Long-Tail Topic Features for Industrial Applications</a>.</p>
 之间的相似性，具体可参考<a
 href="http://wulc.me/2016/02/22/%E3%80%8AProgramming%20Collective%20Intelligence%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%282%29--%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4/">这篇文章</a>。但是遇到下面这种情况时，协同过滤是无能为力的</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1c76fe1ok1oi74fs1o481tef1f959.png"
+<img data-src="https://wulc.me/imgs/image_1c76fe1ok1oi74fs1o481tef1f959.png"
 alt="recommendation system" />
 <figcaption aria-hidden="true">recommendation system</figcaption>
 </figure>
@@ -293,7 +296,7 @@ items 很少，因此协同过滤在推荐系统中几乎不再被使用。</p>
 topic 向量，这样通过比较 topic 向量即可比较两个 user 或 item
 的相似性</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1c76fpgg11k3t4gt1ruhv9n6csm.png"
+<img data-src="https://wulc.me/imgs/image_1c76fpgg11k3t4gt1ruhv9n6csm.png"
 alt="recommendation system 2" />
 <figcaption aria-hidden="true">recommendation system 2</figcaption>
 </figure>
@@ -305,19 +308,19 @@ alt="recommendation system 2" />
 返回关联的内容，下图中的 text
 可以理解为用户的搜索关键词和页面的关键词</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1c76grvnn1n23qjh9clafd2913.png"
+<img data-src="https://wulc.me/imgs/image_1c76grvnn1n23qjh9clafd2913.png"
 alt="search engine 1" />
 <figcaption aria-hidden="true">search engine 1</figcaption>
 </figure>
 <p>图中有几个 topic，最简单的是两个，如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1c76ijipd1ujj13bc14afc6p1gd51g.png"
+<img data-src="https://wulc.me/imgs/image_1c76ijipd1ujj13bc14afc6p1gd51g.png"
 alt="search engine 2" />
 <figcaption aria-hidden="true">search engine 2</figcaption>
 </figure>
 <p>但是也可以认为有四个，如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1c76ikob013gr1bro18omhtq1mm92d.png"
+<img data-src="https://wulc.me/imgs/image_1c76ikob013gr1bro18omhtq1mm92d.png"
 alt="search engine 2" />
 <figcaption aria-hidden="true">search engine 2</figcaption>
 </figure>
@@ -331,7 +334,7 @@ supervised
 不仅需要人工标注的数据，而且还难以确定准确的类别数；因此实际中往往是采用
 unsupervised 的方法，如下所示是一些 unsupervised 方法</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1c76k8ff41pkbqmskflklc193j2q.png"
+<img data-src="https://wulc.me/imgs/image_1c76k8ff41pkbqmskflklc193j2q.png"
 alt="unsupervised method" />
 <figcaption aria-hidden="true">unsupervised method</figcaption>
 </figure>
@@ -381,6 +384,25 @@ target="_blank" rel="noopener" href="http://citeseerx.ist.psu.edu/viewdoc/summar
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -524,7 +546,7 @@ target="_blank" rel="noopener" href="http://citeseerx.ist.psu.edu/viewdoc/summar
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -547,6 +569,10 @@ target="_blank" rel="noopener" href="http://citeseerx.ist.psu.edu/viewdoc/summar
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

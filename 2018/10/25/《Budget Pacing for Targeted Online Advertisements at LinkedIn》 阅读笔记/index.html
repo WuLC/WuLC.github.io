@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="《Budget Pacing for Targeted Online Advertisements at LinkedIn》 是 LinkedIn 在 2014 年发表的一篇关于预算控制的论文，里面的预算控制的策略并不复杂，并且具有很强的实践性和工程性。本文主要是根据论文总结了这个方法的基本原理、工程实现以及实验效果。">
@@ -87,6 +88,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -185,6 +187,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -353,7 +356,7 @@ curve)，令最后两个小时的曝光量为 0，这样会导致 budget pacing
 会根据预设的更新频率从 database 中获取最新的数据来更新 campaign
 index。</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1cquneeh317desbn1f7gd651fl09.png"
+<img data-src="https://wulc.me/imgs/image_1cquneeh317desbn1f7gd651fl09.png"
 alt="engineering design" />
 <figcaption aria-hidden="true">engineering design</figcaption>
 </figure>
@@ -369,7 +372,7 @@ campaign
 campaign 的实验设置情况，其中 On 表示采用上述的 pacing 算法，Off
 表示不采用。</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1cqus9euh1e21bdslma1v85t3jm.png"
+<img data-src="https://wulc.me/imgs/image_1cqus9euh1e21bdslma1v85t3jm.png"
 alt="design of experiment" />
 <figcaption aria-hidden="true">design of experiment</figcaption>
 </figure>
@@ -400,12 +403,12 @@ campaign，表示用户看到的广告的多样性，论文认为这个值越大
 Updates）上分别做了这个实验，结果如下，带加号 <code>+</code> 的指标表示
 On 在 oFF 的基础上的变化比例；根据下表，在各个指标上均有较高提升</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1cqutctu84f72db1rj6177a1ah133.png"
+<img data-src="https://wulc.me/imgs/image_1cqutctu84f72db1rj6177a1ah133.png"
 alt="effect 1" />
 <figcaption aria-hidden="true">effect 1</figcaption>
 </figure>
 <figure>
-<img src="https://wulc.me/imgs/image_1cquteetoe1r441vp86lf15r450.png"
+<img data-src="https://wulc.me/imgs/image_1cquteetoe1r441vp86lf15r450.png"
 alt="effect 2" />
 <figcaption aria-hidden="true">effect 2</figcaption>
 </figure>
@@ -415,7 +418,7 @@ pacing 后前期的竞争有所缓和（slow
 start导致的），而后期的竞争力比原来有所提升，原因是 campaign life time
 变长了，因此有竞争力的 campaign 不会早早就退出了竞价环境。</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1cqutoq7r1bd31bbkrst4pe1s3o5d.png"
+<img data-src="https://wulc.me/imgs/image_1cqutoq7r1bd31bbkrst4pe1s3o5d.png"
 alt="competition" />
 <figcaption aria-hidden="true">competition</figcaption>
 </figure>
@@ -433,6 +436,25 @@ and E. Vee. Forecasting high-dimensional data. In Proceedings of the
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -574,7 +596,7 @@ and E. Vee. Forecasting high-dimensional data. In Proceedings of the
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -597,6 +619,10 @@ and E. Vee. Forecasting high-dimensional data. In Proceedings of the
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

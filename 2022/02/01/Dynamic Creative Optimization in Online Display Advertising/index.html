@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="最近在研究广告创意相关内容, 笔者根据当前的调研，将这个领域划分为创意生成、创意优选和创意投放三大块，每一块的具体职责如下  创意生成：利用素材(标题、图片、视频、落地页等)生成候选创意(用户看到的广告) 创意优选：从计划的候选创意(一个计划下的候选往往有多个)中选择 topk 个用于投放 创意投放：将优选出来的创意投放至线上  严格来说，这三部分其实也并非泾渭分明，比如前两部分可以统一理解为创意">
@@ -87,6 +88,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -185,6 +187,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -267,12 +270,12 @@ Creative Optimization in Online Display Advertising</a>，这篇 paper
 user，右边则是具体的广告(在这里为创意),
 连接的边表示这个用户访问了这个广告/创意，边的权重可根据具体的业务目标决定</p>
 <figure>
-<img src="https://wulc.me/imgs/dco_graph.jpg" alt="dco_graph" />
+<img data-src="https://wulc.me/imgs/dco_graph.jpg" alt="dco_graph" />
 <figcaption aria-hidden="true">dco_graph</figcaption>
 </figure>
 <p>基于上图的二部图，paper 里将问题建模成如下的最优化问题</p>
 <figure>
-<img src="https://wulc.me/imgs/modelling_dco.jpg" alt="modelling" />
+<img data-src="https://wulc.me/imgs/modelling_dco.jpg" alt="modelling" />
 <figcaption aria-hidden="true">modelling</figcaption>
 </figure>
 <p>符号含义如下</p>
@@ -343,7 +346,7 @@ target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/127046673">算
 最小费用最大流</a></p>
 <p>因此，基于最小费用最大流的概念，可以构造出如下的网络流</p>
 <figure>
-<img src="https://wulc.me/imgs/dco_flow_problem.jpg" alt="dco graph" />
+<img data-src="https://wulc.me/imgs/dco_flow_problem.jpg" alt="dco graph" />
 <figcaption aria-hidden="true">dco graph</figcaption>
 </figure>
 <p>上面的网络流中有 2 个 user 和 2 个
@@ -437,7 +440,7 @@ bound <span class="math inline">\(c_u\)</span>
 <p>在 <span class="math inline">\(c_u\)</span> 比较容易获得的 assumption
 下，paper 里给出了第一种在线算方法，总体算法流程如下</p>
 <figure>
-<img src="https://wulc.me/imgs/dco_online_algo1.jpg" alt="algo1" />
+<img data-src="https://wulc.me/imgs/dco_online_algo1.jpg" alt="algo1" />
 <figcaption aria-hidden="true">algo1</figcaption>
 </figure>
 <p>其实跟 offline 的区别不大，就是用了 <span
@@ -474,7 +477,7 @@ class="math inline">\(\beta_u\)</span>, 则有</p>
 <p>基于这个假设，paper 里给了如下的 online algorithm，并且证明了这里的
 competitive ratio 能跟最优的一致</p>
 <figure>
-<img src="https://wulc.me/imgs/dco_online_algo2.jpg" alt="algo2" />
+<img data-src="https://wulc.me/imgs/dco_online_algo2.jpg" alt="algo2" />
 <figcaption aria-hidden="true">algo2</figcaption>
 </figure>
 <p>但是笔者觉得这里的 assumption 有很大的问题，即假设了每个 item 对所有
@@ -507,6 +510,25 @@ clustering 怎么保证两次聚类的结果差异性不大？</strong></p>
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -649,7 +671,7 @@ with assumption</span></a></li><li class="nav-item nav-level-4"><a class="nav-li
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -672,6 +694,10 @@ with assumption</span></a></li><li class="nav-item nav-level-4"><a class="nav-li
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="文章为转载，原文链接见这里，作者是 carbon zhang。这篇文章主要介绍了分布式机器学习中的若干重点概念和经典论文，包括数据并行和模型并行、分布式框架的流派、参数服务器以及同步协议的演进等，非常值得一看。">
@@ -98,6 +99,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -196,6 +198,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -297,7 +300,7 @@ Dean）的blog里，当时匆匆一瞥，以为自己懂了。多年以后，再
 target="_blank" rel="noopener" href="https://www.zhihu.com/question/53851014">这个问题</a>中沐帅曾经给出了一个非常直观而经典的解释，可惜不知道什么原因，当我想引用时却发现已经被删除了。我在这里简单介绍下这个比喻：如果要修两栋楼，有一个工程队，怎么操作？第一个方案是将人分成两组，分别盖楼，改好了就装修；第二种做法是一组人盖楼，等第一栋楼盖好，另一组装修第一栋，然后第一组继续盖第二栋楼，改完以后等装修队装修第二栋楼。咋一看，第二种方法似乎并行度并不高，但第一种方案需要每个工程人员都拥有“盖楼”和“装修”两种能力，而第二个方案只需要每个人拥有其中一种能力即可。第一个方案和数据并行类似，第二个方案则道出了模型并行的精髓。</p>
 <p>数据并行理解起来比较简单，当样本比较多的时候，为了使用所有样本来训练模型，我们不妨把数据分布到不同的机器上，然后每台机器都来对模型参数进行迭代，如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1c8cl0d5u1emv1j8v5p9ogc1dfl9.png"
+<img data-src="https://wulc.me/imgs/image_1c8cl0d5u1emv1j8v5p9ogc1dfl9.png"
 alt="data parallel" />
 <figcaption aria-hidden="true">data parallel</figcaption>
 </figure>
@@ -311,14 +314,14 @@ target="_blank" rel="noopener" href="https://www.jianshu.com/p/00736aa21dc8">这
 <p>模型并行的问题定义可以参考姐夫的<a
 target="_blank" rel="noopener" href="http://papers.nips.cc/paper/4687-large-scale-distributed-deep-networks">[4]</a>，这篇paper也是tensorflow的前身相关的总结，其中图</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1c8cm9l72otn1vu6r7f1dbt13grm.png"
+<img data-src="https://wulc.me/imgs/image_1c8cm9l72otn1vu6r7f1dbt13grm.png"
 alt="model parallel" />
 <figcaption aria-hidden="true">model parallel</figcaption>
 </figure>
 <p>解释了模型并行的物理图景，当一个超大神经网络无法存储在一台机器上时，我们可以切割网络存到不同的机器上，但是为了保持不同参数分片之间的依赖，如图中粗黑线的部分，则需要在不同的机器之间进行concurrent控制；同一个机器内部的参数依赖，即途中细黑线部分在机器内即可完成控制。</p>
 <p>黑线部分如何有效控制呢？如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1c8cmb1p01bq8jrq1u8ijg61dc813.png"
+<img data-src="https://wulc.me/imgs/image_1c8cmb1p01bq8jrq1u8ijg61dc813.png"
 alt="parameter rely" />
 <figcaption aria-hidden="true">parameter rely</figcaption>
 </figure>
@@ -326,7 +329,7 @@ alt="parameter rely" />
 ABC
 代表模型的不同部分的参数；假设C依赖B，B依赖A，机器1上得到A的一个迭代后，将A和必要的样本信息一起传到机器2，机器2根据A和样本对P2更新得到，以此类推；当机器2计算B的时候，机器1可以展开A的第二个迭代的计算。了解<strong>CPU流水线</strong>操作的同学一定感到熟悉，是的，模型并行是通过数据流水线来实现并行的。想想那个盖楼的第二种方案，就能理解模型并行的精髓了。</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1c8cmdj2u20adgtc5c6b1pkt2g.png"
+<img data-src="https://wulc.me/imgs/image_1c8cmdj2u20adgtc5c6b1pkt2g.png"
 alt="parameter rely controller" />
 <figcaption aria-hidden="true">parameter rely controller</figcaption>
 </figure>
@@ -337,7 +340,7 @@ alt="parameter rely controller" />
 <p>从函数式编程中的受到启发，google发布了MapReduce<a
 target="_blank" rel="noopener" href="https://dl.acm.org/citation.cfm?id=1327492">[5]</a>的分布式计算方式；通过将任务切分成多个叠加的Map+Reduce任务，来完成复杂的计算任务，示意图如下</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1c8cmk8hj1k1518k91j4eb19pv43t.png"
+<img data-src="https://wulc.me/imgs/image_1c8cmk8hj1k1518k91j4eb19pv43t.png"
 alt="MapReduce" />
 <figcaption aria-hidden="true">MapReduce</figcaption>
 </figure>
@@ -345,7 +348,7 @@ alt="MapReduce" />
 <p>为了解决MapReduce的两个问题，Matei在<a
 target="_blank" rel="noopener" href="https://dl.acm.org/citation.cfm?id=2228301">[6]</a>中提出了一种新的数据结构RDD，并构建了Spark框架。Spark框架在MR语义之上封装了DAG调度器，极大降低了算法使用的门槛。较长时间内spark几乎可以说是大规模机器学习的代表，直至后来沐帅的参数服务器进一步开拓了大规模机器学习的领域以后，spark才暴露出一点点不足。如下图</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1c8cmp3c8682rsf42j1l2r9cn4a.png"
+<img data-src="https://wulc.me/imgs/image_1c8cmp3c8682rsf42j1l2r9cn4a.png"
 alt="spark" />
 <figcaption aria-hidden="true">spark</figcaption>
 </figure>
@@ -358,7 +361,7 @@ alt="spark" />
 target="_blank" rel="noopener" href="https://www.zhihu.com/question/55119470">这个问题</a>中对MPI的前景做了简要介绍；和Spark不同，MPI是类似socket的一种系统通信API，只是支持了消息广播等功能。因为对MPI研究不深入，这里简单介绍下优点和缺点吧；优点是系统级支持，性能杠杠的；缺点也比较多，一是和MR一样因为原语过于低级，用MPI写算法，往往代码量比较大。另一方面是基于MPI的集群，如果某个任务失败，往往需要重启整个集群，而MPI集群的任务成功率并不高。阿里在<a
 target="_blank" rel="noopener" href="https://dl.acm.org/citation.cfm?id=3098029">[7]</a>中给出了下图：</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1c8cn0o8l6q65bh90f17io8tr4n.png"
+<img data-src="https://wulc.me/imgs/image_1c8cn0o8l6q65bh90f17io8tr4n.png"
 alt="MPI" />
 <figcaption aria-hidden="true">MPI</figcaption>
 </figure>
@@ -370,7 +373,7 @@ target="_blank" rel="noopener" href="https://www.usenix.org/system/files/confere
 <a target="_blank" rel="noopener" href="http://vldb.org/pvldb/vldb2010/papers/R63.pdf">[9]</a>
 ，如下图所示：</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1c8cs9n1qgj71ohp8pgv6t7l454.png"
+<img data-src="https://wulc.me/imgs/image_1c8cs9n1qgj71ohp8pgv6t7l454.png"
 alt="parallel topic model" />
 <figcaption aria-hidden="true">parallel topic model</figcaption>
 </figure>
@@ -385,7 +388,7 @@ target="_blank" rel="noopener" href="https://dl.acm.org/citation.cfm?id=2959190"
 <p>5）<strong>易用性</strong>：主要针对使用框架进行算法调优的工程师而言，显然，一个难用的框架是没有生命力的。</p>
 <p>在正式介绍第三代参数服务器的主要技术之前，先从另一个角度来看下大规模机器学习框架的演进</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1c8csill81sv91pbo1songrh8rf5h.png"
+<img data-src="https://wulc.me/imgs/image_1c8csill81sv91pbo1songrh8rf5h.png"
 alt="框架演进" />
 <figcaption aria-hidden="true">框架演进</figcaption>
 </figure>
@@ -394,7 +397,7 @@ YahooLDA
 是针对LDA算法的。当模型参数突破十亿以后，则可以看出参数服务器一统江湖，再无敌手。</p>
 <p>首先我们看看第三代参数服务器的基本架构</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1c8cskcg2r9olg5shi1l956du5u.png"
+<img data-src="https://wulc.me/imgs/image_1c8cskcg2r9olg5shi1l956du5u.png"
 alt="parameter server" />
 <figcaption aria-hidden="true">parameter server</figcaption>
 </figure>
@@ -421,14 +424,14 @@ node上，s1、s2、s3分布在三个worker上，这时候如果我们还要保�
 <p>为了解决性能的问题，业界开始探索这里的一致性模型，最先出来的版本是前面提到的<a
 target="_blank" rel="noopener" href="http://papers.nips.cc/paper/4687-large-scale-distributed-deep-networks">9</a>中的<strong>ASP模式，就是完全不顾worker之间的顺序，每个worker按照自己的节奏走，跑完一个迭代就update</strong>，然后继续，这应该是大规模机器学习中的freestyle了，如图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1c8ct5p651d7816sh1tk0n1p1g5s6b.png"
+<img data-src="https://wulc.me/imgs/image_1c8ct5p651d7816sh1tk0n1p1g5s6b.png"
 alt="ASP" />
 <figcaption aria-hidden="true">ASP</figcaption>
 </figure>
 <p>ASP的优势是最大限度利用了集群的计算能力，所有的worker所在的机器都不用等待，但缺点也显而易见，除了少数几个模型，比如LDA，<strong>ASP协议可能导致模型无法收敛</strong>。也就是SGD彻底跑飞了，梯度不知道飞到哪里去了。</p>
 <p>在ASP之后提出了另一种相对极端的同步协议BSP，Spark用的就是这种方式，如图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1c8ct7b2p1ps16ju7kfpfii6i6o.png"
+<img data-src="https://wulc.me/imgs/image_1c8ct7b2p1ps16ju7kfpfii6i6o.png"
 alt="BSP" />
 <figcaption aria-hidden="true">BSP</figcaption>
 </figure>
@@ -440,7 +443,7 @@ size的区别，所以在模型收敛性上是完全一样的。同时，因为�
 group的性能由其中最慢的worker决定，这个worker一般称为straggler。</strong>读过GFS文章的同学应该都知道straggler的存在是非常普遍的现象。</p>
 <p>能否将ASP和BSP做一下折中呢？答案当然是可以的，这就是目前我认为最好的同步协议SSP；<strong>SSP的思路其实很简单，既然ASP是允许不同worker之间的迭代次数间隔任意大，而BSP则只允许为0，那我是否可以取一个常数s</strong>？如图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1c8cta3iv13eb1o6istc1ue1v9e75.png"
+<img data-src="https://wulc.me/imgs/image_1c8cta3iv13eb1o6istc1ue1v9e75.png"
 alt="SSP" />
 <figcaption aria-hidden="true">SSP</figcaption>
 </figure>
@@ -460,7 +463,7 @@ node中，以master-slave的形式存活。如果master挂掉，可以快速从s
 <p><strong>Server node管理</strong>：可以使用一致性哈希技术来解决server
 node的加入和退出问题，如图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1c8ctft67143lni21uk71s2tgag7i.png"
+<img data-src="https://wulc.me/imgs/image_1c8ctft67143lni21uk71s2tgag7i.png"
 alt="一致性哈希" />
 <figcaption aria-hidden="true">一致性哈希</figcaption>
 </figure>
@@ -542,6 +545,25 @@ information processing systems. 2013: 1223-1231.</p>
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -685,7 +707,7 @@ information processing systems. 2013: 1223-1231.</p>
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -708,6 +730,10 @@ information processing systems. 2013: 1223-1231.</p>
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="之前的文章 Dynamic Creative Optimization in Online Display Advertising中提到，广告创意往往可分为创意生成、创意优选和创意投放三大块，本文主要讲创意优选这部分的一些做法，这个过程一般会涉及到 E&amp;E 的过程。 本文的主要内容是选自阿里发表的一篇 paper：A Hybrid Bandit Model with Visual Prio">
@@ -90,6 +91,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -188,6 +190,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -271,7 +274,7 @@ Exploration
 list-wise 优选做 exploitation 模块，HBM 则是基于 badnit model 做
 exploration 模块，下面也主要从这两个模块进行介绍。</p>
 <figure>
-<img src="https://wulc.me/imgs/VAM_HBM.jpg" alt="architecture" />
+<img data-src="https://wulc.me/imgs/VAM_HBM.jpg" alt="architecture" />
 <figcaption aria-hidden="true">architecture</figcaption>
 </figure>
 <h2 id="vam">VAM</h2>
@@ -293,7 +296,7 @@ to Rank: From Pairwise Approach to Listwise Approach</a></li>
 <p>VAM 采用的 list-wise loss 即是第二篇 paper 中的提出的
 loss，其流程如下图所示，更详细的推导可参考上面第二篇 paper</p>
 <!-- ![listnet algorithm][6] -->
-<p><img src="https://wulc.me/imgs/ListNetAlgorithm.jpg" height="50%" width="50%"></p>
+<p><img data-src="https://wulc.me/imgs/ListNetAlgorithm.jpg" height="50%" width="50%"></p>
 <h3 id="vam-loss">VAM loss</h3>
 <p>回到 VAM，上图的 query 相当于商品(product)，而 list 则是每个 product
 对应的所有创意(一个 product 往往会有多个候选的创意)</p>
@@ -335,7 +338,7 @@ Estimation for Rare Events in Online
 Advertising</a>，其思想是基于贝叶斯学派给点击数 clicks 和 CTR
 值整个先验分布，这样遇到极端值时也有分布约束，导致最终的值不会太离谱，</p>
 <figure>
-<img src="https://wulc.me/imgs/vam_label_smoothing.jpg"
+<img data-src="https://wulc.me/imgs/vam_label_smoothing.jpg"
 alt="label smoothing" />
 <figcaption aria-hidden="true">label smoothing</figcaption>
 </figure>
@@ -365,7 +368,7 @@ class="math inline">\(\widetilde{w}|\sigma^2\)</span>
 <p>参考上面 wiki 的推导过程，总体模型的 training 和 serving
 过程如下所示</p>
 <figure>
-<img src="https://wulc.me/imgs/HBM_training_serving.jpg"
+<img data-src="https://wulc.me/imgs/HBM_training_serving.jpg"
 alt="hbm_train_serving" />
 <figcaption aria-hidden="true">hbm_train_serving</figcaption>
 </figure>
@@ -420,15 +423,15 @@ product-wise 的 score 相当于是做了一个 clustering，笔者认为这样�
 sense</strong></p>
 <p>因此，HBM 的算法流程如下图所示</p>
 <!-- ![HBM_algo][13] -->
-<p><img src="https://wulc.me/imgs/HybridBanditModel.jpg" height="50%" width="50%"></p>
+<p><img data-src="https://wulc.me/imgs/HybridBanditModel.jpg" height="50%" width="50%"></p>
 <h2 id="实验">实验</h2>
 <p>paper 里采用了 2 个评估指标：Simulated CTR(sCTR) 和 Cumulative
 regret, 前者模拟 online learning 过程，后者则是评估 bandit model
 ，两者计算方法如下，但是好像这两个指标不是非常通用？</p>
 <!-- ![sCTR][14] -->
-<p><img src="https://wulc.me/imgs/VAM_HBM_sCTR.jpg" height="50%" width="50%"></p>
+<p><img data-src="https://wulc.me/imgs/VAM_HBM_sCTR.jpg" height="50%" width="50%"></p>
 <!-- ![regret][15] -->
-<p><img src="https://wulc.me/imgs/VAM_HBM_regret.jpg" height="50%" width="50%"></p>
+<p><img data-src="https://wulc.me/imgs/VAM_HBM_regret.jpg" height="50%" width="50%"></p>
 <p>采用的评估数据集有 2
 个，一个是自建的，另一个是公开数据集，效果上自然也是 paper
 提出的效果最好，但是 paper 没有做在线的 ab
@@ -464,6 +467,25 @@ loop
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -606,7 +628,7 @@ loop
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -629,6 +651,10 @@ loop
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="本系列文章是刘鹏老师的计算广告学中的一些记录。本文是第一章的相关笔记：广告的基本知识，主要介绍广告的定义与模型，目前在线广告的特点、技术架构与市场形态，可以说简要地概括了整个课程的内容。">
@@ -95,6 +96,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -193,6 +195,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -274,21 +277,21 @@ Awareness)与效果广告(Direct Response)</h3>
 <p>品牌广告：创造独特良好的品牌或产品形象,
 目的在于提升较长时期内的离线转化率</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bedb9224c2f10df1pn9m1o1fg413.png"
+<img data-src="https://wulc.me/imgs/image_1bedb9224c2f10df1pn9m1o1fg413.png"
 alt="品牌广告" />
 <figcaption aria-hidden="true">品牌广告</figcaption>
 </figure>
 <p>效果广告：有短期内明确用户转化行为诉求的广告。用户转化行为例如：购买,
 注册, 投票, 捐款等。大部分互联网广告都是这种类型。</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bedb9svv5n4h6217d81g8pg4b1g.png"
+<img data-src="https://wulc.me/imgs/image_1bedb9svv5n4h6217d81g8pg4b1g.png"
 alt="效果广告" />
 <figcaption aria-hidden="true">效果广告</figcaption>
 </figure>
 <h2 id="广告的有效性模型">广告的有效性模型</h2>
 <p>三个大阶段，同时可分为6个小阶段</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bh7rmedu2b68f41qkd19imfbr9.png"
+<img data-src="https://wulc.me/imgs/image_1bh7rmedu2b68f41qkd19imfbr9.png"
 alt="广告有效性模型" />
 <figcaption aria-hidden="true">广告有效性模型</figcaption>
 </figure>
@@ -301,7 +304,7 @@ alt="广告有效性模型" />
 <code>+</code> 表示对该项有正面效果， <code>-</code>
 表示对该项有负面效果。</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bh7rp7pc10ti1am4on0cd919uhm.png"
+<img data-src="https://wulc.me/imgs/image_1bh7rp7pc10ti1am4on0cd919uhm.png"
 alt="广告策略的效果" />
 <figcaption aria-hidden="true">广告策略的效果</figcaption>
 </figure>
@@ -316,7 +319,7 @@ alt="广告策略的效果" />
 3）
 <strong>标准化</strong>。指的是有行业制定了相关的规则来指导广告市场。如下是一些美国广告行业相关的机构。</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bedfs4ft1dau44j10of1dbfstvm.png"
+<img data-src="https://wulc.me/imgs/image_1bedfs4ft1dau44j10of1dbfstvm.png"
 alt="iab" />
 <figcaption aria-hidden="true">iab</figcaption>
 </figure>
@@ -329,7 +332,7 @@ alt="iab" />
 </ul></li>
 </ul>
 <figure>
-<img src="https://wulc.me/imgs/image_1bedfsgru1ndc14qe1n3v1ps5n1t13.png"
+<img data-src="https://wulc.me/imgs/image_1bedfsgru1ndc14qe1n3v1ps5n1t13.png"
 alt="4a" />
 <figcaption aria-hidden="true">4a</figcaption>
 </figure>
@@ -343,7 +346,7 @@ McCann等,Dentsu等非4A会员的大公司但也被列为4A公司</li>
 </ul></li>
 </ul>
 <figure>
-<img src="https://wulc.me/imgs/image_1beejom04mi91t2t1j9pjh6c6a9.png"
+<img data-src="https://wulc.me/imgs/image_1beejom04mi91t2t1j9pjh6c6a9.png"
 alt="ana" />
 <figcaption aria-hidden="true">ana</figcaption>
 </figure>
@@ -357,13 +360,13 @@ alt="ana" />
 <h3 id="在线广告市场">在线广告市场</h3>
 <p>在线广告市场发展情况如下所示，主要分为了三大部分：需求方，供给方和连接两者的平台，需求方指的是需要投放广告的广告主，供给方指的是提供广告位的媒体。</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bh7sbaqo4u216vppmrfo3cm13.png"
+<img data-src="https://wulc.me/imgs/image_1bh7sbaqo4u216vppmrfo3cm13.png"
 alt="在线广告市场" />
 <figcaption aria-hidden="true">在线广告市场</figcaption>
 </figure>
 <p>从媒体也就是supply端来看，其变现的手段有以下三种</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bh7sru9gvr71qtd1uufl1le3r1g.png"
+<img data-src="https://wulc.me/imgs/image_1bh7sru9gvr71qtd1uufl1le3r1g.png"
 alt="在线广告变现手段" />
 <figcaption aria-hidden="true">在线广告变现手段</figcaption>
 </figure>
@@ -451,7 +454,7 @@ class="math inline">\((a, u, c)\)</span>
 <h2 id="搜索广告与推荐">搜索、广告与推荐</h2>
 <p>搜索，广告和推荐可以说是联系紧密同时又有各自特点的三个领域。</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bedoi0jlq2t1i4v1io719501uo82n.png"
+<img data-src="https://wulc.me/imgs/image_1bedoi0jlq2t1i4v1io719501uo82n.png"
 alt="比较" />
 <figcaption aria-hidden="true">比较</figcaption>
 </figure>
@@ -463,7 +466,7 @@ alt="比较" />
 <h2 id="在线广告系统结构">在线广告系统结构</h2>
 <p>下面的在线广告系统结构图，需要注意这并非实际设计图，只是概念性的结构图</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1bh7suuk0sm21em8lvg1743ajr1t.png"
+<img data-src="https://wulc.me/imgs/image_1bh7suuk0sm21em8lvg1743ajr1t.png"
 alt="在线广告系统" />
 <figcaption aria-hidden="true">在线广告系统</figcaption>
 </figure>
@@ -480,7 +483,7 @@ Hadoop 平台</p></li>
 </ol>
 <p>将上面的架构图各部分做更细致的划分时，可以得到如下的划分图</p>
 <figure>
-<img src="https://wulc.me/imgs/image_1beg937q514t51k1r2j6158uie013.png"
+<img data-src="https://wulc.me/imgs/image_1beg937q514t51k1r2j6158uie013.png"
 alt="在线广告系统更细致的分类" />
 <figcaption aria-hidden="true">在线广告系统更细致的分类</figcaption>
 </figure>
@@ -508,6 +511,25 @@ targeting：受众定向，根据用户及其浏览的上下文决定出推送�
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -651,7 +673,7 @@ Awareness)与效果广告(Direct Response)</span></a></li></ol></li><li class="n
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -674,6 +696,10 @@ Awareness)与效果广告(Direct Response)</span></a></li></ol></li><li class="n
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

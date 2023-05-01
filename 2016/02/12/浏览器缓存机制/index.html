@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="最近看到一篇比较好的关于浏览器缓存的文章，原文链接,原文内容如下">
@@ -86,6 +87,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -184,6 +186,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -257,7 +260,7 @@ Cache-control等）。但是也有非HTTP协议定义的缓存机制，如使用
 <h2 id="expires策略"><strong>Expires策略</strong></h2>
 <p>Expires是Web服务器响应消息头字段，在响应http请求时告诉浏览器在过期时间前浏览器可以直接从浏览器缓存取数据，而无需再次请求。</p>
 <p>下面是宝宝PK项目中，浏览器拉取jquery.js web服务器的响应头：</p>
-<p><img src="https://wulc.me/imgs/201211281402425894.png" /></p>
+<p><img data-src="https://wulc.me/imgs/201211281402425894.png" /></p>
 <p>【注：Date头域表示消息发送的时间，时间的描述格式由rfc822定义。例如，Date:
 Mon,31 Dec 2001 04:25:57GMT。】</p>
 <p>Web服务器告诉浏览器在2012-11-28
@@ -279,7 +282,7 @@ store、no-transform、must-revalidate、proxy-revalidate、max-age
 |min-fresh|指示客户机可以接收响应时间小于当前时间加上指定时间的响应|
 |max-stale|指示客户机可以接收超出超时期间的响应消息。如果指定max-stale消息的值，那么客户机可以接收超出超时期指定值之内的响应消息|</p>
 <p>还是上面那个请求，web服务器返回的Cache-Control头的值为max-age=300，即5分钟（和上面的Expires时间一致，这个不是必须的）。</p>
-<p><img src="https://wulc.me/imgs/201211281402428992.png" /></p>
+<p><img data-src="https://wulc.me/imgs/201211281402428992.png" /></p>
 <h2
 id="last-modifiedif-modified-since"><strong>Last-Modified/If-Modified-Since</strong></h2>
 <p>Last-Modified/If-Modified-Since要配合Cache-Control使用。</p>
@@ -354,15 +357,34 @@ id="既生last-modified何生etag"><strong>既生Last-Modified何生Etag？</str
 </table>
 <h2 id="总结"><strong>总结</strong></h2>
 <p>浏览器第一次请求：</p>
-<p><img src="https://wulc.me/imgs/201211281402437422.png" /></p>
+<p><img data-src="https://wulc.me/imgs/201211281402437422.png" /></p>
 <p>浏览器再次请求时：</p>
-<p><img src="https://wulc.me/imgs/201211281402442505.png" /></p>
+<p><img data-src="https://wulc.me/imgs/201211281402442505.png" /></p>
 
     </div>
 
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -504,7 +526,7 @@ id="既生last-modified何生etag"><strong>既生Last-Modified何生Etag？</str
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -527,6 +549,10 @@ id="既生last-modified何生etag"><strong>既生Last-Modified何生Etag？</str
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

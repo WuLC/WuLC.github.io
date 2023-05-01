@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="组播是介于单播和广播间的一种通信方式，单播是单台源机和单台目的机的通信，广播是单台源机和网络中所有其他主机的通信。而组播则是单台源机和网络中部分主机的通信。本文主要介绍组播中的一些基本概念。">
@@ -85,6 +86,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -183,6 +185,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -489,8 +492,8 @@ path tree) （假设所有主机都需要接收组播数据）。</p>
 <p>主要步骤为以下三个： 1）周期性扩散(泛洪,Flood)：为每个路由器创建(S,G)
 2）剪枝(Prune)：除去不需要组播数据的路径
 3）嫁接(Graft)：迅速得到数据，而不用到下一周期</p>
-<p>泛洪和剪枝的过程如下所示 <img src="https://wulc.me/imgs/1.png" />
-<img src="https://wulc.me/imgs/2.png" /> <img
+<p>泛洪和剪枝的过程如下所示 <img data-src="https://wulc.me/imgs/1.png" />
+<img data-src="https://wulc.me/imgs/2.png" /> <img
 src="https://wulc.me/imgs/3.png" /></p>
 <p>满足以下任一条件即可发送剪枝消息 1）信息到达PIM-DM
 路由器的<strong>非RPF点对点接口</strong>；
@@ -565,7 +568,7 @@ src="https://wulc.me/imgs/image_1b4m1ullq1vk01oiqqotu9a1ac37t.png" />
 src="https://wulc.me/imgs/image_1b4m1v6usqin1i91hl06jq1sog8a.png" />
 <img
 src="https://wulc.me/imgs/image_1b4m1l71s1efk1f6s10df3cl1dtj69.png" />
-<img src="https://wulc.me/imgs/image_1b4m1llim1qpk182folf91io76m.png" />
+<img data-src="https://wulc.me/imgs/image_1b4m1llim1qpk182folf91io76m.png" />
 <img
 src="https://wulc.me/imgs/image_1b4m1m95l1iueqvm1nu5q661b8i73.png" />
 <img
@@ -615,6 +618,25 @@ Discovery，侦听发现协议）,MLD几乎全盘继承了IGMPv2和IGMPv3，更�
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -756,7 +778,7 @@ Discovery，侦听发现协议）,MLD几乎全盘继承了IGMPv2和IGMPv3，更�
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -779,6 +801,10 @@ Discovery，侦听发现协议）,MLD几乎全盘继承了IGMPv2和IGMPv3，更�
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 

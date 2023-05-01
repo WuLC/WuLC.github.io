@@ -18,10 +18,11 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="在计算广告中，转化是有延迟的，即在点击发生后过一段时间用户可能才会发生转化，且往往转化漏斗越深，延迟的时间越长；因此在训练 cvr&#x2F;deepcvr 模型时，会有两种情况出现（1）过早把样本送入模型，把最终会转化但是还没回传 label 的事件当做负例，导致模型低估（2）过晚把样本送入模型，即让所有样本都等待一个足够长的时间才送入模型，导致模型没能及时更新 因此在建模时需要对转化的回传延时进行建模，">
@@ -88,6 +89,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -186,6 +188,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -273,7 +276,7 @@ click 上，paper 中用了常用的 last-click 归因，归因窗口固定在 3
 <p>此外，paper
 中还提到了新计划的问题，主要的观点是每天都会有大量的新计划被创建（如下图二所示），如果不能尽快将这些新计划对应的样本喂给模型，会导致模型在这些新计划上预估得不好</p>
 <figure>
-<img src="https://wulc.me/imgs/WhyNeedModelDelay.jpg" alt="graph" />
+<img data-src="https://wulc.me/imgs/WhyNeedModelDelay.jpg" alt="graph" />
 <figcaption aria-hidden="true">graph</figcaption>
 </figure>
 <p>上面这两张图正好对应着文章开头说的要对 delayed conversion
@@ -337,7 +340,7 @@ function</a>，其含义表示的是<strong>事件发生的频率/强度</strong
 <span class="math inline">\(\lambda(x) \gt 0\)</span>, 这里令 <span
 class="math inline">\(\lambda(x) = \exp(w\_dx)\)</span></p>
 <figure>
-<img src="https://wulc.me/imgs/ExpProbDenFunc.jpg"
+<img data-src="https://wulc.me/imgs/ExpProbDenFunc.jpg"
 alt="exp prob density" />
 <figcaption aria-hidden="true">exp prob density</figcaption>
 </figure>
@@ -458,7 +461,7 @@ M-step 中只针对 <span class="math inline">\(\theta\)</span>
 讲义里的一次迭代的流程, 里面的 <span class="math inline">\(i\)</span>
 表示隐变量可能的状态</p>
 <figure>
-<img src="https://wulc.me/imgs/EM_algorithm.jpg" alt="EM" />
+<img data-src="https://wulc.me/imgs/EM_algorithm.jpg" alt="EM" />
 <figcaption aria-hidden="true">EM</figcaption>
 </figure>
 <p>EM 算法的证明中通过证明了算法会随着 E-step + M-step
@@ -562,7 +565,7 @@ class="math inline">\(\lambda(x) = \exp(w\_dx)\)</span></p>
 <p>则对 <span class="math inline">\(w\_c\)</span> 和 <span
 class="math inline">\(w\_d\)</span> 的导数如下图所示</p>
 <figure>
-<img src="https://wulc.me/imgs/gradient_formula.jpg" alt="gradient" />
+<img data-src="https://wulc.me/imgs/gradient_formula.jpg" alt="gradient" />
 <figcaption aria-hidden="true">gradient</figcaption>
 </figure>
 <p>从上面的求导的表达式可知，对于当前 <span
@@ -614,7 +617,7 @@ target="_blank" rel="noopener" href="https://ljvmiranda921.github.io/notebook/20
 log-likelihood</a>(NLL)，因为 NLL 比起AUC等指标更能反映预估 cvr
 值的准确性</strong>。</p>
 <figure>
-<img src="https://wulc.me/imgs/DelayFeedBackExp.jpg" alt="exp" />
+<img data-src="https://wulc.me/imgs/DelayFeedBackExp.jpg" alt="exp" />
 <figcaption aria-hidden="true">exp</figcaption>
 </figure>
 <p>实验中提供了两套评估数据集，overall 和
@@ -636,6 +639,25 @@ bidding 方式</strong>，即当前 conversion
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -780,7 +802,7 @@ bidding 方式</strong>，即当前 conversion
 
 <div class="copyright">
   
-  &copy; 
+  &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
  
   <span class="author" itemprop="copyrightHolder">良超</span>
@@ -803,6 +825,10 @@ bidding 方式</strong>，即当前 conversion
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 
