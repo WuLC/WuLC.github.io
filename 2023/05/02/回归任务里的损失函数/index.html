@@ -40,7 +40,7 @@
 <meta property="og:image" content="https://wulc.me/imgs/WeightedLogisticRegression.jpg">
 <meta property="og:image" content="https://wulc.me/imgs/OrdinalRegressionLoss.jpg">
 <meta property="article:published_time" content="2023-05-02T13:37:39.000Z">
-<meta property="article:modified_time" content="2023-05-03T12:41:49.472Z">
+<meta property="article:modified_time" content="2023-05-03T14:33:06.431Z">
 <meta property="article:author" content="良超">
 <meta property="article:tag" content="计算广告">
 <meta property="article:tag" content="机器学习">
@@ -293,9 +293,9 @@ target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Maximum_likel
 MLE 推导出来最终的 loss 的形式，其推导过程如下图所示（来自 <a
 target="_blank" rel="noopener" href="https://cs229.stanford.edu/">CS229</a> 的教材）</p>
 <p>根据误差服从均值为 0 的高斯分布可以写出如下的似然函数</p>
-<p><img data-src="https://wulc.me/imgs/mse_derive1.jpg" height="40%" width="40%" alt="mse 推导"></p>
+<p><img data-src="https://wulc.me/imgs/mse_derive1.jpg" height="50%" width="50%" alt="mse 推导"></p>
 <p>然后根据 IID 的假设和 MLE，可以写出最终的损失函数</p>
-<p><img data-src="https://wulc.me/imgs/mse_derive2.jpg" height="40%" width="40%" alt="mse 推导"></p>
+<p><img data-src="https://wulc.me/imgs/mse_derive2.jpg" height="50%" width="50%" alt="mse 推导"></p>
 <p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Mean_absolute_error">MAE</a>
 的推导跟 MSE 很类似，只是假设误差服从<a
 target="_blank" rel="noopener" href="https://zh.wikipedia.org/zh-hans/%E6%8B%89%E6%99%AE%E6%8B%89%E6%96%AF%E5%88%86%E5%B8%83#:~:text=%E5%9C%A8%E6%A6%82%E7%8E%87%E8%AE%BA%E4%B8%8E%E7%BB%9F%E8%AE%A1,%E5%88%86%E5%B8%83%28Double%20exponential%20distribution%29%E3%80%82">拉普拉斯分布</a>，把拉普拉斯的概率密度函数替换成上面推导过程中的高斯分布，便能得到了最终
@@ -320,7 +320,7 @@ target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/491935204">绝
 <p>所以 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Huber_loss">Huber
 Loss</a> 也是考虑到了这点，对于 label 较小的样本采用 MSE，label
 比较大的样本，则采用 MAE, 整个损失的形式如下图所示</p>
-<p><img data-src="https://wulc.me/imgs/HuberLoss.jpg" height="40%" width="40%" alt="Huber Loss"></p>
+<p><img data-src="https://wulc.me/imgs/HuberLoss.jpg" height="50%" width="50%" alt="Huber Loss"></p>
 <h2 id="zilnlog-normal">ZILN(Log-normal)</h2>
 <p>这是 google 一篇预估 LTV 的 paper 中提出来的 loss，<a
 target="_blank" rel="noopener" href="https://arxiv.org/abs/1912.07753">A Deep Probabilistic Model for
@@ -329,7 +329,7 @@ Customer Lifetime Value Prediction</a></p>
 任务为例，会有非常多的 0 值，也存在极端高的值，如下图所示是paper
 里展示的 LTV 的分布（这里的 LTV 含义是首次购买后产生的价值，0
 值代表很多客户只购买了一次）</p>
-<p><img data-src="https://wulc.me/imgs/LTV_Distribution.jpg" height="40%" width="40%" alt="LTV 分布"></p>
+<p><img data-src="https://wulc.me/imgs/LTV_Distribution.jpg" height="50%" width="50%" alt="LTV 分布"></p>
 <p>paper 提到直接用 MSE 会有如下问题，其实也是上面提到了 MSE
 存在的问题</p>
 <blockquote>
@@ -365,7 +365,7 @@ label)</p>
 <p>最终的模型会输出 3 个预估值 <span class="math inline">\(p\)</span>,
 <span class="math inline">\(\mu\)</span> 和 <span
 class="math inline">\(\sigma\)</span>，如下图所示</p>
-<p><img data-src="https://wulc.me/imgs/ZILN_model.jpg" height="40%" width="40%" alt="ZILN 的预估值"></p>
+<p><img data-src="https://wulc.me/imgs/ZILN_model.jpg" height="50%" width="50%" alt="ZILN 的预估值"></p>
 <p>log-normal 形式的推导可以参考前面的 wiki 链接或者<a
 target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/490650039">对数正态分布（Log-Normal
 Distribution）</a>，简单来看，当一个变量 <span
@@ -373,7 +373,7 @@ class="math inline">\(X\)</span> 服从 log-normal 分布时，其对数 <span
 class="math inline">\(\ln X\)</span> 服从正态分布，反之亦然</p>
 <p>相比于 MSE，log-normal 在预估值异常大时，loss
 也不会非常大，一定程度上缓解了前面提到的 MSE 的问题</p>
-<p><img data-src="https://wulc.me/imgs/lognormalVSmse.jpg" height="40%" width="40%" alt="Log-normal v.s MSE"></p>
+<p><img data-src="https://wulc.me/imgs/lognormalVSmse.jpg" height="50%" width="50%" alt="Log-normal v.s MSE"></p>
 <h2 id="weighted-logistics-regression">Weighted Logistics
 Regression</h2>
 <p>这个 loss 在 Google 这篇 2016 的神文里被应用来预估用户的观看时长，<a
@@ -420,7 +420,7 @@ class="math inline">\(e^{logit}\)</span></strong></p>
 reweight，serving 时得到 logit 后，取 <span
 class="math inline">\(e^{logit}\)</span> 作为最终的预估值，paper
 里这张图很好地展示了这个过程</p>
-<p><img data-src="https://wulc.me/imgs/WeightedLogisticRegression.jpg" height="40%" width="40%" alt="Log-normal v.s MSE"></p>
+<p><img data-src="https://wulc.me/imgs/WeightedLogisticRegression.jpg" height="50%" width="50%" alt="Log-normal v.s MSE"></p>
 <p>上面的推导过程中忽略了原来样本中正样本的数量 <span
 class="math inline">\(k\)</span>，从严格意义来讲，这会导致预估值有偏，所以最简单的方法是<strong>对于
 label 为<span class="math inline">\(T\)</span> 的样本，把它当做 <span
@@ -501,7 +501,7 @@ Distribution Function</a>)，这里用了基于 CDF 的
 MLE，推导过程如下图所示，从推导过程可知，这里的推导的假设也是<strong>“误差
 <span class="math inline">\(\epsilon\)</span>
 服从标准正态分布”</strong>，跟 MSE 一样</p>
-<p><img data-src="https://wulc.me/imgs/OrdinalRegressionLoss.jpg" height="40%" width="40%" alt="Ordinal Regression 推导"></p>
+<p><img data-src="https://wulc.me/imgs/OrdinalRegressionLoss.jpg" height="70%" width="70%" alt="Ordinal Regression 推导"></p>
 <p>用来区分样本处于不同区间的 <span
 class="math inline">\(\theta\)</span> 也是需要通过训练得到的参数，最终的
 serving 输出也是依赖 <span class="math inline">\(\theta\)</span>
