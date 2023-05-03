@@ -2,12 +2,12 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
-<meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 6.3.0">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
 
 <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
 <script>LA.init({id: "JmI6QmP3fMkLet6B",ck: "JmI6QmP3fMkLet6B"})</script>
+
   <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
   <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
@@ -17,45 +17,69 @@
 <link rel="stylesheet" href="/css/main.css">
 
 
-<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
-<script id="hexo-configurations">
-    var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
-  </script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
 
-  <meta name="description" content="组播是介于单播和广播间的一种通信方式，单播是单台源机和单台目的机的通信，广播是单台源机和网络中所有其他主机的通信。而组播则是单台源机和网络中部分主机的通信。本文主要介绍组播中的一些基本概念。">
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wulc.me","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.15.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="组播是介于单播和广播间的一种通信方式，单播是单台源机和单台目的机的通信，广播是单台源机和网络中所有其他主机的通信。而组播则是单台源机和网络中部分主机的通信。本文主要介绍组播中的一些基本概念。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="计算机网络课程总结--组播基础">
 <meta property="og:url" content="https://wulc.me/2016/12/20/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93--%E7%BB%84%E6%92%AD%E5%9F%BA%E7%A1%80/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
 <meta property="og:description" content="组播是介于单播和广播间的一种通信方式，单播是单台源机和单台目的机的通信，广播是单台源机和网络中所有其他主机的通信。而组播则是单台源机和网络中部分主机的通信。本文主要介绍组播中的一些基本概念。">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4ks6rmq1d9nkgmuqf1b46bfem.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4l9cstt170fr7aef81dgk2nk9.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4l9gr82c2c1ofi15di10oj1bapm.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4la1ddp1mlbbkjsais3q1jso13.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4la277n1gjg191vi7u1vijl1b1g.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4lf3ujgdsv1mhp1c1o12k7183s1t.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4lgopfv7ke1uiec2po8ra772a.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4lh0vrvint1gta1qgqbre1ddb2n.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4lhdn731mkl1eq3iqqc1hbu834.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4li84ga19gm11411acd1389117h3h.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4ljrgrkum3pp514db1f271fo23u.png">
 <meta property="og:image" content="https://wulc.me/imgs/1.png">
 <meta property="og:image" content="https://wulc.me/imgs/2.png">
+<meta property="og:image" content="https://wulc.me/imgs/3.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4lt29fp9mtk87m5dq21kmi1d.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4lt2vubb1kjp01iv8qf210pl1q.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4lt3hrr1efk3ld1jru1pkq1cde27.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4ltcboa13da1ei01bjog9rmap2k.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4ltr5cvljd1vn08jj1ivmdss31.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4m0fa731g541t4q1ccoq881i5p3r.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4m0fui01ggdpfp7301ktrqkm48.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4m0gg4v1p9b1etgiop156f17sr4l.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4m0hvccirf1l8016lve8o12ah52.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4m0lfpn1npf2eo121m152m1b6q5f.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4m0r5vui3neb1juo1foakf85s.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4m1ullq1vk01oiqqotu9a1ac37t.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4m1v6usqin1i91hl06jq1sog8a.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4m1l71s1efk1f6s10df3cl1dtj69.png">
 <meta property="og:image" content="https://wulc.me/imgs/image_1b4m1llim1qpk182folf91io76m.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4m1m95l1iueqvm1nu5q661b8i73.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4m1moiv19a28d7j9o1jdv1vdt7g.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4pokpvl9c38eo1991ifbcj89.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4popspc1ofl119lfqu4oa1utqm.png">
 <meta property="article:published_time" content="2016-12-20T13:37:39.000Z">
 <meta property="article:modified_time" content="2023-04-30T05:12:49.056Z">
 <meta property="article:author" content="良超">
 <meta property="article:tag" content="计算机网络">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://wulc.me/imgs/1.png">
+<meta name="twitter:image" content="https://wulc.me/imgs/image_1b4ks6rmq1d9nkgmuqf1b46bfem.png">
+
 
 <link rel="canonical" href="https://wulc.me/2016/12/20/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93--%E7%BB%84%E6%92%AD%E5%9F%BA%E7%A1%80/">
 
 
-<script id="page-configurations">
-  // https://hexo.io/docs/variables.html
-  CONFIG.page = {
-    sidebar: "",
-    isHome : false,
-    isPost : true,
-    lang   : 'zh-CN'
-  };
-</script>
 
-  <title>计算机网络课程总结--组播基础 | 吴良超的学习笔记</title>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wulc.me/2016/12/20/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93--%E7%BB%84%E6%92%AD%E5%9F%BA%E7%A1%80/","path":"2016/12/20/计算机网络课程总结--组播基础/","title":"计算机网络课程总结--组播基础"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>计算机网络课程总结--组播基础 | 吴良超的学习笔记</title>
   
 
 
@@ -63,57 +87,39 @@
 
 
 
+
+
   <noscript>
-  <style>
-  .use-motion .brand,
-  .use-motion .menu-item,
-  .sidebar-inner,
-  .use-motion .post-block,
-  .use-motion .pagination,
-  .use-motion .comments,
-  .use-motion .post-header,
-  .use-motion .post-body,
-  .use-motion .collection-header { opacity: initial; }
-
-  .use-motion .site-title,
-  .use-motion .site-subtitle {
-    opacity: initial;
-    top: initial;
-  }
-
-  .use-motion .logo-line-before i { left: initial; }
-  .use-motion .logo-line-after i { right: initial; }
-  </style>
-</noscript>
-
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
 <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage">
-  <div class="container use-motion">
-    <div class="headband"></div>
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
 
-    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-container">
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
   <div class="site-nav-toggle">
-    <div class="toggle" aria-label="切换导航栏">
-      <span class="toggle-line toggle-line-first"></span>
-      <span class="toggle-line toggle-line-middle"></span>
-      <span class="toggle-line toggle-line-last"></span>
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
     </div>
   </div>
 
   <div class="site-meta">
 
     <a href="/" class="brand" rel="start">
-      <span class="logo-line-before"><i></i></span>
-      <h1 class="site-title">吴良超的学习笔记</h1>
-      <span class="logo-line-after"><i></i></span>
+      <i class="logo-line"></i>
+      <p class="site-title">吴良超的学习笔记</p>
+      <i class="logo-line"></i>
     </a>
   </div>
 
   <div class="site-nav-right">
-    <div class="toggle popup-trigger">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
         <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
@@ -121,29 +127,8 @@
 
 
 
-
 <nav class="site-nav">
-  <ul id="menu" class="main-menu menu">
-        <li class="menu-item menu-item-home">
-
-    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
-
-  </li>
-        <li class="menu-item menu-item-tags">
-
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
-
-  </li>
-        <li class="menu-item menu-item-archives">
-
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
-
-  </li>
-        <li class="menu-item menu-item-about">
-
-    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
-
-  </li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
         </a>
@@ -154,88 +139,155 @@
 
 
   <div class="search-pop-overlay">
-    <div class="popup search-popup">
-        <div class="search-header">
+    <div class="popup search-popup"><div class="search-header">
   <span class="search-icon">
     <i class="fa fa-search"></i>
   </span>
   <div class="search-input-container">
-    <input autocomplete="off" autocapitalize="off"
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
            placeholder="搜索..." spellcheck="false"
            type="search" class="search-input">
   </div>
-  <span class="popup-btn-close">
+  <span class="popup-btn-close" role="button">
     <i class="fa fa-times-circle"></i>
   </span>
 </div>
-<div id="search-result">
-  <div id="no-result">
-    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
   </div>
 </div>
 
     </div>
   </div>
 
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">1.</span> <span class="nav-text">基本概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%84%E6%92%AD%E8%BD%AC%E5%8F%91%E6%A0%91"><span class="nav-number">2.</span> <span class="nav-text">组播转发树</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%84%E6%92%AD%E8%B7%AF%E7%94%B1"><span class="nav-number">3.</span> <span class="nav-text">组播路由</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%84%E6%92%AD%E5%8D%8F%E8%AE%AE"><span class="nav-number">4.</span> <span class="nav-text">组播协议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%84%E6%88%90%E5%91%98%E7%AE%A1%E7%90%86%E5%8D%8F%E8%AE%AE%E4%B8%BB%E6%9C%BA-%E8%B7%AF%E7%94%B1%E5%99%A8"><span class="nav-number">4.1.</span> <span class="nav-text">组成员管理协议（主机-路由器）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#igmp-v1"><span class="nav-number">4.1.1.</span> <span class="nav-text">IGMP v1</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#igmp-v2"><span class="nav-number">4.1.2.</span> <span class="nav-text">IGMP v2</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#igmp-v3"><span class="nav-number">4.1.3.</span> <span class="nav-text">IGMP v3</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%AF%E7%94%B1%E5%8D%8F%E8%AE%AE%E8%B7%AF%E7%94%B1%E5%99%A8-%E8%B7%AF%E7%94%B1%E5%99%A8"><span class="nav-number">4.2.</span> <span class="nav-text">路由协议（路由器-路由器）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#pim-dm"><span class="nav-number">4.2.1.</span> <span class="nav-text">PIM-DM</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#pim-sm"><span class="nav-number">4.2.2.</span> <span class="nav-text">PIM-SM</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BA%90%E7%89%B9%E5%AE%9A%E7%BB%84%E6%92%ADssm"><span class="nav-number">5.</span> <span class="nav-text">源特定组播(SSM)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ipv6%E7%BB%84%E6%92%AD"><span class="nav-number">6.</span> <span class="nav-text">ipv6组播</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
 </div>
-    </header>
-
-    
-  <div class="back-to-top">
-    <i class="fa fa-arrow-up"></i>
-    <span>0%</span>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">249</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.linkedin.com/in/wuliangchao/" title="LinkedIn → https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;wuliangchao&#x2F;" rel="noopener me" target="_blank"><i class="fab fa-linkedin fa-fw"></i>LinkedIn</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml" rel="noopener me"><i class="fa fa-rss fa-fw"></i>RSS</a>
+      </span>
   </div>
-  <div class="reading-progress-bar"></div>
 
-
-    <main class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          
-
-          <div class="content post posts-expand">
-            
+        </div>
+      </div>
+    </div>
 
     
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://wulc.me/2016/12/20/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93--%E7%BB%84%E6%92%AD%E5%9F%BA%E7%A1%80/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/files/profile.jpg">
       <meta itemprop="name" content="良超">
-      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="吴良超的学习笔记">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="计算机网络课程总结--组播基础 | 吴良超的学习笔记">
+      <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           计算机网络课程总结--组播基础
         </h1>
 
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2016-12-20 21:37:39" itemprop="dateCreated datePublished" datetime="2016-12-20T21:37:39+08:00">2016-12-20</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
-                </span>
-            </span>
+      <time title="创建时间：2016-12-20 21:37:39" itemprop="dateCreated datePublished" datetime="2016-12-20T21:37:39+08:00">2016-12-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%9D%82/" itemprop="url" rel="index"><span itemprop="name">杂</span></a>
+        </span>
+    </span>
 
-          
+  
+</div>
 
         </div>
       </header>
@@ -244,16 +296,13 @@
     
     
     <div class="post-body" itemprop="articleBody">
-
-      
         <p>组播是介于单播和广播间的一种通信方式，单播是单台源机和单台目的机的通信，广播是单台源机和网络中所有其他主机的通信。而组播则是单台源机和网络中部分主机的通信。本文主要介绍组播中的一些基本概念。
 <span id="more"></span></p>
 <h2 id="基本概念">基本概念</h2>
 <p>IP组播是指在IP网络中将数据包以<strong>尽力传送（best-effort）</strong>的形式发送到网络中的某个确定节点子集，这个子集称为一个<strong>组播组</strong>。</p>
 <p>组播传输时，源主机<strong>只发送一份数据，这份数据的目的地址为组播组地址</strong>。</p>
 <p>组播组中的所有成员都可接收到同样的数据拷贝（通过路由器进行复制分发），并且只有组播组内的主机（成员，目标主机）可以接收该数据。</p>
-<p><img
-src="https://wulc.me/imgs/image_1b4ks6rmq1d9nkgmuqf1b46bfem.png" /></p>
+<p><img data-src="https://wulc.me/imgs/image_1b4ks6rmq1d9nkgmuqf1b46bfem.png" /></p>
 <p>从上图可知，由于<strong>每个分支只发送一份报文，所以网络规模（如用户数量）的增大不会额外增加网络的负担</strong>。</p>
 <p>故组播的优势为 1）降低了骨干上的网络流量
 2）降低了应用服务器的负担</p>
@@ -330,26 +379,21 @@ src="https://wulc.me/imgs/image_1b4ks6rmq1d9nkgmuqf1b46bfem.png" /></p>
 <p>组播转发树指的是数据从源主机到接受者的传输路径。组播转发树主要有两类：<strong>有源树(SPT)和共享树(RPT)</strong>。</p>
 <p><strong>有源树</strong>
 有源树中源主机构成了源树的根，数据传输的路径构成了有源树的分支，有源树又称为生成树或最短路径树(沿着最短路径传输)。下图中箭头便是有源树</p>
-<p><img
-src="https://wulc.me/imgs/image_1b4l9cstt170fr7aef81dgk2nk9.png" /></p>
+<p><img data-src="https://wulc.me/imgs/image_1b4l9cstt170fr7aef81dgk2nk9.png" /></p>
 <p><strong>共享树</strong>
 共享树是各个组播组共享的传输路径，如下图所示</p>
-<p><img
-src="https://wulc.me/imgs/image_1b4l9gr82c2c1ofi15di10oj1bapm.png" /></p>
+<p><img data-src="https://wulc.me/imgs/image_1b4l9gr82c2c1ofi15di10oj1bapm.png" /></p>
 <p>有源树和共享树均是无回路的树，且均在分支处复制数据包，但是有源树能够提供一个最优的路径，而共享树路径可能不是最优的，相应的代价是有源树会占用较多的内存。</p>
 <h2 id="组播路由">组播路由</h2>
 <p>组播路由和单播路由是相反的，单播路由关心数据报文要到哪里去，组播路由关心数据报文从哪里来。</p>
 <p>组播路由使用 “反向路径转发”机制(<strong>RPF</strong>, Reverse Path
 Forwarding)，它是IP组播转发过程的基础，几乎所有的IP组播路由协议都<strong>利用RPF作为决定是否转发或丢弃</strong>从某个接口上接收到的组播信息包。</p>
 <p>RPF的具体机制是路由器收到组播数据报文后，只有<strong>确认这个数据报文是从自己到源的出接口（单播）上到来的，才进行转发，否则丢弃报文</strong>。实际上就是在路由器中查询到组播报文源地址的路由，假如该路由的出口就是组播报文的入口，RPF检查成功，转发数据包，否则丢弃数据包。</p>
-<p>如下为RPF的具体例子 RPF检查失败 <img
-src="https://wulc.me/imgs/image_1b4la1ddp1mlbbkjsais3q1jso13.png" />
-RPF检查成功 <img
-src="https://wulc.me/imgs/image_1b4la277n1gjg191vi7u1vijl1b1g.png" /></p>
+<p>如下为RPF的具体例子 RPF检查失败 <img data-src="https://wulc.me/imgs/image_1b4la1ddp1mlbbkjsais3q1jso13.png" />
+RPF检查成功 <img data-src="https://wulc.me/imgs/image_1b4la277n1gjg191vi7u1vijl1b1g.png" /></p>
 <p><strong>TTL阈值</strong>
 IP组播包被路由器转发的时候，IP头中的TTL值要减1；路由器在传输的时候可以在每个接口设置一个TTL阈值，只有数据包的TTL值大于或等于接口的TTL阈值时，路由器才能在出接口转发该数据包。这个机制的目的是为了限制组播的范围。如下图所示</p>
-<p><img
-src="https://wulc.me/imgs/image_1b4lf3ujgdsv1mhp1c1o12k7183s1t.png" /></p>
+<p><img data-src="https://wulc.me/imgs/image_1b4lf3ujgdsv1mhp1c1o12k7183s1t.png" /></p>
 <h2 id="组播协议">组播协议</h2>
 <p>组播协议分为主机与路由器之间的组成员关系协议和路由器与路由器之间的组播路由协议。</p>
 <h3 id="组成员管理协议主机-路由器">组成员管理协议（主机-路由器）</h3>
@@ -359,8 +403,7 @@ src="https://wulc.me/imgs/image_1b4lf3ujgdsv1mhp1c1o12k7183s1t.png" /></p>
 <p>注意，IGMP <strong>不包括</strong>
 组播路由器之间的组成员关系信息的传播与维护，这部分工作由各组播路由协议完成。</p>
 <p>IGMP作为TCP/IP第三层的协议，被封装在IP数据包中进行传输。其报文格式如下所示
-<img
-src="https://wulc.me/imgs/image_1b4lgopfv7ke1uiec2po8ra772a.png" /></p>
+<img data-src="https://wulc.me/imgs/image_1b4lgopfv7ke1uiec2po8ra772a.png" /></p>
 <p>IGMP协议有三个版本，各个版本的功能和区别如下：</p>
 <ul>
 <li><strong>IGMP
@@ -372,14 +415,12 @@ v3</strong>：增加了对特定(源,组)的加入离开的支持，以提供对
 </ul>
 <h4 id="igmp-v1"><strong>IGMP v1</strong></h4>
 <p>IGMP v1的报文格式如下所示</p>
-<p><img
-src="https://wulc.me/imgs/image_1b4lh0vrvint1gta1qgqbre1ddb2n.png" /></p>
+<p><img data-src="https://wulc.me/imgs/image_1b4lh0vrvint1gta1qgqbre1ddb2n.png" /></p>
 <p>上面的报文中，类型字段有两种取值： 1：成员关系查询(路由器发出)
 2：成员关系报告(主机发出)</p>
 <p>组地址只有在成员关系报告时才填入，注意这个地址不是发送IGMP数据包时用于寻址的地址，用于寻址的地址在IP报头中。</p>
 <p>查询报文是周期性发送的，默认为60s一次，过程如下所示</p>
-<p><img
-src="https://wulc.me/imgs/image_1b4lhdn731mkl1eq3iqqc1hbu834.png" /></p>
+<p><img data-src="https://wulc.me/imgs/image_1b4lhdn731mkl1eq3iqqc1hbu834.png" /></p>
 <p>上图出现了报告抑制的情况，这个机制主要是为了<strong>使得当前子网中对于每个组只需有一个成员响应成员关系查询</strong>，在上图中H1和H2属于同一组的，因此只需要一个成员响应成员报告。</p>
 <p>报告抑制的步骤如下 1)主机收到 IGMP
 成员关系查询后，主机对已经加入的每个组播组启动一个<strong>倒数计时器</strong>，计时器初始化为一个给定时间（在IGMPv1中为固定值10S）范围内的随机值。
@@ -392,8 +433,7 @@ src="https://wulc.me/imgs/image_1b4lhdn731mkl1eq3iqqc1hbu834.png" /></p>
 <p>IGMP v2与IGMP v1的最大区别为： 1）支持特定组查询
 2）通过离开消息允许主机主动汇报他们的离开</p>
 <p>IGMP v2的报文如下所示：</p>
-<p><img
-src="https://wulc.me/imgs/image_1b4li84ga19gm11411acd1389117h3h.png" /></p>
+<p><img data-src="https://wulc.me/imgs/image_1b4li84ga19gm11411acd1389117h3h.png" /></p>
 <p>上面的报文类型有以下四种：</p>
 <ul>
 <li>0x11：成员关系查询（与IGMP v1兼容）</li>
@@ -428,8 +468,7 @@ v1路由器，所有的路由器必须手工配置为运行IGMP v1</strong>。</
 <h4 id="igmp-v3"><strong>IGMP v3</strong></h4>
 <p>IGMP v3 与 IGMP
 v2的最大区别是<strong>允许主机只收到组播组内某个特定信源的传输</strong>，如下图所示</p>
-<p><img
-src="https://wulc.me/imgs/image_1b4ljrgrkum3pp514db1f271fo23u.png" /></p>
+<p><img data-src="https://wulc.me/imgs/image_1b4ljrgrkum3pp514db1f271fo23u.png" /></p>
 <p>三个版本的 IGMP 协议比较如下</p>
 <table>
 <thead>
@@ -493,28 +532,22 @@ path tree) （假设所有主机都需要接收组播数据）。</p>
 2）剪枝(Prune)：除去不需要组播数据的路径
 3）嫁接(Graft)：迅速得到数据，而不用到下一周期</p>
 <p>泛洪和剪枝的过程如下所示 <img data-src="https://wulc.me/imgs/1.png" />
-<img data-src="https://wulc.me/imgs/2.png" /> <img
-src="https://wulc.me/imgs/3.png" /></p>
+<img data-src="https://wulc.me/imgs/2.png" /> <img data-src="https://wulc.me/imgs/3.png" /></p>
 <p>满足以下任一条件即可发送剪枝消息 1）信息到达PIM-DM
 路由器的<strong>非RPF点对点接口</strong>；
 2）PIM-DM路由器没有下游邻居，且所有叶网络上没有组成员；
 3）PIM-DM路由器接口上<strong>所有的下游邻居</strong>已经通过了剪枝表决</p>
 <p>嫁接的目的是为了能够迅速得到数据，从而不用等到下一次的泛洪。过程如下图所示</p>
-<p><img
-src="https://wulc.me/imgs/image_1b4lt29fp9mtk87m5dq21kmi1d.png" /> <img
-src="https://wulc.me/imgs/image_1b4lt2vubb1kjp01iv8qf210pl1q.png" />
-<img
-src="https://wulc.me/imgs/image_1b4lt3hrr1efk3ld1jru1pkq1cde27.png" /></p>
+<p><img data-src="https://wulc.me/imgs/image_1b4lt29fp9mtk87m5dq21kmi1d.png" /> <img data-src="https://wulc.me/imgs/image_1b4lt2vubb1kjp01iv8qf210pl1q.png" />
+<img data-src="https://wulc.me/imgs/image_1b4lt3hrr1efk3ld1jru1pkq1cde27.png" /></p>
 <p>PIM-DM中还有一种<strong>断言（Assert）机制</strong>。目的是为了避免出现组播流量重复和多份，如下图所示，BCD都会收到重复的数据</p>
-<p><img
-src="https://wulc.me/imgs/image_1b4ltcboa13da1ei01bjog9rmap2k.png" /></p>
+<p><img data-src="https://wulc.me/imgs/image_1b4ltcboa13da1ei01bjog9rmap2k.png" /></p>
 <p>为了避免这种情况，断言机制过程如下
 1）当路由器从其组播“出接口列表”(oiflist)中的某个接口收到与其发送的组播数据相同的数据
 2）路由器发送 “PIM Assert”消息 3）计算distance和
 metric值，谁到源的路由最优谁获胜；如果distance和
 metric相等，IP地址大的获胜，输的就停止转发 (剪枝接口)</p>
-<p>对于上图运行断言机制后，假如C获胜，那么情况如下 <img
-src="https://wulc.me/imgs/image_1b4ltr5cvljd1vn08jj1ivmdss31.png" /></p>
+<p>对于上图运行断言机制后，假如C获胜，那么情况如下 <img data-src="https://wulc.me/imgs/image_1b4ltr5cvljd1vn08jj1ivmdss31.png" /></p>
 <p>原因是B经Assert断言成了loser之后，将自己的loser接口设为剪枝状态，并向winner
 C发送剪枝消息，D的RPF接口也会收到该剪枝消息，发出join消息，否决。</p>
 <p>PIM-DM的优点为 1）易于配置 2）实现机制简单（泛滥剪枝）</p>
@@ -546,33 +579,22 @@ C-RP 的地址、可选的组播组地址和一个掩码长度域（说明组的
 <p>1）源的DR(执行注册的源第一跳路由器)将组播数据封装进一个注册消息，单播到RP；
 2）RP打开注册消息,将组播数据在RPT上转发,发送(S,G)加入消息，沿途建立(S,G)状态
 3）当RP察觉到从源到RP的SPT树已经建立，RP发送“注册停止”消息给源</p>
-<p>上面的过程图示如下所示; <img
-src="https://wulc.me/imgs/image_1b4m0fa731g541t4q1ccoq881i5p3r.png" />
-<img
-src="https://wulc.me/imgs/image_1b4m0fui01ggdpfp7301ktrqkm48.png" />
-<img
-src="https://wulc.me/imgs/image_1b4m0gg4v1p9b1etgiop156f17sr4l.png" />
-<img
-src="https://wulc.me/imgs/image_1b4m0hvccirf1l8016lve8o12ah52.png" />
-<img
-src="https://wulc.me/imgs/image_1b4m0lfpn1npf2eo121m152m1b6q5f.png" /></p>
+<p>上面的过程图示如下所示; <img data-src="https://wulc.me/imgs/image_1b4m0fa731g541t4q1ccoq881i5p3r.png" />
+<img data-src="https://wulc.me/imgs/image_1b4m0fui01ggdpfp7301ktrqkm48.png" />
+<img data-src="https://wulc.me/imgs/image_1b4m0gg4v1p9b1etgiop156f17sr4l.png" />
+<img data-src="https://wulc.me/imgs/image_1b4m0hvccirf1l8016lve8o12ah52.png" />
+<img data-src="https://wulc.me/imgs/image_1b4m0lfpn1npf2eo121m152m1b6q5f.png" /></p>
 <p>需要注意的是当源的SPT建立起来后，源的DR不会马上停止注册，而是等待收到RP的注册停止消息后才会停止，这时候空注册消息和沿着SPT的组播数据流并存。</p>
 <p>在通过组播传输数据的时候，数据的传输方向为
 <code>源→SPT→RP→RPT</code>，如下图所示</p>
-<p><img
-src="https://wulc.me/imgs/image_1b4m0r5vui3neb1juo1foakf85s.png" /></p>
+<p><img data-src="https://wulc.me/imgs/image_1b4m0r5vui3neb1juo1foakf85s.png" /></p>
 <p>从上面的传播路径可知，RP可能会成为瓶颈，针对这个问题，也就是问题（3），提出了<strong>SPT切换</strong>的方法,其过程如下
-<img
-src="https://wulc.me/imgs/image_1b4m1ullq1vk01oiqqotu9a1ac37t.png" />
-<img
-src="https://wulc.me/imgs/image_1b4m1v6usqin1i91hl06jq1sog8a.png" />
-<img
-src="https://wulc.me/imgs/image_1b4m1l71s1efk1f6s10df3cl1dtj69.png" />
+<img data-src="https://wulc.me/imgs/image_1b4m1ullq1vk01oiqqotu9a1ac37t.png" />
+<img data-src="https://wulc.me/imgs/image_1b4m1v6usqin1i91hl06jq1sog8a.png" />
+<img data-src="https://wulc.me/imgs/image_1b4m1l71s1efk1f6s10df3cl1dtj69.png" />
 <img data-src="https://wulc.me/imgs/image_1b4m1llim1qpk182folf91io76m.png" />
-<img
-src="https://wulc.me/imgs/image_1b4m1m95l1iueqvm1nu5q661b8i73.png" />
-<img
-src="https://wulc.me/imgs/image_1b4m1moiv19a28d7j9o1jdv1vdt7g.png" /></p>
+<img data-src="https://wulc.me/imgs/image_1b4m1m95l1iueqvm1nu5q661b8i73.png" />
+<img data-src="https://wulc.me/imgs/image_1b4m1moiv19a28d7j9o1jdv1vdt7g.png" /></p>
 <p>上面中
 <strong>SPT切换的条件</strong>为：最后一跳路由器（和接收者直连的路由器）一旦发现某个特定的组播源的数据量超出了某个界限(阈值)，马上向<strong>组播源</strong>发送<code>（S，G）Join</code>消息。</p>
 <p><strong>共享树剪枝的条件</strong>为：最后一跳路由器根据自己的状态表中的（*，G）和（S，G）的入接口情况来判断是否发送剪枝消息（剪共享树），触发条件是：在（S，G）的入接口上收到了相符合的组播数据
@@ -597,8 +619,7 @@ RP</strong>的概念，SSM直接建立由(S,G)标识的一个有源树，</p>
 <h2 id="ipv6组播">ipv6组播</h2>
 <p>ipv6 的组播与ipv4的组播非常类似，这里做简单介绍。</p>
 <p>ipv6的组播地址规定前8位均为1,也就是以ff开头，其他部分含义如下所示：</p>
-<p><img
-src="https://wulc.me/imgs/image_1b4pokpvl9c38eo1991ifbcj89.png" /></p>
+<p><img data-src="https://wulc.me/imgs/image_1b4pokpvl9c38eo1991ifbcj89.png" /></p>
 <ul>
 <li>Flags:用来表示permanent或transient组播组</li>
 <li>Scope:表示组播组的范围 &gt;0：预留 1：节点本地范围 2：链路本地范围
@@ -606,8 +627,7 @@ src="https://wulc.me/imgs/image_1b4pokpvl9c38eo1991ifbcj89.png" /></p>
 <li>Group ID:组播组ID</li>
 </ul>
 <p>ipv6中一些众所周知的组播地址以及与ipv4的对应关系如下：</p>
-<p><img
-src="https://wulc.me/imgs/image_1b4popspc1ofl119lfqu4oa1utqm.png" /></p>
+<p><img data-src="https://wulc.me/imgs/image_1b4popspc1ofl119lfqu4oa1utqm.png" /></p>
 <p>ipv6组播中的mac地址也是通过映射来的，映射规则为<code>33:33:+IPv6组播地址的后32位</code>。同样也存在mac重复问题。</p>
 <p>ipv6的组播协议也分为组管理协议和路由协议。组成员管理协议为MLD（Multicast
 listener
@@ -619,270 +639,94 @@ Discovery，侦听发现协议）,MLD几乎全盘继承了IGMPv2和IGMPv3，更�
     
     
 
-      <footer class="post-footer">
+    <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="tag"># 计算机网络</a>
+              <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="tag"><i class="fa fa-tag"></i> 计算机网络</a>
           </div>
 
         
 
-
-        
-    <div class="post-nav">
-      <div class="post-nav-item">
-    <a href="/2016/12/18/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/" rel="prev" title="操作系统课程总结">
-      <i class="fa fa-chevron-left"></i> 操作系统课程总结
-    </a></div>
-      <div class="post-nav-item">
-    <a href="/2016/12/25/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93--BGP%E5%8D%8F%E8%AE%AE/" rel="next" title="计算机网络课程总结--BGP协议">
-      计算机网络课程总结--BGP协议 <i class="fa fa-chevron-right"></i>
-    </a></div>
-    </div>
-      </footer>
-    
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2016/12/18/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/" rel="prev" title="操作系统课程总结">
+                  <i class="fa fa-chevron-left"></i> 操作系统课程总结
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2016/12/25/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93--BGP%E5%8D%8F%E8%AE%AE/" rel="next" title="计算机网络课程总结--BGP协议">
+                  计算机网络课程总结--BGP协议 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
   </article>
-  
-  
-  
-
-
-
-          </div>
-          
-
-<script>
-  window.addEventListener('tabs:register', () => {
-    let { activeClass } = CONFIG.comments;
-    if (CONFIG.comments.storage) {
-      activeClass = localStorage.getItem('comments_active') || activeClass;
-    }
-    if (activeClass) {
-      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
-      if (activeTab) {
-        activeTab.click();
-      }
-    }
-  });
-  if (CONFIG.comments.storage) {
-    window.addEventListener('tabs:click', event => {
-      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
-      let commentClass = event.target.classList[1];
-      localStorage.setItem('comments_active', commentClass);
-    });
-  }
-</script>
-
-        </div>
-          
-  
-  <div class="toggle sidebar-toggle">
-    <span class="toggle-line toggle-line-first"></span>
-    <span class="toggle-line toggle-line-middle"></span>
-    <span class="toggle-line toggle-line-last"></span>
-  </div>
-
-  <aside class="sidebar">
-    <div class="sidebar-inner">
-
-      <ul class="sidebar-nav motion-element">
-        <li class="sidebar-nav-toc">
-          文章目录
-        </li>
-        <li class="sidebar-nav-overview">
-          站点概览
-        </li>
-      </ul>
-
-      <!--noindex-->
-      <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">1.</span> <span class="nav-text">基本概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%84%E6%92%AD%E8%BD%AC%E5%8F%91%E6%A0%91"><span class="nav-number">2.</span> <span class="nav-text">组播转发树</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%84%E6%92%AD%E8%B7%AF%E7%94%B1"><span class="nav-number">3.</span> <span class="nav-text">组播路由</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%84%E6%92%AD%E5%8D%8F%E8%AE%AE"><span class="nav-number">4.</span> <span class="nav-text">组播协议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%84%E6%88%90%E5%91%98%E7%AE%A1%E7%90%86%E5%8D%8F%E8%AE%AE%E4%B8%BB%E6%9C%BA-%E8%B7%AF%E7%94%B1%E5%99%A8"><span class="nav-number">4.1.</span> <span class="nav-text">组成员管理协议（主机-路由器）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#igmp-v1"><span class="nav-number">4.1.1.</span> <span class="nav-text">IGMP v1</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#igmp-v2"><span class="nav-number">4.1.2.</span> <span class="nav-text">IGMP v2</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#igmp-v3"><span class="nav-number">4.1.3.</span> <span class="nav-text">IGMP v3</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%AF%E7%94%B1%E5%8D%8F%E8%AE%AE%E8%B7%AF%E7%94%B1%E5%99%A8-%E8%B7%AF%E7%94%B1%E5%99%A8"><span class="nav-number">4.2.</span> <span class="nav-text">路由协议（路由器-路由器）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#pim-dm"><span class="nav-number">4.2.1.</span> <span class="nav-text">PIM-DM</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#pim-sm"><span class="nav-number">4.2.2.</span> <span class="nav-text">PIM-SM</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BA%90%E7%89%B9%E5%AE%9A%E7%BB%84%E6%92%ADssm"><span class="nav-number">5.</span> <span class="nav-text">源特定组播(SSM)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ipv6%E7%BB%84%E6%92%AD"><span class="nav-number">6.</span> <span class="nav-text">ipv6组播</span></a></li></ol></div>
-      </div>
-      <!--/noindex-->
-
-      <div class="site-overview-wrap sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <img class="site-author-image" itemprop="image" alt="良超"
-      src="/files/profile.jpg">
-  <p class="site-author-name" itemprop="name">良超</p>
-  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
 </div>
-<div class="site-state-wrap motion-element">
-  <nav class="site-state">
-      <div class="site-state-item site-state-posts">
-          <a href="/archives/">
-        
-          <span class="site-state-item-count">248</span>
-          <span class="site-state-item-name">日志</span>
-        </a>
-      </div>
-      <div class="site-state-item site-state-categories">
-        <span class="site-state-item-count">30</span>
-        <span class="site-state-item-name">分类</span>
-      </div>
-      <div class="site-state-item site-state-tags">
-            <a href="/tags/">
-          
-        <span class="site-state-item-count">45</span>
-        <span class="site-state-item-name">标签</span></a>
-      </div>
-  </nav>
+
+
+
+
+
+
 </div>
-  <div class="links-of-author motion-element">
-      <span class="links-of-author-item">
-        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://www.linkedin.com/in/wuliangchao/" title="LinkedIn → https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;wuliangchao&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i>LinkedIn</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="/atom.xml" title="RSS → &#x2F;atom.xml"><i class="fa fa-rss fa-fw"></i>RSS</a>
-      </span>
-  </div>
+  </main>
 
+  <footer class="footer">
+    <div class="footer-inner">
 
-
-      </div>
-
-    </div>
-  </aside>
-  <div id="sidebar-dimmer"></div>
-
-
-      </div>
-    </main>
-
-    <footer class="footer">
-      <div class="footer-inner">
-        
-
-        
 
 <div class="copyright">
-  
   &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
- 
+  <span class="with-love">
+    <i class="fa fa-pen"></i>
+  </span>
   <span class="author" itemprop="copyrightHolder">良超</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
   </div>
 
-        
+    </div>
+  </footer>
 
-
-
-
-
-
-
-
-      </div>
-    </footer>
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
-  
-  <script src="/lib/anime.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
-  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
-  <script src="/lib/velocity/velocity.min.js"></script>
-  <script src="/lib/velocity/velocity.ui.min.js"></script>
-
-<script src="/js/utils.js"></script>
-
-<script src="/js/motion.js"></script>
-
-
-<script src="/js/schemes/pisces.js"></script>
-
-
-<script src="/js/next-boot.js"></script>
-
-
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
 
 
   
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
 
 
+
+  <script src="/js/third-party/fancybox.js"></script>
 
 
   
-<script src="/js/local-search.js"></script>
-
-
-
-
-
-
-
-
-
 
 
 
 
   
 
-  
-      
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
 
-<script>
-  if (typeof MathJax === 'undefined') {
-    window.MathJax = {
-      loader: {
-        source: {
-          '[tex]/amsCd': '[tex]/amscd',
-          '[tex]/AMScd': '[tex]/amscd'
-        }
-      },
-      tex: {
-        inlineMath: {'[+]': [['$', '$']]},
-        tags: 'ams'
-      },
-      options: {
-        renderActions: {
-          findScript: [10, doc => {
-            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
-              const display = !!node.type.match(/; *mode=display/);
-              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
-              const text = document.createTextNode('');
-              node.parentNode.replaceChild(text, node);
-              math.start = {node: text, delim: '', n: 0};
-              math.end = {node: text, delim: '', n: 0};
-              doc.math.push(math);
-            });
-          }, '', false],
-          insertedScript: [200, () => {
-            document.querySelectorAll('mjx-container').forEach(node => {
-              let target = node.parentNode;
-              if (target.nodeName.toLowerCase() === 'li') {
-                target.parentNode.classList.add('has-jax');
-              }
-            });
-          }, '', false]
-        }
-      }
-    };
-    (function () {
-      var script = document.createElement('script');
-      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
-      script.defer = true;
-      document.head.appendChild(script);
-    })();
-  } else {
-    MathJax.startup.document.state(0);
-    MathJax.texReset();
-    MathJax.typeset();
-  }
-</script>
 
-    
-
-  
 
 </body>
 </html>

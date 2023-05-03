@@ -2,12 +2,12 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
-<meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 6.3.0">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
 
 <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
 <script>LA.init({id: "JmI6QmP3fMkLet6B",ck: "JmI6QmP3fMkLet6B"})</script>
+
   <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
   <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
@@ -17,42 +17,46 @@
 <link rel="stylesheet" href="/css/main.css">
 
 
-<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
-<script id="hexo-configurations">
-    var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
-  </script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
 
-  <meta name="description" content="Reducing the Dimensionality of Data with Neural Networks是对深度学习有重要影响的一篇论文，可以说是拉开了深度学习的帷幕，该论文出自 Hinton 大神之手。本文是读了论文后结合其他一些参考资料整理成的读书笔记。">
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wulc.me","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.15.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Reducing the Dimensionality of Data with Neural Networks是对深度学习有重要影响的一篇论文，可以说是拉开了深度学习的帷幕，该论文出自 Hinton 大神之手。本文是读了论文后结合其他一些参考资料整理成的读书笔记。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="《Reducing the Dimensionality of Data with Neural Networks》阅读笔记">
 <meta property="og:url" content="https://wulc.me/2016/11/28/%E3%80%8AReducing%20the%20Dimensionality%20of%20Data%20with%20Neural%20Networks%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
 <meta property="og:description" content="Reducing the Dimensionality of Data with Neural Networks是对深度学习有重要影响的一篇论文，可以说是拉开了深度学习的帷幕，该论文出自 Hinton 大神之手。本文是读了论文后结合其他一些参考资料整理成的读书笔记。">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b32fsja61u4b5ka1tgq9ucqubm.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b32hutvj5qj1m0t5qe14nogr613.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b32l5rhvb9urad4c71lk11f5d9.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b32hutvj5qj1m0t5qe14nogr613.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b33qroceosghtu1oo71k9b9qt9.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b33r5cli1ll51nd0v1q1g2itumm.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b33re6ri1j3sjecrf9ivjcl713.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b33trplg1iqqj4v17i41bib1m1h1g.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b33uavmu123l1a0i13tk9cl2sf1t.png">
 <meta property="article:published_time" content="2016-11-28T04:00:37.000Z">
 <meta property="article:modified_time" content="2023-04-30T05:12:49.120Z">
 <meta property="article:author" content="良超">
 <meta property="article:tag" content="机器学习">
 <meta property="article:tag" content="深度学习">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/image_1b32fsja61u4b5ka1tgq9ucqubm.png">
+
 
 <link rel="canonical" href="https://wulc.me/2016/11/28/%E3%80%8AReducing%20the%20Dimensionality%20of%20Data%20with%20Neural%20Networks%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/">
 
 
-<script id="page-configurations">
-  // https://hexo.io/docs/variables.html
-  CONFIG.page = {
-    sidebar: "",
-    isHome : false,
-    isPost : true,
-    lang   : 'zh-CN'
-  };
-</script>
 
-  <title>《Reducing the Dimensionality of Data with Neural Networks》阅读笔记 | 吴良超的学习笔记</title>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wulc.me/2016/11/28/%E3%80%8AReducing%20the%20Dimensionality%20of%20Data%20with%20Neural%20Networks%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/","path":"2016/11/28/《Reducing the Dimensionality of Data with Neural Networks》阅读笔记/","title":"《Reducing the Dimensionality of Data with Neural Networks》阅读笔记"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>《Reducing the Dimensionality of Data with Neural Networks》阅读笔记 | 吴良超的学习笔记</title>
   
 
 
@@ -60,57 +64,39 @@
 
 
 
+
+
   <noscript>
-  <style>
-  .use-motion .brand,
-  .use-motion .menu-item,
-  .sidebar-inner,
-  .use-motion .post-block,
-  .use-motion .pagination,
-  .use-motion .comments,
-  .use-motion .post-header,
-  .use-motion .post-body,
-  .use-motion .collection-header { opacity: initial; }
-
-  .use-motion .site-title,
-  .use-motion .site-subtitle {
-    opacity: initial;
-    top: initial;
-  }
-
-  .use-motion .logo-line-before i { left: initial; }
-  .use-motion .logo-line-after i { right: initial; }
-  </style>
-</noscript>
-
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
 <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage">
-  <div class="container use-motion">
-    <div class="headband"></div>
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
 
-    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-container">
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
   <div class="site-nav-toggle">
-    <div class="toggle" aria-label="切换导航栏">
-      <span class="toggle-line toggle-line-first"></span>
-      <span class="toggle-line toggle-line-middle"></span>
-      <span class="toggle-line toggle-line-last"></span>
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
     </div>
   </div>
 
   <div class="site-meta">
 
     <a href="/" class="brand" rel="start">
-      <span class="logo-line-before"><i></i></span>
-      <h1 class="site-title">吴良超的学习笔记</h1>
-      <span class="logo-line-after"><i></i></span>
+      <i class="logo-line"></i>
+      <p class="site-title">吴良超的学习笔记</p>
+      <i class="logo-line"></i>
     </a>
   </div>
 
   <div class="site-nav-right">
-    <div class="toggle popup-trigger">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
         <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
@@ -118,29 +104,8 @@
 
 
 
-
 <nav class="site-nav">
-  <ul id="menu" class="main-menu menu">
-        <li class="menu-item menu-item-home">
-
-    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
-
-  </li>
-        <li class="menu-item menu-item-tags">
-
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
-
-  </li>
-        <li class="menu-item menu-item-archives">
-
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
-
-  </li>
-        <li class="menu-item menu-item-about">
-
-    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
-
-  </li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
         </a>
@@ -151,92 +116,155 @@
 
 
   <div class="search-pop-overlay">
-    <div class="popup search-popup">
-        <div class="search-header">
+    <div class="popup search-popup"><div class="search-header">
   <span class="search-icon">
     <i class="fa fa-search"></i>
   </span>
   <div class="search-input-container">
-    <input autocomplete="off" autocapitalize="off"
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
            placeholder="搜索..." spellcheck="false"
            type="search" class="search-input">
   </div>
-  <span class="popup-btn-close">
+  <span class="popup-btn-close" role="button">
     <i class="fa fa-times-circle"></i>
   </span>
 </div>
-<div id="search-result">
-  <div id="no-result">
-    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
   </div>
 </div>
 
     </div>
   </div>
 
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%9A%84%E9%99%8D%E7%BB%B4"><span class="nav-number">2.</span> <span class="nav-text">数据的降维</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%AA%E7%BC%96%E7%A0%81%E5%99%A8%E4%B8%8E%E9%80%90%E5%B1%82%E9%A2%84%E8%AE%AD%E7%BB%83"><span class="nav-number">3.</span> <span class="nav-text">自编码器与逐层预训练</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%90%E5%B1%82%E9%A2%84%E8%AE%AD%E7%BB%83%E8%BF%87%E7%A8%8B"><span class="nav-number">3.1.</span> <span class="nav-text">逐层预训练过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%9F%E7%90%86%E4%B8%8E%E6%8E%A8%E5%AF%BC"><span class="nav-number">3.2.</span> <span class="nav-text">原理与推导</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E6%95%88%E6%9E%9C%E5%AF%B9%E6%AF%94"><span class="nav-number">4.</span> <span class="nav-text">实验效果对比</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E4%BA%8C%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E5%9B%BE%E7%89%87%E7%9A%84%E5%8E%8B%E7%BC%A9%E6%81%A2%E5%A4%8D%E4%B8%8E%E5%88%86%E7%B1%BB"><span class="nav-number">4.1.</span> <span class="nav-text">实验二：手写数字图片的压缩、恢复与分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E4%B8%89%E4%BA%BA%E8%84%B8%E5%9B%BE%E5%83%8F%E7%9A%84%E5%8E%8B%E7%BC%A9%E4%B8%8E%E6%81%A2%E5%A4%8D"><span class="nav-number">4.2.</span> <span class="nav-text">实验三：人脸图像的压缩与恢复</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E5%9B%9B%E8%AF%8D%E5%90%91%E9%87%8F%E7%9A%84%E9%99%8D%E7%BB%B4%E4%B8%8E%E5%88%86%E7%B1%BB"><span class="nav-number">4.3.</span> <span class="nav-text">实验四：词向量的降维与分类</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
 </div>
-    </header>
-
-    
-  <div class="back-to-top">
-    <i class="fa fa-arrow-up"></i>
-    <span>0%</span>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">249</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.linkedin.com/in/wuliangchao/" title="LinkedIn → https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;wuliangchao&#x2F;" rel="noopener me" target="_blank"><i class="fab fa-linkedin fa-fw"></i>LinkedIn</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml" rel="noopener me"><i class="fa fa-rss fa-fw"></i>RSS</a>
+      </span>
   </div>
-  <div class="reading-progress-bar"></div>
 
-
-    <main class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          
-
-          <div class="content post posts-expand">
-            
+        </div>
+      </div>
+    </div>
 
     
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://wulc.me/2016/11/28/%E3%80%8AReducing%20the%20Dimensionality%20of%20Data%20with%20Neural%20Networks%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/files/profile.jpg">
       <meta itemprop="name" content="良超">
-      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="吴良超的学习笔记">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="《Reducing the Dimensionality of Data with Neural Networks》阅读笔记 | 吴良超的学习笔记">
+      <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           《Reducing the Dimensionality of Data with Neural Networks》阅读笔记
         </h1>
 
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2016-11-28 12:00:37" itemprop="dateCreated datePublished" datetime="2016-11-28T12:00:37+08:00">2016-11-28</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">深度学习</span></a>
-                </span>
-            </span>
+      <time title="创建时间：2016-11-28 12:00:37" itemprop="dateCreated datePublished" datetime="2016-11-28T12:00:37+08:00">2016-11-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+        </span>
+    </span>
 
-          
+  
+</div>
 
         </div>
       </header>
@@ -245,8 +273,6 @@
     
     
     <div class="post-body" itemprop="articleBody">
-
-      
         <p><a
 target="_blank" rel="noopener" href="http://science.sciencemag.org/content/313/5786/504.full">Reducing
 the Dimensionality of Data with Neural
@@ -271,8 +297,7 @@ PCA
 <code>Encoder</code> 和 <code>Decoder</code> 两部分构成，其中
 <code>Encoder</code> 的作用是降维，而 <code>Decoder</code>
 的作用是从降维的后的特征中恢复出原始特征。其结构如下所示：</p>
-<p><img
-src="https://wulc.me/imgs/image_1b32fsja61u4b5ka1tgq9ucqubm.png" /></p>
+<p><img data-src="https://wulc.me/imgs/image_1b32fsja61u4b5ka1tgq9ucqubm.png" /></p>
 <p>上图主要展示了<strong>通过自编码器对图像进行特征压缩并复原的过程</strong>。其中左边部分是初始训练时候的状态，<code>Encoder</code>
 将原图像2000维的特征压缩到了30维， 而 <code>Decoder</code>
 将压缩后得到的30维的图像恢复成原来的2000维，由于还没对网络进行训练，所以此时的图像会比较模糊。右边部分则是通过经典的
@@ -288,8 +313,7 @@ class="math inline">\(W_1,W_2,W_3,W_4\)</span>，然后再进行后面的前向�
 <p>下面主要讲述如何训练出网络的初始化参数，而这也是本文的最重要的工作。</p>
 <h3 id="逐层预训练过程">逐层预训练过程</h3>
 <p>在逐层预训练中采用的模型是 RBM, RBM 的结构图如下所示</p>
-<p><img
-src="https://wulc.me/imgs/image_1b32hutvj5qj1m0t5qe14nogr613.png" /></p>
+<p><img data-src="https://wulc.me/imgs/image_1b32hutvj5qj1m0t5qe14nogr613.png" /></p>
 <p>从上面的的结构图可知， RBM
 是一个二层全连接的双向网络，二层指的是隐藏层(h节点)和可视层(v节点)，其中各层节点的大小关系没有要求（也就是
 m可以大于n也可以小于n），双向指数据既可从可视层传播到隐藏层，也可从隐藏层传输到可视层。</p>
@@ -332,8 +356,7 @@ class="math display">\[W(t+1) = W(t) +
 W\_{ij} = \varepsilon ( (v\_jh\_j)\_{data} -
 (v\_jh\_j)\_{recon})\)</span>，但是含义是一致的，就是<strong>利用被压缩后再恢复的数据与原始数据的误差来调整二层网络间的参数，使得恢复出来的数据尽可能与原始数据接近，也就是要让被压缩后的数据尽可能的保留着原始数据的特征</strong>。</p>
 <p>上面的训练过程中只是训练了相邻两层网络间的参数，而神经网络一般是有多层的，所以需要利用这种方法逐层进行训练，这也是逐层预训练说法的来由。所以上面通过自编码器对图像进行特征压缩并复原的完整过程如下图所示：</p>
-<p><img
-src="https://wulc.me/imgs/image_1b32l5rhvb9urad4c71lk11f5d9.png" /></p>
+<p><img data-src="https://wulc.me/imgs/image_1b32l5rhvb9urad4c71lk11f5d9.png" /></p>
 <p>首先利用 RBM
 逐层训练出网络的初始化参数，后面就是传统神经网络的训练过程了，通过前向传播和反向传播来调整网络间的参数，从而达到收敛。</p>
 <h3 id="原理与推导">原理与推导</h3>
@@ -353,8 +376,7 @@ class="math inline">\(v&#39;\)</span>）,权重更新过程则是利用他们的
 的能量函数推导出概率模型，再从概率模型推导极大似然估计。</p>
 <p>首先， RBM 诞生于统计力学，统计力学中为其定义的一个<a
 target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Restricted_Boltzmann_machine">能量函数</a>,针对下图的RBM</p>
-<p><img
-src="https://wulc.me/imgs/image_1b32hutvj5qj1m0t5qe14nogr613.png" /></p>
+<p><img data-src="https://wulc.me/imgs/image_1b32hutvj5qj1m0t5qe14nogr613.png" /></p>
 <p>其能量函数表示如下：<span class="math display">\[E(v,h) =
 -\sum\_{i=1}^n\sum\_{j=1}^m
 w\_{ij}h\_iv\_j-\sum\_{j=1}^mb\_jv\_j-\sum\_{i=1}^nc\_ih\_i
@@ -400,8 +422,7 @@ target="_blank" rel="noopener" href="http://blog.csdn.net/mytestmy/article/detai
 和 (3-2),也就完成了从概率模型到最大似然的推导。</p>
 <h2 id="实验效果对比">实验效果对比</h2>
 <p>论文通过若干的实验证明了通过自编码器对图像进行压缩后再恢复的效果要优于PCA，需要注意的是图像的压缩实际上就是特征的压缩，也就是一个特征提取或者说降维的过程，下面是具体的实验结果。
-### 实验一：曲线图像的压缩与恢复 下图是实验数据 <img
-src="https://wulc.me/imgs/image_1b33qroceosghtu1oo71k9b9qt9.png" /></p>
+### 实验一：曲线图像的压缩与恢复 下图是实验数据 <img data-src="https://wulc.me/imgs/image_1b33qroceosghtu1oo71k9b9qt9.png" /></p>
 <p>上图中从上到下每一行对应于下表中从上到下的每一行</p>
 <table>
 <thead>
@@ -441,8 +462,7 @@ src="https://wulc.me/imgs/image_1b33qroceosghtu1oo71k9b9qt9.png" /></p>
 </table>
 <h3
 id="实验二手写数字图片的压缩恢复与分类">实验二：手写数字图片的压缩、恢复与分类</h3>
-<p>该实验采用 MNIST 数据集，下图是实验数据 <img
-src="https://wulc.me/imgs/image_1b33r5cli1ll51nd0v1q1g2itumm.png" /></p>
+<p>该实验采用 MNIST 数据集，下图是实验数据 <img data-src="https://wulc.me/imgs/image_1b33r5cli1ll51nd0v1q1g2itumm.png" /></p>
 <p>上图中从上到下每一行对应于下表中从上到下的每一行</p>
 <table>
 <thead>
@@ -478,11 +498,9 @@ src="https://wulc.me/imgs/image_1b33r5cli1ll51nd0v1q1g2itumm.png" /></p>
 <p>上面是对图像进行压缩与恢复的实验，下面是提取每个手写数字两维的特征（原始维度为786维）进行分类的结果，图A是原始数据进行分类后的结果，图B是通过自编码器中的
 <code>Encoder</code>
 压缩到两维后再分类的结果。可以看到，通过自编码器得到的两维特征已经能够将各个数字较好分离开。</p>
-<p><img
-src="https://wulc.me/imgs/image_1b33re6ri1j3sjecrf9ivjcl713.png" /></p>
+<p><img data-src="https://wulc.me/imgs/image_1b33re6ri1j3sjecrf9ivjcl713.png" /></p>
 <h3 id="实验三人脸图像的压缩与恢复">实验三：人脸图像的压缩与恢复</h3>
-<p>实验数据如下所示 <img
-src="https://wulc.me/imgs/image_1b33trplg1iqqj4v17i41bib1m1h1g.png" /></p>
+<p>实验数据如下所示 <img data-src="https://wulc.me/imgs/image_1b33trplg1iqqj4v17i41bib1m1h1g.png" /></p>
 <p>上图中从上到下每一行对应于下表中从上到下的每一行</p>
 <table>
 <thead>
@@ -516,8 +534,7 @@ src="https://wulc.me/imgs/image_1b33trplg1iqqj4v17i41bib1m1h1g.png" /></p>
 对原始数据进行提取特征后，可利用这些特征进行分类和回归。这个实验就是对词向量进行降维后并进行分类，主要比较自编码器和<a
 target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Latent_semantic_analysis">LSA</a>(
 Latent Semantic Analysis, 隐性语义分析)对词向量降维后分类的效果。</p>
-<p><img
-src="https://wulc.me/imgs/image_1b33uavmu123l1a0i13tk9cl2sf1t.png" /></p>
+<p><img data-src="https://wulc.me/imgs/image_1b33uavmu123l1a0i13tk9cl2sf1t.png" /></p>
 <p>上图中 A
 是文档相似性判断的准确率，通过LSA分类要提取文档向量的50维才能达到自编码器提取前10维进行分类的效果，图
 B
@@ -550,271 +567,95 @@ target="_blank" rel="noopener" href="http://blog.csdn.net/xbinworld/article/deta
     
     
 
-      <footer class="post-footer">
+    <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 机器学习</a>
-              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"># 深度学习</a>
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 深度学习</a>
           </div>
 
         
 
-
-        
-    <div class="post-nav">
-      <div class="post-nav-item">
-    <a href="/2016/11/18/%E6%A6%82%E7%8E%87%E8%AE%BA%E4%B8%8E%E6%95%B0%E7%90%86%E7%BB%9F%E8%AE%A1%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86(5)--%E6%A0%B7%E6%9C%AC%E5%8F%8A%E6%8A%BD%E6%A0%B7%E5%88%86%E5%B8%83/" rel="prev" title="概率论与数理统计知识整理(5)--样本及抽样分布">
-      <i class="fa fa-chevron-left"></i> 概率论与数理统计知识整理(5)--样本及抽样分布
-    </a></div>
-      <div class="post-nav-item">
-    <a href="/2016/12/18/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/" rel="next" title="操作系统课程总结">
-      操作系统课程总结 <i class="fa fa-chevron-right"></i>
-    </a></div>
-    </div>
-      </footer>
-    
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2016/11/18/%E6%A6%82%E7%8E%87%E8%AE%BA%E4%B8%8E%E6%95%B0%E7%90%86%E7%BB%9F%E8%AE%A1%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86(5)--%E6%A0%B7%E6%9C%AC%E5%8F%8A%E6%8A%BD%E6%A0%B7%E5%88%86%E5%B8%83/" rel="prev" title="概率论与数理统计知识整理(5)--样本及抽样分布">
+                  <i class="fa fa-chevron-left"></i> 概率论与数理统计知识整理(5)--样本及抽样分布
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2016/12/18/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/" rel="next" title="操作系统课程总结">
+                  操作系统课程总结 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
   </article>
-  
-  
-  
-
-
-
-          </div>
-          
-
-<script>
-  window.addEventListener('tabs:register', () => {
-    let { activeClass } = CONFIG.comments;
-    if (CONFIG.comments.storage) {
-      activeClass = localStorage.getItem('comments_active') || activeClass;
-    }
-    if (activeClass) {
-      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
-      if (activeTab) {
-        activeTab.click();
-      }
-    }
-  });
-  if (CONFIG.comments.storage) {
-    window.addEventListener('tabs:click', event => {
-      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
-      let commentClass = event.target.classList[1];
-      localStorage.setItem('comments_active', commentClass);
-    });
-  }
-</script>
-
-        </div>
-          
-  
-  <div class="toggle sidebar-toggle">
-    <span class="toggle-line toggle-line-first"></span>
-    <span class="toggle-line toggle-line-middle"></span>
-    <span class="toggle-line toggle-line-last"></span>
-  </div>
-
-  <aside class="sidebar">
-    <div class="sidebar-inner">
-
-      <ul class="sidebar-nav motion-element">
-        <li class="sidebar-nav-toc">
-          文章目录
-        </li>
-        <li class="sidebar-nav-overview">
-          站点概览
-        </li>
-      </ul>
-
-      <!--noindex-->
-      <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%9A%84%E9%99%8D%E7%BB%B4"><span class="nav-number">2.</span> <span class="nav-text">数据的降维</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%AA%E7%BC%96%E7%A0%81%E5%99%A8%E4%B8%8E%E9%80%90%E5%B1%82%E9%A2%84%E8%AE%AD%E7%BB%83"><span class="nav-number">3.</span> <span class="nav-text">自编码器与逐层预训练</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%90%E5%B1%82%E9%A2%84%E8%AE%AD%E7%BB%83%E8%BF%87%E7%A8%8B"><span class="nav-number">3.1.</span> <span class="nav-text">逐层预训练过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%9F%E7%90%86%E4%B8%8E%E6%8E%A8%E5%AF%BC"><span class="nav-number">3.2.</span> <span class="nav-text">原理与推导</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E6%95%88%E6%9E%9C%E5%AF%B9%E6%AF%94"><span class="nav-number">4.</span> <span class="nav-text">实验效果对比</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E4%BA%8C%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E5%9B%BE%E7%89%87%E7%9A%84%E5%8E%8B%E7%BC%A9%E6%81%A2%E5%A4%8D%E4%B8%8E%E5%88%86%E7%B1%BB"><span class="nav-number">4.1.</span> <span class="nav-text">实验二：手写数字图片的压缩、恢复与分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E4%B8%89%E4%BA%BA%E8%84%B8%E5%9B%BE%E5%83%8F%E7%9A%84%E5%8E%8B%E7%BC%A9%E4%B8%8E%E6%81%A2%E5%A4%8D"><span class="nav-number">4.2.</span> <span class="nav-text">实验三：人脸图像的压缩与恢复</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E5%9B%9B%E8%AF%8D%E5%90%91%E9%87%8F%E7%9A%84%E9%99%8D%E7%BB%B4%E4%B8%8E%E5%88%86%E7%B1%BB"><span class="nav-number">4.3.</span> <span class="nav-text">实验四：词向量的降维与分类</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
-      </div>
-      <!--/noindex-->
-
-      <div class="site-overview-wrap sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <img class="site-author-image" itemprop="image" alt="良超"
-      src="/files/profile.jpg">
-  <p class="site-author-name" itemprop="name">良超</p>
-  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
 </div>
-<div class="site-state-wrap motion-element">
-  <nav class="site-state">
-      <div class="site-state-item site-state-posts">
-          <a href="/archives/">
-        
-          <span class="site-state-item-count">248</span>
-          <span class="site-state-item-name">日志</span>
-        </a>
-      </div>
-      <div class="site-state-item site-state-categories">
-        <span class="site-state-item-count">30</span>
-        <span class="site-state-item-name">分类</span>
-      </div>
-      <div class="site-state-item site-state-tags">
-            <a href="/tags/">
-          
-        <span class="site-state-item-count">45</span>
-        <span class="site-state-item-name">标签</span></a>
-      </div>
-  </nav>
+
+
+
+
+
+
 </div>
-  <div class="links-of-author motion-element">
-      <span class="links-of-author-item">
-        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://www.linkedin.com/in/wuliangchao/" title="LinkedIn → https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;wuliangchao&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i>LinkedIn</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="/atom.xml" title="RSS → &#x2F;atom.xml"><i class="fa fa-rss fa-fw"></i>RSS</a>
-      </span>
-  </div>
+  </main>
 
+  <footer class="footer">
+    <div class="footer-inner">
 
-
-      </div>
-
-    </div>
-  </aside>
-  <div id="sidebar-dimmer"></div>
-
-
-      </div>
-    </main>
-
-    <footer class="footer">
-      <div class="footer-inner">
-        
-
-        
 
 <div class="copyright">
-  
   &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
- 
+  <span class="with-love">
+    <i class="fa fa-pen"></i>
+  </span>
   <span class="author" itemprop="copyrightHolder">良超</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
   </div>
 
-        
+    </div>
+  </footer>
 
-
-
-
-
-
-
-
-      </div>
-    </footer>
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
-  
-  <script src="/lib/anime.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
-  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
-  <script src="/lib/velocity/velocity.min.js"></script>
-  <script src="/lib/velocity/velocity.ui.min.js"></script>
-
-<script src="/js/utils.js"></script>
-
-<script src="/js/motion.js"></script>
-
-
-<script src="/js/schemes/pisces.js"></script>
-
-
-<script src="/js/next-boot.js"></script>
-
-
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
 
 
   
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
 
 
+
+  <script src="/js/third-party/fancybox.js"></script>
 
 
   
-<script src="/js/local-search.js"></script>
-
-
-
-
-
-
-
-
-
 
 
 
 
   
 
-  
-      
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
 
-<script>
-  if (typeof MathJax === 'undefined') {
-    window.MathJax = {
-      loader: {
-        source: {
-          '[tex]/amsCd': '[tex]/amscd',
-          '[tex]/AMScd': '[tex]/amscd'
-        }
-      },
-      tex: {
-        inlineMath: {'[+]': [['$', '$']]},
-        tags: 'ams'
-      },
-      options: {
-        renderActions: {
-          findScript: [10, doc => {
-            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
-              const display = !!node.type.match(/; *mode=display/);
-              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
-              const text = document.createTextNode('');
-              node.parentNode.replaceChild(text, node);
-              math.start = {node: text, delim: '', n: 0};
-              math.end = {node: text, delim: '', n: 0};
-              doc.math.push(math);
-            });
-          }, '', false],
-          insertedScript: [200, () => {
-            document.querySelectorAll('mjx-container').forEach(node => {
-              let target = node.parentNode;
-              if (target.nodeName.toLowerCase() === 'li') {
-                target.parentNode.classList.add('has-jax');
-              }
-            });
-          }, '', false]
-        }
-      }
-    };
-    (function () {
-      var script = document.createElement('script');
-      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
-      script.defer = true;
-      document.head.appendChild(script);
-    })();
-  } else {
-    MathJax.startup.document.state(0);
-    MathJax.texReset();
-    MathJax.typeset();
-  }
-</script>
 
-    
-
-  
 
 </body>
 </html>

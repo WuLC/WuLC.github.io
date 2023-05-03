@@ -2,12 +2,12 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
-<meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 6.3.0">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
 
 <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
 <script>LA.init({id: "JmI6QmP3fMkLet6B",ck: "JmI6QmP3fMkLet6B"})</script>
+
   <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
   <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
@@ -17,21 +17,31 @@
 <link rel="stylesheet" href="/css/main.css">
 
 
-<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
-<script id="hexo-configurations">
-    var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wulc.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
-  </script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
 
-  <meta name="description" content="这是一篇关于maven入门的相当好的文章，文章有点长，但是非常值得看。原文链接 Maven简介 何为Maven Maven这个词可以翻译为“知识的积累”，也可以翻译为“专家”或“内行”。本书将介绍Maven这一跨平台的项目管理工具。作为Apache组织中的一个颇为成功的开源项目，Maven主要服务于基于Java平 台的项目构建、依赖管理和项目信息管理。无论是小型的开源类库项目，还是大型的企业级应用">
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wulc.me","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.15.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="这是一篇关于maven入门的相当好的文章，文章有点长，但是非常值得看。原文链接 Maven简介 何为Maven Maven这个词可以翻译为“知识的积累”，也可以翻译为“专家”或“内行”。本书将介绍Maven这一跨平台的项目管理工具。作为Apache组织中的一个颇为成功的开源项目，Maven主要服务于基于Java平 台的项目构建、依赖管理和项目信息管理。无论是小型的开源类库项目，还是大型的企业级应用">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Maven的安装、配置及使用入门">
 <meta property="og:url" content="https://wulc.me/2016/02/18/Maven%E7%9A%84%E5%AE%89%E8%A3%85%E3%80%81%E9%85%8D%E7%BD%AE%E5%8F%8A%E4%BD%BF%E7%94%A8%E5%85%A5%E9%97%A8/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
 <meta property="og:description" content="这是一篇关于maven入门的相当好的文章，文章有点长，但是非常值得看。原文链接 Maven简介 何为Maven Maven这个词可以翻译为“知识的积累”，也可以翻译为“专家”或“内行”。本书将介绍Maven这一跨平台的项目管理工具。作为Apache组织中的一个颇为成功的开源项目，Maven主要服务于基于Java平 台的项目构建、依赖管理和项目信息管理。无论是小型的开源类库项目，还是大型的企业级应用">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/e4f32577-29ad-35a7-b384-753eb4df2e37.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/1ae54751-ad82-3066-ba5a-e8818cfc504d.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/d36bea18-262e-35e3-8a44-e3bac9ba225b.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/8c938c76-5859-33ea-aee2-b1f6e3a182ac.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/c6793b02-251d-3e1f-833c-8ff12d14ba05.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/897a084a-6965-3d4a-b437-36c3a4ea5c09.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/93cb4cf7-4027-397d-9e42-185acb6fc868.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/9a71aa9f-dc5e-32e1-8d0e-f71de55de5e9.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/dc2c1bfc-ce95-3395-a5d7-16bdf5894101.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/bb255ca9-2341-37fb-aa9c-de619c2bf80a.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/09f3ec72-eb31-3f25-97af-545213fe4793.jpg">
 <meta property="article:published_time" content="2016-02-18T14:06:31.000Z">
 <meta property="article:modified_time" content="2023-04-30T05:12:49.142Z">
 <meta property="article:author" content="良超">
@@ -39,21 +49,17 @@
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="工具使用">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/e4f32577-29ad-35a7-b384-753eb4df2e37.jpg">
+
 
 <link rel="canonical" href="https://wulc.me/2016/02/18/Maven%E7%9A%84%E5%AE%89%E8%A3%85%E3%80%81%E9%85%8D%E7%BD%AE%E5%8F%8A%E4%BD%BF%E7%94%A8%E5%85%A5%E9%97%A8/">
 
 
-<script id="page-configurations">
-  // https://hexo.io/docs/variables.html
-  CONFIG.page = {
-    sidebar: "",
-    isHome : false,
-    isPost : true,
-    lang   : 'zh-CN'
-  };
-</script>
 
-  <title>Maven的安装、配置及使用入门 | 吴良超的学习笔记</title>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wulc.me/2016/02/18/Maven%E7%9A%84%E5%AE%89%E8%A3%85%E3%80%81%E9%85%8D%E7%BD%AE%E5%8F%8A%E4%BD%BF%E7%94%A8%E5%85%A5%E9%97%A8/","path":"2016/02/18/Maven的安装、配置及使用入门/","title":"Maven的安装、配置及使用入门"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Maven的安装、配置及使用入门 | 吴良超的学习笔记</title>
   
 
 
@@ -61,57 +67,39 @@
 
 
 
+
+
   <noscript>
-  <style>
-  .use-motion .brand,
-  .use-motion .menu-item,
-  .sidebar-inner,
-  .use-motion .post-block,
-  .use-motion .pagination,
-  .use-motion .comments,
-  .use-motion .post-header,
-  .use-motion .post-body,
-  .use-motion .collection-header { opacity: initial; }
-
-  .use-motion .site-title,
-  .use-motion .site-subtitle {
-    opacity: initial;
-    top: initial;
-  }
-
-  .use-motion .logo-line-before i { left: initial; }
-  .use-motion .logo-line-after i { right: initial; }
-  </style>
-</noscript>
-
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
 <link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage">
-  <div class="container use-motion">
-    <div class="headband"></div>
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
 
-    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-container">
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
   <div class="site-nav-toggle">
-    <div class="toggle" aria-label="切换导航栏">
-      <span class="toggle-line toggle-line-first"></span>
-      <span class="toggle-line toggle-line-middle"></span>
-      <span class="toggle-line toggle-line-last"></span>
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
     </div>
   </div>
 
   <div class="site-meta">
 
     <a href="/" class="brand" rel="start">
-      <span class="logo-line-before"><i></i></span>
-      <h1 class="site-title">吴良超的学习笔记</h1>
-      <span class="logo-line-after"><i></i></span>
+      <i class="logo-line"></i>
+      <p class="site-title">吴良超的学习笔记</p>
+      <i class="logo-line"></i>
     </a>
   </div>
 
   <div class="site-nav-right">
-    <div class="toggle popup-trigger">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
         <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
@@ -119,29 +107,8 @@
 
 
 
-
 <nav class="site-nav">
-  <ul id="menu" class="main-menu menu">
-        <li class="menu-item menu-item-home">
-
-    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
-
-  </li>
-        <li class="menu-item menu-item-tags">
-
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
-
-  </li>
-        <li class="menu-item menu-item-archives">
-
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
-
-  </li>
-        <li class="menu-item menu-item-about">
-
-    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
-
-  </li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
         </a>
@@ -152,96 +119,155 @@
 
 
   <div class="search-pop-overlay">
-    <div class="popup search-popup">
-        <div class="search-header">
+    <div class="popup search-popup"><div class="search-header">
   <span class="search-icon">
     <i class="fa fa-search"></i>
   </span>
   <div class="search-input-container">
-    <input autocomplete="off" autocapitalize="off"
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
            placeholder="搜索..." spellcheck="false"
            type="search" class="search-input">
   </div>
-  <span class="popup-btn-close">
+  <span class="popup-btn-close" role="button">
     <i class="fa fa-times-circle"></i>
   </span>
 </div>
-<div id="search-result">
-  <div id="no-result">
-    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
   </div>
 </div>
 
     </div>
   </div>
 
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#maven%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">Maven简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%95%E4%B8%BAmaven"><span class="nav-number">1.1.</span> <span class="nav-text">何为Maven</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#maven%E6%98%AF%E4%BC%98%E7%A7%80%E7%9A%84%E6%9E%84%E5%BB%BA%E5%B7%A5%E5%85%B7"><span class="nav-number">1.1.1.</span> <span class="nav-text">Maven是优秀的构建工具</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#maven%E4%B8%8D%E4%BB%85%E4%BB%85%E6%98%AF%E6%9E%84%E5%BB%BA%E5%B7%A5%E5%85%B7"><span class="nav-number">1.1.2.</span> <span class="nav-text">Maven不仅仅是构建工具</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81maven"><span class="nav-number">1.2.</span> <span class="nav-text">为什么需要Maven</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BB%84%E8%A3%85pc%E5%92%8C%E5%93%81%E7%89%8Cpc"><span class="nav-number">1.2.1.</span> <span class="nav-text">组装PC和品牌PC</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ide%E4%B8%8D%E6%98%AF%E4%B8%87%E8%83%BD%E7%9A%84"><span class="nav-number">1.2.2.</span> <span class="nav-text">IDE不是万能的</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#make"><span class="nav-number">1.2.3.</span> <span class="nav-text">Make</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ant"><span class="nav-number">1.2.4.</span> <span class="nav-text">Ant</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8D%E9%87%8D%E5%A4%8D%E5%8F%91%E6%98%8E%E8%BD%AE%E5%AD%90"><span class="nav-number">1.2.5.</span> <span class="nav-text">不重复发明轮子</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#maven%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AE"><span class="nav-number">2.</span> <span class="nav-text">Maven的安装和配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%A8windows%E4%B8%8A%E5%AE%89%E8%A3%85maven"><span class="nav-number">2.1.</span> <span class="nav-text">在Windows上安装Maven</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A3%80%E6%9F%A5jdk%E5%AE%89%E8%A3%85"><span class="nav-number">2.1.1.</span> <span class="nav-text">检查JDK安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BDmaven"><span class="nav-number">2.1.2.</span> <span class="nav-text">下载Maven</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%AC%E5%9C%B0%E5%AE%89%E8%A3%85"><span class="nav-number">2.1.3.</span> <span class="nav-text">本地安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%87%E7%BA%A7maven"><span class="nav-number">2.1.4.</span> <span class="nav-text">升级Maven</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%A8%E5%9F%BA%E4%BA%8Eunix%E7%9A%84%E7%B3%BB%E7%BB%9F%E4%B8%8A%E5%AE%89%E8%A3%85maven"><span class="nav-number">2.2.</span> <span class="nav-text">在基于Unix的系统上安装Maven</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD%E5%92%8C%E5%AE%89%E8%A3%85"><span class="nav-number">2.2.1.</span> <span class="nav-text">下载和安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%87%E7%BA%A7maven-1"><span class="nav-number">2.2.2.</span> <span class="nav-text">升级Maven</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E7%9B%AE%E5%BD%95%E5%88%86%E6%9E%90"><span class="nav-number">2.3.</span> <span class="nav-text">安装目录分析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#m2_home"><span class="nav-number">2.3.1.</span> <span class="nav-text">M2_HOME</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#m2"><span class="nav-number">2.3.2.</span> <span class="nav-text">~&#x2F;.m2</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AEhttp%E4%BB%A3%E7%90%86"><span class="nav-number">2.4.</span> <span class="nav-text">设置HTTP代理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85m2eclipse"><span class="nav-number">2.5.</span> <span class="nav-text">安装m2eclipse</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#maven%E5%AE%89%E8%A3%85%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="nav-number">2.6.</span> <span class="nav-text">Maven安装最佳实践</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AEmaven_opts%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="nav-number">2.6.1.</span> <span class="nav-text">设置MAVEN_OPTS环境变量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E7%94%A8%E6%88%B7%E8%8C%83%E5%9B%B4settings.xml"><span class="nav-number">2.6.2.</span> <span class="nav-text">配置用户范围settings.xml</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8D%E8%A6%81%E4%BD%BF%E7%94%A8ide%E5%86%85%E5%B5%8C%E7%9A%84maven"><span class="nav-number">2.6.3.</span> <span class="nav-text">不要使用IDE内嵌的Maven</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#maven%E4%BD%BF%E7%94%A8%E5%85%A5%E9%97%A8"><span class="nav-number">3.</span> <span class="nav-text">Maven使用入门</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E5%86%99pom.xml%E6%96%87%E4%BB%B6"><span class="nav-number">3.1.</span> <span class="nav-text">编写pom.xml文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E5%86%99%E4%B8%BB%E4%BB%A3%E7%A0%81"><span class="nav-number">3.2.</span> <span class="nav-text">编写主代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E5%86%99%E6%B5%8B%E8%AF%95%E4%BB%A3%E7%A0%81"><span class="nav-number">3.3.</span> <span class="nav-text">编写测试代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%93%E5%8C%85%E5%92%8C%E8%BF%90%E8%A1%8C"><span class="nav-number">3.4.</span> <span class="nav-text">打包和运行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8archetype%E7%94%9F%E6%88%90%E9%A1%B9%E7%9B%AE%E9%AA%A8%E6%9E%B6"><span class="nav-number">3.5.</span> <span class="nav-text">使用Archetype生成项目骨架</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#m2eclipse%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8"><span class="nav-number">3.6.</span> <span class="nav-text">m2eclipse简单使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%BC%E5%85%A5maven%E9%A1%B9%E7%9B%AE"><span class="nav-number">3.6.1.</span> <span class="nav-text">导入Maven项目</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9B%E5%BB%BAmaven%E9%A1%B9%E7%9B%AE"><span class="nav-number">3.6.2.</span> <span class="nav-text">创建Maven项目</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%90%E8%A1%8Cmvn%E5%91%BD%E4%BB%A4"><span class="nav-number">3.6.3.</span> <span class="nav-text">运行mvn命令</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
 </div>
-    </header>
-
-    
-  <div class="back-to-top">
-    <i class="fa fa-arrow-up"></i>
-    <span>0%</span>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">249</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.linkedin.com/in/wuliangchao/" title="LinkedIn → https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;wuliangchao&#x2F;" rel="noopener me" target="_blank"><i class="fab fa-linkedin fa-fw"></i>LinkedIn</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml" rel="noopener me"><i class="fa fa-rss fa-fw"></i>RSS</a>
+      </span>
   </div>
-  <div class="reading-progress-bar"></div>
 
-
-    <main class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          
-
-          <div class="content post posts-expand">
-            
+        </div>
+      </div>
+    </div>
 
     
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://wulc.me/2016/02/18/Maven%E7%9A%84%E5%AE%89%E8%A3%85%E3%80%81%E9%85%8D%E7%BD%AE%E5%8F%8A%E4%BD%BF%E7%94%A8%E5%85%A5%E9%97%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/files/profile.jpg">
       <meta itemprop="name" content="良超">
-      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="吴良超的学习笔记">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Maven的安装、配置及使用入门 | 吴良超的学习笔记">
+      <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           Maven的安装、配置及使用入门
         </h1>
 
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2016-02-18 22:06:31" itemprop="dateCreated datePublished" datetime="2016-02-18T22:06:31+08:00">2016-02-18</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/tags/%E8%BD%AC%E8%BD%BD/" itemprop="url" rel="index"><span itemprop="name">转载</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/tags/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/tags/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/" itemprop="url" rel="index"><span itemprop="name">工具使用</span></a>
-                </span>
-            </span>
+      <time title="创建时间：2016-02-18 22:06:31" itemprop="dateCreated datePublished" datetime="2016-02-18T22:06:31+08:00">2016-02-18</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/" itemprop="url" rel="index"><span itemprop="name">工具使用</span></a>
+        </span>
+    </span>
 
-          
+  
+</div>
 
         </div>
       </header>
@@ -250,8 +276,6 @@
     
     
     <div class="post-body" itemprop="articleBody">
-
-      
         <p>这是一篇关于maven入门的相当好的文章，文章有点长，但是非常值得看。<a
 target="_blank" rel="noopener" href="http://www.cnblogs.com/dcba1112/archive/2011/05/01/2033805.html">原文链接</a></p>
 <h2 id="maven简介">Maven简介</h2>
@@ -337,8 +361,7 @@ target compile; target jar; ……
 <pre><code>C:\Users\Juven Xu&gt;echo %JAVA_HOME%
 C:\Users\Juven Xu&gt;java -version</code></pre>
 <p>结果如下图所示：</p>
-<p><img
-src="https://wulc.me/imgs/e4f32577-29ad-35a7-b384-753eb4df2e37.jpg" /></p>
+<p><img data-src="https://wulc.me/imgs/e4f32577-29ad-35a7-b384-753eb4df2e37.jpg" /></p>
 <p>上述命令首先检查环境变量JAVA_HOME是否指向了正确的JDK目录，接着尝试运行java命令。如果Windows无法执行java命令，或者无法找到JAVA_HOME环境变量。你就需要检查Java是否安装了，或者环境变量是否设置正确。关于环境变量的设置，请参考2.1.3节。</p>
 <h4 id="下载maven">下载Maven</h4>
 <p>请访问Maven的下载页面：http://maven.apache.org/download.html，其中包含针对不同平台的各种版本的Maven下载文件。对于首次接触Maven的读者来说，推荐使用Maven3.0，因此下载apache-maven-3.0-bin.zip。当然，如果你对Maven的源代码感兴趣并想自己构建Maven，还可以下载apache-maven-3.0
@@ -441,19 +464,16 @@ Zyl创立的Sonatype公司建立了m2eclipse项目，这是Eclipse下的一款�
 New Software…，接着你会看到一个Install对话框，点击Work
 with:字段边上的Add按钮，你会得到一个新的Add
 Repository对话框，在Name字段中输入m2e，Location字段中输入http://m2eclipse.sonatype.org/sites/m2e，然后点击OK。Eclipse会下载m2eclipse安装站点上的资源信息。等待资源载入完成之后，我们再将其全部展开，就能看到下图所示的界面：</p>
-<p><img
-src="https://wulc.me/imgs/1ae54751-ad82-3066-ba5a-e8818cfc504d.jpg" /></p>
+<p><img data-src="https://wulc.me/imgs/1ae54751-ad82-3066-ba5a-e8818cfc504d.jpg" /></p>
 <p>如图显示了m2eclipse的核心模块Maven Integration for Eclipse
 (Required)，选择后点击Next
 &gt;，Eclipse会自动计算模块间依赖，然后给出一个将被安装的模块列表，确认无误后，继续点击Next
 &gt;，这时我们会看到许可证信息，m2eclipse使用的开源许可证是Eclipse
 Public License v1.0，选择I accept the terms of the license
 agreements，然后点击Finish，接着就耐心等待Eclipse下载安装这些模块，如下图所示：</p>
-<p><img
-src="https://wulc.me/imgs/d36bea18-262e-35e3-8a44-e3bac9ba225b.jpg" /></p>
+<p><img data-src="https://wulc.me/imgs/d36bea18-262e-35e3-8a44-e3bac9ba225b.jpg" /></p>
 <p>除了核心组件之外，m2eclipse还提供了一组额外组件，主要是为了方便与其它工具如Subversion进行集成，这些组件的安装地址为http://m2eclipse.sonatype.org/sites/m2e-extras。使用前面类似的安装方法，我们可以看到如下图的组件列表：</p>
-<p><img
-src="https://wulc.me/imgs/8c938c76-5859-33ea-aee2-b1f6e3a182ac.jpg" /></p>
+<p><img data-src="https://wulc.me/imgs/8c938c76-5859-33ea-aee2-b1f6e3a182ac.jpg" /></p>
 <p>下面简单解释一下这些组件的用途：</p>
 <p><strong>1.重要的</strong> Maven SCM handler for
 Subclipse(Optional）：Subversion是非常流行的版本管理工具，该模块能够帮助我们直接从Subversion服务器签出Maven项目，不过前提是需要首先安装Subclipse（http://subclipse.tigris.org/）。
@@ -474,11 +494,9 @@ configurators for commonly used maven plugins
 <p>待安装完毕后，重启Eclipse，现在让我们验证一下m2eclipse是否正确安装了。首先，点击菜单栏中的Help，然后选择About
 Eclipse，在弹出的对话框中，点击Installation
 Details按钮，会得到一个对话框，在Installed
-Software标签栏中，检查刚才我们选择的模块是否在这个列表中 <img
-src="https://wulc.me/imgs/c6793b02-251d-3e1f-833c-8ff12d14ba05.jpg" />
+Software标签栏中，检查刚才我们选择的模块是否在这个列表中 <img data-src="https://wulc.me/imgs/c6793b02-251d-3e1f-833c-8ff12d14ba05.jpg" />
 如果一切没问题，我们再检查一下Eclipse现在是否已经支持创建Maven项目，依次点击菜单栏中的File→New→Other，在弹出的对话框中，找到Maven一项，再将其展开，你应该能够看到如下所示的对话框：</p>
-<p><img
-src="https://wulc.me/imgs/897a084a-6965-3d4a-b437-36c3a4ea5c09.jpg" /></p>
+<p><img data-src="https://wulc.me/imgs/897a084a-6965-3d4a-b437-36c3a4ea5c09.jpg" /></p>
 <p>如果一切正常，说明m2eclipse已经正确安装了。</p>
 <p>最后，关于m2eclipse的安装，需要提醒的一点是，你可能会在使用m2eclipse时遇到类似这样的错误：</p>
 <p>09-10-6 上午01时14分49秒: Eclipse is running in a JRE, but a JDK is
@@ -508,8 +526,7 @@ D:\java\jdk1.6.0_07\bin\javaw.exe
 <p>无论是Eclipse还是NetBeans，当我们集成Maven时，都会安装上一个内嵌的Maven，这个内嵌的Maven通常会比较新，但不一定很稳定，而且往往也会和我们在命令行使用的Maven不是同一个版本。这里有会出现两个潜在的问题：首先，较新版本的Maven存在很多不稳定因素，容易造成一些难以理解的问题；其次，除了IDE，我们也经常还会使用命令行的Maven，如果版本不一致，容易造成构建行为的不一致，这是我们所不希望看到的。因此，我们应该在IDE中配置Maven插件时使用与命令行一致的Maven。</p>
 <p>在m2eclipse环境中，点击菜单栏中的Windows，然后选择Preferences，在弹出的对话框中，展开左边的Maven项，选择Installation子项，在右边的面板中，我们能够看到有一个默认的Embedded
 Maven安装被选中了，点击Add…然后选择我们的Maven安装目录M2_HOME，添加完毕之后选择这一个外部的Maven，如下图所示：
-<img
-src="https://wulc.me/imgs/93cb4cf7-4027-397d-9e42-185acb6fc868.jpg" />
+<img data-src="https://wulc.me/imgs/93cb4cf7-4027-397d-9e42-185acb6fc868.jpg" />
 ### 小结</p>
 <p>本章详细介绍了在各种操作系统平台上安装Maven，并对Maven安装目录进行了深入的分析，在命令行的基础上，本章又进一步介绍了Maven与主流IDE
 Eclipse及NetBeans的集成，本章最后还介绍了一些与Maven安装相关的最佳实践。本书下一章会创建一个Hello
@@ -689,12 +706,10 @@ World项目。选择菜单项File，然后选择Import，我们会看到一个Im
 Projects，然后点击Next，就会出现Import
 Projects对话框，在该对话框中点击Browse…选择Hello
 World的根目录（即包含pom.xml文件的那个目录），这时对话框中的Projects:部分就会显示该目录包含的Maven项目，如下图所示：
-<img
-src="https://wulc.me/imgs/9a71aa9f-dc5e-32e1-8d0e-f71de55de5e9.jpg" /></p>
+<img data-src="https://wulc.me/imgs/9a71aa9f-dc5e-32e1-8d0e-f71de55de5e9.jpg" /></p>
 <p>点击Finish之后，m2ecilpse就会将该项目导入到当前的workspace中，导入完成之后，我们就可以在Package
 Explorer视图中看到如下图的项目结构：</p>
-<p><img
-src="https://wulc.me/imgs/dc2c1bfc-ce95-3395-a5d7-16bdf5894101.jpg" /></p>
+<p><img data-src="https://wulc.me/imgs/dc2c1bfc-ce95-3395-a5d7-16bdf5894101.jpg" /></p>
 <p>我们看到主代码目录src/main/java和测试代码目录src/test/java成了Eclipse中的资源目录，包和类的结构也十分清晰，当然pom.xml永远在项目的根目录下，而从这个视图中我们甚至还能看到项目的依赖junit-4.7.jar，其实际的位置指向了Maven本地仓库（这里我自定义了Maven本地仓库地址为D:，后续章节会介绍如何自定义本地仓库位置）。</p>
 <h4 id="创建maven项目">创建Maven项目</h4>
 <p>创建一个Maven项目也十分简单，选择菜单项File -&gt; New -&gt;
@@ -704,16 +719,14 @@ Project对话框中，我们使用默认的选项（不要选择Create a simple
 project选项，那样我们就能使用Maven Archetype），点击Next
 &gt;，此时m2eclipse会提示我们选择一个Archetype，我们选择maven-archetype-quickstart，再点击Next
 &gt;。由于m2eclipse实际上是在使用maven-archetype-plugin插件创建项目，因此这个步骤与上一节我们使用archetype创建项目骨架类似，输入groupId,、artifactId、version、package（暂时我们不考虑Properties），如下图所示：
-<img
-src="https://wulc.me/imgs/bb255ca9-2341-37fb-aa9c-de619c2bf80a.jpg" />
+<img data-src="https://wulc.me/imgs/bb255ca9-2341-37fb-aa9c-de619c2bf80a.jpg" />
 注意，为了不和前面已导入的Hello
 World项目产生冲突和混淆，我们使用不同的artifactId和package。OK，点击Finish，Maven项目就创建完成了，其结构与前一个已导入的Hello
 World项目基本一致。</p>
 <h4 id="运行mvn命令">运行mvn命令</h4>
 <p>我们需要在命令行输入如mvn clean
 install之类的命令来执行maven构建，m2eclipse中也有对应的功能，在Maven项目或者pom.xml上右击，再选择Run
-As，就能看到如下的常见Maven命令，如下图所示： <img
-src="https://wulc.me/imgs/09f3ec72-eb31-3f25-97af-545213fe4793.jpg" />
+As，就能看到如下的常见Maven命令，如下图所示： <img data-src="https://wulc.me/imgs/09f3ec72-eb31-3f25-97af-545213fe4793.jpg" />
 选择想要执行的Maven命令就能执行相应的构建，同时我们也能在Eclipse的console中看到构建输出。这里常见的一个问题是，默认选项中没有我们想要执行的Maven命令怎么办？比如，默认带有mvn
 test，但我们想执行mvn clean test，很简单，选择Maven buid…
 以自定义Maven运行命令，在弹出对话框中的Goals一项中输入我们想要执行的命令，如clean
@@ -727,272 +740,96 @@ M快速执行Maven构建的时候，上次的配置直接就能在历史记录�
     
     
 
-      <footer class="post-footer">
+    <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/%E8%BD%AC%E8%BD%BD/" rel="tag"># 转载</a>
-              <a href="/tags/Java/" rel="tag"># Java</a>
-              <a href="/tags/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/" rel="tag"># 工具使用</a>
+              <a href="/tags/%E8%BD%AC%E8%BD%BD/" rel="tag"><i class="fa fa-tag"></i> 转载</a>
+              <a href="/tags/Java/" rel="tag"><i class="fa fa-tag"></i> Java</a>
+              <a href="/tags/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/" rel="tag"><i class="fa fa-tag"></i> 工具使用</a>
           </div>
 
         
 
-
-        
-    <div class="post-nav">
-      <div class="post-nav-item">
-    <a href="/2016/02/14/python%E4%B8%AD%E7%9A%84%E7%B1%BB%E5%B1%9E%E6%80%A7%E5%92%8C%E5%AE%9E%E4%BE%8B%E5%B1%9E%E6%80%A7/" rel="prev" title="python中的类属性和实例属性">
-      <i class="fa fa-chevron-left"></i> python中的类属性和实例属性
-    </a></div>
-      <div class="post-nav-item">
-    <a href="/2016/02/20/Hadoop2-6-0%E5%AE%89%E8%A3%85%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/" rel="next" title="Hadoop2.6.0安装注意事项">
-      Hadoop2.6.0安装注意事项 <i class="fa fa-chevron-right"></i>
-    </a></div>
-    </div>
-      </footer>
-    
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2016/02/14/python%E4%B8%AD%E7%9A%84%E7%B1%BB%E5%B1%9E%E6%80%A7%E5%92%8C%E5%AE%9E%E4%BE%8B%E5%B1%9E%E6%80%A7/" rel="prev" title="python中的类属性和实例属性">
+                  <i class="fa fa-chevron-left"></i> python中的类属性和实例属性
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2016/02/20/Hadoop2-6-0%E5%AE%89%E8%A3%85%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/" rel="next" title="Hadoop2.6.0安装注意事项">
+                  Hadoop2.6.0安装注意事项 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
   </article>
-  
-  
-  
-
-
-
-          </div>
-          
-
-<script>
-  window.addEventListener('tabs:register', () => {
-    let { activeClass } = CONFIG.comments;
-    if (CONFIG.comments.storage) {
-      activeClass = localStorage.getItem('comments_active') || activeClass;
-    }
-    if (activeClass) {
-      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
-      if (activeTab) {
-        activeTab.click();
-      }
-    }
-  });
-  if (CONFIG.comments.storage) {
-    window.addEventListener('tabs:click', event => {
-      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
-      let commentClass = event.target.classList[1];
-      localStorage.setItem('comments_active', commentClass);
-    });
-  }
-</script>
-
-        </div>
-          
-  
-  <div class="toggle sidebar-toggle">
-    <span class="toggle-line toggle-line-first"></span>
-    <span class="toggle-line toggle-line-middle"></span>
-    <span class="toggle-line toggle-line-last"></span>
-  </div>
-
-  <aside class="sidebar">
-    <div class="sidebar-inner">
-
-      <ul class="sidebar-nav motion-element">
-        <li class="sidebar-nav-toc">
-          文章目录
-        </li>
-        <li class="sidebar-nav-overview">
-          站点概览
-        </li>
-      </ul>
-
-      <!--noindex-->
-      <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#maven%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">Maven简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%95%E4%B8%BAmaven"><span class="nav-number">1.1.</span> <span class="nav-text">何为Maven</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#maven%E6%98%AF%E4%BC%98%E7%A7%80%E7%9A%84%E6%9E%84%E5%BB%BA%E5%B7%A5%E5%85%B7"><span class="nav-number">1.1.1.</span> <span class="nav-text">Maven是优秀的构建工具</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#maven%E4%B8%8D%E4%BB%85%E4%BB%85%E6%98%AF%E6%9E%84%E5%BB%BA%E5%B7%A5%E5%85%B7"><span class="nav-number">1.1.2.</span> <span class="nav-text">Maven不仅仅是构建工具</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81maven"><span class="nav-number">1.2.</span> <span class="nav-text">为什么需要Maven</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BB%84%E8%A3%85pc%E5%92%8C%E5%93%81%E7%89%8Cpc"><span class="nav-number">1.2.1.</span> <span class="nav-text">组装PC和品牌PC</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ide%E4%B8%8D%E6%98%AF%E4%B8%87%E8%83%BD%E7%9A%84"><span class="nav-number">1.2.2.</span> <span class="nav-text">IDE不是万能的</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#make"><span class="nav-number">1.2.3.</span> <span class="nav-text">Make</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ant"><span class="nav-number">1.2.4.</span> <span class="nav-text">Ant</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8D%E9%87%8D%E5%A4%8D%E5%8F%91%E6%98%8E%E8%BD%AE%E5%AD%90"><span class="nav-number">1.2.5.</span> <span class="nav-text">不重复发明轮子</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#maven%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AE"><span class="nav-number">2.</span> <span class="nav-text">Maven的安装和配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%A8windows%E4%B8%8A%E5%AE%89%E8%A3%85maven"><span class="nav-number">2.1.</span> <span class="nav-text">在Windows上安装Maven</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A3%80%E6%9F%A5jdk%E5%AE%89%E8%A3%85"><span class="nav-number">2.1.1.</span> <span class="nav-text">检查JDK安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BDmaven"><span class="nav-number">2.1.2.</span> <span class="nav-text">下载Maven</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%AC%E5%9C%B0%E5%AE%89%E8%A3%85"><span class="nav-number">2.1.3.</span> <span class="nav-text">本地安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%87%E7%BA%A7maven"><span class="nav-number">2.1.4.</span> <span class="nav-text">升级Maven</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%A8%E5%9F%BA%E4%BA%8Eunix%E7%9A%84%E7%B3%BB%E7%BB%9F%E4%B8%8A%E5%AE%89%E8%A3%85maven"><span class="nav-number">2.2.</span> <span class="nav-text">在基于Unix的系统上安装Maven</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD%E5%92%8C%E5%AE%89%E8%A3%85"><span class="nav-number">2.2.1.</span> <span class="nav-text">下载和安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%87%E7%BA%A7maven-1"><span class="nav-number">2.2.2.</span> <span class="nav-text">升级Maven</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E7%9B%AE%E5%BD%95%E5%88%86%E6%9E%90"><span class="nav-number">2.3.</span> <span class="nav-text">安装目录分析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#m2_home"><span class="nav-number">2.3.1.</span> <span class="nav-text">M2_HOME</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#m2"><span class="nav-number">2.3.2.</span> <span class="nav-text">~&#x2F;.m2</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AEhttp%E4%BB%A3%E7%90%86"><span class="nav-number">2.4.</span> <span class="nav-text">设置HTTP代理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85m2eclipse"><span class="nav-number">2.5.</span> <span class="nav-text">安装m2eclipse</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#maven%E5%AE%89%E8%A3%85%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="nav-number">2.6.</span> <span class="nav-text">Maven安装最佳实践</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AEmaven_opts%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="nav-number">2.6.1.</span> <span class="nav-text">设置MAVEN_OPTS环境变量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E7%94%A8%E6%88%B7%E8%8C%83%E5%9B%B4settings.xml"><span class="nav-number">2.6.2.</span> <span class="nav-text">配置用户范围settings.xml</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8D%E8%A6%81%E4%BD%BF%E7%94%A8ide%E5%86%85%E5%B5%8C%E7%9A%84maven"><span class="nav-number">2.6.3.</span> <span class="nav-text">不要使用IDE内嵌的Maven</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#maven%E4%BD%BF%E7%94%A8%E5%85%A5%E9%97%A8"><span class="nav-number">3.</span> <span class="nav-text">Maven使用入门</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E5%86%99pom.xml%E6%96%87%E4%BB%B6"><span class="nav-number">3.1.</span> <span class="nav-text">编写pom.xml文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E5%86%99%E4%B8%BB%E4%BB%A3%E7%A0%81"><span class="nav-number">3.2.</span> <span class="nav-text">编写主代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E5%86%99%E6%B5%8B%E8%AF%95%E4%BB%A3%E7%A0%81"><span class="nav-number">3.3.</span> <span class="nav-text">编写测试代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%93%E5%8C%85%E5%92%8C%E8%BF%90%E8%A1%8C"><span class="nav-number">3.4.</span> <span class="nav-text">打包和运行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8archetype%E7%94%9F%E6%88%90%E9%A1%B9%E7%9B%AE%E9%AA%A8%E6%9E%B6"><span class="nav-number">3.5.</span> <span class="nav-text">使用Archetype生成项目骨架</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#m2eclipse%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8"><span class="nav-number">3.6.</span> <span class="nav-text">m2eclipse简单使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%BC%E5%85%A5maven%E9%A1%B9%E7%9B%AE"><span class="nav-number">3.6.1.</span> <span class="nav-text">导入Maven项目</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9B%E5%BB%BAmaven%E9%A1%B9%E7%9B%AE"><span class="nav-number">3.6.2.</span> <span class="nav-text">创建Maven项目</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%90%E8%A1%8Cmvn%E5%91%BD%E4%BB%A4"><span class="nav-number">3.6.3.</span> <span class="nav-text">运行mvn命令</span></a></li></ol></li></ol></li></ol></div>
-      </div>
-      <!--/noindex-->
-
-      <div class="site-overview-wrap sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <img class="site-author-image" itemprop="image" alt="良超"
-      src="/files/profile.jpg">
-  <p class="site-author-name" itemprop="name">良超</p>
-  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
 </div>
-<div class="site-state-wrap motion-element">
-  <nav class="site-state">
-      <div class="site-state-item site-state-posts">
-          <a href="/archives/">
-        
-          <span class="site-state-item-count">248</span>
-          <span class="site-state-item-name">日志</span>
-        </a>
-      </div>
-      <div class="site-state-item site-state-categories">
-        <span class="site-state-item-count">30</span>
-        <span class="site-state-item-name">分类</span>
-      </div>
-      <div class="site-state-item site-state-tags">
-            <a href="/tags/">
-          
-        <span class="site-state-item-count">45</span>
-        <span class="site-state-item-name">标签</span></a>
-      </div>
-  </nav>
+
+
+
+
+
+
 </div>
-  <div class="links-of-author motion-element">
-      <span class="links-of-author-item">
-        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://www.linkedin.com/in/wuliangchao/" title="LinkedIn → https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;wuliangchao&#x2F;" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i>LinkedIn</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="/atom.xml" title="RSS → &#x2F;atom.xml"><i class="fa fa-rss fa-fw"></i>RSS</a>
-      </span>
-  </div>
+  </main>
 
+  <footer class="footer">
+    <div class="footer-inner">
 
-
-      </div>
-
-    </div>
-  </aside>
-  <div id="sidebar-dimmer"></div>
-
-
-      </div>
-    </main>
-
-    <footer class="footer">
-      <div class="footer-inner">
-        
-
-        
 
 <div class="copyright">
-  
   &copy; 2015 – 
   <span itemprop="copyrightYear">2023</span>
- 
+  <span class="with-love">
+    <i class="fa fa-pen"></i>
+  </span>
   <span class="author" itemprop="copyrightHolder">良超</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
   </div>
 
-        
+    </div>
+  </footer>
 
-
-
-
-
-
-
-
-      </div>
-    </footer>
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
-  
-  <script src="/lib/anime.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
-  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
-  <script src="/lib/velocity/velocity.min.js"></script>
-  <script src="/lib/velocity/velocity.ui.min.js"></script>
-
-<script src="/js/utils.js"></script>
-
-<script src="/js/motion.js"></script>
-
-
-<script src="/js/schemes/pisces.js"></script>
-
-
-<script src="/js/next-boot.js"></script>
-
-
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
 
 
   
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
 
 
+
+  <script src="/js/third-party/fancybox.js"></script>
 
 
   
-<script src="/js/local-search.js"></script>
-
-
-
-
-
-
-
-
-
 
 
 
 
   
 
-  
-      
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
 
-<script>
-  if (typeof MathJax === 'undefined') {
-    window.MathJax = {
-      loader: {
-        source: {
-          '[tex]/amsCd': '[tex]/amscd',
-          '[tex]/AMScd': '[tex]/amscd'
-        }
-      },
-      tex: {
-        inlineMath: {'[+]': [['$', '$']]},
-        tags: 'ams'
-      },
-      options: {
-        renderActions: {
-          findScript: [10, doc => {
-            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
-              const display = !!node.type.match(/; *mode=display/);
-              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
-              const text = document.createTextNode('');
-              node.parentNode.replaceChild(text, node);
-              math.start = {node: text, delim: '', n: 0};
-              math.end = {node: text, delim: '', n: 0};
-              doc.math.push(math);
-            });
-          }, '', false],
-          insertedScript: [200, () => {
-            document.querySelectorAll('mjx-container').forEach(node => {
-              let target = node.parentNode;
-              if (target.nodeName.toLowerCase() === 'li') {
-                target.parentNode.classList.add('has-jax');
-              }
-            });
-          }, '', false]
-        }
-      }
-    };
-    (function () {
-      var script = document.createElement('script');
-      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
-      script.defer = true;
-      document.head.appendChild(script);
-    })();
-  } else {
-    MathJax.startup.document.state(0);
-    MathJax.texReset();
-    MathJax.typeset();
-  }
-</script>
 
-    
-
-  
 
 </body>
 </html>
