@@ -60,7 +60,7 @@
 <meta property="og:image" content="https://wulc.me/imgs/image_1b5mp3qbeafq14ma1865obmk7e34.png">
 <meta property="og:image" content="https://wulc.me/imgs/image_1b5mp5eok1thd14gl39epfk1k763h.png">
 <meta property="article:published_time" content="2017-02-01T12:08:55.000Z">
-<meta property="article:modified_time" content="2023-04-30T05:12:49.081Z">
+<meta property="article:modified_time" content="2023-05-09T14:59:03.750Z">
 <meta property="article:author" content="良超">
 <meta property="article:tag" content="数学">
 <meta name="twitter:card" content="summary">
@@ -300,11 +300,10 @@ target="_blank" rel="noopener" href="https://book.douban.com/subject/2971114/">�
 <p>在讲述具体的优化算法前，先介绍最优化中常用的概念。</p>
 <p>最优化的基本模型为</p>
 <p><span class="math display">\[
-min\;f(x)\\\
-s.t\quad c(x) \ge 0\\\
+min\;f(x)\\
+s.t\quad c(x) \ge 0\\
 \]</span></p>
-<p>其中 <span class="math inline">\(x =
-(x\_1,x\_2,x\_3,...x\_n)\)</span>
+<p>其中 <span class="math inline">\(x = (x_1,x_2,x_3,...x_n)\)</span>
 是一个变量组成的向量，也就是包含了若干变量，<span
 class="math inline">\(c(x)\)</span>则是对各个变量约束的等式和不等式。</p>
 <p>有了基本模型，下面介绍在最优化中的常用概念。</p>
@@ -319,8 +318,8 @@ class="math inline">\(c(x)\)</span>中包含的所有的等式和不等式</li>
 <li>最优解：能够使目标函数达到最大或最小的可行解</li>
 <li>凸集：集合的一种，用于描述可行域，满足以下性质 &gt;令 <span
 class="math inline">\(K\)</span> 为集合，<span
-class="math inline">\(\forall x\_1,x\_2 \in K\)</span>,若 <span
-class="math inline">\(\alpha x\_1 + (1-\alpha)x\_2 \in
+class="math inline">\(\forall x_1,x_2 \in K\)</span>,若 <span
+class="math inline">\(\alpha x_1 + (1-\alpha)x_2 \in
 K\)</span>,其中<span class="math inline">\(\alpha \in [0,1])\)</span>,则
 <span class="math inline">\(K\)</span> 为凸集</li>
 </ul>
@@ -363,10 +362,10 @@ class="math inline">\(A\)</span>中取大小为<span class="math inline">\(m
 × m\)</span>的子矩阵<span class="math inline">\(B\)</span>，若<span
 class="math inline">\(Rank(B) = m\)</span>(即B为满秩矩阵)，则称<span
 class="math inline">\(B\)</span>为线性规划问题的一个<strong>基矩阵</strong>。取<span
-class="math inline">\(B = (A\_1,A\_2,···,A\_m)\)</span> ，其中<span
-class="math inline">\(A\_j = (a\_{1j},a\_{2j},···,a\_{mj})^T\)</span>
+class="math inline">\(B = (A_1,A_2,···,A_m)\)</span> ，其中<span
+class="math inline">\(A_j = (a_{1j},a_{2j},···,a_{mj})^T\)</span>
 则称<span
-class="math inline">\(x\_1,x\_2,···,x\_m\)</span>为<strong>基变量</strong>，其它为<strong>非基变量</strong>。如下所示</p>
+class="math inline">\(x_1,x_2,···,x_m\)</span>为<strong>基变量</strong>，其它为<strong>非基变量</strong>。如下所示</p>
 <figure>
 <img data-src="https://wulc.me/imgs/image_1b5fmv3ah1td1jqoafc1h3i1pnh6p.png"
 alt="基变量和非基变量" />
@@ -374,7 +373,7 @@ alt="基变量和非基变量" />
 </figure>
 <p>令所有的非基变量为0，则得到的解称为<strong>基本解</strong>，可知基本解的个数
 <span class="math inline">\(\le
-C\_n^m\)</span>。但是基本解不一定满足约束条件，满足约束条件的基本解称为<strong>基本可行解</strong>，而基本可行解对应的基变量称为<strong>可行基</strong>。</p>
+C_n^m\)</span>。但是基本解不一定满足约束条件，满足约束条件的基本解称为<strong>基本可行解</strong>，而基本可行解对应的基变量称为<strong>可行基</strong>。</p>
 <p>基本解，基本可行解，可行解，非可行解的关系如下图所示</p>
 <figure>
 <img data-src="https://wulc.me/imgs/image_1b5fn6nh4pkqkcmble1e9lpga76.png"
@@ -408,34 +407,34 @@ alt="单纯形表" />
 <figcaption aria-hidden="true">单纯形表</figcaption>
 </figure>
 <p>表中的基指的是基变量，最后一行 <span
-class="math inline">\(\sigma\_j\)</span>
+class="math inline">\(\sigma_j\)</span>
 是检验数，用于检验当前的基本可行解是否为最优解。</p>
 <p>对应于单纯形表，求解步骤如下
 （1）<strong>确定初始基本可行解</strong>。
 也就是列出如上图所示的初始的单纯形表，将线性规划化为标准型后,通过矩阵的初等行变换,可以使系数矩阵A中包含一个单位阵，而这个单位阵对应的基变量即可作为初始基本可行解。
 （2）<strong>判别当前基本可行解是否是最优解</strong>。
-通过最后一行的检验数 <span class="math inline">\(\sigma\_j\)</span>
-判断，假如所有非基变量的检验数 <span class="math inline">\(\sigma\_j \ge
+通过最后一行的检验数 <span class="math inline">\(\sigma_j\)</span>
+判断，假如所有非基变量的检验数 <span class="math inline">\(\sigma_j \ge
 0\)</span>，则基变量为最优解，计算结束；假如存在<span
-class="math inline">\(\sigma\_k \lt 0\)</span>,且<span
-class="math inline">\(A\_k \le
+class="math inline">\(\sigma_k \lt 0\)</span>,且<span
+class="math inline">\(A_k \le
 0\)</span>,则问题为无界解，计算结束；否则转第（3）步
 （3）<strong>从一个基本可行解转换到相邻且改善了的基本可行解</strong>。
 这一步要确定一个入基变量和一个出基变量，入基变量就是从非基变量中选择的一个变量，然后将其变为基变量，出基变量就是从基变量中选择一个变量，然后将其变为非基变量。实际上就是将这两个变量的位置(基或非基)互换，对应于从可行域的一个顶点走到另外一个顶点。</p>
 <p><strong>入基变量的确定</strong>:从所有的检验数中找出最小的 <span
-class="math inline">\(\sigma\_k\)</span>,对应的<span
-class="math inline">\(x\_k\)</span>为入基变量。
+class="math inline">\(\sigma_k\)</span>,对应的<span
+class="math inline">\(x_k\)</span>为入基变量。
 <strong>出基变量的确定</strong>：通过下式确定的 <span
 class="math inline">\(l\)</span>所对应的的 <span
-class="math inline">\(x\_l\)</span>作为出基变量</p>
-<p><span class="math display">\[\min\_{1 \le i \le m} \lbrace
-\frac{b\_i}{a\_{ik}} | a\_{ik} &gt; 0 \rbrace\]</span></p>
-<p>上式中的 <span class="math inline">\(a\_{ik}\)</span>
+class="math inline">\(x_l\)</span>作为出基变量</p>
+<p><span class="math display">\[\min_{1 \le i \le m} \lbrace
+\frac{b_i}{a_{ik}} | a_{ik} &gt; 0 \rbrace\]</span></p>
+<p>上式中的 <span class="math inline">\(a_{ik}\)</span>
 为入基变量对应系数举证 A 的第k列</p>
-<p>找到入基变量<span class="math inline">\(x\_k\)</span>和出基变量<span
-class="math inline">\(x\_l\)</span>后，用入基变量替换出基变量，通过初等行变换使得<span
-class="math inline">\(x\_k\)</span>对应系数矩阵A的一列成为原单位矩阵中<span
-class="math inline">\(x\_l\)</span>对应的那列，其他的值做相应的计算(见下图)，画出的新的单纯形表如下所示：</p>
+<p>找到入基变量<span class="math inline">\(x_k\)</span>和出基变量<span
+class="math inline">\(x_l\)</span>后，用入基变量替换出基变量，通过初等行变换使得<span
+class="math inline">\(x_k\)</span>对应系数矩阵A的一列成为原单位矩阵中<span
+class="math inline">\(x_l\)</span>对应的那列，其他的值做相应的计算(见下图)，画出的新的单纯形表如下所示：</p>
 <figure>
 <img data-src="https://wulc.me/imgs/image_1b5fp6uvg1p191fa812h388tjjm1g.png"
 alt="新的单纯形表" />
@@ -450,9 +449,9 @@ Point Methods and Linear Programming</a>。</p>
 <p>在求解一个规划问题（不限于线性规划）的时候，我们常常需要知道这个问题<strong>有没有可行解</strong>（有时候约束条件很复杂，不要说最优解，找到可行解都很难），或者是估计一下<strong>目前的解离最优解还有多远</strong>（大型问题多用迭代解法，如果能大致估计当前的解的质量，就对算法什么时候运行结束有一个大致的把握，如果得到了可接受的近似解也可以提前停止），以及判断原问题的最优解是否无界（万一出现这种情况迭代就停不下来了）。</p>
 <p>而对偶问题就是回答这些问题的利器：<strong>弱对偶定理给原问题的最优解定了一个界，强对偶定理给出了原问题最优解的一个判定条件。</strong>同时，还有很多别的优良性质：例如可以化难为易（把难以求解的约束条件扔到目标函数的位置上去），如果问题的形式合适(变量少，约束多)还可以通过把约束变量和对偶变量互换来把大规模问题转换成小规模问题。实际上，很多凸优化问题都是通过解对偶问题来求解的，线性规划只是其中一个特例而已。</p>
 <p>一般地，对于原问题 <span class="math display">\[min\;z =  c^Tx \quad
-\\\
+\\
 s.t.\,Ax \ge b(x \ge 0)\tag{1}\]</span></p>
-<p>其对偶问题为 <span class="math display">\[max\;w =  b^Ty \quad \\\
+<p>其对偶问题为 <span class="math display">\[max\;w =  b^Ty \quad \\
 s.t.\,A^Ty \le c(y \ge 0)\tag{2}\]</span></p>
 <p>根据原问题写出其对偶问题时要注意<strong>约束条件和变量的符号变化情况</strong>，其变换规则如下
 1. max 问题第 i 个约束取“≥”，则min问题第 i 个变量 ≤ 0 2. min 问题第 i
@@ -464,7 +463,7 @@ s.t.\,A^Ty \le c(y \ge 0)\tag{2}\]</span></p>
 <p>以上规则是具体的变换规则，实际上其变换规律就是<strong>假如原问题不符合以上的给出的(1)或(2)的标准形状，那么原问题的第
 i 个不符合要求的约束，对应的对偶问题的第i个变量要 ≤ 0
 ；同样假如原问题的第 i 个变量不符合要求(就是 <span
-class="math inline">\(x\_i\)</span>≤
+class="math inline">\(x_i\)</span>≤
 0)，对应的对偶问题的第i个约束要改变符号。</strong></p>
 <p>对偶定理包含了一系列的定理，其中主要有弱对偶定理，强对偶定理，最优性定理，互补松弛定理。通过这些定理可以将原来难以解决的原问题通过引入对偶理论从而得以解决，各定理的具体内容如下:</p>
 <p><strong>弱对偶定理</strong> &gt;max
@@ -493,20 +492,19 @@ class="math inline">\(\overline y^T(A\overline x-b)=0\)</span></p>
 <h3 id="灵敏度分析">灵敏度分析</h3>
 <p>在许多实际问题中，数据模型的数据未知，需要根据实际情况进行测量、估计和预测，因此这些<strong>数据不是十分精确，数据的略微的变化可能会引起问题解的显著变化。所谓灵敏度分析就是研究输入数据的扰动对LP最优解的影响</strong>，或者说是LP最优解对参数变化、约束条件增减、决策变量增减的Robust(稳健性)。</p>
 <p>灵敏度分析主要就是考虑问题</p>
-<p><span class="math display">\[min\;z =  c^Tx \quad \\\
+<p><span class="math display">\[min\;z =  c^Tx \quad \\
 s.t.\,Ax \ge b(x \ge 0)\tag{1}\]</span></p>
 <p>中，参数 c,b,A 的变化是否会引起最优解的变化。</p>
 <p><span class="math inline">\(c\)</span> 的变化可分为两种：<span
 class="math inline">\(c\)</span>为非基变量的价值系数和c为基变量的价值系数
-1.非基变量价值系数 <span class="math inline">\(c\_k\)</span>的变化 假设
-<span class="math inline">\(\overline{c\_k} = c\_k + \Delta
-c\_k\)</span>, 则其在单纯形法中的检验数变为$ = _k + c_k <span
+1.非基变量价值系数 <span class="math inline">\(c_k\)</span>的变化 假设
+<span class="math inline">\(\overline{c_k} = c_k + \Delta c_k\)</span>,
+则其在单纯形法中的检验数变为$ = _k + c_k <span
 class="math inline">\(,只需要让\)</span> $ 即 $_k -c_k
 $即可保证最优解不变</p>
-<p>2.基变量价值系数 <span class="math inline">\(c\_b\)</span>的变化 假设
-<span class="math inline">\(\overline{c\_b} = c\_b + \Delta
-c\_b\)</span>, 则其在单纯形法中的检验数变为$ = _b -
-(0,0,0,..c_b,...0,0,0)B^{-1}N <span
+<p>2.基变量价值系数 <span class="math inline">\(c_b\)</span>的变化 假设
+<span class="math inline">\(\overline{c_b} = c_b + \Delta c_b\)</span>,
+则其在单纯形法中的检验数变为$ = _b - (0,0,0,..c_b,...0,0,0)B^{-1}N <span
 class="math inline">\(,其中\)</span>(0,0,0,..c_b,...0,0,0)<span
 class="math inline">\(为基变量的价值系数的变化量组成的向量，\)</span>B^{-1}N
 <span
@@ -516,21 +514,20 @@ $ 即可保证最优解不变.</p>
 B^{-1}(b+\Delta b) \ge 0\)</span>,否则需要将<span
 class="math inline">\(\overline{b}\)</span>
 作为新的b的值代入到原来的单纯形表中，让后通过<strong>对偶单纯形法</strong>进行求解。对偶单纯形法的步骤与原始单纯形法的步骤非常相似，只是选择出基变量和入基变量的方法不同。出基变量选择为
-<span class="math inline">\(b\_k = min\;\lbrace
-b\_i,i=1,2,..m\rbrace\)</span>所对应的 <span
-class="math inline">\(x\_k\)</span>,入基变量选择为下面公式对应的<span
-class="math inline">\(x\_l\)</span>,</p>
-<p><span class="math display">\[\frac{\sigma\_l}{a\_{kl}} =
-max\;\[\frac{\sigma\_j}{a\_{kj}}|a\_{kj} \lt 0,j=1,2,...n\]\]</span></p>
+<span class="math inline">\(b_k = min\;\lbrace
+b_i,i=1,2,..m\rbrace\)</span>所对应的 <span
+class="math inline">\(x_k\)</span>,入基变量选择为下面公式对应的<span
+class="math inline">\(x_l\)</span>,</p>
+<p><span class="math display">\[\frac{\sigma_l}{a_{kl}} =
+max\;\[\frac{\sigma_j}{a_{kj}}|a_{kj} \lt 0,j=1,2,...n\]\]</span></p>
 <h2 id="非线性规划">非线性规划</h2>
 <h3 id="数学模型与基本概念-1">数学模型与基本概念</h3>
 <p>目标函数或约束函数至少有一个不是决策变量的线性函数。即</p>
 <p><span class="math display">\[
-min f(x)\\\
-s.t\quad h\_i(x) = 0(i=1,2,...,m)\\\
-\quad\quad g\_j(x) \ge 0(j=1,2,...,l)\\\
-\]</span> 其中，<span
-class="math inline">\(f(x),h\_i(x),g\_j(x)\)</span>
+min f(x)\\
+s.t\quad h_i(x) = 0(i=1,2,...,m)\\
+\quad\quad g_j(x) \ge 0(j=1,2,...,l)\\
+\]</span> 其中，<span class="math inline">\(f(x),h_i(x),g_j(x)\)</span>
 中至少有一个是非线性函数。</p>
 <h4 id="梯度与海塞矩阵">梯度与海塞矩阵</h4>
 <p>梯度和海塞矩阵是在非线性规划中用得较多的概念，其定义如下：</p>
@@ -541,13 +538,13 @@ class="math inline">\(f (x)\)</span> 对 <span
 class="math inline">\(x\)</span>
 的偏导数为元素的n维<strong>向量</strong>,如下所示<span
 class="math display">\[\nabla f(x) = (\frac{\partial f(x)}{\partial
-x\_1},\frac{\partial f(x)}{\partial x\_2},....,\frac{\partial
+x_1},\frac{\partial f(x)}{\partial x_2},....,\frac{\partial
 f(x)}{\partial
-x\_n})\]</span>而在某一点的梯度就是将这一点的值代入到上式中，如在点<span
-class="math inline">\(x\_0\)</span>上的梯度为<span
-class="math display">\[\nabla f(x\_0) = (\frac{\partial
-f(x\_0)}{\partial x\_1},\frac{\partial f(x\_0)}{\partial
-x\_2},....,\frac{\partial f(x\_0)}{\partial x\_n})\]</span></p>
+x_n})\]</span>而在某一点的梯度就是将这一点的值代入到上式中，如在点<span
+class="math inline">\(x_0\)</span>上的梯度为<span
+class="math display">\[\nabla f(x_0) = (\frac{\partial f(x_0)}{\partial
+x_1},\frac{\partial f(x_0)}{\partial x_2},....,\frac{\partial
+f(x_0)}{\partial x_n})\]</span></p>
 <p>对于一元函数，其梯度就是其一阶导数。</p>
 <p>对于任何函数<span class="math inline">\(f(x)\)</span>，假如<span
 class="math inline">\(\overline x\)</span>是<span
@@ -560,16 +557,16 @@ class="math inline">\(\nabla f(\overline x) =0\)</span></p>
 <p><span class="math display">\[
 \nabla^2 f(x) =
 \begin{pmatrix}
-\frac{\partial^2 f(x)}{\partial^2 x\_1} &amp; \frac{\partial^2
-f(x)}{\partial x\_1\partial x\_2} &amp; \cdots &amp; \frac{\partial^2
-f(x)}{\partial x\_1\partial x\_n}\\\
-\frac{\partial^2 f(x)}{\partial x\_2\partial x\_1} &amp;
-\frac{\partial^2 f(x)}{\partial^2 x\_2} &amp; \cdots &amp;
-\frac{\partial^2 f(x)}{\partial x\_2\partial x\_n}\\\
-\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\\
-\frac{\partial^2 f(x)}{\partial x\_n\partial x\_1}&amp; \frac{\partial^2
-f(x)}{\partial x\_n\partial x\_2} &amp; \cdots &amp; \frac{\partial^2
-f(x)}{\partial^2 x\_n}\\\
+\frac{\partial^2 f(x)}{\partial^2 x_1} &amp; \frac{\partial^2
+f(x)}{\partial x_1\partial x_2} &amp; \cdots &amp; \frac{\partial^2
+f(x)}{\partial x_1\partial x_n}\\
+\frac{\partial^2 f(x)}{\partial x_2\partial x_1} &amp; \frac{\partial^2
+f(x)}{\partial^2 x_2} &amp; \cdots &amp; \frac{\partial^2 f(x)}{\partial
+x_2\partial x_n}\\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+\frac{\partial^2 f(x)}{\partial x_n\partial x_1}&amp; \frac{\partial^2
+f(x)}{\partial x_n\partial x_2} &amp; \cdots &amp; \frac{\partial^2
+f(x)}{\partial^2 x_n}\\
 \end{pmatrix}
 \]</span></p>
 <p>对于任何函数<span class="math inline">\(f(x)\)</span>，假如<span
@@ -639,7 +636,7 @@ alt="凸规划模型" />
 <figcaption aria-hidden="true">凸规划模型</figcaption>
 </figure>
 <p>注意上面的<span
-class="math inline">\(g\_j(X)\)</span>为凹函数，这样围起来的可行域才为凸集。</p>
+class="math inline">\(g_j(X)\)</span>为凹函数，这样围起来的可行域才为凸集。</p>
 <p>因为凸函数和凸集的性质，凸规划有一条重要的性质：<strong>凸规划的任一局部极小点为全局极小点</strong>。</p>
 <h3 id="一维搜索">一维搜索</h3>
 <p>一维搜索就是<strong>目标变量只有一个</strong>的时候的最优化问题，又称为单变量函数寻优法。</p>
@@ -651,13 +648,13 @@ b] 上的单谷函数。</p>
 <p>单谷函数具有一个重要的<strong>消去性质</strong> &gt;设<span
 class="math inline">\(f(x)\)</span>是区间 [a,b] 上的一个单谷函数，<span
 class="math inline">\(\overline x \in\)</span> [a,b] 是其极小点， <span
-class="math inline">\(x\_1\)</span> 和<span
-class="math inline">\(x\_2\)</span>是 [a, b] 上的任意两点，且<span
-class="math inline">\(a&lt;x\_1 &lt;x\_2&lt;b\)</span>，那么比较<span
-class="math inline">\(f(x\_1)\)</span>与<span
-class="math inline">\(f(x\_2)\)</span>的值后，可得出如下结论： 1)若<span
-class="math inline">\(f(x\_1)≥f(x\_2),\overline x\in [x\_1,b]\)</span>
-2)若<span class="math inline">\(f(x\_1) &lt; f(x\_2),\overline x \in
+class="math inline">\(x_1\)</span> 和<span
+class="math inline">\(x_2\)</span>是 [a, b] 上的任意两点，且<span
+class="math inline">\(a&lt;x_1 &lt;x_2&lt;b\)</span>，那么比较<span
+class="math inline">\(f(x_1)\)</span>与<span
+class="math inline">\(f(x_2)\)</span>的值后，可得出如下结论： 1)若<span
+class="math inline">\(f(x_1)≥f(x_2),\overline x\in [x_1,b]\)</span>
+2)若<span class="math inline">\(f(x_1) &lt; f(x_2),\overline x \in
 [a,x2]\)</span> 两种情况如下图所示 <img data-src="https://wulc.me/imgs/image_1b5adl8g8vfc1b701sahj6a1gst3u.png"
 alt="单谷函数消去性质" /></p>
 <h4 id="外推内插法">外推内插法</h4>
@@ -670,14 +667,14 @@ class="math inline">\(f(a+h)\)</span>；有前进和后退两种情况：
 f(a+h)\)</span>则步长加倍，计算<span
 class="math inline">\(f(a+3h)\)</span>。若<span
 class="math inline">\(f(a+h) \le f(a+3h)\)</span>，<span
-class="math inline">\(a\_1=a, a\_2=a+3h\)</span>,
+class="math inline">\(a_1=a, a_2=a+3h\)</span>,
 停止运算；否则将步长加倍，并重复上述运算。
 2)<strong>后退算法</strong>：若<span class="math inline">\(f(a) \lt
 f(a+h)\)</span>则步长改为 <span
 class="math inline">\(-h\)</span>，计算<span
 class="math inline">\(f(a-h)\)</span>。若<span
 class="math inline">\(f(a-h) \ge f(a)\)</span>，<span
-class="math inline">\(a\_1=a-h, a\_2=a+h\)</span>,
+class="math inline">\(a_1=a-h, a_2=a+h\)</span>,
 停止运算；否则将步长加倍，继续后退。</p>
 <p>3.得到的满足“中间小两头大”的三点已经可以作为单谷区间，但是当这个区间太大的时候，也可以进行缩短，缩短的方法如下：</p>
 <blockquote>
@@ -687,12 +684,12 @@ class="math inline">\(\overline b =
 (b+c)/2\)</span>。这样得到四个点：<span class="math inline">\(a
 ，b，\overline
 b，c\)</span>。比较这4个点的函数值，令其中函数值最小的点为 <span
-class="math inline">\(x\_2\)</span> , <span
-class="math inline">\(x\_2\)</span> 的左右邻点为 <span
-class="math inline">\(x\_1\)</span> 和 <span
-class="math inline">\(x\_3\)</span>，至此得到了更小的极值点存在区间
-[<span class="math inline">\(x\_1,x\_3\)</span>]，且 <span
-class="math inline">\(x\_1、x\_2、x\_3\)</span>
+class="math inline">\(x_2\)</span> , <span
+class="math inline">\(x_2\)</span> 的左右邻点为 <span
+class="math inline">\(x_1\)</span> 和 <span
+class="math inline">\(x_3\)</span>，至此得到了更小的极值点存在区间
+[<span class="math inline">\(x_1,x_3\)</span>]，且 <span
+class="math inline">\(x_1、x_2、x_3\)</span>
 三点，满足“两头大中间小”的条件。依照此方法可以划出更小的单谷区间。</p>
 </blockquote>
 <h4 id="黄金分割法">黄金分割法</h4>
@@ -702,15 +699,15 @@ class="math inline">\(x\_1、x\_2、x\_3\)</span>
 <p>三点二次插值法的思想是：<strong>形式复杂的函数进行数学运算时不方便，因此找一个近似的、解析性能好、便于计算的简单函数来代替，用近似函数的极小点作为原函数极小点的近似，常用于近似的简单函数是二次函数。</strong></p>
 <p>三点二次插值多项式近似法（抛物线法）的基本原理为：设目标函数 <span
 class="math inline">\(f(x)\)</span> 在三点 <span
-class="math inline">\(x\_1 &lt; x\_2 &lt;x\_3\)</span>
+class="math inline">\(x_1 &lt; x_2 &lt;x_3\)</span>
 上的函数值分别为<span
-class="math inline">\(f\_1,f\_2,f\_3\)</span>,假设相应的二次插值多项式为<span
-class="math inline">\(P\_2(x)=c＋bx + ax^2\)</span>,令<span
-class="math inline">\(P\_2(x)\)</span> 和 <span
+class="math inline">\(f_1,f_2,f_3\)</span>,假设相应的二次插值多项式为<span
+class="math inline">\(P_2(x)=c＋bx + ax^2\)</span>,令<span
+class="math inline">\(P_2(x)\)</span> 和 <span
 class="math inline">\(f(x)\)</span> 在三点上的函数值相等，进而求出<span
-class="math inline">\(P\_2(x)\)</span>中三个未知参数 <span
+class="math inline">\(P_2(x)\)</span>中三个未知参数 <span
 class="math inline">\(a、b、c\)</span> 的值以及<span
-class="math inline">\(P\_2(x)\)</span>的稳定点<span
+class="math inline">\(P_2(x)\)</span>的稳定点<span
 class="math inline">\(\overline x =
 -\frac{b}{2a}\)</span>。而这个方法的命名也源于其原理，通过三个点用二次函数去逼近原函数。其图像直观表示如下</p>
 <figure>
@@ -727,24 +724,24 @@ alt="三点二次插值不符合" />
 <figcaption aria-hidden="true">三点二次插值不符合</figcaption>
 </figure>
 <p>因此，最初的三个点<span
-class="math inline">\(x\_1&lt;x\_2&lt;x\_3\)</span>
+class="math inline">\(x_1&lt;x_2&lt;x_3\)</span>
 应构成一个两边高，中间低的极小化框架。</p>
 <p>在完成一次计算后，得到近似的<span class="math inline">\(\overline
 x\)</span>,要进行搜索区间的收缩，然后在新区间中重新构造三点组成的“极小化框架”
 。<strong>构造的方法为比较<span class="math inline">\(f(\overline
-x),f(x\_2)\)</span>，以函数值较小的点为中间点，加上左右两点</strong>。</p>
+x),f(x_2)\)</span>，以函数值较小的点为中间点，加上左右两点</strong>。</p>
 <p>最后终止准则可以采用目标函数值的相对误差或绝对误差来判断。</p>
 <h4 id="牛顿法">牛顿法</h4>
 <p>牛顿法是一种函数逼近法，其基本思想是<strong>在极小点附近用二阶泰勒多项式近似代替目标函数，求解二阶泰勒多项式的极小点作为目标函数的极小点</strong>。牛顿法在数值分析中是用于求解方程的根，而<strong>求解函数极值点等价于求其导函数为0时的根(假如函数可微)</strong>。</p>
 <p>将<span class="math inline">\(f(x)\)</span>在点<span
-class="math inline">\(x\_k\)</span>处进行泰勒展开，取前三项有 <span
+class="math inline">\(x_k\)</span>处进行泰勒展开，取前三项有 <span
 class="math display">\[f(x) \approx \varphi(x) =
-f(x\_k)+f^{&#39;}(x\_k)(x-x\_k)+\frac{1}{2}f^{&quot;}(x\_k)(x-x\_k)^2\]</span></p>
+f(x_k)+f^{&#39;}(x_k)(x-x_k)+\frac{1}{2}f^{&quot;}(x_k)(x-x_k)^2\]</span></p>
 <p>求<span class="math inline">\(\varphi^{&#39;}(x) = 0\)</span>
-的根，可得 <span class="math display">\[x\_{k+1} = x\_k -
-\frac{f^{&#39;}(x\_k)}{f^{&quot;}(x\_k)}\]</span></p>
-<p>通过上面公式进行迭代直至 <span
-class="math inline">\(|f^{&#39;}(x\_k)| \lt \epsilon\)</span> (<span
+的根，可得 <span class="math display">\[x_{k+1} = x_k -
+\frac{f^{&#39;}(x_k)}{f^{&quot;}(x_k)}\]</span></p>
+<p>通过上面公式进行迭代直至 <span class="math inline">\(|f^{&#39;}(x_k)|
+\lt \epsilon\)</span> (<span
 class="math inline">\(\epsilon\)</span>为很小的正数)。</p>
 <h3 id="无约束非线性规划">无约束非线性规划</h3>
 <p>前面介绍的一维搜索虽然也属于无约束非线性规划，只是仅有一个约束变量。但是由于实际问题中变量的个数往往不止一个，因此多个变量的无约束非线性规划在实际中使用更为广泛。下面主要介绍多变量无约束非线性规划的解决方法。无约束问题的最优化方大致分为两类：</p>
@@ -821,34 +818,34 @@ class="math inline">\(x^{(k)}\)</span>点邻域内取<span
 class="math inline">\(f(x)\)</span>的二次泰勒多项式作近似式，对于只有一个变量<span
 class="math inline">\(x\)</span>时为</p>
 <p><span class="math display">\[f(x) \approx \varphi(x) =
-f(x\_k)+f^{&#39;}(x\_k)(x-x\_k)+\frac{1}{2}f^{&#39;&#39;}(x\_k)(x-x\_k)^2\]</span></p>
+f(x_k)+f^{&#39;}(x_k)(x-x_k)+\frac{1}{2}f^{&#39;&#39;}(x_k)(x-x_k)^2\]</span></p>
 <p>而有多个变量 <span class="math inline">\(x\)</span> 时，有</p>
 <p><span class="math display">\[f(x) \approx \varphi(x) =
-f(x^{(k)})+\nabla f(x^{(k)})^T\Delta x+\frac{1}{2}\Delta x^TH\_k\Delta
+f(x^{(k)})+\nabla f(x^{(k)})^T\Delta x+\frac{1}{2}\Delta x^TH_k\Delta
 x\]</span></p>
 <p>令 <span class="math inline">\(x^{(k+1)}\)</span>
 为函数的极小点,则应有 <span class="math inline">\(\nabla
 \varphi(x^{(k+1)}) = 0\)</span></p>
 <p>令 $ (x)= f(x^{(k)})+H_kx=0$,且 <span class="math inline">\(\Delta x
 = x^{(k+1)}-x^{(k)}\)</span></p>
-<p>则有 <span class="math inline">\(x^{(k+1)} = x^{(k)}-H\_k^{-1}\nabla
-f(x^{(k)})\)</span>，而 <span class="math inline">\(-H\_k^{-1}\nabla
+<p>则有 <span class="math inline">\(x^{(k+1)} = x^{(k)}-H_k^{-1}\nabla
+f(x^{(k)})\)</span>，而 <span class="math inline">\(-H_k^{-1}\nabla
 f(x^{(k)})\)</span> 则为点 <span class="math inline">\(x^{(k)}\)</span>
 处的牛顿方向，也就是该点的下降方向。通过该公式进行迭代直至该点的梯度收敛，即其梯度的二阶范数<span
 class="math inline">\(||\nabla f(x^{(k)})|| \lt \epsilon\)</span>。</p>
 <p>牛顿法是具有<strong>二次收敛性</strong>的算法。若用原始牛顿法求某二次目标函数的最优解，则构造的逼近函数与原目标函数是完全相同的二次式，其等值线完全重合，故从任一点出发，一定可以一次达到目标函数的极小点。</p>
 <p>其<strong>优点</strong>是：对于二次正定函数，迭代一次即可以得到最优解，对于非二次函数，若函数二次性较强或迭代点已经进入最优点的较小邻域，则收敛速度也很快。</p>
 <p>其<strong>缺点</strong>是：由于迭代点的位置是按照极值条件确定的，并未沿函数值下降方向搜索，因此，对于非二次函数，有时会使函数值上升，即
-<span class="math inline">\(f(x\_{k+1}) &gt;
-f(x\_k)\)</span>，而使计算失败。</p>
+<span class="math inline">\(f(x_{k+1}) &gt;
+f(x_k)\)</span>，而使计算失败。</p>
 <h6 id="阻尼牛顿法">阻尼牛顿法</h6>
 <p>阻尼牛顿法对原始牛顿法进行了改进,每次迭代<strong>加入了步长</strong>
 <span class="math inline">\(\alpha^{(k)}\)</span>，即将迭代公式从</p>
-<p><span class="math inline">\(x^{(k+1)} = x^{(k)}-H\_k^{-1}\nabla
+<p><span class="math inline">\(x^{(k+1)} = x^{(k)}-H_k^{-1}\nabla
 f(x^{(k)})\)</span></p>
 <p>变为了</p>
 <p><span class="math inline">\(x^{(k+1)} =
-x^{(k)}-\alpha^{(k)}H\_k^{-1}\nabla f(x^{(k)})\)</span></p>
+x^{(k)}-\alpha^{(k)}H_k^{-1}\nabla f(x^{(k)})\)</span></p>
 <p>最优步长 <span class="math inline">\(\alpha^{(k)}\)</span>
 也称为阻尼因子，其求解方法也类似于最速下降中通过一维搜索得到的最优步长。</p>
 <p>其<strong>优点</strong>是：
@@ -860,20 +857,20 @@ x^{(k)}-\alpha^{(k)}H\_k^{-1}\nabla f(x^{(k)})\)</span></p>
 <p>从前面介绍的最速下降法和牛顿法可知，梯度法的搜索方向只需计算函数的一阶偏导数，<strong>计算量小</strong>，当迭代点<strong>远离最优点时，函数值下降很快</strong>，但当迭代点<strong>接近最优点时收敛速度极慢</strong>。牛顿法的搜索方向不仅需要计算一阶偏导数，而且要计算二阶偏导数及其逆阵，<strong>计算量很大</strong>，但牛顿法具有二次收敛性，当<strong>迭代点接近最优点时，收敛速度很快。</strong></p>
 <p>若迭代过程先用梯度法，后用牛顿法并避开牛顿法的海赛矩阵的逆矩阵的烦琐计算，则可以得到一种较好的优化方法，这就是“拟牛顿法”产生的基本构想。为此，综合梯度法和牛顿法的优点，提出拟牛顿法。</p>
 <p>拟牛顿法的迭代公式与最速下降和阻尼牛顿法类似，</p>
-<p><span class="math inline">\(x^{(k+1)} =
-x^{(k)}-\alpha^{(k)}A\_k\nabla f(x^{(k)})\)</span></p>
-<p>其中<span class="math inline">\(A\_k\)</span>为构造的构造的
+<p><span class="math inline">\(x^{(k+1)} = x^{(k)}-\alpha^{(k)}A_k\nabla
+f(x^{(k)})\)</span></p>
+<p>其中<span class="math inline">\(A_k\)</span>为构造的构造的
 <code>n×n</code> 阶对称矩阵，拟牛顿方向即为<span
-class="math inline">\(-A\_k\nabla f(x^{(k)})\)</span>。</p>
+class="math inline">\(-A_k\nabla f(x^{(k)})\)</span>。</p>
 <blockquote>
-<p>当<span class="math inline">\(A\_k =
+<p>当<span class="math inline">\(A_k =
 I\)</span>时，上式为最速下降法的迭代公式 当<span
-class="math inline">\(A\_k =
-H\_k^{-1}\)</span>时，上式为阻尼牛顿法的迭代公式</p>
+class="math inline">\(A_k =
+H_k^{-1}\)</span>时，上式为阻尼牛顿法的迭代公式</p>
 </blockquote>
 <p>拟牛顿法原来使通过DFP法构造 <span
-class="math inline">\(A\_k\)</span>，构造过程中<strong>避开了二阶导数的计算</strong>，因此收敛速度也比较快；但是DFP算法由于舍入误差和一维搜索的不精确，有可能导致<span
-class="math inline">\(A\_k\)</span>奇异，而使数值稳定性方面不够理想。所以1970年提出更稳定的算法，称为BFGS算法。这里不详细展开讨论这两种算法。</p>
+class="math inline">\(A_k\)</span>，构造过程中<strong>避开了二阶导数的计算</strong>，因此收敛速度也比较快；但是DFP算法由于舍入误差和一维搜索的不精确，有可能导致<span
+class="math inline">\(A_k\)</span>奇异，而使数值稳定性方面不够理想。所以1970年提出更稳定的算法，称为BFGS算法。这里不详细展开讨论这两种算法。</p>
 <h5 id="共轭梯度法">共轭梯度法</h5>
 <p>共轭梯度法的搜索方向采用<strong>梯度法基础上的共轭方向</strong>，如图所示，</p>
 <figure>
@@ -892,8 +889,8 @@ class="math inline">\(S^k\)</span>
 class="math inline">\(-\nabla f(x^{(k+1)})\)</span> 与 <span
 class="math inline">\(S^k\)</span> 的线性组合。即 <span
 class="math display">\[ S^{k+1} = -\nabla f(x^{(k+1)}) +
-\beta\_kS^k\]</span></p>
-<p><span class="math display">\[\beta\_k = (\frac{||\nabla
+\beta_kS^k\]</span></p>
+<p><span class="math display">\[\beta_k = (\frac{||\nabla
 f(x^{(k+1)})||}{||\nabla f(x^{(k)})||})^2\]</span></p>
 <p>2）<span class="math inline">\([S^{k+1}]^TGS^k=0\)</span></p>
 <p>除了计算下降方向方法不同，其迭代公式与前面的方法类似,为</p>
@@ -923,15 +920,15 @@ n
 <h3 id="约束非线性规划">约束非线性规划</h3>
 <p>约束条件下的非线性规划模型如下所示</p>
 <p><span class="math display">\[
-min\;f(x)\\\
-s.t\quad h\_i(x) = 0(i=1,2,...,m)\\\
-\quad\quad g\_j(x) \ge 0(j=1,2,...,l)\\\
+min\;f(x)\\
+s.t\quad h_i(x) = 0(i=1,2,...,m)\\
+\quad\quad g_j(x) \ge 0(j=1,2,...,l)\\
 \]</span></p>
 <p>在约束非线性规划中有几个比较重要的概念</p>
 <p><strong>起作用约束和不起作用约束</strong></p>
-<p>对于约束条件 <span class="math inline">\(g\_j(x) \ge
+<p>对于约束条件 <span class="math inline">\(g_j(x) \ge
 0(j=1,2,...,l)\)</span>,满足它有两种可能：其一是<span
-class="math inline">\(g\_j(x) \gt 0\)</span>, 这时, <span
+class="math inline">\(g_j(x) \gt 0\)</span>, 这时, <span
 class="math inline">\(x\)</span>
 不是处于由这一约束条件形成的可行域的边界上，因此当点不论沿什么方向稍微离开时,都不会违背这一约束条件,这样的约束就称为不起作用约束，即它<strong>对
 的微小扰动不起限制作用</strong>,也就是约束中的所有等式约束均是起作用约束，包括
@@ -940,7 +937,7 @@ class="math inline">\(g(x)\)</span>
 中取等号的约束。注意，<strong>不起作用约束并不是无效约束</strong>！</p>
 <p><strong>有效集(积极集)</strong>
 有效集定义为不等式约束中符号为等号的那些约束条件的下标，如对于上面的带约束的非线性规划模型，其有效集为</p>
-<p><span class="math inline">\(I(x) = \lbrace j|g\_j(x)=0, 1 \le j \le l
+<p><span class="math inline">\(I(x) = \lbrace j|g_j(x)=0, 1 \le j \le l
 \rbrace\)</span></p>
 <h4 id="kt条件">KT条件</h4>
 <p>在不同的资料中，KT(Kuhn-Tucker) 条件也会被称为
@@ -949,61 +946,61 @@ Kuhn和Tucker(1951)
 先后独立发表出来的。而且是在Kuhn和Tucker发表之后才逐渐受到重视,所有很多教材都会将这一条件称为KT条件，我们这里只需要知道这KT跟KKT是一样的东西就可以了。</p>
 <p>KT条件是非线性规划领域中最重要的理论成果之一，其重要的意义在于它是<strong>确定某点是最优点的一阶必要条件</strong>，只要是最优点就必须满足这个条件。但一般来说它不是充分条件，即满足KT条件的点并不一定是最优点。但是<strong>对于凸规划，KT条件是最优点存在的充要条件</strong>。也就是说在凸规划中通过KT条件可以找到最优解。</p>
 <p>对于非线性规划模型 <span class="math display">\[
-min\;f(x)\\\
-s.t\quad h\_i(x) = 0(i=1,2,...,m)\\\
-\quad\quad g\_j(x) \ge 0(j=1,2,...,l)\\\
+min\;f(x)\\
+s.t\quad h_i(x) = 0(i=1,2,...,m)\\
+\quad\quad g_j(x) \ge 0(j=1,2,...,l)\\
 \]</span></p>
 <p>其KT条件为 <span class="math display">\[
-\nabla f(x) - \sum\_{i=1}^mr\_i\nabla h\_i(x) -
-\sum\_{j=1}^l\lambda\_j\nabla g\_j(x) = 0\\\
-\lambda\_j g\_j(x) = 0\quad (j=1,2,3...l)\\\
-\lambda\_j \ge 0 \quad (j=1,2,3...l)\\\
+\nabla f(x) - \sum_{i=1}^mr_i\nabla h_i(x) - \sum_{j=1}^l\lambda_j\nabla
+g_j(x) = 0\\
+\lambda_j g_j(x) = 0\quad (j=1,2,3...l)\\
+\lambda_j \ge 0 \quad (j=1,2,3...l)\\
 \]</span></p>
 <p>求解上面的KT条件组成的方程组得到的 <span
 class="math inline">\(x\)</span>
 值就是KT点，也就是最优点(对于凸规划而言)。另外,下式</p>
-<p>$f(x) - _{i=1}^mr_i h_i(x) - _{j=1}^l_j g_j(x) $</p>
+<p>$f(x) - <em>{i=1}^mr_i h_i(x) - </em>{j=1}^l_j g_j(x) $</p>
 <p>通常被称为上面非线性规划问题的<strong>拉格朗日函数</strong>，对应的</p>
-<p><span class="math inline">\((r\_1,r\_2,...r\_m)\)</span> 和 <span
-class="math inline">\((\lambda\_1,\lambda\_2,...\lambda\_l)\)</span></p>
+<p><span class="math inline">\((r_1,r_2,...r_m)\)</span> 和 <span
+class="math inline">\((\lambda_1,\lambda_2,...\lambda_l)\)</span></p>
 <p>称为<strong>拉格朗日乘子</strong>。</p>
 <h4 id="罚函数法">罚函数法</h4>
 <p>罚函数法的思想是<strong>借助惩罚函数将约束问题装化为无约束问题进行求解</strong>，根据惩罚函数的不同，罚函数法又分为外点法，内点法和乘子法。</p>
 <h5 id="外点法">外点法</h5>
 <p>外点法可以用来解决只有等式约束、只有不等式约束或同时含有等式和不等式约束问题。</p>
 <p>先考虑只有等式约束的问题如下 <span class="math display">\[
-min\;f(x)\\\
-s.t\quad h\_i(x) = 0(i=1,2,...,m)\\\
+min\;f(x)\\
+s.t\quad h_i(x) = 0(i=1,2,...,m)\\
 \]</span></p>
 <p>则可以将上面的带约束的问题等价于下面的无约束问题</p>
-<p><span class="math display">\[min\;p(x,M) = f(x) + M\sum\_i^m
-[h\_i(x)]^2\]</span></p>
+<p><span class="math display">\[min\;p(x,M) = f(x) + M\sum_i^m
+[h_i(x)]^2\]</span></p>
 <p>其中 M 是充分大的正数(求解时一般让其趋于无穷大),被称为罚因子，而
 <span class="math inline">\(p(x,M)\)</span> 称为惩罚函数，<span
-class="math inline">\(M\sum\_i^m [h\_i(x)]^2\)</span>
+class="math inline">\(M\sum_i^m [h_i(x)]^2\)</span>
 为惩罚项，其作用就是当 <span class="math inline">\(x\)</span>
 不满足任一等式约束 <span class="math inline">\(h(x) = 0\)</span>
 时，罚项就会变得很大从而使解不能满足最小，也就是惩罚了这个解。</p>
 <p>同样对于不等式约束问题 <span class="math display">\[
-min\;f(x)\\\
-s.t\quad g\_j(x) \ge 0(j=1,2,...,l)\\\
+min\;f(x)\\
+s.t\quad g_j(x) \ge 0(j=1,2,...,l)\\
 \]</span></p>
 <p>构造的惩罚函数为</p>
-<p><span class="math display">\[p(x,M) = f(x) + M\sum\_j^l [min(0,
-g\_j(x))]^2\]</span></p>
+<p><span class="math display">\[p(x,M) = f(x) + M\sum_j^l [min(0,
+g_j(x))]^2\]</span></p>
 <p>其含义也是当 <span class="math inline">\(x\)</span>
 满足不等式约束条件时，罚项为0，不满足是罚项就会变得很大，从而使当前的
 <span class="math inline">\(x\)</span> 不忙足目标函数值最小。</p>
 <p>对于同时含有等式约束和不等式约束的规划问题，只要将上面的等式约束和不等式约束中的罚项加在一起即可构造惩罚函数：
-<span class="math display">\[p(x,M) = f(x) + M( \sum\_i^m [h\_i(x)]^2 +
-\sum\_j^l [min(0, g\_j(x))]^2)\]</span></p>
+<span class="math display">\[p(x,M) = f(x) + M( \sum_i^m [h_i(x)]^2 +
+\sum_j^l [min(0, g_j(x))]^2)\]</span></p>
 <p>求解时只需要用无约束问题的求解方法求解惩罚函数的最小点即可，如下为一个求解的例子</p>
 <figure>
 <img data-src="https://wulc.me/imgs/image_1b5m40a01f1rqtv1n8h1r01a0im.png"
 alt="外点法求解例子" />
 <figcaption aria-hidden="true">外点法求解例子</figcaption>
 </figure>
-<p>让 <span class="math inline">\(M\_k \rightarrow \infty\)</span>
+<p>让 <span class="math inline">\(M_k \rightarrow \infty\)</span>
 即可得到最优解为 <span class="math inline">\(x =(2,1)^T\)</span>。
 但是假如让M逐步变化，可以得到以下表格</p>
 <figure>
@@ -1011,29 +1008,29 @@ alt="外点法求解例子" />
 alt="外点法渐变过程" />
 <figcaption aria-hidden="true">外点法渐变过程</figcaption>
 </figure>
-<p>从上面的表格可知，当 <span class="math inline">\(M\_k\)</span>
-从<span class="math inline">\(1 \rightarrow \infty\)</span>
+<p>从上面的表格可知，当 <span class="math inline">\(M_k\)</span> 从<span
+class="math inline">\(1 \rightarrow \infty\)</span>
 过程中，<strong>罚函数的一系列无约束极小点是从可行域的外部趋近最优解的</strong>，因此，这也是外点法名称的来历。</p>
 <h5 id="内点法">内点法</h5>
 <p>这里讲述的内点法只考虑不等式约束的问题，对于问题</p>
 <p><span class="math display">\[
-min\;f(x)\\\
-s.t\quad g\_j(x) \ge 0(j=1,2,...,l)\\\
+min\;f(x)\\
+s.t\quad g_j(x) \ge 0(j=1,2,...,l)\\
 \]</span></p>
 <p>其严格内点集合(又称可行域内部)定义为</p>
-<p><span class="math inline">\(H = \lbrace g\_j(x) &gt; 0
+<p><span class="math inline">\(H = \lbrace g_j(x) &gt; 0
 |j=1,2,...,l\rbrace\)</span></p>
 <p>内点法就是通过<strong>在严格内点集合中进行迭代</strong>得到最优解，这也是内点法这一说法的来历，需要注意的是<strong>内点法得到的最优解并不一定是全局最优解，因为内点法只是在严格内点中迭代，而全局最优解有可能落在边界上</strong>。但是对于最优解不落在边界的问题，内点法能够得到最优解，并且对于那些最优解落在边界上的问题，内点法也能够获得较好的近似解。</p>
 <p>对于上面的模型可以构造障碍函数</p>
-<p><span class="math display">\[p(x,r\_k) = f(x) + r\_k \sum\_j^l
-\frac{1}{g\_j(x)}\]</span></p>
+<p><span class="math display">\[p(x,r_k) = f(x) + r_k \sum_j^l
+\frac{1}{g_j(x)}\]</span></p>
 <p>或</p>
-<p><span class="math display">\[p(x,r\_k) = f(x) - r\_k \sum\_j^l
-ln(g\_j(x))\]</span></p>
+<p><span class="math display">\[p(x,r_k) = f(x) - r_k \sum_j^l
+ln(g_j(x))\]</span></p>
 <p>求解障碍函数的最小值就相当于求解原来的带约束问题；障碍函数类似于外点法中的惩罚函数，其中
-<span class="math inline">\(r\_k \sum\_j^l \frac{1}{g\_j(x)}\)</span> 或
-<span class="math inline">\(- r\_k \sum\_j^l ln(g\_j(x))\)</span>
-被称为障碍项，<span class="math inline">\(r\_k\)</span>
+<span class="math inline">\(r_k \sum_j^l \frac{1}{g_j(x)}\)</span> 或
+<span class="math inline">\(- r_k \sum_j^l ln(g_j(x))\)</span>
+被称为障碍项，<span class="math inline">\(r_k\)</span>
 称为障碍因子。</p>
 <p>障碍函数的作用是惩罚靠近可行域边界的 <span
 class="math inline">\(x\)</span> 点，即那些使 <span
@@ -1049,21 +1046,21 @@ alt="内点法求解例子" />
 <h5 id="乘子法">乘子法</h5>
 <p>乘子法类似于上面提到的外点法和内点法，也是通过引入<strong>乘子罚函数</strong>使约束问题变为无约束问题。但是与前面不同的地方是乘子罚函数是在罚函数的基础上增加了拉格朗日乘子项，从而称为増广拉格朗日函数。这里只讨论等式约束的情况。</p>
 <p>对于问题 <span class="math display">\[
-min\;f(x)\\\
-s.t\quad h\_i(x) = 0(i=1,2,...,m)\\\
+min\;f(x)\\
+s.t\quad h_i(x) = 0(i=1,2,...,m)\\
 \]</span></p>
 <p>定义<strong>增广拉格朗日函数(乘子罚函数)</strong>为</p>
 <p><span class="math display">\[\varphi (x,\lambda, M) = f(x) -
-\sum\_{i=0}^m \lambda\_i h\_i(x) + \frac{M}{2} \sum\_{i=1}^m
-[h\_i(x)]^2\]</span></p>
+\sum_{i=0}^m \lambda_i h_i(x) + \frac{M}{2} \sum_{i=1}^m
+[h_i(x)]^2\]</span></p>
 <p>其中，<span class="math inline">\(\overrightarrow \lambda =
-(\lambda\_1,\lambda\_2,...\lambda\_m)^T\)</span>
+(\lambda_1,\lambda_2,...\lambda_m)^T\)</span>
 为拉格朗日乘子向量。则原问题的求解转为了求解增广拉格朗日函数的极小点。</p>
 <p>乘子罚函数 <span class="math inline">\(\varphi (x,\lambda,
 M)\)</span> 与<a
 target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%8B%89%E6%A0%BC%E6%9C%97%E6%97%A5%E4%B9%98%E6%95%B0">普通拉格朗日函数</a>的区别是增加了罚项
-<span class="math inline">\(\frac{M}{2} \sum\_{i=1}^m
-[h\_i(x)]^2\)</span>, 与罚函数的区别是增加了乘子项$ - _{i=0}^m _i
+<span class="math inline">\(\frac{M}{2} \sum_{i=1}^m
+[h_i(x)]^2\)</span>, 与罚函数的区别是增加了乘子项$ - _{i=0}^m _i
 h_i(x)$.</p>
 <p>假如知道拉格朗日乘子 <span class="math inline">\(\overrightarrow
 \lambda\)</span>,
@@ -1077,7 +1074,7 @@ class="math inline">\(\overrightarrow
 {\lambda^{(1)}}\)</span>，每次通过下面的公式对 <span
 class="math inline">\(\overrightarrow \lambda\)</span> 进行修正。</p>
 <p><span class="math display">\[ \overrightarrow {\lambda^{(k+1)}} =
-\overrightarrow {\lambda^{(k)}} - Mh\_i(x^{(k)})\]</span></p>
+\overrightarrow {\lambda^{(k)}} - Mh_i(x^{(k)})\]</span></p>
 <p>上式中的 <span class="math inline">\(x^{(k)}\)</span> 是第 k
 次迭代拉格朗日乘子为 <span class="math inline">\(\overrightarrow
 {\lambda^{(k)}}\)</span> 时得到的极小点。通过上式进行迭代直至 <span
@@ -1098,30 +1095,30 @@ class="math inline">\(\alpha = \frac{7}{23} \alpha +
 <h4 id="二次规划">二次规划</h4>
 <p>二次规划是特殊的非线性规划，形式简单，既可以使用求耳机非线性规划的一般方法，又可以使用特定的解法。在实际中有广泛应用，如支持向量机（SVM）本质上就是一个二次规划问题。</p>
 <p>二次规划问题的一般模型也如下 <span class="math display">\[
-min\;f(x)\\\
-s.t\quad h\_i(x) = 0(i=1,2,...,m)\\\
-\quad\quad g\_j(x) \ge 0(j=1,2,...,l)\\\
+min\;f(x)\\
+s.t\quad h_i(x) = 0(i=1,2,...,m)\\
+\quad\quad g_j(x) \ge 0(j=1,2,...,l)\\
 \]</span></p>
 <p>但是<strong>要求 <span class="math inline">\(f(x)\)</span>
-是二次函数，而 <span class="math inline">\(h\_i(x)\)</span> 和 <span
-class="math inline">\(g\_j(x)\)</span> 是线性函数。</strong>
+是二次函数，而 <span class="math inline">\(h_i(x)\)</span> 和 <span
+class="math inline">\(g_j(x)\)</span> 是线性函数。</strong>
 因此可以展开写成如下的形式：</p>
 <p><span class="math display">\[
-min\;f(x) = \frac{1}{2}x^TGx + r^Tx\\\
-s.t\quad A\_i^Tx - b\_i = 0(i=1,2,...,m)\\\
-\quad\quad\quad A\_i^Tx-b\_i \ge 0(i=m+1,...,m+l)\\\
+min\;f(x) = \frac{1}{2}x^TGx + r^Tx\\
+s.t\quad A_i^Tx - b_i = 0(i=1,2,...,m)\\
+\quad\quad\quad A_i^Tx-b_i \ge 0(i=m+1,...,m+l)\\
 \]</span></p>
 <p>其中 G 为 <span class="math inline">\(n × n\)</span> 阶对称矩阵(
 <span class="math inline">\(n\)</span> 为未知变量个数)，<span
-class="math inline">\(r,A\_i\)</span> 为n 位列向量，<span
-class="math inline">\(b\_i\)</span> 为实数。<strong>若矩阵 G
+class="math inline">\(r,A_i\)</span> 为n 位列向量，<span
+class="math inline">\(b_i\)</span> 为实数。<strong>若矩阵 G
 为(正定)半正定矩阵，那么将问题称为严格)凸二次规划</strong>。前面提到，对于凸规划，<span
 class="math inline">\(\overline x\)</span>
 为全局极小点的充要条件是该点满足如下的KT条件。</p>
 <p><span class="math display">\[
-G\overline x + r - \sum\_{i=1}^{m+l}\lambda\_iA=0\\\
-\lambda\_i (A\_i^Tx-b\_i) = 0(i=m+1,...,m+l)\\\
-\lambda\_i \ge 0(i=m+1,...,m+l)
+G\overline x + r - \sum_{i=1}^{m+l}\lambda_iA=0\\
+\lambda_i (A_i^Tx-b_i) = 0(i=m+1,...,m+l)\\
+\lambda_i \ge 0(i=m+1,...,m+l)
 \]</span></p>
 <p>通过求解KT条件组成的方程组，能够解出二次规划的最优化问题，这只是求解非线性规划的一般方法，还有一些专门用来求解二次规划的方法，对于只含有等式约束的二次规划问题可采用消去法，而同时含有等式约束和不等式约束的解决方法是有效集法，这是更一般的解决方法，下面主要介绍有效集法的原理和过程。</p>
 <p>有效集法又称积极集法，其基本思想是<strong>通过求解有限个等式约束二次规划问题来求解一般约束下的二次规划问题。</strong>从直观上理解，不起作用的约束在解的附近不起任何作用，可以去掉不考虑，而起作用(积极)的不等式约束由于在解处等于0，故可以用等式约束来代替不等式约束。</p>
@@ -1132,8 +1129,8 @@ G\overline x + r - \sum\_{i=1}^{m+l}\lambda\_iA=0\\\
 I(x)\)</span></p>
 <p>有效集方法就是将其转化为以下问题进行求解，并对得到的解进行讨论 <span
 class="math display">\[
-min\;f(x) = \frac{1}{2}x^TGx + r^Tx\\\
-s.t\quad A\_i^Tx = b\_i (i \in E)\\\
+min\;f(x) = \frac{1}{2}x^TGx + r^Tx\\
+s.t\quad A_i^Tx = b_i (i \in E)\\
 \]</span></p>
 <p>其具体计算步骤如下</p>
 <p><img data-src="https://wulc.me/imgs/image_1b5mp3qbeafq14ma1865obmk7e34.png"

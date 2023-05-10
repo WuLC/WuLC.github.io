@@ -32,7 +32,7 @@
 <meta property="og:description" content="最近看到一篇关于 MLE(Maximum Likelihood Estimation) 和 MAP（Maximum A Posteriori) 的文章，写的很好，非常值得一看，文章链接为 聊一聊机器学习的MLE和MAP：最大似然估计和最大后验估计，本文几乎不加修改地转载了文章，侵删。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2019-01-25T08:08:44.000Z">
-<meta property="article:modified_time" content="2023-04-30T05:12:49.136Z">
+<meta property="article:modified_time" content="2023-05-10T14:36:45.800Z">
 <meta property="article:author" content="良超">
 <meta property="article:tag" content="机器学习">
 <meta property="article:tag" content="数学">
@@ -327,14 +327,14 @@ distribution本质上表示对事物没有任何预判</li>
 x\_n)\)</span> 。其中i.i.d.表示Independent and identical
 distribution，独立同分布。那么MLE对 <span
 class="math inline">\(\theta\)</span> 的估计方法可以如下推导：</p>
-<p><span class="math display">\[\begin{align\*}
+<p><span class="math display">\[\begin{align*}
 \hat{\theta}\_\text{MLE} &amp;= \arg \max P(X; \theta) \\\
 &amp;= \arg \max P(x\_1; \theta) P(x\_2; \theta) \cdot\cdot\cdot\cdot
 P(x\_n;\theta) \\\
 &amp; = \arg \max\log \prod\_{i=1}^{n} P(x\_i; \theta) \\\
 &amp;= \arg \max \sum\_{i=1}^{n} \log P(x\_i; \theta) \\\
 &amp;= \arg \min - \sum\_{i=1}^{n} \log P(x\_i; \theta)
-\end{align\*}\]</span></p>
+\end{align*}\]</span></p>
 <p>最后这一行所优化的函数被称为 <strong>Negative Log Likelihood
 (NLL)</strong>，这个概念和上面的推导是非常重要的！</p>
 <p>我们经常在不经意间使用MLE，例如</p>
@@ -347,12 +347,12 @@ P(x\_n;\theta) \\\
 x\_n\)</span> 是i.i.d.的一组抽样，<span class="math inline">\(X = (x\_1,
 x\_2, ..., x\_n)\)</span> 。那么MAP对 <span
 class="math inline">\(\theta\)</span> 的估计方法可以如下推导：</p>
-<p><span class="math display">\[\begin{align\*}
+<p><span class="math display">\[\begin{align*}
 \hat{\theta}\_\text{MAP} &amp;= \arg \max P(\theta | X) \\\
 &amp;= \arg \min -\log P(\theta | X) \\\
 &amp; = \arg \min -\log P(X|\theta) - \log P(\theta) + \log P(X) \\\
 &amp;= \arg \min -\log P(X|\theta ) - \log P(\theta)
-\end{align\*}\]</span></p>
+\end{align*}\]</span></p>
 <p>其中，第二行到第三行使用了贝叶斯定理，第三行到第四行 <span
 class="math inline">\(P(X)\)</span> 可以丢掉因为与 <span
 class="math inline">\(\theta\)</span> 无关。注意 <span

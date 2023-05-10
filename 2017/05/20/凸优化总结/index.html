@@ -40,7 +40,7 @@
 <meta property="og:image" content="https://wulc.me/imgs/image_1bgiiioee1oir157n1ij714db14982a.png">
 <meta property="og:image" content="https://wulc.me/imgs/image_1bgiinl7i1ejimgncpdp0v13b62n.png">
 <meta property="article:published_time" content="2017-05-20T12:08:55.000Z">
-<meta property="article:modified_time" content="2023-04-30T05:12:49.034Z">
+<meta property="article:modified_time" content="2023-05-10T14:37:38.542Z">
 <meta property="article:author" content="良超">
 <meta property="article:tag" content="数学">
 <meta name="twitter:card" content="summary">
@@ -281,8 +281,8 @@ href="http://wulc.me/2017/02/01/%E6%9C%80%E4%BC%98%E5%8C%96%E8%AE%A1%E7%AE%97%E8
 <p>凸集的定义非常清楚</p>
 <blockquote>
 <p>对于集合 <span class="math inline">\(K\)</span> ，<span
-class="math inline">\(\forall x\_1,x\_2 \in K\)</span>,若 <span
-class="math inline">\(\alpha x\_1 + (1-\alpha)x\_2 \in
+class="math inline">\(\forall x_1,x_2 \in K\)</span>,若 <span
+class="math inline">\(\alpha x_1 + (1-\alpha)x_2 \in
 K\)</span>,其中<span class="math inline">\(\alpha \in [0,1])\)</span>,则
 <span class="math inline">\(K\)</span> 为凸集</p>
 </blockquote>
@@ -351,7 +351,7 @@ alt="凸函数" />
 class="math inline">\(\le\)</span> 改为 <span
 class="math inline">\(\lt\)</span>， 则称该函数为严格凸函数。</li>
 <li>严格凸指的是<span class="math inline">\(\forall m &gt; 0, f -
-\frac{m}{2}||x||\_2^2\)</span>
+\frac{m}{2}||x||_2^2\)</span>
 也是凸的，其含义就是该凸函数的“凸性”比二次函数还要强，即使减去一个二次函数还是凸函数</li>
 </ul>
 <p>凸函数有几个非常重要的性质，对于一个凸函数 <span
@@ -379,43 +379,43 @@ class="math inline">\(Q\)</span> 必须为半正定矩阵: <span
 class="math inline">\(\frac{1}{2}x^TQx + b^Tx+c(Q \succeq
 0)\)</span></li>
 <li>最小平方误差( Least squares loss ): <span
-class="math inline">\(||y-Ax||\_2^2\)</span> (总是凸的，因为 <span
+class="math inline">\(||y-Ax||_2^2\)</span> (总是凸的，因为 <span
 class="math inline">\(A^TA\)</span> 总是半正定的)</li>
-<li>示性函数（Indicator function）：<span class="math display">\[I\_C(X)
+<li>示性函数（Indicator function）：<span class="math display">\[I_C(X)
 = \begin{cases} 0&amp;x \in C\\\
 \infty &amp; x \notin C\end{cases}\]</span></li>
 <li>max function: <span class="math inline">\(f(x) = max \lbrace
-x\_1,...x\_n \rbrace\)</span></li>
+x_1,...x_n \rbrace\)</span></li>
 <li>范数（Norm）：范数分为向量范数和矩阵范数，任意范数均为凸的，各种范数的定义如下</li>
 </ul>
 <p><strong>向量范数</strong></p>
 <blockquote>
 <p>0范数：$||x||_0 $= 向量中非零元素的个数 1范数： <span
-class="math inline">\(||x||\_1 = \sum\_{i=1}^n |x\_i|\)</span> <span
+class="math inline">\(||x||_1 = \sum_{i=1}^n |x_i|\)</span> <span
 class="math inline">\(p\)</span> 范数：<span
-class="math inline">\(||x||\_p = (\sum\_{i=1}^nx\_i^p)^{1/p}~~(p &gt;
-1)\)</span> 无穷范数: <span class="math inline">\(||x||\_{\infty} =
-max\_{i=1,...n} |x\_i|\)</span></p>
+class="math inline">\(||x||_p = (\sum_{i=1}^nx_i^p)^{1/p}~~(p &gt;
+1)\)</span> 无穷范数: <span class="math inline">\(||x||_{\infty} =
+max_{i=1,...n} |x_i|\)</span></p>
 </blockquote>
 <p><strong>矩阵范数</strong> &gt;核(nuclear)范数: <span
-class="math inline">\(||X||\_{tr} = \sum\_{i=1}^{r}\sigma\_i(X)\)</span>
-, (<span
-class="math inline">\(\sigma\_i(X)\)</span>是矩阵分解后的奇异值,核范数即为矩阵所有奇异值之和)
-&gt;谱（spectral）范数：<span class="math inline">\(||X||\_{op} =
-max\_{i=1,...r}\sigma\_i(X)\)</span>, 即为最大的奇异值</p>
+class="math inline">\(||X||_{tr} = \sum_{i=1}^{r}\sigma_i(X)\)</span> ,
+(<span
+class="math inline">\(\sigma_i(X)\)</span>是矩阵分解后的奇异值,核范数即为矩阵所有奇异值之和)
+&gt;谱（spectral）范数：<span class="math inline">\(||X||_{op} =
+max_{i=1,...r}\sigma_i(X)\)</span>, 即为最大的奇异值</p>
 <h3 id="凸优化">凸优化</h3>
 <p>对于下面的优化问题</p>
 <p><span class="math display">\[
-\begin{align\*}
-&amp;\min\_x\quad f(x)\\\
+\begin{align*}
+&amp;\min_x\quad f(x)\\\
 &amp;\begin{array}\\\
-s.t.&amp;g\_i(x) \le 0,~i=1,\ldots,m\\\
-&amp;h\_j(x)=0,~j=1,\ldots,r
+s.t.&amp;g_i(x) \le 0,~i=1,\ldots,m\\\
+&amp;h_j(x)=0,~j=1,\ldots,r
 \end{array}
-\end{align\*}
+\end{align*}
 \]</span></p>
-<p>当 <span class="math inline">\(f(x), g\_i(x)\)</span> 均为凸函数，
-而<span class="math inline">\(h\_j(x)\)</span> 为仿射函数（affine
+<p>当 <span class="math inline">\(f(x), g_i(x)\)</span> 均为凸函数，
+而<span class="math inline">\(h_j(x)\)</span> 为仿射函数（affine
 function）时，该优化称为凸优化,注意上面的 <span
 class="math inline">\(\min\)</span> 以及约束条件的符号均要符合规定。</p>
 <p>凸优化也可以解释为目标函数 <span class="math inline">\(f(x)\)</span>
@@ -428,34 +428,34 @@ SDP\)</span>, 即后者是包含前者的关系。</p>
 class="math inline">\(c\)</span>为向量，<span
 class="math inline">\(D,A\)</span>为矩阵)</p>
 <p><span class="math display">\[
-\begin{align\*}
-&amp;\min\_x\quad c^Tx\\\
+\begin{align*}
+&amp;\min_x\quad c^Tx\\\
 &amp;\begin{array}\\\
 s.t.&amp;Dx \le d\\\
 &amp;Ax=b
 \end{array}
-\end{align\*}
+\end{align*}
 \]</span></p>
 <p>二次规划问题一般原型如下（要求矩阵 <span
 class="math inline">\(Q\)</span> 半正定）</p>
 <p><span class="math display">\[
-\begin{align\*}
-&amp;\min\_x\quad \frac{1}{2}x^TQx+c^Tx\\\
+\begin{align*}
+&amp;\min_x\quad \frac{1}{2}x^TQx+c^Tx\\\
 &amp;\begin{array}\\\
 s.t.&amp;Dx \le d\\\
 &amp;Ax=b
 \end{array}
-\end{align\*}
+\end{align*}
 \]</span></p>
 <p>而半正定规划问题一般原型如下(<span class="math inline">\(X\)</span>
 在这里表示矩阵) <span class="math display">\[
-\begin{align\*}
-&amp;\min\_X\quad CX\\\
+\begin{align*}
+&amp;\min_X\quad CX\\\
 &amp;\begin{array}\\\
-s.t.&amp;A\_iX \le b\_i, i=1,...m\\\
+s.t.&amp;A_iX \le b_i, i=1,...m\\\
 &amp;X \succeq 0
 \end{array}
-\end{align\*}
+\end{align*}
 \]</span></p>
 <h2 id="梯度类方法">梯度类方法</h2>
 <p>梯度类方法是无约束优化中非常常用的方法，其依据的最根本的事实就是梯度的负方向是函数值下降最快的方向。但是常用的
@@ -465,10 +465,10 @@ regression），<code>gradient descent</code>
 无能为力，这是需要用到<code>subgradient descent</code>和<code>proximal gradient descent</code>.</p>
 <h3 id="gradient-descent">gradient descent</h3>
 <p>梯度下降法的迭代公式为 <span class="math display">\[x^{(k)} =
-x^{(k-1)} - t\_k\nabla f(x^{(k-1)} )\]</span></p>
+x^{(k-1)} - t_k\nabla f(x^{(k-1)} )\]</span></p>
 <p>上式中上标 <span class="math inline">\((k)\)</span> 表示第 <span
 class="math inline">\(k\)</span> 次迭代, 而 <span
-class="math inline">\(t\_k\)</span>表示步长，<span
+class="math inline">\(t_k\)</span>表示步长，<span
 class="math inline">\(\nabla f(x^{(k-1)} )\)</span>表示在点 <span
 class="math inline">\(x^{(k-1)}\)</span> 的梯度。</p>
 <p>这里对于梯度下降主要讨论其步长选择的问题，
@@ -481,7 +481,7 @@ class="math inline">\(0 &lt; \beta &lt; 1,
 0&lt;\alpha&lt;1/2\)</span></p>
 <p>每次迭代的时候，假如下式成立</p>
 <p><span class="math display">\[f(x - t\nabla f(x)) &gt; f(x) - \alpha
-t||\nabla f(x)||\_2^2\]</span></p>
+t||\nabla f(x)||_2^2\]</span></p>
 <p>则改变步长为 <span class="math inline">\(t = \beta t\)</span>,
 否则步长不变。</p>
 <p>这种方法的思想是当步长过大的时候(即跨过了最优点)，减小步长，否则保持步长不变，如下式是一个简单的例子</p>
@@ -494,11 +494,11 @@ alt="backtracking line search" />
 <p>exact line serach 则是得到先计算出梯度 <span
 class="math inline">\(\nabla f(x^{(k-1)}
 )\)</span>,然后代入下面的函数中，此时只有步长 <span
-class="math inline">\(t\_k\)</span> 是未知，因此可对 <span
-class="math inline">\(t\_k\)</span> 进行求导并令其为0，求得的 <span
-class="math inline">\(t\_k\)</span>
+class="math inline">\(t_k\)</span> 是未知，因此可对 <span
+class="math inline">\(t_k\)</span> 进行求导并令其为0，求得的 <span
+class="math inline">\(t_k\)</span>
 即为当前的最优的步长，因为这个步长令当前迭代下降的距离最大。</p>
-<p><span class="math display">\[f(x^{(k-1)} - t\_k\nabla f(x^{(k-1)}
+<p><span class="math display">\[f(x^{(k-1)} - t_k\nabla f(x^{(k-1)}
 ))\]</span></p>
 <p>这种方法也被称为最速下降法。</p>
 <h3 id="subgradient-descent">subgradient descent</h3>
@@ -523,74 +523,74 @@ alt="sub1" />
 &amp;x \neq 0\\\
 [-1,1] &amp; x=0\end{cases}\]</span></p>
 <p>对于函数 <span class="math inline">\(f(x) =
-||x||\_2\)</span>,其图像如下</p>
+||x||_2\)</span>,其图像如下</p>
 <figure>
 <img data-src="https://wulc.me/imgs/image_1bgiiehmc19eb1j631gejubdc191t.png"
 alt="sub2" />
 <figcaption aria-hidden="true">sub2</figcaption>
 </figure>
 <p>其subgradient为 <span class="math display">\[g = \begin{cases}
-x/||x||\_2&amp;x \neq 0\\\
-\lbrace z: ||z||\_2 \le 1\rbrace &amp; x=0\end{cases}\]</span></p>
+x/||x||_2&amp;x \neq 0\\\
+\lbrace z: ||z||_2 \le 1\rbrace &amp; x=0\end{cases}\]</span></p>
 <p>对于函数 <span class="math inline">\(f(x) =
-||x||\_1\)</span>,其图像如下</p>
+||x||_1\)</span>,其图像如下</p>
 <figure>
 <img data-src="https://wulc.me/imgs/image_1bgiiioee1oir157n1ij714db14982a.png"
 alt="sub3" />
 <figcaption aria-hidden="true">sub3</figcaption>
 </figure>
 <p>其subgradient为 <span class="math display">\[g = \begin{cases}
-sign(x\_i) &amp;x\_i \neq 0\\\
-[-1,1] &amp; x\_i=0\end{cases}\]</span></p>
+sign(x_i) &amp;x_i \neq 0\\\
+[-1,1] &amp; x_i=0\end{cases}\]</span></p>
 <p>对于两个相交的函数 <span class="math inline">\(f(x) = \max \lbrace
-f(x\_1), f(x\_2)\rbrace\)</span>,设其函数图像如下</p>
+f(x_1), f(x_2)\rbrace\)</span>,设其函数图像如下</p>
 <figure>
 <img data-src="https://wulc.me/imgs/image_1bgiinl7i1ejimgncpdp0v13b62n.png"
 alt="sub4" />
 <figcaption aria-hidden="true">sub4</figcaption>
 </figure>
 <p>则其subgradient为<span class="math display">\[g = \begin{cases}
-\nabla f(x\_1) &amp;f(x\_1) &gt; f(x\_2) \\\
-\nabla f(x\_2) &amp;f(x\_1) &lt; f(x\_2) \\\
-[\min \lbrace \nabla f(x\_1),\nabla f(x\_2)\rbrace, \max \lbrace \nabla
-f(x\_1), \nabla f(x\_2)\rbrace] &amp;f(x\_1) = f(x\_2)\end{cases}
+\nabla f(x_1) &amp;f(x_1) &gt; f(x_2) \\\
+\nabla f(x_2) &amp;f(x_1) &lt; f(x_2) \\\
+[\min \lbrace \nabla f(x_1),\nabla f(x_2)\rbrace, \max \lbrace \nabla
+f(x_1), \nabla f(x_2)\rbrace] &amp;f(x_1) = f(x_2)\end{cases}
 \]</span></p>
 <p>而 subgradient descent 与 gradient descent
 的不同地方就是当函数不可微的时候，将 gradient descent 中更新公式中的
 gradient 换成 subgradient。下面看一个经典的
 <code>lasso regression</code> 问题。</p>
-<p><span class="math display">\[\min\_{\beta \in \mathbb {R}^n}
-\frac{1}{2} ||y-\beta||\_2^2 + \lambda ||\beta||\_1~~(\lambda \ge
+<p><span class="math display">\[\min_{\beta \in \mathbb {R}^n}
+\frac{1}{2} ||y-\beta||_2^2 + \lambda ||\beta||_1~~(\lambda \ge
 0)\]</span></p>
 <p>对目标函数求导并令其为0，其中 <span
-class="math inline">\(||\beta||\_1\)</span>
+class="math inline">\(||\beta||_1\)</span>
 项不可导，用前面提到的subgradient代替，则有以下等式</p>
-<p><span class="math display">\[\begin{cases} y\_i - \beta\_i = \lambda
-sign(\beta\_i) &amp;\beta\_i \neq 0\\\
-|y\_i - \beta\_i| \le \lambda &amp;\beta\_i = 0
+<p><span class="math display">\[\begin{cases} y_i - \beta_i = \lambda
+sign(\beta_i) &amp;\beta_i \neq 0\\\
+|y_i - \beta_i| \le \lambda &amp;\beta_i = 0
 \end{cases}\]</span></p>
 <p>则解可表示成</p>
-<p><span class="math display">\[\beta\_i = \begin{cases} y\_i - \lambda
-&amp; y\_i &gt; \lambda\\\
-0 &amp;-\lambda \le y\_i \le \lambda \\\
-y\_i + \lambda &amp; y\_i &lt; -\lambda\end{cases}\]</span></p>
+<p><span class="math display">\[\beta_i = \begin{cases} y_i - \lambda
+&amp; y_i &gt; \lambda\\\
+0 &amp;-\lambda \le y_i \le \lambda \\\
+y_i + \lambda &amp; y_i &lt; -\lambda\end{cases}\]</span></p>
 <p>上面实际上是简化了的 <code>lasso regression</code>，
 因为更一般的lasso 问题表示如下</p>
-<p><span class="math display">\[\min\_{\beta \in \mathbb {R}^n}
-\frac{1}{2} ||y-X\beta||\_2^2 + \lambda ||\beta||\_1~~(\lambda \ge
+<p><span class="math display">\[\min_{\beta \in \mathbb {R}^n}
+\frac{1}{2} ||y-X\beta||_2^2 + \lambda ||\beta||_1~~(\lambda \ge
 0)\]</span></p>
 <p>这时如果采用上面的解法，那么会得到</p>
-<p><span class="math display">\[\begin{cases} X\_i^T(y - X\beta) =
-\lambda sign(\beta\_i) &amp;\beta\_i \neq 0\\\
-|X\_i^T(y - X\beta)| \le \lambda &amp;\beta\_i = 0
+<p><span class="math display">\[\begin{cases} X_i^T(y - X\beta) =
+\lambda sign(\beta_i) &amp;\beta_i \neq 0\\\
+|X_i^T(y - X\beta)| \le \lambda &amp;\beta_i = 0
 \end{cases}\]</span></p>
 <p>上式并没有为这个 lasso
 问题提供一个明确的解，这个问题可以通过下面要提到的 proximal gradient
 进行求解，但是上面的式子一定程度上解释了<code>L1 regularization</code>的导致的参数的稀疏性的特点，从上面的表达式可知，只有当
-<span class="math inline">\(X\_i^T(y - X\beta) = \lambda
-sign(\beta\_i)\)</span> 时，对应的 <span
-class="math inline">\(\beta\_i\)</span> 才不为0，而其他大多数的情况下
-<span class="math inline">\(\beta\_i\)</span> 为0.</p>
+<span class="math inline">\(X_i^T(y - X\beta) = \lambda
+sign(\beta_i)\)</span> 时，对应的 <span
+class="math inline">\(\beta_i\)</span> 才不为0，而其他大多数的情况下
+<span class="math inline">\(\beta_i\)</span> 为0.</p>
 <h3 id="proximal-gradient-descent">proximal gradient descent</h3>
 <p>proximal gradient descent 也可以说是 subgradient
 的升级版，<strong>proximal 通过对原问题的拆分并利用 proximal
@@ -602,36 +602,36 @@ lasso 问题）。</strong></p>
 <span class="math inline">\(h(x)\)</span> 也是凸的，但是不一定可微。则
 proximal gradient descent 的迭代公式为</p>
 <p><span class="math display">\[x^{(k)} = x^{(k-1)} -
-t\_kG\_{t\_k}(x^{(k-1)})\\\
-G\_{t}(x) = \frac{x - prox\_{th}(x-t\nabla g(x))}{t}\\\
-prox\_{th}(x) = argmin\_{z\in \mathbb {R}^n}
-\frac{1}{2t}||x-z||\_2^2+h(z)\]</span></p>
-<p>上面 <span class="math inline">\(prox\_{th}(x)\)</span> 表示对函数
+t_kG_{t_k}(x^{(k-1)})\\\
+G_{t}(x) = \frac{x - prox_{th}(x-t\nabla g(x))}{t}\\\
+prox_{th}(x) = argmin_{z\in \mathbb {R}^n}
+\frac{1}{2t}||x-z||_2^2+h(z)\]</span></p>
+<p>上面 <span class="math inline">\(prox_{th}(x)\)</span> 表示对函数
 <span class="math inline">\(h\)</span> proximal
 mapping。这里仅给出结论，证明过程略，接下来以上面没有解决的一般化的
 lasso 问题为例讲述这种方法的应用。</p>
-<p><span class="math display">\[\min\_{\beta \in \mathbb {R}^n}
-\frac{1}{2} ||y-X\beta||\_2^2 + \lambda ||\beta||\_1~~(\lambda \ge
+<p><span class="math display">\[\min_{\beta \in \mathbb {R}^n}
+\frac{1}{2} ||y-X\beta||_2^2 + \lambda ||\beta||_1~~(\lambda \ge
 0)\]</span></p>
 <p>记 <span class="math inline">\(g(\beta) = \frac{1}{2}
-||y-X\beta||\_2^2, h(\beta) = \lambda ||\beta||\_1\)</span></p>
-<p>则有 <span class="math display">\[prox\_{th}(\beta) = argmin\_{z \in
-\mathbb {R}^n} \frac{1}{2t}||\beta - z||\_2^2+h(z) \]</span></p>
+||y-X\beta||_2^2, h(\beta) = \lambda ||\beta||_1\)</span></p>
+<p>则有 <span class="math display">\[prox_{th}(\beta) = argmin_{z \in
+\mathbb {R}^n} \frac{1}{2t}||\beta - z||_2^2+h(z) \]</span></p>
 <p>这个问题通过前面的 subgradient 方法已经解出来，结果为</p>
-<p><span class="math display">\[z\_i = \begin{cases} y\_i - \lambda t
-&amp; y\_i &gt; \lambda t\\\
-0 &amp;-\lambda t \le y\_i \le \lambda t\\\
-y\_i + \lambda t &amp; y\_i &lt; -\lambda t\end{cases}\]</span></p>
-<p>将上面的解记为 <span class="math inline">\(S\_{\lambda
-t}(y)\)</span>, 同时 <span class="math inline">\(\nabla g(\beta) = -
+<p><span class="math display">\[z_i = \begin{cases} y_i - \lambda t
+&amp; y_i &gt; \lambda t\\\
+0 &amp;-\lambda t \le y_i \le \lambda t\\\
+y_i + \lambda t &amp; y_i &lt; -\lambda t\end{cases}\]</span></p>
+<p>将上面的解记为 <span class="math inline">\(S_{\lambda t}(y)\)</span>,
+同时 <span class="math inline">\(\nabla g(\beta) = -
 X^T(y-X\beta)\)</span></p>
 <p>代取上面列出的 proximal gradient descent 列出的迭代公式，则 <span
 class="math inline">\(\beta\)</span> 的迭代公式如下</p>
-<p><span class="math display">\[\beta^{(k)} = S\_{\lambda
-t}(\beta^{(k-1)} + t\_kX^T(y-X\beta^{(k-1)}))\]</span></p>
-<p>其中 <span class="math inline">\(t\_k\)</span> 为步长。</p>
+<p><span class="math display">\[\beta^{(k)} = S_{\lambda
+t}(\beta^{(k-1)} + t_kX^T(y-X\beta^{(k-1)}))\]</span></p>
+<p>其中 <span class="math inline">\(t_k\)</span> 为步长。</p>
 <p>这种方法之所以比 subgradient 方法更加一般化，是因为 <span
-class="math inline">\(prox\_{th}(x)\)</span> 对于绝大部分的 <span
+class="math inline">\(prox_{th}(x)\)</span> 对于绝大部分的 <span
 class="math inline">\(h\)</span> 是易求的。</p>
 <h2 id="对偶方法与kkt条件">对偶方法与KKT条件</h2>
 <p>对偶理论在最优化中非常重要，其中具有代表性的两条定理是弱对偶定理和强对偶定理，<strong>弱对偶定理告诉了我们最优化的目标的上界(
@@ -641,38 +641,38 @@ max 问题)或下界(min 问题)，而强对偶定理告诉了当 KKT
 成立时才成立，该条件描述如下</p>
 <p>对于优化问题</p>
 <p><span class="math display">\[
-\begin{align\*}
-&amp;\min\_x\quad f(x)\\\
+\begin{align*}
+&amp;\min_x\quad f(x)\\\
 &amp;\begin{array}\\\
-s.t.&amp;g\_i(x) \le 0,~i=1,\ldots,m\\\
-&amp;h\_j(x)=0,~j=1,\ldots,r
+s.t.&amp;g_i(x) \le 0,~i=1,\ldots,m\\\
+&amp;h_j(x)=0,~j=1,\ldots,r
 \end{array}
-\end{align\*}
+\end{align*}
 \]</span></p>
 <p>假如存在可行解 <span class="math inline">\(x&#39;\)</span> 使得 <span
-class="math inline">\(g\_i(x&#39;) &lt; 0(i=1,...m)\)</span>,
+class="math inline">\(g_i(x&#39;) &lt; 0(i=1,...m)\)</span>,
 即不等式约束严格成立（注意同时等式约束也要成立，否则就不是可行解了），那么称<code>Slater's condition</code>
 成立，同时强对偶也成立。</p>
 <h3 id="线性规划对偶">线性规划对偶</h3>
 <p>对于形如下面的线性规划问题</p>
 <p><span class="math display">\[
-\begin{align\*}
-&amp;\min\_x\quad c^Tx\\\
+\begin{align*}
+&amp;\min_x\quad c^Tx\\\
 &amp;\begin{array}\\\
 s.t.&amp;Ax = b\\\
 &amp;Gx \le h
 \end{array}
-\end{align\*}
+\end{align*}
 \]</span></p>
 <p>其对偶问题为</p>
 <p><span class="math display">\[
-\begin{align\*}
-&amp;\min\_{u,v}\quad -b^Tu - h^Tv\\\
+\begin{align*}
+&amp;\min_{u,v}\quad -b^Tu - h^Tv\\\
 &amp;\begin{array}\\\
 s.t.&amp;-A^Tu - G^Tv = c\\\
 &amp; v \ge 0
 \end{array}
-\end{align\*}
+\end{align*}
 \]</span></p>
 <p>对于 LP 问题，其对偶的特殊性在于只要存在原问题存在可行解，那么
 <code>Slater's condition</code> 一定成立，因此强对偶也成立.</p>
@@ -685,43 +685,44 @@ cut)问题.</p>
 target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%8B%89%E6%A0%BC%E6%9C%97%E6%97%A5%E4%B9%98%E6%95%B0">拉格朗日乘子法</a>的一个推广。</p>
 <p>对于下面的优化问题</p>
 <p><span class="math display">\[
-\begin{align\*}
-&amp;\min\_x\quad f(x)\\\
+\begin{align*}
+&amp;\min_x\quad f(x)\\\
 &amp;\begin{array}\\\
-s.t.&amp;g\_i(x) \le 0,~i=1,\ldots,m\\\
-&amp;h\_j(x)=0,~j=1,\ldots,r
+s.t.&amp;g_i(x) \le 0,~i=1,\ldots,m\\\
+&amp;h_j(x)=0,~j=1,\ldots,r
 \end{array}
-\end{align\*}
+\end{align*}
 \]</span></p>
 <p>其増广拉格朗日函数为</p>
-<p><span class="math display">\[L(x,u,v) = f(x) + \sum\_{i=1}^m
-u\_ig\_i(x) + \sum\_{j=1}^r v\_jh\_j(x)~~(u\_i \ge 0)\]</span></p>
+<p><span class="math display">\[L(x,u,v) = f(x) + \sum_{i=1}^m u_ig_i(x)
++ \sum_{j=1}^r v_jh_j(x)~~(u_i \ge 0)\]</span></p>
 <p>则原问题的拉格朗日对偶函数为</p>
-<p><span class="math display">\[ g(u,v) = \min\_x L(x,u,v)\]</span></p>
+<p><span class="math display">\[ g(u,v) = \min_x L(x,u,v)\]</span></p>
 <p>且原问题的对偶问题为</p>
 <p><span class="math display">\[
-\begin{align\*}
-&amp;\max\_{u,v}\quad g(u,v)\\\
+\begin{align*}
+&amp;\max_{u,v}\quad g(u,v)\\\
 &amp;\begin{array}\\\
-s.t.&amp;u\_i \ge 0,~i=1,\ldots,m
+s.t.&amp;u_i \ge 0,~i=1,\ldots,m
 \end{array}
-\end{align\*}
+\end{align*}
 \]</span></p>
 <p>上面得到对偶问题的简单推导流程如下：</p>
 <p>首先原问题的目标函数<strong>加上约束</strong>可以表示为</p>
-<p><span class="math display">\[f(x) = \max\_{u,v} L(x,u,v)\]</span></p>
+<p><span class="math display">\[f(x) = \max_{u,v} L(x,u,v)\]</span></p>
 <p>原因是在增广拉格朗日函数中，假如 <span
 class="math inline">\(x\)</span> 违反了约束条件(即 $ g(x) &gt; 0 $
 )，那么 <span class="math inline">\(f(x)\)</span>
 会趋向无穷大；而不违反约束条件时，<span class="math inline">\(u\)</span>
 必须取0才能使得目标最小。</p>
-<p>进一步，原问题可以表示为 <span class="math display">\[\min\_x
-\max\_{u,v} L(x,u,v) \]</span></p>
+<p>进一步，原问题可以表示为 <span class="math display">\[\min_x
+\max_{u,v} L(x,u,v) \]</span></p>
 <p>而由于下式恒成立（弱对偶定理）</p>
-<p><span class="math display">\[\min\_x \max\_{u,v} L(x,u,v) \ge
-\max\_{u,v} \min\_xL(x,u,v) \]</span></p>
-<p>因此将 <span class="math inline">\(\min\_xL(x,u,v)\)</span>
-作为对偶函数， $_{u,v} _xL(x,u,v) $ 作为对偶问题。</p>
+<p><span class="math display">\[\min_x \max_{u,v} L(x,u,v) \ge
+\max_{u,v} \min_xL(x,u,v) \]</span></p>
+<p>因此将 <span class="math inline">\(\min_xL(x,u,v)\)</span>
+作为对偶函数， <span class="math inline">\(\max_{u,v}
+\min_xL(x,u,v)\)</span> 作为对偶问题。</p>
 <p>假设现在找到了对偶问题，并且对偶问题比原问题要容易求解得多，也求出了对偶问题的解，那么该转化去求原问题的解，这里就要用到下面的KKT条件。</p>
 <h3 id="kkt-条件">KKT 条件</h3>
 <p>KKT
@@ -729,22 +730,22 @@ class="math inline">\(x\)</span> 违反了约束条件(即 $ g(x) &gt; 0 $
 <p>同样地</p>
 <p>对于下面的优化问题</p>
 <p><span class="math display">\[
-\begin{align\*}
-&amp;\min\_x\quad f(x)\\\
+\begin{align*}
+&amp;\min_x\quad f(x)\\\
 &amp;\begin{array}\\\
-s.t.&amp;g\_i(x) \le 0,~i=1,\ldots,m\\\
-&amp;h\_j(x)=0,~j=1,\ldots,r
+s.t.&amp;g_i(x) \le 0,~i=1,\ldots,m\\\
+&amp;h_j(x)=0,~j=1,\ldots,r
 \end{array}
-\end{align\*}
+\end{align*}
 \]</span></p>
 <p>其増广拉格朗日函数为</p>
-<p><span class="math display">\[L(x,u,v) = f(x) + \sum\_{i=1}^m
-u\_ig\_i(x) + \sum\_{j=1}^r v\_jh\_j(x)~~(u\_i \ge 0)\]</span></p>
+<p><span class="math display">\[L(x,u,v) = f(x) + \sum_{i=1}^m u_ig_i(x)
++ \sum_{j=1}^r v_jh_j(x)~~(u_i \ge 0)\]</span></p>
 <p>则 KKT 条件为</p>
-<p><span class="math display">\[\begin{cases} \nabla\_x L(x,u,v) = 0\\\
-u\_ig(x) = 0\\\
-u\_i \ge 0\\\
-g\_i(x) \le 0, h\_j(x)=0
+<p><span class="math display">\[\begin{cases} \nabla_x L(x,u,v) = 0\\\
+u_ig(x) = 0\\\
+u_i \ge 0\\\
+g_i(x) \le 0, h_j(x)=0
 \end{cases}\]</span></p>
 <p>因此其实只要能够求解出上面的联立方程组，得到的解就是最优解（对于凸优化而言，非凸的问题一般用KKT来验证最优解）。</p>
 <p>但是上面的方程组往往很难求解，一些特殊情况下解是有限的，可以分类讨论；但是更一般的情况下可能的解是无限的，因此无法求解。这里要结合上面的拉格朗日对偶问题得到的解进行求解。</p>
@@ -769,21 +770,21 @@ MPI 等)中迭代求解这个问题，关于这方面的资料可参考<a
 target="_blank" rel="noopener" href="http://stanford.edu/~boyd/admm.html">这里</a></p>
 <p>ADMM 将要解决的问题描述成以下形式</p>
 <p><span class="math display">\[
-\begin{align\*}
-&amp;\min\_x\quad f\_1(x\_1) + f\_2(x\_2)\\\
+\begin{align*}
+&amp;\min_x\quad f_1(x_1) + f_2(x_2)\\\
 &amp;\begin{array}\\\
-s.t.&amp; A\_1x\_1+A\_2x\_2 = b
+s.t.&amp; A_1x_1+A_2x_2 = b
 \end{array}
-\end{align\*}
+\end{align*}
 \]</span></p>
 <p>这里省略证明过程，直接给出 ADMM 的迭代公式</p>
-<p><span class="math display">\[\begin{align\*}
-&amp;x\_1^{(k)} = argmin\_{x\_1} f\_1(x\_1) +
-\frac{\rho}{2}||A\_1x\_1+A\_2x\_2^{(k-1)} - b + w^{(k-1)}||\_2^2\\\
-&amp;x\_2^{(k)} = argmin\_{x\_2} f\_2(x\_2) +
-\frac{\rho}{2}||A\_1x\_1^{(k)} + A\_2x\_2 - b + w^{(k-1)}||\_2^2\\\
-&amp;w^{(k)} = w^{(k-1)} + A\_1x\_1^{(k)} + A\_2x\_2^{(k)} - b
-\end{align\*}
+<p><span class="math display">\[\begin{align*}
+&amp;x_1^{(k)} = argmin_{x_1} f_1(x_1) +
+\frac{\rho}{2}||A_1x_1+A_2x_2^{(k-1)} - b + w^{(k-1)}||_2^2\\\
+&amp;x_2^{(k)} = argmin_{x_2} f_2(x_2) + \frac{\rho}{2}||A_1x_1^{(k)} +
+A_2x_2 - b + w^{(k-1)}||_2^2\\\
+&amp;w^{(k)} = w^{(k-1)} + A_1x_1^{(k)} + A_2x_2^{(k)} - b
+\end{align*}
 \]</span></p>
 <p>上式中的 <span class="math inline">\(\rho\)</span>
 是事先选择的参数，可以选择定值，选择定值的时候会遇到跟梯度下降固定步长的类似问题，因此也可以根据每次迭代情况改变
@@ -792,42 +793,41 @@ target="_blank" rel="noopener" href="http://stanford.edu/~boyd/papers/pdf/admm_d
 <p>实际中，<strong>难点在于把一个问题变为 ADMM
 求解的形式</strong>，即上面列出的优化问题的形式。下面给出一个例子说明这个问题，这个例子是一个更一般的
 lasso regression 问题，称为 <code>fused lasso regression</code>.</p>
-<p><span class="math display">\[\min\_{\beta \in \mathbb {R}^n}
-\frac{1}{2} ||y-X\beta||\_2^2 + \lambda ||D\beta||\_1~~(\lambda \ge
+<p><span class="math display">\[\min_{\beta \in \mathbb {R}^n}
+\frac{1}{2} ||y-X\beta||_2^2 + \lambda ||D\beta||_1~~(\lambda \ge
 0)\]</span></p>
 <p>一般的 lasso regression 问题中 <span class="math inline">\(D =
 I\)</span>.下面用 ADMM 的形式表示上面的问题</p>
-<p><span class="math display">\[\min\_{\beta \in \mathbb {R}^n，\alpha
-\in \mathbb {R}^n} \frac{1}{2} ||y-X\beta||\_2^2 + \lambda
-||\alpha||\_1~~(\lambda \ge 0)\\\
+<p><span class="math display">\[\min_{\beta \in \mathbb {R}^n，\alpha
+\in \mathbb {R}^n} \frac{1}{2} ||y-X\beta||_2^2 + \lambda
+||\alpha||_1~~(\lambda \ge 0)\\\
 s.t. D\beta - \alpha = 0\]</span></p>
 <p>将这个问题映射到上面的优化问题的模式有</p>
-<p><span class="math display">\[\frac{1}{2} ||y-X\beta||\_2^2\rightarrow
-f\_1(x1) \\\
-\lambda ||\alpha||\_1 \rightarrow f\_2(x\_2)\\\
-D\beta - \alpha = 0 \rightarrow A\_1x\_1+A\_2x\_2 = b\]</span></p>
+<p><span class="math display">\[\frac{1}{2} ||y-X\beta||_2^2\rightarrow
+f_1(x1) \\\
+\lambda ||\alpha||_1 \rightarrow f_2(x_2)\\\
+D\beta - \alpha = 0 \rightarrow A_1x_1+A_2x_2 = b\]</span></p>
 <p>则根据上面的迭代公式计算（对问题变量求导且令结果为0）可得到下面的迭代公式</p>
-<p><span class="math display">\[\begin{align\*}
+<p><span class="math display">\[\begin{align*}
 &amp;\beta^{(k)} = (X^TX+\rho D^TD)^{-1}(X^Ty+\rho
 D^T(\alpha^{(k-1)}-w^{(k-1)})\\\
-&amp;\alpha^{(k)} = S\_{\lambda/\rho}(D\beta^{(k)}+w^{(k-1)})\\\
+&amp;\alpha^{(k)} = S_{\lambda/\rho}(D\beta^{(k)}+w^{(k-1)})\\\
 &amp;w^{(k)} = w^{(k-1)} + D\beta^{(k)} - \alpha^{(k)}
-\end{align\*}
+\end{align*}
 \]</span></p>
 <p>而对于无约束的优化也可以通过 ADMM 求解，例如对于下面的问题</p>
-<p><span class="math display">\[\min\_x \sum\_{i=1}^B
-f\_i(x)\]</span></p>
+<p><span class="math display">\[\min_x \sum_{i=1}^B f_i(x)\]</span></p>
 <p>将其表示为ADMM的形式如下</p>
-<p><span class="math display">\[\min\_{x\_1,..x\_B,x} \sum\_{i=1}^B
-f\_i(x\_i)\\\
-s.t. x\_i = x,~~i=1,..B\]</span></p>
+<p><span class="math display">\[\min_{x_1,..x_B,x} \sum_{i=1}^B
+f_i(x_i)\\\
+s.t. x_i = x,~~i=1,..B\]</span></p>
 <p>则ADMM的迭代规则如下</p>
-<p><span class="math display">\[\begin{align\*}
-&amp;x\_i^{(k)} = argmin\_{x\_i}
-f\_i(x\_i)+\frac{\rho}{2}||x\_i-x^{(k-1)}+w\_i^{(k-1)}||~(i=1,..B)\\\
-&amp;x^{(k)} = \frac{1}{B} \sum\_{i=1}^B (x\_i^{(k)} + w\_i^{(k-1)})\\\
-&amp;w\_i^{(k)} = w\_i^{(k-1)} + x\_i^{(k)} - x^{(k)}~(i=1,..B)
-\end{align\*}
+<p><span class="math display">\[\begin{align*}
+&amp;x_i^{(k)} = argmin_{x_i}
+f_i(x_i)+\frac{\rho}{2}||x_i-x^{(k-1)}+w_i^{(k-1)}||~(i=1,..B)\\\
+&amp;x^{(k)} = \frac{1}{B} \sum_{i=1}^B (x_i^{(k)} + w_i^{(k-1)})\\\
+&amp;w_i^{(k)} = w_i^{(k-1)} + x_i^{(k)} - x^{(k)}~(i=1,..B)
+\end{align*}
 \]</span></p>
 
     </div>

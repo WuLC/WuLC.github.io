@@ -42,7 +42,7 @@
 <meta property="og:image" content="https://wulc.me/imgs/HighlightDetection_LessIsMore_ablation1.jpg">
 <meta property="og:image" content="https://wulc.me/imgs/HighlightDetection_LessIsMore_ablation2.jpg">
 <meta property="article:published_time" content="2022-08-27T04:00:37.000Z">
-<meta property="article:modified_time" content="2023-04-30T05:12:49.122Z">
+<meta property="article:modified_time" content="2023-05-10T14:37:15.886Z">
 <meta property="article:author" content="良超">
 <meta property="article:tag" content="计算广告">
 <meta property="article:tag" content="机器学习">
@@ -415,7 +415,7 @@ noise，所以需要计算每对 pair 的置信度，因此引入了一个 binar
 variable <span class="math inline">\(w_{ij}\)</span>，表示每对 pair
 的置信度, 因此上面的损失函数变成了如下形式</p>
 <p><span class="math display">\[
-\begin{align\*}
+\begin{align*}
 &amp;L(D) = \sum_{(s_i, s_j) \in \mathcal{P}} w_{ij} \max(0, 1 - f(x_i)
 + f(x_j)) \\\
 &amp;\begin{array} \\\
@@ -423,7 +423,7 @@ s.t.&amp; \sum_{(s_i, s_j) \in \mathcal{P}} w_{ij} = p|\mathcal{P}|,
 w_{ij} \in [0,1] \\\
 &amp;w_{ij} = h(x_i, x_j)
 \end{array}
-\end{align\*}
+\end{align*}
 \]</span></p>
 <p>上面的 <span class="math inline">\(p\)</span> 表示训练样本里有效的
 pair 的比例，<span class="math inline">\(h\)</span> 则是计算 <span
@@ -446,7 +446,7 @@ class="math inline">\(\sigma\)</span> 是个 softmax 函数，生效在 <span
 class="math inline">\(\mathcal{P_g}\)</span> 中，相当于 <span
 class="math inline">\(p=\frac{1}{n}\)</span></p>
 <p><span class="math display">\[
-\begin{align\*}
+\begin{align*}
 &amp;L(D) = \sum_{g=1}^{m} \sum_{(s_i, s_j) \in \mathcal{P_g}} w_{ij}
 \max(0, 1 - f(x_i) + f(x_j)) \\\
 &amp;\begin{array}\\\
@@ -454,7 +454,7 @@ s.t.&amp; \sum_{(s_i, s_j) \in \mathcal{P_g}} w_{ij} = \sum_{(s_i, s_j)
 \in \mathcal{P_g}} \sigma(h(x_i, x_j)) = 1 \\\
 &amp;w_{ij} \in [0,1]
 \end{array}
-\end{align\*}
+\end{align*}
 \]</span></p>
 <p>实验采用的指标是 mAP(mean average precision)，在 object detection
 中比较常见的指标，可以简单理解为多个类别物体检测中，每一个类别都可以根据recall和precision绘制一条曲线，AP
