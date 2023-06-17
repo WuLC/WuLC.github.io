@@ -37,7 +37,7 @@
 <meta property="og:image" content="https://wulc.me/imgs/image_1cquteetoe1r441vp86lf15r450.png">
 <meta property="og:image" content="https://wulc.me/imgs/image_1cqutoq7r1bd31bbkrst4pe1s3o5d.png">
 <meta property="article:published_time" content="2018-10-25T13:37:39.000Z">
-<meta property="article:modified_time" content="2023-04-30T05:12:49.022Z">
+<meta property="article:modified_time" content="2023-06-17T02:38:16.262Z">
 <meta property="article:author" content="良超">
 <meta property="article:tag" content="计算广告">
 <meta name="twitter:card" content="summary">
@@ -286,40 +286,40 @@ campaign（推广计划）的消耗趋势与其曝光变化趋势基本保持一
 的比例，则说明预算已经消耗过快，需要减小消耗的速度，反之则要加快消耗的速度。</p>
 <p>下面详细讲述这个算法的原理</p>
 <p>对于某个 campaign <span class="math inline">\(i\)</span>，记其出价为
-<span class="math inline">\(b\_i\)</span>，当天预算为 <span
-class="math inline">\(d\_i\)</span>。一天的时间被划分为 <span
+<span class="math inline">\(b_i\)</span>，当天预算为 <span
+class="math inline">\(d_i\)</span>。一天的时间被划分为 <span
 class="math inline">\(T\)</span> 个时间窗口， <span
-class="math inline">\(s\_{i,t}(0 \le t \lt T)\)</span> 表示截止到第
-<span class="math inline">\(t\)</span> 个时间窗口开始时的累积预算，<span
-class="math inline">\(f\_{i,t}\)</span> 与 <span
-class="math inline">\(s\_{i,t}\)</span> 对应，表示截止到第 <span
+class="math inline">\(s_{i,t}(0 \le t \lt T)\)</span> 表示截止到第 <span
+class="math inline">\(t\)</span> 个时间窗口开始时的累积预算，<span
+class="math inline">\(f_{i,t}\)</span> 与 <span
+class="math inline">\(s_{i,t}\)</span> 对应，表示截止到第 <span
 class="math inline">\(t\)</span> 个时间窗口开始时的累积曝光(<span
-class="math inline">\(f\_{i,t}\)</span> 是预测出来的，下式的 <span
-class="math inline">\(f\_{i,T}\)</span> 表示预测出来 campaign <span
+class="math inline">\(f_{i,t}\)</span> 是预测出来的，下式的 <span
+class="math inline">\(f_{i,T}\)</span> 表示预测出来 campaign <span
 class="math inline">\(i\)</span> 在当天的总曝光)。则在时间窗口 <span
 class="math inline">\(t\)</span> 开始时，有</p>
-<p><span class="math display">\[a\_{it} := \frac{f\_{i, t}}{f\_{i,
-T}}d\_i\]</span></p>
+<p><span class="math display">\[a_{it} := \frac{f_{i, t}}{f_{i,
+T}}d_i\]</span></p>
 <p>根据上面的比例，<strong>在每次竞价开始时，为 campaign <span
 class="math inline">\(i\)</span> 算出其参与这次竞价的概率 <span
-class="math inline">\(p\_{i,t}\)</span></strong>，论文称这个概率为
+class="math inline">\(p_{i,t}\)</span></strong>，论文称这个概率为
 PTR（pass through rate）, 计算方式如下</p>
-<p><span class="math display">\[p\_{i,t} =
-\begin{cases} p\_{i, t-1}\*(1 + r\_t)&amp; s\_{i, t} \le a\_{i, t}\\\
-p\_{i, t-1}\*(1 - r\_t)&amp; s\_{i, t} \gt a\_{i, t}
+<p><span class="math display">\[p_{i,t} =
+\begin{cases} p_{i, t-1}\*(1 + r_t)&amp; s_{i, t} \le a_{i, t}\\\
+p_{i, t-1}\*(1 - r_t)&amp; s_{i, t} \gt a_{i, t}
 \end{cases}\]</span></p>
-<p>上式中的 <span class="math inline">\(r\_t(0 &lt; r\_t &lt;
-1)\)</span> 称作调整速率（adjustment rate）。</p>
+<p>上式中的 <span class="math inline">\(r_t(0 &lt; r_t &lt; 1)\)</span>
+称作调整速率（adjustment rate）。</p>
 <p>对于 campaign <span class="math inline">\(i\)</span> , <span
-class="math inline">\(a\_{it}\)</span> 在当天开始已经确定，因为 <span
-class="math inline">\(f\_{i,t}\)</span> 是预测出来的,
-因此控制预算就完全是针对 <span class="math inline">\(s\_{i,t}\)</span>
+class="math inline">\(a_{it}\)</span> 在当天开始已经确定，因为 <span
+class="math inline">\(f_{i,t}\)</span> 是预测出来的,
+因此控制预算就完全是针对 <span class="math inline">\(s_{i,t}\)</span>
 的变化进行。</p>
 <p>除了这种调整 campaign
 参与竞价概率的控制方式，某些文献也建议通过调整出价的方式进行干预，如下所示是论文
 [1] 提出的调价方式</p>
-<p><span class="math display">\[b\_i^* = b\_i \psi(s\_{i,
-t}/d\_i)\]</span></p>
+<p><span class="math display">\[b_i^* = b_i \psi(s_{i,
+t}/d_i)\]</span></p>
 <p>其中 <span class="math inline">\(\psi(x) = 1 - e^{x-1}\)</span>，但是
 LinkedIn
 这篇论文的作者不建议采用这种方式，原因是对于那些快耗尽预算的campaign，bid
@@ -338,21 +338,21 @@ min</strong>，实验证明这个更新频率使得整个系统更快达到一�
 在做保量的合约广告时提出的预估流量的方法。这里不详细展开了，会另外写一篇博客加以阐释。</p>
 <h3 id="调整速率的设置">调整速率的设置</h3>
 <p>调整速率也就是上面的 <span
-class="math inline">\(r\_t\)</span>，目的是控制 PTR
+class="math inline">\(r_t\)</span>，目的是控制 PTR
 变化的快慢，论文将这个值设置为固定的
 10%，这不仅实现简单，鲁棒性也很强。另外一种更复杂的设置方法就是将这个值设置成
-<span class="math inline">\(s\_{i,t}\)</span> 的变化率，也就是 <span
-class="math inline">\(\partial s\_{i,t}/\partial t\)</span>,
+<span class="math inline">\(s_{i,t}\)</span> 的变化率，也就是 <span
+class="math inline">\(\partial s_{i,t}/\partial t\)</span>,
 表示消耗过快的 campaign
 其对应的调整速率也应该较大。然后论文还是选择了固定的 10%
 的值，原因有两个</p>
-<p>1）<span class="math inline">\(s\_{i,t}\)</span>
+<p>1）<span class="math inline">\(s_{i,t}\)</span>
 表示的曲线并不光滑（一系列离散的点），尤其是对于 CPC
 这种有了点击才会扣费的广告，这时候的 <span
-class="math inline">\(s\_{i,t}\)</span> 波动会比较大，从而使得计算出来的
-<span class="math inline">\(\partial s\_{i,t}/\partial t\)</span> 会比较
+class="math inline">\(s_{i,t}\)</span> 波动会比较大，从而使得计算出来的
+<span class="math inline">\(\partial s_{i,t}/\partial t\)</span> 会比较
 noisy 2）PTR 的更新频率比较频繁，因此即使当前 PTR
-不在最合适的位置（<span class="math inline">\(\partial s\_{i,t}/\partial
+不在最合适的位置（<span class="math inline">\(\partial s_{i,t}/\partial
 t\)</span>），也能够很快更新到理想位置</p>
 <h3 id="设置-ptr-初始值slow-start">设置 PTR 初始值（Slow Start）</h3>
 <p>论文将每个 campaign 的 PTR 初始值设置为 10%，并将这种方式称为 slow
@@ -365,7 +365,7 @@ PTR，但是论文并没有针对这一点进行深度的探讨。</p>
 <p>由于系统存在统计偏差，使得 PTR
 的值偏低，这会导致当天预算没法完全花出去，而 fast finish
 就是针对这个问题的一种解决方法。具体的做法就是修改上面预测的 <span
-class="math inline">\(f\_{i,t}\)</span> (allocation
+class="math inline">\(f_{i,t}\)</span> (allocation
 curve)，令最后两个小时的曝光量为 0，这样会导致 budget pacing
 这个算法每天会尝试在 22 小时内花光预算。</p>
 <h3 id="工程上的设计">工程上的设计</h3>
