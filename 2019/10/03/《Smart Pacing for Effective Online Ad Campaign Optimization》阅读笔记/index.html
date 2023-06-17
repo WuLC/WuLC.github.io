@@ -39,7 +39,7 @@
 <meta property="og:image" content="https://wulc.me/imgs/SmartPacingExp3.png">
 <meta property="og:image" content="https://wulc.me/imgs/SmartPacingArchitecture.png">
 <meta property="article:published_time" content="2019-10-03T13:37:39.000Z">
-<meta property="article:modified_time" content="2023-04-30T05:12:49.093Z">
+<meta property="article:modified_time" content="2023-06-17T01:30:32.588Z">
 <meta property="article:author" content="良超">
 <meta property="article:tag" content="计算广告">
 <meta name="twitter:card" content="summary">
@@ -338,38 +338,38 @@ Goals 和 Campaigns with Performance Goals</p>
 with Performance Goals，下面会分别介绍。</p>
 <p>文章约定了一些符号以便对问题进行建模</p>
 <ul>
-<li><span class="math inline">\(r\_i\)</span>: 在第 <span
+<li><span class="math inline">\(r_i\)</span>: 在第 <span
 class="math inline">\(i\)</span> 个请求参竞的概率，就是本文描述的 pacing
-rate, <span class="math inline">\(s\_i \sim Bern(r\_i)\)</span>
+rate, <span class="math inline">\(s_i \sim Bern(r_i)\)</span>
 则表示是否参竞这个事件</li>
-<li><span class="math inline">\(w\_i\)</span>：赢得第 <span
+<li><span class="math inline">\(w_i\)</span>：赢得第 <span
 class="math inline">\(i\)</span> 个请求的概率</li>
-<li><span class="math inline">\(c\_i\)</span>: 赢得第 <span
+<li><span class="math inline">\(c_i\)</span>: 赢得第 <span
 class="math inline">\(i\)</span> 个请求的 cost</li>
-<li><span class="math inline">\(p\_i\)</span>: 在第 <span
+<li><span class="math inline">\(p_i\)</span>: 在第 <span
 class="math inline">\(i\)</span> 个请求能带来用户点击等行为的概率，<span
-class="math inline">\(q\_i \sim Bern(p\_i)\)</span>
+class="math inline">\(q_i \sim Bern(p_i)\)</span>
 则表示是否带来点击这个事件</li>
 </ul>
 <p>通过上述符合可定义</p>
 <ul>
-<li><p><span class="math inline">\(C = \sum\_i s\_iw\_ic\_i\)</span>
+<li><p><span class="math inline">\(C = \sum_i s_iw_ic_i\)</span>
 为计划的总 cost</p></li>
-<li><p><span class="math inline">\(P = \frac{C}{\sum\_i s\_i w\_i
-q\_i}\)</span> 为计划的 performance,
+<li><p><span class="math inline">\(P = \frac{C}{\sum_i s_i w_i
+q_i}\)</span> 为计划的 performance,
 即成本（如点击成本，转化成本等）,文中描述为 eCPC 即点击成本</p></li>
 </ul>
 <p>此外，计划在一天的总预算 <span class="math inline">\(B\)</span> 和总
 cost <span class="math inline">\(C\)</span> 都会被划分到 K
 个时间片内，以此来度量 budget pacing 的效果；即 <span
-class="math inline">\(B = \sum\_{t=1}^{K}B^{(t)}\)</span>， <span
-class="math inline">\(C = \sum\_{t=1}^{K}C^{(t)}\)</span>，则 budget
+class="math inline">\(B = \sum_{t=1}^{K}B^{(t)}\)</span>， <span
+class="math inline">\(C = \sum_{t=1}^{K}C^{(t)}\)</span>，则 budget
 pacing 的 error 定义如下</p>
 <p><span class="math display">\[\Omega(B, C) =
-\sqrt{\frac{1}{K}\sum\_{t=1}^{K}(C^{(t)}-B^{(t)})^2}\]</span></p>
+\sqrt{\frac{1}{K}\sum_{t=1}^{K}(C^{(t)}-B^{(t)})^2}\]</span></p>
 <p>则对第一类问题即只需要 pacing 预算的问题文章建模如下</p>
 <p><span class="math display">\[
-\min\_{r\_i} P \\\
+\min_{r_i} P \\\
 s.t\quad C = B, \Omega(C, B) \le \epsilon
 \]</span></p>
 <p>上面的 <span class="math inline">\(\epsilon\)</span> 表示可容忍的
@@ -384,7 +384,7 @@ SSP，ADX 和 DSP 都在同一个平台时，这并不适用；如微信、抖�
 <p>而对于第二类不仅需要 pacing 预算同时需要保证 performance
 的问题，文章建模如下</p>
 <p><span class="math display">\[
-\min\_{r\_i} \Omega(C, B) \\\
+\min_{r_i} \Omega(C, B) \\\
 s.t\quad P \le G,  B-C \le \epsilon
 \]</span></p>
 <p>上面的 <span class="math inline">\(G\)</span>
@@ -407,10 +407,10 @@ Performance Goals</h4>
 pacin'g</p>
 <p>根据上面的分层方法，假设每个广告计划的所有 requests 会被分成 <span
 class="math inline">\(L\)</span> 层，则在第 t-1 个时间片内各层的 pacing
-rate 记为 <span class="math inline">\(r^{(t-1)} = (r\_1^{(t-1)},
-r\_2^{(t-1)}...r\_L^{(t-1)})\)</span>, 且各层的 cost 记为 <span
-class="math inline">\(c^{(t-1)} = (c\_1^{(t-1)},
-c\_2^{(t-1)}...c\_L^{(t-1)})\)</span></p>
+rate 记为 <span class="math inline">\(r^{(t-1)} = (r_1^{(t-1)},
+r_2^{(t-1)}...r_L^{(t-1)})\)</span>, 且各层的 cost 记为 <span
+class="math inline">\(c^{(t-1)} = (c_1^{(t-1)},
+c_2^{(t-1)}...c_L^{(t-1)})\)</span></p>
 <p>前面提到一天的总预算 <span class="math inline">\(B\)</span>
 会根据时间片划分成 <span class="math inline">\(K\)</span> 份小预算，即
 <span class="math inline">\(B = (B^{(1)}, B^{(2)}....B^{(K)})\)</span>,
@@ -418,11 +418,11 @@ c\_2^{(t-1)}...c\_L^{(t-1)})\)</span></p>
 都刚好达到分配的预算值，因此<strong>如果前面的时间片中出现了少投或超投情况，就要把少投或超投那些部分均摊到后面的时间片中</strong>，所以每个时刻的预算需要根据前面的花费来调整，记的<strong>经过调整的预算为
 <span class="math inline">\(\hat{C}^{(t)}\)</span></strong>，则 <span
 class="math inline">\(\hat{C}^{(t)}\)</span> 可表示为</p>
-<p><span class="math display">\[\hat{C}^{(t)} = B^{(t)} + \frac{B\_m -
-\sum\_{i=t}^KB^{(i)}}{K-m}\]</span></p>
-<p>上式中的 <span class="math inline">\(B\_m\)</span> 表示经过了 <span
+<p><span class="math display">\[\hat{C}^{(t)} = B^{(t)} + \frac{B_m -
+\sum_{i=t}^KB^{(i)}}{K-m}\]</span></p>
+<p>上式中的 <span class="math inline">\(B_m\)</span> 表示经过了 <span
 class="math inline">\(m\)</span> 个时间片后剩余的实际预算，分母 <span
-class="math inline">\(B\_m - \sum\_{i=t}^KB^{(i)}\)</span>
+class="math inline">\(B_m - \sum_{i=t}^KB^{(i)}\)</span>
 表示当前预算花费是否超过了预期(&lt;0)或者不满足预期(&gt;0)，并通过分母均摊到后面的
 <span class="math inline">\(K-m\)</span> 个时间片中。</p>
 <p>则调整 <span class="math inline">\(L\)</span> 个的 pacing rate
@@ -462,14 +462,14 @@ rate在这里是一个超参，是一个很小的值，后面会介绍该如何�
 Goals</h4>
 <p>这部分的控制算法除了要保证 budget 被 pacing
 花完，还要保证成本小于预设的成本；而每一层的成本在这里记为 <span
-class="math inline">\(e = (e\_1, e\_2...e\_L)\)</span>, 其中 <span
-class="math inline">\(e\_i = \frac{CPM}{1000*p\_i}\)</span></p>
+class="math inline">\(e = (e_1, e_2...e_L)\)</span>, 其中 <span
+class="math inline">\(e_i = \frac{CPM}{1000*p_i}\)</span></p>
 <p>考虑了成本的算法在主要在上面的算法上增加了一个 ExpPerf
 函数，用于计算当前所有层的联合期望成本，该函数的定义如下</p>
 <p><span class="math display">\[ExpPerf(c^{(t-1)}, r^{(t-1)}, r^{(t)},
-e, i) = \frac{\sum\_{j=i}^{L} \frac{c\_j^{(t-1)}
-r\_j^{(t)}}{r\_j^{(t-1)}}}{\sum\_{j=i}^{L} \frac{c\_j^{(t-1)}
-r\_j^{(t)}}{r\_j^{(t-1)}e\_j}}\]</span></p>
+e, i) = \frac{\sum_{j=i}^{L} \frac{c_j^{(t-1)}
+r_j^{(t)}}{r_j^{(t-1)}}}{\sum_{j=i}^{L} \frac{c_j^{(t-1)}
+r_j^{(t)}}{r_j^{(t-1)}e_j}}\]</span></p>
 <p>上面的式子中的分子可理解为各层在当前时间片的 cost
 之和，分母可理解为各层在当前时间片的点击数之和，因此总体就是当前的时间片所有层的联合期望成本</p>
 <p>则成本约束的 budget pacing 控制算法过程如下所示</p>
@@ -488,7 +488,7 @@ rate 会根据上面算法第 7
 行来调整，然后算法就终止了，根据文章描述其含义是<strong>调整当前的层使得总体的期望成本达到目标的期望成本</strong>；</li>
 </ol>
 <p>但是文章并没具体解释第七行的公式的含义，比如说如分母为0时，<span
-class="math inline">\(r\_{l}^{(t)}\)</span> 岂不是变为无穷大？</p>
+class="math inline">\(r_{l}^{(t)}\)</span> 岂不是变为无穷大？</p>
 <h3 id="超参选取">超参选取</h3>
 <p>上面提过的算法的流程中涉及到多个超参数，如层数 <span
 class="math inline">\(L\)</span> 以及 trial
@@ -496,11 +496,11 @@ rate，下面介绍如何选取这两个超参</p>
 <p>对于一个新计划，决定其层数 <span class="math inline">\(L\)</span>
 的方法如下，首先找到与这个新计划最相似的老计划 <span
 class="math inline">\(a\)</span>, 并找到这个老计划最合适的 pacing rate
-<span class="math inline">\(r\_G\)</span>, 则新计划的层数可计算为<span
-class="math inline">\(L = \lceil \frac{1}{r\_G} \rceil\)</span>,
+<span class="math inline">\(r_G\)</span>, 则新计划的层数可计算为<span
+class="math inline">\(L = \lceil \frac{1}{r_G} \rceil\)</span>,
 计算的逻辑其实就是要找到这个计划最合适 pacing rate 粒度对应的层数。</p>
 <p>一旦层数决定后，在第一个时间片内会每个层都会通过 <span
-class="math inline">\(r\_G\)</span>
+class="math inline">\(r_G\)</span>
 初始化，在第一个时间片积累了数据后，后面会根据上面提到的算法调整各层的
 pacing rate。</p>
 <p>前面提到 trail rate 的目的令 pacing rate 非 0
@@ -512,16 +512,16 @@ rate，目的是为了让后面加快预算花费做准备。其设置方法如�
 划分一小部分，记为 <span class="math inline">\(\lambda\)</span>(e.g.
 <span class="math inline">\(\lambda\)</span> = 1%), 假设当前层为第 <span
 class="math inline">\(l\)</span> 层，则其 trail rate = <span
-class="math inline">\(r\_l^{(\*)} ×\frac{\lambda
-×\hat{C}^{(t)}}{c\_l^{(\*)}}\)</span> ，而 <span
-class="math inline">\(r\_l^{(\*)}\)</span> 和 <span
-class="math inline">\(c\_l^{(\*)}\)</span> 则是 <span
+class="math inline">\(r_l^{(\*)} ×\frac{\lambda
+×\hat{C}^{(t)}}{c_l^{(\*)}}\)</span> ，而 <span
+class="math inline">\(r_l^{(\*)}\)</span> 和 <span
+class="math inline">\(c_l^{(\*)}\)</span> 则是 <span
 class="math inline">\(l\)</span> 层的历史pacing rate 和 cost。</p>
 <h2 id="实验效果">实验效果</h2>
 <p>文章对提出的方法进行了AB实验评估，并与论文 Budget Pacing for Targeted
 Online Advertisements at LinkedIn
 中的方法进行了比较，预算的花费时间定义为一天，而时间片定义为15分钟；超参的值为
-<span class="math inline">\(r\_G = 0.01\)</span> 以及 <span
+<span class="math inline">\(r_G = 0.01\)</span> 以及 <span
 class="math inline">\(\lambda = 1\%\)</span></p>
 <p>考察的指标主要有三个 1）performance 2）budget spending 3）spending
 pattern</p>
