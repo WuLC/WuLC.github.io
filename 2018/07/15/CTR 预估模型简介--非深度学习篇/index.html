@@ -39,7 +39,7 @@
 <meta property="og:image" content="https://wulc.me/imgs/image_1cdkhqh8gpjrb9n1mi11o6b16tj56.png">
 <meta property="og:image" content="https://wulc.me/imgs/image_1cdkb5qkk2ie1njv17ekj5s131k4p.png">
 <meta property="article:published_time" content="2018-07-15T13:53:19.000Z">
-<meta property="article:modified_time" content="2023-04-30T05:12:49.155Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.220Z">
 <meta property="article:author" content="良超">
 <meta property="article:tag" content="计算广告">
 <meta property="article:tag" content="机器学习">
@@ -302,11 +302,11 @@ h(x)^y(1-h(x))^{1-y}\]</span></p>
 <p>有了这个概率值，则给定 <span class="math inline">\(n\)</span>
 个样本，便可通过极大似然估计来估算模型参数，即目标函数为</p>
 <p><span class="math display">\[\max
-\prod\_{i=1}^np(y\_i|x\_i)\]</span></p>
+\prod_{i=1}^np(y_i|x_i)\]</span></p>
 <p>通常我们还会对概率取 log，同时添加负号将 max
 改成min，则可将目标函数改写成如下的形式</p>
-<p><span class="math display">\[\min -\sum\_{i=1}^ny\_i\log
-h(x\_i)+(1-y\_i)\log (1-h(x\_i))\]</span></p>
+<p><span class="math display">\[\min -\sum_{i=1}^ny_i\log
+h(x_i)+(1-y_i)\log (1-h(x_i))\]</span></p>
 <p>上面的损失函数也叫作 <strong>log loss</strong>，实际上多分类的
 <strong>cross entropy</strong> 也同以通过极大似然估计推导出来。</p>
 <p>有了损失函数，便可通过优化算法来求出最优的参数，由于这是个无约束的最优化问题，可选用的方法很多，最常用的就是
@@ -321,13 +321,13 @@ gradient descent)
 相似，稀疏性指的是该算法能够解决带非光滑的L1正则项的优化问题。由于这里这篇文章主要讲述各种
 CTR 预估模型，因此这里不对优化算法做展开了。</p>
 <p>上面提到了 L1 正则项，就是在原来的损失函数基础上加上了 <span
-class="math inline">\(C\sum\_{i=1}^m |w\_i|\)</span> 这一项,
+class="math inline">\(C\sum_{i=1}^m |w_i|\)</span> 这一项,
 表示各个参数的绝对值的和乘上常数 <span
 class="math inline">\(C\)</span>；加上这一项后能够使得最终的求解出来的参数中大部分的
-<span class="math inline">\(|w\_i|\)</span>
+<span class="math inline">\(|w_i|\)</span>
 为0，这也是稀疏性的名称来源。稀疏性使得模型的复杂度下降，缓解了过拟合的问题，同时具有有特征筛选的能力。因为
 LR 模型可以理解为对各个特征进行加权求和，如果某些特征的权重即 <span
-class="math inline">\(w\_i\)</span>
+class="math inline">\(w_i\)</span>
 为0，则可认为这些特征的重要性不高。在CTR预估中输入的是海量人工特征，因此添加
 L1 正则化就更有必要了。</p>
 <p>由于 L1 正则项不再是处处光滑可导的函数，因此在优化损失函数时。原来的
@@ -368,23 +368,23 @@ target="_blank" rel="noopener" href="https://www.cnblogs.com/dreamvibe/p/4259460
 target="_blank" rel="noopener" href="https://www.zhihu.com/question/37096933/answer/70426653">l1 相比于
 l2
 为什么容易获得稀疏解？</a>，简单来说，就是<strong>当不带正则项的损失函数对于某个参数
-<span class="math inline">\(w\_i\)</span> 的导数的绝对值小于 l1
+<span class="math inline">\(w_i\)</span> 的导数的绝对值小于 l1
 正则项中的常数 <span class="math inline">\(C\)</span> 时，这个参数 <span
-class="math inline">\(w\_i\)</span> 的最优解就是0</strong>。</p>
-<p>因为求解某个参数 <span class="math inline">\(w\_i\)</span>
+class="math inline">\(w_i\)</span> 的最优解就是0</strong>。</p>
+<p>因为求解某个参数 <span class="math inline">\(w_i\)</span>
 使得损失函数取极小值时可分两种情况讨论(下面的 <span
 class="math inline">\(L\)</span> 为不带正则项的损失函数) 1）<span
-class="math inline">\(w\_i&lt;0\)</span> 时, <span
-class="math inline">\(L+C|w\_i|\)</span> 的导数为 <span
+class="math inline">\(w_i&lt;0\)</span> 时, <span
+class="math inline">\(L+C|w_i|\)</span> 的导数为 <span
 class="math inline">\(L&#39;- C\)</span> 2) <span
-class="math inline">\(w\_i&gt;0\)</span>时, <span
-class="math inline">\(L+C|w\_i|\)</span> 的导数为 <span
+class="math inline">\(w_i&gt;0\)</span>时, <span
+class="math inline">\(L+C|w_i|\)</span> 的导数为 <span
 class="math inline">\(L&#39;+C\)</span></p>
-<p>当 <span class="math inline">\(w\_i&lt;0\)</span> 时，令 <span
+<p>当 <span class="math inline">\(w_i&lt;0\)</span> 时，令 <span
 class="math inline">\(L&#39;- C &lt; 0\)</span>, 函数在递减；而当<span
-class="math inline">\(w\_i&gt;0\)</span>时, 令 <span
+class="math inline">\(w_i&gt;0\)</span>时, 令 <span
 class="math inline">\(L&#39;+C &gt; 0\)</span>, 函数在递增，则 <span
-class="math inline">\(w\_i=0\)</span>
+class="math inline">\(w_i=0\)</span>
 便是使得损失函数最小的最优解，且结合 <span class="math inline">\(L&#39;-
 C &lt; 0\)</span> 和 <span class="math inline">\(L&#39;+C &gt;
 0\)</span>，可得 <span class="math inline">\(C &gt;
@@ -446,15 +446,15 @@ LR。</p>
 LDA(Latent Dirichlet allocation) 中一个单词会按照概率分到多个 topic
 上。</p>
 <p>论文中的公式如下</p>
-<p><span class="math display">\[p(y=1|x) = g ( \sum\_{j=1}^m
-\sigma(\mu\_j^T x)\eta(w\_j^Tx))\]</span></p>
+<p><span class="math display">\[p(y=1|x) = g ( \sum_{j=1}^m
+\sigma(\mu_j^T x)\eta(w_j^Tx))\]</span></p>
 <p>公式中的符号定义如下：</p>
 <p>参数定义如下：</p>
 <ul>
 <li><span class="math inline">\(m\)</span> : region
 的个数(超参数：一般是10~100)</li>
-<li><span class="math inline">\(\Theta=\{\mu\_1,\dots,\mu\_m,
-w\_1,\dots,w\_m \}\)</span>: 表示模型的参数，需要训练</li>
+<li><span class="math inline">\(\Theta=\{\mu_1,\dots,\mu_m,
+w_1,\dots,w_m \}\)</span>: 表示模型的参数，需要训练</li>
 <li><span
 class="math inline">\(g(\cdot)\)</span>：为了让模型符合概率定义(概率和为1)的函数</li>
 <li><span class="math inline">\(\sigma(\cdot)\)</span>：将样本分到
@@ -467,9 +467,9 @@ class="math inline">\(g(x) = x\)</span>, <span
 class="math inline">\(\sigma\)</span> = softmax ，<span
 class="math inline">\(\eta\)</span> = sigmoid
 的情形，而且因此，上面的公式可写成如下的形式</p>
-<p><span class="math display">\[p(y=1|x) = \sum\_{i=1}^m
-\frac{e^{\mu\_i^Tx}}{\sum\_{j=1}^m
-e^{\mu\_j^Tx}}\frac{1}{1+e^{-w\_i^Tx}}\]</span></p>
+<p><span class="math display">\[p(y=1|x) = \sum_{i=1}^m
+\frac{e^{\mu_i^Tx}}{\sum_{j=1}^m
+e^{\mu_j^Tx}}\frac{1}{1+e^{-w_i^Tx}}\]</span></p>
 <p>这个公式其实已经变成了通过多个 LR 模型进行加权求和的 bagging
 模式，只是这里每个模型的权重是学习出来而不是事先确定的。</p>
 <p>写出了概率函数, 后面的推导跟前面的 LR
@@ -477,18 +477,18 @@ e^{\mu\_j^Tx}}\frac{1}{1+e^{-w\_i^Tx}}\]</span></p>
 class="math inline">\(\max\)</span> 问题，添加负号后转为损失函数求 <span
 class="math inline">\(\min\)</span> 问题。这里不做详细的推导了。</p>
 <p>在 LS-PLM 中也是需要添加正则项的，除了在 LR 中提到的 L1
-正则化，论文还提出了 <span class="math inline">\(L\_{2,1}\)</span>
+正则化，论文还提出了 <span class="math inline">\(L_{2,1}\)</span>
 正则项，表示如下</p>
-<p><span class="math display">\[||\Theta||\_{2,1} = \sum\_{i=1}^d \sqrt
-{\sum\_{j=1}^m(\mu\_{ij}^2+w\_{ij}^2)}\]</span></p>
+<p><span class="math display">\[||\Theta||_{2,1} = \sum_{i=1}^d \sqrt
+{\sum_{j=1}^m(\mu_{ij}^2+w_{ij}^2)}\]</span></p>
 <p>上式中的 <span class="math inline">\(d\)</span> 表示特征的维数，其中
 <span class="math inline">\(\sqrt
-{\sum\_{j=1}^m(\mu\_{ij}^2+w\_{ij}^2)}\)</span>
+{\sum_{j=1}^m(\mu_{ij}^2+w_{ij}^2)}\)</span>
 表示对某一维特征的所有参数进行 L2 正则化，而外侧的 <span
-class="math inline">\(\sum\_{i=1}^d\)</span> 表示对所有的 feature 进行
-L1 正则化，由于开方后的值必为正，因此这里也不用添加绝对值了。由于结合了
-L1 和 L2 正则项，所以论文也将这个叫做<span
-class="math inline">\(L\_{2,1}\)</span> 正则项。</p>
+class="math inline">\(\sum_{i=1}^d\)</span> 表示对所有的 feature 进行 L1
+正则化，由于开方后的值必为正，因此这里也不用添加绝对值了。由于结合了 L1
+和 L2 正则项，所以论文也将这个叫做<span
+class="math inline">\(L_{2,1}\)</span> 正则项。</p>
 <p>由于损失函数和正则项都是光滑可导的，因此优化方面比带 L1 正则的 LR
 更加简单，可选的优化方法也更多。</p>
 <p>MLR 适用的场景跟 LR 一样，也是适用于高纬稀疏特征作为输入。</p>
@@ -537,12 +537,12 @@ Tree)，将其当做回归树使用，这里的回归树是一棵在每个树节
 <ol type="1">
 <li>假设切分后左子树有 <span class="math inline">\(m\)</span>
 个样本，右子树有 <span class="math inline">\(n\)</span> 个</li>
-<li>计算左子树样本的目标值的均值为 <span class="math inline">\(y\_m =
-\frac{1}{m}\sum\_{i=1}^{m}y\_i\)</span>,
-同样计算右子树样本的目标值的均值为 <span class="math inline">\(y\_n =
-\frac{1}{n}\sum\_{j=1}^{n}y\_j\)</span></li>
-<li>平方误差和为 <span class="math inline">\(L = \sum\_{i=1}^m(y\_i -
-y\_m)^2 + \sum\_{j=1}^n(y\_j - y\_n)^2\)</span></li>
+<li>计算左子树样本的目标值的均值为 <span class="math inline">\(y_m =
+\frac{1}{m}\sum_{i=1}^{m}y_i\)</span>,
+同样计算右子树样本的目标值的均值为 <span class="math inline">\(y_n =
+\frac{1}{n}\sum_{j=1}^{n}y_j\)</span></li>
+<li>平方误差和为 <span class="math inline">\(L = \sum_{i=1}^m(y_i -
+y_m)^2 + \sum_{j=1}^n(y_j - y_n)^2\)</span></li>
 <li>对于每一个可能的切分值，我们都可计算其平方误差和 <span
 class="math inline">\(L\)</span>，选择使得 <span
 class="math inline">\(L\)</span> 最小的切分点即可。</li>
@@ -559,20 +559,20 @@ Scalable Tree Boosting System</a>)</p>
 <figcaption aria-hidden="true">xgboost</figcaption>
 </figure>
 <p>下式就是叠加了 <span class="math inline">\(T\)</span> 个 <span
-class="math inline">\(f\_t(x)\)</span> 模型作为最终的模型，<span
-class="math inline">\(f\_t(x)\)</span> 在 GBDT 中就是一棵 CART，当然
-<span class="math inline">\(f\_t(x)\)</span> 不限于树模型。</p>
-<p><span class="math display">\[F(x) = \sum\_{t=1}^Tf\_t(x)\]</span></p>
+class="math inline">\(f_t(x)\)</span> 模型作为最终的模型，<span
+class="math inline">\(f_t(x)\)</span> 在 GBDT 中就是一棵 CART，当然
+<span class="math inline">\(f_t(x)\)</span> 不限于树模型。</p>
+<p><span class="math display">\[F(x) = \sum_{t=1}^Tf_t(x)\]</span></p>
 <p>在构建每棵树的时候，输入的样本不同的地方在于每个样本的目标值 <span
 class="math inline">\(y\)</span>；如构建第 <span
 class="math inline">\(k\)</span> 棵树，对于原始样本 <span
-class="math inline">\((x\_i, y\_i)\)</span>, 其目标值变为</p>
-<p><span class="math display">\[y\_{ik} = y\_i -
-\sum\_{t=1}^{k-1}f\_t(x\_i)\]</span></p>
+class="math inline">\((x_i, y_i)\)</span>, 其目标值变为</p>
+<p><span class="math display">\[y_{ik} = y_i -
+\sum_{t=1}^{k-1}f_t(x_i)\]</span></p>
 <p>即输入第 <span class="math inline">\(k\)</span> 棵树的样本变为 <span
-class="math inline">\((x\_i, y\_{ik})\)</span>，所以在<strong>构建第
-<span class="math inline">\(k\)</span> 棵树的时候，实际上是在拟合前
-<span class="math inline">\(k-1\)</span>
+class="math inline">\((x_i, y_{ik})\)</span>，所以在<strong>构建第 <span
+class="math inline">\(k\)</span> 棵树的时候，实际上是在拟合前 <span
+class="math inline">\(k-1\)</span>
 棵树的输出值的和与样本真实值的残差。</strong></p>
 <p>回到我们的 GBDT + LR 模型，首先通过前面提到的 GBDT
 训练出一批树模型，然后样本输入每棵树后最终都会落到一个具体的叶子节点上，那我们就将这个节点标为
@@ -630,13 +630,12 @@ boosting</figcaption>
 alt="GBDT" />
 <figcaption aria-hidden="true">GBDT</figcaption>
 </figure>
-<p>上图中的 <span class="math inline">\(\tilde{y\_i}\)</span>
+<p>上图中的 <span class="math inline">\(\tilde{y_i}\)</span>
 就是我们前面说的第 <span class="math inline">\(i\)</span>
 个样本的残差，当损失函数为平方损失即 <span
 class="math display">\[L(y,F(x)) = \frac{1}{2}(y-F(x))^2\]</span></p>
 <p>对 <span class="math inline">\(F(x)\)</span> 求导得出的残差为</p>
-<p><span class="math display">\[\tilde{y\_i} = y\_i -
-F(x\_i)\]</span></p>
+<p><span class="math display">\[\tilde{y_i} = y_i - F(x_i)\]</span></p>
 <p>这正是我们前面说的样本的真实值与前面建的树的输出和的差。<strong>如果损失函数改变，这个残差值也会进行相应的改变。</strong></p>
 <p><strong>2. GBDT 怎么处理分类问题？</strong></p>
 <p>上面我们讲的 GBDT 是处理回归问题的，但是对于 CTR
@@ -649,15 +648,15 @@ class="math inline">\(f(x)\)</span>。</p>
 个类别，那么每一轮迭代实质是构建了 <span
 class="math inline">\(k\)</span> 棵树，对某个样本 <span
 class="math inline">\(x\)</span> 的预测值为 <span
-class="math inline">\(f\_{1}(x), f\_{2}(x), ..., f\_{k}(x)\)</span>,</p>
+class="math inline">\(f_{1}(x), f_{2}(x), ..., f_{k}(x)\)</span>,</p>
 <p>在这里我们仿照多分类的逻辑回归，使用
 softmax来产生概率，则属于某个类别 <span class="math inline">\(j\)</span>
 的概率为</p>
-<p><span class="math display">\[p\_{c} = \frac{\exp(f\_{j}(x))}{
-\sum\_{i=1}^{k}{exp(f\_{k}(x))}}\]</span></p>
+<p><span class="math display">\[p_{c} = \frac{\exp(f_{j}(x))}{
+\sum_{i=1}^{k}{exp(f_{k}(x))}}\]</span></p>
 <p>通过上面的概率值，可以分别计算出样本在各个分类下的 log loss，根据上面
-GBDT 在函数空间的求导，对 <span class="math inline">\(f\_1\)</span> 到
-<span class="math inline">\(f\_k\)</span>
+GBDT 在函数空间的求导，对 <span class="math inline">\(f_1\)</span> 到
+<span class="math inline">\(f_k\)</span>
 都可以算出一个梯度，也就是当前轮的残差，供下一轮迭代学习。也就是每一轮的迭代会同时产生
 k 棵树。</p>
 <p>最终做预测时，输入的 <span class="math inline">\(x\)</span> 会得到
@@ -684,20 +683,20 @@ target="_blank" rel="noopener" href="https://tech.meituan.com/deep-understanding
 <h3 id="原理-3"><strong>原理</strong></h3>
 <p>FM 可以认为是在 LR
 的基础上加入特征的二阶组合，即最多有两个特征相乘，则模型可表示成如下形式</p>
-<p><span class="math display">\[y(\mathbf{x}) = w\_0+ \sum\_{i=1}^n w\_i
-x\_i + \sum\_{i=1}^n \sum\_{j=i+1}^n w\_{ij} x\_i x\_j \]</span></p>
+<p><span class="math display">\[y(\mathbf{x}) = w_0+ \sum_{i=1}^n w_i
+x_i + \sum_{i=1}^n \sum_{j=i+1}^n w_{ij} x_i x_j \]</span></p>
 <p>从模型也可以看出，其实 FM 是在 LR 基础上增加了最后的二阶交叉项。</p>
 <p>从上面的公式可以看出，组合特征的参数一共有 <span
 class="math inline">\(\frac{n(n−1)}{2}\)</span>
 个，任意两个参数都是独立的。然而，在数据稀疏性普遍存在的实际应用场景中，<strong>二次项参数的训练是很困难的,原因是每个参数
-<span class="math inline">\(w\_{ij}\)</span> 的训练需要大量 <span
-class="math inline">\(x\_i\)</span> 和 <span
-class="math inline">\(x\_j\)</span>
+<span class="math inline">\(w_{ij}\)</span> 的训练需要大量 <span
+class="math inline">\(x_i\)</span> 和 <span
+class="math inline">\(x_j\)</span>
 都非零的样本</strong>；由于样本数据本来就比较稀疏，满足 <span
-class="math inline">\(x\_i\)</span> 和 <span
-class="math inline">\(x\_j\)</span>
+class="math inline">\(x_i\)</span> 和 <span
+class="math inline">\(x_j\)</span>
 都非零的样本将会非常少。训练样本的不足，则会导致参数 <span
-class="math inline">\(w\_{ij}\)</span>
+class="math inline">\(w_{ij}\)</span>
 不准确，最终将严重影响模型的性能。</p>
 <p>如何解决这个问题？FM 中借鉴了矩阵分解的思想，在推荐系统中，会对
 user-item 矩阵进行矩阵分解，从而每个 user 和每个 item
@@ -707,7 +706,7 @@ user-item 矩阵进行矩阵分解，从而每个 user 和每个 item
 alt="matrix" />
 <figcaption aria-hidden="true">matrix</figcaption>
 </figure>
-<p>类似地，所有二次项参数 <span class="math inline">\(w\_{ij}\)</span>
+<p>类似地，所有二次项参数 <span class="math inline">\(w_{ij}\)</span>
 可以组成一个对称阵 <span
 class="math inline">\(W\)</span>，那么这个矩阵就可以分解为 <span
 class="math inline">\(W=V^TV\)</span>，<span
@@ -715,37 +714,37 @@ class="math inline">\(V\)</span> 的第 <span
 class="math inline">\(j\)</span> 列便是第 <span
 class="math inline">\(j\)</span>
 维特征的隐向量。换句话说，每个参数可表示成两个隐向量的内积的形式。即
-<span class="math inline">\(w\_{ij}=&lt;v\_i,v\_j&gt;\)</span>，<span
-class="math inline">\(v\_i\)</span> 表示第 <span
+<span class="math inline">\(w_{ij}=&lt;v_i,v_j&gt;\)</span>，<span
+class="math inline">\(v_i\)</span> 表示第 <span
 class="math inline">\(i\)</span>
 维特征的隐向量，这就是FM模型的核心思想。因此，可以将上面的方程改写成如下形式</p>
-<p><span class="math display">\[y(\mathbf{x}) = w\_0+ \sum\_{i=1}^n w\_i
-x\_i + \sum\_{i=1}^n \sum\_{j=i+1}^n
-&lt;v\_i, v\_j&gt;x\_i x\_j \]</span></p>
+<p><span class="math display">\[y(\mathbf{x}) = w_0+ \sum_{i=1}^n w_i
+x_i + \sum_{i=1}^n \sum_{j=i+1}^n
+&lt;v_i, v_j&gt;x_i x_j \]</span></p>
 <p>假设隐向量的长度为 <span
 class="math inline">\(k(k&lt;&lt;n)\)</span>，二次项的参数数量减少为
 <span
 class="math inline">\(kn\)</span>个，远少于多项式模型的参数数量。另外，参数因子化使得
-<span class="math inline">\(x\_hx\_i\)</span> 的参数和 <span
-class="math inline">\(x\_ix\_j\)</span>
+<span class="math inline">\(x_hx_i\)</span> 的参数和 <span
+class="math inline">\(x_ix_j\)</span>
 的参数不再是相互独立的，因此我们可以在样本稀疏的情况下相对合理地估计FM的二次项参数。</p>
-<p>具体来说，<span class="math inline">\(x\_hx\_i\)</span> 和 <span
-class="math inline">\(x\_ix\_j\)</span> 的系数分别为 <span
-class="math inline">\(&lt;v\_h,v\_i&gt;\)</span> 和 <span
-class="math inline">\(&lt;v\_i,v\_j&gt;\)</span>，它们之间有共同项 <span
-class="math inline">\(v\_i\)</span>。也就是说，<strong>所有包含 <span
-class="math inline">\(x\_i\)</span> 的非零组合特征（即存在某个<span
+<p>具体来说，<span class="math inline">\(x_hx_i\)</span> 和 <span
+class="math inline">\(x_ix_j\)</span> 的系数分别为 <span
+class="math inline">\(&lt;v_h,v_i&gt;\)</span> 和 <span
+class="math inline">\(&lt;v_i,v_j&gt;\)</span>，它们之间有共同项 <span
+class="math inline">\(v_i\)</span>。也就是说，<strong>所有包含 <span
+class="math inline">\(x_i\)</span> 的非零组合特征（即存在某个<span
 class="math inline">\(j≠i\)</span>，使得 <span
-class="math inline">\(x\_ix\_j≠0\)</span>）的样本都可以用来学习隐向量
+class="math inline">\(x_ix_j≠0\)</span>）的样本都可以用来学习隐向量
 <span
-class="math inline">\(v\_i\)</span>，这很大程度上避免了数据稀疏性造成的影响</strong>。而在多项式模型中，<span
-class="math inline">\(w\_{hi}\)</span> 和 <span
-class="math inline">\(w\_{ij}\)</span> 是相互独立的。</p>
+class="math inline">\(v_i\)</span>，这很大程度上避免了数据稀疏性造成的影响</strong>。而在多项式模型中，<span
+class="math inline">\(w_{hi}\)</span> 和 <span
+class="math inline">\(w_{ij}\)</span> 是相互独立的。</p>
 <p>另外，原始论文还对特征交叉项计算的时间复杂度做了优化，具体见如下公式</p>
-<p><span class="math display">\[\sum\_{i=1}^n \sum\_{j=i+1}^n \langle
-\mathbf{v}\_i, \mathbf{v}\_j \rangle x\_i x\_j = \frac{1}{2}
-\sum\_{f=1}^k \left(\left( \sum\_{i=1}^n v\_{i, f} x\_i \right)^2 -
-\sum\_{i=1}^n v\_{i, f}^2 x\_i^2 \right)\]</span></p>
+<p><span class="math display">\[\sum_{i=1}^n \sum_{j=i+1}^n \langle
+\mathbf{v}_i, \mathbf{v}_j \rangle x_i x_j = \frac{1}{2} \sum_{f=1}^k
+\left(\left( \sum_{i=1}^n v_{i, f} x_i \right)^2 - \sum_{i=1}^n v_{i,
+f}^2 x_i^2 \right)\]</span></p>
 <p>从公式可知，原来的计算复杂度为 <span
 class="math inline">\(O(kn^2)\)</span>，而改进后的时间复杂度为 <span
 class="math inline">\(O(kn)\)</span></p>
@@ -777,19 +776,19 @@ Through Rate Prediction</a> 中的 field 的 概念，从而提出了 FM
 <h3 id="原理-4"><strong>原理</strong></h3>
 <p><strong>通过引入field的概念，FFM把相同性质的特征归于同一个field。简单来说，同一个categorical特征经过One-Hot编码生成的数值特征都可以放到同一个field</strong>，包括用户性别、职业、品类偏好等。</p>
 <p>在FFM中，每一维特征 <span
-class="math inline">\(x\_i\)</span>，针对其它特征的每一种 field <span
-class="math inline">\(f\_j\)</span>，都会学习一个隐向量 <span
-class="math inline">\(v\_{i,f\_j}\)</span>。因此，<strong>隐向量不仅与特征相关，也与field相关。也就是说，假设有
+class="math inline">\(x_i\)</span>，针对其它特征的每一种 field <span
+class="math inline">\(f_j\)</span>，都会学习一个隐向量 <span
+class="math inline">\(v_{i,f_j}\)</span>。因此，<strong>隐向量不仅与特征相关，也与field相关。也就是说，假设有
 <span class="math inline">\(f\)</span> 个 field，那么每个特征就有 <span
 class="math inline">\(f\)</span> 个隐向量，与不同的 field
 的特征组合时使用不同的隐向量</strong>，而原来的 FM
 中每个特征只有一个隐向量。</p>
 <p>实际上，FM 可以看作 FFM 的特例，是把所有特征都归属到一个 field
 时的FFM模型。根据FFM的field敏感特性，同样可以导出其模型方程如下</p>
-<p><span class="math display">\[y(\mathbf{x}) = w\_0 + \sum\_{i=1}^n
-w\_i x\_i + \sum\_{i=1}^n \sum\_{j=i+1}^n \langle \mathbf{v}\_{i, f\_j},
-\mathbf{v}\_{j, f\_i} \rangle x\_i x\_j \]</span></p>
-<p>其中，<span class="math inline">\(f\_j\)</span> 是第 <span
+<p><span class="math display">\[y(\mathbf{x}) = w_0 + \sum_{i=1}^n w_i
+x_i + \sum_{i=1}^n \sum_{j=i+1}^n \langle \mathbf{v}_{i, f_j},
+\mathbf{v}_{j, f_i} \rangle x_i x_j \]</span></p>
+<p>其中，<span class="math inline">\(f_j\)</span> 是第 <span
 class="math inline">\(j\)</span> 个特征所属的 field。如果隐向量的长度为
 <span class="math inline">\(k\)</span>，那么FFM的二次参数有 <span
 class="math inline">\(nfk\)</span> 个，远多于FM模型的 <span

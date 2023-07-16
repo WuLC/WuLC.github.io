@@ -37,7 +37,7 @@
 <meta property="og:image" content="https://wulc.me/imgs/gradient_formula.jpg">
 <meta property="og:image" content="https://wulc.me/imgs/DelayFeedBackExp.jpg">
 <meta property="article:published_time" content="2020-05-17T13:37:39.000Z">
-<meta property="article:modified_time" content="2023-04-30T05:12:49.055Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.108Z">
 <meta property="article:author" content="良超">
 <meta property="article:tag" content="计算广告">
 <meta property="article:tag" content="机器学习">
@@ -350,7 +350,7 @@ target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Log-normal_di
 分布</a> 也常被用来建模事件发生的时间间隔，这些分布是 <a
 target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Survival_analysis#General_formulation">Survival
 analysis</a> 这个研究领域里常用的分布。</p>
-<p><span class="math display">\[P(C=1|X=x)=p(x)=\frac{1}{1+\exp(-w\_cx)}
+<p><span class="math display">\[P(C=1|X=x)=p(x)=\frac{1}{1+\exp(-w_cx)}
 \tag{1}\]</span></p>
 <p><span class="math display">\[P(D=d|X=x,
 C=1)=\lambda(x)\exp(-\lambda(x)d) \tag{2}\]</span></p>
@@ -360,7 +360,7 @@ target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Survival_anal
 function</a>，其含义表示的是<strong>事件发生的频率/强度</strong>;
 如对于指数分布，如果这个值越大，表示事件发生频率越大，事件间的时间间隔越短，则概率密度函数会越陡峭，如下图所示。此外，为了保证
 <span class="math inline">\(\lambda(x) \gt 0\)</span>, 这里令 <span
-class="math inline">\(\lambda(x) = \exp(w\_dx)\)</span></p>
+class="math inline">\(\lambda(x) = \exp(w_dx)\)</span></p>
 <figure>
 <img data-src="https://wulc.me/imgs/ExpProbDenFunc.jpg"
 alt="exp prob density" />
@@ -377,10 +377,10 @@ conversion 的样本和未观察到 conversion 的样本</strong></p>
 <p>即当前观察到 conversion 的概率可写成</p>
 <p><span class="math display">\[
 \begin{split}
-p\_1&amp;=p(Y=1, D=d\_i|X = x\_i, E=e\_i) \\\
-&amp;= p(Y=1,D=d\_i|X = x\_i) \\\
-&amp;= p(C=1,D=d\_i|X = x\_i) \\\
-&amp;= p(D=d\_i|X=x\_i, C=1)*p(C=1|X=x\_i)
+p_1&amp;=p(Y=1, D=d_i|X = x_i, E=e_i) \\\
+&amp;= p(Y=1,D=d_i|X = x_i) \\\
+&amp;= p(C=1,D=d_i|X = x_i) \\\
+&amp;= p(D=d_i|X=x_i, C=1)*p(C=1|X=x_i)
 \end{split}
 \]</span></p>
 <p>上面的推导的三步主要利用了以下三点</p>
@@ -394,65 +394,61 @@ class="math inline">\(C=1\)</span> 的充分条件</li>
 p(a,b|c)\)</span></li>
 </ul>
 <p>最后可将概率表示成公式(1) 和公式（2）的乘积，则</p>
-<p><span class="math display">\[p\_1=p(Y=1, D=d\_i|X = x\_i,
-E=e\_i)=\lambda(x\_i)\exp(-\lambda(x\_i)d\_i) * p(x\_i)
-\tag{3}\]</span></p>
+<p><span class="math display">\[p_1=p(Y=1, D=d_i|X = x_i,
+E=e_i)=\lambda(x_i)\exp(-\lambda(x_i)d_i) * p(x_i) \tag{3}\]</span></p>
 <h3 id="未观察到-conversion-的样本的似然">未观察到 conversion
 的样本的似然</h3>
 <p>同理，可写出当前还没观察到 conversion 的样本的概率 <span
-class="math inline">\(p\_0\)</span> 为</p>
+class="math inline">\(p_0\)</span> 为</p>
 <p><span class="math display">\[
 \begin{split}
-p\_0&amp;=p(Y=0|X = x\_i, E=e\_i) \\\
-&amp;=p(Y=0|C=0, X = x\_i, E=e\_i)p(C=0|X=x\_i) +\\\
-&amp;p(Y=0|C=1, X = x\_i, E=e\_i)p(C=1|X=x\_i) \\\
-&amp;=p(C=0|X=x\_i) + p(Y=0|C=1, X = x\_i, E=e\_i)p(C=1|X=x\_i)
+p_0&amp;=p(Y=0|X = x_i, E=e_i) \\\
+&amp;=p(Y=0|C=0, X = x_i, E=e_i)p(C=0|X=x_i) +\\\
+&amp;p(Y=0|C=1, X = x_i, E=e_i)p(C=1|X=x_i) \\\
+&amp;=p(C=0|X=x_i) + p(Y=0|C=1, X = x_i, E=e_i)p(C=1|X=x_i)
 \end{split}
 \]</span></p>
 <p>上面的推导的两步主要利用了以下两点</p>
 <ul>
 <li>全概率公式 + 条件概率
 <ul>
-<li><span
-class="math inline">\(p(a|c)=\sum\_{b\_i}p(ab\_i)\)</span></li>
-<li><span class="math inline">\(p(ab\_i|c)=\sum\_{b\_i}p(a|b\_i,
-c)p(b\_i|c)\)</span></li>
+<li><span class="math inline">\(p(a|c)=\sum_{b_i}p(ab_i)\)</span></li>
+<li><span class="math inline">\(p(ab_i|c)=\sum_{b_i}p(a|b_i,
+c)p(b_i|c)\)</span></li>
 </ul></li>
-<li><span class="math inline">\(p(Y=0|C=0, X = x\_i,
-E=e\_i)=1\)</span></li>
+<li><span class="math inline">\(p(Y=0|C=0, X = x_i,
+E=e_i)=1\)</span></li>
 </ul>
 <p>则上面的推导关键点在于求出条件概率 <span
-class="math inline">\(p(Y=0|C=1, X = x\_i, E=e\_i)\)</span>,
+class="math inline">\(p(Y=0|C=1, X = x_i, E=e_i)\)</span>,
 该条件概率的含义是<strong>当前未观察到 conversion
 的样本最终会转化的概率，换种描述就是最终的延时<span
 class="math inline">\(D\)</span>大于当前已过去时间<span
 class="math inline">\(E\)</span>的概率</strong>，即可表示成如下公式</p>
 <p><span class="math display">\[
 \begin{split}
-&amp;p(Y=0|C=1, X = x\_i, E=e\_i) \\
-&amp;=p(D&gt;E|C=1,X=x\_i, E=e\_i) \\
-&amp;=\int\_{e\_i}^{\infty} \lambda(x)\exp(\lambda(x)t)dt \\
-&amp;=\exp(-\lambda(x)e\_i)
+&amp;p(Y=0|C=1, X = x_i, E=e_i) \\
+&amp;=p(D&gt;E|C=1,X=x_i, E=e_i) \\
+&amp;=\int_{e_i}^{\infty} \lambda(x)\exp(\lambda(x)t)dt \\
+&amp;=\exp(-\lambda(x)e_i)
 \end{split}
 \]</span></p>
-<p>即最终有 <span class="math display">\[p\_0=p(Y=0|X = x\_i,
-E=e\_i)=1-p(x\_i) + p(x\_i) * \exp(-\lambda(x\_i)e\_i)
-\tag{4}\]</span></p>
+<p>即最终有 <span class="math display">\[p_0=p(Y=0|X = x_i,
+E=e_i)=1-p(x_i) + p(x_i) * \exp(-\lambda(x_i)e_i) \tag{4}\]</span></p>
 <h3 id="小结">小结</h3>
 <p>综上</p>
 <ul>
 <li>对于当前观察到conversion的样本，其似然函数为公式(3)即,</li>
 </ul>
-<p><span
-class="math display">\[p\_1=\lambda(x\_i)\exp(-\lambda(x\_i)d\_i) *
-p(x\_i) \]</span></p>
+<p><span class="math display">\[p_1=\lambda(x_i)\exp(-\lambda(x_i)d_i) *
+p(x_i) \]</span></p>
 <ul>
 <li>对于当前未观察到conversion的样本，其似然函数为公式(4)即</li>
 </ul>
-<p><span class="math display">\[p\_0=1-p(x\_i) + p(x\_i) *
-\exp(-\lambda(x\_i)e\_i) \]</span></p>
-<p>可以看到，这里 <span class="math inline">\(p\_0 + p\_1 \ne
-1\)</span>, 跟我们常见的建模方式不一样</p>
+<p><span class="math display">\[p_0=1-p(x_i) + p(x_i) *
+\exp(-\lambda(x_i)e_i) \]</span></p>
+<p>可以看到，这里 <span class="math inline">\(p_0 + p_1 \ne 1\)</span>,
+跟我们常见的建模方式不一样</p>
 <h2 id="问题求解">问题求解</h2>
 <p>上面的问题的解法的基本原理是
 MLE(极大似然估计)，但是根据是否显式地写出变量 <span
@@ -461,7 +457,7 @@ class="math inline">\(C\)</span> 当做隐变量，通过 EM
 算法求解；<strong>第二种没有直接写出隐变量 <span
 class="math inline">\(C\)</span> 的概率密度函数，而是直接写出样本集的
 likelihood，因为从上面的问题建模中已经基于当前观察到的 <span
-class="math inline">\(y\_i\)</span> 写出对应的似然函数了。</strong></p>
+class="math inline">\(y_i\)</span> 写出对应的似然函数了。</strong></p>
 <h3 id="em-算法">EM 算法</h3>
 <p>关于 EM 算法的推导，CS229 的讲义 <a
 target="_blank" rel="noopener" href="http://cs229.stanford.edu/notes/cs229-notes8.pdf">EM algorithm</a>
@@ -491,31 +487,29 @@ M-step 中只针对 <span class="math inline">\(\theta\)</span>
 <p>回到这个问题，由于 <span class="math inline">\(C\)</span>
 是隐变量，则 E-step 和 M-step 的过程分别如下</p>
 <p><strong>E-step</strong></p>
-<p>给定一个样本 <span class="math inline">\((x\_i, y\_i, e\_i)\)</span>,
+<p>给定一个样本 <span class="math inline">\((x_i, y_i, e_i)\)</span>,
 令隐变量的条件概率为</p>
-<p><span class="math display">\[p(C=1|X=x\_i, Y=y\_i) :=
-w\_i\]</span></p>
+<p><span class="math display">\[p(C=1|X=x_i, Y=y_i) := w_i\]</span></p>
 <p>相比于上面的 EM 算法的流程，我们这还多了一个 <span
-class="math inline">\(y\_i\)</span>, 因此还要对 <span
-class="math inline">\(y\_i\)</span> 的值进行分类讨论</p>
+class="math inline">\(y_i\)</span>, 因此还要对 <span
+class="math inline">\(y_i\)</span> 的值进行分类讨论</p>
 <ul>
-<li>当 <span class="math inline">\(y\_i=1\)</span> 时，可知 <span
-class="math inline">\(w\_i=1\)</span>（因为 <span
+<li>当 <span class="math inline">\(y_i=1\)</span> 时，可知 <span
+class="math inline">\(w_i=1\)</span>（因为 <span
 class="math inline">\(Y=1\)</span> 是 <span
 class="math inline">\(C=1\)</span> 的充分条件）</li>
-<li>当 <span class="math inline">\(y\_i=0\)</span> 时，其计算方法如下,
+<li>当 <span class="math inline">\(y_i=0\)</span> 时，其计算方法如下,
 即</li>
 </ul>
 <p><span class="math display">\[
 \begin{split}
-w\_i&amp;=p(C=1|Y=0,X=x\_i,E=e\_i) \\\
-&amp;=p(Y=0|C=1, X = x\_i, E=e\_i)p(C=1|X=x\_i) \\\
-&amp;=p(x\_i) * \exp(-\lambda(x\_i)e\_i)
+w_i&amp;=p(C=1|Y=0,X=x_i,E=e_i) \\\
+&amp;=p(Y=0|C=1, X = x_i, E=e_i)p(C=1|X=x_i) \\\
+&amp;=p(x_i) * \exp(-\lambda(x_i)e_i)
 \end{split}
 \]</span></p>
-<p>计算出 <span class="math inline">\(w\_i=p(C=1|X=x\_i,
-Y=y\_i)\)</span> 后，<span class="math inline">\(p(C=0|X=x\_i, Y=y\_i) =
-1-w\_i\)</span></p>
+<p>计算出 <span class="math inline">\(w_i=p(C=1|X=x_i, Y=y_i)\)</span>
+后，<span class="math inline">\(p(C=0|X=x_i, Y=y_i) = 1-w_i\)</span></p>
 <p><strong>M-step</strong></p>
 <p>M step 最大化的似然函数根据<span class="math inline">\(Y\)</span> 和
 <span class="math inline">\(C\)</span> 的值可分为四项，分别对应与上图中
@@ -525,12 +519,12 @@ class="math inline">\(C=0\)</span> 的概率为0，最终M-step
 的似然函数如下所示</p>
 <p><span class="math display">\[
 \begin{split}
-L&amp;=\sum\_{i,y\_i=1}w\_i \* \log p(Y=1,D=d\_i|X=x\_i,E=e\_i) + \\\
-&amp;\sum\_{i,y\_i=0}[ w\_i \* \log p(Y=0,C=1|X=x\_i,E=e\_i) + \\\
-&amp;(1-w\_i) \* \log p(Y=0,C=0|X=x\_i,E=e\_i)]
+L&amp;=\sum_{i,y_i=1}w_i \* \log p(Y=1,D=d_i|X=x_i,E=e_i) + \\\
+&amp;\sum_{i,y_i=0}[ w_i \* \log p(Y=0,C=1|X=x_i,E=e_i) + \\\
+&amp;(1-w_i) \* \log p(Y=0,C=0|X=x_i,E=e_i)]
 \end{split}
 \]</span></p>
-<p>且由前面可知，<span class="math inline">\(w\_i\)</span> 取值为</p>
+<p>且由前面可知，<span class="math inline">\(w_i\)</span> 取值为</p>
 <p><span class="math display">\[
 w_i = \begin{cases}
 1 &amp; &amp;y_i =1 \\\
@@ -540,14 +534,14 @@ p(x_i) * \exp(-\lambda(x_i)e_i) &amp; &amp;y_i =0
 <p>因此，利用公式(3)和公式(4)的推导，导入上式最终化简得到结果为</p>
 <p><span class="math display">\[
 \begin{split}
-L&amp;=\sum\_{i}w\_i \log p(x\_i) + (1-w\_i) \log(1-p(x\_i)) \\\
-&amp;+\sum\_{i} \log(\lambda(x\_i))y\_i - \lambda(x\_i)t\_iw\_i
+L&amp;=\sum_{i}w_i \log p(x_i) + (1-w_i) \log(1-p(x_i)) \\\
+&amp;+\sum_{i} \log(\lambda(x_i))y_i - \lambda(x_i)t_iw_i
 \end{split}\tag{5}
 \]</span></p>
-<p>除了 <span class="math inline">\(w\_i\)</span> 的值要根据 <span
-class="math inline">\(y\_i\)</span> 的值变化外，公式 (5) 中的 <span
-class="math inline">\(t\_i\)</span> 也需要根据 <span
-class="math inline">\(y\_i\)</span> 的值变化，即如下所示</p>
+<p>除了 <span class="math inline">\(w_i\)</span> 的值要根据 <span
+class="math inline">\(y_i\)</span> 的值变化外，公式 (5) 中的 <span
+class="math inline">\(t_i\)</span> 也需要根据 <span
+class="math inline">\(y_i\)</span> 的值变化，即如下所示</p>
 <p><span class="math display">\[
 t_i = \begin{cases}
 e_i &amp;y_i =1 \\\
@@ -562,49 +556,49 @@ regression 的过程，而对 <span class="math inline">\(\lambda\)</span>
 执行的优化构成则是一个 exponential regression</strong></p>
 <h3 id="joint-optimization">Joint Optimization</h3>
 <p>在上面的问题建模中，基于当前观察到的 <span
-class="math inline">\(y\_i\)</span>
+class="math inline">\(y_i\)</span>
 已经能写出样本对应的似然函数了，因此虽然问题中包含隐变量 <span
 class="math inline">\(C\)</span>, 但是不一定要显示的将 <span
 class="math inline">\(C\)</span>
 的条件概率写出来（<strong>当无法写出样本对应的似然函数了需要这一步，这个时候就一定要通过
 EM 算法求解了</strong>）</p>
 <p>根据MLE，求解的问题可表示成如下形式</p>
-<p><span class="math display">\[\arg \min\_{w\_c,w\_d}
-L(w\_c,w\_d)+\frac{\mu}{2}(||w\_c||\_2^2 + ||w\_d||\_2^2)\]</span></p>
+<p><span class="math display">\[\arg \min_{w_c,w_d}
+L(w_c,w_d)+\frac{\mu}{2}(||w_c||_2^2 + ||w_d||_2^2)\]</span></p>
 <p>上面的公式中加入了 L2 regularization，要求教的 <span
-class="math inline">\(w\_c,w\_d\)</span> 分别是 <span
+class="math inline">\(w_c,w_d\)</span> 分别是 <span
 class="math inline">\(p\)</span> 和 <span
 class="math inline">\(\lambda\)</span> 的参数；根据公式 (3) 和 (4),
-可写出 <span class="math inline">\(L(w\_c,w\_d)\)</span> 为</p>
+可写出 <span class="math inline">\(L(w_c,w_d)\)</span> 为</p>
 <p><span class="math display">\[
-L(w\_c,w\_d) = -\sum\_{i, y\_i=1} \log(p(x\_i)+ \log
-\lambda(x\_i)-\lambda(x\_i)d\_i  - \\\
-\sum\_{i, y\_i=0} \log[1-p(x\_i) + p(x\_i) \exp(-\lambda(x\_i)e\_i)]
+L(w_c,w_d) = -\sum_{i, y_i=1} \log(p(x_i)+ \log
+\lambda(x_i)-\lambda(x_i)d_i  - \\\
+\sum_{i, y_i=0} \log[1-p(x_i) + p(x_i) \exp(-\lambda(x_i)e_i)]
 \]</span></p>
 <p>其中，<span
-class="math inline">\(p(x)=\frac{1}{1+\exp(-w\_cx)}\)</span> , <span
-class="math inline">\(\lambda(x) = \exp(w\_dx)\)</span></p>
-<p>则对 <span class="math inline">\(w\_c\)</span> 和 <span
-class="math inline">\(w\_d\)</span> 的导数如下图所示</p>
+class="math inline">\(p(x)=\frac{1}{1+\exp(-w_cx)}\)</span> , <span
+class="math inline">\(\lambda(x) = \exp(w_dx)\)</span></p>
+<p>则对 <span class="math inline">\(w_c\)</span> 和 <span
+class="math inline">\(w_d\)</span> 的导数如下图所示</p>
 <figure>
 <img data-src="https://wulc.me/imgs/gradient_formula.jpg" alt="gradient" />
 <figcaption aria-hidden="true">gradient</figcaption>
 </figure>
 <p>从上面的求导的表达式可知，对于当前 <span
-class="math inline">\(y\_i=0\)</span> 即label还没回传的样本，其对 <span
-class="math inline">\(w\_c\)</span> 的影响可从下面两方面去了解</p>
-<p>(1)当 <span class="math inline">\(\lambda(x\_i)e\_i \ll 1\)</span>,
-即当前已经过去的时间 <span class="math inline">\(e\_i\)</span>
+class="math inline">\(y_i=0\)</span> 即label还没回传的样本，其对 <span
+class="math inline">\(w_c\)</span> 的影响可从下面两方面去了解</p>
+<p>(1)当 <span class="math inline">\(\lambda(x_i)e_i \ll 1\)</span>,
+即当前已经过去的时间 <span class="math inline">\(e_i\)</span>
 远小于平均的回传时间 <span
-class="math inline">\(\lambda(x\_i)^{-1}\)</span> 时，<strong><span
-class="math inline">\(\sum\_{i, y\_i}\)</span>
+class="math inline">\(\lambda(x_i)^{-1}\)</span> 时，<strong><span
+class="math inline">\(\sum_{i, y_i}\)</span>
 这一项几乎为0，表示click发生的时间还很短，没法完全确认最终是没有
-conversion 的</strong> (2)<span class="math inline">\(\lambda(x\_i)e\_i
+conversion 的</strong> (2)<span class="math inline">\(\lambda(x_i)e_i
 \gg 1\)</span>, 即当前已经过去的时间 <span
-class="math inline">\(e\_i\)</span> 远大于平均的回传时间 <span
-class="math inline">\(\lambda(x\_i)^{-1}\)</span> 时，<strong>对 <span
-class="math inline">\(w\_c\)</span> 贡献的梯度是 <span
-class="math inline">\(1/(1-p(x\_i))\)</span>, 相当于在 logistics
+class="math inline">\(e_i\)</span> 远大于平均的回传时间 <span
+class="math inline">\(\lambda(x_i)^{-1}\)</span> 时，<strong>对 <span
+class="math inline">\(w_c\)</span> 贡献的梯度是 <span
+class="math inline">\(1/(1-p(x_i))\)</span>, 相当于在 logistics
 regression
 中的一个负样本的梯度，表示已经过了较长时间还没观察到conversion，可认为这个样本是负样本了</strong></p>
 <h3 id="小结-1">小结</h3>

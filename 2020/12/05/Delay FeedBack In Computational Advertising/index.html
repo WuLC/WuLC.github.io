@@ -43,7 +43,7 @@
 <meta property="og:image" content="https://wulc.me/imgs/PUMLE.jpg">
 <meta property="og:image" content="https://wulc.me/imgs/PU_finalloss.jpg">
 <meta property="article:published_time" content="2020-12-05T13:37:39.000Z">
-<meta property="article:modified_time" content="2023-04-30T05:12:49.111Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.159Z">
 <meta property="article:author" content="良超">
 <meta property="article:tag" content="计算广告">
 <meta property="article:tag" content="机器学习">
@@ -355,30 +355,30 @@ class="math inline">\(\lambda(x)\)</span></p>
 的关键是求出 hazard function <span class="math inline">\(h(x)\)</span>,
 hazard function 的含义是当前时刻第一次发生事件的 event rate;
 相比于第一篇直接令 <span class="math inline">\(h(x) = \lambda(x) =
-w\\_dx\)</span>, 这里借鉴了 Kernel density estimation 的思想将 hazard
+w\_dx\)</span>, 这里借鉴了 Kernel density estimation 的思想将 hazard
 function 写成如下形式（<span
 class="math inline">\(L\)</span>是一个超参，表示时间轴上的 <span
 class="math inline">\(L\)</span>个 pseudo-points）</p>
-<p><span class="math display">\[h(d\_i; x\_i, V) =
-\sum\_{l=1}^{L}\alpha\_l(x\_i;V)k(t\_l, d\_i)\]</span></p>
+<p><span class="math display">\[h(d_i; x_i, V) =
+\sum_{l=1}^{L}\alpha_l(x_i;V)k(t_l, d_i)\]</span></p>
 <p>下图更直观地描述了这种形式是如何拟合任意分布的</p>
 <figure>
 <img data-src="https://wulc.me/imgs/SAKDE.jpg" alt="KDE" />
 <figcaption aria-hidden="true">KDE</figcaption>
 </figure>
-<p>上面中的 <span class="math inline">\(\alpha\_l,
+<p>上面中的 <span class="math inline">\(\alpha_l,
 k\)</span>定义如下，直观来看，<span
-class="math inline">\(\alpha\_l\)</span> 表示当前的 pseudo-point
-对总体的 hazard function 的贡献，<span class="math inline">\(k(t\_l,
+class="math inline">\(\alpha_l\)</span> 表示当前的 pseudo-point 对总体的
+hazard function 的贡献，<span class="math inline">\(k(t_l,
 \tau)\)</span> 表示离当前的 pseudo-point <span
-class="math inline">\(t\_l\)</span>越近的训练样本，对当前的 pseudo-point
-<span class="math inline">\(t\_l\)</span>的参数 <span
-class="math inline">\(V\_l\)</span> 的影响越大（想象 bp 时各个 <span
-class="math inline">\(V\_l\)</span>的 gradient）</p>
-<p><span class="math display">\[\alpha\_l(x\_i; V) =
-(1+\exp(-V\_{l}^{T}x\_i))^{-1}\]</span></p>
-<p><span class="math display">\[k(t\_l, \tau) =
-\exp(-\frac{(t\_l-\tau)^2}{2h^2})\]</span></p>
+class="math inline">\(t_l\)</span>越近的训练样本，对当前的 pseudo-point
+<span class="math inline">\(t_l\)</span>的参数 <span
+class="math inline">\(V_l\)</span> 的影响越大（想象 bp 时各个 <span
+class="math inline">\(V_l\)</span>的 gradient）</p>
+<p><span class="math display">\[\alpha_l(x_i; V) =
+(1+\exp(-V_{l}^{T}x_i))^{-1}\]</span></p>
+<p><span class="math display">\[k(t_l, \tau) =
+\exp(-\frac{(t_l-\tau)^2}{2h^2})\]</span></p>
 <p>写出了 hazard function 后，根据公式（2）有</p>
 <figure>
 <img data-src="https://wulc.me/imgs/survivalFunction.jpg"
@@ -386,8 +386,8 @@ alt="survival function" />
 <figcaption aria-hidden="true">survival function</figcaption>
 </figure>
 <p>则 paper1 的的回传延迟概率可写成如下形式</p>
-<p><span class="math display">\[p(d\_i|x\_i, c\_i = 1) = s(d\_i; x\_i, V
-)h(d\_i; x\_i, V)\]</span></p>
+<p><span class="math display">\[p(d_i|x_i, c_i = 1) = s(d_i; x_i, V
+)h(d_i; x_i, V)\]</span></p>
 <figure>
 <img data-src="https://wulc.me/imgs/nonparametricf2.jpg" alt="probability" />
 <figcaption aria-hidden="true">probability</figcaption>
@@ -423,8 +423,8 @@ interest</p>
 <p>zhihu 上一个更通俗的解释见 <a
 target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/41217212">重要性采样（Importance
 Sampling</a>），则 paper 中的可将真实分布的期望写成如下形式</p>
-<p><span class="math display">\[E\_p[\log f\_{\theta}(y|x)] =
-E\_b[\frac{p(x,y)}{b(x,y)} f\_{\theta}(y|x)]\]</span></p>
+<p><span class="math display">\[E_p[\log f_{\theta}(y|x)] =
+E_b[\frac{p(x,y)}{b(x,y)} f_{\theta}(y|x)]\]</span></p>
 <p>即在观察到的 biased distribution <span
 class="math inline">\(b\)</span> 上对样本进行加权 <span
 class="math inline">\(w(x,y) = \frac{p(x,y)}{b(x,y)}\)</span>，则 loss
@@ -453,7 +453,7 @@ alt="loss func1" />
 </figure>
 <p>但是这里的 <span class="math inline">\(p\)</span> 是未知的，因此
 paper 中利用了模型的预估值 <span
-class="math inline">\(f\_{\theta}\)</span> 来近似</p>
+class="math inline">\(f_{\theta}\)</span> 来近似</p>
 <p>此外，importance sampling 也被应用在强化学习中的 off-policy
 策略中，简单来说就是通过行为策略(behavior strategy) <span
 class="math inline">\(b\)</span> 产生的序列分布来优化目标策略(target
@@ -537,7 +537,7 @@ positive). The estimator of <span class="math inline">\(p(s = 1|y =
 class="math inline">\(g(x)\)</span> for <span
 class="math inline">\(x\)</span> in <span
 class="math inline">\(P\)</span>. That is <span
-class="math inline">\(\frac{1}{n}\sum\_{x \in P}g(x)\)</span></p>
+class="math inline">\(\frac{1}{n}\sum_{x \in P}g(x)\)</span></p>
 </blockquote>
 <p>求解环节，所有样本的 期望/likelihook 可写成如下形式</p>
 <figure>

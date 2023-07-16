@@ -42,7 +42,7 @@
 <meta property="og:image" content="https://wulc.me/imgs/image_1bdgsa177is3q4i1rs114kvl436.png">
 <meta property="og:image" content="https://wulc.me/imgs/image_1bdgsl05t1qu513751btg2mh1v133j.png">
 <meta property="article:published_time" content="2017-04-10T12:08:55.000Z">
-<meta property="article:modified_time" content="2023-04-30T05:12:49.078Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.129Z">
 <meta property="article:author" content="良超">
 <meta property="article:tag" content="数学">
 <meta name="twitter:card" content="summary">
@@ -373,11 +373,10 @@ operators such as mutation, crossover and selection。</p>
 <p>选择模拟了生物进化中的“适者生存”，根据当代的个体的适应度按概率选出下一代，适应度越高，则被选择的概率也越大。</p>
 <p>之所以不直接将适应度最大的若干个个体作为下一代，是因为这样可能会导致算法过早陷入局部最优解。在遗传算法里面这种现象称为"早熟（premature）"。</p>
 <p>假如当代的个体总数是 <span class="math inline">\(M\)</span>，而个体
-<span class="math inline">\(a\_i\)</span> 的适应度是 <span
-class="math inline">\(f\_i\)</span>，则个体 <span
-class="math inline">\(a\_i\)</span>被选择到下一代的概率是 <span
-class="math display">\[p\_i = \frac{f\_i}{\sum\_{j=1}^{M}
-f\_j}\]</span></p>
+<span class="math inline">\(a_i\)</span> 的适应度是 <span
+class="math inline">\(f_i\)</span>，则个体 <span
+class="math inline">\(a_i\)</span>被选择到下一代的概率是 <span
+class="math display">\[p_i = \frac{f_i}{\sum_{j=1}^{M} f_j}\]</span></p>
 <h4 id="交叉crossover">交叉(crossover)</h4>
 <p>交叉跟生物上的杂交是一样的，只是生物中是双螺旋结构，而遗传算法中只有一条链。原始的遗传算法只会选择一个点进行交叉，如下如所示</p>
 <figure>
@@ -427,13 +426,13 @@ results</li>
 target="_blank" rel="noopener" href="https://zh.wikipedia.org/zh-hans/%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98">背包问题</a>是一个很经典的组合优化问题，通过遗传算法可以求解，但是目前求解这类问题的最优方法是动态规划，是一个<a
 target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E4%BC%AA%E5%A4%9A%E9%A1%B9%E5%BC%8F%E6%97%B6%E9%97%B4">伪多项式时间复杂度问题</a>。这里采用背包问题为例子是因为这个例子的编码方式有较好的解释。</p>
 <p>假设现在背包的容量为 <span class="math inline">\(W\)</span>, 共有 15
-个物品，每个物品的大小为 <span class="math inline">\(w\_i\)</span>,
-价值为 <span class="math inline">\(v\_i\)</span>,
+个物品，每个物品的大小为 <span class="math inline">\(w_i\)</span>,
+价值为 <span class="math inline">\(v_i\)</span>,
 则可以得到下面的最优化问题</p>
-<p><span class="math display">\[max \sum\_{i=1}^{15} x\_iv\_i\\
-s.t. \sum\_{i}w\_ix\_i \le W\\
-x\_i \in \lbrace 0,1 \rbrace\]</span></p>
-<p><span class="math inline">\(x\_i \in \lbrace 0,1 \rbrace\)</span>
+<p><span class="math display">\[max \sum_{i=1}^{15} x_iv_i\\
+s.t. \sum_{i}w_ix_i \le W\\
+x_i \in \lbrace 0,1 \rbrace\]</span></p>
+<p><span class="math inline">\(x_i \in \lbrace 0,1 \rbrace\)</span>
 表示是否将第 <span class="math inline">\(i\)</span>
 件物品放到背包中。</p>
 <p>则通过遗传算法解决这个问题的流程如下</p>
@@ -445,14 +444,13 @@ alt="initialize" />
 <figcaption aria-hidden="true">initialize</figcaption>
 </figure>
 <p>由于没有给出每个物品具体的价值，这里用 <span
-class="math inline">\(V\_i\)</span> 表示第 <span
+class="math inline">\(V_i\)</span> 表示第 <span
 class="math inline">\(i\)</span> 个候选解通过公式 <span
-class="math inline">\(\sum\_{j=1}^{15}x\_jv\_j\)</span>求得的总价值。</p>
+class="math inline">\(\sum_{j=1}^{15}x_jv_j\)</span>求得的总价值。</p>
 <p><strong>选择</strong></p>
 <p>由于每个个体被选择到下一代的概率与其适应度成正比，因此第 <span
 class="math inline">\(i\)</span> 个候选解被选择到下一代的概率为<span
-class="math display">\[p\_i =
-\frac{V\_i}{\sum\_{j=1}^{15}V\_j}\]</span></p>
+class="math display">\[p_i = \frac{V_i}{\sum_{j=1}^{15}V_j}\]</span></p>
 <p>如下为模拟的过程，注意一个个体可能会被选择多次</p>
 <figure>
 <img data-src="https://wulc.me/imgs/image_1bdgqvll710hjeh190011vt1r8a1v.png"
@@ -542,22 +540,21 @@ Length)</strong>：指第一个和最后一个具有含义的字符之间的距�
 <span class="math inline">\(s\)</span> 的个体数记为 <span
 class="math inline">\(m(s,t)\)</span>，整个种群的数目为 <span
 class="math inline">\(M\)</span>，个体 <span
-class="math inline">\(a\_i\)</span> 的适应度为 <span
-class="math inline">\(f\_i\)</span></p>
-<p>则个体 <span class="math inline">\(a\_i\)</span> 被选择的概率为 <span
-class="math display">\[p\_i = \frac{f\_i}{\sum\_{j=1}^{M}
-f\_j}\]</span></p>
+class="math inline">\(a_i\)</span> 的适应度为 <span
+class="math inline">\(f_i\)</span></p>
+<p>则个体 <span class="math inline">\(a_i\)</span> 被选择的概率为 <span
+class="math display">\[p_i = \frac{f_i}{\sum_{j=1}^{M} f_j}\]</span></p>
 <p>因此经过选择后， 模式 <span class="math inline">\(s\)</span>
 在下一代的数目为</p>
 <p><span class="math display">\[m(s, t+1) = M\frac{m(s,t) \overline
-{f(s)}}{\sum\_{j=1}^{M} f\_j} = m(s,t) \frac{\overline {f(s)}}{\overline
+{f(s)}}{\sum_{j=1}^{M} f_j} = m(s,t) \frac{\overline {f(s)}}{\overline
 {f}}\]</span></p>
 <p>其中 <span class="math inline">\(\overline {f(s)}\)</span>表示模式
 <span class="math inline">\(s\)</span> 中个体的平均适应度, <span
 class="math inline">\(\overline
 f\)</span>表示整个种群的平均适应度，也就是 <span
-class="math display">\[\overline f = \frac{\sum\_{j=1}^{M}
-f\_j}{M}\]</span></p>
+class="math display">\[\overline f = \frac{\sum_{j=1}^{M}
+f_j}{M}\]</span></p>
 <p>可知只有当<span class="math inline">\(\overline {f(s)} &gt; \overline
 f\)</span>, 模式 <span class="math inline">\(s\)</span>
 中的个体才能增长, 将上面的公式做简单的变化，则有</p>
@@ -573,32 +570,31 @@ class="math display">\[m(s, t+1) = m(s, t)(1+c)^t\]</span></p>
 class="math inline">\(\delta(s)\)</span>，染色体的长度记为 <span
 class="math inline">\(\lambda\)</span></p>
 <p>则模式被破坏，也就是在定义长度内进行交叉的概率为 <span
-class="math inline">\(p\_d = \frac{\delta(s)}{\lambda - 1}\)</span></p>
-<p>因此模式存活的概率为 <span class="math inline">\(p\_s = 1 - p\_d = 1
-- \frac{\delta(s)}{\lambda - 1}\)</span></p>
-<p>假设交叉概率为 <span
-class="math inline">\(p\_c\)</span>，则存活概率为 <span
-class="math inline">\(p\_s = 1 - p\_c \frac{\delta(s)}{\lambda -
+class="math inline">\(p_d = \frac{\delta(s)}{\lambda - 1}\)</span></p>
+<p>因此模式存活的概率为 <span class="math inline">\(p_s = 1 - p_d = 1 -
+\frac{\delta(s)}{\lambda - 1}\)</span></p>
+<p>假设交叉概率为 <span class="math inline">\(p_c\)</span>，则存活概率为
+<span class="math inline">\(p_s = 1 - p_c \frac{\delta(s)}{\lambda -
 1}\)</span></p>
 <p>在经过选择，交叉后，模式 <span class="math inline">\(s\)</span>
 在下一代数目为</p>
 <p><span class="math display">\[m(s, t+1) = m(s,t) \frac{\overline
-{f(s)}}{\overline {f}}[1 - p\_c \frac{\delta(s)}{\lambda -
+{f(s)}}{\overline {f}}[1 - p_c \frac{\delta(s)}{\lambda -
 1}]\]</span></p>
 <p>从这里可以看到，<strong>模式的定义长度(schema defining length)
 越小，则其存活的概率越大</strong></p>
 <h4 id="变异">变异</h4>
 <p>记模式的阶(Schema Order) 为 <span
 class="math inline">\(o(s)\)</span>，变异的概率为 <span
-class="math inline">\(p\_m\)</span></p>
+class="math inline">\(p_m\)</span></p>
 <p>则原来的基因存活，也就是那些确定的位置都不发生变异的概率为 <span
-class="math display">\[p\_s = (1-p\_m)^{o(s)} \approx 1 -
-p\_mo(s)\]</span></p>
+class="math display">\[p_s = (1-p_m)^{o(s)} \approx 1 -
+p_mo(s)\]</span></p>
 <p>上式最后做了泰勒展开，因此经过选择，交叉和变异后，模式 <span
 class="math inline">\(s\)</span> 在下一代种群的数目为</p>
 <p><span class="math display">\[m(s, t+1) = m(s,t) \frac{\overline
-{f(s)}}{\overline {f}}[1 - p\_c \frac{\delta(s)}{\lambda - 1} -
-p\_mo(s)]\]</span></p>
+{f(s)}}{\overline {f}}[1 - p_c \frac{\delta(s)}{\lambda - 1} -
+p_mo(s)]\]</span></p>
 <p>从上式也可以看到，<strong>模式的阶越低，模式约容易存活</strong>。</p>
 <p>因此经过上面的分析，可以得到模式定理的定义</p>
 <blockquote>
@@ -652,45 +648,45 @@ the Genetics from the Standard Genetic Algorithm</a>
 target="_blank" rel="noopener" href="http://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=286385">Adaptive
 probabilities of crossover and mutation in genetic
 algorithms</a>，将两个概率设定为下面的两个公式</p>
-<p><span class="math display">\[ P\_c=
+<p><span class="math display">\[ P_c=
 \begin{cases}
-\frac{k\_1(f\_{max}-f&#39;)}{f\_{max}-f\_{avg}}&amp;&amp; {f&#39;
-\geq   f\_{avg}}\\\
-k\_2  &amp;&amp; {f&#39; &lt; f\_{avg}}
+\frac{k_1(f_{max}-f&#39;)}{f_{max}-f_{avg}}&amp;&amp; {f&#39;
+\geq   f_{avg}}\\\
+k_2  &amp;&amp; {f&#39; &lt; f_{avg}}
 \end{cases}\]</span></p>
-<p><span class="math display">\[ P\_m=
+<p><span class="math display">\[ P_m=
 \begin{cases}
-\frac{k\_3(f\_{max}-f&#39;)}{f\_{max}-f\_{avg}}  &amp;&amp; {f&#39; \geq
-f\_{avg}}\\\
-k\_4 &amp;&amp; {f&#39; &lt; f\_{avg}}
+\frac{k_3(f_{max}-f&#39;)}{f_{max}-f_{avg}}  &amp;&amp; {f&#39; \geq
+f_{avg}}\\\
+k_4 &amp;&amp; {f&#39; &lt; f_{avg}}
 \end{cases}
 \]</span></p>
 <p>上面的公式表明，交叉率和变异率随着个体的适应度在种群平均适应度和最大适应度之间进行线性调整。上面的公式中
-<span class="math inline">\(f\_{max}\)</span> 表示种群的最大适应度,
-<span class="math inline">\(f\_{avg}\)</span> 表示种群的平均适应度,
-<span class="math inline">\(f&#39;\)</span>
+<span class="math inline">\(f_{max}\)</span> 表示种群的最大适应度, <span
+class="math inline">\(f_{avg}\)</span> 表示种群的平均适应度, <span
+class="math inline">\(f&#39;\)</span>
 表示参与交叉的两个个体中较大的适应度。</p>
 <p>由上面的公式可知，当适应度越接近最大适应度时．交叉率和变异率越小，好处是降低了最优解被破坏的概率，坏处是当前的最优适应度等于最大适应度时，交叉率和变异率为零。这使得AGA在演化初期并不理想。因为在进化初期的群体中，较优个体几乎处于一种不发生变化的状态，而此时的优良个体不一定是全局最优解，这容易使演化走向局部收敛的可能性增加。</p>
 <p>因此这篇文献<a
 target="_blank" rel="noopener" href="http://www.cqvip.com/qk/91690x/200612/21781597.html">自适应遗传算法交叉变异算子的改进</a>对上面的公式进行了如下的改进</p>
-<p><span class="math display">\[ P\_c=
+<p><span class="math display">\[ P_c=
 \begin{cases}
-p\_{cmin}-\frac{（p\_{cmax}-p\_{cmin}）(f&#39;-f\_{avg})}{f\_{max}-f\_{avg}}&amp;&amp;
-{f&#39; \geq   f\_{avg}}\\\
-p\_{cmax}  &amp;&amp; {f&#39; &lt; f\_{avg}}
+p_{cmin}-\frac{（p_{cmax}-p_{cmin}）(f&#39;-f_{avg})}{f_{max}-f_{avg}}&amp;&amp;
+{f&#39; \geq   f_{avg}}\\\
+p_{cmax}  &amp;&amp; {f&#39; &lt; f_{avg}}
 \end{cases}\]</span></p>
-<p><span class="math display">\[ P\_m=
+<p><span class="math display">\[ P_m=
 \begin{cases}
-p\_{mmin}-\frac{（p\_{mmax}-p\_{mmin}）(f&#39;-f\_{avg})}{f\_{max}-f\_{avg}}&amp;&amp;
-{f&#39; \geq   f\_{avg}}\\\
-p\_{mmax}  &amp;&amp; {f&#39; &lt; f\_{avg}}
+p_{mmin}-\frac{（p_{mmax}-p_{mmin}）(f&#39;-f_{avg})}{f_{max}-f_{avg}}&amp;&amp;
+{f&#39; \geq   f_{avg}}\\\
+p_{mmax}  &amp;&amp; {f&#39; &lt; f_{avg}}
 \end{cases}
 \]</span></p>
-<p><span class="math inline">\(p\_{cmin}\)</span>, <span
-class="math inline">\(p\_{cmax}\)</span>
+<p><span class="math inline">\(p_{cmin}\)</span>, <span
+class="math inline">\(p_{cmax}\)</span>
 分别表示交叉率取值的下限和上限；而<span
-class="math inline">\(p\_{mmin}\)</span>, <span
-class="math inline">\(p\_{mmax}\)</span>
+class="math inline">\(p_{mmin}\)</span>, <span
+class="math inline">\(p_{mmax}\)</span>
 分别表示变异率取值的下限和上限,这样就避免了前面的概率出现0的情况。</p>
 <h2 id="参考文献">参考文献</h2>
 <p>这些文献在上面已经在不同部分给出其相应的链接了，这里再次统一列出</p>

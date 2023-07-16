@@ -41,7 +41,7 @@
 <meta property="og:image" content="https://wulc.me/imgs/image_1b33trplg1iqqj4v17i41bib1m1h1g.png">
 <meta property="og:image" content="https://wulc.me/imgs/image_1b33uavmu123l1a0i13tk9cl2sf1t.png">
 <meta property="article:published_time" content="2016-11-28T04:00:37.000Z">
-<meta property="article:modified_time" content="2023-04-30T05:12:49.120Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.169Z">
 <meta property="article:author" content="良超">
 <meta property="article:tag" content="机器学习">
 <meta property="article:tag" content="深度学习">
@@ -323,21 +323,21 @@ class="math inline">\(W_1,W_2,W_3,W_4\)</span>，然后再进行后面的前向�
 m可以大于n也可以小于n），双向指数据既可从可视层传播到隐藏层，也可从隐藏层传输到可视层。</p>
 <p>RBM包含的参数有</p>
 <ul>
-<li>权重矩阵 <span class="math inline">\(W\_{nm}\)</span></li>
-<li>隐藏层偏置量 <span class="math inline">\(c = (c\_1, c\_2, c\_3, ...
-c\_n)\)</span></li>
-<li>可视层偏置量 <span class="math inline">\(b = (b\_1, b\_2, b\_3, ...
-b\_m)\)</span></li>
+<li>权重矩阵 <span class="math inline">\(W_{nm}\)</span></li>
+<li>隐藏层偏置量 <span class="math inline">\(c = (c_1, c_2, c_3, ...
+c_n)\)</span></li>
+<li>可视层偏置量 <span class="math inline">\(b = (b_1, b_2, b_3, ...
+b_m)\)</span></li>
 </ul>
 <p>其中偏置量的取值为0或1。</p>
 <p>由于传播方向是双向的，这里先不加证明给出两个方向的传播的公式，具体的证明看下一节的原理与推导。</p>
-<p>从可视层传到隐藏层<span class="math display">\[P(h\_i=1|v) =
-\sigma(\sum\_{j=1}^mw\_{ij}v\_j+c\_i)\tag{3-1}\]</span>
-从隐藏层传到可视层<span class="math display">\[P(v\_j=1|h) =
-\sigma(\sum\_{i=1}^nw\_{ij}h\_i+b\_j)\tag{3-2}\]</span> 其中 <span
+<p>从可视层传到隐藏层<span class="math display">\[P(h_i=1|v) =
+\sigma(\sum_{j=1}^mw_{ij}v_j+c_i)\tag{3-1}\]</span>
+从隐藏层传到可视层<span class="math display">\[P(v_j=1|h) =
+\sigma(\sum_{i=1}^nw_{ij}h_i+b_j)\tag{3-2}\]</span> 其中 <span
 class="math display">\[ \sigma(x) = 1/(1+e^{-x})\tag{3-3}\]</span></p>
 <p>由上面的传播公式可知，两个传播过程计算出来的都是一个概率值，就是传播的目标点取1的概率，实际中赋值时按照均匀分布产生一个0到1之间的随机浮点数，如果它小于<span
-class="math inline">\(P(v\_j=1|h)，v\_j\)</span> 的取值就是1，否则就是
+class="math inline">\(P(v_j=1|h)，v_j\)</span> 的取值就是1，否则就是
 0。</p>
 <p>有了上面关于 RBM 的基础知识，下面就是逐层预训练的具体过程</p>
 <ol type="1">
@@ -357,8 +357,8 @@ class="math display">\[W(t+1) = W(t) +
 </ol>
 <p>上面的公式中的 <span class="math inline">\(v,h,v&#39;,h&#39;\)</span>
 均为向量，且公式 (3-4) 在原文表述为 <span class="math inline">\(\Delta
-W\_{ij} = \varepsilon ( (v\_jh\_j)\_{data} -
-(v\_jh\_j)\_{recon})\)</span>，但是含义是一致的，就是<strong>利用被压缩后再恢复的数据与原始数据的误差来调整二层网络间的参数，使得恢复出来的数据尽可能与原始数据接近，也就是要让被压缩后的数据尽可能的保留着原始数据的特征</strong>。</p>
+W_{ij} = \varepsilon ( (v_jh_j)_{data} -
+(v_jh_j)_{recon})\)</span>，但是含义是一致的，就是<strong>利用被压缩后再恢复的数据与原始数据的误差来调整二层网络间的参数，使得恢复出来的数据尽可能与原始数据接近，也就是要让被压缩后的数据尽可能的保留着原始数据的特征</strong>。</p>
 <p>上面的训练过程中只是训练了相邻两层网络间的参数，而神经网络一般是有多层的，所以需要利用这种方法逐层进行训练，这也是逐层预训练说法的来由。所以上面通过自编码器对图像进行特征压缩并复原的完整过程如下图所示：</p>
 <p><img data-src="https://wulc.me/imgs/image_1b32l5rhvb9urad4c71lk11f5d9.png" /></p>
 <p>首先利用 RBM
@@ -382,8 +382,8 @@ class="math inline">\(v&#39;\)</span>）,权重更新过程则是利用他们的
 target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Restricted_Boltzmann_machine">能量函数</a>,针对下图的RBM</p>
 <p><img data-src="https://wulc.me/imgs/image_1b32hutvj5qj1m0t5qe14nogr613.png" /></p>
 <p>其能量函数表示如下：<span class="math display">\[E(v,h) =
--\sum\_{i=1}^n\sum\_{j=1}^m
-w\_{ij}h\_iv\_j-\sum\_{j=1}^mb\_jv\_j-\sum\_{i=1}^nc\_ih\_i
+-\sum_{i=1}^n\sum_{j=1}^m
+w_{ij}h_iv_j-\sum_{j=1}^mb_jv_j-\sum_{i=1}^nc_ih_i
 \tag{3-5}\]</span></p>
 <p>定义出这个能量函数又有什么作用呢？根据参考资料，原因有以下几个
 &gt;第一、RBM网络是一种无监督学习的方法，无监督学习的目的是最大可能的拟合输入数据，所以<strong>学习RBM网络的目的是让RBM网络最大可能地拟合输入数据</strong>。</p>
@@ -395,23 +395,22 @@ w\_{ij}h\_iv\_j-\sum\_{j=1}^mb\_jv\_j-\sum\_{i=1}^nc\_ih\_i
 </blockquote>
 <p>因此，基于上面的能量函数，可以定义出一个可视节点与隐藏节点间的联合概率
 <span class="math display">\[P(v,h) =
-\frac{e^{-E(v,h)}}{\sum\_{v,h}e^{-E(v,h)}} \tag{3-6}\]</span></p>
+\frac{e^{-E(v,h)}}{\sum_{v,h}e^{-E(v,h)}} \tag{3-6}\]</span></p>
 <p>该公式也是根据统计热力学给出的，具体参看<a
 target="_blank" rel="noopener" href="http://blog.csdn.net/mytestmy/article/details/9150213">参考文献</a>。有了联合概率，就可以求出其条件概率如下所示：</p>
 <p><span class="math display">\[P(v) =
-\frac{\sum\_he^{-E(v,h)}}{\sum\_{v,h}e^{-E(v,h)}} \tag{3-7}\]</span>
-<span class="math display">\[P(h) =
-\frac{\sum\_ve^{-E(v,h)}}{\sum\_{v,h}e^{-E(v,h)}} \tag{3-8}\]</span>
-<span class="math display">\[P(v|h) =
-\frac{e^{-E(v,h)}}{\sum\_ve^{-E(v,h)}} \tag{3-9}\]</span> <span
-class="math display">\[P(h|v) = \frac{e^{-E(v,h)}}{\sum\_he^{-E(v,h)}}
-\tag{3-10}\]</span></p>
+\frac{\sum_he^{-E(v,h)}}{\sum_{v,h}e^{-E(v,h)}} \tag{3-7}\]</span> <span
+class="math display">\[P(h) =
+\frac{\sum_ve^{-E(v,h)}}{\sum_{v,h}e^{-E(v,h)}} \tag{3-8}\]</span> <span
+class="math display">\[P(v|h) = \frac{e^{-E(v,h)}}{\sum_ve^{-E(v,h)}}
+\tag{3-9}\]</span> <span class="math display">\[P(h|v) =
+\frac{e^{-E(v,h)}}{\sum_he^{-E(v,h)}} \tag{3-10}\]</span></p>
 <p>上面的这些概率分布也叫<strong>Gibbs分布</strong>，这样就完成了从能量模型到概率模型的推导，下面是从概率模型推导出极大似然估计。</p>
 <p>现在回到<strong>求解的目标:
 让RBM网络的表示Gibbs分布最大可能的拟合输入数据的分布</strong>。那么这两个分布的<a
 target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence">KL散度</a>如下所示,KL散度主要用于表示两个分布的一个相似度，其值越小，表示两个分布越相似：
-<span class="math display">\[KL(q||p) = \sum\_{x \epsilon \Omega} q(x)
-ln\frac{q(x)}{p(x)} =\sum\_{x \epsilon \Omega} q(x)lnq(x)-\sum\_{x
+<span class="math display">\[KL(q||p) = \sum_{x \epsilon \Omega} q(x)
+ln\frac{q(x)}{p(x)} =\sum_{x \epsilon \Omega} q(x)lnq(x)-\sum_{x
 \epsilon \Omega} q(x)lnp(x) \tag{3-11}\]</span></p>
 <p>上式中的 <span class="math inline">\(q(x)\)</span>
 是输入样本的分布，样本确定的时候，该分布也确定了下来，而<span

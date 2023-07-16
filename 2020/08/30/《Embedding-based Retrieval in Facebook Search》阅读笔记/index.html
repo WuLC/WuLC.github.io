@@ -36,7 +36,7 @@
 <meta property="og:image" content="https://wulc.me/imgs/LocationFeature.jpg">
 <meta property="og:image" content="https://wulc.me/imgs/FeatureEffectiveness.jpg">
 <meta property="article:published_time" content="2020-08-30T13:37:39.000Z">
-<meta property="article:modified_time" content="2023-04-30T05:12:49.051Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.104Z">
 <meta property="article:author" content="良超">
 <meta property="article:tag" content="计算广告">
 <meta property="article:tag" content="机器学习">
@@ -316,15 +316,15 @@ alt="model overview" />
 </figure>
 <h3 id="损失函数">损失函数</h3>
 <p>模型采用的损失函数是 triple loss，最早是在人脸识别中提出的一个
-loss，假设每条训练样本是 <span
-class="math inline">\((q^{(i)},d\_+^{(i)}, d\_-^{(i)})\)</span>,
-式子中的<span class="math inline">\(d\_+^{(i)}\)</span> 表示与 query
-<span class="math inline">\(q^{(i)}\)</span> 相关的 document，而 <span
-class="math inline">\(d\_-^{(i)}\)</span>表示与query <span
+loss，假设每条训练样本是 <span class="math inline">\((q^{(i)},d_+^{(i)},
+d_-^{(i)})\)</span>, 式子中的<span
+class="math inline">\(d_+^{(i)}\)</span> 表示与 query <span
+class="math inline">\(q^{(i)}\)</span> 相关的 document，而 <span
+class="math inline">\(d_-^{(i)}\)</span>表示与query <span
 class="math inline">\(q^{(i)}\)</span> 不相关的 document, 则 paper 中的
 loss 定义如下</p>
-<p><span class="math display">\[L=\sum\_{i=1}^{N} \max(0,
-D(q^{(i)},d\_+^{(i)}) - D(q^{(i)},d\_-^{(i)}) + m)\]</span></p>
+<p><span class="math display">\[L=\sum_{i=1}^{N} \max(0,
+D(q^{(i)},d_+^{(i)}) - D(q^{(i)},d_-^{(i)}) + m)\]</span></p>
 <p>上式中的 <span class="math inline">\(m\)</span>
 是一个超参，表示正样本与负样本的 enforced margin，<strong>表示正负样本的
 distance 假如大于 m，则认为这个是一个 easy example
@@ -403,10 +403,10 @@ hard nagative 并不是那些曝光未点击的负例</strong>，paper
 offline hard nagative mining，两种方法的基本流程如下</p>
 <p><strong>online hard negative mining</strong></p>
 <p>在每个 batch 的训练中，假设正样本对为 <span
-class="math inline">\(\lbrace(q^{(i)},d\_+^{(i)})\rbrace\_{i=1}^{n}\)</span>,
+class="math inline">\(\lbrace(q^{(i)},d_+^{(i)})\rbrace_{i=1}^{n}\)</span>,
 则对于每个query <span class="math inline">\(q^{(i)}\)</span>, 会从 <span
-class="math inline">\(\lbrace d\_+^{(1)} \dots d\_+^{(j)} \dots
-d\_+^{(n)} | j \ne i\rbrace\)</span> 中随机选出 k 个 document 作为 hard
+class="math inline">\(\lbrace d_+^{(1)} \dots d_+^{(j)} \dots d_+^{(n)}
+| j \ne i\rbrace\)</span> 中随机选出 k 个 document 作为 hard
 nagative，paper 中称其场景下 k=2
 是最优的，如果多了会导致模型的效果下降</p>
 <p>paper 中的实验数据表示加入这样的 hard nagative 后，在不同类型的 iterm

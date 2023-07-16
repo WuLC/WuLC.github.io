@@ -44,7 +44,7 @@
 <meta property="og:image" content="https://wulc.me/imgs/image_1bf8jl7lr10uq196pjs4s0hacs1t.png">
 <meta property="og:image" content="https://wulc.me/imgs/image_1bf8jnibpk3o14g81cj1fqnna2a.png">
 <meta property="article:published_time" content="2017-05-07T13:37:39.000Z">
-<meta property="article:modified_time" content="2023-04-30T05:12:49.076Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.127Z">
 <meta property="article:author" content="良超">
 <meta property="article:tag" content="计算广告">
 <meta property="article:tag" content="机器学习">
@@ -296,19 +296,19 @@ auctions)，该问题描述如下</p>
 <li>该问题要解决的是将广告对象 $ a = , 2, … A $ 排放到位置 $ s = , 2, …,
 S $，这里的位置主要针对搜索广告而言</li>
 <li>假设对象 <span class="math inline">\(a\)</span> 的出价(bid)为 <span
-class="math inline">\(b\_a\)</span> , 而其对位置 <span
+class="math inline">\(b_a\)</span> , 而其对位置 <span
 class="math inline">\(s\)</span> 的计价为 <span
-class="math inline">\(u\_{as} = v\_ax\_s ,(x\_1&gt;x\_2
-&gt;…&gt;x\_S)\)</span>， <span class="math inline">\(v\_a\)</span>
-视为点击价值，<span class="math inline">\(x\_s\)</span>
+class="math inline">\(u_{as} = v_ax_s ,(x_1&gt;x_2
+&gt;…&gt;x_S)\)</span>， <span class="math inline">\(v_a\)</span>
+视为点击价值，<span class="math inline">\(x_s\)</span>
 视为点击率，该模型可近似描述广告系统竞价问题(对显示广告，可以认为S =
 1，但是与搜索广告的不同点在于搜索广告可以一个都不出，而显示广告至少要出一个)</li>
 <li>可以将问题描述成一个对称纳什均衡(Symmetric Nash equilibrium)
 其目标是 $(v_s – p_s)x_s &gt;= (v_s – p_t)x_t $, 其中 <span
-class="math inline">\(p\_t = b\_{s+1}\)</span>,这里的 <span
-class="math inline">\(p\_s\)</span>
+class="math inline">\(p_t = b_{s+1}\)</span>,这里的 <span
+class="math inline">\(p_s\)</span>
 表示根据广告的位置实际的收费情况，<span
-class="math inline">\(b\_{s+1}\)</span> 在位置 <span
+class="math inline">\(b_{s+1}\)</span> 在位置 <span
 class="math inline">\(s+1\)</span>
 的广告的出价；寻找收入最大化且稳定的纳什均衡状态是竞价系统设计的关键</li>
 </ol>
@@ -317,7 +317,7 @@ second pricing)机制</strong>。</p>
 <p>从理论上来讲，VCG 机制是最优的，VCG
 认为某对象的收费应等于给他人带来的价值损害，而且其有一个很好的性质：整体市场是truth-telling的，也就是每个广告主只需要根据自己真实想法出价，避免广告主间的博弈。</p>
 <p>但是实际的定价机制是广义第二高价，就是每个位置收取的费用是其下一个位置的出价加1（比下一个位置高即可）即
-<span class="math display">\[p\_s = b\_{s+1} + 1\]</span>
+<span class="math display">\[p_s = b_{s+1} + 1\]</span>
 这种做法看似会降低收益，但是实际上与VCG机制相比，会收取广告主更多的费用。关于原因，视频讲解时给了一个例子
 &gt;假如说现在第一高价的广告是5块，第二高价的是3块。
 &gt;假如采用第一高价的机制，那么出了第一高价的广告主就会设法调低自己的价格，比如说调到3块1毛，因为这时候仍然可以拿到第一位且支出更少，而如果再来一个人要第一的广告位，那么他可能就会调到3块2；
@@ -461,7 +461,7 @@ alt="BFGS" />
 <figcaption aria-hidden="true">BFGS</figcaption>
 </figure>
 <p>L(imited memory)-BFGS 是为了解决 BFGS 的空间复杂度问题。将 nxn
-的Hession阵用下图方式加以近似(<span class="math inline">\(B\_k\)</span>
+的Hession阵用下图方式加以近似(<span class="math inline">\(B_k\)</span>
 为Hession近似)</p>
 <figure>
 <img data-src="https://wulc.me/imgs/image_1bf8ilp9l7m41pga1opf1vf83ku1g.png"
@@ -492,15 +492,15 @@ alt="ADMM 更一般表示方法" />
 <p>ADMM这种迭代的解法能够很容易地通过 MapReduce 模式迭代进行求解。</p>
 <p>下面介绍逻辑回归的ADMM分布式解法，这种方法将将样本划分为 N 份，每个
 mapper 负责一份，其描述的最优化问题如下</p>
-<p><span class="math display">\[\min \sum\_{i=1}^{N}\sigma
-(w\_ix\_i)+r(z)\\\
+<p><span class="math display">\[\min \sum_{i=1}^{N}\sigma
+(w_ix_i)+r(z)\\\
 s.t. w - z = 0\]</span></p>
 <p>分布式的迭代解法入下:</p>
-<p><span class="math display">\[w\_i^{k+1} \leftarrow \arg \min\_{w\_i}
-(\sigma(w\_ix\_i) + \frac{\rho}{2}||w\_i - z^k + \mu\_i^k||\_2^2)\\\
-z^{k+1} \leftarrow \arg \min\_{z} (r(z) + \frac{N\rho}{2}||z^k -
-\overline w^{k+1}+ \overline \mu\_k||\_2^2)\\\
-\mu\_i^{k+1} \leftarrow \mu\_i^k + w\_i^{k+1} - z^{k+1}
+<p><span class="math display">\[w_i^{k+1} \leftarrow \arg \min_{w_i}
+(\sigma(w_ix_i) + \frac{\rho}{2}||w_i - z^k + \mu_i^k||_2^2)\\\
+z^{k+1} \leftarrow \arg \min_{z} (r(z) + \frac{N\rho}{2}||z^k -
+\overline w^{k+1}+ \overline \mu_k||_2^2)\\\
+\mu_i^{k+1} \leftarrow \mu_i^k + w_i^{k+1} - z^{k+1}
 \]</span></p>
 <h2 id="探索与利用explore-and-exploit-ee">探索与利用(Explore and
 exploit， E&amp;E)</h2>

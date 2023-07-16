@@ -35,7 +35,7 @@
 <meta property="og:image" content="https://wulc.me/imgs/DistillationTrainingAndServing.png">
 <meta property="og:image" content="https://wulc.me/imgs/SynchronousTraining.png">
 <meta property="article:published_time" content="2020-03-01T04:00:37.000Z">
-<meta property="article:modified_time" content="2023-04-30T05:12:49.144Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.206Z">
 <meta property="article:author" content="良超">
 <meta property="article:tag" content="机器学习">
 <meta name="twitter:card" content="summary">
@@ -293,22 +293,21 @@ alt="MD vs FD" />
 模型学得更好？<strong>基本的做法是将 teacher 模型的输出作为 soft
 label(相对于作为 ground truth 的 hard label）, 为 student 模型添加额外的
 loss 项</strong>；如下公式 (1) 所示</p>
-<p><span class="math display">\[\min\_{W\_s} (1-\lambda)L\_s(y,
-f\_s(X;W\_s))+\lambda*L\_d(f\_t(X;W\_t),f\_s(X;W\_s))
-\tag{1}\]</span></p>
+<p><span class="math display">\[\min_{W_s} (1-\lambda)L_s(y,
+f_s(X;W_s))+\lambda*L_d(f_t(X;W_t),f_s(X;W_s)) \tag{1}\]</span></p>
 <p>上式中各项符号含义如下</p>
 <ul>
-<li><span class="math inline">\(f\_s(X; W\_s)\)</span> ：student
+<li><span class="math inline">\(f_s(X; W_s)\)</span> ：student
 模型的预估值</li>
-<li><span class="math inline">\(f\_t(X;W\_t)\)</span> ： teacher
+<li><span class="math inline">\(f_t(X;W_t)\)</span> ： teacher
 模型的预估值</li>
-<li><span class="math inline">\(L\_s\)</span> ：student 模型原始的
+<li><span class="math inline">\(L_s\)</span> ：student 模型原始的
 loss</li>
-<li><span class="math inline">\(L\_d\)</span> ：利用 teacher
+<li><span class="math inline">\(L_d\)</span> ：利用 teacher
 模型预估值输出作为 soft label 计算的 distillation loss;</li>
 <li><span class="math inline">\(\lambda\)</span>：平衡 <span
-class="math inline">\(L\_s\)</span> 和 <span
-class="math inline">\(L\_d\)</span> 的超参</li>
+class="math inline">\(L_s\)</span> 和 <span
+class="math inline">\(L_d\)</span> 的超参</li>
 </ul>
 <p>上面公式（1）是 Model Distillation 的典型做法，可以看到输入 teacher
 模型和 student 模型的特征都是相同的即 <span
@@ -316,20 +315,19 @@ class="math inline">\(X\)</span> ；而公式(2)描述的 Feature Distillation
 则认为 teacher 模型的特征（<span class="math inline">\(X^*\)</span>）比
 student 模型的特征(<span class="math inline">\(X\)</span>)
 更为丰富，</p>
-<p><span class="math display">\[\min\_{W\_s} (1-\lambda)L\_s(y,
-f\_s(X;W\_s))+\lambda\*L\_d(f\_t(X^\*;W\_t),f\_s(X;W\_s))
-\tag{2}\]</span></p>
+<p><span class="math display">\[\min_{W_s} (1-\lambda)L_s(y,
+f_s(X;W_s))+\lambda\*L_d(f_t(X^\*;W_t),f_s(X;W_s)) \tag{2}\]</span></p>
 <p>上面两条公式是 Distillation
 的核心思想了，且在使用<strong>理论上应该首先训练好 teacher 网络，再训练
 student 网络；但是在实际训练的时候，为了加快训练速度，会令 teacher
 模型和 student
 模型同时进行训练</strong>；因此最终的损失函数变为了如下公式(3)
-形式，其中 <span class="math inline">\(L\_s\)</span> 和 <span
-class="math inline">\(L\_t\)</span> 是 logloss， 而 <span
-class="math inline">\(L\_d\)</span> 是 cross entropy loss</p>
-<p><span class="math display">\[\min\_{W\_s, W\_t} (1-\lambda)L\_s(y,
-f\_s(X;W\_s)) +  \lambda\*L\_d(f\_t(X^\*;W\_t),f\_s(X;W\_s)) + L\_t(y,
-f\_t(X^\*;W\_t))\tag{3}\]</span></p>
+形式，其中 <span class="math inline">\(L_s\)</span> 和 <span
+class="math inline">\(L_t\)</span> 是 logloss， 而 <span
+class="math inline">\(L_d\)</span> 是 cross entropy loss</p>
+<p><span class="math display">\[\min_{W_s, W_t} (1-\lambda)L_s(y,
+f_s(X;W_s)) +  \lambda\*L_d(f_t(X^\*;W_t),f_s(X;W_s)) + L_t(y,
+f_t(X^\*;W_t))\tag{3}\]</span></p>
 <p>综上，在 training 和 serving 时的模型结构分别如下所示</p>
 <figure>
 <img data-src="https://wulc.me/imgs/DistillationTrainingAndServing.png"

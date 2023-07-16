@@ -37,7 +37,7 @@
 <meta property="og:image" content="https://wulc.me/imgs/image_1bi8fediq174f1egd1s8l1jl217is13.png">
 <meta property="og:image" content="https://wulc.me/imgs/image_1bibltpvd144k7me1e2b1elinct18.png">
 <meta property="article:published_time" content="2017-02-28T12:08:55.000Z">
-<meta property="article:modified_time" content="2023-04-30T05:12:49.143Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.204Z">
 <meta property="article:author" content="良超">
 <meta property="article:tag" content="机器学习">
 <meta name="twitter:card" content="summary">
@@ -300,13 +300,13 @@ class="math inline">\(N\)</span>, 则对应的 Hoeffding 不等式如下</p>
 预测出的标签一致，而橙色弹珠则表示样本标签与预测标签不一致。则橙色弹珠的比例就是模型
 <span class="math inline">\(h\)</span> 的错误率。同时将模型 <span
 class="math inline">\(h\)</span> 在全部弹珠中的错误率记为 <span
-class="math inline">\(E\_{out}(h)\)</span>, 而在样本中的错误率记为 <span
-class="math inline">\(E\_{in}(h)\)</span>，则根据 Hoeffding 不等式有</p>
-<p><span class="math display">\[p(|E\_{in}(h) - E\_{out}(h)| \gt
-\epsilon) \le 2\exp(-2\epsilon^2N)\]</span></p>
+class="math inline">\(E_{out}(h)\)</span>, 而在样本中的错误率记为 <span
+class="math inline">\(E_{in}(h)\)</span>，则根据 Hoeffding 不等式有</p>
+<p><span class="math display">\[p(|E_{in}(h) - E_{out}(h)| \gt \epsilon)
+\le 2\exp(-2\epsilon^2N)\]</span></p>
 <p>也就是说，<strong>训练样本的数目越大，<span
-class="math inline">\(E\_{in}(h)\)</span> 和 <span
-class="math inline">\(E\_{out}(h)\)</span>，
+class="math inline">\(E_{in}(h)\)</span> 和 <span
+class="math inline">\(E_{out}(h)\)</span>，
 也就是训练误差和泛化误差越接近。</strong></p>
 <p>这一等式实际上代表了 <a
 target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Probably_approximately_correct_learning">PAC</a>
@@ -321,7 +321,7 @@ error (the "approximately correct" part).</p>
 </blockquote>
 <p>上面的 Hoeffding
 不等式只是说明了训练误差和泛化误差可以很接近，但是这一接近必须要在训练误差也就是
-<span class="math inline">\(E\_{in}(h)\)</span>
+<span class="math inline">\(E_{in}(h)\)</span>
 很小的情况下才有意义，否则大的训练误差就有大的范化误差，而大的范化误差的模型实际上是没有意义的。而小的训练误差对应到
 PAC 中的 AC(approximately correct) 部分。</p>
 <h2 id="从一个-hyposthesis-到多个-hypothesis">从一个 hyposthesis 到多个
@@ -339,22 +339,22 @@ class="math inline">\(h\)</span>
 class="math inline">\(h\)</span>
 在样本上得到的误差与其在总体上得到的误差相差很大（实际上就是抽出的样本不能很好反映总体），讲义中将这部分的
 sample 称为 bad data，就是使得 <span class="math inline">\(h\)</span> 的
-<span class="math inline">\(E\_{in}(h)\)</span>很小，<span
-class="math inline">\(E\_{out}(h)\)</span>
+<span class="math inline">\(E_{in}(h)\)</span>很小，<span
+class="math inline">\(E_{out}(h)\)</span>
 很大的样本。如下图所示，如果进行多次抽样，那么肯定有一些样本会导致 <span
-class="math inline">\(E\_{in}(h)\)</span>和 <span
-class="math inline">\(E\_{out}(h)\)</span> 的差距较大。</p>
+class="math inline">\(E_{in}(h)\)</span>和 <span
+class="math inline">\(E_{out}(h)\)</span> 的差距较大。</p>
 <figure>
 <img data-src="https://wulc.me/imgs/image_1bi8c9bsjveuio7id2ile1fo59.png"
 alt="bad data for h" />
 <figcaption aria-hidden="true">bad data for h</figcaption>
 </figure>
 <blockquote>
-<p>注：这里 <span class="math inline">\(E\_{in}(h)\)</span> 很小，<span
-class="math inline">\(E\_{out}(h)\)</span>
+<p>注：这里 <span class="math inline">\(E_{in}(h)\)</span> 很小，<span
+class="math inline">\(E_{out}(h)\)</span>
 很大其实已经是我们常听到的过拟合现象，影响过拟合的因素有很多，而抽样的数据的分布是否能够代表整体数据的分布则是其中一个因素。下面是一个简单的例子：对于一个高斯分布产生的数据，如果抽样数据是图中的黑色点，那么拟合出来的曲线可能是图中的黑线，也就是说假如抽样数据的分布如果跟原始数据分布不一致，我们的模型拟合了抽样的数据，对于原始数据而言，自然没有预测能力，也就是<span
-class="math inline">\(E\_{in}(h)\)</span> 很小，<span
-class="math inline">\(E\_{out}(h)\)</span>
+class="math inline">\(E_{in}(h)\)</span> 很小，<span
+class="math inline">\(E_{out}(h)\)</span>
 很大，可以说是过拟合了抽样的数据。</p>
 </blockquote>
 <figure>
@@ -381,22 +381,22 @@ alt="Hoeffding 对多个不等式的情况" />
 <figcaption aria-hidden="true">Hoeffding 对多个不等式的情况</figcaption>
 </figure>
 <p>上面的不等式表明，对于有限多个 hypothesis 而言，<span
-class="math inline">\(E\_{in}(h) \approx E\_{out}(h)\)</span> 还是 PAC
+class="math inline">\(E_{in}(h) \approx E_{out}(h)\)</span> 还是 PAC
 的，只是两者误差的 upper bound 变大了，但是数据量 <span
 class="math inline">\(N\)</span> 的增大能够抵消这一影响。</p>
 <p>在上面的前提下，在有多个 hypothesis 的情况下，只需要选择 <span
-class="math inline">\(E\_{in}(h)\)</span> 小的，就能拿保证 <span
-class="math inline">\(E\_{out}(h)\)</span>
+class="math inline">\(E_{in}(h)\)</span> 小的，就能拿保证 <span
+class="math inline">\(E_{out}(h)\)</span>
 也是小的，也就是学习是可行的。</p>
 <h2 id="小结">小结</h2>
 <p>本文主要是通过 Hoeffding 不等式证明了<strong>当模型的所有 hypothesis
 的个数 <span class="math inline">\(M\)</span> 为有限个时，样本数目 <span
 class="math inline">\(N\)</span> 足够大时，就能够保证泛化误差 <span
-class="math inline">\(E\_{out}(h)\)</span> 和训练误差 <span
-class="math inline">\(E\_{in}(h)\)</span> 很接近。</strong></p>
+class="math inline">\(E_{out}(h)\)</span> 和训练误差 <span
+class="math inline">\(E_{in}(h)\)</span> 很接近。</strong></p>
 <p>这时候只要找到一个 hypothesis 使得 <span
-class="math inline">\(E\_{in}(h)\)</span> 很小，那么 <span
-class="math inline">\(E\_{out}(h)\)</span>
+class="math inline">\(E_{in}(h)\)</span> 很小，那么 <span
+class="math inline">\(E_{out}(h)\)</span>
 也会很小，从而达到学习的目的。</p>
 <p>当然有一个大前提就是训练样本和测试样本必须要在同一分布下产生，否则学习无从谈起。</p>
 <p>上面的内容可通过下图进行描述</p>

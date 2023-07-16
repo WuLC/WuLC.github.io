@@ -34,7 +34,7 @@
 <meta property="og:image" content="https://wulc.me/imgs/pearson-2-small.png">
 <meta property="og:image" content="https://wulc.me/imgs/2016-03-01_220750.png">
 <meta property="article:published_time" content="2016-02-22T14:31:17.000Z">
-<meta property="article:modified_time" content="2023-04-30T05:12:49.118Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.166Z">
 <meta property="article:author" content="良超">
 <meta property="article:tag" content="机器学习">
 <meta property="article:tag" content="集体智慧编程">
@@ -292,11 +292,10 @@ inflation)</strong>的问题,比如说A和B两个人的评判标准不一样，A
 Correlation Coefficient）</strong>可以实现上面的功能。</p>
 <h3 id="皮尔逊相关系数">皮尔逊相关系数</h3>
 <p>皮尔逊相关系数取值范围为[-1,1],数值为正表示正相关，且越大表示相关性越强；数值为负则为负相关，越小则负相关性越强。计算公式如下：</p>
-<p><span class="math display">\[sim = \frac{\sum\_{c \in
-I\_{ij}}(R\_{i,c} - \overline{R\_i})(R\_{j,c} -
-\overline{R\_j})}{\sqrt{\sum\_{c \in I\_{ij}} (R\_{i,c} -
-\overline{R\_i})^2} \sqrt{\sum\_{c \in I\_{ij}} (R\_{j,c} -
-\overline{R\_j})^2} }\]</span></p>
+<p><span class="math display">\[sim = \frac{\sum_{c \in I_{ij}}(R_{i,c}
+- \overline{R_i})(R_{j,c} - \overline{R_j})}{\sqrt{\sum_{c \in I_{ij}}
+(R_{i,c} - \overline{R_i})^2} \sqrt{\sum_{c \in I_{ij}} (R_{j,c} -
+\overline{R_j})^2} }\]</span></p>
 <p>公式中的符号意义如下：</p>
 <table>
 <colgroup>
@@ -311,28 +310,28 @@ I\_{ij}}(R\_{i,c} - \overline{R\_i})(R\_{j,c} -
 </thead>
 <tbody>
 <tr class="odd">
-<td><span class="math inline">\(I\_{ij}\)</span></td>
+<td><span class="math inline">\(I_{ij}\)</span></td>
 <td>用户 <span class="math inline">\(i\)</span> 和用户 <span
 class="math inline">\(j\)</span>
 的公共评分集，也就是两者都有评分的物品的集合</td>
 </tr>
 <tr class="even">
-<td><span class="math inline">\(R\_{i,c}\)</span></td>
+<td><span class="math inline">\(R_{i,c}\)</span></td>
 <td>用户 <span class="math inline">\(i\)</span> 对物品c的评分</td>
 </tr>
 <tr class="odd">
-<td><span class="math inline">\(R\_{j,c}\)</span></td>
+<td><span class="math inline">\(R_{j,c}\)</span></td>
 <td>用户 <span class="math inline">\(j\)</span> 对物品c的评分</td>
 </tr>
 <tr class="even">
-<td><span class="math inline">\(\overline {R\_i}\)</span></td>
+<td><span class="math inline">\(\overline {R_i}\)</span></td>
 <td>用户 <span class="math inline">\(i\)</span> 对 <span
-class="math inline">\(I\_{ij}\)</span> 中物品评分的均值</td>
+class="math inline">\(I_{ij}\)</span> 中物品评分的均值</td>
 </tr>
 <tr class="odd">
-<td><span class="math inline">\(\overline {R\_j}\)</span></td>
+<td><span class="math inline">\(\overline {R_j}\)</span></td>
 <td>用户 <span class="math inline">\(j\)</span> 对 <span
-class="math inline">\(I\_{ij}\)</span> 中物品评分的均值</td>
+class="math inline">\(I_{ij}\)</span> 中物品评分的均值</td>
 </tr>
 </tbody>
 </table>
@@ -375,11 +374,10 @@ Similarity）</strong>。</p>
 <h3 id="修正的余弦相似性">修正的余弦相似性</h3>
 <p>修正的余弦相似度跟上面提到的皮尔逊系数很相似，包括计算公式，区别在于<strong>皮尔逊系数是依据双方共同评分项进行计算，而修正的余弦相似度则对所有项都进行运算</strong>。比如说一部电影A有评分，B没有评分，那么计算皮尔逊系数时就不能采用这不电影作为计算的数据集，但是计算修正的余弦相似性则可以利用这个数据。</p>
 <p>修正的余弦相似性的计算公式如下</p>
-<p><span class="math display">\[sim = \frac{\sum\_{c \in
-I\_{ij}}(R\_{i,c} - \overline{R\_i})(R\_{j,c} -
-\overline{R\_j})}{\sqrt{\sum\_{c \in I\_i} (R\_{i,c} -
-\overline{R\_i})^2} \sqrt{\sum\_{c \in I\_j} (R\_{j,c} -
-\overline{R\_j})^2} }\]</span></p>
+<p><span class="math display">\[sim = \frac{\sum_{c \in I_{ij}}(R_{i,c}
+- \overline{R_i})(R_{j,c} - \overline{R_j})}{\sqrt{\sum_{c \in I_i}
+(R_{i,c} - \overline{R_i})^2} \sqrt{\sum_{c \in I_j} (R_{j,c} -
+\overline{R_j})^2} }\]</span></p>
 <p>公式中的符号意义如下：</p>
 <table>
 <colgroup>
@@ -394,45 +392,44 @@ I\_{ij}}(R\_{i,c} - \overline{R\_i})(R\_{j,c} -
 </thead>
 <tbody>
 <tr class="odd">
-<td><span class="math inline">\(I\_{ij}\)</span></td>
+<td><span class="math inline">\(I_{ij}\)</span></td>
 <td>用户 <span class="math inline">\(i\)</span> 和用户 <span
 class="math inline">\(j\)</span>
 的公共评分集，也就是均被两者评分的物品的集合</td>
 </tr>
 <tr class="even">
-<td><span class="math inline">\(I\_i\)</span></td>
+<td><span class="math inline">\(I_i\)</span></td>
 <td>被用户 <span class="math inline">\(i\)</span>
 评分了的物品的集合</td>
 </tr>
 <tr class="odd">
-<td><span class="math inline">\(I\_j\)</span></td>
+<td><span class="math inline">\(I_j\)</span></td>
 <td>被用户 <span class="math inline">\(j\)</span>
 评分了的物品的集合</td>
 </tr>
 <tr class="even">
-<td><span class="math inline">\(R\_{i,c}\)</span></td>
+<td><span class="math inline">\(R_{i,c}\)</span></td>
 <td>用户 <span class="math inline">\(i\)</span> 对物品c的评分</td>
 </tr>
 <tr class="odd">
-<td><span class="math inline">\(R\_{j,c}\)</span></td>
+<td><span class="math inline">\(R_{j,c}\)</span></td>
 <td>用户 <span class="math inline">\(j\)</span> 对物品c的评分</td>
 </tr>
 <tr class="even">
-<td><span class="math inline">\(\overline {R\_i}\)</span></td>
+<td><span class="math inline">\(\overline {R_i}\)</span></td>
 <td>用户 <span class="math inline">\(i\)</span> 所有评分的均值</td>
 </tr>
 <tr class="odd">
-<td><span class="math inline">\(\overline {R\_j}\)</span></td>
+<td><span class="math inline">\(\overline {R_j}\)</span></td>
 <td>用户 <span class="math inline">\(j\)</span> 所有评分的均值</td>
 </tr>
 </tbody>
 </table>
 <p>这条公式跟上面的皮尔逊相关系数很相似，皮尔逊相关系数的公式如下：</p>
-<p><span class="math display">\[sim = \frac{\sum\_{c \in
-I\_{ij}}(R\_{i,c} - \overline{R\_i})(R\_{j,c} -
-\overline{R\_j})}{\sqrt{\sum\_{c \in I\_{ij}} (R\_{i,c} -
-\overline{R\_i})^2} \sqrt{\sum\_{c \in I\_{ij}} (R\_{j,c} -
-\overline{R\_j})^2} }\]</span></p>
+<p><span class="math display">\[sim = \frac{\sum_{c \in I_{ij}}(R_{i,c}
+- \overline{R_i})(R_{j,c} - \overline{R_j})}{\sqrt{\sum_{c \in I_{ij}}
+(R_{i,c} - \overline{R_i})^2} \sqrt{\sum_{c \in I_{ij}} (R_{j,c} -
+\overline{R_j})^2} }\]</span></p>
 <p><strong>两者的区别在于分母上，皮尔逊系数的分母采用的评分集是两个用户的共同评分集（就是两个用户都对这个物品有评价），而修正的余弦系数则采用两个用户各自的评分集。</strong></p>
 <p>采用修正的余弦系数的实现代码如下：</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">user_similarity_on_modified_cosine</span>(<span class="params">scores, user1, user2</span>):</span><br><span class="line">    commom = [movie <span class="keyword">for</span> movie <span class="keyword">in</span> scores[user1] <span class="keyword">if</span> movie <span class="keyword">in</span> scores[user2]]</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(commom) == <span class="number">0</span>:  <span class="comment">#no common item of the two users</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    average1 = <span class="built_in">float</span>(<span class="built_in">sum</span>(scores[user1][movie] <span class="keyword">for</span> movie <span class="keyword">in</span> scores[user1]))/<span class="built_in">len</span>(scores[user1])</span><br><span class="line">    average2 = <span class="built_in">float</span>(<span class="built_in">sum</span>(scores[user2][movie] <span class="keyword">for</span> movie <span class="keyword">in</span> scores[user2]))/<span class="built_in">len</span>(scores[user2])</span><br><span class="line">    <span class="comment"># denominator</span></span><br><span class="line">    multiply_sum = <span class="built_in">sum</span>( (scores[user1][movie]-average1) * (scores[user2][movie]-average2) <span class="keyword">for</span> movie <span class="keyword">in</span> commom )</span><br><span class="line">    <span class="comment"># member</span></span><br><span class="line">    pow_sum_1 = <span class="built_in">sum</span>( math.<span class="built_in">pow</span>(scores[user1][movie]-average1, <span class="number">2</span>) <span class="keyword">for</span> movie <span class="keyword">in</span> scores[user1] )</span><br><span class="line">    pow_sum_2 = <span class="built_in">sum</span>( math.<span class="built_in">pow</span>(scores[user2][movie]-average2, <span class="number">2</span>) <span class="keyword">for</span> movie <span class="keyword">in</span> scores[user2] )</span><br><span class="line">    </span><br><span class="line">    modified_cosine_similarity = <span class="built_in">float</span>(multiply_sum)/math.sqrt(pow_sum_1*pow_sum_2)</span><br><span class="line">    <span class="keyword">return</span> modified_cosine_similarity </span><br></pre></td></tr></table></figure>

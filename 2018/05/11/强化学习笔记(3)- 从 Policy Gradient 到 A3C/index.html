@@ -39,7 +39,7 @@
 <meta property="og:image" content="https://wulc.me/imgs/image_1cd746v6om9cmoh1nul1io01fg19.png">
 <meta property="og:image" content="https://wulc.me/imgs/image_1cd7766d16uk2l812unadu2gt9.png">
 <meta property="article:published_time" content="2018-05-11T14:21:25.000Z">
-<meta property="article:modified_time" content="2023-04-30T05:12:49.137Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.194Z">
 <meta property="article:author" content="良超">
 <meta property="article:tag" content="机器学习">
 <meta property="article:tag" content="强化学习">
@@ -451,11 +451,10 @@ function的估计。但是<strong>不同点</strong>在于 1. A3C 中有多个 a
 对网络进行 asynchronous update，这样带来了样本间的相关性较低的好处，因此
 A3C 中也没有采用 Experience Replay 的机制；这样 A3C 便支持 online
 的训练模式了 2. A3C 有两个输出，其中一个 softmax output 作为 policy
-<span
-class="math inline">\(\pi(a\_t|s\_t;\theta)\)</span>，而另一个linear
+<span class="math inline">\(\pi(a_t|s_t;\theta)\)</span>，而另一个linear
 output为 value function <span
-class="math inline">\(V(s\_t;\theta\_v)\)</span> 3. A3C 中的Policy
-network 的评估指标采用的是上面比较了多种评估指标的论文中提到的 Advantage
+class="math inline">\(V(s_t;\theta_v)\)</span> 3. A3C 中的Policy network
+的评估指标采用的是上面比较了多种评估指标的论文中提到的 Advantage
 Function(即A值) 而不是 DDPG 中单纯的 Q 值。</p>
 <p>整体的结构如下所示，图片摘自<a
 target="_blank" rel="noopener" href="https://blog.csdn.net/jinzhuojun/article/details/72851548">这篇文章</a>。</p>

@@ -40,7 +40,7 @@
 <meta property="og:image" content="https://wulc.me/imgs/image_1belg5n9m11kd1pni1krdb6d1220m.png">
 <meta property="og:image" content="https://wulc.me/imgs/image_1belga1ij1tn01nov1ota1kmr9a1g.png">
 <meta property="article:published_time" content="2017-04-25T13:37:39.000Z">
-<meta property="article:modified_time" content="2023-05-10T14:36:37.703Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.087Z">
 <meta property="article:author" content="良超">
 <meta property="article:tag" content="计算广告">
 <meta property="article:tag" content="机器学习">
@@ -365,10 +365,9 @@ class="math inline">\(a\)</span>
 <p><span class="math display">\[\begin{align*}
 &amp;\max \quad C\\\
 &amp;\begin{array}\\\
-s.t. &amp;\sum\_{a \in \Gamma(i)} x\_{ia} \le 1 &amp;\forall i \in I\\\
-&amp;\sum\_{i \in \Gamma(a)} s\_i x\_{ia} \ge d\_a &amp;\forall a \in
-A\\\
-&amp;x\_{ia} \ge 0 &amp;\forall (i,a) \in E
+s.t. &amp;\sum_{a \in \Gamma(i)} x_{ia} \le 1 &amp;\forall i \in I\\\
+&amp;\sum_{i \in \Gamma(a)} s_i x_{ia} \ge d_a &amp;\forall a \in A\\\
+&amp;x_{ia} \ge 0 &amp;\forall (i,a) \in E
 \end{array}
 \end{align*}\]</span></p>
 <p>上面各式的符号含义如下</p>
@@ -378,15 +377,15 @@ class="math inline">\(A\)</span>、<span class="math inline">\(E\)</span>
 上面已经提到，分别表示供给点集合，需求点集合，边的集合 <span
 class="math inline">\(\Gamma(i)\)</span> 表示与供给节点 <span
 class="math inline">\(i\)</span> 连接的所有需求节点的集合 <span
-class="math inline">\(x\_{i,a}\)</span> 表示供给节点 <span
+class="math inline">\(x_{i,a}\)</span> 表示供给节点 <span
 class="math inline">\(i\)</span> 分配给需求节点 <span
 class="math inline">\(a\)</span> 的流量的比例 <span
 class="math inline">\(\Gamma(a)\)</span> 表示所有与需求节点 <span
 class="math inline">\(a\)</span> 连接的供给节点 <span
 class="math inline">\(i\)</span> 的集合 <span
-class="math inline">\(s\_i\)</span> 表示供给节点 <span
+class="math inline">\(s_i\)</span> 表示供给节点 <span
 class="math inline">\(i\)</span> 的总流量 <span
-class="math inline">\(d\_a\)</span> 表示需求节点 <span
+class="math inline">\(d_a\)</span> 表示需求节点 <span
 class="math inline">\(a\)</span> 的展示量需求</p>
 <p><strong>Adwords 问题</strong></p>
 <p>AdWorks
@@ -394,31 +393,30 @@ class="math inline">\(a\)</span> 的展示量需求</p>
 CPC
 方式结算的广告环境下，给定广告主的预算，整体化市场营收问题。需要注意的是，竞价广告中已经没有了量的约束，广告主给的约束是其预算费用。因此可以将这个问题表示为如下的优化问题</p>
 <p><span class="math display">\[\begin{align*}
-&amp;\max\_{(i,a) \in E} \quad q\_{ia} s\_i x\_{ia}\\\
+&amp;\max_{(i,a) \in E} \quad q_{ia} s_i x_{ia}\\\
 &amp;\begin{array}\\\
-s.t. &amp;\sum\_{a \in \Gamma(i)} x\_{ia} \le 1  &amp; \forall i \in
-I\\\
-&amp;\sum\_{i \in \Gamma(a)} q\_{ia}s\_i x\_{ia} \le d\_a &amp; \forall
-a \in A\\\
-&amp;x\_{i,a} \ge 0 &amp;\forall (i,a) \in E
+s.t. &amp;\sum_{a \in \Gamma(i)} x_{ia} \le 1  &amp; \forall i \in I\\\
+&amp;\sum_{i \in \Gamma(a)} q_{ia}s_i x_{ia} \le d_a &amp; \forall a \in
+A\\\
+&amp;x_{i,a} \ge 0 &amp;\forall (i,a) \in E
 \end{array}
 \end{align*}\]</span></p>
 <p>上式大部分的符号跟 GD 问题相同，不同的地方主要是以下两个符号 <span
-class="math inline">\(q\_{ia}\)</span> 表示需求节点(广告主) <span
+class="math inline">\(q_{ia}\)</span> 表示需求节点(广告主) <span
 class="math inline">\(a\)</span> 对供给节点（某个人群标签） <span
 class="math inline">\(i\)</span> 的出价 <span
-class="math inline">\(d\_a\)</span> 表示则表示广告主 <span
+class="math inline">\(d_a\)</span> 表示则表示广告主 <span
 class="math inline">\(a\)</span> 的总预算</p>
 <h3 id="问题求解">问题求解</h3>
 <p>上面的两个最优化问题均是线性规划问题，未知量是 <span
-class="math inline">\(s\_i\)</span>（供给节点 <span
+class="math inline">\(s_i\)</span>（供给节点 <span
 class="math inline">\(i\)</span> 的流量） 和 <span
-class="math inline">\(x\_{ia}\)</span>（供给节点 <span
+class="math inline">\(x_{ia}\)</span>（供给节点 <span
 class="math inline">\(i\)</span> 分配给需求节点 <span
 class="math inline">\(a\)</span> 的流量的比例）。但是对于 <span
-class="math inline">\(s\_i\)</span>
+class="math inline">\(s_i\)</span>
 ，常常利用历史流量去估计它的值，因此上面的优化问题变成了仅仅需要求解
-<span class="math inline">\(x\_{ia}\)</span>
+<span class="math inline">\(x_{ia}\)</span>
 的问题。下面解决这个问题的几种思路</p>
 <h4 id="直接求解">直接求解</h4>
 <p>对于这类线性规划问题，可以通过内点法或单纯形法直接进行求解，但是在大型的广告合约系统中，供给节点和需求节点的数目都很大，因此边

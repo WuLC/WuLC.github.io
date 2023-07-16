@@ -43,7 +43,7 @@
 <meta property="og:image" content="https://wulc.me/imgs/AirbnbFeatureList.jpg">
 <meta property="og:image" content="https://wulc.me/imgs/featureImportance.jpg">
 <meta property="article:published_time" content="2020-06-20T13:37:39.000Z">
-<meta property="article:modified_time" content="2023-04-30T05:12:49.104Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.154Z">
 <meta property="article:author" content="良超">
 <meta property="article:tag" content="机器学习">
 <meta property="article:tag" content="深度学习">
@@ -331,17 +331,16 @@ session（类比 nlp 中的一个 sentence），在 paper
 的长度</strong>，在paper中定义<strong>当用户的两次点击超过 30
 分钟时，那这两次点击应该属于两个 session</strong>。</p>
 <p>假设总体训练集为 <span class="math inline">\(S\)</span>, 每个 session
-为 <span class="math inline">\(s=(l\_1,l\_2...l\_M) \in S\)</span>,
-则通过 word2vec 中的 skip-gram 可写出 loss 如下</p>
-<p><span class="math display">\[L=\sum\_{s \in S}\sum\_{l\_i \in
-s}(\sum\_{-m \le j \le m,j \ne 0}^M \log
-p(l\_{i+j}|l\_i))\tag{1}\]</span></p>
+为 <span class="math inline">\(s=(l_1,l_2...l_M) \in S\)</span>, 则通过
+word2vec 中的 skip-gram 可写出 loss 如下</p>
+<p><span class="math display">\[L=\sum_{s \in S}\sum_{l_i \in
+s}(\sum_{-m \le j \le m,j \ne 0}^M \log
+p(l_{i+j}|l_i))\tag{1}\]</span></p>
 <p>上面的 m 是个超参，表示 skip-gram
 训练时窗口的大小，且上式的概率可通过 embedding 向量和 softmax
 表示成如下形式</p>
-<p><span class="math display">\[p(l\_{i+j}|l\_i) =
-\frac{\exp(v\_{l\_j}^T
-v\_{l\_{i+j}}^{&#39;})}{\sum\_{l=1}^{|V|}\exp(v\_{l\_i}^Tv\_{l}^{&#39;})}\tag{2}\]</span></p>
+<p><span class="math display">\[p(l_{i+j}|l_i) = \frac{\exp(v_{l_j}^T
+v_{l_{i+j}}^{&#39;})}{\sum_{l=1}^{|V|}\exp(v_{l_i}^Tv_{l}^{&#39;})}\tag{2}\]</span></p>
 <p>上式中的 <span class="math inline">\(|V|\)</span> 是所有 item
 的集合， <span class="math inline">\(v\)</span> 和 <span
 class="math inline">\(v&#39;\)</span> 分表表示 input vector 和 output
@@ -360,18 +359,18 @@ Natural Language Processing with Deep Learning</a></p>
 的策略，简单来说，就是对于每个 session 内的每个 clicked item，从其窗口 m
 内选择一些 positive pairs <span class="math inline">\((l,
 c)\)</span>作为 positive set（记为<span
-class="math inline">\(D\_p\)</span>）,同时从整个 item 集合 <span
+class="math inline">\(D_p\)</span>）,同时从整个 item 集合 <span
 class="math inline">\(|V|\)</span> 中随机选一些 negative pairs <span
 class="math inline">\((l, c)\)</span>取一些 item 作为 negative
-set(记为<span class="math inline">\(D\_n\)</span>), 不用 softmax 而是用
+set(记为<span class="math inline">\(D_n\)</span>), 不用 softmax 而是用
 sigmoid 的方式将要求解的参数写成如下形式</p>
-<p><span class="math display">\[ \arg\max\_{\theta} \sum\_{(l,c) \in
-D\_p} \log\frac{1}{1+e^{-v\_{c}^{&#39;}v\_l}} + \sum\_{(l,c) \in D\_n}
-\log\frac{1}{1+e^{v\_{c}^{&#39;}v\_l}} \tag{3}\]</span></p>
+<p><span class="math display">\[ \arg\max_{\theta} \sum_{(l,c) \in D_p}
+\log\frac{1}{1+e^{-v_{c}^{&#39;}v_l}} + \sum_{(l,c) \in D_n}
+\log\frac{1}{1+e^{v_{c}^{&#39;}v_l}} \tag{3}\]</span></p>
 <p>上式中要求解的参数 <span class="math inline">\(\theta\)</span> 就是
 每个 item 的 embedding <span
-class="math inline">\(v\_l\)</span>，基本就是原始 word2vec 中的
-skip-gram 算法了，下面文章中的几个点可以认为是作者根据业务对 word2vec
+class="math inline">\(v_l\)</span>，基本就是原始 word2vec 中的 skip-gram
+算法了，下面文章中的几个点可以认为是作者根据业务对 word2vec
 的一些改动，也是非常值得借鉴的</p>
 <p><strong>(1)利用监督信号作为 global context</strong></p>
 <p>在 airbnb 的业务中，上面的 session
@@ -379,12 +378,12 @@ skip-gram 算法了，下面文章中的几个点可以认为是作者根据业�
 session，paper 中分别称其为 booked session 和 exploratory
 sessions，这两个实际上都是监督信号，而在 paper
 中<strong>只使用了第一个监督信号</strong>，则公式(3）可写成如下形式</p>
-<p><span class="math display">\[ \arg\max\_{\theta} \sum\_{(l,c) \in
-D\_p} \log\frac{1}{1+e^{-v\_{c}^{&#39;}v\_l}} + \sum\_{(l,c) \in D\_n}
-\log\frac{1}{1+e^{v\_{c}^{&#39;}v\_l}} + \\\
-\log \frac{1}{1+e^{-v\_{l\_b}v\_l}}\tag{4}\]</span></p>
-<p>公式（4）中的 <span class="math inline">\(v\_{l\_b}\)</span>
-表示的是被下单的 item <span class="math inline">\(l\_b\)</span> 的
+<p><span class="math display">\[ \arg\max_{\theta} \sum_{(l,c) \in D_p}
+\log\frac{1}{1+e^{-v_{c}^{&#39;}v_l}} + \sum_{(l,c) \in D_n}
+\log\frac{1}{1+e^{v_{c}^{&#39;}v_l}} + \\\
+\log \frac{1}{1+e^{-v_{l_b}v_l}}\tag{4}\]</span></p>
+<p>公式（4）中的 <span class="math inline">\(v_{l_b}\)</span>
+表示的是被下单的 item <span class="math inline">\(l_b\)</span> 的
 embedding，下图则是更直观地显示了这个监督信号是如何起作用的,
 可以看到，<strong>每个 centeral listing/item 更新时都会与 booked
 listing/item 一起算一次概率，因此称这个 listing 为 global
@@ -399,21 +398,21 @@ alt="global context" />
 <p>上面提到 negative sampling 会随机从全集中抽取 n 个 item
 作为负例，但是在 airbnb 的业务中，一个用户往往只会在一个
 market(也就是旅游地点) 中下单，而上面做 negative sampling
-得到的结果往往是， <span class="math inline">\(D\_p\)</span>
-里的候选都是同一个 market 的，<span class="math inline">\(D\_n\)</span>
+得到的结果往往是， <span class="math inline">\(D_p\)</span>
+里的候选都是同一个 market 的，<span class="math inline">\(D_n\)</span>
 里的候选往往都不是同一个 market 的，paper 称这样的 imbalanced
 并不是最优的，笔者猜测原始是<strong>在做预估时候候选的 item
 基本都是同一个 market 的，而这样 <span
-class="math inline">\(D\_n\)</span> 的随机性使得同一个 market 内的正负
+class="math inline">\(D_n\)</span> 的随机性使得同一个 market 内的正负
 item 区分度并不高</strong>，因此，在原始的 nagative sampling
 基础上增加了一项在同一 market 下随机选取负样本的 <span
-class="math inline">\(D\_{m\_n}\)</span>, 因此，最终的 loss 形式如下</p>
+class="math inline">\(D_{m_n}\)</span>, 因此，最终的 loss 形式如下</p>
 <p><span class="math display">\[
-\arg\max\_{\theta} \sum\_{(l,c) \in D\_p}
-\log\frac{1}{1+e^{-v\_{c}^{&#39;}v\_l}} + \sum\_{(l,c) \in D\_p}
-\log\frac{1}{1+e^{v\_{c}^{&#39;}v\_l}} + \\\
-\log \frac{1}{1+e^{-v\_{l\_b}v\_l}}+\sum\_{(l,m\_n) \in D\_{m\_n}}
-\log\frac{1}{1+e^{v\_{m\_n}^{&#39;}v\_l}}\tag{5}
+\arg\max_{\theta} \sum_{(l,c) \in D_p}
+\log\frac{1}{1+e^{-v_{c}^{&#39;}v_l}} + \sum_{(l,c) \in D_p}
+\log\frac{1}{1+e^{v_{c}^{&#39;}v_l}} + \\\
+\log \frac{1}{1+e^{-v_{l_b}v_l}}+\sum_{(l,m_n) \in D_{m_n}}
+\log\frac{1}{1+e^{v_{m_n}^{&#39;}v_l}}\tag{5}
 \]</span></p>
 <p><strong>(3)冷启动的 item embedding</strong></p>
 <p>在推荐系统中，每天都会有很多新的 item 加入，还有一些 item 压根没有
@@ -438,9 +437,9 @@ short-term interest，paper 称这个为 long-term interest。</p>
 <p>前面的训练数据是 <strong>800 billion 个 click
 session</strong>，而这里捕获 long-term interest 的训练则 <strong>利用了
 50 million 个用户的 booked listings</strong></p>
-<p>假设总体训练集为 <span class="math inline">\(S\_b\)</span>, 每个
+<p>假设总体训练集为 <span class="math inline">\(S_b\)</span>, 每个
 booked listing 为 <span
-class="math inline">\(s\_b=(l\_{b1},l\_{b2}...l\_{bM}) \in S\)</span>,
+class="math inline">\(s_b=(l_{b1},l_{b2}...l_{bM}) \in S\)</span>,
 表示<strong>某个用户的历史下单的所有 lisitng（按时间排序）</strong></p>
 <p>比起上面较为丰富的 click
 session，这个问题更为严峻，主要体现在下面几个方面</p>
@@ -468,10 +467,9 @@ embedding</strong>？因为最原始的 word2vec 中的 sequence
 往往都是同一属性的 item 的</p>
 <p>paper 中解决这个问题的方法也和直接，就是将前面提到的每个 user
 的booked listing <span
-class="math inline">\(s\_b=(l\_{b1},l\_{b2}...l\_{bM}) \in S\)</span>
-变为 <span
-class="math inline">\(s\_b=(u\_{type1},l\_{type1}...u\_{typeM},
-l\_{typeM}) \in S\)</span>, 值得注意的是，<strong>虽然每个 session 的
+class="math inline">\(s_b=(l_{b1},l_{b2}...l_{bM}) \in S\)</span> 变为
+<span class="math inline">\(s_b=(u_{type1},l_{type1}...u_{typeM},
+l_{typeM}) \in S\)</span>, 值得注意的是，<strong>虽然每个 session 的
 sequence 表示的是同一个user_id，但是其 user_type
 是会随时间变化而变化的，但是 paper 中并没有提到改变 user_type
 的时间窗口，猜测是一旦发生变化就改变，然后插入到上面的 booked listing
@@ -484,10 +482,9 @@ alt="type-skipgram" />
 </figure>
 <p>做了 negative sampling 后，loss 跟公式 3 是一样的, 如下是 central
 item 是 user type 的情况（listing type 同理）</p>
-<p><span class="math display">\[ \arg\max\_{\theta} \sum\_{(u\_t,c) \in
-D\_{book}} \log\frac{1}{1+e^{-v\_{c}^{&#39;}v\_{u\_t}}} +
-\sum\_{(u\_t,c) \in D\_{neg}}
-\log\frac{1}{1+e^{v\_{c}^{&#39;}v\_{u\_t}}} \tag{6}\]</span></p>
+<p><span class="math display">\[ \arg\max_{\theta} \sum_{(u_t,c) \in
+D_{book}} \log\frac{1}{1+e^{-v_{c}^{&#39;}v_{u_t}}} + \sum_{(u_t,c) \in
+D_{neg}} \log\frac{1}{1+e^{v_{c}^{&#39;}v_{u_t}}} \tag{6}\]</span></p>
 <p><strong>相比于前面在训练 listing embedding 在做 negative sampling
 对同一个 market 中的 item做额外的负采样，但是这里并没有做，原因是这里的
 booked session 中对应的 item 已经是包含了不同 market
@@ -497,16 +494,15 @@ booked session 中对应的 item 已经是包含了不同 market
 user_type embedding 的学习是有好处的，对于这些负反馈信号，airbnb
 是按照如下方法加入到模型中的</p>
 <p>对于每个 central item，训练的数据除了上面的做 negative sampling
-得到的 <span class="math inline">\(D\_{book}\)</span> 和 <span
-class="math inline">\(D\_{neg}\)</span>，还定义了一个 <span
-class="math inline">\(D\_{rej}\)</span>, 其中包含了 user 历史上被拒绝的
-pair <span class="math inline">\((u\_t, l\_t)\)</span>, 则当前的 central
+得到的 <span class="math inline">\(D_{book}\)</span> 和 <span
+class="math inline">\(D_{neg}\)</span>，还定义了一个 <span
+class="math inline">\(D_{rej}\)</span>, 其中包含了 user 历史上被拒绝的
+pair <span class="math inline">\((u_t, l_t)\)</span>, 则当前的 central
 item 是 user（listing 同理） 时， loss 可写成如下形式，</p>
-<p><span class="math display">\[ \arg\max\_{\theta} \sum\_{(u\_t,c) \in
-D\_{book}} \log\frac{1}{1+e^{-v\_{c}^{&#39;}v\_{u\_t}}} +
-\sum\_{(u\_t,c) \in D\_{neg}}
-\log\frac{1}{1+e^{v\_{c}^{&#39;}v\_{u\_t}}} + \\\
-\sum\_{(u\_t,l\_t) \in D\_{neg}} \log\frac{1}{1+e^{v\_{l\_t}v\_{u\_t}}}
+<p><span class="math display">\[ \arg\max_{\theta} \sum_{(u_t,c) \in
+D_{book}} \log\frac{1}{1+e^{-v_{c}^{&#39;}v_{u_t}}} + \sum_{(u_t,c) \in
+D_{neg}} \log\frac{1}{1+e^{v_{c}^{&#39;}v_{u_t}}} + \\\
+\sum_{(u_t,l_t) \in D_{neg}} \log\frac{1}{1+e^{v_{l_t}v_{u_t}}}
 \tag{7}\]</span></p>
 <p>则加入了这个监督信号后的 skip gram 则如下图所示</p>
 <figure>
@@ -639,33 +635,32 @@ alt="featureList" />
 </figure>
 <p>上图中的一些符号含义如下</p>
 <ul>
-<li><span class="math inline">\(H\_c\)</span>: 用户过去两周点击过的
+<li><span class="math inline">\(H_c\)</span>: 用户过去两周点击过的
 listing ids</li>
-<li><span class="math inline">\(H\_{lc}\)</span>:
+<li><span class="math inline">\(H_{lc}\)</span>:
 用户点击过且停留时长超过 60s 的 listing ids</li>
-<li><span class="math inline">\(H\_s\)</span>: 用户点击的某个 listing
+<li><span class="math inline">\(H_s\)</span>: 用户点击的某个 listing
 时跳过的其他的 listing ids（如点击了排序第 4 的，就跳过了前 3 个
 listing）</li>
-<li><span class="math inline">\(H\_w\)</span>:
-用户过去两周添加到心愿单的 listing ids</li>
-<li><span class="math inline">\(H\_i\)</span>:
+<li><span class="math inline">\(H_w\)</span>: 用户过去两周添加到心愿单的
+listing ids</li>
+<li><span class="math inline">\(H_i\)</span>:
 用户过去两周联系过但是没有下单的 listing ids</li>
-<li><span class="math inline">\(H\_b\)</span>: 用户过去两周下单过的
+<li><span class="math inline">\(H_b\)</span>: 用户过去两周下单过的
 listing ids</li>
 </ul>
 <p>因此，上面的列表中的前 6 个 Feature 表示的都是当前 candidate
 与用户在历史发生过交互的 lisitng 的一些相似性。除此之外，paper
 还<strong>对 feature 做了 market 的划分</strong>，比如对于 <span
-class="math inline">\(H\_c\)</span>, 将其划分为 <span
-class="math inline">\(H\_c(market1)\)</span>, <span
-class="math inline">\(H\_c(market2)\)</span>..., 然后对同一个 market
+class="math inline">\(H_c\)</span>, 将其划分为 <span
+class="math inline">\(H_c(market1)\)</span>, <span
+class="math inline">\(H_c(market2)\)</span>..., 然后对同一个 market
 内的所有 listing id 的 embedding 做一个 mean-pooling, 称为 market-level
 embedding，然后计算 candidate listing 跟各个 market-level embedding 的
 similarity 并取最大那个，即对于 candidate <span
-class="math inline">\(l\_c\)</span>, 上面第一个 feature 的计算如下</p>
-<p><span class="math display">\[EmbClickSim(l\_c, H\_c) = \max\_{m \in
-M} cos(v\_{l\_i}, \sum\_{l\_h \in m, l\_h \in
-H\_c}v\_{l\_h})\]</span></p>
+class="math inline">\(l_c\)</span>, 上面第一个 feature 的计算如下</p>
+<p><span class="math display">\[EmbClickSim(l_c, H_c) = \max_{m \in M}
+cos(v_{l_i}, \sum_{l_h \in m, l_h \in H_c}v_{l_h})\]</span></p>
 <p>笔者这里有个疑惑，<strong>为什么要取 max
 操作而不是把所有的特征都加进去</strong>？因为上面的做法相当于将 market
 和 simlarity 这两个 feature 做了交叉，如果把所有 feature

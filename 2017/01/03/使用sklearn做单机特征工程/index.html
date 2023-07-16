@@ -34,7 +34,7 @@
 <meta property="og:image" content="https://wulc.me/imgs/image_1b99tlsf81c6n5iicv3otetoa9.png">
 <meta property="og:image" content="https://wulc.me/imgs/image_1b99vqj1v1cffks1m321n8k1lalm.png">
 <meta property="article:published_time" content="2017-01-03T12:15:44.000Z">
-<meta property="article:modified_time" content="2023-04-30T05:12:49.101Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.152Z">
 <meta property="article:author" content="良超">
 <meta property="article:tag" content="机器学习">
 <meta name="twitter:card" content="summary">
@@ -313,29 +313,29 @@ http://www.zhaokv.com/2016/01/normalization-and-standardization.html
 <blockquote>
 <p>均值为0有什么好处呢？它可以使数据以0为中心左右分布（这不是废话嘛），而数据以0为中心左右分布会带来很多便利。比如在去中心化的数据上做SVD分解等价于在原始数据上做PCA；机器学习中很多函数如Sigmoid、Tanh、Softmax等都以0为中心左右分布（不一定对称）。</p>
 <p>标准差为1有什么好处呢？这个更复杂一些。对于<span
-class="math inline">\(x\_i, x\_{i&#39;}\)</span>两点间距离，往往表示为
+class="math inline">\(x_i, x_{i&#39;}\)</span>两点间距离，往往表示为
 <span
-class="math display">\[D(x\_i,x\_{i&#39;})=\sum\limits\_{j=1}^pw\_j\cdot
-d\_j(x\_{ij},x\_{i&#39;j})(\sum\limits\_{j=1}^pw\_j=1)\]</span> 其中
-<span class="math inline">\(d\_j(x\_{ij},x\_{i&#39;j})\)</span>是属性
-<span class="math inline">\(j\)</span> 两个点之间的距离, <span
-class="math inline">\(w\_j\)</span> 是该属性间距离在总距离中的权重
-注意设 <span class="math inline">\(w\_j=1,\forall
+class="math display">\[D(x_i,x_{i&#39;})=\sum\limits_{j=1}^pw_j\cdot
+d_j(x_{ij},x_{i&#39;j})(\sum\limits_{j=1}^pw_j=1)\]</span> 其中 <span
+class="math inline">\(d_j(x_{ij},x_{i&#39;j})\)</span>是属性 <span
+class="math inline">\(j\)</span> 两个点之间的距离, <span
+class="math inline">\(w_j\)</span> 是该属性间距离在总距离中的权重 注意设
+<span class="math inline">\(w_j=1,\forall
 j\)</span>并不能实现每个属性对最后的结果贡献度相同。对于给定的数据集，所有点对间距离的平均值是个定值，即
 <span
-class="math display">\[\bar{D}=\frac{1}{N^2}\sum\limits\_{i=1}^N\sum\limits\_{i&#39;=1}^ND(x\_i,x\_{i&#39;})=\sum\limits\_{j=1}^pw\_j\cdot
-\bar{d}\_j\]</span> 是个常数，其中 <span
-class="math inline">\(\bar{d}\_j=\frac{1}{N^2}\sum\limits\_{i=1}^N\sum\limits\_{i&#39;=1}^Nd\_j(x\_{ij},
-x\_{x&#39;j})\)</span>, 可见第 <span class="math inline">\(j\)</span>
-个变量对最终整体平均距离的影响是 <span class="math inline">\(w\_j\cdot
-\bar{d}\_j\)</span>,所以设 <span class="math inline">\(w\_j\sim
-1/\bar{d}\_j\)</span>
+class="math display">\[\bar{D}=\frac{1}{N^2}\sum\limits_{i=1}^N\sum\limits_{i&#39;=1}^ND(x_i,x_{i&#39;})=\sum\limits_{j=1}^pw_j\cdot
+\bar{d}_j\]</span> 是个常数，其中 <span
+class="math inline">\(\bar{d}_j=\frac{1}{N^2}\sum\limits_{i=1}^N\sum\limits_{i&#39;=1}^Nd_j(x_{ij},
+x_{x&#39;j})\)</span>, 可见第 <span class="math inline">\(j\)</span>
+个变量对最终整体平均距离的影响是 <span class="math inline">\(w_j\cdot
+\bar{d}_j\)</span>,所以设 <span class="math inline">\(w_j\sim
+1/\bar{d}_j\)</span>
 可以使所有属性对全体数据集平均距离的贡献相同。现在设 <span
-class="math inline">\(d\_j\)</span>
+class="math inline">\(d_j\)</span>
 为欧氏距离的平方，它是最常用的距离衡量方法之一，则有<span
-class="math display">\[\bar{d\_j}=\frac{1}{N^2}\sum\limits\_{i=1}^N\sum\limits\_{i&#39;=1}^N(x\_{ij}-x\_{i&#39;j})^2=2\cdot
-var\_j\]</span>其中 <span class="math inline">\(var\_j\)</span> 是 <span
-class="math inline">\(Var(X\_j)\)</span>
+class="math display">\[\bar{d_j}=\frac{1}{N^2}\sum\limits_{i=1}^N\sum\limits_{i&#39;=1}^N(x_{ij}-x_{i&#39;j})^2=2\cdot
+var_j\]</span>其中 <span class="math inline">\(var_j\)</span> 是 <span
+class="math inline">\(Var(X_j)\)</span>
 样本估计，也就是说每个变量的重要程度正比于这个变量在这个数据集上的方差<strong>。如果我们让每一维变量的标准差都为1（即方差都为1），每维变量在计算距离的时候重要程度相同。</strong></p>
 </blockquote>
 <p>因此在分类、聚类算法中，需要使用距离来度量相似性的时候、或者使用PCA技术进行降维的时候，往往采用标准化方法。</p>
@@ -471,7 +471,7 @@ target="_blank" rel="noopener" href="http://guoze.me/2015/09/07/chi-square/">卡
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.feature_selection <span class="keyword">import</span> SelectKBest</span><br><span class="line"><span class="keyword">from</span> sklearn.feature_selection <span class="keyword">import</span> chi2</span><br><span class="line"></span><br><span class="line"><span class="comment">#选择K个最好的特征，返回选择特征后的数据</span></span><br><span class="line">SelectKBest(chi2, k=<span class="number">2</span>).fit_transform(iris.data, iris.target)</span><br></pre></td></tr></table></figure>
 <h4 id="互信息法"><strong>互信息法</strong></h4>
 <p>经典的互信息也是变量间相互依赖性的量度，互信息计算公式如下： <span
-class="math display">\[I(X,Y) = \sum\_{x \in X}\sum\_{y \in
+class="math display">\[I(X,Y) = \sum_{x \in X}\sum_{y \in
 Y}p(x,y)log\frac{p(x,y)}{p(x)p(y)}\]</span>
 为了处理定量数据，最大信息系数法被提出，使用
 <code>feature_selection</code> 库的 <code>SelectKBest</code>

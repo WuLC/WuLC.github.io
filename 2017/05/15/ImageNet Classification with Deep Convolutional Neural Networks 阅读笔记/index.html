@@ -46,7 +46,7 @@
 <meta property="og:image" content="https://wulc.me/imgs/image_1bglq28egel61eidsd6r4k11aa5d.png">
 <meta property="og:image" content="https://wulc.me/imgs/image_1bglsl8l91sjp1k7bide1f5bbhc9.png">
 <meta property="article:published_time" content="2017-05-15T04:00:37.000Z">
-<meta property="article:modified_time" content="2023-05-10T14:36:59.452Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.112Z">
 <meta property="article:author" content="良超">
 <meta property="article:tag" content="机器学习">
 <meta property="article:tag" content="深度学习">
@@ -439,13 +439,13 @@ ReLU
 <p><strong>Local Response Normalization</strong></p>
 <p>Local Response Normalization 指的是对网络中经过 ReLU
 层输出的结果进行正规化， 其正规化的公式如下所示：</p>
-<p><span class="math display">\[b\_{x,y}^i = a\_{x,y}^i/(k + \alpha
-\sum\_{j=\max(0, i-n/2)}^{\min(N-1,
-i+n/2)}(a\_{x,y}^j)^2)^{\beta}\]</span></p>
-<p>上式中的 <span class="math inline">\(a\_{x,y}^i\)</span> 表示第 <span
+<p><span class="math display">\[b_{x,y}^i = a_{x,y}^i/(k + \alpha
+\sum_{j=\max(0, i-n/2)}^{\min(N-1,
+i+n/2)}(a_{x,y}^j)^2)^{\beta}\]</span></p>
+<p>上式中的 <span class="math inline">\(a_{x,y}^i\)</span> 表示第 <span
 class="math inline">\(i\)</span> 个kernel 在位置 <span
 class="math inline">\((x,y)\)</span> 的原始输出，而 <span
-class="math inline">\(b\_{x,y}^i\)</span>表示正规化后的输出，<span
+class="math inline">\(b_{x,y}^i\)</span>表示正规化后的输出，<span
 class="math inline">\(N\)</span> 表示所有 kernel 的数目。上式表明对某个
 kernel 在某个位置的输出的正规化利用了与这个 kernel 相邻的 <span
 class="math inline">\(n\)</span> 个 kernel 在相同位置的值进行。</p>
@@ -463,10 +463,10 @@ top-1 error 和 top-5 error 降低了 0.4% 和 0.3%。</p>
 <p>单纯从数学的角度来讲，softmax
 只是一种向量变换方式，假设现在有一个长度为 <span
 class="math inline">\(k\)</span> 的向量 <span class="math inline">\(z =
-(z\_1,...z\_k)\)</span>,对其进行 softmax 变换后得到向量 <span
+(z_1,...z_k)\)</span>,对其进行 softmax 变换后得到向量 <span
 class="math inline">\(\sigma(z)\)</span>, 其变换公式如下</p>
-<p><span class="math display">\[\sigma(z)\_j =
-\frac{e^{z\_j}}{\sum\_{l=1}^k e^{z\_l}}~~~(j=1,...k)\]</span></p>
+<p><span class="math display">\[\sigma(z)_j =
+\frac{e^{z_j}}{\sum_{l=1}^k e^{z_l}}~~~(j=1,...k)\]</span></p>
 <p>变换后的向量 <span class="math inline">\(\sigma(z)\)</span>
 有一个重要特征，就是所有元素之和加起来为
 1；从概率论的角度来考虑，很自然地可以将这个向量作为属于各个分类的一个概率分布，选择值最大的那个项对应的分类作为其分类。</p>
@@ -480,15 +480,15 @@ class="math inline">\(1 \lbrace . \rbrace\)</span> 的含义为 <span
 class="math inline">\(1 \lbrace True \rbrace = 1, 1 \lbrace False
 \rbrace = 0\)</span>，如<span class="math inline">\(1 \lbrace 2=2
 \rbrace = 1, 1 \lbrace 2=3 \rbrace = 0\)</span></p>
-<p><span class="math display">\[\max \sum\_{i=1}^{m} \sum\_{j=1}^{k} 1
-\lbrace y^{(i)} = j \rbrace \log \frac{e^{z\_j}}{\sum\_{l=1}^k
-e^{z\_l}}\]</span></p>
+<p><span class="math display">\[\max \sum_{i=1}^{m} \sum_{j=1}^{k} 1
+\lbrace y^{(i)} = j \rbrace \log \frac{e^{z_j}}{\sum_{l=1}^k
+e^{z_l}}\]</span></p>
 <p>在其前面添加一个负号和一个常数 <span
 class="math inline">\(\frac{1}{m}\)</span>
 可以将其转为如下的极小化问题</p>
-<p><span class="math display">\[\min -\frac{1}{m} \sum\_{i=1}^{m}
-\sum\_{j=1}^{k} 1 \lbrace y^{(i)} = j \rbrace \log
-\frac{e^{z\_j}}{\sum\_{l=1}^k e^{z\_l}}\]</span></p>
+<p><span class="math display">\[\min -\frac{1}{m} \sum_{i=1}^{m}
+\sum_{j=1}^{k} 1 \lbrace y^{(i)} = j \rbrace \log
+\frac{e^{z_j}}{\sum_{l=1}^k e^{z_l}}\]</span></p>
 <p>实际上，上面要最小化的目标函数是交叉熵损失（cross-entropy
 error），这个目标函数也可以通过交叉熵的定义推导出来。</p>
 <h3 id="训练算法">训练算法</h3>
@@ -508,16 +508,16 @@ decay</a> 实际上是 L2 regularization
 target="_blank" rel="noopener" href="http://www.cs.toronto.edu/~tijmen/csc321/slides/lecture_slides_lec6.pdf">mini-batch</a>
 则是指每个更新时不仅采用一个样本，而是采用多个样本，这种方法介于 BGD 和
 SGD 之间。</p>
-<p>其更新的规则如下所示,参数 ，<span class="math inline">\(v\_i\)</span>
+<p>其更新的规则如下所示,参数 ，<span class="math inline">\(v_i\)</span>
 被称作 momentum variable， $- 0.0005 w_i $ 是 weight decay 项，<span
 class="math inline">\(&lt;\frac{\partial L}{\partial
-w}|\_{w\_i}&gt;\_{D\_i}\)</span> 则是从 mini-batch 为 <span
-class="math inline">\(D\_i\)</span> 中得到的gradient， <span
+w}|_{w_i}&gt;_{D_i}\)</span> 则是从 mini-batch 为 <span
+class="math inline">\(D_i\)</span> 中得到的gradient， <span
 class="math inline">\(\epsilon\)</span> 为步长。</p>
 <p><span class="math display">\[\begin{align*}
-&amp;v\_{i+1} = 0.9v\_i - 0.0005 \epsilon w\_i - \epsilon
-&lt;\frac{\partial L}{\partial w}|\_{w\_i}&gt;\_{D\_i}\\\
-&amp;w\_{i+1} = w\_i + v\_{i+1}
+&amp;v_{i+1} = 0.9v_i - 0.0005 \epsilon w_i - \epsilon
+&lt;\frac{\partial L}{\partial w}|_{w_i}&gt;_{D_i}\\\
+&amp;w_{i+1} = w_i + v_{i+1}
 \end{align*}\]</span></p>
 <h3 id="多gpu训练">多GPU训练</h3>
 <p>前面已经提到了整个网络在两个 GPU 上训练， 原因是 GPU

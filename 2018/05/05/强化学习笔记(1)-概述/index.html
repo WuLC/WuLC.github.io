@@ -35,7 +35,7 @@
 <meta property="og:image" content="https://wulc.me/imgs/image_1cctfljjh1bv918u91j9g1fgs1ln89.png">
 <meta property="og:image" content="https://wulc.me/imgs/image_1cctgird1rv11gljv1f72esim.png">
 <meta property="article:published_time" content="2018-05-05T14:21:25.000Z">
-<meta property="article:modified_time" content="2023-04-30T05:12:49.129Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.182Z">
 <meta property="article:author" content="良超">
 <meta property="article:tag" content="机器学习">
 <meta property="article:tag" content="强化学习">
@@ -296,7 +296,7 @@ reward 最大，从 state 到 action 的过程就称之为一个策略Policy，�
 <p><strong>强化学习的任务就是找到一个最优的策略Policy从而使Reward最多。</strong></p>
 <p>我们一开始并不知道最优的策略是什么，因此往往从随机的策略开始，使用随机的策略进行试验，就可以得到一系列的状态,动作和反馈：</p>
 <p><span
-class="math inline">\((s\_1,a\_1,r\_1,s\_2,a\_2,r\_2,...s\_t,a\_t,r\_t)\)</span></p>
+class="math inline">\((s_1,a_1,r_1,s_2,a_2,r_2,...s_t,a_t,r_t)\)</span></p>
 <p>这就是一系列的样本Sample。<strong>强化学习的算法就是需要根据这些样本来改进Policy，从而使得得到的样本中的Reward更好</strong>。由于这种让Reward越来越好的特性，所以这种算法就叫做强化学习Reinforcement
 Learning。</p>
 <h2 id="mdpmarkov-decision-process">MDP（Markov Decision Process）</h2>
@@ -310,12 +310,12 @@ class="math inline">\((S,A,P,R, \gamma)\)</span> 表示，其中</p>
 <li><span class="math inline">\(S\)</span> 是一个有限状态集</li>
 <li><span class="math inline">\(A\)</span> 是一个有限动作集</li>
 <li><span class="math inline">\(P\)</span> 是一个状态转移概率矩阵，<span
-class="math inline">\(P\_a(s, s′)=P(s\_{t+1}=s′|s\_t=s, a\_t=a)\)</span>
+class="math inline">\(P_a(s, s′)=P(s_{t+1}=s′|s_t=s, a_t=a)\)</span>
 表示在状态 <span class="math inline">\(s\)</span> 下执行动作 <span
 class="math inline">\(a\)</span> 后转移到状态 <span
 class="math inline">\(s′\)</span> 的概率</li>
 <li><span class="math inline">\(R\)</span> 是一个奖励函数，<span
-class="math inline">\(R\_a(s, s′)\)</span> 表示在状态 <span
+class="math inline">\(R_a(s, s′)\)</span> 表示在状态 <span
 class="math inline">\(s\)</span> 下执行动作 <span
 class="math inline">\(a\)</span> 后转移到状态 <span
 class="math inline">\(s′\)</span> 所得到的即时回报(reward)</li>
@@ -331,8 +331,8 @@ chain，且此时的目标跟我们前面提到的强化学习的目标是一致
 <h2 id="回报与价值函数">回报与价值函数</h2>
 <p>状态的好坏等价于对未来回报的期望。因此，引入<strong>回报(Return)</strong>
 来表示某个时刻t的状态将具备的回报：</p>
-<p><span class="math inline">\(G\_t = R\_{t+1} + \gamma R\_{t+2} + ... =
-\sum\_{k=0}^\infty\gamma^kR\_{t+k+1}\)</span></p>
+<p><span class="math inline">\(G_t = R_{t+1} + \gamma R_{t+2} + ... =
+\sum_{k=0}^\infty\gamma^kR_{t+k+1}\)</span></p>
 <p>上面 <span class="math inline">\(R\)</span> 是 Reward 反馈，<span
 class="math inline">\(\gamma\)</span> 是 discount
 factor（折扣因子）,跟前面 MDP 中的符号的含义一致。</p>
@@ -343,7 +343,7 @@ function)</strong>,记为 <span class="math inline">\(V(s)\)</span>，通过
 <span class="math inline">\(V(s)\)</span>
 来表示一个状态未来的潜在价值。从定义上看，value function
 就是<strong>回报的期望</strong>：</p>
-<p><span class="math inline">\(V(s) = \mathbb E[G\_t|S\_t =
+<p><span class="math inline">\(V(s) = \mathbb E[G_t|S_t =
 s]\)</span></p>
 <p><strong>引出价值函数，对于获取最优的策略Policy这个目标，我们就会有两种方法</strong>：</p>
 <ol type="1">
@@ -357,22 +357,22 @@ class="math inline">\(a = \pi(s)\)</span> 使得回报更高</li>
 <p>采用上面获取最优策略的第 2 种方法时，我们需要估算 Value
 Function，只要能够计算出价值函数，那么最优决策也就得到了。因此，问题就变成了<strong>如何计算Value
 Function</strong>？</p>
-<p>根据前面 <span class="math inline">\(G\_t\)</span> 和 <span
+<p>根据前面 <span class="math inline">\(G_t\)</span> 和 <span
 class="math inline">\(V(s)\)</span> 的定义，有</p>
 <p><span class="math display">\[
 \begin{align}
-V(s) &amp; = \mathbb E[G\_t|S\_t = s]\\\
-    &amp; = \mathbb E[R\_{t+1}+\gamma R\_{t+2} + \gamma ^2R\_{t+3} +
-...|S\_t = s]\\\
-    &amp; = \mathbb E[R\_{t+1}+\gamma (R\_{t+2} + \gamma R\_{t+3} +
-...)|S\_t = s]\\\
-    &amp; = \mathbb E[R\_{t+1}+\gamma G\_{t+1}|S\_t = s]\\\
-    &amp; = \mathbb E[R\_{t+1}+\gamma v(S\_{t+1})|S\_t = s]
+V(s) &amp; = \mathbb E[G_t|S_t = s]\\\
+    &amp; = \mathbb E[R_{t+1}+\gamma R_{t+2} + \gamma ^2R_{t+3} +
+...|S_t = s]\\\
+    &amp; = \mathbb E[R_{t+1}+\gamma (R_{t+2} + \gamma R_{t+3} +
+...)|S_t = s]\\\
+    &amp; = \mathbb E[R_{t+1}+\gamma G_{t+1}|S_t = s]\\\
+    &amp; = \mathbb E[R_{t+1}+\gamma v(S_{t+1})|S_t = s]
 \end{align}
 \]</span></p>
 <p>则有</p>
-<p><span class="math display">\[V(s) = \mathbb E[R\_{t+1} + \gamma
-V(S\_{t+1})|S\_t = s]\]</span></p>
+<p><span class="math display">\[V(s) = \mathbb E[R_{t+1} + \gamma
+V(S_{t+1})|S_t = s]\]</span></p>
 <p>上面这个公式就是Bellman方程的基本形态。从公式上看，当前状态的价值和下一步的价值以及当前的反馈Reward有关,
 其中透出的含义就是<strong>价值函数的计算可以通过迭代的方式来实现</strong>。</p>
 <h2 id="从-mdp-到-reinforcement-learning">从 MDP 到 Reinforcement
@@ -383,12 +383,12 @@ class="math inline">\(R\)</span>，那么便可通过下面的方法求出最优
 <span class="math inline">\(\pi(s)\)</span>,
 首先，结合上面提到的价值函数和Bellman方程有</p>
 <p>公式1：</p>
-<p><span class="math display">\[\pi(s):=\arg \max\_a\
-\{\sum\_{s&#39;}P\_{a}(s,s&#39;)(R\_{a}(s,s&#39;)+\gamma
+<p><span class="math display">\[\pi(s):=\arg \max_a\
+\{\sum_{s&#39;}P_{a}(s,s&#39;)(R_{a}(s,s&#39;)+\gamma
 V(s&#39;))\}\]</span></p>
 <p>公式2:</p>
 <p><span class="math display">\[ V(s) :=
-\sum\_{s&#39;}P\_{\pi(s)}(s,s&#39;)(R\_{\pi(s)}(s,s&#39;) + \gamma
+\sum_{s&#39;}P_{\pi(s)}(s,s&#39;)(R_{\pi(s)}(s,s&#39;) + \gamma
 V(s&#39;)) \]</span></p>
 <p>公式 1 表示在状态 <span class="math inline">\(s\)</span>
 下的采取的最优动作，公式 2 表示在状态 <span
@@ -400,8 +400,8 @@ iteration</strong></p>
 <h3 id="value-iteration">Value iteration</h3>
 <p>在 Value iteration 中，策略函数 <span
 class="math inline">\(\pi\)</span> 没有被使用，迭代公式如下：</p>
-<p><span class="math display">\[V\_{i+1}(s) := \max\_a \sum\_{s&#39;}
-P\_a(s,s&#39;)(R\_a(s,s&#39;) + \gamma V\_i(s&#39;))\]</span></p>
+<p><span class="math display">\[V_{i+1}(s) := \max_a \sum_{s&#39;}
+P_a(s,s&#39;)(R_a(s,s&#39;) + \gamma V_i(s&#39;))\]</span></p>
 <p>下标 <span class="math inline">\(i\)</span> 表示第 <span
 class="math inline">\(i\)</span>
 次迭代，在每轮迭代中需要计算每个状态的价值，并且直到两次迭代结果的差值小于给定的阈值才能认为是收敛。</p>

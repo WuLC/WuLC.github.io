@@ -47,7 +47,7 @@
 <meta property="og:image" content="https://wulc.me/imgs/bid_optimization_performance.jpg">
 <meta property="og:image" content="https://wulc.me/imgs/bid_optimization_evaluation_result.jpg">
 <meta property="article:published_time" content="2020-07-19T13:37:39.000Z">
-<meta property="article:modified_time" content="2023-04-30T05:12:49.168Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.235Z">
 <meta property="article:author" content="良超">
 <meta property="article:tag" content="计算广告">
 <meta property="article:tag" content="机器学习">
@@ -323,18 +323,18 @@ truth, 我们能拿到的是点击/转化与否，但是要预估的则是点击
 <ul>
 <li><span class="math inline">\(N\)</span>,
 广告计划的总的可参竞次数(opportunities)</li>
-<li><span class="math inline">\(x\_i\)</span>, 第 i
+<li><span class="math inline">\(x_i\)</span>, 第 i
 次竞价获胜的概率<br />
 </li>
-<li><span class="math inline">\(wp\_i\)</span>, 第 i 次竞价的 winning
+<li><span class="math inline">\(wp_i\)</span>, 第 i 次竞价的 winning
 price，即 bid price 要大于等于这个值才能获胜</li>
 <li><span class="math inline">\(B\)</span>, 计划的总预算</li>
 <li><span class="math inline">\(C\)</span>, 计划设置的点击成本</li>
 </ul>
 <p>值得注意的是，我们<strong>不需要直接求解出上面的最优化问题的解，而只是需要求出取值为最优时的的解形式，然后作为最优出价公式</strong>，也就是说我们并不关心上面的
-<span class="math inline">\(x\_i\)</span>
+<span class="math inline">\(x_i\)</span>
 的最优解取值，而关心的是其他变量满足什么样的形式时，<span
-class="math inline">\(x\_i\)</span> 的解是最优的</p>
+class="math inline">\(x_i\)</span> 的解是最优的</p>
 <h3 id="paper-原始推导">paper 原始推导</h3>
 <p>paper 通过最优化中的对偶理论将上面的原问题(primal
 problem)转为对偶问题(dual problem)，如下图所示；对偶理论的详细描述可参考
@@ -358,17 +358,17 @@ class="math inline">\(x\)</span>
 alt="Complementary Slackness" />
 <figcaption aria-hidden="true">Complementary Slackness</figcaption>
 </figure>
-<p>上面的公式中 <span class="math inline">\(x\_i^{\*}\)</span> 和 <span
-class="math inline">\(r\_i^{\*}\)</span>
+<p>上面的公式中 <span class="math inline">\(x_i^{\*}\)</span> 和 <span
+class="math inline">\(r_i^{\*}\)</span>
 分别表示原问题和对偶问题的最优解，后面带 <code>*</code>
 上标的符号均表示最优解，至此为止，上面都是基于最优化理论推导出来的一些公式，但是<strong>接下来这一步就有点跳了</strong>，paper
 中直接令最优出价公式为</p>
-<p><span class="math display">\[bid^{\*} = \frac{1}{p^\*+q^\*} × CTR\_i
-× CVR\_i + \frac{q^\*}{p^\*+q^\*} × C × CTR\_{i}\tag{6}\]</span></p>
+<p><span class="math display">\[bid^{\*} = \frac{1}{p^\*+q^\*} × CTR_i ×
+CVR_i + \frac{q^\*}{p^\*+q^\*} × C × CTR_{i}\tag{6}\]</span></p>
 <p>则上面那些公式中表示给广告主带来的价值 <span
-class="math inline">\(v\_i\)</span> 可写成 <span
-class="math inline">\(v\_i = bid\_i - wp\_i\)</span>,
-将公式（6）代入这个式子，再将 <span class="math inline">\(v\_i\)</span>
+class="math inline">\(v_i\)</span> 可写成 <span
+class="math inline">\(v_i = bid_i - wp_i\)</span>,
+将公式（6）代入这个式子，再将 <span class="math inline">\(v_i\)</span>
 代入上图中的公式(8)，可得到下面的公式（10）及其分类讨论的结果</p>
 <figure>
 <img data-src="https://wulc.me/imgs/bid_optimization_classify_situation.jpg"
@@ -387,28 +387,28 @@ href="http://wulc.me/2017/05/20/%E5%87%B8%E4%BC%98%E5%8C%96%E6%80%BB%E7%BB%93/">
 中的拉格朗日对偶部分</p>
 <p>对于原问题即上图中的 LP1， 可写出其増广拉格朗日函数为(暂时忽略 <span
 class="math inline">\(x\)</span> 的值的约束)</p>
-<p><span class="math display">\[L(x,p,q) = \sum\_{i=1\dots
-N}-x\_iCTR\_iCVR\_i + p(\sum\_{i=1\dots N}x\_iwp\_i-B) +
-q(\sum\_{i=1\dots N}x\_i(wp\_i-CTR\_iC))\]</span></p>
+<p><span class="math display">\[L(x,p,q) = \sum_{i=1\dots
+N}-x_iCTR_iCVR_i + p(\sum_{i=1\dots N}x_iwp_i-B) + q(\sum_{i=1\dots
+N}x_i(wp_i-CTR_iC))\]</span></p>
 <p>上式中的 <span
 class="math inline">\(p&gt;=0,q&gt;=0\)</span>，则原问题可写成如下形式,
 详细推导过程可参考上面的凸优化总结的链接</p>
-<p><span class="math display">\[\max\_{p,
-q}\min\_{x\_i}L(x,p,q)\]</span></p>
+<p><span class="math display">\[\max_{p,
+q}\min_{x_i}L(x,p,q)\]</span></p>
 <p>如果是要求出这个问题的解，还需要转为拉格朗日对偶问题，通过 SMO
 等算法进行求解，但是我们这里不需要确切的解，而是只需要最优解的表达式，因此可令
 <span
 class="math inline">\(\frac{\partial{L(x,p,q)}}{\partial{x}}=0\)</span>,
 求解可得</p>
-<p><span class="math display">\[wp\_i = \frac{1}{p+q} × CTR\_{i} ×
-CVR\_{i} + \frac{q}{p+q} × C × CTR\_{i}\]</span></p>
+<p><span class="math display">\[wp_i = \frac{1}{p+q} × CTR_{i} × CVR_{i}
++ \frac{q}{p+q} × C × CTR_{i}\]</span></p>
 <p>可以看到，<strong>winning price <span
-class="math inline">\(wp\_i\)</span> 推导出来的形式跟上面给的公式(6)
+class="math inline">\(wp_i\)</span> 推导出来的形式跟上面给的公式(6)
 中的最优出价公式的形式是一样的</strong>！！！</p>
 <p>但是上面的推导中的仍有一些问题，上面求解的是最优的 <span
-class="math inline">\(wp\_i\)</span>，bid
+class="math inline">\(wp_i\)</span>，bid
 这个变量没有显示地出现在增广拉格朗日函数中，但是可近似认为两者是相等的；其次是，<strong><span
-class="math inline">\(x\_i\)</span> 本身的约束(即取值在 0~1
+class="math inline">\(x_i\)</span> 本身的约束(即取值在 0~1
 之间)没有显式的考虑进增广拉格朗日函数中</strong>，针对这一点，笔者的理解是在解决最优化问题时可以忽略某个条件，然后在求解出来之后基于这个条件做分类讨论，而这一部分实际上就是原始
 paper 在推导出公式(10)后做的分类讨论。</p>
 <h3 id="小结">小结</h3>
@@ -456,9 +456,9 @@ alt="pid" />
 <p>每次调整变量时，需要通过公式(13)计算出当前的
 error，然后通过公式(14)计算出控制型号 <span
 class="math inline">\(u(t)\)</span>（其中 <span
-class="math inline">\(k\_p\)</span>、<span
-class="math inline">\(k\_i\)</span>、<span
-class="math inline">\(k\_d\)</span> 是三个拍定的超参），最后利用 <span
+class="math inline">\(k_p\)</span>、<span
+class="math inline">\(k_i\)</span>、<span
+class="math inline">\(k_d\)</span> 是三个拍定的超参），最后利用 <span
 class="math inline">\(u(t)\)</span> 通过公式(15) 的调控公式(actuator
 model) <span class="math inline">\(\phi(x(0), u(t))\)</span>
 得到最终调整后的值</p>
@@ -578,17 +578,17 @@ class="math inline">\(X\)</span> 的逆便得到；公式 (19) 则是 paper
 中提出的调控方式：首先通过上面的 PID 调控公式(14)可以将公式(18)中的<span
 class="math inline">\(\Delta cost\)</span> 、 <span
 class="math inline">\(\Delta CPC\)</span> 变为 <span
-class="math inline">\(u\_{p}(t)\)</span>、<span
-class="math inline">\(u\_{q}(t)\)</span>; 同时只用两个变量 <span
+class="math inline">\(u_{p}(t)\)</span>、<span
+class="math inline">\(u_{q}(t)\)</span>; 同时只用两个变量 <span
 class="math inline">\(\alpha\)</span> 和 <span
 class="math inline">\(\beta\)</span> 来近似矩阵 <span
 class="math inline">\(X\)</span> 的逆（理论上应该有 4 个的），并认为
 <span class="math inline">\(p\)</span>、<span
 class="math inline">\(q\)</span> 的 control signal(通过公式 (14) 获取)
-<span class="math inline">\(u&#39;\_{p}(t)\)</span>、<span
-class="math inline">\(u&#39;\_{q}(t)\)</span>是<span
-class="math inline">\(u\_{p}(t)\)</span>、<span
-class="math inline">\(u\_{q}(t)\)</span> 的线性组合；paper
+<span class="math inline">\(u&#39;_{p}(t)\)</span>、<span
+class="math inline">\(u&#39;_{q}(t)\)</span>是<span
+class="math inline">\(u_{p}(t)\)</span>、<span
+class="math inline">\(u_{q}(t)\)</span> 的线性组合；paper
 称这样做的好处是 <strong>makes the controller more robust and stable
 against the changing environment</strong>, paper 中称 <span
 class="math inline">\(\alpha\)</span> 和 <span
@@ -604,21 +604,21 @@ alt="related pid" />
 <h3 id="基本设置">基本设置</h3>
 <p>paper 中并没有进行在线实验，而是通过离线方式进行评估</p>
 <p>采用的数据集是 taobao 40 个计划总共 20M 条 bid log，每条 bid log
-的关键信息是<span class="math inline">\(wp\_i、
+的关键信息是<span class="math inline">\(wp_i、
 CTR、CVR\)</span>；同时根据时间划分了训练集和测试集</p>
 <p>评估指标主要有两个</p>
 <ul>
-<li><span class="math inline">\(CPC\_{ratio}\)</span>:
+<li><span class="math inline">\(CPC_{ratio}\)</span>:
 表示保住点击成本的计划的比例</li>
 <li><span
-class="math inline">\(Value\_{ratio}\)</span>：表示按最优出价公式重新投放时，每个计划获取的value与其理论最优的比值(<span
+class="math inline">\(Value_{ratio}\)</span>：表示按最优出价公式重新投放时，每个计划获取的value与其理论最优的比值(<span
 class="math inline">\(\le 1\)</span>)</li>
 </ul>
 <h3 id="实现细节">实现细节</h3>
 <p>除此之外，paper 中通过 PID 计算 control signal 时，会<strong>对 err
 进行加权</strong>，而传统的 PID 中所有的 err
 的权值都是一样的，其加权方法如下公式(21)所示，而前一章提到的 <span
-class="math inline">\(u\_{q}(t)\)</span> 计算方式如公式(22)所示</p>
+class="math inline">\(u_{q}(t)\)</span> 计算方式如公式(22)所示</p>
 <figure>
 <img data-src="https://wulc.me/imgs/bid_optimization_weighted_pid_err.jpg"
 alt="weighted_pid_err" />
@@ -630,7 +630,7 @@ signal 调整目标zhi值<span class="math inline">\(x\)</span>
 class="math inline">\(x(t)\)</span>，而是基于最开始的值 <span
 class="math inline">\(x(0)\)</span></strong></p>
 <p>此外，<strong>调价的频率是每小时调整一次，PID 中涉及的超参(<span
-class="math inline">\(k\_p、 k\_i、 k\_d\)</span>)以及公式(19)中的 <span
+class="math inline">\(k_p、 k_i、 k_d\)</span>)以及公式(19)中的 <span
 class="math inline">\(\alpha\)</span> 和 <span
 class="math inline">\(\beta\)</span> 都是在训练集中通过 grid serach
 找到的</strong></p>

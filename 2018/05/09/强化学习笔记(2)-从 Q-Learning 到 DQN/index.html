@@ -35,7 +35,7 @@
 <meta property="og:image" content="https://wulc.me/imgs/image_1cd24f88k2ae10911ipacg01cv49.png">
 <meta property="og:image" content="https://wulc.me/imgs/image_1cd2kiaol19ft2kb1dr4ricnorm.png">
 <meta property="article:published_time" content="2018-05-09T14:21:25.000Z">
-<meta property="article:modified_time" content="2023-04-30T05:12:49.166Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.232Z">
 <meta property="article:author" content="良超">
 <meta property="article:tag" content="机器学习">
 <meta property="article:tag" content="强化学习">
@@ -282,9 +282,9 @@ value iteration 而发展出来的 Q-Learning 系列方法，包括 Q-Learning�
 <h2 id="q-learning">Q-Learning</h2>
 <p>Q-Learning
 是一个强化学习中一个很经典的算法，其出发点很简单，就是用一张表存储在各个状态下执行各种动作能够带来的
-reward，如下表表示了有两个状态 <span class="math inline">\(s\_1,
-s\_2\)</span>，每个状态下有两个动作 <span class="math inline">\(a\_1,
-a\_2\)</span>, 表格里面的值表示 reward</p>
+reward，如下表表示了有两个状态 <span class="math inline">\(s_1,
+s_2\)</span>，每个状态下有两个动作 <span class="math inline">\(a_1,
+a_2\)</span>, 表格里面的值表示 reward</p>
 <table>
 <thead>
 <tr class="header">
@@ -332,7 +332,7 @@ class="math inline">\(Q&#39;(s,a)\)</span>)由两部分组成：即时的 reward
 class="math inline">\(\gamma\)</span>,则真实的 reward
 表示如下</strong></p>
 <p><span class="math display">\[Q&#39;(s,a) = r +
-\gamma\max\_{a&#39;}Q(s&#39;,a&#39;)\]</span></p>
+\gamma\max_{a&#39;}Q(s&#39;,a&#39;)\]</span></p>
 <p><span class="math inline">\(\gamma\)</span> 的值一般设置为 0 到 1
 之间，设为0时表示只关心即时回报，设为 1
 时表示未来的期望回报跟即时回报一样重要。</p>
@@ -455,8 +455,8 @@ sample 后，就可以根据上面提到的 Q-Learning
 更新算法来更新网络，只是这时候需要进行的是反向传播。</p>
 <p><strong>Experience Replay
 机制的出发点是按照时间顺序所构造的样本之间是有关的(如上面的 <span
-class="math inline">\(\phi(s\_{t+1})\)</span> 会受到 <span
-class="math inline">\(\phi(s\_{t})\)</span> 的影响)、非静态的（highly
+class="math inline">\(\phi(s_{t+1})\)</span> 会受到 <span
+class="math inline">\(\phi(s_{t})\)</span> 的影响)、非静态的（highly
 correlated and
 non-stationary），这样会很容易导致训练的结果难以收敛。通过 Experience
 Replay
@@ -470,11 +470,10 @@ FlappyBird 的 DQN 实现。</p>
 <p>上面提到的 DQN 是最原始的的网络，后面Deepmind
 对其进行了多种改进，比如说 Nature DQN 增加了一种新机制 <strong>separate
 Target Network</strong>，就是计算上图的<span
-class="math inline">\(y\_j\)</span> 的时候不采用网络 <span
+class="math inline">\(y_j\)</span> 的时候不采用网络 <span
 class="math inline">\(Q\)</span>, 而是采用另外一个网络(也就是 Target
 Network) <span class="math inline">\(Q&#39;\)</span>, 原因是上面计算
-<span class="math inline">\(y\_j\)</span> 和 Q 估计都采用相同的网络
-<span
+<span class="math inline">\(y_j\)</span> 和 Q 估计都采用相同的网络 <span
 class="math inline">\(Q\)</span>，这样<strong>使得Q大的样本，y也会大，这样模型震荡和发散可能性变大</strong>，其原因其实还是两者的关联性较大。而采用另外一个独立的网络使得训练震荡发散可能性降低，更加稳定。一般
 <span class="math inline">\(Q&#39;\)</span> 会直接采用旧的 <span
 class="math inline">\(Q\)</span>, 比如说 10 个 epoch 前的 <span

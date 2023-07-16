@@ -43,7 +43,7 @@
 <meta property="og:image" content="https://wulc.me/imgs/SelfSupervisedLearningFramework.jpg">
 <meta property="og:image" content="https://wulc.me/imgs/SelfSupervisedTraining.jpg">
 <meta property="article:published_time" content="2022-04-04T08:08:44.000Z">
-<meta property="article:modified_time" content="2023-04-30T05:12:49.113Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.162Z">
 <meta property="article:author" content="良超">
 <meta property="article:tag" content="计算广告">
 <meta property="article:tag" content="机器学习">
@@ -530,12 +530,12 @@ class="math inline">\(\mathcal{L}_{self}(\lbrace x_i
 <p>而主任务的 loss 是计算 query-item 的 loss，paper 这里采用的是 batch
 softmax loss，形式跟self supervised loss其实是一样的，只是计算相似性从
 item-item 变为了 query-item，具体形式如下</p>
-<p><span class="math display">\[\mathcal{L}\_{main} = -\frac{1}{N}
+<p><span class="math display">\[\mathcal{L}_{main} = -\frac{1}{N}
 \sum_{i=1}^{N} \log \frac{\exp(s(q_i,
 x_i)/\tau)}{\sum_{j=1}^{N}\exp(s(q_i, x_j)/\tau)}\]</span></p>
 <p>则总体的 loss 为</p>
-<p><span class="math display">\[\mathcal{L} = \mathcal{L}\_{main} +
-\alpha \mathcal{L}\_{self}\]</span></p>
+<p><span class="math display">\[\mathcal{L} = \mathcal{L}_{main} +
+\alpha \mathcal{L}_{self}\]</span></p>
 <p>则最终的模型如下所示，注意这里的 3 个 item twoer 的参数是共享的</p>
 <figure>
 <img data-src="https://wulc.me/imgs/SelfSupervisedTraining.jpg"

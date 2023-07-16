@@ -34,7 +34,7 @@
 <meta property="og:image" content="https://wulc.me/imgs/image_1cstndv791jqh17tnago65f10679.png">
 <meta property="og:image" content="https://wulc.me/imgs/image_1csvl3andohv1od31prus551h4l26.png">
 <meta property="article:published_time" content="2018-11-15T13:37:39.000Z">
-<meta property="article:modified_time" content="2023-04-30T05:12:49.164Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.230Z">
 <meta property="article:author" content="良超">
 <meta property="article:tag" content="计算广告">
 <meta property="article:tag" content="机器学习">
@@ -323,68 +323,68 @@ correlation model 在 online 部分是如何工作的</strong>。</p>
 <h2 id="correlation-model">Correlation Model</h2>
 <p>上文提到了对一部分有代表性的 combination（也就是上图中的 Selected
 Attribute Combinations）进行时间序列预估，这里记为 <span
-class="math inline">\(Q = \lbrace Q\_1, Q\_2,... Q\_m \rbrace\)</span>,
+class="math inline">\(Q = \lbrace Q_1, Q_2,... Q_m \rbrace\)</span>,
 称其为 base queries。则对于一个在线的 query <span
 class="math inline">\(q\)</span>, 其<strong>预估步骤如下</strong></p>
 <ol type="1">
 <li>选择 <span class="math inline">\(Q\)</span> 中某个 base query <span
-class="math inline">\(Q\_k\)</span>, 使得 <span class="math inline">\(q
-\subseteq Q\_k\)</span></li>
-<li>计算 <span class="math inline">\(Q\_k\)</span> 在未来时间 <span
+class="math inline">\(Q_k\)</span>, 使得 <span class="math inline">\(q
+\subseteq Q_k\)</span></li>
+<li>计算 <span class="math inline">\(Q_k\)</span> 在未来时间 <span
 class="math inline">\(T\)</span> 内的流量，记为 <span
-class="math inline">\(B(Q\_k, T)\)</span></li>
+class="math inline">\(B(Q_k, T)\)</span></li>
 <li>计算 <span class="math inline">\(q\)</span> 在 <span
-class="math inline">\(Q\_k\)</span> 中出现的概率，记为 <span
-class="math inline">\(R(q|Q\_k)\)</span></li>
+class="math inline">\(Q_k\)</span> 中出现的概率，记为 <span
+class="math inline">\(R(q|Q_k)\)</span></li>
 <li>返回 <span class="math inline">\(q\)</span> 的预估结果为 <span
-class="math inline">\(B(Q\_k, T) \times R(q|Q\_k)\)</span></li>
+class="math inline">\(B(Q_k, T) \times R(q|Q_k)\)</span></li>
 </ol>
 <p>Correlation Model 所做的事情就是第3步：计算比例。</p>
 <p>而在第一步中，<strong>必然会存在某个 <span
-class="math inline">\(Q\_k\)</span>，使得<span class="math inline">\(q
-\subseteq Q\_k\)</span></strong>, 为什么呢？</p>
+class="math inline">\(Q_k\)</span>，使得<span class="math inline">\(q
+\subseteq Q_k\)</span></strong>, 为什么呢？</p>
 <p>假设总共有 n 个 attribute，那么只要将每个 attribute 作为一个 base
 query（这样 <span class="math inline">\(Q\)</span> 中便有了 n 个 base
 queries），则 attribute 的任意 combination 肯定会属于 Q 中的某几个 base
 queries 的。那如果<strong>不止一个 <span
-class="math inline">\(Q\_k\)</span>，使得<span class="math inline">\(q
-\subseteq Q\_k\)</span></strong> 时该怎么办？这时候就需要选择一个最小的
-<span class="math inline">\(Q\_k\)</span>, 这里的最小指的是不存在某个
-<span class="math inline">\(Q\_l\)</span> 同时满足 <span
-class="math inline">\(q \subseteq Q\_l\)</span> 且 <span
-class="math inline">\(Q\_l \subseteq
-Q\_k\)</span>。举个简单的例子，假如有两个 base queries <span
-class="math inline">\(Q1 = a\_1 , Q\_2 = a1 \wedge a\_2\)</span>,
-则对于某个 query <span class="math inline">\(q = a1 \wedge a\_2 \wedge
-a\_3\)</span>，应该选择 <span class="math inline">\(Q\_2\)</span> 作为
-<span class="math inline">\(Q\_k\)</span>。</p>
+class="math inline">\(Q_k\)</span>，使得<span class="math inline">\(q
+\subseteq Q_k\)</span></strong> 时该怎么办？这时候就需要选择一个最小的
+<span class="math inline">\(Q_k\)</span>, 这里的最小指的是不存在某个
+<span class="math inline">\(Q_l\)</span> 同时满足 <span
+class="math inline">\(q \subseteq Q_l\)</span> 且 <span
+class="math inline">\(Q_l \subseteq
+Q_k\)</span>。举个简单的例子，假如有两个 base queries <span
+class="math inline">\(Q1 = a_1 , Q_2 = a1 \wedge a_2\)</span>,
+则对于某个 query <span class="math inline">\(q = a1 \wedge a_2 \wedge
+a_3\)</span>，应该选择 <span class="math inline">\(Q_2\)</span> 作为
+<span class="math inline">\(Q_k\)</span>。</p>
 <p>下面分别讲述文中提到的三种 correlation model</p>
 <h3 id="full-independence-model-fim">Full Independence Model (FIM)</h3>
 <p>FIM 实际上就是个 Naive Bayes，假设了每个 attribute
 是相互独立的，也就是</p>
-<p><span class="math display">\[R(Gender = male \wedge Age &lt; 30|Q\_k)
-= R(Gender = male|Q\_k) \times R(Age &lt; 30|Q\_k)\]</span></p>
-<p>也就是只要为 <span class="math inline">\(Q\_k\)</span> 每个单独的
-attribute 计算其比例 <span class="math inline">\(R(.| Q\_k)\)</span>
+<p><span class="math display">\[R(Gender = male \wedge Age &lt; 30|Q_k)
+= R(Gender = male|Q_k) \times R(Age &lt; 30|Q_k)\]</span></p>
+<p>也就是只要为 <span class="math inline">\(Q_k\)</span> 每个单独的
+attribute 计算其比例 <span class="math inline">\(R(.| Q_k)\)</span>
 即可。具体计算方法如下</p>
-<p>令 <span class="math inline">\(P\_t\)</span> 是截止到时间 <span
+<p>令 <span class="math inline">\(P_t\)</span> 是截止到时间 <span
 class="math inline">\(t\)</span> 时所有的访问量，<span
-class="math inline">\(|Q\_k \wedge P\_t|\)</span> 为这些访问量中满足
-<span class="math inline">\(|Q\_k|\)</span> 的那些访问量，<span
-class="math inline">\(|a\_i \in (Q\_k \wedge P\_t)|\)</span> 为满足
-<span class="math inline">\(|Q\_k|\)</span> 的那些访问量中同时满足
-attribute <span class="math inline">\(a\_i\)</span>的，则对于
+class="math inline">\(|Q_k \wedge P_t|\)</span> 为这些访问量中满足 <span
+class="math inline">\(|Q_k|\)</span> 的那些访问量，<span
+class="math inline">\(|a_i \in (Q_k \wedge P_t)|\)</span> 为满足 <span
+class="math inline">\(|Q_k|\)</span> 的那些访问量中同时满足 attribute
+<span class="math inline">\(a_i\)</span>的，则对于
 attribute，其计算公式如下</p>
-<p><span class="math display">\[R(a\_i|Q\_k) = \frac{|a_i \in (Q\_k
-\wedge P\_t)|}{|Q\_k \wedge P\_t|}\]</span></p>
+<p><span class="math display">\[R(a_i|Q_k) = \frac{|a_i \in (Q_k \wedge
+P_t)|}{|Q_k \wedge P_t|}\]</span></p>
 <h3 id="partwise-independence-model-pim">Partwise Independence Model
 (PIM)</h3>
 <p>将所有的 attribute 都认为是相互独立的显然是不合理的，因为有某些
 attribute 之间是相互关联的，比如说年龄和收入一般是存在关联的，因为 PIM
 实际上就是将某些可能有关联的 attribute 的比例一起计算。即</p>
 <p><span class="math display">\[R(Gender = male \wedge Age &lt; 30
-\wedge Incom &gt; 10000|Q\_k) = R(Gender = male|Q\_k) \times R(Age &lt;
-30 \wedge Incom &gt; 10000|Q\_k)\]</span>,
+\wedge Incom &gt; 10000|Q_k) = R(Gender = male|Q_k) \times R(Age &lt; 30
+\wedge Incom &gt; 10000|Q_k)\]</span>,
 而比例的计算公式也跟上面的类似</p>
 <h3 id="sampling-based-joint-modelsjm">Sampling-based Joint
 Model(SJM)</h3>
@@ -394,15 +394,15 @@ Sampling-based Joint Model(SJM) 就避免了独立性的假设。</p>
 <p>虽然说是 model ，但是方法还是统计，只是为了避免数量太大，首先做了
 sampling，选出经过 sample 后的数据并记为 <span
 class="math inline">\(S\)</span>，然后计算 base query <span
-class="math inline">\(|Q\_k|\)</span> 在 <span
+class="math inline">\(|Q_k|\)</span> 在 <span
 class="math inline">\(S\)</span> 中的数量 <span
-class="math inline">\(|Q\_k \cap S|\)</span>,
+class="math inline">\(|Q_k \cap S|\)</span>,
 这部分会在离线做，然后在线来了一个 query <span
 class="math inline">\(q\)</span> 后，会计算在 <span
 class="math inline">\(S\)</span> 中满足 <span
 class="math inline">\(q\)</span> 的数量并记为 <span
 class="math inline">\(n\)</span>。则比例计算公式就很简单了</p>
-<p><span class="math display">\[R(q|Q\_k) = \frac{n}{|Q\_k \cap
+<p><span class="math display">\[R(q|Q_k) = \frac{n}{|Q_k \cap
 S|}\]</span></p>
 <p>整个过程思路非常简单，没有涉及到 attribute，因此也没有 attribute
 independent
@@ -426,10 +426,10 @@ forecasting，另一半用于验证效果（按时间划分），且对于某些
 <p><span class="math display">\[APE = \frac{|F-A|}{A}\]</span></p>
 <p>APE 针对的是单个 query，但是往往希望的是验证一系列 query
 的效果，其指标为 Root Mean Square Error (RMSE)，定义如下, <span
-class="math inline">\(w\_q\)</span> 表示每个 query 的权重，这个值被设为
+class="math inline">\(w_q\)</span> 表示每个 query 的权重，这个值被设为
 query 在过去两年的合约中出现的次数</p>
-<p><span class="math display">\[RMSE = \sqrt{\frac{\sum\_{q \in
-Q}w\_qAPE^2(q)}{\sum\_{q \in Q}w\_q}}\]</span></p>
+<p><span class="math display">\[RMSE = \sqrt{\frac{\sum_{q \in
+Q}w_qAPE^2(q)}{\sum_{q \in Q}w_q}}\]</span></p>
 <h3 id="效果对比">效果对比</h3>
 <p>下面是三个模型的 RMSE（取了对数） 效果对比，横轴的 forecast horizon
 表示预估未来多少天的时的效果。可以看到假设 attribute independent

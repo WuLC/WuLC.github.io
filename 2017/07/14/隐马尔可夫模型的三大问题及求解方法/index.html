@@ -35,7 +35,7 @@
 <meta property="og:image" content="https://wulc.me/imgs/image_1bkmitsfj1i3ga0c1d2c14gp566m.png">
 <meta property="og:image" content="https://wulc.me/imgs/image_1bkmiuj7c1dii1lu2efijaomu113.png">
 <meta property="article:published_time" content="2017-07-14T12:08:55.000Z">
-<meta property="article:modified_time" content="2023-04-30T05:12:49.058Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.111Z">
 <meta property="article:author" content="良超">
 <meta property="article:tag" content="机器学习">
 <meta property="article:tag" content="NLP">
@@ -282,8 +282,8 @@
 alt="隐马尔可夫模型" />
 <figcaption aria-hidden="true">隐马尔可夫模型</figcaption>
 </figure>
-<p>上图中， <span class="math inline">\(X\_1,X\_2,...X\_T\)</span>
-是隐含序列，而 <span class="math inline">\(O\_1, O\_2,..O\_T\)</span>
+<p>上图中， <span class="math inline">\(X_1,X_2,...X_T\)</span>
+是隐含序列，而 <span class="math inline">\(O_1, O_2,..O_T\)</span>
 是观察序列</p>
 <p>隐马尔可夫模型由三个概率确定</p>
 <ol type="1">
@@ -328,27 +328,27 @@ class="math inline">\(O(m^n)\)</span>,
 <blockquote>
 <p>前向概率定义为到时刻 <span class="math inline">\(t\)</span>
 为止观测序列为 <span
-class="math inline">\(o\_1,o\_2,o\_3...o\_t\)</span>，且时刻 <span
+class="math inline">\(o_1,o_2,o_3...o_t\)</span>，且时刻 <span
 class="math inline">\(t\)</span> 的隐含状态为所有的隐含状态中的第 <span
 class="math inline">\(i\)</span> 个（记为 <span
-class="math inline">\(q\_i\)</span>），则前向概率可记为 <span
-class="math display">\[\alpha\_t(i) = P(o\_1,o\_2,o\_3...o\_t,x\_t =
-q\_i|\lambda)\]</span></p>
+class="math inline">\(q_i\)</span>），则前向概率可记为 <span
+class="math display">\[\alpha_t(i) = P(o_1,o_2,o_3...o_t,x_t =
+q_i|\lambda)\]</span></p>
 </blockquote>
 <p>定义了前向概率，便可递归地求解前向概率和观测序列的概率 <span
-class="math inline">\(P(o\_1,o\_2,o\_3...o\_t|\lambda)\)</span></p>
+class="math inline">\(P(o_1,o_2,o_3...o_t|\lambda)\)</span></p>
 <p>初始的状态为</p>
-<p><span class="math display">\[\alpha\_1(i) =
-\pi\_ib\_i(o\_1)~~i=1,..m\]</span></p>
+<p><span class="math display">\[\alpha_1(i) =
+\pi_ib_i(o_1)~~i=1,..m\]</span></p>
 <p>上式中的 <span class="math inline">\(m\)</span> 表示隐含状态的数目，
-<span class="math inline">\(\pi\_i\)</span> 表示各个隐含状态的初始概率，
-<span class="math inline">\(b\_i(o\_1)\)</span> 表示第 <span
+<span class="math inline">\(\pi_i\)</span> 表示各个隐含状态的初始概率，
+<span class="math inline">\(b_i(o_1)\)</span> 表示第 <span
 class="math inline">\(i\)</span> 个隐含状态生成观测状态 <span
-class="math inline">\(o\_1\)</span> 的概率</p>
+class="math inline">\(o_1\)</span> 的概率</p>
 <p>则递推的公式为</p>
-<p><span class="math display">\[\alpha\_{t+1}(i) = (\sum\_{j=1}^N
-\alpha\_t(j) a\_{ji} )b\_i(o\_{t+1})~~i=1,..m\]</span></p>
-<p>上式中的 <span class="math inline">\(a\_{ji}\)</span> 表示从隐含状态
+<p><span class="math display">\[\alpha_{t+1}(i) = (\sum_{j=1}^N
+\alpha_t(j) a_{ji} )b_i(o_{t+1})~~i=1,..m\]</span></p>
+<p>上式中的 <span class="math inline">\(a_{ji}\)</span> 表示从隐含状态
 <span class="math inline">\(j\)</span> 转移到隐含状态 <span
 class="math inline">\(i\)</span>
 的状态转移概率。通过下图可较直观地看到前向递推公式的过程</p>
@@ -360,30 +360,29 @@ alt="前向算法" />
 <p>最终计算得到的概率为（其中 <span class="math inline">\(T\)</span>
 为观测序列的长度）</p>
 <p><span class="math display">\[P(O|\lambda) =
-\sum\_{i=1}^{m}\alpha\_T(i)\]</span></p>
+\sum_{i=1}^{m}\alpha_T(i)\]</span></p>
 <h3 id="后向算法">后向算法</h3>
 <p>类似前向算法，后向算法也可用于求解这个问题，只是方向是从后到前的。同样的，需要先定义后向概率</p>
 <blockquote>
 <p>后向概率指时刻 <span class="math inline">\(t\)</span>
 的隐含状态为所有隐含状态中的第 <span class="math inline">\(i\)</span>
-个(记为 <span class="math inline">\(q\_i\)</span>), 且时刻<span
+个(记为 <span class="math inline">\(q_i\)</span>), 且时刻<span
 class="math inline">\(t+1\)</span> 到 <span
 class="math inline">\(T\)</span> 的观测序列为 <span
-class="math inline">\(o\_{t+1},
-o\_{t+2},....o\_T\)</span>的概率,记为<span
-class="math display">\[\beta\_t(i) = P(o\_{t+1}, o\_{t+2},....o\_T, x\_t
-= q\_i|\lambda)\]</span></p>
+class="math inline">\(o_{t+1}, o_{t+2},....o_T\)</span>的概率,记为<span
+class="math display">\[\beta_t(i) = P(o_{t+1}, o_{t+2},....o_T, x_t =
+q_i|\lambda)\]</span></p>
 </blockquote>
 <p>初始状态定义为</p>
-<p><span class="math display">\[ \beta\_T(i) = 1~~i=1,2,...m
+<p><span class="math display">\[ \beta_T(i) = 1~~i=1,2,...m
 \]</span></p>
 <p>这里概率为 1 的原因是概率为1的原因是本来还需要看看时刻 <span
 class="math inline">\(T\)</span> 后面有什么东西，但因为最后一个时刻
 <span class="math inline">\(T\)</span>
 后面已经没有时刻，即不需要再观测某个东西，所以随便给个什么状态都可以</p>
 <p>递推公式为</p>
-<p><span class="math display">\[\beta\_t(i) =
-\sum\_{j=1}^ma\_{ij}b\_j(o\_{t+1})\beta\_{t+1}(j)~~i=1,2,...m\]</span></p>
+<p><span class="math display">\[\beta_t(i) =
+\sum_{j=1}^ma_{ij}b_j(o_{t+1})\beta_{t+1}(j)~~i=1,2,...m\]</span></p>
 <p>上面的式子中的符号与前向算法中的一致，其过程可通过下图更直观理解</p>
 <figure>
 <img data-src="https://wulc.me/imgs/image_1bkmiuj7c1dii1lu2efijaomu113.png"
@@ -391,8 +390,8 @@ alt="后向算法" />
 <figcaption aria-hidden="true">后向算法</figcaption>
 </figure>
 <p>最终计算得到的概率为</p>
-<p><span class="math display">\[P(O|\lambda) = \sum\_{i=1}^m
-\pi\_ib\_i(o\_1)\beta\_1(i)\]</span></p>
+<p><span class="math display">\[P(O|\lambda) = \sum_{i=1}^m
+\pi_ib_i(o_1)\beta_1(i)\]</span></p>
 <p>分析可知，前向算法和后向算法的时间复杂度均是 <span
 class="math inline">\(O(m^2T)\)</span>, <span
 class="math inline">\(m\)</span> 为隐含状态的个数，<span
@@ -408,53 +407,52 @@ target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Baum%E2%80%93
 <p>注：这里采用 EM
 算法的前提是问题仅给出了观测序列，假如同时给出了观测序列和隐含序列，可直接通过最大似然估计求解。</p>
 <p>问题的描述如下：给定的训练数据只包含 S 个长度为 T 的观测序列 <span
-class="math inline">\(O = \lbrace O\_1, O\_2, O\_3...O\_T
-\rbrace\)</span> 而没有对应的状态序列 <span
+class="math inline">\(O = \lbrace O_1, O_2, O_3...O_T \rbrace\)</span>
+而没有对应的状态序列 <span
 class="math inline">\(X\)</span>，目标是学习隐马尔可夫模型 <span
 class="math inline">\(\lambda = (A,B,\pi)\)</span>
 的参数，则隐马尔可夫模型此时变为了一个含有隐含变量的概率模型，表示为<span
-class="math display">\[P(O|\lambda) = \sum\_I
+class="math display">\[P(O|\lambda) = \sum_I
 P(O|I,\lambda)P(I|\lambda)\]</span></p>
 <p>这里只给出 Baum-Welch 算法的流程，而省去其推导过程</p>
-<p>1.初始化模型参数：选取 <span class="math inline">\(a\_{ij}^{(0)},
-b\_j^{(0)}, \pi\_i^{(0)}\)</span>, 得到模型 <span
+<p>1.初始化模型参数：选取 <span class="math inline">\(a_{ij}^{(0)},
+b_j^{(0)}, \pi_i^{(0)}\)</span>, 得到模型 <span
 class="math inline">\(\pi^{(0)} = (A^{(0)}, B^{(0)}, \pi^{(0)})\)</span>
-2.E 步，求解两个中间变量 <span class="math inline">\(\gamma\_t(i),
-\xi\_t(i,j)\)</span>,两者的含义如下 <span
-class="math inline">\(\gamma\_t(i)\)</span>：给定模型 <span
+2.E 步，求解两个中间变量 <span class="math inline">\(\gamma_t(i),
+\xi_t(i,j)\)</span>,两者的含义如下 <span
+class="math inline">\(\gamma_t(i)\)</span>：给定模型 <span
 class="math inline">\(\lambda\)</span> 和观测序列 <span
 class="math inline">\(O\)</span>，在时刻 <span
 class="math inline">\(t\)</span> 的隐含状态为 <span
-class="math inline">\(q\_i\)</span> 的概率, 即 <span
-class="math inline">\(\gamma\_t(i) = P(x\_t = q\_i | O,
-\lambda)\)</span> <span
-class="math inline">\(\xi\_t(i,j)\)</span>：给定模型 <span
+class="math inline">\(q_i\)</span> 的概率, 即 <span
+class="math inline">\(\gamma_t(i) = P(x_t = q_i | O, \lambda)\)</span>
+<span class="math inline">\(\xi_t(i,j)\)</span>：给定模型 <span
 class="math inline">\(\lambda\)</span> 和观测序列 <span
 class="math inline">\(O\)</span>，在时刻 <span
 class="math inline">\(t\)</span> 的隐含状态为 <span
-class="math inline">\(q\_i\)</span> , 时刻 <span
+class="math inline">\(q_i\)</span> , 时刻 <span
 class="math inline">\(t+1\)</span> 的隐含状态为 <span
-class="math inline">\(q\_j\)</span> 的概率, 即 <span
-class="math inline">\(\xi\_t(i,j) = P(x\_t = q\_i, x\_{t+1} = q\_j | O,
+class="math inline">\(q_j\)</span> 的概率, 即 <span
+class="math inline">\(\xi_t(i,j) = P(x_t = q_i, x_{t+1} = q_j | O,
 \lambda)\)</span></p>
 <p>结合前面的前向概率和后向概率的定义，计算这两个中间变量的公式如下(<span
 class="math inline">\(m\)</span> 表示隐含状态的总个数)</p>
-<p><span class="math display">\[\gamma\_t(i) = \frac{\alpha\_t(i)
-\beta\_t(i)}{\sum\_{j=1}^m \alpha\_t(j) \beta\_t(j)}\]</span></p>
-<p><span class="math display">\[\xi\_t(i,j) = \frac{\alpha\_t(i) a\_{ij}
-b\_j(o\_{t+1})\beta\_{t+1}(j)}{\sum\_{p=1}^m \sum\_{q=1}^m \alpha\_t(p)
-a\_{pq} b\_q(o\_{t+1})\beta\_{t+1}(q)}\]</span></p>
+<p><span class="math display">\[\gamma_t(i) = \frac{\alpha_t(i)
+\beta_t(i)}{\sum_{j=1}^m \alpha_t(j) \beta_t(j)}\]</span></p>
+<p><span class="math display">\[\xi_t(i,j) = \frac{\alpha_t(i) a_{ij}
+b_j(o_{t+1})\beta_{t+1}(j)}{\sum_{p=1}^m \sum_{q=1}^m \alpha_t(p) a_{pq}
+b_q(o_{t+1})\beta_{t+1}(q)}\]</span></p>
 <p>3.M 步，同时 E
 步求解出的两个中间变量来求解模型的参数，求解公式如下</p>
-<p><span class="math display">\[a\_{ij} = \frac{\sum\_{t=1}^T
-\xi\_t(i,j)}{\sum\_{t=1}^T \gamma\_t(i)} \]</span></p>
-<p><span class="math display">\[b\_j(k) = \frac{\sum\_{t=1}^T
-\gamma\_t(j)I(o\_t = v\_k)}{\sum\_{t=1}^T \gamma\_t(j)}\]</span></p>
-<p><span class="math display">\[\pi\_i = \gamma\_1(i)\]</span></p>
-<p>上式中的 <span class="math inline">\(I(o\_t = v\_k)\)</span> 表示时刻
+<p><span class="math display">\[a_{ij} = \frac{\sum_{t=1}^T
+\xi_t(i,j)}{\sum_{t=1}^T \gamma_t(i)} \]</span></p>
+<p><span class="math display">\[b_j(k) = \frac{\sum_{t=1}^T
+\gamma_t(j)I(o_t = v_k)}{\sum_{t=1}^T \gamma_t(j)}\]</span></p>
+<p><span class="math display">\[\pi_i = \gamma_1(i)\]</span></p>
+<p>上式中的 <span class="math inline">\(I(o_t = v_k)\)</span> 表示时刻
 <span class="math inline">\(t\)</span> 的观察状态为 <span
-class="math inline">\(v\_k\)</span> 时, <span
-class="math inline">\(I(o\_t = v\_k)\)</span> 才为1，否则为0</p>
+class="math inline">\(v_k\)</span> 时, <span class="math inline">\(I(o_t
+= v_k)\)</span> 才为1，否则为0</p>
 <p>迭代进行 E 步骤和 M 步，将最终收敛的结果作为模型的参数</p>
 <h2 id="解码问题">解码问题</h2>
 <p>解码问题理论上也可以通过穷举法来解决，就是穷举所有可能的隐含序列并计算在这个隐含序列下观测序列的概率，并选择概率最大的那个隐含序列，但是穷举所有可能的隐含序列的时间复杂度也是指数级别的，跟第一个问题一样，在实际中往往也是不常用的。</p>

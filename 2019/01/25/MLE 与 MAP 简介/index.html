@@ -32,7 +32,7 @@
 <meta property="og:description" content="最近看到一篇关于 MLE(Maximum Likelihood Estimation) 和 MAP（Maximum A Posteriori) 的文章，写的很好，非常值得一看，文章链接为 聊一聊机器学习的MLE和MAP：最大似然估计和最大后验估计，本文几乎不加修改地转载了文章，侵删。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2019-01-25T08:08:44.000Z">
-<meta property="article:modified_time" content="2023-05-10T14:36:45.800Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.193Z">
 <meta property="article:author" content="良超">
 <meta property="article:tag" content="机器学习">
 <meta property="article:tag" content="数学">
@@ -330,18 +330,18 @@ distribution本质上表示对事物没有任何预判</li>
 </ol>
 <h2 id="mle---最大似然估计">MLE - 最大似然估计</h2>
 <p>Maximum Likelihood Estimation, MLE是频率学派常用的估计方法！</p>
-<p>假设数据 <span class="math inline">\(x\_1, x\_2, ..., x\_n\)</span>
-是 i.i.d.的一组抽样，<span class="math inline">\(X = (x\_1, x\_2, ...,
-x\_n)\)</span> 。其中i.i.d.表示Independent and identical
+<p>假设数据 <span class="math inline">\(x_1, x_2, ..., x_n\)</span> 是
+i.i.d.的一组抽样，<span class="math inline">\(X = (x_1, x_2, ...,
+x_n)\)</span> 。其中i.i.d.表示Independent and identical
 distribution，独立同分布。那么MLE对 <span
 class="math inline">\(\theta\)</span> 的估计方法可以如下推导：</p>
 <p><span class="math display">\[\begin{align*}
-\hat{\theta}\_\text{MLE} &amp;= \arg \max P(X; \theta) \\\
-&amp;= \arg \max P(x\_1; \theta) P(x\_2; \theta) \cdot\cdot\cdot\cdot
-P(x\_n;\theta) \\\
-&amp; = \arg \max\log \prod\_{i=1}^{n} P(x\_i; \theta) \\\
-&amp;= \arg \max \sum\_{i=1}^{n} \log P(x\_i; \theta) \\\
-&amp;= \arg \min - \sum\_{i=1}^{n} \log P(x\_i; \theta)
+\hat{\theta}_\text{MLE} &amp;= \arg \max P(X; \theta) \\\
+&amp;= \arg \max P(x_1; \theta) P(x_2; \theta) \cdot\cdot\cdot\cdot
+P(x_n;\theta) \\\
+&amp; = \arg \max\log \prod_{i=1}^{n} P(x_i; \theta) \\\
+&amp;= \arg \max \sum_{i=1}^{n} \log P(x_i; \theta) \\\
+&amp;= \arg \min - \sum_{i=1}^{n} \log P(x_i; \theta)
 \end{align*}\]</span></p>
 <p>最后这一行所优化的函数被称为 <strong>Negative Log Likelihood
 (NLL)</strong>，这个概念和上面的推导是非常重要的！</p>
@@ -351,12 +351,12 @@ P(x\_n;\theta) \\\
 深度学习做分类任务时所用的cross entropy loss，其本质也是MLE</p>
 <h2 id="map---最大后验估计">MAP - 最大后验估计</h2>
 <p>Maximum A Posteriori, MAP是贝叶斯学派常用的估计方法！</p>
-<p>同样的，假设数据 <span class="math inline">\(x\_1, x\_2, ...,
-x\_n\)</span> 是i.i.d.的一组抽样，<span class="math inline">\(X = (x\_1,
-x\_2, ..., x\_n)\)</span> 。那么MAP对 <span
+<p>同样的，假设数据 <span class="math inline">\(x_1, x_2, ...,
+x_n\)</span> 是i.i.d.的一组抽样，<span class="math inline">\(X = (x_1,
+x_2, ..., x_n)\)</span> 。那么MAP对 <span
 class="math inline">\(\theta\)</span> 的估计方法可以如下推导：</p>
 <p><span class="math display">\[\begin{align*}
-\hat{\theta}\_\text{MAP} &amp;= \arg \max P(\theta | X) \\\
+\hat{\theta}_\text{MAP} &amp;= \arg \max P(\theta | X) \\\
 &amp;= \arg \min -\log P(\theta | X) \\\
 &amp; = \arg \min -\log P(X|\theta) - \log P(\theta) + \log P(X) \\\
 &amp;= \arg \min -\log P(X|\theta ) - \log P(\theta)
