@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id: "JmI6QmP3fMkLet6B",ck: "JmI6QmP3fMkLet6B"})</script>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wulc.me","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.15.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="&quot;Quantitative Trading: How to Build Your Own Algorithmic Trading Business&quot; by Ernie Chan is a comprehensive guide that explores the world of quantitative trading and provides practical advice for buil">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Quantitative Trading:How to Build Your Own Algorithmic Trading Business(2)">
+<meta property="og:url" content="https://wulc.me/2023/10/02/Quantitative%20Trading:%20How%20to%20Build%20Your%20Own%20Algorithmic%20Trading%20Business(2)/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="&quot;Quantitative Trading: How to Build Your Own Algorithmic Trading Business&quot; by Ernie Chan is a comprehensive guide that explores the world of quantitative trading and provides practical advice for buil">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/Kelly_criterion_proof.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/Ornstein_Uhlenbeck_process.jpg">
+<meta property="article:published_time" content="2023-10-02T13:53:19.000Z">
+<meta property="article:modified_time" content="2023-10-02T07:43:18.999Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="读书">
+<meta property="article:tag" content="量化交易">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/Kelly_criterion_proof.jpg">
+
+
+<link rel="canonical" href="https://wulc.me/2023/10/02/Quantitative%20Trading:%20How%20to%20Build%20Your%20Own%20Algorithmic%20Trading%20Business(2)/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wulc.me/2023/10/02/Quantitative%20Trading:%20How%20to%20Build%20Your%20Own%20Algorithmic%20Trading%20Business(2)/","path":"2023/10/02/Quantitative Trading: How to Build Your Own Algorithmic Trading Business(2)/","title":"Quantitative Trading:How to Build Your Own Algorithmic Trading Business(2)"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Quantitative Trading:How to Build Your Own Algorithmic Trading Business(2) | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">吴良超的学习笔记</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#execution-systems"><span class="nav-number">1.</span> <span class="nav-text">Execution Systems</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#automated-trading-system"><span class="nav-number">1.1.</span> <span class="nav-text">Automated Trading System</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#fully-automated-trading-system"><span class="nav-number">1.1.1.</span> <span class="nav-text">Fully Automated Trading
+System</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#semiautomated-trading-system"><span class="nav-number">1.1.2.</span> <span class="nav-text">Semiautomated Trading System</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#minimizing-transaction-costs"><span class="nav-number">1.2.</span> <span class="nav-text">Minimizing Transaction Costs</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#cut-down-on-commissions"><span class="nav-number">1.2.1.</span> <span class="nav-text">Cut Down on Commissions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#minimize-market-impact-cost"><span class="nav-number">1.2.2.</span> <span class="nav-text">Minimize Market Impact Cost</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#slippage"><span class="nav-number">1.2.3.</span> <span class="nav-text">Slippage</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#paper-trading"><span class="nav-number">1.3.</span> <span class="nav-text">Paper Trading</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#actual-performance-v.s-expectations"><span class="nav-number">1.4.</span> <span class="nav-text">Actual Performance V.S
+Expectations</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#money-and-risk-management"><span class="nav-number">2.</span> <span class="nav-text">Money and Risk Management</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#kelly-criterion"><span class="nav-number">2.1.</span> <span class="nav-text">Kelly Criterion</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mind-set"><span class="nav-number">2.2.</span> <span class="nav-text">Mind-Set</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#special-topics"><span class="nav-number">3.</span> <span class="nav-text">Special topics</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#mean-reversion-and-momentum"><span class="nav-number">3.1.</span> <span class="nav-text">Mean Reversion and Momentum</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#regime-switching"><span class="nav-number">3.2.</span> <span class="nav-text">Regime Switching</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#stationarity-and-cointegration"><span class="nav-number">3.3.</span> <span class="nav-text">Stationarity AND
+Cointegration</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#factor-models"><span class="nav-number">3.4.</span> <span class="nav-text">Factor Models</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#exit-strategy"><span class="nav-number">3.5.</span> <span class="nav-text">Exit Strategy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#seasonal-trading"><span class="nav-number">3.6.</span> <span class="nav-text">Seasonal Trading</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#high-frequency-trading"><span class="nav-number">3.7.</span> <span class="nav-text">High-Frequency Trading</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#can-independent-traders-succeed"><span class="nav-number">4.</span> <span class="nav-text">Can Independent Traders
+Succeed?</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#capacity"><span class="nav-number">4.1.</span> <span class="nav-text">capacity</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#constraints"><span class="nav-number">4.2.</span> <span class="nav-text">constraints</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#summary"><span class="nav-number">5.</span> <span class="nav-text">Summary</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">253</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.linkedin.com/in/wuliangchao/" title="LinkedIn → https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;wuliangchao&#x2F;" rel="noopener me" target="_blank"><i class="fab fa-linkedin fa-fw"></i>LinkedIn</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml" rel="noopener me"><i class="fa fa-rss fa-fw"></i>RSS</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2023/10/02/Quantitative%20Trading:%20How%20to%20Build%20Your%20Own%20Algorithmic%20Trading%20Business(2)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Quantitative Trading:How to Build Your Own Algorithmic Trading Business(2) | 吴良超的学习笔记">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Quantitative Trading:How to Build Your Own Algorithmic Trading Business(2)
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-10-02 21:53:19" itemprop="dateCreated datePublished" datetime="2023-10-02T21:53:19+08:00">2023-10-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-tags"></i>
+      </span>
+      <span class="post-meta-item-text">标签</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E8%AF%BB%E4%B9%A6/" itemprop="url" rel="index"><span itemprop="name">读书</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E9%87%8F%E5%8C%96%E4%BA%A4%E6%98%93/" itemprop="url" rel="index"><span itemprop="name">量化交易</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>"<a
+target="_blank" rel="noopener" href="https://www.myquant.cn/uploads/default/original/1X/4c7037365a4bf1623734c1c899baed7855061ace.pdf">Quantitative
+Trading: How to Build Your Own Algorithmic Trading Business</a>" by
+Ernie Chan is a comprehensive guide that explores the world of
+quantitative trading and provides practical advice for building a
+algorithmic trading business, especially for individuals interested in
+quantitative trading.</p>
+<p>It covers essential concepts, methodologies, and practical tips to
+help readers develop and implement their own algorithmic trading
+strategies while effectively managing risk and building a sustainable
+trading business.</p>
+<p>Due to the significant benefits I received from reading this book, I
+want to write down some of the most important takeways I get from this
+book, with the hope that it can also be useful to you.</p>
+<p>This passage is about the last four chapters, which introduces
+execution system in actual trading(automated and semi-automated), how to
+minimize transaction cost and determine the optimal leverage using the
+Kelly Criterion. It also talks about some special topics or common sense
+in trading. Finally, it lists some advantages of individuals investors
+over institutional investors.</p>
+<span id="more"></span>
+<h1 id="execution-systems">Execution Systems</h1>
+<p>This chapter is about building an automated trading system and ways
+to minimize trading costs and divergence with your expected performance
+based on your backtests.</p>
+<h2 id="automated-trading-system">Automated Trading System</h2>
+<p>An automated trading system is a piece of software that automatically
+generates and transmits orders to your brokerage account based on your
+trading strategy.</p>
+<ul>
+<li>It eliminates manual operation so that you can simultaneously run
+multiple strategies.</li>
+<li>Most importantly, it allows speedy transmissions of orders,which is
+essential to high-frequency trading strategies.</li>
+</ul>
+<p>There are two kinds of trading systems: fully automated and
+semiautomated, and the choice depends on the frequency of your
+trading.</p>
+<h3 id="fully-automated-trading-system">Fully Automated Trading
+System</h3>
+<p>A fully automated trading system can run the trading algorithm in a
+loop again and again, constantly scanning the latest prices and
+generating new waves of orders throughout the trading day. The
+submission of orders through an API to your brokerage account is
+automatic, so you would not need to load the trades to a basket trader
+or spread trader</p>
+<p>A fully automated system has the advantage that it minimizes human
+errors and delays. For certain high-frequency systems, a fully automated
+system is indispensable, because any human intervention will cause
+enough delay to seriously derail the performance.</p>
+<p>However, a fully automated system is also complicated and costly to
+build, often requiring professional programmers with knowledge of
+high-performance programming languages such as Java, C, or C++ in order
+to connect to your brokerage’s application program- ming interface
+(API).</p>
+<h3 id="semiautomated-trading-system">Semiautomated Trading System</h3>
+<p>In a semiautomated trading system, the trader still needs to manually
+upload a text file containing order details to a basket trader or spread
+trader, and manually press a button to transmit the orders at the
+appropriate time. However, the order text file can be automatically
+generated by a program such as Python.</p>
+<p>Whether you have built a semiautomated or a fully automated trading
+system, there is often a need for input data beyond the prices that your
+brokerage or data vendor can readily provide you. For example,
+<strong>earnings estimates or dividends data</strong> are often not
+provided as part of the real-time data stream.</p>
+<p>These non-price data are typically available free of charge from many
+web sites, but are usually embedded in an HTML format and not readily
+usable. Hence, an automated system also must be able to retrieve such
+web pages, parse them, and reformat them into a tabular format that your
+trading strategy can utilize</p>
+<h2 id="minimizing-transaction-costs">Minimizing Transaction Costs</h2>
+<p>In the previous chapter, we had talked about how to reduce
+transaction costs. Besides changing your brokerage or proprietary
+trading firm to one that charges a lower commission, there are a few
+things you can do in your execution method to minimize the transaction
+costs.</p>
+<p>And the book regards this mainly as a matter of <strong>not allowing
+your order size to be too big relative to its average trading volume and
+relative to its market capitalization</strong></p>
+<h3 id="cut-down-on-commissions">Cut Down on Commissions</h3>
+<p>You should <strong>refrain from trading lowprice stocks</strong>.
+Typically, institutional traders do not trade any stocks with prices
+lower than $5</p>
+<p>Because low-price stocks increase your total commissions costs (since
+you need to buy or sell more shares for a fixed amount of
+capital)（Why？？）</p>
+<p>Also it has a wider <strong>bid-ask spread</strong> and therefore
+increase your total liquidity costs</p>
+<p>The definition of bid-ask spread from ChatGPT is as follow</p>
+<blockquote>
+<p>The bid-ask spread is a concept used in financial markets,
+particularly in securities trading such as stocks, bonds, commodities,
+and foreign exchange. It refers to the difference between the highest
+price a buyer is willing to pay (the bid price) and the lowest price a
+seller is willing to accept (the ask price) for a particular asset or
+security.</p>
+<p><strong>A wider spread can indicate lower liquidity or higher
+transaction costs</strong>. Market conditions, supply and demand
+dynamics, trading volume, and the nature of the asset being traded can
+all influence the bid-ask spread.</p>
+</blockquote>
+<h3 id="minimize-market-impact-cost">Minimize Market Impact Cost</h3>
+<p>We should limit the size (number of shares) of your orders based on
+the liquidity of the stock, on which we can do two things:</p>
+<ul>
+<li>limit the size of order according to the certain measurement(like
+average daily volume)</li>
+<li>allocate assets effectively between large-cap and small-cap
+stocks</li>
+</ul>
+<p>One common measure of liquidity is the average daily volume (it is
+your choice what lookback period you want to average over). <strong>As a
+rule of thumb, each order should not exceed 1 percent of the average
+daily volume</strong>. As an independent trader, you may think that it
+is not easy to reach this 1 percent threshold, and you would be right
+when the stock in question is a large-cap stock belonging to the S&amp;P
+500. However, you may be <strong>surprised by the low liquidity of some
+small-cap stocks out there</strong></p>
+<p>Another way to reduce market impact is to scale the size of your
+orders based on the market capitalization of a stock.</p>
+<p>A linear scale (i.e., scaling the capital of a stock to be linearly
+proportional to its market capitalization) would <strong>result in
+practically zero weights for most small- and micro- cap stocks in your
+portfolio, and this will take away any benefits of
+diversification</strong></p>
+<p>If we were to use linear scale, the capital weight of the largest
+large-cap stock will be about 10,000 of the smallest small-cap stock. To
+reap the benefits of diversification, <strong>we should not allow that
+ratio to be more than 10 or so</strong>, provided that the liquidity
+(volume) constraint described above is also satisfied.</p>
+<h3 id="slippage">Slippage</h3>
+<p>Many institutional traders who desire to execute a large order will
+break it down into many smaller orders and execute them over time. This
+method of trading will certainly reduce market impact; however, it
+engenders another kind of transactions costs, namely, slippage，</p>
+<p>Reducing market impact in this way may increase slippage, <strong>it
+is not really suitable for retail traders whose order size is usually
+not big enough to require this remedy</strong></p>
+<p>Slippage is usually outside of your control, perhaps your brokerage’s
+execution speed is simply too slow, due to either software issues (their
+software processes your orders too slowly), risk control issues (your
+order has to be checked against your account’s buying power and pass
+various risk control criteria before it can be routed to the exchange),
+or pipeline issues (the brokerage’s speed of access to the exchanges).
+Or perhaps your brokerage does not have access to deep enough
+“dark-pool” liquidity. These execution costs and issues should affect
+your choice of brokerages</p>
+<h2 id="paper-trading">Paper Trading</h2>
+<p>Paper trading refers to the practice of simulating trades in a
+risk-free environment using virtual money instead of real capital.</p>
+<p>When performing paper trading, there are several key aspects to pay
+attention to in order to make the experience as valuable and realistic
+as possible</p>
+<p>You should be able run your ATS, execute paper trades, and then
+<strong>compare the paper trades and profit and loss (P&amp;L) with the
+theoretical ones generated by your backtest program</strong> using the
+latest data. If the difference is not due to transaction costs
+(including an expected delay in execution for the paper trades), then
+your software likely has bugs.</p>
+<p>It gives you better <strong>intuitive understanding of your
+strategy</strong>, including the volatility of its P&amp;L, the typical
+amount of capital utilized, the number of trades per day, and the
+various operational difficulties including data issues.</p>
+<p>There are some common problems in paper trading, some of them are
+listed in the following</p>
+<p>The moment you start paper trading you will realize that there is a
+glaring look-ahead bias in your strategy—there may just be no way you
+could have obtained some crucial piece of data before you enter an
+order</p>
+<p>If you are able to run a paper trading system for a month or longer,
+you may even be able to discover data-snooping bias, since paper trading
+is a true out-of-sample test.</p>
+<p>Backtesting also won’t reveal the operational difficulties, such as
+how fast you can download all the needed data before the market opens
+each day and how you can optimize your operational procedures in actual
+execution, but paper trading will make you feel all these.</p>
+<p>In summary, paper trading allows you to:</p>
+<ul>
+<li>Discover software bugs in your trading strategy and execution
+programs.</li>
+<li>Discover look-ahead or even data-snooping bias.</li>
+<li>Discover operating difficulties and plan for operating
+schedules.</li>
+<li>Estimate transaction costs more realistically.</li>
+<li>Gain important intuition about P&amp;L volatility, capital usage,
+portfolio size, and trade frequency.</li>
+</ul>
+<h2 id="actual-performance-v.s-expectations">Actual Performance V.S
+Expectations</h2>
+<p>What do you do in the situation when your live trading underperforms
+your backtest?</p>
+<p>The list of what possibly may have caused this divergence from
+expectation is as follows</p>
+<ul>
+<li>Do you have bugs in your ATS software?</li>
+<li>Do the trades generated by your ATS match the ones generatedby your
+backtest program?</li>
+<li>Are the execution costs much higher than what you expected?</li>
+<li>Are you trading illiquid stocks that caused a lot of market
+impact?</li>
+</ul>
+<p>You can start by addressing the usual problems: Eliminate bugs in the
+strategy or execution software; reduce transaction costs; and simplify
+the strategy by eliminating parameters. But, fundamentally, your
+strategy still may have suffered from <strong>data-snooping bias or
+regime shift</strong>.</p>
+<ul>
+<li>data-snooping bias</li>
+</ul>
+<p>You can verify this cause by trying to eliminate as many rules and as
+many parameters in your strategy as possible. If the backtest
+performance completely fell apart after this exercise, chances are you
+do have this bias and it is time to look for a new strategy.</p>
+<ul>
+<li>regime shifts</li>
+</ul>
+<p>When the financial market structure or the macroeconomic environment
+undergoes a drastic change so much so that trading strategies that were
+profitable before may not be profitable</p>
+<p>One regime shift is relevant if your strategy <strong>shorts
+stocks</strong>.</p>
+<p>Many stocks, especially the small-cap ones or the ones with low
+liquidity, are “hard to borrow.” For you to be able to short a stock,
+your broker has to be able to borrow it from someone else (usually a
+large mutual fund or other brokerage clients) and lend it to you for
+selling.</p>
+<p>If no one is able or willing to lend you their stock, it is deemed
+hard to borrow and you would not be able to short it. Hence, again, a
+very profitable historical short position may not actually have been
+possible due to the difficulty of borrowing the stock.</p>
+<h1 id="money-and-risk-management">Money and Risk Management</h1>
+<h2 id="kelly-criterion">Kelly Criterion</h2>
+<p>This chapter provides an important tool for risk management: the
+determination of <strong>the optimal leverage using the Kelly
+Criterion</strong>.</p>
+<p>It also determines the optimal allocation of capital among different
+strategies, based on the covariance of their returns.</p>
+<p>The general form of the <a
+target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Kelly_criterion#Investment_formula">Kelly
+Criterion</a> is as follows:</p>
+<p><span class="math display">\[f^{*} = \frac{p}{a} -
+\frac{q}{b}\]</span></p>
+<p>where - <span class="math inline">\(f^{*}\)</span> is the fraction of
+the assets to apply to the security. - <span
+class="math inline">\(p\)</span> is the probability that the investment
+<strong>increases</strong> in value. - <span
+class="math inline">\(q\)</span> is the probability that the investment
+<strong>decreases</strong> in value(<span
+class="math inline">\(q=1-p\)</span>) - <span
+class="math inline">\(a\)</span> is the fraction that is
+<strong>lost</strong> in a negative outcome. If the security price falls
+10%, then <span class="math inline">\(a=0.1\)</span> - <span
+class="math inline">\(b\)</span> is is the fraction that is
+<strong>gained</strong> in a positive outcome. If the security price
+rises 10%, then <span class="math inline">\(b=0.1\)</span></p>
+<p>In an intuitive understanding of the Kelly Criterion, it involves
+taking the probability of winning divided by the multiple of the wagered
+capital when you lose (typically 1 in the case of gambling), and then
+subtracting the probability of losing divided by the multiple of the
+capital gained when you win.</p>
+<p>Since this formula can result in Kelly fractions <strong>higher than
+1</strong>. In this case, it is theoretically advantageous to use
+<strong>leverage</strong> to purchase additional securities on
+margin.</p>
+<p>The proof of Kelly Formula is also easy to understand, the details in
+wiki is as follows</p>
+<p><img data-src="https://wulc.me/imgs/Kelly_criterion_proof.jpg" height="40%" width="40%" alt="Proof of Kelly Criterion"></p>
+<p><strong>But it's important to note that the Kelly Criterion is not
+suitable for all situations. It assumes that you know the odds or
+returns and expected probabilities</strong>, while ignoring market
+uncertainties and other factors. Therefore, in practical applications,
+the Kelly Criterion is often combined with real-world considerations and
+risk tolerance to formulate more reasonable and feasible money
+management strategies.</p>
+<p>Also, the Kelly criterion is valid only for known outcome
+probabilities, which is not the case with investments. <a
+target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Risk_aversion">Risk averse</a>
+investors should not invest the full Kelly fraction.</p>
+<h2 id="mind-set">Mind-Set</h2>
+<p>The ultimate risk management mind-set is very simple: Do not succumb
+to either despair or greed. To gain practice in this psychological
+discipline, one must <strong>proceed slowly with small position
+size</strong>, and thoroughly test various aspects of the trading
+business (model, software, operational procedure, money and risk
+management) before scaling up according to the Kelly formula.</p>
+<p>In order to proceed slowly and cautiously, it is helpful to have
+other sources of income or other businesses to help sustain yourself
+either financially or emotionally (to avoid the boredom associated with
+slow progress). It is indeed possible that finding a diversion, whether
+income producing or not, may actually help improve the long-term growth
+of your wealth.</p>
+<h1 id="special-topics">Special topics</h1>
+<p>The special topics in this book includes</p>
+<ul>
+<li>mean reversion and momentum</li>
+<li>regime switching</li>
+<li>stationarity and cointegration</li>
+<li>factor model</li>
+<li>seasonal trading models</li>
+<li>high-frequency trading.</li>
+</ul>
+<h2 id="mean-reversion-and-momentum">Mean Reversion and Momentum</h2>
+<p>Trading strategies can be profitable only if securities prices are
+either mean-reverting or trending. Otherwise, they are random-walking,
+and trading will be futile.</p>
+<p>At any given time, stock prices can be both mean reverting and
+trending depending on the time horizon you are interested in.
+<strong>Constructing a trading strategy is essentially a matter of
+determining if the prices under certain conditions and for a certain
+time horizon will be mean reverting or trending</strong>, and what the
+initial reference price should be at any given time.(When the prices are
+trending, they are also said to have “momentum,” and thus the
+corresponding trading strategy is often called a momentum strategy.)</p>
+<p>There are multiple reasons for momentum, slow diffusion of
+information, private liquidity needs and herdlike behavior</p>
+<ul>
+<li>slow diffusion of information</li>
+</ul>
+<p>Momentum can be generated by the slow diffusion of information—as
+more people become aware of certain news, more people decide to buy or
+sell a stock, thereby driving the price in the same direction.</p>
+<p>Stock prices may exhibit momentum when the expected earnings have
+changed. This can happen when a company announces its quarterly
+earnings, and investors either gradually become aware of this
+announcement or they react to this change by incrementally executing a
+large order .</p>
+<ul>
+<li>private liquidity needs</li>
+</ul>
+<p>Besides the slow diffusion of information, momentum can be caused by
+the incremental execution of a large order due to the liquidity needs or
+private investment decisions of a large investor.</p>
+<p>With the advent of increasingly sophisticated execution algorithms
+adopted by the large brokerages, it is, however, increasingly difficult
+to ascertain whether a large order is behind the observed momentum.</p>
+<ul>
+<li>herdlike behavior</li>
+</ul>
+<p>Momentum can also be generated by the herdlike behavior of investors:
+investors interpret the (possibly random and meaningless) buying or
+selling decisions of others as the sole justifications of their own
+trading decisions.</p>
+<p>But momentum regimes generated by private liquidity needs and
+herdlike behavior have highly unpredictable time horizons.</p>
+<p>The most important things we need to pay attention to may be the
+effects of increasing competition from traders with the same
+strategies</p>
+<ul>
+<li><p><strong>For mean-reverting strategies, the effect typically is
+the gradual elimination of any arbitrage opportunity, and thus gradually
+diminishing returns down to zero</strong>. When the number of arbitrage
+opportunities has been reduced to almost zero, the mean-reverting
+strategy is subject to the risk that an increasing percentage of trading
+signals are actually due to fundamental changes in stocks’ valuation and
+thus is not going to mean revert.</p></li>
+<li><p><strong>For momentum strategies, the effect of competition is
+often the diminishing of the time horizon over which the trend will
+continue.</strong> As news disseminates at a faster rate and as more
+traders take advantage of this trend earlier on, the equilibrium price
+will be reached sooner. Any trade entered after this equilibrium price
+is reached will be unprofitable.</p></li>
+</ul>
+<h2 id="regime-switching">Regime Switching</h2>
+<p>The desire to predict regime switches, which are also commonly known
+as turning points, is also as old as financial markets themselves</p>
+<p>Academic attempts to model regime switches in stock prices generally
+proceed along these lines（Markov regime switching or hidden Markov
+models）</p>
+<ol type="1">
+<li><p><strong>Propose that the two (or more) regimes are characterized
+by different probability distributions of the prices.</strong> In the
+simplest cases, the log of the prices of both regimes may be represented
+by normal distributions, except that they have different means and/or
+standard deviations.</p></li>
+<li><p>Assume that there is some kind of <strong>transition
+probability</strong> among the regimes.</p></li>
+<li><p><strong>Determine the exact parameters that specify the regime
+probability distributions and the transition probabilities by fitting
+the model to past prices</strong>, using standard statistical methods
+such as maximum likelihood estimation.</p></li>
+<li><p>Based on the fitted model above, find out the expected regime of
+the next time step and, more importantly, the expected stock
+price.</p></li>
+</ol>
+<p>The method above assumes constant transition probabilities among
+regimes at all times. In practice, this means that at any time, there is
+always a very small probability for the stock to transition from a
+normal, quiescent regime to a volatile regime. But <strong>this is
+useless to traders who want to know when—and under what precise
+conditions—the transition probability will suddenly peak</strong>. This
+question is tackled by the turning points models.</p>
+<h2 id="stationarity-and-cointegration">Stationarity AND
+Cointegration</h2>
+<p>A time series is “stationary” if it never drifts farther and farther
+away from its initial value. In technical terms, stationary time series
+are “integrated of order zero"</p>
+<p>It is obvious that <strong>if the price series of a security is
+stationary, it would be a great candidate for a mean-reversion strategy.
+Unfortunately, most stock price series are not stationary—they exhibit a
+geometric random walk that gets them farther and farther away from their
+starting</strong></p>
+<p>If you find** a pair of stocks such that if you long one and short
+the other, the market value of the pair is stationary.** If this is the
+case, then the two individual time series are said to be cointegrated.
+because a linear combination of them is integrated of order zero.</p>
+<p>Usually, two stocks that form a cointegrating pair are from the same
+industry group. Traders have long been familiar with this so-called
+<strong>pair-trading strategy.</strong> They buy the pair portfolio when
+the spread of the stock prices formed by these pairs is low, and
+sell/short the pair when the spread is high—in other words, a classic
+mean-reverting strategy</p>
+<p>If a price series (of a stock, a pair of stocks, or, in general, a
+portfolio of stocks) is stationary, then a mean-reverting strategy is
+guaranteed to be profitable, as long as the stationarity persists into
+the future (which is by no means guaranteed).</p>
+<p>However, the converse is not true. You don’t necessarily need a
+stationary price series in order to have a successful mean-reverting
+strategy. Even <strong>a nonstationary price series can have many
+short-term reversal opportunities that one can exploit</strong>, as many
+traders have discovered.</p>
+<h2 id="factor-models">Factor Models</h2>
+<p>Assume excess returns <span class="math inline">\(R\)</span> can be
+obtained in the formula</p>
+<p><span class="math display">\[R = Xb+u\]</span></p>
+<p>There are multiple components in the formula</p>
+<ul>
+<li><p><strong>Factor returns</strong>, <span
+class="math inline">\(X\)</span> are the common drivers of stock
+returns, and are therefore independent of a particular stock.</p></li>
+<li><p><strong>Factor exposures</strong>, <span
+class="math inline">\(b\)</span> are the sensitivities to each of these
+common drivers.</p></li>
+<li><p><strong>Specific return</strong>, <span
+class="math inline">\(u\)</span>, any part of a stock’s return that
+cannot be explained by these common factor returns is deemed a specific
+return (i.e., specific to a stock and essentially regarded as just
+random noise within the APT framework). Each stock’s specific return is
+assumed to be uncorrelated to another stock’s.</p></li>
+</ul>
+<p>A famous factor model is <strong>Three-Factor model</strong>, that is
+excess return of a stock depends linearly on only three factor
+exposures: <strong>beta, market capitalization and book-to-price
+ratio</strong></p>
+<p>These factor exposures are obviously different for each stock and for
+each time period. (Factor exposures are often normalized such that the
+average of the factor exposures within a universe of stocks is zero, and
+the standard deviation is 1.)</p>
+<p>What about the factor returns and specific returns? We cannot
+directly compute the factor returns and specific returns—we have to
+infer their values by running a multivariate linear regression of the
+excess returns of stocks against the factor exposures.</p>
+<p>Note that each stock represents one data point in this linear
+regression, and we have to either run a separate linear regression for
+each time period or, if we want an average value over many time periods,
+aggregate the values from all these time periods into one training set
+and run one regression against them all.</p>
+<p>But the limitation of factor models are also obvious, one can make a
+general observation that <strong>factor models that are dominated by
+fundamental and macroeconomic factors have one major drawback—they
+depend on the fact that investors persist in using the same metric to
+value companies</strong></p>
+<p>For example, even though the value (book-to-price ratio) factor
+returns are usually positive, there are periods of time when investors
+prefer growth stocks such as during the Internet bubble in the late
+1990s</p>
+<p>Therefore, it is not uncommon for factor models to <strong>experience
+steep drawdown during the times when investors’ valuation method
+shifts</strong>, even if only for a short duration. But then, this
+problem is common to practically any trading model that holds stocks
+overnight.</p>
+<h2 id="exit-strategy">Exit Strategy</h2>
+<p>There isn’t usually much variety in the way exit signals are
+generated. They are based on one of these</p>
+<ul>
+<li>A fixed holding period</li>
+<li>A target price or profit cap</li>
+<li>The latest entry signals</li>
+<li>A stop price</li>
+</ul>
+<p><strong>Fixed Holding Period</strong></p>
+<p>For momentum model, the optimal period typically decreases due to the
+increasing speed of the diffusion of information and the increasing
+number of traders who catch on to this trading opportunity. Hence
+<strong>a momentum model that has worked well with a holding period
+equal to a week in the backtest period may work only with a one-day
+holding period now</strong></p>
+<p>For mean-reverting model, there is a more statistically robust way to
+determine the optimal holding period that does not depend on the limited
+number of actual trades, that is <a
+target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Ornstein%E2%80%93Uhlenbeck_process">Ornstein-Uhlenbeck
+formula</a>, which describes the behavior of a continuous-time
+stochastic (random) process</p>
+<p>The Ornstein-Uhlenbeck process is a stationary Gaussian process that
+exhibits mean-reverting behavior. In simpler terms, it models a system
+that tends to return to a central equilibrium or mean value over time,
+similar to a particle undergoing Brownian motion but with a restoring
+force pulling it back towards a mean position.</p>
+<p>The definition of the Ornstein-Uhlenbeck</p>
+<p><img data-src="https://wulc.me/imgs/Ornstein_Uhlenbeck_process.jpg" height="40%" width="40%" alt="Ornstein–Uhlenbeck process"></p>
+<p>Mathematicians tell us that the average value of <span
+class="math inline">\(X(t)\)</span> follows an exponential decay to its
+mean <span class="math inline">\(\mu\)</span>, and the half-life of this
+exponential decay is equal to <span
+class="math inline">\(ln(2)/θ\)</span></p>
+<p><strong>Target Price</strong></p>
+<p>If you believe that your security is mean reverting, then you also
+have a ready-made target price—the mean value of the historical prices
+of the security, or <span class="math inline">\(\mu\)</span> in the
+Ornstein-Uhlenbeck formula.</p>
+<p>But target prices are not as easily justified in momentum models as
+in mean-reverting models.</p>
+<p><strong>Latest entry signals</strong></p>
+<p>Suppose you are running a trading model, and you entered into a
+position based on its signal. Some time later, you run this model again.
+If you find that the sign of this latest signal is opposite to your
+original position (e.g., the latest signal is “buy” when you have an
+existing short position), then you have two choices. Either you simply
+use the latest signal to exit the existing position and become flat or
+you can exit the existing position and then enter into an opposite
+position</p>
+<h2 id="seasonal-trading">Seasonal Trading</h2>
+<p>These strategies recommend that you buy or sell certain securities at
+a fixed date of every year</p>
+<p>However, from my own experience, much of the seasonality in equity
+markets has weakened or even disappeared in recent years, perhaps due to
+the wide spread knowledge of this trading opportunity, whereas some
+seasonal trades in commodity futures are still profitable</p>
+<p>The most famous seasonal trade in equities is called the
+<strong>January effect</strong>.</p>
+<p>One version states that small-cap stocks that had the worst returns
+in the previous calendar year will have higher returns in January than
+small-cap stocks that had the best returns. The rationale for this is
+that investors like to sell their losers in December to benefit from tax
+losses, which creates additional downward pressure on their prices.</p>
+<h2 id="high-frequency-trading">High-Frequency Trading</h2>
+<p>In general, if a high Sharpe ratio is the goal of your trading
+strategy (as it should be), then you should be trading at high
+frequencies, rather than holding stocks overnight.</p>
+<p>The reason why these strategies have Sharpe ratio is simple: Based on
+the “law of large numbers,” the more bets you can place, the smaller the
+percent deviation from the mean return you will experience. With
+high-frequency trading, one can potentially place hundreds if not
+thousands of bets all in one day.</p>
+<p>Therefore, <strong>provided the strategy is sound and generates
+positive mean return</strong>, you can expect the day-to-day deviation
+from this return to be minimal. With this high Sharpe ratio, one can
+increase the leverage to a much higher level than longer-term strategies
+can</p>
+<p>But no strategy can actually guarantee positive mean return, besides,
+high-frequency trading also requires harder backtesting and more
+powerful infrastructure</p>
+<p>Though successful high-frequency strategies have such numerous
+merits, it is not easy to backtest such strategies when the average
+holding period decreases to minutes or even seconds. Just having
+high-frequency data with last prices is not sufficient—data with bid,
+ask, and last quotes is needed to find out the profitability of
+executing on the bid versus the ask</p>
+<p>High-speed execution may account for a large part of the actual
+profits or losses. Professional high-frequency trading firms have been
+writing their strategies in C instead of other, more user-friendly
+languages, and locating their servers next to the exchange or a ma- jor
+Internet backbone to reduce the microsecond delays.</p>
+<p><strong>Even though the Sharpe ratio is appealing and the returns
+astronomical, truly high-frequency trading is not by any means easy for
+an independent trader to achieve in the beginning. But there is no
+reason not to work toward this goal gradually as expertise and resources
+accrue</strong></p>
+<h1 id="can-independent-traders-succeed">Can Independent Traders
+Succeed?</h1>
+<p>This section primarily outlines some advantages that individual
+investors have in quantitative trading compared to institutional
+investors.</p>
+<h2 id="capacity">capacity</h2>
+<p>A significant difference between individual and institutional quant
+trading lies in the size of capital (capacity).</p>
+<p>The book states that it is far, far easier to generate a high Sharpe
+ratio trading a 100,000 account than a 100 million account</p>
+<p>Different capital sizes lead to different strategies, and it's
+generally easier to profit in small-scale quant trading compared to
+managing large amounts of capital. <strong>And there are many simple and
+profitable strategies that can work at the low capacity end that would
+be totally unsuitable to hedge funds</strong>.</p>
+<p>More details about this can be obtained from this question on <a
+target="_blank" rel="noopener" href="https://www.zhihu.com/question/426468983/answer/1535274523">zhihu</a></p>
+<p>The specific reason for such phenomenon, as explained in the book,
+starts with liquidity: <strong>small capital provides liquidity, while
+large capital demands liquidity</strong>.</p>
+<blockquote>
+<p>Most profitable strategies that have low capacities are acting as
+market makers: <strong>providing short-term liquidity when it is needed
+and taking quick profits when the liquidity need
+disappears</strong>.</p>
+<p>However, you have billions of dollars to manage, you now
+<strong>become the party in need of liquidity, and you have to pay for
+it</strong>. To minimize the cost of this liquidity demand, you
+necessarily have to hold your positions over long periods of time. When
+you hold for long periods, your portfolio will be subject to
+macroeconomic changes (i.e., regime shifts) that can cause great damage
+to your portfolio.</p>
+</blockquote>
+<p>Another issue with large-scale funds is that they engage in
+competition with different hedge funds, <strong>ultimately resulting in
+similar holdings and similar returns</strong></p>
+<p>The intense competition among hedge funds means the strategies become
+less profitable. The lowered returns in turn pressure the fund manager
+to overleverage.</p>
+<p>The fundamental market inefficiency that they are trying to exploit
+may remain the same, and thus their portfolios may still end up holding
+very similar positions. When market environment changes, a stampede out
+of similar losing positions can (and did) cause a complete meltdown of
+the market.</p>
+<h2 id="constraints">constraints</h2>
+<p>Another difference between individual and institutional quant trading
+is the constraints during trading.</p>
+<p>For example, as a trader in a quantitative fund, you may be
+prohibited from trading a long-only strategy, but long-only strategies
+are often easier to find, simpler, more profitable, and if traded in
+small sizes, no more risky than market-neutral strategies. Or you may be
+prohibited from trading futures. You may be required to be not only
+market neutral but also sector neutral. You may be asked to find a
+momentum strategy when you know that a mean-reverting strategy would
+work.And on and on. Many of these constraints are imposed for risk
+management reasons, but many others may be just whims, quirks, and
+prejudices of the management.</p>
+<p>When your strategy shows initial profits, these managers may impose
+enormous pressure for you to scale up quickly, and when your strategy
+starts to lose, they may force you to liquidate the portfolios and
+abandon the strategy immediately.</p>
+<p>As every student of mathematical optimization knows, any constraint
+imposed on an optimization problem decreases the optimal objective
+value. Similarly, every institutional constraint imposed on a trading
+strategy tends to decrease its returns</p>
+<h1 id="summary">Summary</h1>
+<p>This passage firstly introduces two kinds of execution system,
+automated and semi-automated, and the choice depends on the frequency of
+your trading. But no matter which on to choose, minimizing transaction
+cost is very necessary, we should cut down on commissions, minimize
+market impact cost and try to avoid slippage as much as possible.</p>
+<p>In actual trading, risk management is very necessary. One important
+point is to determine the optimal leverage using the Kelly Criterion.And
+the mind-set is also very important, do not succumb to either despair or
+greed, proceed slowly with small position size, and thoroughly test
+various aspects of the trading business.</p>
+<p>It also talks about some special topics or common sense in trading,
+including mean reversion strategy and momentum startegy, regime
+switching, stationarity and cointegration, factor model, seasonal
+trading models, high-frequency trading. These can be also regarded as
+common sense in quantative trading</p>
+<p>Finally, it lists some advantages of individual investors over
+institutional investors, capacity and constraints. Individual investors
+can use many more strategies than institutional investors with smaller
+capacity, and also face fewer constraints.</p>
+<p>Once you have automated everything and your equity is growing
+exponentially, can you just sit back, relax, and enjoy your wealth?
+Unfortunately, <strong>experience tells us that strategies do lose their
+potency over time as more traders catch on to them. It takes ongoing
+research to supply you with new strategies.</strong> So keep studying
+and thinking, this will be an endless game.</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%AF%BB%E4%B9%A6/" rel="tag"><i class="fa fa-tag"></i> 读书</a>
+              <a href="/tags/%E9%87%8F%E5%8C%96%E4%BA%A4%E6%98%93/" rel="tag"><i class="fa fa-tag"></i> 量化交易</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/07/30/Quantitative%20Trading:%20How%20to%20Build%20Your%20Own%20Algorithmic%20Trading%20Business(1)/" rel="prev" title="Quantitative Trading:How to Build Your Own Algorithmic Trading Business(1)">
+                  <i class="fa fa-chevron-left"></i> Quantitative Trading:How to Build Your Own Algorithmic Trading Business(1)
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-pen"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>
