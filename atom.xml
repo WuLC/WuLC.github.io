@@ -6,7 +6,7 @@
   <link href="https://wulc.me/atom.xml" rel="self"/>
   
   <link href="https://wulc.me/"/>
-  <updated>2024-01-01T00:34:27.723Z</updated>
+  <updated>2024-01-12T16:01:49.675Z</updated>
   <id>https://wulc.me/</id>
   
   <author>
@@ -15,31 +15,6 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
-  
-  <entry>
-    <title>2023 小结</title>
-    <link href="https://wulc.me/2024/01/01/2023%20%E5%B0%8F%E7%BB%93/"/>
-    <id>https://wulc.me/2024/01/01/2023%20%E5%B0%8F%E7%BB%93/</id>
-    <published>2024-01-01T13:53:19.000Z</published>
-    <updated>2024-01-01T00:34:27.723Z</updated>
-    
-    <content type="html"><![CDATA[<p>2022的最后一个月，在全国“喜阳阳”的氛围中度过了，写这篇文章时，恢复了差不多一周多，基本也没什么症状了。但回想下今年发生的各种事情，真的是可以用魔幻来形容，这个魔幻不仅仅指防疫政策的180度大转弯，更是发生在身上的各种事情，这些事情基本都可以总计为计划赶不上变化，或者说未来无人知晓</p><p>一直都有写年度总结的习惯，而这么魔幻的一年，更值得写篇文章纪念下，正好也是元旦放假，趁着这几天把过去一年发生的事情梳理了一下~</p><span id="more"></span>]]></content>
-    
-    
-    <summary type="html">&lt;p&gt;2022
-的最后一个月，在全国“喜阳阳”的氛围中度过了，写这篇文章时，恢复了差不多一周多，基本也没什么症状了。但回想下今年发生的各种事情，真的是可以用魔幻来形容，这个魔幻不仅仅指防疫政策的
-180
-度大转弯，更是发生在身上的各种事情，这些事情基本都可以总计为计划赶不上变化，或者说未来无人知晓&lt;/p&gt;
-&lt;p&gt;一直都有写年度总结的习惯，而这么魔幻的一年，更值得写篇文章纪念下，正好也是元旦放假，趁着这几天把过去一年发生的事情梳理了一下~&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="闲话几句" scheme="https://wulc.me/categories/%E9%97%B2%E8%AF%9D%E5%87%A0%E5%8F%A5/"/>
-    
-    
-    <category term="闲话几句" scheme="https://wulc.me/tags/%E9%97%B2%E8%AF%9D%E5%87%A0%E5%8F%A5/"/>
-    
-  </entry>
   
   <entry>
     <title>业务、组织与心态</title>
@@ -698,6 +673,41 @@ Exploration
     <category term="计算广告" scheme="https://wulc.me/tags/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A/"/>
     
     <category term="机器学习" scheme="https://wulc.me/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Dynamic Creative Optimization in Online Display Advertising</title>
+    <link href="https://wulc.me/2022/02/01/Dynamic%20Creative%20Optimization%20in%20Online%20Display%20Advertising/"/>
+    <id>https://wulc.me/2022/02/01/Dynamic%20Creative%20Optimization%20in%20Online%20Display%20Advertising/</id>
+    <published>2022-02-01T13:53:19.000Z</published>
+    <updated>2023-07-16T15:28:28.198Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近在研究广告创意相关内容,笔者根据当前的调研，将这个领域划分为<strong>创意生成、创意优选和创意投放</strong>三大块，每一块的具体职责如下</p><ul><li>创意生成：利用素材(标题、图片、视频、落地页等)生成候选创意(用户看到的广告)</li><li>创意优选：从计划的候选创意(一个计划下的候选往往有多个)中选择 topk个用于投放</li><li>创意投放：将优选出来的创意投放至线上</li></ul><p>严格来说，这三部分其实也并非泾渭分明，比如前两部分可以统一理解为创意生成(从最原始的素材生成最终要投放的创意)，后两部分可以统一理解为创意投放过程(从候选中选出来并投放至线上)。</p><p>本文主要侧重讲述与创意投放相关的一篇 paper,而且偏向于上面提到第三块内容(没有基于 E&amp;E 的优选过程)，paper的标题是 <ahref="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3863663">DynamicCreative Optimization in Online Display Advertising</a>，这篇 paper将素材在线投放问题建模成一个二部图匹配问题，并提供了严格求解的方法和在线的近似求解方法。更重要的是，这种建模的方法不局限于创意领域，能应用到更多投放场景下。</p><span id="more"></span><h2 id="问题建模">问题建模</h2><p>online advertising 的绝大多数方法，如targeting、ranking、bidding等，本质上都是在解决在线分配问题，即让合适的广告分发给合适用户，从而使得收入最大化（同时需要考虑生态、用户体验等），因此也可以从分配的角度去构造出一个如下简单二部图的形式，左边是user，右边则是具体的广告(在这里为创意),连接的边表示这个用户访问了这个广告/创意，边的权重可根据具体的业务目标决定</p><figure><img data-src="https://wulc.me/imgs/dco_graph.jpg" alt="dco_graph" /><figcaption aria-hidden="true">dco_graph</figcaption></figure><p>基于上图的二部图，paper 里将问题建模成如下的最优化问题</p><figure><img data-src="https://wulc.me/imgs/modelling_dco.jpg" alt="modelling" /><figcaption aria-hidden="true">modelling</figcaption></figure><p>符号含义如下</p><ul><li><span class="math inline">\(u\)</span>: user 的 index</li><li><span class="math inline">\(i\)</span>: item 的 index, 这里的 item指的是创意(creative)</li><li><span class="math inline">\(r_{iu}\)</span>: 第 <spanclass="math inline">\(u\)</span> 个 user 访问了第 <spanclass="math inline">\(i\)</span> 个 item 的revenue，比如消耗/点击等，即上图中的边权</li><li><span class="math inline">\(T_u\)</span>: 第 <spanclass="math inline">\(u\)</span> 个 user 的总访问次数</li><li><span class="math inline">\(x_{iu}\)</span>: 第 <spanclass="math inline">\(u\)</span> 个 user 访问了第 <spanclass="math inline">\(i\)</span> 个 item 的次数</li><li><span class="math inline">\(\underline{k_{iu}}\)</span>: 第 <spanclass="math inline">\(u\)</span> 个 user 访问了第 <spanclass="math inline">\(i\)</span> 个 item 的次数的下限</li><li><span class="math inline">\(\overline{k_{iu}}\)</span>: 第 <spanclass="math inline">\(u\)</span> 个 user 访问了第 <spanclass="math inline">\(i\)</span> 个 item 的次数的上限</li><li><span class="math inline">\(y_{iu}\)</span>: 第 <spanclass="math inline">\(u\)</span> 个 user 是否访问了第 <spanclass="math inline">\(i\)</span> 个 item</li><li><span class="math inline">\(l_i\)</span>: 第 <spanclass="math inline">\(i\)</span> 个 item触达的不同用户数的下限(防止只给一个用户出广告)</li></ul><p>上面的最优化问题中，(1b)到(1d) 中的三个约束，对应的是如下三个约束</p><blockquote><p>(1b) <strong>ad fatigue constraint</strong>, which aims to help inavoiding customers becoming fatigued by seeing a product too many times.This constraint says that a particular item <spanclass="math inline">\(i\)</span> can be shown at most <spanclass="math inline">\(\overline{k_{iu}}\)</span> times to user <spanclass="math inline">\(u\)</span>. To calibrate ad fatigue, <strong>thisparameter can be set using historical data showing when customers stopengaging with ads</strong>. (1c) <strong>ad retargetingconstraint</strong>, which focuses on showing products to customers thathave seen or searched for them before. In this constraint, we say that aparticular item <span class="math inline">\(i\)</span> has to be shownat least <span class="math inline">\(\underline{k_{iu}}\)</span> timesto user <span class="math inline">\(u\)</span>. To retarget an ad,<strong>this parameter can be set postive for items that the user sawjust before the ad campaign is planned</strong>. (1d) <strong>userdiversity constraint</strong>, which addresses the requirement thatadvertisers want to increase reach and purchasing by showing theirproducts to many different customers. This constraints says that atleast <span class="math inline">\(l_i\)</span> users have to see aparticular item <span class="math inline">\(i\)</span>. These parametersare specifically set by the advertiser.</p></blockquote><h2 id="问题求解">问题求解</h2><p>这里问题的求解分为了离线和在线两部分，区别是离线时是以上帝视角看这个问题，即能够获取用户的访问次数 <spanclass="math inline">\(T_u\)</span>，但是在线时则是不知道的。因此，离线可采用严格的求解方法，在线则只能采用近似的求解方法。</p><h3 id="离线求解">离线求解</h3><p>假如能够获取 <spanclass="math inline">\(T_u\)</span>（即用户当天的访问次数），就能够采用来求解上面的最优化问题，这类问题通常会被变换成一个<ahref="https://zh.wikipedia.org/wiki/%E7%BD%91%E7%BB%9C%E6%B5%81">网络流</a>问题来求解，关于网络流更详细的介绍可以参考<a href="https://zhuanlan.zhihu.com/p/122375531">算法学习笔记(28):网络流</a></p><p>而上面建模出来的问题，可以被转变成网络流中的最小费用最大流问题(<ahref="https://en.wikipedia.org/wiki/Minimum-cost_flow_problem">minimum-costflow problem</a>), 这部分更详细的描述也可参考 <ahref="https://zhuanlan.zhihu.com/p/127046673">算法学习笔记(31):最小费用最大流</a></p><p>因此，基于最小费用最大流的概念，可以构造出如下的网络流</p><figure><img data-src="https://wulc.me/imgs/dco_flow_problem.jpg" alt="dco graph" /><figcaption aria-hidden="true">dco graph</figcaption></figure><p>上面的网络流中有 2 个 user 和 2 个item，理解以下几点就能够理解上图的含义了</p><ul><li>每条边的三个参数的含义分别是 <strong>(流量上限, 流量下限,费用)</strong></li><li>从 source 出发到第 <span class="math inline">\(u\)</span> 个 user的流量上限为 <spanclass="math inline">\(T_u\)</span>(即用户当前访问的次数)</li><li>每个 user 访问每个 item 的次数的上限（<strong>ad fatigueconstraint</strong>）和下限（<strong>ad retargetingconstraint</strong>）的约束体现在<code>users-&gt;item-copies</code>的边上</li><li><code>item-copies-&gt;items</code>的连边是为了满足上面的<strong>user diversityconstraint</strong>，即保证访问第 <span class="math inline">\(i\)</span>个 item 的不同用户的数量不小于 <spanclass="math inline">\(l_i\)</span></li><li><code>item-&gt;sink</code> 中，流量上限为 <spanclass="math inline">\(m\)</span>, 即访问第 <spanclass="math inline">\(i\)</span> 个 item的不同用户数的上限是总用户数</li></ul><p>此外，在构图中还需要考虑如下几个问题，paper里没有给明确的答案，也算比较 open的问题，需要针对不同的业务场景设计对应的技术方案了</p><p><strong>(1)边的权值(即上面说的费用的负值)的物理含义是什么？缺失的边的权值怎么计算？</strong><strong>(2)采用 id粒度过小可能导致整个图可能过大，进而导致图的求解比较困难，如果做clustering 要怎么做？</strong> <strong>(3)新 uid/item-id如何处理？</strong></p><h3 id="在线求解">在线求解</h3><p>上面的解法是离线解法，即能够拿到了用户当天的访问次数 <spanclass="math inline">\(T_u\)</span>,然后用严格的方法求解最优化问题，这个模式往往可以用来大致摸底方法的收益天花板（通过回放历史精排日志），但是在实际投放中，并不知道用户当天的访问次数<spanclass="math inline">\(T_u\)</span>(笔者附：如果用历史平均来近似，误差会有多大？)，因此在线需要提供一种近似最优的求解方法</p><h4 id="deterministic-algorithm">deterministic algorithm</h4><p>paper 指出了 <ahref="https://en.wikipedia.org/wiki/Deterministic_algorithm">deterministicalgorithm</a>（简单来说就是不会有 random操作，反例是启发式算法）对于在线问题表现效果很差，至于有多差，paper给了一些证明，这里略过过程，只给出其中一些核心概念和结论</p><p>paper 在这个过程中使用了 <ahref="https://en.wikipedia.org/wiki/Competitive_analysis_%28online_algorithm%29">competitiveratio</a>来衡量 deterministic算法的效果，这个指标主要用来描述极端情况下，online algorithm的效果相比于 offline 的有多差，引用这个<ahref="http://theory.stanford.edu/~trevisan/cs261/lecture17.pdf">讲义</a>里的定义如下</p><blockquote><p>The competitive ratio of an online algorithm for an optimizationproblem is simply the approximation ratio achieved by the algorithm,that is, the worst-case ratio between the cost of the solution found bythe algorithm and the cost of an optimal solution.</p></blockquote><p>有了 competitive ratio 的概念，paper 针对 deterministic algorithm给出了如下结论（证明的详细过程可以参考 paper 中的 4.1 小节)，即deterministic algorithm 的效果很差，哪怕给 reward 加了 bound</p><blockquote><p>Proposition 1. The competitive ratio of any deterministic algorithmfor the online DCO problem is arbitrarily small</p><p>Proposition 2. Suppose that the revenue associated to all item anduser pairs are bounded, that is, there exists an <spanclass="math inline">\(r\)</span> such that <spanclass="math inline">\(\underline{r} ≤ r_{iu} ≤ 1\)</span> for all items<span class="math inline">\(i\)</span> and users <spanclass="math inline">\(u\)</span>. In this case, the competitive ratio ofany deterministic algorithm for the online DCO problem is <spanclass="math inline">\(\underline{r}\)</span></p></blockquote><h4 id="deterministic-algorithm-with-assumption">deterministic algorithmwith assumption</h4><p>上面给出的结果中，没有任何的假设，因此在这个方法中加入了一个assumption：即用户 <span class="math inline">\(u\)</span> 每天至少有<span class="math inline">\(c_u\)</span> 次访问，paper 中引用了 IAB(<ahref="https://en.wikipedia.org/wiki/Interactive_Advertising_Bureau">InteractiveAdvertising Bureau</a> )的一个结论，认为这个数据是比较容易能得到的，paper 描述如下，</p><blockquote><p>Using historical data, advertisers can make accurate estimates aboutthe minimum number of times they expect a user to visit the platformduring the advertising period (Interactive Advertising Bureau 2020).</p></blockquote><p>但是 paper 中给出了这一结论的<ahref="https://www.iab.com/wp-content/uploads/2020/05/Consumer-Media-Usage-2019-through-April-2020.pdf">参考资料</a>中似乎只是一些统计数据的罗列，并未提及上面这个结论的推导过程。。。而从逻辑上讲，笔者猜测虽然用户<span class="math inline">\(u\)</span> 准确的访问次数 <spanclass="math inline">\(T_u\)</span> 比较难预测，但是这个访问次数的 lowerbound <span class="math inline">\(c_u\)</span>的难度也许会比较容易获得</p><p>在 <span class="math inline">\(c_u\)</span> 比较容易获得的 assumption下，paper 里给出了第一种在线算方法，总体算法流程如下</p><figure><img data-src="https://wulc.me/imgs/dco_online_algo1.jpg" alt="algo1" /><figcaption aria-hidden="true">algo1</figcaption></figure><p>其实跟 offline 的区别不大，就是用了 <spanclass="math inline">\(c_u\)</span> 替换了 <spanclass="math inline">\(T_u\)</span>,在线分配时优先满足约束，而满足了约束后，就可以在 ad fatigue 的约束下去拿highest revenue 的边</p><p>paper 里绕了一大圈才给出了上面的算法流程，给出了各种符号、lemma、proposition，但是跟最终的结论的关系又不是非常大，有点凑字数的感觉；而且比较核心的部分即<span class="math inline">\(c_u\)</span>是如何获取的则是基本没怎么提。。。</p><p>paper 里还给出了这个算法的 competitive ratio 的 lower bound是（证明过程可参考 paper，这里略过）</p><p><span class="math display">\[1-\frac{(\overline{r} -\underline{r})n_1}{\underline{r}(n_1+n_2)}\]</span></p><p>各个符号含义如下</p><ul><li><span class="math inline">\(n_1=\sum_{u=1}^{m} c_u\)</span>:即所有用户的最少访问次数之和</li><li><span class="math inline">\(n_2= T- n_1\)</span>: <spanclass="math inline">\(T\)</span> 是所有用户的实际访问次数之和</li><li><span class="math inline">\(\underline{r}=\min_{i=1 \dots n, u=1\dots m}r_{iu}\)</span>: 即所有 pair 的 revenue 的最小值</li><li><span class="math inline">\(\overline{r}=\max_{i=1 \dots n, u=1\dots m}r_{iu}\)</span>: 即所有 pair 的 revenue 的最大值</li></ul><h4 id="greedy-algorithm">greedy algorithm</h4><p>paper 里还提到到了另一种贪心的算法，其 assumption 是每个 item/user都有一个reserved revenue, 第 <span class="math inline">\(i\)</span> 个item 的 reserved revenue 记为 $ _i$, 第 <spanclass="math inline">\(u\)</span> 个 user 的 reserved revenue 记为 <spanclass="math inline">\(\beta_u\)</span>, 则有</p><p><span class="math display">\[r_{iu} = \alpha_i + \beta_u\]</span></p><p>基于这个假设，paper 里给了如下的 online algorithm，并且证明了这里的competitive ratio 能跟最优的一致</p><figure><img data-src="https://wulc.me/imgs/dco_online_algo2.jpg" alt="algo2" /><figcaption aria-hidden="true">algo2</figcaption></figure><p>但是笔者觉得这里的 assumption 有很大的问题，即假设了每个 item 对所有user 的 revenue 是一样的，这样显然不合理，因为正是每个 user的兴趣不同，才需要进行个性化的推荐，也是当前推荐/广告里各种算法和策略有效的原因，所以这里的算法笔者觉得可以看一下数学的原理，但是在实际应用并不现实</p><h2 id="小结">小结</h2><p>总的来说，这篇 paper将在线广告的分配建模成一个经典的二部图问题，提供了离线和在线的解法，并给出了一些理论证明，笔者觉得可以学习一下其中的思想，但是如果照搬paper 的方法在实际应用的话比较难</p><p>第一个 online algorithm 的问题在于 <spanclass="math inline">\(c_u\)</span> 的获取并没有给出具体的方法，第二个online algorithm 的问题在于本来的 assumption 就不合理</p><p>笔者认为利用用户 <span class="math inline">\(u\)</span>过去一段时间的访问次数来近似（或者通过预估的方式）作为其未来的访问次数<span class="math inline">\(T_u\)</span>是一种可行的方法，但是这个方法还需要解决如下的问题</p><p><strong>（1）如果求解出来某个 item 需要分配给某个 user，paper里说了是直接展示，但是在实际的系统中往往是“召回+精排”的结构，需要如何保证这个item 一定能被 user看到？或者说，实际中的系统往往已经有一套召回和精排的策略，怎么让这套新策略融入现有的系统中</strong></p><p><strong>（2）user-item边的权值的物理含义是什么？缺失的边的权值怎么计算？</strong></p><p><strong>（3）采用 id粒度过小可能导致整个图可能过大，进而导致图的求解比较困难，可以怎么做，如果做clustering 怎么保证两次聚类的结果差异性不大？</strong></p><p><strong>（4）新 uid/item-id 如何处理？</strong></p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;最近在研究广告创意相关内容,
+笔者根据当前的调研，将这个领域划分为&lt;strong&gt;创意生成、创意优选和创意投放&lt;/strong&gt;三大块，每一块的具体职责如下&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;创意生成：利用素材(标题、图片、视频、落地页等)生成候选创意(用户看到的广告)&lt;/li&gt;
+&lt;li&gt;创意优选：从计划的候选创意(一个计划下的候选往往有多个)中选择 topk
+个用于投放&lt;/li&gt;
+&lt;li&gt;创意投放：将优选出来的创意投放至线上&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;严格来说，这三部分其实也并非泾渭分明，比如前两部分可以统一理解为创意生成(从最原始的素材生成最终要投放的创意)，后两部分可以统一理解为创意投放过程(从候选中选出来并投放至线上)。&lt;/p&gt;
+&lt;p&gt;本文主要侧重讲述与创意投放相关的一篇 paper,
+而且偏向于上面提到第三块内容(没有基于 E&amp;amp;E 的优选过程)，paper
+的标题是 &lt;a
+href=&quot;https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3863663&quot;&gt;Dynamic
+Creative Optimization in Online Display Advertising&lt;/a&gt;，这篇 paper
+将素材在线投放问题建模成一个二部图匹配问题，并提供了严格求解的方法和在线的近似求解方法。更重要的是，这种建模的方法不局限于创意领域，能应用到更多投放场景下。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="计算广告" scheme="https://wulc.me/categories/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A/"/>
+    
+    
+    <category term="计算广告" scheme="https://wulc.me/tags/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A/"/>
     
   </entry>
   
