@@ -24,15 +24,15 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"wulc.me","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.15.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="An Overview Of An Ad System 流量策略 客户 链路效率 模型">
+    <meta name="description" content="An Overview Of An Ad System 链路匹配效率 模型 出价 出价与排序计费分离 流量策略 分人群策略 用户体验 混排 客户 客户类型 KA、smb 分行业优化 行业客户特点">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Yet Another Overview of An AD System">
 <meta property="og:url" content="https://wulc.me/2024/04/05/Yet%20Another%20Overview%20of%20An%20AD%20System/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
-<meta property="og:description" content="An Overview Of An Ad System 流量策略 客户 链路效率 模型">
+<meta property="og:description" content="An Overview Of An Ad System 链路匹配效率 模型 出价 出价与排序计费分离 流量策略 分人群策略 用户体验 混排 客户 客户类型 KA、smb 分行业优化 行业客户特点">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-04-05T08:08:44.000Z">
-<meta property="article:modified_time" content="2024-04-02T15:56:21.791Z">
+<meta property="article:modified_time" content="2024-04-04T03:19:05.568Z">
 <meta property="article:author" content="良超">
 <meta property="article:tag" content="计算广告">
 <meta name="twitter:card" content="summary">
@@ -145,7 +145,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%81%E9%87%8F%E7%AD%96%E7%95%A5"><span class="nav-number">1.</span> <span class="nav-text">流量策略</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7"><span class="nav-number">2.</span> <span class="nav-text">客户</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%93%BE%E8%B7%AF%E6%95%88%E7%8E%87"><span class="nav-number">3.</span> <span class="nav-text">链路效率</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B"><span class="nav-number">3.1.</span> <span class="nav-text">模型</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%93%BE%E8%B7%AF%E5%8C%B9%E9%85%8D%E6%95%88%E7%8E%87"><span class="nav-number">1.</span> <span class="nav-text">链路匹配效率</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.1.</span> <span class="nav-text">模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%BA%E4%BB%B7"><span class="nav-number">1.2.</span> <span class="nav-text">出价</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%81%E9%87%8F%E7%AD%96%E7%95%A5"><span class="nav-number">2.</span> <span class="nav-text">流量策略</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E4%BA%BA%E7%BE%A4%E7%AD%96%E7%95%A5"><span class="nav-number">2.1.</span> <span class="nav-text">分人群策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E4%BD%93%E9%AA%8C"><span class="nav-number">2.2.</span> <span class="nav-text">用户体验</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%B7%E6%8E%92"><span class="nav-number">2.3.</span> <span class="nav-text">混排</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7"><span class="nav-number">3.</span> <span class="nav-text">客户</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%B1%BB%E5%9E%8B"><span class="nav-number">3.1.</span> <span class="nav-text">客户类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E8%A1%8C%E4%B8%9A%E4%BC%98%E5%8C%96"><span class="nav-number">3.2.</span> <span class="nav-text">分行业优化</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -178,9 +178,6 @@
   <div class="links-of-author animated">
       <span class="links-of-author-item">
         <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://www.linkedin.com/in/wuliangchao/" title="LinkedIn → https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;wuliangchao&#x2F;" rel="noopener me" target="_blank"><i class="fab fa-linkedin fa-fw"></i>LinkedIn</a>
       </span>
       <span class="links-of-author-item">
         <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
@@ -265,10 +262,19 @@
         <p><a
 href="https://wulc.me/2021/05/05/An%20Overview%20Of%20Ad%20System/">An
 Overview Of An Ad System</a></p>
-<h2 id="流量策略">流量策略</h2>
-<h2 id="客户">客户</h2>
-<h2 id="链路效率">链路效率</h2>
+<h2 id="链路匹配效率">链路匹配效率</h2>
 <h3 id="模型">模型</h3>
+<h3 id="出价">出价</h3>
+<p>出价与排序计费分离</p>
+<h2 id="流量策略">流量策略</h2>
+<h3 id="分人群策略">分人群策略</h3>
+<h3 id="用户体验">用户体验</h3>
+<h3 id="混排">混排</h3>
+<h2 id="客户">客户</h2>
+<h3 id="客户类型">客户类型</h3>
+<p>KA、smb</p>
+<h3 id="分行业优化">分行业优化</h3>
+<p>行业客户特点</p>
 <!-- flag of hidden posts -->
     </div>
 
