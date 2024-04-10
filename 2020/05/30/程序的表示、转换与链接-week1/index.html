@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id: "JmI6QmP3fMkLet6B",ck: "JmI6QmP3fMkLet6B"})</script>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wulc.me","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.15.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="最近在 coursera 上发现一门不错的课程，程序的表示、转换与链接，内容是类似《深入理解计算机系统》这本书的，说来惭愧，虽然在上学时零星上过一些相关的课程，但是却没有系统地将这些内容串起来理解。本着算法工程师首先得是个工程的原则，觉得还是有必要去了解一下这块内容;而且课程内容讲得挺通俗的，值得一听。 本文的内容主要是 week1 的内容，较为宏观地介绍了如何从冯·诺依曼体系结构演进至现代计算机">
+<meta property="og:type" content="article">
+<meta property="og:title" content="程序的表示、转换与链接-week1">
+<meta property="og:url" content="https://wulc.me/2020/05/30/%E7%A8%8B%E5%BA%8F%E7%9A%84%E8%A1%A8%E7%A4%BA%E3%80%81%E8%BD%AC%E6%8D%A2%E4%B8%8E%E9%93%BE%E6%8E%A5-week1/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="最近在 coursera 上发现一门不错的课程，程序的表示、转换与链接，内容是类似《深入理解计算机系统》这本书的，说来惭愧，虽然在上学时零星上过一些相关的课程，但是却没有系统地将这些内容串起来理解。本着算法工程师首先得是个工程的原则，觉得还是有必要去了解一下这块内容;而且课程内容讲得挺通俗的，值得一听。 本文的内容主要是 week1 的内容，较为宏观地介绍了如何从冯·诺依曼体系结构演进至现代计算机">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/VonNeumannarchitecture.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/VonNeumannarchitecture1.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/VonNeumannarchitecture2.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/CookVSProgram1.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/CookVSProgram2.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/compile2link.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/compile2link1.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/ComputerLevel.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/ISA.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/ISAandMicroarchitecture.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/content.jpg">
+<meta property="article:published_time" content="2020-05-30T13:37:39.000Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.115Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="程序的表示、转换与链接">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/VonNeumannarchitecture.jpg">
+
+
+<link rel="canonical" href="https://wulc.me/2020/05/30/%E7%A8%8B%E5%BA%8F%E7%9A%84%E8%A1%A8%E7%A4%BA%E3%80%81%E8%BD%AC%E6%8D%A2%E4%B8%8E%E9%93%BE%E6%8E%A5-week1/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wulc.me/2020/05/30/%E7%A8%8B%E5%BA%8F%E7%9A%84%E8%A1%A8%E7%A4%BA%E3%80%81%E8%BD%AC%E6%8D%A2%E4%B8%8E%E9%93%BE%E6%8E%A5-week1/","path":"2020/05/30/程序的表示、转换与链接-week1/","title":"程序的表示、转换与链接-week1"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>程序的表示、转换与链接-week1 | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">吴良超的学习笔记</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%AF%E8%AF%BA%E4%BE%9D%E6%9B%BC%E7%BB%93%E6%9E%84"><span class="nav-number">1.</span> <span class="nav-text">冯·诺依曼结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3"><span class="nav-number">1.1.</span> <span class="nav-text">基本思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%9A%84%E6%A8%A1%E5%9E%8B%E7%BB%93%E6%9E%84%E5%92%8C%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-number">1.2.</span> <span class="nav-text">现代计算机的模型结构和工作原理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8E%E6%9C%BA%E5%99%A8%E8%AF%AD%E8%A8%80%E5%88%B0%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80"><span class="nav-number">2.</span> <span class="nav-text">从机器语言到高级编程语言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%9A%84%E5%B1%82%E6%AC%A1%E7%BB%93%E6%9E%84"><span class="nav-number">3.</span> <span class="nav-text">计算机的层次结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">4.</span> <span class="nav-text">小结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">253</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2020/05/30/%E7%A8%8B%E5%BA%8F%E7%9A%84%E8%A1%A8%E7%A4%BA%E3%80%81%E8%BD%AC%E6%8D%A2%E4%B8%8E%E9%93%BE%E6%8E%A5-week1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="程序的表示、转换与链接-week1 | 吴良超的学习笔记">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          程序的表示、转换与链接-week1
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-05-30 21:37:39" itemprop="dateCreated datePublished" datetime="2020-05-30T21:37:39+08:00">2020-05-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-tags"></i>
+      </span>
+      <span class="post-meta-item-text">标签</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E7%A8%8B%E5%BA%8F%E7%9A%84%E8%A1%A8%E7%A4%BA%E3%80%81%E8%BD%AC%E6%8D%A2%E4%B8%8E%E9%93%BE%E6%8E%A5/" itemprop="url" rel="index"><span itemprop="name">程序的表示、转换与链接</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>最近在 coursera 上发现一门不错的课程，<a
+target="_blank" rel="noopener" href="https://www.coursera.org/learn/jisuanji-xitong/home/welcome">程序的表示、转换与链接</a>，内容是类似《深入理解计算机系统》这本书的，说来惭愧，虽然在上学时零星上过一些相关的课程，但是却没有系统地将这些内容串起来理解。本着算法工程师首先得是个工程的原则，觉得还是有必要去了解一下这块内容;而且课程内容讲得挺通俗的，值得一听。</p>
+<p>本文的内容主要是 week1
+的内容，较为宏观地介绍了如何从冯·诺依曼体系结构演进至现代计算机结构、程序执行的基本原理、微体系结构与指令集(ISA)等。由于课程
+PPT
+说得已经较为清晰了，这里大部分内容会直接截图（懒得再打字也是一个原因。。。）</p>
+<span id="more"></span>
+<h2 id="冯诺依曼结构">冯·诺依曼结构</h2>
+<h3 id="基本思想">基本思想</h3>
+<p>冯-诺依曼结构主要思想是<strong>存储程序的工作方式</strong>，即让计算机完成的任何的一项工作，事先要编写成程序，然后把这个程序以及程序处理的这个数据先要送到主存，然后启动运行，运行以后，计算机就可以自动的取出一条一条指令，并且取出来进行执行，就是取出指令，执行。然后再取下条指令再执行，这样按部就班的取出指令并执行</p>
+<p>按照上面的描述，计算机应该有如下的组成部分</p>
+<figure>
+<img data-src="https://wulc.me/imgs/VonNeumannarchitecture.jpg"
+alt="Von Neumann architecture" />
+<figcaption aria-hidden="true">Von Neumann architecture</figcaption>
+</figure>
+<p>更抽象一点的结构如下</p>
+<figure>
+<img data-src="https://wulc.me/imgs/VonNeumannarchitecture1.jpg"
+alt="Von Neumann architecture1" />
+<figcaption aria-hidden="true">Von Neumann architecture1</figcaption>
+</figure>
+<p>因此，冯-诺依曼结构主要思想是</p>
+<ol type="1">
+<li>计算机由运算器，控制器，存储器，输入设备和输出设备五个基本部件组成</li>
+<li>各部件的基本功能是
+<ul>
+<li><strong>存储器不仅能存放数据，也能存放指令</strong>，形式上两者都是0/1序列</li>
+<li>控制器能自动取出指令来执行</li>
+<li>运算器能够进行加减乘除、与或非等运算</li>
+<li>操作人员可以通过输入设备和输出设备与主机进行通信</li>
+</ul></li>
+<li>内部以二进制表示指令和数据。<strong>每条指令由操作码和地址码组成</strong>，操作码指出操作类型，地址码指出操作数的地址</li>
+<li>采用“存储程序”的工作方式</li>
+</ol>
+<h3
+id="现代计算机的模型结构和工作原理">现代计算机的模型结构和工作原理</h3>
+<p>现代计算机采用的基本就是前面提到的冯-诺依曼结构，更深入地看 CPU
+的基本组成如下图所示，</p>
+<figure>
+<img data-src="https://wulc.me/imgs/VonNeumannarchitecture2.jpg"
+alt="Von Neumann architecture2" />
+<figcaption aria-hidden="true">Von Neumann architecture2</figcaption>
+</figure>
+<p>各个部件的作用如下</p>
+<ul>
+<li>PC（program counter）: 程序计数器，是一个用于存储指令在 memory
+中的地址的寄存器，需要执行的指令先送到 PC，然后送到 MAR</li>
+<li>MAR(memory address register)：存储 memory
+中某些指令或数据的地址(跟总线相连)，除了接收 PC 的指令地址，还可以接收
+GPR 的数据地址</li>
+<li>MDR(memory data register): 从 memory
+读出的指令或数据(跟总线相连)，送给 IR 或 GPR（同理也可往里面写）</li>
+<li>IR（instruction register）：存储真实的指令，每条指令由 OP 和 ADDR
+组成，表示指令的具体操作和要操作的对象的地址，供控制器读取</li>
+<li>标志寄存器：存储运算的结果得到的符号是什么，有没有进位
+有没有溢出等等一些标志信息</li>
+</ul>
+<p>因此，cpu 从内存读取指令/数据的流程是：<strong>PC/GPR -&gt; MAR -&gt;
+memory -&gt; MDR
+-&gt;IR/GPR</strong>(同时会有一些控制信号，即图中的红色虚线）</p>
+<p>下面是以做菜的例子更详细描述计算机是如何工作的</p>
+<figure>
+<img data-src="https://wulc.me/imgs/CookVSProgram1.jpg"
+alt="cookVSprogram1" />
+<figcaption aria-hidden="true">cookVSprogram1</figcaption>
+</figure>
+<figure>
+<img data-src="https://wulc.me/imgs/CookVSProgram2.jpg"
+alt="cookVSprogram2" />
+<figcaption aria-hidden="true">cookVSprogram2</figcaption>
+</figure>
+<h2 id="从机器语言到高级编程语言">从机器语言到高级编程语言</h2>
+<ul>
+<li>机器语言（01表示指令）：增减指令后需要重新对纸带打孔</li>
+<li>汇编语言（符号表示指令）:
+增减指令不影响，需要<strong>通过汇编程序转为机器语言</strong></li>
+<li>高级语言：与平台无关，编译程序(生成目标文件）和解释程序（不生成目标文件）</li>
+</ul>
+<p>因此，高级语言(这里以c为例）需要执行如下步骤才能最终被计算机执行</p>
+<figure>
+<img data-src="https://wulc.me/imgs/compile2link.jpg"
+alt="compile&amp;link1" />
+<figcaption aria-hidden="true">compile&amp;link1</figcaption>
+</figure>
+<p>各个步骤做的事情如下</p>
+<ol type="1">
+<li>预编译（生成 <code>.i</code> 文件）：主要是处理 <code>#</code>
+开头的语句，如进行宏展开、将被 include
+的文件插入到对应的地方（递归执行）</li>
+<li>编译（生成 <code>.s</code>
+文件）：将代码编译成汇编代码，包括词法分析、语法分析、语义分析和生成汇编代码的优化；虽然不同语言都可通过
+gcc 来统一编译，但是 gcc
+对于对于不同的语言调用了不同的编译程序（如c是cc1，c++是cclplus，java是jc1）</li>
+<li>汇编（生成<code>.o</code>文件）：将汇编代码逐条转换成机器指令（有查找表）</li>
+<li>链接（生成可执行文件）：静态链接与动态链接</li>
+</ol>
+<p>下面是一个简单的例子</p>
+<figure>
+<img data-src="https://wulc.me/imgs/compile2link1.jpg"
+alt="compile&amp;link2" />
+<figcaption aria-hidden="true">compile&amp;link2</figcaption>
+</figure>
+<p>上面的图中有几点值得注意</p>
+<ul>
+<li>汇编指令与机器指令是一一对应的</li>
+<li>任何程序最终都是通过执行若干条指令来完成</li>
+<li>指令集体系结构由计算机硬件决定</li>
+</ul>
+<h2 id="计算机的层次结构">计算机的层次结构</h2>
+<p>计算机简单可分为软件和硬件两个层次，而在这两个层次内又可以做更细的划分，连接着两层的则是指令集(ISA)
+如下图所示</p>
+<figure>
+<img data-src="https://wulc.me/imgs/ComputerLevel.jpg" alt="level" />
+<figcaption aria-hidden="true">level</figcaption>
+</figure>
+<p>作为软件和硬件的桥梁，ISA 具体做了些啥，简单来说，ISA
+规定了如何使用硬件；类似于一个协议，其细节如下图所示</p>
+<figure>
+<img data-src="https://wulc.me/imgs/ISA.jpg" alt="ISA" />
+<figcaption aria-hidden="true">ISA</figcaption>
+</figure>
+<p><strong>计算机组成也被称为微体系结构(<a
+target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Microarchitecture">Microarchitecture</a>)</strong>，微体系结构跟ISA的关系不是一一对应的，不同的
+ISA 定义了不同的指令集，同一个 ISA 可对应于多个微体系结构</p>
+<figure>
+<img data-src="https://wulc.me/imgs/ISAandMicroarchitecture.jpg"
+alt="Microarchitecture v.s ISA" />
+<figcaption aria-hidden="true">Microarchitecture v.s ISA</figcaption>
+</figure>
+<h2 id="小结">小结</h2>
+<p>week1
+的内容比较宏观地介绍了冯·诺依曼结构的计算机系统层次结构、程序在计算机系统内运行的基本原理、高级语言如何转换为机器语言、ISA
+的概念等基本内容，课程总共有12周，后面的课程当于是对上述的相关部分内容进行展开。</p>
+<figure>
+<img data-src="https://wulc.me/imgs/content.jpg" alt="content" />
+<figcaption aria-hidden="true">content</figcaption>
+</figure>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%A8%8B%E5%BA%8F%E7%9A%84%E8%A1%A8%E7%A4%BA%E3%80%81%E8%BD%AC%E6%8D%A2%E4%B8%8E%E9%93%BE%E6%8E%A5/" rel="tag"><i class="fa fa-tag"></i> 程序的表示、转换与链接</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/05/17/Modeling%20Delayed%20Feedback%20in%20Display%20Advertising%20%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" rel="prev" title="《Modeling Delayed Feedback in Display Advertising》 阅读笔记">
+                  <i class="fa fa-chevron-left"></i> 《Modeling Delayed Feedback in Display Advertising》 阅读笔记
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/05/31/%E3%80%8A%E9%93%BE%E6%8E%A5%E3%80%81%E8%A3%85%E8%BD%BD%E4%B8%8E%E5%BA%93%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0(1)-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E4%B8%8E%E9%9D%99%E6%80%81%E9%93%BE%E6%8E%A5/" rel="next" title="《链接、装载与库》 阅读笔记(1)-基本概念与静态链接">
+                  《链接、装载与库》 阅读笔记(1)-基本概念与静态链接 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-pen"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id: "JmI6QmP3fMkLet6B",ck: "JmI6QmP3fMkLet6B"})</script>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wulc.me","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.15.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Highlight Detection，直译过来就是高光检测，一般应用在图像或视频里，本文主要关注视频场景，其任务就是从一段长视频里找到某个“高光”的片段。这里的“高光”是一个非常宽泛的定义，不像 ctr&#x2F;cvr 有明确的含义，不同场景下对“高光”的定义不一样：比如说对于带货直播，高光片段也许是 gmv 最高的时间段；对于非带货直播，高光的片段也许是观看人数或者刷礼物最多的时间段。 Highlig">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Highlight Detection In Video">
+<meta property="og:url" content="https://wulc.me/2022/08/27/Highlight%20Detection%20In%20Video/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="Highlight Detection，直译过来就是高光检测，一般应用在图像或视频里，本文主要关注视频场景，其任务就是从一段长视频里找到某个“高光”的片段。这里的“高光”是一个非常宽泛的定义，不像 ctr&#x2F;cvr 有明确的含义，不同场景下对“高光”的定义不一样：比如说对于带货直播，高光片段也许是 gmv 最高的时间段；对于非带货直播，高光的片段也许是观看人数或者刷礼物最多的时间段。 Highlig">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/TaoHighlight_CAM.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/TaoHighlight_coattention.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/TaoHighlight_Coattention_compute.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/TaoHighlight_dataset.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/TaoHighlight_ablation.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/HighlightDetection_LessIsMore.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/HighlightDetection_LessIsMore_result1.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/HighlightDetection_LessIsMore_result2.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/HighlightDetection_LessIsMore_ablation1.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/HighlightDetection_LessIsMore_ablation2.jpg">
+<meta property="article:published_time" content="2022-08-27T04:00:37.000Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.171Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="计算广告">
+<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="深度学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/TaoHighlight_CAM.jpg">
+
+
+<link rel="canonical" href="https://wulc.me/2022/08/27/Highlight%20Detection%20In%20Video/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wulc.me/2022/08/27/Highlight%20Detection%20In%20Video/","path":"2022/08/27/Highlight Detection In Video/","title":"Highlight Detection In Video"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Highlight Detection In Video | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">吴良超的学习笔记</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#taohighlight"><span class="nav-number">1.</span> <span class="nav-text">TaoHighlight</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#unsupervised-solution"><span class="nav-number">2.</span> <span class="nav-text">“unsupervised” solution</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">3.</span> <span class="nav-text">小结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">253</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2022/08/27/Highlight%20Detection%20In%20Video/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Highlight Detection In Video | 吴良超的学习笔记">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Highlight Detection In Video
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-08-27 12:00:37" itemprop="dateCreated datePublished" datetime="2022-08-27T12:00:37+08:00">2022-08-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-tags"></i>
+      </span>
+      <span class="post-meta-item-text">标签</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A/" itemprop="url" rel="index"><span itemprop="name">计算广告</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">深度学习</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>Highlight
+Detection，直译过来就是高光检测，一般应用在图像或视频里，本文主要关注视频场景，其任务就是从一段长视频里找到某个“高光”的片段。这里的“高光”是一个非常宽泛的定义，不像
+ctr/cvr
+有明确的含义，不同场景下对“高光”的定义不一样：比如说对于带货直播，高光片段也许是
+gmv
+最高的时间段；对于非带货直播，高光的片段也许是观看人数或者刷礼物最多的时间段。</p>
+<p>Highlight Detection
+在实际的应用场景较为广泛：一些视频网站(如爱奇艺、哔哩哔哩)里鼠标停留在视频上时会自动播放一些片段，这些片段可认为是高光片段；主流的直播平台基本都提供了直播回放工具，其中往往也会提供高光片段的候选，除了提供给用户侧，广告主/商家侧也会提供类似产品，如<a
+target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/fojF0LZKQcPVNKuEiGfrtg">巨量千川</a>、<a
+target="_blank" rel="noopener" href="https://partner.e.kuaishou.com/detail/2628">磁力金牛</a>等平台的产品</p>
+<p><a
+target="_blank" rel="noopener" href="https://paperswithcode.com/task/highlight-detection">Highlight
+Detection</a>
+在学术界也是一个研究方向，但是学界基本研究局限在几个人工标注的数据集上，一般无法直接应用到实际的生产环境中，原因就是上面说的，不同场景下对高光的定义不一样，需要的数据集也不一样。Highlight
+Detection 相关 paper 不少，本文主要讲2 篇更贴近业界的
+paper，可以重点关注<strong>高光的监督信号的定义，损失函数的设计以及数据集的获取</strong></p>
+<span id="more"></span>
+<h2 id="taohighlight">TaoHighlight</h2>
+<p>这个方法来自 <a
+target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/document/9447925">TaoHighlight:
+Commodity-Aware Multi-Modal Video Highlight Detection in
+E-Commerce</a></p>
+<p>这是淘宝在 2021
+提出的一个方法，总体的模型结构图如下图所示，模型不复杂，左边是抽取多模态特征部分，右边则是基于抽取出来的特征和
+score，通过 GCN 做 finetune，损失函数由两部分组成，即
+<code>Loss_reg</code> 和 <code>Loss_ag</code></p>
+<p><img data-src="https://wulc.me/imgs/TaoHighlight_CAM.jpg" height="70%" width="70%"></p>
+<p>特征工程部分，visual information 通过 I3D+BiGRU 提取，比较常规；text
+information 提出了一个 QFGA(Query-Focus Graph Aggregation), 一个基于
+graph 抽取特征的模块</p>
+<p><strong>Co-Attention
+Module</strong>，这个模块主要作用是融合多模态特征（即 visual information
+和 text information），基本的原理是参考了 trasformer 的 self-attention
+机制, 对于下面左边的 block，<span class="math inline">\(v\)</span>
+相当于 query, <span class="math inline">\(s\)</span> 相当于 key 和
+value</p>
+<p><img data-src="https://wulc.me/imgs/TaoHighlight_coattention.jpg" height="50%" width="50%"></p>
+<p>其计算逻辑如下图所示</p>
+<p><img data-src="https://wulc.me/imgs/TaoHighlight_Coattention_compute.jpg" height="50%" width="50%"></p>
+<p><strong>Graph-based Fine-tuning</strong>:
+这部分主要是为了减少抽取出来的特征里的 noise；paper 里是这么说的:
+<code>Due to the presence of visual and text noises in multi-modal video highlight detection, we propose a graph based fine-tuning module to improve the accuracy of our model.</code>，但是也没进一步说明原因</p>
+<p>具体的做法就是给每帧打一个分，然后选取按 score 排序 topk 的 frame
+构造一个 graph，基于 graph 做 GCN 的计算，关于 GCN
+的详细解释可参考这篇文章：<a
+target="_blank" rel="noopener" href="https://distill.pub/2021/understanding-gnns/">Understanding
+Convolutions on Graphs</a>，</p>
+<p>而最终的损失函数由 2 部分组成，<span
+class="math inline">\(L_{reg}\)</span> 和 <span
+class="math inline">\(L_{ag}\)</span>, 两部分的含义如下</p>
+<p><span class="math inline">\(L_{reg}\)</span>
+，计算预估的开始/结束时间和真正的开始/结束时间的的差异，计算方式如下</p>
+<p><span class="math display">\[L_{reg} = \frac{1}{N}
+\sum_{i=1}^{N}[R(\hat{s_i}, s_i) + R(\hat{e_i}, e_i)]\]</span></p>
+<p>各符号含义如下</p>
+<ul>
+<li><span class="math inline">\(s_i\)</span>, <span
+class="math inline">\(e_i\)</span>:
+预估的高光片段的开始和结束时间点</li>
+<li><span class="math inline">\(\hat{s_i}\)</span>, <span
+class="math inline">\(\hat{e_i}\)</span>: 高光开始和结束时间的 ground
+truth</li>
+<li><span class="math inline">\(R\)</span>: L1 函数</li>
+</ul>
+<p><span class="math inline">\(L_{ag}\)</span> 计算方式如下,
+主要用来计算两段视频的相关性，<span class="math inline">\(k\)</span>
+表示将每段视频切成 <span class="math inline">\(k\)</span> 段
+clips，主要由三项组成</p>
+<p><span class="math display">\[L_{ag} = - \sum_{i=1}^{k}e(v_i,
+\hat{v})\]</span></p>
+<p><span class="math display">\[e(v_i, v_j) = \theta_{r} \cdot r(v_i,
+v_j)+\theta_{d} \cdot d(v_i, v_j)+\theta_{s} \cdot \cos(v_i,
+v_j)\]</span></p>
+<p>各符号含义如下</p>
+<ul>
+<li><span class="math inline">\(v_i\)</span>, <span
+class="math inline">\(\hat{v_i}\)</span>: 预估的高光片段和 ground
+truth</li>
+<li><span class="math inline">\(r(v_i, v_j) = \frac{I(v_i, v_j)}{U(v_i,
+v_j)}\)</span>, 就是 <a
+target="_blank" rel="noopener" href="https://medium.com/analytics-vidhya/iou-intersection-over-union-705a39e7acef">IoU</a>
+指标，表示重合面积占比</li>
+<li><span class="math inline">\(d(v_i, v_j) = \frac{ |c_i - c_j|}{U(v_i,
+v_j)}\)</span>, <span class="math inline">\(c_i\)</span> 和 <span
+class="math inline">\(c_j\)</span> 表示两个 video 的中心位置</li>
+<li><span class="math inline">\(cos\)</span>: 两个片段的 cos 相似性</li>
+</ul>
+<p>预估时实际是一个多分类模型(softmax)，会对最后构造的 graph
+做一个预估，并选择概率最大的一帧作为起始帧，然后取其后的 128
+frame作为固定的高光片段</p>
+<p>实验评估的效果指标就是看各种 IoU 的占比，数据集是 taobao 提供的包含 5
+个大分类的数据，整个 dataset 的信息如下</p>
+<p><img data-src="https://wulc.me/imgs/TaoHighlight_dataset.jpg" height="60%" width="60%"></p>
+<p>paper 做了消融实验，结果如下图所示</p>
+<p><img data-src="https://wulc.me/imgs/TaoHighlight_ablation.jpg" height="50%" width="50%"></p>
+<p>各符号含义如下，可以看到文本特征，Graph-based Fine-tuning
+以及损失函数中的 <span class="math inline">\(L_{ag}\)</span>
+项作用还是不小的</p>
+<ul>
+<li>w/o.ti. 去掉文本特征</li>
+<li>w/o.ci. 文本特征只包含 video title（去掉了商品 titile
+和商品属性）</li>
+<li>w/o.st. 去掉了 Graph-based Fine-tuning</li>
+<li>w/o.ag. 去掉了损失函数中的 <span
+class="math inline">\(L_{ag}\)</span> 项</li>
+</ul>
+<h2 id="unsupervised-solution">“unsupervised” solution</h2>
+<p>上面的 TaoHighlight
+方法使用的是人工标注的数据集，其缺陷是比较明显的，即人工标注导致了成本较高，可维护性太差；一是高光的定义因人而异，标注时主观性会比较强，二是成本和标注的难度决定了数据更新频率不会很高，这在业界基本是无法接受的</p>
+<p>那很自然就会想到，能否利用一些无须标注的信号来规避掉需要人工打标这个环节呢？这篇
+paper 就提供了一个思路 <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1903.00859">Less
+is More: Learning Highlight Detection from Video Duration</a></p>
+<p>peper 认为 <strong>Less is More</strong>,
+即越短的视频的信息量就越高，所以切分出来的片段都可以认为是高光片段，反之越长的视频的信息量约低，切出来的都不是高光片段，因此，paper
+将训练样本 <span class="math inline">\(D\)</span>
+分为分为三部分，即<span class="math inline">\(D= \lbrace D_S, D_L, D_R
+\rbrace\)</span>，<span class="math inline">\(D_S\)</span>
+表示短视频的集合，<span class="math inline">\(D_L\)</span>
+表示长视频的集合，paper 将短于 15s 定义为短视频，长于 45s
+的定义为长视频</p>
+<p>每个视频都会被切成等成的 segment，记为 <span
+class="math inline">\(s\)</span>, <span
+class="math inline">\(v(s)\)</span> 表示 segment 对应的视频</p>
+<p>paper 采用了 pair-wise 的方法来构造样本，即从 <span
+class="math inline">\(D_S\)</span> 和 <span
+class="math inline">\(D_L\)</span> 切好的 segment
+中分别取出一个，来构成一对 pair <span class="math inline">\((s_i,
+s_j)\)</span>，然后基于下面的 <a
+target="_blank" rel="noopener" href="https://gombru.github.io/2019/04/03/ranking_loss/">ranking
+loss</a> 计算两部分的差异，这里的 ranking loss
+其实是一类损失函数，常见的 triplet loss、magrin loss、hinge loss
+其实都可以算做 ranking loss</p>
+<p>损失函数的表达如下</p>
+<p><span class="math display">\[L(D) = \sum_{(s_i, s_j) \in \mathcal{P}}
+\max(0, 1 - f(x_i) + f(x_j))\]</span></p>
+<p>但这种认为短视频切出来的都是高光，长视频切出来都不是高光的方法显然是比较武断的，或者说存在
+noise，所以需要计算每对 pair 的置信度，因此引入了一个 binary latent
+variable <span class="math inline">\(w_{ij}\)</span>，表示每对 pair
+的置信度, 因此上面的损失函数变成了如下形式</p>
+<p><span class="math display">\[
+\begin{align*}
+&amp;L(D) = \sum_{(s_i, s_j) \in \mathcal{P}} w_{ij} \max(0, 1 - f(x_i)
++ f(x_j)) \\\
+&amp;\begin{array} \\\
+s.t.&amp; \sum_{(s_i, s_j) \in \mathcal{P}} w_{ij} = p|\mathcal{P}|,
+w_{ij} \in [0,1] \\\
+&amp;w_{ij} = h(x_i, x_j)
+\end{array}
+\end{align*}
+\]</span></p>
+<p>上面的 <span class="math inline">\(p\)</span> 表示训练样本里有效的
+pair 的比例，<span class="math inline">\(h\)</span> 则是计算 <span
+class="math inline">\(w_{ij}\)</span> 这个 variable
+的网络，在训练时会跟原来的网络做 joint training，实际实现时，会通过分
+batch + softmax 生效</p>
+<p>虽然这里通过 <span class="math inline">\(w_{ij}\)</span>
+做到了在<strong>统计意义上只有部分样本有效</strong>，但是未必就能把
+noise 完全干掉，因为缺少人工先验的信息，可能最终训练出来，在真正有效的
+pair 上，<span class="math inline">\(w_{ij}\)</span> 可能会更小</p>
+<p>总体的模型和流程如下图所示，<span
+class="math inline">\(\mathcal{P_1}\)</span> 到 <span
+class="math inline">\(\mathcal{P_t}\)</span> 可认为是 <span
+class="math inline">\(t\)</span> 个 batch，每个 batch 有 n 个 pair</p>
+<p><img data-src="https://wulc.me/imgs/HighlightDetection_LessIsMore.jpg" height="50%" width="50%"></p>
+<p>上面也提到，<span
+class="math inline">\(w_{ij}\)</span>实际的生效是通过分 batch +
+softmax，即上面的损失函数最终会改成如下形式，<span
+class="math inline">\(\sigma\)</span> 是个 softmax 函数，生效在 <span
+class="math inline">\(\mathcal{P_g}\)</span> 中，相当于 <span
+class="math inline">\(p=\frac{1}{n}\)</span></p>
+<p><span class="math display">\[
+\begin{align*}
+&amp;L(D) = \sum_{g=1}^{m} \sum_{(s_i, s_j) \in \mathcal{P_g}} w_{ij}
+\max(0, 1 - f(x_i) + f(x_j)) \\\
+&amp;\begin{array}\\\
+s.t.&amp; \sum_{(s_i, s_j) \in \mathcal{P_g}} w_{ij} = \sum_{(s_i, s_j)
+\in \mathcal{P_g}} \sigma(h(x_i, x_j)) = 1 \\\
+&amp;w_{ij} \in [0,1]
+\end{array}
+\end{align*}
+\]</span></p>
+<p>实验采用的指标是 mAP(mean average precision)，在 object detection
+中比较常见的指标，可以简单理解为多个类别物体检测中，每一个类别都可以根据recall和precision绘制一条曲线，AP
+就是该曲线下的面积，mAP是多个类别AP的平均值</p>
+<p>mAP 的定义跟 AUC 有点像，只是这里采用了 PR 曲线，AUC 采用的是 ROC
+曲线，两者的区别可参考 <a
+href="https://wulc.me/2018/06/16/ROC%20%E6%9B%B2%E7%BA%BF%E4%B8%8E%20PR%20%E6%9B%B2%E7%BA%BF/">ROC
+曲线与 PR 曲线</a></p>
+<p>实验主要在两个公开数据集上做，数据集为 YouTube Highlights 和
+TVSum，数据集里对视频做了分类(domain)，因此也尝试了总体建模（下图的
+Ours-A）和分 domain 建模（下图的
+Ours-S），效果还是挺不错的，也超过了一些 supervised 的方法</p>
+<p><img data-src="https://wulc.me/imgs/HighlightDetection_LessIsMore_result1.jpg" height="50%" width="50%"></p>
+<p><img data-src="https://wulc.me/imgs/HighlightDetection_LessIsMore_result2.jpg" height="50%" width="50%"></p>
+<p>文章也做了消融实验，主要是 2 部分</p>
+<p>（1）针对上面的binary latent variable <span
+class="math inline">\(w_{ij}\)</span>，对比了去掉 <span
+class="math inline">\(w_{ij}\)</span> （下图中的Ranking-D）和通过 EM
+来更新 <span class="math inline">\(w_{ij}\)</span> （下图中的
+Ranking-EM）的效果，效果是 joint training &gt; EM &gt; 去掉 <span
+class="math inline">\(w_{ij}\)</span></p>
+<p><img data-src="https://wulc.me/imgs/HighlightDetection_LessIsMore_ablation1.jpg" height="50%" width="50%"></p>
+<p>（2）对比了数据集大小的影响，随着数据集增大，准确率逐渐上升并减缓，比较常规的结论</p>
+<p><img data-src="https://wulc.me/imgs/HighlightDetection_LessIsMore_ablation2.jpg" height="50%" width="50%"></p>
+<h2 id="小结">小结</h2>
+<p>关于 highlight detection 的 paper
+不少，这里主要挑选了两篇有针对性的，两篇 paper 的一些核心点如下</p>
+<p>第一篇 paper，TaoHighlight: Commodity-Aware Multi-Modal Video
+Highlight Detection in E-Commerce</p>
+<ul>
+<li>特征工程: video 和 text 特征的提取，通过 co-attention
+机制融合这两部分特征</li>
+<li>损失函数的设计，<span class="math inline">\(L_{reg}\)</span> + <span
+class="math inline">\(L_{ag}\)</span></li>
+<li>减少noise: graph-based fine-tunning 模块，对一些 topk 的候选做
+fine-tuning</li>
+</ul>
+<p>第二篇 paper，Less is More: Learning Highlight Detection from Video
+Duration</p>
+<ul>
+<li>数据集，根据 video 的长短来判断视频的是否属于高光，无需人工打标</li>
+<li>损失函数的设计，pair-wise 的 ranking loss</li>
+<li>减少noise: 通过一个可训练的 binary latent variable
+来标识样本的置信度</li>
+</ul>
+<p>第二篇的 paper
+的模式感觉是更适合实际的生产环境的，主要是人工标注的可维护性和持续性都不好，而在第二篇基础上，真正落地时可能还有几个问题需要思考</p>
+<ol type="1">
+<li>video duration
+是一个比较粗糙的信号，<strong>实际的业务中，会有很多的指标(比如说
+ctr、cvr、roi等)，这些指标作为高光的定义也许是一个更好的选择，同时需要权衡选择的信号的深度和数据稀疏的
+trade-off</strong></li>
+<li>除了以上的 ranking loss，<strong>LTR(pair-wise, list-wise)
+建模也是一个不错的选择，实际业务中需要考虑 pair 或 list
+怎么构建</strong></li>
+<li>如果是直播的场景下，需要实时做高光的检测，无法拿到整个视频，需要考虑一种<strong>流式的检测方法</strong></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A/" rel="tag"><i class="fa fa-tag"></i> 计算广告</a>
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 深度学习</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/07/31/%E4%BB%8E%E7%84%A6%E8%99%91%E8%B0%88%E8%B5%B7%EF%BC%8C%E8%81%8A%E8%81%8A%E7%94%9F%E6%B4%BB%E7%9A%84%E5%8F%AF%E8%83%BD%E6%80%A7%E4%B8%8E%E9%9A%8F%E6%9C%BA%E6%80%A7/" rel="prev" title="从焦虑谈起，聊聊生活的可能性与随机性">
+                  <i class="fa fa-chevron-left"></i> 从焦虑谈起，聊聊生活的可能性与随机性
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/09/25/%E8%81%8A%E8%81%8A%E7%AE%A1%E7%90%86/" rel="next" title="聊聊管理">
+                  聊聊管理 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-pen"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

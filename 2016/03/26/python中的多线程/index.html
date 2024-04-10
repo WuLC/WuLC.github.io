@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id: "JmI6QmP3fMkLet6B",ck: "JmI6QmP3fMkLet6B"})</script>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wulc.me","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.15.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="本文主要讲述了python中多线程的使用、线程锁以及多线程在python中是否能够提高效率。 多线程的概念 进程的相信大家都听说过，而线程可以理解为比进程更小一级的概念，一个进程内至少有一个线程,如果有多个线程，那么他们就共享进程的资源，共同完成进程的任务。 使用多线程一般有两个不同的目的： 一是把程序细分成几个功能相对独立的模块，防止其中一个功能模块阻塞导致整个程序假死（GUI程序是典型） 另一">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python中的多线程">
+<meta property="og:url" content="https://wulc.me/2016/03/26/python%E4%B8%AD%E7%9A%84%E5%A4%9A%E7%BA%BF%E7%A8%8B/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="本文主要讲述了python中多线程的使用、线程锁以及多线程在python中是否能够提高效率。 多线程的概念 进程的相信大家都听说过，而线程可以理解为比进程更小一级的概念，一个进程内至少有一个线程,如果有多个线程，那么他们就共享进程的资源，共同完成进程的任务。 使用多线程一般有两个不同的目的： 一是把程序细分成几个功能相对独立的模块，防止其中一个功能模块阻塞导致整个程序假死（GUI程序是典型） 另一">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/1.png">
+<meta property="og:image" content="https://wulc.me/imgs/2.png">
+<meta property="og:image" content="https://wulc.me/imgs/3.png">
+<meta property="og:image" content="https://wulc.me/imgs/2016-03-26_210528.png">
+<meta property="og:image" content="https://wulc.me/imgs/5.png">
+<meta property="article:published_time" content="2016-03-26T14:21:25.000Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.113Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="操作系统">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/1.png">
+
+
+<link rel="canonical" href="https://wulc.me/2016/03/26/python%E4%B8%AD%E7%9A%84%E5%A4%9A%E7%BA%BF%E7%A8%8B/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wulc.me/2016/03/26/python%E4%B8%AD%E7%9A%84%E5%A4%9A%E7%BA%BF%E7%A8%8B/","path":"2016/03/26/python中的多线程/","title":"python中的多线程"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>python中的多线程 | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">吴良超的学习笔记</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%9A%84%E6%A6%82%E5%BF%B5"><span class="nav-number">1.</span> <span class="nav-text">多线程的概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#python%E4%B8%AD%E7%9A%84%E5%A4%9A%E7%BA%BF%E7%A8%8B"><span class="nav-number">2.</span> <span class="nav-text">python中的多线程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%A7%E6%89%BFthreading.thread%E7%B1%BB"><span class="nav-number">2.1.</span> <span class="nav-text">继承threading.Thread类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%86%E9%9C%80%E8%A6%81%E7%BA%BF%E7%A8%8B%E6%89%A7%E8%A1%8C%E7%9A%84%E5%87%BD%E6%95%B0%E4%BC%A0%E5%85%A5%E7%BA%BF%E7%A8%8B%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E4%B8%AD"><span class="nav-number">2.2.</span> <span class="nav-text">将需要线程执行的函数传入线程构造函数中</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E9%94%81"><span class="nav-number">3.</span> <span class="nav-text">线程锁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%98%AF%E5%90%A6%E6%8F%90%E9%AB%98%E4%BA%86%E6%95%88%E7%8E%87"><span class="nav-number">4.</span> <span class="nav-text">多线程是否提高了效率</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">253</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2016/03/26/python%E4%B8%AD%E7%9A%84%E5%A4%9A%E7%BA%BF%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="python中的多线程 | 吴良超的学习笔记">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          python中的多线程
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2016-03-26 22:21:25" itemprop="dateCreated datePublished" datetime="2016-03-26T22:21:25+08:00">2016-03-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-tags"></i>
+      </span>
+      <span class="post-meta-item-text">标签</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">操作系统</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>本文主要讲述了python中多线程的使用、线程锁以及多线程在python中是否能够提高效率。</p>
+<h2 id="多线程的概念">多线程的概念</h2>
+<p>进程的相信大家都听说过，而线程可以理解为比进程更小一级的概念，<strong>一个进程内至少有一个线程,如果有多个线程，那么他们就共享进程的资源，共同完成进程的任务。</strong></p>
+<p>使用多线程一般有两个不同的目的：
+一是把程序细分成几个功能相对独立的模块，防止其中一个功能模块阻塞导致整个程序假死（GUI程序是典型）
+另一个就是提高运行效率，比如多个核同时跑，或者单核里面，某个线程进行IO操作时，另一个线程可以同时执行。具体可以参考<a
+target="_blank" rel="noopener" href="http://ifeve.com/benefits/">这篇文章</a></p>
+<span id="more"></span>
+<p>相比进程，线程有以下优点</p>
+<ul>
+<li>创建和销毁的代价比进程要小得多，尤其是在windows下，<a
+target="_blank" rel="noopener" href="https://www.zhihu.com/question/19901763">可以参考这个回答</a>。而且线程间彼此切换所需的时间也远远小于进程间切换所需要的时间</li>
+<li>线程间方便的通信机制。对不同进程来说，它们具有独立的数据空间，要进行数据的传递只能通过通信的方式进行。而由于同一进程下的线程之间共享数据空间，降低了通信的开销。</li>
+</ul>
+<p>除了优点，
+线程间方便的通信机制源于线程间数据的共享，同时也带来了其他问题，如需要保护变量不能同时被两个线程所修改，这也需要一定的开销，而且需要开发者处理好这个调度。</p>
+<h2 id="python中的多线程">python中的多线程</h2>
+<p>python中提供了两个模块实现多线程，分别是<code>thread</code>和<code>threading</code>，<code>thread</code>是比较低级的模块,而<code>threading</code>在其基础上封装了其他许多高级特性，故本文主要讲述<code>threading</code>模块的使用，若要了解<code>thread</code>模块的使用，请参考<a
+target="_blank" rel="noopener" href="https://docs.python.org/2/library/thread.html#module-thread">官方文档</a>。</p>
+<p>创建进程有两种方式，分别是<strong>继承threading.Thread类创建自己的线程子类</strong>和<strong>将需要线程执行的函数传入线程构造函数中</strong>。下面分别讲述</p>
+<h3 id="继承threading.thread类">继承threading.Thread类</h3>
+<p>继承threading.Thread类<strong>只能重写（override）<code>__init__</code>函数和<code>run()</code>函数</strong>，<code>__init__</code>函数就是构造函数，<code>run()</code>函数就是创建线程后线程需要执行的任务。下面是一个简单的demo
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># encoding:utf-8</span></span><br><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">sleepThread</span>(threading.Thread):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        threading.Thread.__init__(self)</span><br><span class="line">        <span class="built_in">print</span> self.name+ <span class="string">&#x27; is created!&#x27;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">run</span>(<span class="params">self</span>):</span><br><span class="line">        randomTime = random.randint(<span class="number">1</span>,<span class="number">9</span>) <span class="comment"># 生成 1~9的随机整数</span></span><br><span class="line">        time.sleep(randomTime)</span><br><span class="line">        <span class="built_in">print</span> self.name+ <span class="string">&#x27; slept for &#x27;</span>+<span class="built_in">str</span>(randomTime)+<span class="string">&#x27; seconds&#x27;</span> </span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    threads = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>):  <span class="comment"># 创建5个进程</span></span><br><span class="line">        th = sleepThread()</span><br><span class="line">        threads.append(th)</span><br><span class="line">        th.start()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> t <span class="keyword">in</span> threads:</span><br><span class="line">        t.join() </span><br><span class="line">        </span><br><span class="line">    <span class="built_in">print</span> <span class="string">&#x27;all threads finished&#x27;</span></span><br><span class="line">    </span><br></pre></td></tr></table></figure></p>
+<p>在上面的例子中，我们编写了自己的线程类<code>sleepThread</code>,然后创建了5个线程，用<code>start()</code>启动了各个线程，<code>start()</code>实际上是执行了线程类的<code>run()</code>函数。这时输出如下所示：</p>
+<p><img data-src="https://wulc.me/imgs/1.png" /></p>
+<p>其中，默认线程的名称是<code>Thread-i</code>，i就是创建的第i个线程。<code>join()</code>函数的作用是等待线程执行完成再执行下面任务,实际的应用场景比如说进程要合并多个线程的处理结果，那么这时候<code>join()</code>函数就必不可少了。假如没有<code>join()</code>函数，即主函数改成下面的样子。
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>):  <span class="comment"># 创建5个进程</span></span><br><span class="line">        th = sleepThread()</span><br><span class="line">        th.start()  </span><br><span class="line">    <span class="built_in">print</span> <span class="string">&#x27;all threads finished&#x27;</span></span><br></pre></td></tr></table></figure> 那么输出就像下面所示：</p>
+<p><img data-src="https://wulc.me/imgs/2.png" /></p>
+<p>那为什么不在<code>thread.start()</code>后执行join()呢？即主函数改成以下样子。
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">  </span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>):  <span class="comment"># 创建5个进程</span></span><br><span class="line">        th = sleepThread()</span><br><span class="line">        th.start()  </span><br><span class="line">        th.join()</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&#x27;all threads finished&#x27;</span></span><br></pre></td></tr></table></figure> 这样输出的结果就像下面一样：</p>
+<p><img data-src="https://wulc.me/imgs/3.png" /></p>
+<p>原因是线程join()后会阻塞后面线程的创建，导致线程无法并行，这样多线程就没有意义了。</p>
+<h3
+id="将需要线程执行的函数传入线程构造函数中">将需要线程执行的函数传入线程构造函数中</h3>
+<p>上面是线程的一种创建方式，实现上面相同功能的另外一种创建方式如下：
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">sleepThread</span>(<span class="params">threadName</span>):</span><br><span class="line">    randomTime = random.randint(<span class="number">1</span>,<span class="number">9</span>) <span class="comment"># 生成 1~9的随机整数</span></span><br><span class="line">    time.sleep(randomTime)</span><br><span class="line">    <span class="built_in">print</span> threadName+ <span class="string">&#x27; slept for &#x27;</span>+<span class="built_in">str</span>(randomTime)+<span class="string">&#x27; seconds&#x27;</span> </span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    threads = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>):</span><br><span class="line">        th = threading.Thread(target=sleepThread,args=(<span class="string">&#x27;Thread-&#x27;</span>+<span class="built_in">str</span>(i),))</span><br><span class="line">        threads.append(th)</span><br><span class="line">        th.start()</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> t <span class="keyword">in</span> threads:</span><br><span class="line">        t.join()</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&#x27;all threads finished&#x27;</span></span><br></pre></td></tr></table></figure>
+利用了<code>threading.Thread</code>自身的构造函数，传入的target参数作为线程的<code>run</code>函数,args参数则为传入的run函数的参数。</p>
+<p>输出结果如下所示：</p>
+<p><img data-src="https://wulc.me/imgs/2016-03-26_210528.png" /></p>
+<p>线程还有比较常用的方法比如说setdaemon(True),字面上的意思是设为守护线程，但是这个守护线程跟守护进程有很大的区别，<strong>实际上setdaemon(True)的作用是保证主线程（就是任何进程最开始的那个线程）退出时，派生出来的线程也必须退出。</strong>详细例子见http://stackoverflow.com/questions/5127401/setdaemon-function-in-thread</p>
+<h2 id="线程锁">线程锁</h2>
+<p>因为多线程共享一个进程内的资源，所以<strong>多个线程同时修改同一个变量时会发生冲突。这时候就需要线程锁</strong>了。比如说下面这段代码;
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">count = <span class="number">10</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">modifyThread</span>(<span class="params">num</span>):</span><br><span class="line">    <span class="keyword">global</span> count</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1000</span>):</span><br><span class="line">        count -= num</span><br><span class="line">        count += num</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    threads = []</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&#x27;before modifying, count=%s &#x27;</span>%count</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>):</span><br><span class="line">        th = threading.Thread(target=modifyThread,args=(i,))</span><br><span class="line">        threads.append(th)</span><br><span class="line">        th.start()</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> t <span class="keyword">in</span> threads:</span><br><span class="line">        t.join()</span><br><span class="line">        </span><br><span class="line">    <span class="built_in">print</span> <span class="string">&#x27;after modifying, count=%s &#x27;</span>%count</span><br><span class="line"></span><br></pre></td></tr></table></figure> 执行的的时候每次输出结果都不一样，例如下图：</p>
+<p><img data-src="https://wulc.me/imgs/5.png" /></p>
+<p>这是因为count是被多个线程同时修改了，解决方法就是利用线程锁<code>threading.Lock()</code>,每次需要修改count时先获取线程锁，修改完再释放。实例代码如下所示：
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">count = <span class="number">10</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">modifyThread</span>(<span class="params">num</span>):</span><br><span class="line">    <span class="keyword">global</span> count</span><br><span class="line">    threadLock.acquire()</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1000</span>):</span><br><span class="line">            count -= num</span><br><span class="line">            count += num</span><br><span class="line">    <span class="keyword">finally</span>:</span><br><span class="line">        threadLock.release()</span><br><span class="line">    </span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    threads = []</span><br><span class="line">    threadLock = threading.Lock()</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&#x27;before modifying, count=%s &#x27;</span>%count</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>):</span><br><span class="line">        th = threading.Thread(target=modifyThread,args=(i,))</span><br><span class="line">        threads.append(th)</span><br><span class="line">        th.start()</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> t <span class="keyword">in</span> threads:</span><br><span class="line">        t.join()</span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span> <span class="string">&#x27;after modifying, count=%s &#x27;</span>%count</span><br></pre></td></tr></table></figure>
+当多个线程同时执行threadLock.acquire()时，只有一个线程能成功地获取锁，然后继续执行代码，其他线程就继续等待直到获得锁为止。</p>
+<p>在其中一个线程获取了线程锁（threadLock.acquire()）后，其他线程便无法修改count，但是修改完后一定要记得释放线程锁（threadLock.release()），否则其他线程会一直处于blocked的状态，上面采用了<code>try-finally</code>保证锁一定被释放。除了<code>try-finally</code>,还可通过
+<code>with</code> 语句实现锁的自动获取和释放, 也就是说上面的
+<code>modifyThread</code> 函数可以写成下面的形式</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">modifyThread</span>(<span class="params">num</span>):</span><br><span class="line">    <span class="keyword">global</span> count</span><br><span class="line">    <span class="keyword">with</span> threadLock:</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1000</span>):</span><br><span class="line">            count -= num</span><br><span class="line">            count += num</span><br></pre></td></tr></table></figure>
+<p>通过加锁的方法修改 count, 最终得到的count的值不变。</p>
+<p>线程锁(Lock)是线程同步的一种方式，除此之外，还有RLocks, Semaphores,
+Condition, Events 和 Queues，具体可参考<a
+target="_blank" rel="noopener" href="https://docs.python.org/2/library/threading.html#lock-objects">官方文档</a>和<a
+target="_blank" rel="noopener" href="http://www.laurentluce.com/posts/python-threads-synchronization-locks-rlocks-semaphores-conditions-events-and-queues/">Python
+threads synchronization: Locks, RLocks, Semaphores, Conditions, Events
+and Queues</a></p>
+<h2 id="多线程是否提高了效率">多线程是否提高了效率</h2>
+<p>常常会听到有人说，<strong>因为python多线程只能使用一个核，所以多线程实际上并没有提高效率</strong>。这句话可以说一半正确，一半不正确。原因如下：</p>
+<p><strong>python多线程只能使用一个核</strong>这句话针对部分python解析器如CPython等是正确的，而且是相对与Java、C++那些一个线程就可以占一个核的程序而言。python的<a
+target="_blank" rel="noopener" href="https://wiki.python.org/moin/GlobalInterpreterLock">官方文档</a>描述如下：
+&gt;In CPython, the global interpreter lock, or GIL, is a mutex that
+prevents multiple native threads from executing Python bytecodes at
+once. This lock is necessary mainly because CPython's memory management
+is not thread-safe</p>
+<p>原因是python的解析器（如CPython）因为内存管理问题设计了一个GIL（全局解析锁），GIL保证了任何时候都只能有一个线程执行其字节码。这就限制了<strong>同一进程内同一时间只能有一个线程在执行其字节码</strong>，也就是说无论一个进程无论创建多少线程都只能使用一个核。</p>
+<p>而且，这个GIL也只在CPython等解释器有，其他的如 <code>Jython</code> 或
+<code>IronPython</code>
+中没有GIL，多线程可以利用多个核。另外，即使是CPython解释器，也可通过多进程来达到利用多个核的目的。</p>
+<p>那第二句话<strong>多线程实际上并没有提高效率</strong>是否正确？可以说也是部分正确，实际上<strong>针对CPU密集型的
+python 进程，多线程没有提高效率，而针对IO密集型的 python
+进程会提高效率</strong>。</p>
+<p>从上面的解释我们知道，GIL是限制了多线程并发执行的一个关键因素，而<strong>GIL仅仅是限制了同一时间同一进程只能有一个线程执行字节码</strong>，执行字节码是在CPU中的，对于CPU密集型的多线程，会一直占据着CPU导致其效果跟单线程一样。</p>
+<p>而<strong>对于IO密集型的多线程，线程的执行时间会较多地消耗在IO上，因而CPU可供多线程轮流使用</strong>。比如说我曾用python爬取几个输入法的词库的，多线程比单线程要快了好几倍，原因就是爬虫属于IO密集型的任务，线程执行字节码所需的时间很短，而把大部分时间放在了下载和存储在本地上，线程执行完字节码后会释放GIL，从而其他线程也能够执行其字节码。从而在总体上提高了下载效率。</p>
+<p>文章为博主个人理解总结，如有错误，欢迎指出交流。</p>
+<p>参考：</p>
+<p><a
+target="_blank" rel="noopener" href="https://docs.python.org/2/library/threading.html#lock-objects">threading
+— Higher-level threading interface</a> <a
+target="_blank" rel="noopener" href="https://wiki.python.org/moin/GlobalInterpreterLock">GlobalInterpreterLock</a>
+<a
+target="_blank" rel="noopener" href="http://www.liaoxuefeng.com/wiki/001374738125095c955c1e6d8bb493182103fac9270762a000/001386832360548a6491f20c62d427287739fcfa5d5be1f000">多线程</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/python/" rel="tag"><i class="fa fa-tag"></i> python</a>
+              <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="tag"><i class="fa fa-tag"></i> 操作系统</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2016/03/10/LeetCode%20%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A(19)--%E4%BB%8E%E5%90%8E%E5%BE%80%E5%89%8D%E5%88%A0%E9%99%A4%E9%93%BE%E8%A1%A8%E7%AC%ACn%E4%B8%AA%E5%85%83%E7%B4%A0/" rel="prev" title="LeetCode 解题报告(19)--从后往前删除链表第n个元素">
+                  <i class="fa fa-chevron-left"></i> LeetCode 解题报告(19)--从后往前删除链表第n个元素
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2016/03/27/%E6%90%9C%E7%8B%97%E3%80%81%E7%99%BE%E5%BA%A6%E3%80%81QQ%E8%BE%93%E5%85%A5%E6%B3%95%E7%9A%84%E8%AF%8D%E5%BA%93%E7%88%AC%E8%99%AB/" rel="next" title="搜狗、百度、QQ输入法的词库爬虫">
+                  搜狗、百度、QQ输入法的词库爬虫 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-pen"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

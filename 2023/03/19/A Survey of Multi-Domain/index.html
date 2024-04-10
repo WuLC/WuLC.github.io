@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id: "JmI6QmP3fMkLet6B",ck: "JmI6QmP3fMkLet6B"})</script>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wulc.me","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.15.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="在实际的业务中，数据往往由多个 domain 组成，以广告为例，往往会存在多个转化目标，在 ctr、cvr 的预估时也要考虑不同转化目标的影响，因为在不同转化目标下，ctr、cvr 的分布(如均值、方差)往往是不一致的 解决这个问题最直观的思路是加 domain 相关特征或根据 domain 拆模型，前者属于隐式的方法，需要特征的区分性足够强、能被模型学到，但这个足够强没有一个量化的标准，基本只能">
+<meta property="og:type" content="article">
+<meta property="og:title" content="A Survey of Multi-Domain">
+<meta property="og:url" content="https://wulc.me/2023/03/19/A%20Survey%20of%20Multi-Domain/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="在实际的业务中，数据往往由多个 domain 组成，以广告为例，往往会存在多个转化目标，在 ctr、cvr 的预估时也要考虑不同转化目标的影响，因为在不同转化目标下，ctr、cvr 的分布(如均值、方差)往往是不一致的 解决这个问题最直观的思路是加 domain 相关特征或根据 domain 拆模型，前者属于隐式的方法，需要特征的区分性足够强、能被模型学到，但这个足够强没有一个量化的标准，基本只能">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/MultiDomainMMOE.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/MultiDomainMMOE_GATE.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/MultiDomainSTAR.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/MultiDomainSTAR_BN.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/MultiDomainSTAR_PN.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/MultiDomainSTAR_AT.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/MultiDomainLHUC_PEPNet.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/MultiDomainLHUC_GateNU1.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/MultiDomainLHUC_GateNU2.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/MultiDomainGRL.jpg">
+<meta property="article:published_time" content="2023-03-19T13:53:19.000Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.172Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="计算广告">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/MultiDomainMMOE.jpg">
+
+
+<link rel="canonical" href="https://wulc.me/2023/03/19/A%20Survey%20of%20Multi-Domain/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wulc.me/2023/03/19/A%20Survey%20of%20Multi-Domain/","path":"2023/03/19/A Survey of Multi-Domain/","title":"A Survey of Multi-Domain"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>A Survey of Multi-Domain | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">吴良超的学习笔记</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#mmoe"><span class="nav-number">1.</span> <span class="nav-text">MMOE</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#star"><span class="nav-number">2.</span> <span class="nav-text">STAR</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#lhuc"><span class="nav-number">3.</span> <span class="nav-text">LHUC</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#grl"><span class="nav-number">4.</span> <span class="nav-text">GRL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">小结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">253</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2023/03/19/A%20Survey%20of%20Multi-Domain/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="A Survey of Multi-Domain | 吴良超的学习笔记">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          A Survey of Multi-Domain
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-03-19 21:53:19" itemprop="dateCreated datePublished" datetime="2023-03-19T21:53:19+08:00">2023-03-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-tags"></i>
+      </span>
+      <span class="post-meta-item-text">标签</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A/" itemprop="url" rel="index"><span itemprop="name">计算广告</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>在实际的业务中，数据往往由多个 domain
+组成，以广告为例，往往会存在多个转化目标，在 ctr、cvr
+的预估时也要考虑不同转化目标的影响，因为在不同转化目标下，ctr、cvr
+的分布(如均值、方差)往往是不一致的</p>
+<p>解决这个问题最直观的思路是加 domain 相关特征或根据 domain
+拆模型，前者属于隐式的方法，需要特征的区分性足够强、能被模型学到，但这个足够强没有一个量化的标准，基本只能看实验效果；后者则存在维护成本过高的问题，比如说有
+n 个 domain 就要拆成 n 个模型</p>
+<p>本文着重讲如何通过一个模型 serve 多个 domain
+的方法，主要是在业界验证有收益且公开发表的工作，基本上可以分为 3 类</p>
+<ol type="1">
+<li>multi-head 结构</li>
+<li>LHUC 机制</li>
+<li>GRL 机制</li>
+</ol>
+<span id="more"></span>
+<h2 id="mmoe">MMOE</h2>
+<p>在一个模型中根据多个 domain 拆成多个 head（每个 head 代表一个
+domain），通过每个 head 的参数学习特定 domain
+的分布，是一种比较直观和常见的做法</p>
+<p>这类方法的代表是 MMOE: <a
+target="_blank" rel="noopener" href="https://dl.acm.org/doi/pdf/10.1145/3219819.3220007">Modeling Task
+Relationships in Multi-task Learning with Multi-gate
+Mixture-of-Experts</a></p>
+<p>下图直观展示了拆 head 的集中常见做法</p>
+<p><img data-src="https://wulc.me/imgs/MultiDomainMMOE.jpg" height="50%" width="50%" alt="mmoe 结构对比"></p>
+<p>MMOE 中的两个 M，第一个代表 multi-gate，第二个代表
+multi-expert；multi-expert 比较好理解，从 ensemble 的角度来看，就是在做
+bagging，而 gate 就是在控制每个 expert 的 weight，multi-gate 则是为每个
+expert 分配一个 gate，本质上就是做到 domain-wise 的优化</p>
+<p>而 gate 的具体实现，也是一个 mlp, 最终通过 softmax 得到每个 expert 的
+weight，对于第 <span class="math inline">\(k\)</span>个
+task，计算过程如下图所示</p>
+<p><img data-src="https://wulc.me/imgs/MultiDomainMMOE_GATE.jpg" height="50%" width="50%" alt="mmoe gate 结构"></p>
+<h2 id="star">STAR</h2>
+<p>这是阿里的一篇 paper，应用场景就是比较典型的 CTR 业务，<a
+target="_blank" rel="noopener" href="https://arxiv.org/pdf/2101.11427.pdf">One Model to Serve All: Star
+Topology Adaptive Recommender for Multi-Domain CTR Prediction</a></p>
+<p>在模型结构上，也是为每个 domain
+分配一部分自己的参数，从而达到在一个模型中 serve 多个 domain
+的目的，这一点跟 MMOE 原理上是一样的，文章是这么说的</p>
+<blockquote>
+<p>Essentially, the network of each domain consists of two factorized
+networks: one centered network shared by all domains and the
+domain-specific network tailored for each domain</p>
+</blockquote>
+<p>STAR 基本结构如下图(b)所示，直观来看，有一个公共的 head，同时为每个
+domain 分配了一个 head，最终每个 head 的参数是公共 head 参数与 domain
+head 参数的 element-wise 结果</p>
+<p><img data-src="https://wulc.me/imgs/MultiDomainSTAR.jpg" height="50%" width="50%" alt="mmoe star 结构"></p>
+<ul>
+<li>Partitioned Normalization(PN)</li>
+</ul>
+<p>在上面的结构中，有一个 Partitioned Normalization (PN)
+的部分，目标是解决统一 batch normalization 在这 multi-domain
+中不适用的问题</p>
+<p>常规的 batch normalization 会计算 batch 内所有的样本的 mean 和
+variance，然后做归一化，如下图所示；这里有个<strong>假设就是这批样本是独立同分布(i.i.d.)</strong>的，但
+multi-domain 本身的要解决的问题就是不同 domain
+的分布不一样，因此不能直接用原始的 batch normalization；关于 BN
+为何有效，可参考这篇文章：<a
+target="_blank" rel="noopener" href="https://arxiv.org/pdf/2105.07576.pdf">Rethinking “Batch” in
+BatchNorm</a></p>
+<p><img data-src="https://wulc.me/imgs/MultiDomainSTAR_BN.jpg" height="40%" width="40%" alt="batch normalization"></p>
+<p>而 PN 的做法是为原始 BN 中的参数 <span
+class="math inline">\(\gamma\)</span> 和 <span
+class="math inline">\(\beta\)</span> 生成额外的 domain-specify
+参数，如下图所示</p>
+<p><img data-src="https://wulc.me/imgs/MultiDomainSTAR_PN.jpg" height="40%" width="40%" alt="partitioned normalization"></p>
+<ul>
+<li>Auxiliary Network</li>
+</ul>
+<p>这是个小网络，输入是domain indicator(表示这个样本来自哪个
+domain)，输出是一个预估值，最终输出的预估值会与上面的 STAR
+的模型加和做最终预估; 作用等价于为每个 domain 增加了一个 bias 项</p>
+<p><img data-src="https://wulc.me/imgs/MultiDomainSTAR_AT.jpg" height="40%" width="40%" alt="Auxiliary Network"></p>
+<p>实验结果这里不展开，paper 效果显示比一些已有的 multi-domain
+任务要好（参数量是否打平没提到）；也对 PN 的效果做了消融，结果显示 PN
+的效果比直接用 BN 要好</p>
+<h2 id="lhuc">LHUC</h2>
+<p>前面的两篇文章基本思路都是为不同的 domain 分配多一个 head
+的参数，然后通过不同 head 来描述不同 domain 的差异</p>
+<p>提出 LHUC 这篇文章则没有显式地分 head ，而是通过在 hidden layer
+上乘上一个 domain-aware embedding，来达到这样的效果：<a
+target="_blank" rel="noopener" href="https://arxiv.org/abs/1601.02828">Learning Hidden Unit
+Contributions for Unsupervised Acoustic Model Adaptation</a></p>
+<p>这篇 paper 最早是在 speech 领域提出的一个方法，基本的思路是为每个
+speaker 单独调整 nn 中全连接层里部分的参数，从而达到每个 speaker
+的个性化预估；总体思路比较直观，也很容易把方法迁移至推荐上</p>
+<p>快手的提出的 PEPNet(<a
+target="_blank" rel="noopener" href="https://arxiv.org/pdf/2302.01115.pdf">Parameter and Embedding
+Personalized Network for Infusing with Personalized Prior
+Information</a>) 也是借鉴了 LHUC 的这个思想</p>
+<p>整个模型结构如下图所示，LHUC 部分是最右边的 PPNet 部分，每个 GateNU
+相当于为每个 hidden layer 生成一个 domain-aware 的 embedding，左边的
+EPNet 则是相当于为 embedding 不用分生成类似的 embedding</p>
+<p><img data-src="https://wulc.me/imgs/MultiDomainLHUC_PEPNet.jpg" height="50%" width="50%" alt="PEPNet 结构"></p>
+<p>Gate NU 可以理解为一个简单两层的 nn
+网络，输入是<strong>依靠先验知识挑选的能够区分不同 domain
+的特征</strong>，输出则是一个 tensor（维度大小与 hidden layer 一样）</p>
+<p><img data-src="https://wulc.me/imgs/MultiDomainLHUC_GateNU1.jpg" height="40%" width="40%"  alt="Gate NU">
+<img data-src="https://wulc.me/imgs/MultiDomainLHUC_GateNU2.jpg" height="40%" width="40%" alt="Gate NU"></p>
+<p>除了结构上的改进，这篇 paper
+还做了较多的工程上的有优化，这里不详细展开</p>
+<h2 id="grl">GRL</h2>
+<p>这里主要想介绍 GRL（Gradient Reversal
+Layer）这个机制，这个机制出自论文 <a
+target="_blank" rel="noopener" href="https://arxiv.org/pdf/1409.7495.pdf">Unsupervised Domain
+Adaptation by Backpropagation</a></p>
+<p>论文主要想解决的问题是 domain adaption，即在 source domain
+有较多数据，target domain 较少数据，怎么能够较好地同时解决两个 domain
+的问题，paper 里提到的方案是从特征层面去解决这个问题</p>
+<blockquote>
+<p>the approach promotes the emergence of “deep” features that are (i)
+discriminative for the main learning task on the source domain and (ii)
+invariant with respect to the shift between the domains.</p>
+</blockquote>
+<p>为了达到这个目标，论文提出的 GRL 机制如下图所示</p>
+<p><img data-src="https://wulc.me/imgs/MultiDomainGRL.jpg" height="50%" width="50%" alt="GRL 机制"></p>
+<p>从结构上来看，这也是个 multi-head 的结构，但蓝色的 head 是 source
+domain 的原始 task，<strong>红色的 head（后面简称为 discriminator）
+则是一个 domain classifier，即是用来区分样本是属于哪一个 domain
+的</strong></p>
+<p>两个 task 在做 bp 时，蓝色的 head 正常回传梯度，discriminator
+则在梯度回传到 feature extractor 即图中色绿色部分时，乘上一个 negative
+constant，这就是 GRL 的机制</p>
+<p>那为什么要这么做呢？paper 给出的解释是这样的，</p>
+<blockquote>
+<p>we want to make the features <span class="math inline">\(f\)</span>
+domain-invariant. That is, <strong>we want to make the distributions
+<span class="math inline">\(S(f) = \lbrace G_f(x;\theta_f)|x∼S(x)
+\rbrace\)</span> and <span class="math inline">\(T(f) = \lbrace
+G_f(x;\theta_f)|x∼T(x) \rbrace\)</span> to be similar</strong>. Under
+the covariate shift assumption, this would make the label prediction
+accuracy on the target domain to be the same as on the source domain
+(Shimodaira, 2000).</p>
+</blockquote>
+<p>即希望 feature extractor 抽取出来的特征是 domain-invariant、对 domain
+不敏感的，或者说<strong>基于抽取出来的特征，discriminator
+不能很好地区分样本来自哪个 domain</strong></p>
+<p>而如果不加 GRL，正常的 bp 是会 discriminator 能够区分样本来自哪个
+domain 的，加了 GRL 后，则能够达到上面提到的“discriminator
+不能很好地区分样本来自哪个 domain”</p>
+<p>那另一个问题来了，即为什么要在 feature extractor 这一层做，而不是在
+<span class="math inline">\(L_d\)</span> 上就加一个负号？</p>
+<p>因为<strong>如果直接在 <span class="math inline">\(L_d\)</span>
+上加负号，相当于让 discriminator 把它分到错误的那个 domain，但一个好的
+feature 应该是让 discriminator 分辨不出它来自哪个
+domain，而不是把它分到错误的那个 domain</strong></p>
+<p>因此，GRL 机制某种程度上也是一类 feature
+engineering，用于提取出适用于多个 domain 的 feature</p>
+<h2 id="小结">小结</h2>
+<p>综上，本文主要介绍了三种解决 multi-domain 的思路，分别是 multi-head
+结构，LHUC 机制和 GRL
+机制；据笔者的了解，目前这几种方案在业界都有落地的案例，值得在相应业务中进行尝试~</p>
+<p>multi-head 机制比较直观，为每个 domain 分配一个 head，分别学习不同
+domain 的分布，MMOE 和 STAR 这一类模型属于这种；LHUC
+机制则是根据先验选择一批有区分度的特征，通过一个小的 nn
+学习一个隐变量作用到hidden-layer上（其实也能作用到 embedding 上，PEPNet
+中没有介绍的 EPNet 就是这部分，原理基本一致）；GRL
+则是通过训练方式使得模型抽取出来的 feature 是 domain-invariant
+的，训练的思想跟 GAN 的对抗训练比较类似</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A/" rel="tag"><i class="fa fa-tag"></i> 计算广告</a>
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/02/26/%E6%B7%B7%E6%8E%92%E9%82%A3%E4%BA%9B%E4%BA%8B/" rel="prev" title="混排的那些事儿">
+                  <i class="fa fa-chevron-left"></i> 混排的那些事儿
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/05/02/%E5%9B%9E%E5%BD%92%E4%BB%BB%E5%8A%A1%E9%87%8C%E7%9A%84%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0/" rel="next" title="回归任务里的损失函数">
+                  回归任务里的损失函数 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-pen"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

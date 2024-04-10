@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id: "JmI6QmP3fMkLet6B",ck: "JmI6QmP3fMkLet6B"})</script>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wulc.me","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.15.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="要通过计算机进行自然语言处理，首先就需要将这些文本数字化。目前用得最广泛的方法是词向量，根据训练使用算法的不同，目前主要有 Word2Vec 和 GloVe 两大方法，本文主要讲述通过这两个方法分别训练中文维基百科语料库的词向量。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="中文维基百科语料库词向量的训练">
+<meta property="og:url" content="https://wulc.me/2016/10/12/%E4%B8%AD%E6%96%87%E7%BB%B4%E5%9F%BA%E7%99%BE%E7%A7%91%E7%9A%84%E8%AF%8D%E5%90%91%E9%87%8F%E7%9A%84%E8%AE%AD%E7%BB%83/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="要通过计算机进行自然语言处理，首先就需要将这些文本数字化。目前用得最广泛的方法是词向量，根据训练使用算法的不同，目前主要有 Word2Vec 和 GloVe 两大方法，本文主要讲述通过这两个方法分别训练中文维基百科语料库的词向量。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2016-10-12T14:31:17.000Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.199Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="NLP">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://wulc.me/2016/10/12/%E4%B8%AD%E6%96%87%E7%BB%B4%E5%9F%BA%E7%99%BE%E7%A7%91%E7%9A%84%E8%AF%8D%E5%90%91%E9%87%8F%E7%9A%84%E8%AE%AD%E7%BB%83/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wulc.me/2016/10/12/%E4%B8%AD%E6%96%87%E7%BB%B4%E5%9F%BA%E7%99%BE%E7%A7%91%E7%9A%84%E8%AF%8D%E5%90%91%E9%87%8F%E7%9A%84%E8%AE%AD%E7%BB%83/","path":"2016/10/12/中文维基百科的词向量的训练/","title":"中文维基百科语料库词向量的训练"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>中文维基百科语料库词向量的训练 | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">吴良超的学习笔记</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E5%B9%B6%E5%A4%84%E7%90%86%E4%B8%AD%E6%96%87%E7%BB%B4%E5%9F%BA%E7%99%BE%E7%A7%91%E8%AF%AD%E6%96%99%E5%BA%93"><span class="nav-number">1.</span> <span class="nav-text">获取并处理中文维基百科语料库</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD"><span class="nav-number">1.1.</span> <span class="nav-text">下载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8A%BD%E5%8F%96%E5%86%85%E5%AE%B9"><span class="nav-number">1.2.</span> <span class="nav-text">抽取内容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B9%81%E7%AE%80%E8%BD%AC%E6%8D%A2"><span class="nav-number">1.3.</span> <span class="nav-text">繁简转换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%BB%E9%99%A4%E6%A0%87%E7%82%B9%E7%AC%A6%E5%8F%B7"><span class="nav-number">1.4.</span> <span class="nav-text">去除标点符号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E8%AF%8D"><span class="nav-number">1.5.</span> <span class="nav-text">分词</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%9A%E8%BF%87-word2vec-%E8%AE%AD%E7%BB%83%E8%AF%8D%E5%90%91%E9%87%8F"><span class="nav-number">2.</span> <span class="nav-text">通过 Word2Vec 训练词向量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%9A%E8%BF%87-glove-%E8%AE%AD%E7%BB%83%E8%AF%8D%E5%90%91%E9%87%8F"><span class="nav-number">3.</span> <span class="nav-text">通过 Glove 训练词向量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E8%AF%8D%E5%90%91%E9%87%8F%E6%A8%A1%E5%9E%8B"><span class="nav-number">4.</span> <span class="nav-text">使用词向量模型</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">253</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2016/10/12/%E4%B8%AD%E6%96%87%E7%BB%B4%E5%9F%BA%E7%99%BE%E7%A7%91%E7%9A%84%E8%AF%8D%E5%90%91%E9%87%8F%E7%9A%84%E8%AE%AD%E7%BB%83/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="中文维基百科语料库词向量的训练 | 吴良超的学习笔记">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          中文维基百科语料库词向量的训练
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2016-10-12 22:31:17" itemprop="dateCreated datePublished" datetime="2016-10-12T22:31:17+08:00">2016-10-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-tags"></i>
+      </span>
+      <span class="post-meta-item-text">标签</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/NLP/" itemprop="url" rel="index"><span itemprop="name">NLP</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>要通过计算机进行自然语言处理，首先就需要将这些文本数字化。目前用得最广泛的方法是词向量，根据训练使用算法的不同，目前主要有
+<a target="_blank" rel="noopener" href="https://code.google.com/archive/p/word2vec/">Word2Vec</a> 和 <a
+target="_blank" rel="noopener" href="http://nlp.stanford.edu/projects/glove/">GloVe</a>
+两大方法，本文主要讲述通过这两个方法分别训练中文维基百科语料库的词向量。</p>
+<span id="more"></span>
+<h2 id="获取并处理中文维基百科语料库">获取并处理中文维基百科语料库</h2>
+<h3 id="下载">下载</h3>
+<p>中文维基百科语料库的下载链接为：https://dumps.wikimedia.org/zhwiki/,
+本试验下载的是最新的<a
+target="_blank" rel="noopener" href="https://dumps.wikimedia.org/zhwiki/latest/zhwiki-latest-pages-articles.xml.bz2">zhwiki-latest-pages-articles.xml.bz2</a>。这个压缩包里面存的是标题、正文部分，该目录下还包括了其他类型的语料库，如仅包含标题，摘要等。</p>
+<h3 id="抽取内容">抽取内容</h3>
+<p>Wikipedia Extractor
+是一个开源的用于抽取维基百科语料库的工具，由python写成，通过这个工具可以很容易地从语料库中抽取出相关内容。使用方法如下：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/attardi/wikiextractor.git wikiextractor</span><br><span class="line">$ wikiextractor/WikiExtractor.py  -b 2000M -o zhwiki_extracted zhwiki-latest-pages-articles.xml.bz2</span><br></pre></td></tr></table></figure>
+<p>由于这个工具就是一个python脚本，因此无需安装，<code>-b</code>
+参数指对提取出来的内容进行切片后每个文件的大小，如果要将所有内容保存在同一个文件，那么就需要把这个参数设得大一下，<code>-o</code>
+的参数指提取出来的文件放置的目录，抽取出来的文件的路径为<code>zhwiki_extract/AA/wiki_00</code>。更多参数可参考其github主页的说明。</p>
+<p>抽取后的内容格式为每篇文章被一对<code>&lt;doc&gt; &lt;/doc&gt;</code>包起来，而<code>&lt;doc&gt;</code>中的包含了属性有文章的id、url和title属性，如<code>&lt;doc id="13" url="https://zh.wikipedia.org/wiki?curid=13" title="数学"&gt;</code>。</p>
+<h3 id="繁简转换">繁简转换</h3>
+<p>由上一步提取出来的中文维基百科中的语料中既有繁体字也有简体字，这里需要将其统一变为简体字，采用的工具也是开源的
+<a target="_blank" rel="noopener" href="https://github.com/BYVoid/OpenCC">OpenCC</a>
+转换器。使用方法如下：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/BYVoid/OpenCC.git</span><br><span class="line">$ <span class="built_in">cd</span> OpenCC &amp;&amp; make &amp;&amp; make install</span><br><span class="line">$ opencc -i zhwiki_extract/AA/wiki_00 -o zhwiki_extract/zhs_wiki -c /home/nlp/OpenCC/data/config/t2s.json</span><br></pre></td></tr></table></figure>
+<p>我使用的是
+centos，yum源中找不到这个软件，因此通过编译安装最新的版本，需要注意的是编译OpenCC
+要求gcc的版本最低为 4.6 。其中 <code>-i</code>表示输入文件路径，
+<code>-o</code>表示输出的文件
+，<code>-c</code>表示转换的配置文件，这里使用的繁体转简体的配置文件，OpenCC自带了一系列的转换配置文件，可参考其github主页的说明。</p>
+<h3 id="去除标点符号">去除标点符号</h3>
+<p>去除标点符号有两个问题需要解决，一是像下面这种为了解决各地术语名称不同的问题
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">他的主要成就包括Emacs及後來的GNU Emacs，GNU C 編譯器及-&#123;zh-hant:GNU 除錯器;zh-hans:GDB 调试器&#125;-。</span><br></pre></td></tr></table></figure></p>
+<p>另外一个就是将所有标点符号替换成空字符，通过正则表达式均可解决这两个问题，下面是具体实现的python代码。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*- </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> io</span><br><span class="line"></span><br><span class="line">reload(sys)</span><br><span class="line">sys.setdefaultencoding(<span class="string">&#x27;utf-8&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">pre_process</span>(<span class="params">input_file, output_file</span>):</span><br><span class="line">    multi_version = re.<span class="built_in">compile</span>(u<span class="string">r&#x27;-\&#123;.*?(zh-hans|zh-cn):([^;]*?)(;.*?)?\&#125;-&#x27;</span>)</span><br><span class="line">    punctuation = re.<span class="built_in">compile</span>(<span class="string">u&quot;[-~!@#$%^&amp;*()_+`=\[\]\\\&#123;\&#125;\&quot;|;&#x27;:,./&lt;&gt;?·！@#￥%……&amp;*（）——+【】、；‘：“”，。、《》？「『」』]&quot;</span>)</span><br><span class="line">    <span class="keyword">with</span> io.<span class="built_in">open</span>(output_file, mode = <span class="string">&#x27;w&#x27;</span>, encoding = <span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> outfile:</span><br><span class="line">        <span class="keyword">with</span> io.<span class="built_in">open</span>(input_file, mode = <span class="string">&#x27;r&#x27;</span>, encoding =<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> infile:</span><br><span class="line">            <span class="keyword">for</span> line <span class="keyword">in</span> infile:</span><br><span class="line">                line = multi_version.sub(u<span class="string">r&#x27;\2&#x27;</span>, line)</span><br><span class="line">                line = punctuation.sub(<span class="string">&#x27;&#x27;</span>, line.decode(<span class="string">&#x27;utf8&#x27;</span>))</span><br><span class="line">                outfile.write(line)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(sys.argv) != <span class="number">3</span>:</span><br><span class="line">        <span class="built_in">print</span> <span class="string">&quot;Usage: python script.py input_file output_file&quot;</span></span><br><span class="line">        sys.exit()</span><br><span class="line">    input_file, output_file = sys.argv[<span class="number">1</span>], sys.argv[<span class="number">2</span>]</span><br><span class="line">    pre_process(input_file, output_file)</span><br></pre></td></tr></table></figure>
+<h3 id="分词">分词</h3>
+<p>经过上面的步骤基本得到了都是简体中文的纯净文本，下面需要对其进行分词并且整理成每行一篇文本的格式，从而方便后续的处理。</p>
+<p>分词采用 python 的分词工具 <a
+target="_blank" rel="noopener" href="https://github.com/fxsjy/jieba">jieba</a>，通过
+<code>pip install jieba</code>
+安装即可。且将一篇文章分词后的结果存储在一行，由前面可知，每篇文章存储在一对<code>&lt;doc&gt;&lt;/doc&gt;</code>标签中，由于前面去掉了标点，所以现在变成了<code>doc doc</code>,所以只要判断当前行为<code>doc</code>时即可认为文章结束，从而开始在新的一行记录下一篇文章的分词结果。实现的python代码如下:</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> io</span><br><span class="line"><span class="keyword">import</span> jieba</span><br><span class="line"></span><br><span class="line">reload(sys)</span><br><span class="line">sys.setdefaultencoding(<span class="string">&#x27;utf-8&#x27;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">cut_words</span>(<span class="params">input_file, output_file</span>):</span><br><span class="line">    count = <span class="number">0</span></span><br><span class="line">    <span class="keyword">with</span> io.<span class="built_in">open</span>(output_file, mode = <span class="string">&#x27;w&#x27;</span>, encoding = <span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> outfile:</span><br><span class="line">        <span class="keyword">with</span> io.<span class="built_in">open</span>(input_file, mode = <span class="string">&#x27;r&#x27;</span>, encoding = <span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> infile:</span><br><span class="line">            <span class="keyword">for</span> line <span class="keyword">in</span> infile:</span><br><span class="line">                line = line.strip()</span><br><span class="line">                <span class="keyword">if</span> <span class="built_in">len</span>(line) &lt; <span class="number">1</span>:  <span class="comment"># empty line</span></span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                <span class="keyword">if</span> line.startswith(<span class="string">&#x27;doc&#x27;</span>): <span class="comment"># start or end of a passage</span></span><br><span class="line">                    <span class="keyword">if</span> line == <span class="string">&#x27;doc&#x27;</span>: <span class="comment"># end of a passage</span></span><br><span class="line">                        outfile.write(<span class="string">u&#x27;\n&#x27;</span>)</span><br><span class="line">                        count = count + <span class="number">1</span></span><br><span class="line">                        <span class="keyword">if</span>(count % <span class="number">1000</span> == <span class="number">0</span>):</span><br><span class="line">                            <span class="built_in">print</span>(<span class="string">&#x27;%s articles were finished.......&#x27;</span> %count)</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                <span class="keyword">for</span> word <span class="keyword">in</span> jieba.cut(line):</span><br><span class="line">                    outfile.write(word + <span class="string">&#x27; &#x27;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;%s articles were finished.......&#x27;</span> %count)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(sys.argv) &lt; <span class="number">3</span>:</span><br><span class="line">        <span class="built_in">print</span> <span class="string">&quot;Usage: python script.py input_file output_file&quot;</span></span><br><span class="line">        sys.exit()</span><br><span class="line">    input_file, output_file = sys.argv[<span class="number">1</span>], sys.argv[<span class="number">2</span>]</span><br><span class="line">    cut_words(input_file, output_file)</span><br></pre></td></tr></table></figure>
+<h2 id="通过-word2vec-训练词向量">通过 Word2Vec 训练词向量</h2>
+<p>Word2vec中包含了两种训练词向量的方法：Continuous Bag of
+Words(CBOW)和Skip-gram。CBOW的目标是根据上下文来预测当前词语的概率。Skip-gram刚好相反，根据当前词语来预测上下文的概率。这两种方法都利用人工神经网络作为它们的分类算法。起初，每个单词都是一个随机N维向量。训练时，该算法利用CBOW或者Skip-gram的方法获得了每个单词的最优向量。</p>
+<p>最初 Google 开源的 Word2Vec 是用C来写的，后面陆续有了Python ，Java
+等语言的版本，这里采用的是 Python 版本的 <a
+target="_blank" rel="noopener" href="http://radimrehurek.com/gensim/models/word2vec.html">gensim</a>。通过
+gensim 提供的 API
+可以比较容易地进行词向量的训练。gensim的建议通过conda安装，步骤如下:</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ wget https://repo.continuum.io/archive/Anaconda2-<span class="number">4.1</span><span class="number">.1</span>-Linux-x86_64.sh</span><br><span class="line">$ bash Anaconda2-<span class="number">4.1</span><span class="number">.1</span>-Linux-x86_64.sh</span><br><span class="line">$ conda update conda</span><br><span class="line">$ conda install gensim</span><br></pre></td></tr></table></figure>
+<p>Linux 系统一般原来会带有 python，直接执行 python
+命令可能会调用系统内置的 python 解释器，因此如果要使用conda安装的
+python， 执行 python 命令的时候需要输入指定其通过 conda
+安装的完整目录，或者将这个路径添加在环境变量<code>$PATH</code>之前。</p>
+<p>下面是对上面处理后的语料库进行训练的一个简单例子。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> os, sys</span><br><span class="line"><span class="keyword">import</span> multiprocessing</span><br><span class="line"><span class="keyword">import</span> gensim  </span><br><span class="line"></span><br><span class="line">reload(sys)</span><br><span class="line">sys.setdefaultencoding(<span class="string">&#x27;utf-8&#x27;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">word2vec_train</span>(<span class="params">input_file, output_file</span>):</span><br><span class="line">    sentences = gensim.models.word2vec.LineSentence(input_file)</span><br><span class="line">    model = gensim.models.Word2Vec(sentences, size=<span class="number">300</span>, min_count=<span class="number">10</span>, sg=<span class="number">0</span>, workers=multiprocessing.cpu_count())</span><br><span class="line">    model.save(output_file)</span><br><span class="line">    model.save_word2vec_format(output_file + <span class="string">&#x27;.vector&#x27;</span>, binary=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(sys.argv) &lt; <span class="number">3</span>:</span><br><span class="line">        <span class="built_in">print</span> <span class="string">&quot;Usage: python script.py infile outfile&quot;</span></span><br><span class="line">        sys.exit()</span><br><span class="line">    input_file, output_file = sys.argv[<span class="number">1</span>], sys.argv[<span class="number">2</span>]</span><br><span class="line">    word2vec_train(input_file, output_file)</span><br></pre></td></tr></table></figure>
+<p>上面的训练过程首先将输入的文件转为 gensim 内部的 LineSentence
+对象，<strong>要求输入的文件的格式为每行一篇文章，每篇文章的词语以空格隔开</strong>。</p>
+<p>然后通过 <code>gensim.models.Word2Vec</code> 初始化一个 Word2Vec
+模型，<code>size</code>参数表示训练的向量的维数；<code>min_count</code>表示忽略那些出现次数小于这个数值的词语，认为他们是没有意义的词语，一般的取值范围为（0，100）；<code>sg</code>表示采用何种算法进行训练，取0时表示采用CBOW模型，取1表示采用skip-gram模型；<code>workers</code>表示开多少个进程进行训练，采用多进程训练可以加快训练过程，这里开的进程数与CPU的核数相等。</p>
+<p>最后将训练后的得到的词向量存储在文件中，存储的格式可以是 gensim
+提供的默认格式(<code>save</code>方法)，也可以与原始c版本word2vec的
+vector 相同的格式(<code>save_word2vec_format</code>方法)，加载时分别采用
+<code>load</code> 方法和 <code>load_word2vec_format</code>
+方法即可。更详细的API可参考
+https://rare-technologies.com/word2vec-tutorial/ 和
+http://radimrehurek.com/gensim/models/word2vec.html。</p>
+<p>假设我们训练好了一个语料库的词向量，当一些新的文章加入这个语料库时，如何训练这些新增的文章从而更新我们的语料库？将全部文章再进行一次训练显然是费时费力的，gensim提供了一种类似于“增量训练”的方法。即可在原来的model基础上仅对新增的文章进行训练。如下所示为一个简单的例子：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">model = gensim.models.Word2Vec.load(exist_model)</span><br><span class="line">model.train(new_sentences)</span><br></pre></td></tr></table></figure>
+<p>上面的代码先加载了一个已经训练好的词向量模型，然后再添加新的文章进行训练，同样新增的文章的格式也要满足每行一篇文章，每篇文章的词语通过空格分开的格式。<strong>这里需要注意的是加载的模型只能
+是通过<code>model.save()</code>存储的模型，从<code>model.save_word2vec_format()</code>恢复过来的模型只能用于查询.</strong></p>
+<h2 id="通过-glove-训练词向量">通过 Glove 训练词向量</h2>
+<p>除了上面的 Word2Vec ，通过 Glove
+也可以训练出词向量，只是这种方法并没有 Word2Vec
+用得那么广泛。这里简单提及，也算是为训练词向量提供多一个选择。</p>
+<p>首先需要下载并编译 Glove，步骤如下： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ wget http://www-nlp.stanford.edu/software/GloVe-1.2.zip</span><br><span class="line">$ unzip Glove-1.2.zip </span><br><span class="line">$ cd Glove-1.2 &amp;&amp; make</span><br></pre></td></tr></table></figure></p>
+<p>编译后会在 <code>Glove-1.2</code> 目录下生成一个 <code>build</code>
+目录，里面包含了训练需要用到的工具。目录结构如下所示： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">build/</span><br><span class="line">|-- cooccur</span><br><span class="line">|-- glove</span><br><span class="line">|-- shuffle</span><br><span class="line">`-- vocab_count</span><br></pre></td></tr></table></figure></p>
+<p>训练过程总共分为四步，对应上面的四个工具，顺序依次为<code>vocab_count --&gt; cooccur --&gt; shuffle --&gt; glove</code>，下面是具体的训练过程</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ build/vocab_count -min-count 5 -verbose 2 &lt; zhs_wiki_cutwords &gt; zhs_wiki_vocab</span><br><span class="line"></span><br><span class="line">$ build/cooccur -memory 4.0 -vocab-file zhs_wiki_vocab  -verbose 2 -window-size 5 &lt; zhs_wiki_cutwords &gt; zhs_wiki_cooccurence.bin</span><br><span class="line"></span><br><span class="line">$ build/shuffle  -memory 4.0 -verbose 2 &lt; zhs_wiki_cooccurence.bin &gt;zhs_wiki_shuff.bin</span><br><span class="line"></span><br><span class="line">$ build/glove -save-file zhs_wiki_glove.vectors -threads 8 -input-file zhs_wiki_shuff.bin -vocab-file zhs_wiki_vocab -x-max 10 -iter 5 -vector-size 300 -binary 2 -verbose 2 </span><br></pre></td></tr></table></figure>
+<p>上面四条命令分别对应于训练的四个步骤，每个步骤含义如下</p>
+<ol type="1">
+<li><p><code>vocab_count</code>从语料库(<code>zhs_wiki_cutwords</code>是上面第一步处理好的语料库)中统计词频，输出文件
+<code>zhs_wiki_vocab</code>，每行为<code>词语 词频</code>；<code>-min-count 5</code>指示词频低于5的词舍弃，<code>-verbose 2</code>控制屏幕打印信息的，设为0表示不输出</p></li>
+<li><p><code>cooccur</code> 从语料库中统计词共现，输出文件
+<code>zhs_wiki_cooccurence.bin</code>，格式为非文本的二进制；<code>-memory 4.0</code>指示<code>bigram_table</code>缓冲器，<code>-vocab-file</code>指上一步得到的文件，<code>-verbose 2</code>同上，<code>-window-size 5</code>指示词窗口大小。</p></li>
+<li><p><code>shuffle</code> 对 <code>zhs_wiki_cooccurence.bin</code>
+重新整理，输出文件<code>zhs_wiki_shuff.bin</code></p></li>
+<li><p><code>glove</code>
+训练模型，输出词向量文件。<code>-save-file</code>
+、<code>-threads</code> 、<code>-input-file</code>
+和<code>-vocab-file</code>
+直接按照字面应该就可以理解了，<code>-iter</code>
+表示迭代次数，<code>-vector-size</code>
+表示向量维度大小，<code>-binary</code>
+控制输出格式<code>0: save as text files; 1: save as binary; 2: both</code></p></li>
+</ol>
+<p>训练后得到的二进制词向量模型格式与原始c版本word2vec的 vector
+格式也相同，可以通过下面的方法统一加载使用。</p>
+<h2 id="使用词向量模型">使用词向量模型</h2>
+<p>训练好的词向量可以供后续的多项自然语言处理工作使用，下面是通过 gensim
+加载训练好的词向量模型并进行查询的例子</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 加载模型</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> gensim.models <span class="keyword">import</span> Word2Vec</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>model = Word2Vec.load_word2vec_format(<span class="string">&#x27;/home/nlp/zhs_wiki_trained.vector&#x27;</span>,binary = <span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 词向量维度</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">len</span>(model[<span class="string">u&#x27;男人&#x27;</span>])</span><br><span class="line"><span class="number">300</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 具体词向量的值</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>model[<span class="string">u&#x27;男人&#x27;</span>]</span><br><span class="line">array([ <span class="number">0.56559366</span>, -<span class="number">1.96017861</span>, -<span class="number">1.57303607</span>,  <span class="number">1.2871722</span> , -<span class="number">1.38108838</span>.....</span><br><span class="line"></span><br><span class="line"><span class="comment"># 词语相似性</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>model.similarity(<span class="string">u&#x27;男人&#x27;</span>,<span class="string">u&#x27;女人&#x27;</span>)</span><br><span class="line"><span class="number">0.86309866214314379</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 找某个词的近义词，反义词</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>words = model.most_similar(<span class="string">u&quot;男人&quot;</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">for</span> word <span class="keyword">in</span> words:</span><br><span class="line"><span class="meta">... </span>    <span class="built_in">print</span> word[<span class="number">0</span>], word[<span class="number">1</span>]</span><br><span class="line"><span class="meta">... </span></span><br><span class="line">女人 <span class="number">0.863098621368</span></span><br><span class="line">女孩 <span class="number">0.67369633913</span></span><br><span class="line">女孩子 <span class="number">0.658665597439</span></span><br><span class="line">陌生人 <span class="number">0.654322624207</span></span><br><span class="line">小女孩 <span class="number">0.637025117874</span></span><br><span class="line">小孩 <span class="number">0.630155563354</span></span><br><span class="line">男孩 <span class="number">0.625135600567</span></span><br><span class="line">男孩子 <span class="number">0.617452859879</span></span><br><span class="line">小孩子 <span class="number">0.613232254982</span></span><br><span class="line">老婆 <span class="number">0.584552764893</span></span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>words = model.most_similar(positive=[<span class="string">u&quot;女人&quot;</span>, <span class="string">u&quot;皇后&quot;</span>], negative=[<span class="string">u&quot;男人&quot;</span>], topn=<span class="number">5</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">for</span> word <span class="keyword">in</span> words:</span><br><span class="line"><span class="meta">... </span>    <span class="built_in">print</span> word[<span class="number">0</span>], word[<span class="number">1</span>]</span><br><span class="line"><span class="meta">... </span></span><br><span class="line">皇太后 <span class="number">0.630089104176</span></span><br><span class="line">太后 <span class="number">0.613425552845</span></span><br><span class="line">王妃 <span class="number">0.581929504871</span></span><br><span class="line">贵妃 <span class="number">0.581658065319</span></span><br><span class="line">王后 <span class="number">0.577878117561</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 若干个词中剔除与其他最不相关的</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">print</span>  model.doesnt_match(<span class="string">u&quot;早餐 晚餐 午餐 食堂&quot;</span>.split())</span><br><span class="line">食堂</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">print</span>  model.doesnt_match(<span class="string">u&quot;早餐 晚餐 午餐 食堂 教室&quot;</span>.split())</span><br><span class="line">教室</span><br><span class="line"></span><br><span class="line"><span class="comment"># 多个词语的相似性</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>model.n_similarity([<span class="string">u&quot;女人&quot;</span>, <span class="string">u&quot;皇帝&quot;</span>], [<span class="string">u&quot;男人&quot;</span>, <span class="string">u&quot;皇后&quot;</span>])</span><br><span class="line"><span class="number">0.76359309631510597</span></span><br></pre></td></tr></table></figure>
+<p>这里并没有对训练出来的词向量质量进行评估，虽然 Google
+提供了一种测试集，约20000句法和语义的测试实例（<a
+target="_blank" rel="noopener" href="https://flystarhe.github.io/2016/09/04/word2vec-test/">questions-words.txt</a>），检查如<code>A对于B类似C对于D</code>这种线性平移关系。由于测试集是英文的，因此可以考虑翻译过来然后对中文的采用同样的评估方法，但是实际的效果还是要看具体应用中的效果。</p>
+<hr />
+<p>参考： https://flystarhe.github.io/2016/09/04/word2vec-test/
+https://flystarhe.github.io/2016/08/31/wiki-corpus-zh/
+http://radimrehurek.com/gensim/models/word2vec.html
+https://rare-technologies.com/word2vec-tutorial/</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/python/" rel="tag"><i class="fa fa-tag"></i> python</a>
+              <a href="/tags/NLP/" rel="tag"><i class="fa fa-tag"></i> NLP</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2016/10/08/%E6%A6%82%E7%8E%87%E8%AE%BA%E4%B8%8E%E6%95%B0%E7%90%86%E7%BB%9F%E8%AE%A1%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86(2)--%E4%BA%8C%E7%BB%B4%E9%9A%8F%E6%9C%BA%E5%8F%98%E9%87%8F%E7%9A%84%E5%88%86%E5%B8%83/" rel="prev" title="概率论与数理统计知识整理(2)--二维随机变量的分布">
+                  <i class="fa fa-chevron-left"></i> 概率论与数理统计知识整理(2)--二维随机变量的分布
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2016/10/14/%E6%A6%82%E7%8E%87%E8%AE%BA%E4%B8%8E%E6%95%B0%E7%90%86%E7%BB%9F%E8%AE%A1%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86(3)--%E9%9A%8F%E6%9C%BA%E5%8F%98%E9%87%8F%E7%9A%84%E7%BB%9F%E8%AE%A1%E7%89%B9%E5%BE%81/" rel="next" title="概率论与数理统计知识整理(3)--随机变量的统计特征">
+                  概率论与数理统计知识整理(3)--随机变量的统计特征 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-pen"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

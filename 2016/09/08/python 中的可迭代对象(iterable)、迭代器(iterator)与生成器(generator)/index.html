@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id: "JmI6QmP3fMkLet6B",ck: "JmI6QmP3fMkLet6B"})</script>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wulc.me","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.15.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="本文主要讲述python中的几个概念：可迭代对象(iterable)、迭代器(iterator)与生成器(generator)。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python 中的可迭代对象(iterable)、迭代器(iterator)与生成器(generator)">
+<meta property="og:url" content="https://wulc.me/2016/09/08/python%20%E4%B8%AD%E7%9A%84%E5%8F%AF%E8%BF%AD%E4%BB%A3%E5%AF%B9%E8%B1%A1(iterable)%E3%80%81%E8%BF%AD%E4%BB%A3%E5%99%A8(iterator)%E4%B8%8E%E7%94%9F%E6%88%90%E5%99%A8(generator)/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="本文主要讲述python中的几个概念：可迭代对象(iterable)、迭代器(iterator)与生成器(generator)。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/image_1asu3d67o1ekr17ib1ecghrbqrk9.png">
+<meta property="article:published_time" content="2016-09-08T04:00:37.000Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.141Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="python">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/image_1asu3d67o1ekr17ib1ecghrbqrk9.png">
+
+
+<link rel="canonical" href="https://wulc.me/2016/09/08/python%20%E4%B8%AD%E7%9A%84%E5%8F%AF%E8%BF%AD%E4%BB%A3%E5%AF%B9%E8%B1%A1(iterable)%E3%80%81%E8%BF%AD%E4%BB%A3%E5%99%A8(iterator)%E4%B8%8E%E7%94%9F%E6%88%90%E5%99%A8(generator)/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wulc.me/2016/09/08/python%20%E4%B8%AD%E7%9A%84%E5%8F%AF%E8%BF%AD%E4%BB%A3%E5%AF%B9%E8%B1%A1(iterable)%E3%80%81%E8%BF%AD%E4%BB%A3%E5%99%A8(iterator)%E4%B8%8E%E7%94%9F%E6%88%90%E5%99%A8(generator)/","path":"2016/09/08/python 中的可迭代对象(iterable)、迭代器(iterator)与生成器(generator)/","title":"python 中的可迭代对象(iterable)、迭代器(iterator)与生成器(generator)"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>python 中的可迭代对象(iterable)、迭代器(iterator)与生成器(generator) | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">吴良超的学习笔记</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AF%E8%BF%AD%E4%BB%A3%E5%AF%B9%E8%B1%A1iterable-%E4%B8%8E-%E8%BF%AD%E4%BB%A3%E5%99%A8iterator"><span class="nav-number">1.</span> <span class="nav-text">可迭代对象(iterable) 与
+迭代器(iterator)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%9F%E6%88%90%E5%99%A8generator"><span class="nav-number">2.</span> <span class="nav-text">生成器(generator)</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">253</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2016/09/08/python%20%E4%B8%AD%E7%9A%84%E5%8F%AF%E8%BF%AD%E4%BB%A3%E5%AF%B9%E8%B1%A1(iterable)%E3%80%81%E8%BF%AD%E4%BB%A3%E5%99%A8(iterator)%E4%B8%8E%E7%94%9F%E6%88%90%E5%99%A8(generator)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="python 中的可迭代对象(iterable)、迭代器(iterator)与生成器(generator) | 吴良超的学习笔记">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          python 中的可迭代对象(iterable)、迭代器(iterator)与生成器(generator)
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2016-09-08 12:00:37" itemprop="dateCreated datePublished" datetime="2016-09-08T12:00:37+08:00">2016-09-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-tags"></i>
+      </span>
+      <span class="post-meta-item-text">标签</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>本文主要讲述python中的几个概念：可迭代对象(iterable)、迭代器(iterator)与生成器(generator)。</p>
+<span id="more"></span>
+<h2 id="可迭代对象iterable-与-迭代器iterator">可迭代对象(iterable) 与
+迭代器(iterator)</h2>
+<p>对于
+<code>string</code>、<code>list</code>、<code>dict</code>、<code>tuple</code>
+等这类容器对象，可以使用 for
+循环对其进行遍历。像这种可以被遍历的对象被称为可迭代对象。</p>
+<p>通过 for 语句对遍历可迭代对象时，实际上是调用可迭代对象内部的
+<code>__iter__()</code> 方法（因此<strong>一个可迭代对象必须要实现
+<code>__iter__()</code>
+方法</strong>），调用了这个方法会返回一个迭代器(iterator)，通过迭代器便可遍历可迭代对象。见下面的例子：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>x = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>y = <span class="built_in">iter</span>(x)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>z = <span class="built_in">iter</span>(x)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">next</span>(y)</span><br><span class="line"><span class="number">1</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>y.<span class="built_in">next</span>()</span><br><span class="line"><span class="number">2</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">next</span>(z)</span><br><span class="line"><span class="number">1</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">type</span>(x)</span><br><span class="line">&lt;<span class="keyword">class</span> <span class="string">&#x27;list&#x27;</span>&gt;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">type</span>(y)</span><br><span class="line">&lt;<span class="keyword">class</span> <span class="string">&#x27;list_iterator&#x27;</span>&gt;</span><br></pre></td></tr></table></figure>
+<p>这里 x 是一个列表，是一个可迭代对象。<strong>y 和 z
+是两个独立的迭代器，迭代器内部持有一个状态，该状态用于记录当前迭代所在的位置，以方便下次迭代的时候获取正确的元素。</strong></p>
+<p>迭代器也分具体的迭代器类型，比如
+<code>list_iterator</code>，<code>set_iterator</code>。<code>iter(x)</code>语句实际上是调用了
+x 内部的 <code>__iter__</code> 方法的, 调用 <code>__iter__</code>
+方法后会返回一个迭代器，由于迭代器内部实现了 <code>next</code> 方法
+（python2中是 <code>next</code> 方法，python3是 <code>__next__</code>
+方法,<strong>一个迭代器必须实现此方法</strong>），因此可通过
+<code>next()</code> 方法来遍历可迭代对象。</p>
+<p>因此，执行下面语句：</p>
+<p><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"> x = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line"><span class="keyword">for</span> elem <span class="keyword">in</span> x:</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure></p>
+<p>相当于以下流程</p>
+<p><img data-src="https://wulc.me/imgs/image_1asu3d67o1ekr17ib1ecghrbqrk9.png" /></p>
+<p>上图中调用 <code>next()</code>
+方法直到没有后续元素时，<code>next()</code> 会抛出一个
+<code>StopIteration</code> 异常，通知for语句循环结束。如</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>a = [<span class="number">1</span>,<span class="number">3</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>b = <span class="built_in">iter</span>(a)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>b.<span class="built_in">next</span>()</span><br><span class="line"><span class="number">1</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">next</span>(b)</span><br><span class="line"><span class="number">3</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">next</span>(b)</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File <span class="string">&quot;&lt;stdin&gt;&quot;</span>, line <span class="number">1</span>, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">StopIteration</span><br></pre></td></tr></table></figure>
+<p>上面说的都是 python
+自带的容器对象，它们都实现了相应的迭代器方法，那如果是自定义类需要遍历怎么办？</p>
+<p>方法很简单，假如我们需要自定义一个有遍历功能的类
+<code>IterClass</code>，那么只需要在这个类的内部实现一个
+<code>__iter__(self)</code> 方法，使其返回一个带有
+<code>__next__(self)</code> 方法的对象就可以了。如果你在
+<code>IterClass</code> 刚好也定义了 <code>__next__(self)</code>
+方法（一般使用迭代器都会定义），那在 <code>__iter__()</code> 里只要返回
+self 就可以。下面是具体的实例：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">IterClass</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, <span class="built_in">max</span></span>):</span><br><span class="line">        self.<span class="built_in">max</span> = <span class="built_in">max</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__iter__</span>(<span class="params">self</span>):</span><br><span class="line">        self.a = <span class="number">0</span></span><br><span class="line">        self.b = <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> self</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">next</span>(<span class="params">self</span>):</span><br><span class="line">        fib = self.a</span><br><span class="line">        <span class="keyword">if</span> fib &gt; self.<span class="built_in">max</span>:</span><br><span class="line">            <span class="keyword">raise</span> StopIteration</span><br><span class="line">        self.a, self.b = self.b, self.a + self.b</span><br><span class="line">        <span class="keyword">return</span> fib</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    fib = IterClass(<span class="number">10</span>)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> fib:</span><br><span class="line">        <span class="built_in">print</span> i</span><br></pre></td></tr></table></figure>
+<p>上面输出的结果为: <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0</span></span><br><span class="line"><span class="number">1</span></span><br><span class="line"><span class="number">1</span></span><br><span class="line"><span class="number">2</span></span><br><span class="line"><span class="number">3</span></span><br><span class="line"><span class="number">5</span></span><br><span class="line"><span class="number">8</span></span><br></pre></td></tr></table></figure></p>
+<p>上面的代码定义了一个 <code>IterClass</code> 类，用于生成 fibonacci
+序列。用for遍历时会逐个打印生成的fibonacci数，max是生成的fibonacci序列中数字大小的上限。</p>
+<p>在类的实现中，定义了一个 <code>__iter__(self)</code>
+方法，这个方法是在遍历时被 <code>iter()</code>
+调用，返回一个迭代器。<strong>因为在遍历的时候，是直接调用 python
+的内置函数 <code>iter()</code>，由 <code>iter()</code> 通过调用
+<code>__iter__(self)</code> 获得对象的迭代器。</strong></p>
+<p>有了迭代器，就可以逐个遍历元素了。而逐个遍历的时候，也是使用 python
+的内置 的 <code>next()</code> 函数，<code>next()</code>
+函数通过调用对象的 <code>next(self)</code> 方法（python 3 为
+<code>__next__(self)</code> 方法）对迭代器对象进行遍历。因为同时实现
+<code>__iter__(self)</code> 和 <code>next(self)</code> ， 所以
+<code>IterClass</code> 既是可迭代对象，也是迭代器，在实现
+<code>__iter__(self)</code> 的时候，直接返回self就可以。</p>
+<p>为了更好地理解，对上面的内容的小结如下：<strong>在循环遍历自定义容器对象时,会使用
+python 内置函数 <code>iter()</code> 调用遍历对象的
+<code>__iter__(self)</code> 获得一个迭代器,之后再循环对这个迭代器使用
+<code>next()</code> 调用迭代器对象的 <code>next(self)</code> 或
+<code>__next__(self)</code>。<code>__iter__</code> 只会被调用一次,而
+<code>__next__</code> 会被调用 n 次。</strong></p>
+<h2 id="生成器generator">生成器(generator)</h2>
+<p><strong>生成器其实是一种特殊的迭代器，不过这种迭代器更加简洁和高效,它自动创建了
+<code>__iter__()</code> 和 <code>next()</code>
+方法（因此生成器其实既是一个可迭代对象，也是一个迭代器）,
+除了创建和保存程序状态的自动方法,当发生器终结时,还会自动抛出
+<code>StopIteration</code> 异常。它不需要再像上面的类一样写
+<code>__iter__()</code> 和 <code>next ()</code> 方法了，只需要一个
+<code>yiled</code>
+关键字。生成器一定是迭代器（反之不成立）。</strong></p>
+<p>一个带有关键词 <code>yield</code>
+的函数就是一个生成器,它和普通函数不同,生成一个 generator
+看起来像函数调用,但不会执行任何函数代码,直到对其显式或隐式地调用
+<code>next()</code> (<strong>在 for 循环中会隐式自动调用
+<code>next()</code></strong>)
+才开始执行。虽然执行流程仍按函数的流程执行,但<strong>每执行到一个
+<code>yield</code> 语句就会中断,并返回一个迭代值,下次执行时从
+<code>yield</code>
+的下一个语句继续执行。看起来就好像一个函数在正常执行的过程中被
+<code>yield</code> 中断了数次,每次中断都会通过 yield
+返回当前的迭代值</strong>（yield暂停一个函数，next()从其暂停处恢复其运行）。见下面的例子：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">def</span> <span class="title function_">reverse</span>(<span class="params">data</span>):</span><br><span class="line"><span class="meta">... </span>    <span class="keyword">for</span> index <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(data)-<span class="number">1</span>, -<span class="number">1</span>, -<span class="number">1</span>):</span><br><span class="line"><span class="meta">... </span>        <span class="keyword">yield</span> data[index]</span><br><span class="line"><span class="meta">... </span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">for</span> char <span class="keyword">in</span> reverse(<span class="string">&#x27;hello&#x27;</span>):</span><br><span class="line"><span class="meta">... </span>    <span class="built_in">print</span>(char)</span><br><span class="line"><span class="meta">... </span></span><br><span class="line">o</span><br><span class="line">l</span><br><span class="line">l</span><br><span class="line">e</span><br><span class="line">h</span><br></pre></td></tr></table></figure>
+<p>用生成器来实现上面的斐波那契数列的例子是：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">fib</span>():</span><br><span class="line">    prev, curr = <span class="number">0</span>, <span class="number">1</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        <span class="keyword">yield</span> curr</span><br><span class="line">        prev, curr = curr, curr + prev</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>f = fib()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">list</span>(itertools.islice(f, <span class="number">0</span>, <span class="number">10</span>))</span><br><span class="line">[<span class="number">1</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">8</span>, <span class="number">13</span>, <span class="number">21</span>, <span class="number">34</span>, <span class="number">55</span>]</span><br></pre></td></tr></table></figure>
+<p>生成器在Python中是一个非常强大的编程结构，可以用更少地中间变量写流式代码，此外，相比其它容器对象它更能节省内存和CPU，它也可以用更少的代码来实现相似的功能。如果构造一个列表的目的仅仅是传递给别的函数,
+那么就可以用生成器来代替。但凡看到类似： <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">something</span>():</span><br><span class="line">    result = []</span><br><span class="line">    <span class="keyword">for</span> ... <span class="keyword">in</span> ...:</span><br><span class="line">        result.append(x)</span><br><span class="line">    <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
+都可以用生成器函数来替换： <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">iter_something</span>():</span><br><span class="line">    <span class="keyword">for</span> ... <span class="keyword">in</span> ...:</span><br><span class="line">        <span class="keyword">yield</span> x</span><br></pre></td></tr></table></figure>
+只需要在接收函数返回值的时候将其转为 list 类型即可。</p>
+<p>另外对于生成器，python还提供了一个<strong>生成器表达式(generator
+expression)</strong>：类似与一个 <code>yield</code>
+值的匿名函数。表达式本身看起来像列表推导式,
+但<strong>不是用方括号而是用圆括号包围起来</strong>,
+它<strong>返回的是一个生成器对象而不是列表对象</strong>。见下面的例子：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>a = (i*i <span class="keyword">for</span> i <span class="keyword">in</span> xrange(<span class="number">5</span>))</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">for</span> num <span class="keyword">in</span> a:</span><br><span class="line"><span class="meta">... </span>    <span class="built_in">print</span> num</span><br><span class="line">...</span><br><span class="line"><span class="number">0</span></span><br><span class="line"><span class="number">1</span></span><br><span class="line"><span class="number">4</span></span><br><span class="line"><span class="number">9</span></span><br><span class="line"><span class="number">16</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>a</span><br><span class="line">&lt;generator <span class="built_in">object</span> &lt;genexpr&gt; at <span class="number">0x02B707D8</span>&gt;</span><br></pre></td></tr></table></figure>
+<hr />
+<p>参考： https://segmentfault.com/a/1190000002900850
+http://foofish.net/blog/109/iterators-vs-generators</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/python/" rel="tag"><i class="fa fa-tag"></i> python</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2016/09/01/python%20%E4%B8%AD%E6%98%9F%E5%8F%B7%E5%8F%82%E6%95%B0%E4%BC%A0%E9%80%92/" rel="prev" title="python 中 * 与 ** 的参数传递">
+                  <i class="fa fa-chevron-left"></i> python 中 * 与 ** 的参数传递
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2016/09/18/%E5%B8%B8%E7%94%A8%E6%95%B0%E5%AD%A6%E7%AC%A6%E5%8F%B7%E7%9A%84%20LaTeX%20%E8%A1%A8%E7%A4%BA%E6%96%B9%E6%B3%95/" rel="next" title="常用数学符号的 LaTeX 表示方法">
+                  常用数学符号的 LaTeX 表示方法 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-pen"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id: "JmI6QmP3fMkLet6B",ck: "JmI6QmP3fMkLet6B"})</script>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wulc.me","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.15.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="基本概念 在Java中，String既可以作为一个对象来使用，又可以作为一个基本类型来使用。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java中String的比较方式（&#x3D;&#x3D; 和 equals）">
+<meta property="og:url" content="https://wulc.me/2016/05/18/Java%E4%B8%ADString%E7%9A%84%E6%AF%94%E8%BE%83%E6%96%B9%E5%BC%8F%EF%BC%88==%20%E5%92%8C%20equals%EF%BC%89/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="基本概念 在Java中，String既可以作为一个对象来使用，又可以作为一个基本类型来使用。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2016-05-18T14:31:01.000Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.204Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://wulc.me/2016/05/18/Java%E4%B8%ADString%E7%9A%84%E6%AF%94%E8%BE%83%E6%96%B9%E5%BC%8F%EF%BC%88==%20%E5%92%8C%20equals%EF%BC%89/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wulc.me/2016/05/18/Java%E4%B8%ADString%E7%9A%84%E6%AF%94%E8%BE%83%E6%96%B9%E5%BC%8F%EF%BC%88==%20%E5%92%8C%20equals%EF%BC%89/","path":"2016/05/18/Java中String的比较方式（== 和 equals）/","title":"Java中String的比较方式（== 和 equals）"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Java中String的比较方式（== 和 equals） | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">吴良超的学习笔记</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">1.</span> <span class="nav-text">基本概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%99%85%E4%BE%8B%E5%AD%90"><span class="nav-number">2.</span> <span class="nav-text">实际例子</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#string-%E4%BD%9C%E4%B8%BA%E5%AF%B9%E8%B1%A1%E6%97%B6%E7%9A%84%E6%AF%94%E8%BE%83"><span class="nav-number">2.1.</span> <span class="nav-text">String 作为对象时的比较</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#string%E4%BD%9C%E4%B8%BA%E5%9F%BA%E6%9C%AC%E7%B1%BB%E5%9E%8B%E6%97%B6%E7%9A%84%E6%AF%94%E8%BE%83"><span class="nav-number">2.2.</span> <span class="nav-text">String作为基本类型时的比较</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E8%B1%A1%E4%B8%8E%E5%9F%BA%E6%9C%AC%E7%B1%BB%E5%9E%8B%E7%9A%84%E6%AF%94%E8%BE%83"><span class="nav-number">2.3.</span> <span class="nav-text">对象与基本类型的比较</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8B%BC%E6%8E%A5%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%90%8E%E7%9A%84%E6%AF%94%E8%BE%83"><span class="nav-number">2.4.</span> <span class="nav-text">拼接字符串后的比较</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">253</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2016/05/18/Java%E4%B8%ADString%E7%9A%84%E6%AF%94%E8%BE%83%E6%96%B9%E5%BC%8F%EF%BC%88==%20%E5%92%8C%20equals%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Java中String的比较方式（== 和 equals） | 吴良超的学习笔记">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Java中String的比较方式（== 和 equals）
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2016-05-18 22:31:01" itemprop="dateCreated datePublished" datetime="2016-05-18T22:31:01+08:00">2016-05-18</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-tags"></i>
+      </span>
+      <span class="post-meta-item-text">标签</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h2 id="基本概念">基本概念</h2>
+<p>在Java中，<strong>String既可以作为一个对象来使用，又可以作为一个基本类型来使用</strong>。
+<span id="more"></span>
+这里指的作为一个基本类型来使用只是指使用方法上的，比如<code>String s = "hello"</code>，它的使用方法如同基本类型int一样，比如int
+i =
+1;，而作为一个对象来使用，则是指<strong>通过new关键字来创建一个新对象</strong>，比如<code>String s = new String("Hello")</code></p>
+<p>Java中String比较的方法有两种：
+1）<strong>用"=="来比较</strong>。这种比较是比较两个String类型变量的<strong>引用</strong>是否相同(即是否指相同的内存地址)
+2）<strong>用Object对象的<code>equals()</code>方法来比较</strong>。String对象继承自Object，并且对equals()方法进行了重写。两个String对象通过equals()方法来进行比较时，也就是对String对象的实际内容进行比较。</p>
+<h2 id="实际例子">实际例子</h2>
+<h3 id="string-作为对象时的比较">String 作为对象时的比较</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">s1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">String</span>(<span class="string">&quot;Hello&quot;</span>);</span><br><span class="line"><span class="type">String</span> <span class="variable">s2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">String</span>(<span class="string">&quot;Hello&quot;</span>);</span><br><span class="line"></span><br><span class="line">System.out.println(s1 == s2);</span><br><span class="line">System.out.println(s1.equals(s2));</span><br><span class="line"></span><br><span class="line"><span class="comment">/*output*/</span></span><br><span class="line"><span class="literal">false</span></span><br><span class="line"><span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<p>两个String对象都是通过<code>new</code>创建出来的，而<code>new</code>关键字为创建的每个对象分配一块新的、独立的内存堆，因此当通过"=="来比较它们的引用是否相同时，将返回false；而通过<code>equals()</code>方法来比较时，则返回true，因为这两个对象所封装的字符串内容是完全相同的。</p>
+<h3 id="string作为基本类型时的比较">String作为基本类型时的比较</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">s1</span> <span class="operator">=</span> <span class="string">&quot;Hello&quot;</span>;</span><br><span class="line"><span class="type">String</span> <span class="variable">s2</span> <span class="operator">=</span> <span class="string">&quot;Hello&quot;</span>;</span><br><span class="line"></span><br><span class="line">System.out.println(s1 == s2);</span><br><span class="line">System.out.println(s1.equals(s2));</span><br><span class="line"></span><br><span class="line"><span class="comment">/*output*/</span></span><br><span class="line"><span class="literal">true</span></span><br><span class="line"><span class="literal">true</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>由于这两个String对象都是作为一个基本类型来使用的，而<strong>不是通过new关键字来创建的，因此虚拟机不会为这两个String对象分配新的内存堆</strong>，而是到<strong>String缓冲池</strong>中来寻找。</p>
+<p>什么是String缓冲池？在Java中，由于String（final）是不可改变的，为了提高效率，不重复创建新的字符创，Java引用了String缓冲池的概念。</p>
+<p>首先为s1寻找String缓冲池内是否有与"Hello"相同值的String对象存在，此时String缓冲没有相同值的String对象存在，所以<strong>虚拟机会在String缓冲池内创建此String对象，其动作就是new
+String("Hello");。然后把此String对象的引用赋值给s1</strong>。</p>
+<p>接着为s2寻找String缓冲池内是否有与"Hello"相同值的String对象存在，此时虚拟机找到了一个与其相同值的String对象，这个String对象其实就是为s1所创建的String对象。既然找到了一个相同值的对象，那么虚拟机就不在为此创建一个新的String对象，而是直接把存在的String对象的引用赋值给s2。</p>
+<p>这里既然s1和s2所引用的是同一个String对象，即自己等于自己，所以以上两种比较方法都返回ture。
+。</p>
+<h3 id="对象与基本类型的比较">对象与基本类型的比较</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">s1</span> <span class="operator">=</span> <span class="string">&quot;Hello&quot;</span>;</span><br><span class="line"><span class="type">String</span> <span class="variable">s2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">String</span>(<span class="string">&quot;Hello&quot;</span>);</span><br><span class="line"></span><br><span class="line">System.out.println(s1 == s2);</span><br><span class="line">System.out.println(s1.equals(s2));</span><br><span class="line"></span><br><span class="line"><span class="comment">/*output*/</span></span><br><span class="line"><span class="literal">false</span></span><br><span class="line"><span class="literal">true</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>由于<strong><code>new</code>关键字会申请新的内存空间，创建新的对象</strong>，因此不会去查找缓存池，即使缓存池中有"Hello"，因此两者的内存地址不是一样的，所以第一个输出为false，而两者的内容是一样的，输出为true。</p>
+<p>将上面的代码稍作修改</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">s1</span> <span class="operator">=</span> <span class="string">&quot;Hello&quot;</span>;</span><br><span class="line"><span class="type">String</span> <span class="variable">s2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">String</span>(<span class="string">&quot;Hello&quot;</span>);</span><br><span class="line">s2 = s2.intern();</span><br><span class="line"></span><br><span class="line">System.out.println(s1 == s2);</span><br><span class="line">System.out.println(s1.equals(s2));</span><br><span class="line"></span><br><span class="line"><span class="comment">/*output*/</span></span><br><span class="line"><span class="literal">true</span></span><br><span class="line"><span class="literal">true</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>上面的代码增加了一行<code>s2 = s2.intern();</code><strong>其作用是从String缓冲池内取出一个与其值相同的String对象的引用赋值给s（假如有的话）</strong>。</p>
+<p>这样做的原因是如果频繁地创建相同内容的对象，虚拟机分配许多新的内存堆，虽然它们的内容是完全相同的。<strong>由于String是final类，因此String对象在创建后不能改变</strong>。所以为了节省内存，可以使用String缓冲池，因为String缓冲池内不会存在相同内容的String对象。而<code>intern()</code>方法就是使用这种机制的途径。</p>
+<p>在一个已实例化的String对象s上调用<code>intern()</code>方法后，虚拟机会在String缓冲池内寻找与此s对象存储内容相同的String对象，如果能找到，则返回对象在缓冲池中的地址，如果找不到，那么虚拟机在缓冲池中以s的内容新建一个对象并返回这个对象的地址。<strong>注意需要将s指向返回的缓冲池对象的地址，这样才能通过垃圾回收器回将原先那个通过new关键字所创建出的String对象回收。</strong></p>
+<p>因此可以解释上面的<code>s1==s2</code>返回结果为什么是true了，因为此时，两者的引用相同，均指向缓冲池的对象。</p>
+<h3 id="拼接字符串后的比较">拼接字符串后的比较</h3>
+<p>上面提到由于String是final类，因此String对象在创建后不能改变，那么像拼接字符串的操作如<code>String s1=s2+s3;</code>（s2、s3是已赋值的String）应该会产生一个新的对象，用新的地址空间存储。但是这句话也不完全对，详见下面的例子</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">s1</span> <span class="operator">=</span> <span class="string">&quot;a&quot;</span>;  </span><br><span class="line"><span class="type">String</span> <span class="variable">s2</span> <span class="operator">=</span> <span class="string">&quot;b&quot;</span>;  </span><br><span class="line"><span class="type">String</span> <span class="variable">s3</span> <span class="operator">=</span> <span class="string">&quot;ab&quot;</span>;  </span><br><span class="line"><span class="type">String</span> <span class="variable">s4</span> <span class="operator">=</span> <span class="string">&quot;a&quot;</span>+<span class="string">&quot;b&quot;</span>;  </span><br><span class="line">System.out.println(<span class="string">&quot;s3==s4? &quot;</span>+ (s3==s4));  </span><br><span class="line">  </span><br><span class="line"><span class="type">String</span> <span class="variable">s5</span> <span class="operator">=</span> s1+s2;  </span><br><span class="line">System.out.println(<span class="string">&quot;s3==s5? &quot;</span>+ (s3==s5));  </span><br><span class="line"></span><br><span class="line"><span class="keyword">final</span> <span class="type">String</span> <span class="variable">s6</span> <span class="operator">=</span> <span class="string">&quot;a&quot;</span> ;   </span><br><span class="line"><span class="keyword">final</span> <span class="type">String</span> <span class="variable">s7</span> <span class="operator">=</span> <span class="string">&quot;b&quot;</span> ;  </span><br><span class="line"><span class="type">String</span> <span class="variable">s8</span> <span class="operator">=</span> s6 + s7;  </span><br><span class="line">System.out.println(<span class="string">&quot;s3==s8? &quot;</span>+ (s3==s8));  </span><br></pre></td></tr></table></figure>
+<p>输出如下： <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">s3==s4? <span class="literal">true</span></span><br><span class="line">s3==s5? <span class="literal">false</span></span><br><span class="line">s3==s8? <span class="literal">true</span></span><br></pre></td></tr></table></figure></p>
+<p>s4由"a"、"b"两个常量拼接而成，本来按照上面的说法应该会生成新的内存空间，但是<strong>因为"a"、"b"为两个为常量，不可变</strong>，在编译期间编译器会把s5="a"+"b"优化为s5="ab"。</p>
+<p>s5由s1和s2拼接而成，由于两个变量的相加所以编译器无法优化，
+在运行时，会有新的String地址空间的分配，而不是指向缓冲池中的“ab”。所以结果false。</p>
+<p>s6虽让也是由两个变量拼接而成，但是这两个变量已经声明为final不可变的了，所以类似于s4，在编译期间编译器也进行了优化确定了s8的值。</p>
+<hr />
+<p>参考： http://blog.csdn.net/wangdong20/article/details/8566217
+http://www.itxxz.com/a/tea/2014/0814/208.html
+http://renxiangzyq.iteye.com/blog/549554</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Java/" rel="tag"><i class="fa fa-tag"></i> Java</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2016/05/16/LeetCode%20%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A(51)--%E5%9B%9E%E6%BA%AF%E6%B3%95%E8%A7%A3%E5%86%B3N%E7%9A%87%E5%90%8E%E9%97%AE%E9%A2%98/" rel="prev" title="LeetCode 解题报告(51)--回溯法解决N皇后问题">
+                  <i class="fa fa-chevron-left"></i> LeetCode 解题报告(51)--回溯法解决N皇后问题
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2016/05/23/python%20%E8%AF%AD%E6%B3%95%E6%9D%82%E8%AE%B0/" rel="next" title="Python语法杂记">
+                  Python语法杂记 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-pen"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

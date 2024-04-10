@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id: "JmI6QmP3fMkLet6B",ck: "JmI6QmP3fMkLet6B"})</script>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wulc.me","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.15.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="ROC 曲线和 PR 曲线是评估机器学习算法性能的两条重要曲线，两者概念比较容易混淆，但是两者的使用场景是不同的。本文主要讲述两种曲线的含义以及应用的场景。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ROC 曲线与 PR 曲线">
+<meta property="og:url" content="https://wulc.me/2018/06/16/ROC%20%E6%9B%B2%E7%BA%BF%E4%B8%8E%20PR%20%E6%9B%B2%E7%BA%BF/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="ROC 曲线和 PR 曲线是评估机器学习算法性能的两条重要曲线，两者概念比较容易混淆，但是两者的使用场景是不同的。本文主要讲述两种曲线的含义以及应用的场景。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/image_1cfpcf7brpr9i4k1h0aklg8vt9.png">
+<meta property="og:image" content="https://wulc.me/imgs/ROC_PR.png">
+<meta property="article:published_time" content="2018-06-16T04:00:37.000Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.089Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/image_1cfpcf7brpr9i4k1h0aklg8vt9.png">
+
+
+<link rel="canonical" href="https://wulc.me/2018/06/16/ROC%20%E6%9B%B2%E7%BA%BF%E4%B8%8E%20PR%20%E6%9B%B2%E7%BA%BF/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wulc.me/2018/06/16/ROC%20%E6%9B%B2%E7%BA%BF%E4%B8%8E%20PR%20%E6%9B%B2%E7%BA%BF/","path":"2018/06/16/ROC 曲线与 PR 曲线/","title":"ROC 曲线与 PR 曲线"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>ROC 曲线与 PR 曲线 | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">吴良超的学习笔记</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89"><span class="nav-number">1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E6%AF%94"><span class="nav-number">2.</span> <span class="nav-text">对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">253</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2018/06/16/ROC%20%E6%9B%B2%E7%BA%BF%E4%B8%8E%20PR%20%E6%9B%B2%E7%BA%BF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="ROC 曲线与 PR 曲线 | 吴良超的学习笔记">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ROC 曲线与 PR 曲线
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-06-16 12:00:37" itemprop="dateCreated datePublished" datetime="2018-06-16T12:00:37+08:00">2018-06-16</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-tags"></i>
+      </span>
+      <span class="post-meta-item-text">标签</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>ROC 曲线和 PR
+曲线是评估机器学习算法性能的两条重要曲线，两者概念比较容易混淆，但是两者的使用场景是不同的。本文主要讲述两种曲线的含义以及应用的场景。</p>
+<span id="more"></span>
+<h2 id="定义">定义</h2>
+<p>ROC 曲线和 PR 曲线都是用在二分类中，且涉及到下图的几个概念(摘自 <a
+target="_blank" rel="noopener" href="https://www.biostat.wisc.edu/~page/rocpr.pdf">The Relationship
+Between Precision-Recall and ROC Curves</a>)</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1cfpcf7brpr9i4k1h0aklg8vt9.png"
+alt="roc vs pr" />
+<figcaption aria-hidden="true">roc vs pr</figcaption>
+</figure>
+<p>上面四个指标用大白话解释如下</p>
+<p><strong>Recall：查全率，正样本中被预测出来是正的比例(越大越好)
+Precision：查准率，预测的正样本中被正确预测的比例(越大越好) True
+Positive Rate：跟 Recall 定义一样 （越大越好) FPR :
+负样本中被预测为正的比例(越小越好)</strong></p>
+<p>对于一个二分类问题，往往要设定一个 threshold，当预测值大于这个
+threshold 时预测为正样本，小于这个 threshold 时预测为负样本。如果以
+Recall 为横轴，Precision 为纵轴，那么设定一个 threshold
+时，便可在坐标轴上画出一个点，设定多个 threshold
+则可以画出一条曲线，这条曲线便是 PR 曲线。</p>
+<p><strong>PR 曲线是以 Recall 为横轴，Precision 为纵轴；而 ROC曲线则是以
+FPR 为横轴，TPR 为纵轴。</strong></p>
+<p>那么两者的关系是怎样的？</p>
+<h2 id="对比">对比</h2>
+<p><a target="_blank" rel="noopener" href="https://www.biostat.wisc.edu/~page/rocpr.pdf">The
+Relationship Between Precision-Recall and ROC Curves</a>
+中证明了以下两条定理</p>
+<p><strong>定理1</strong>：对于一个给定的的数据集，ROC空间和PR空间存在一一对应的关系，因为二者包含完全一致的混淆矩阵。我们可以将ROC曲线转化为PR曲线，反之亦然。</p>
+<p><strong>定理2</strong>：对于一个给定数目的正负样本数据集，曲线 A 在
+ROC 空间优于曲线 B ，当且仅当在 PR 空间中曲线 A 也优于曲线 B。</p>
+<p>定理 2 中 “曲线A优于曲线B” 是指曲线 B 的所有部分与曲线 A 重合或在曲线
+A
+之下。<strong>而在ROC空间，ROC曲线越凸向左上方向效果越好。与ROC曲线左上凸不同的是，PR曲线是右上凸效果越好。</strong></p>
+<p>从定理 2 来看，ROC 空间和 PR
+空间两个指标似乎具有冗余性，那么为什么还需要这同时两个指标呢？答案是在<strong>两者在样本不均衡的情况下表现有较大差异</strong>。</p>
+<p>下图是ROC曲线和Precision-Recall曲线的对比，摘自 <a
+target="_blank" rel="noopener" href="https://ccrma.stanford.edu/workshops/mir2009/references/ROCintro.pdf">An
+introduction to ROC analysis</a></p>
+<figure>
+<img data-src="https://wulc.me/imgs/ROC_PR.png" alt="ROC_PR.png-89.5kB" />
+<figcaption aria-hidden="true">ROC_PR.png-89.5kB</figcaption>
+</figure>
+<p>图 (a) 和 (b) 是在样本正负比例为 1:1 下的 ROC 曲线和PR 曲线，图(c) 和
+(d) 是在样本正负比例为 1:100 下的 ROC 曲线和PR 曲线。</p>
+<p>从结果来看：<strong>当测试集中的正负样本的分布变化的时候，ROC曲线能够保持不变。</strong></p>
+<p>文章 <a
+target="_blank" rel="noopener" href="http://alexkong.net/2013/06/introduction-to-auc-and-roc/">ROC和AUC介绍以及如何计算AUC</a>
+以及<a
+target="_blank" rel="noopener" href="https://ccrma.stanford.edu/workshops/mir2009/references/ROCintro.pdf">An
+introduction to ROC analysis</a>
+中都认为这是个优点，原因是在实际的数据集中经常会出现类不平衡（class
+imbalance）现象，即负样本比正样本多很多（或者相反），而 <strong>ROC
+这种对不平衡样本的鲁棒性使得其曲线下的面积 AUC
+不会发生突变</strong>。</p>
+<p>那么，AUC 意味这什么？首先 <strong>AUC
+值是一个概率值，表示随机挑选一个正样本以及一个负样本，当前的分类算法根据计算得到的Score值将这个正样本排在负样本前面的概率</strong>。</p>
+<p>因此，AUC值实际上反映了模型的 rank
+能力，AUC值越大，当前的分类算法越有可能将正样本排在负样本前面。这个指标尤其适用在某些场景下(如
+CTR 预估)，每次要返回的是最有可能点击的若干个广告(根据CTR排序,
+选择排在前面的若干个)，实际上便是在考验模型的排序能力。除此之外，CTR
+中存在着样本不均衡的问题，正负样本比例通常会大于 1:100，如果采用 PR
+曲线，则会导致 AUC 发生剧变，无法较好反映模型效果。</p>
+<p>然而，<strong>ROC
+曲线不会随着类别分布的改变而改变的优点在一定程度上也是其缺点</strong>。因为
+ROC 曲线这种不变性其实影响着的是 AUC
+值，或者说是评估分类器的整体性能。但是在<strong>某些场景下，我们会更关注正样本，这时候就要用到
+PR 曲线了。</strong></p>
+<p>比如说信用卡欺诈检测，我们会更关注 precision 和
+recall，比如说如果要求预测出为欺诈的人尽可能准确，那么就是要提高
+precision；而如果要尽可能多地预测出潜在的欺诈人群，那么就是要提高
+recall。一般来说，提高二分类的 threshold 就能提高 precision，降低
+threshold 就能提高 recall，这时便可观察 PR 曲线，得到最优的
+threshold。</p>
+<p>除此之外，Quora 上的问题 <a
+target="_blank" rel="noopener" href="https://www.quora.com/What-is-the-difference-between-a-ROC-curve-and-a-precision-recall-curve-When-should-I-use-each">What
+is the difference between a ROC curve and a precision-recall curve? When
+should I use each?</a> 中也举了一下的例子说明了在欺诈检测的问题中，PR
+曲线更能反映结果的变化。</p>
+<blockquote>
+<p>Let's take an example of fraud detection problem where there are 100
+frauds out of 2 million samples.</p>
+<p>Algorithm 1: 90 relevant out of 100 identified Algorithm 2: 90
+relevant out of 1000 identified</p>
+<p><strong>Evidently, algorithm 1 is more preferable because it
+identified less number of false positive</strong>.</p>
+<p>In the context of ROC curve, Algorithm 1: TPR=90/100=0.9, FPR=
+10/1,999,900=0.00000500025 Algorithm 2: TPR=90/100=0.9,
+FPR=910/1,999,900=0.00045502275 The FPR difference is 0.0004500225</p>
+<p>For PR Curve Algorithm 1: precision=0.9, recall=0.9 Algorithm 2:
+Precision=90/1000=0.09, recall= 0.9 Precision difference= 0.81</p>
+<p><strong>The difference is more apparent in PR curve</strong></p>
+</blockquote>
+<h2 id="总结">总结</h2>
+<p>综上，有以下几条结论（参考 <a
+target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/34655990">机器学习之类别不平衡问题
+(2) —— ROC和PR曲线</a>）</p>
+<ol type="1">
+<li><p>ROC曲线由于兼顾正例与负例，所以适用于评估分类器的整体性能(通常是会计算AUC，表示模型的rank性能)，相比而言PR曲线完全聚焦于正例。</p></li>
+<li><p>如果有<strong>多份数据且存在不同的类别分布</strong>。比如信用卡欺诈问题中每个月正例和负例的比例可能都不相同，这时候如果只想单纯地比较分类器的性能且剔除类别分布改变的影响，则ROC曲线比较适合，因为类别分布改变可能使得PR曲线发生变化时好时坏，这种时候难以进行模型比较；反之，如果想测试不同类别分布下对分类器的性能的影响，则PR曲线比较适合。</p></li>
+<li><p>如果想要评估在<strong>相同的类别分布下正例的预测情况</strong>，则宜选PR曲线。类别不平衡问题中，ROC曲线通常会给出一个乐观的效果估计，所以大部分时候还是PR曲线更好。(参考上面
+Quora 的例子)</p></li>
+<li><p>最后可以根据具体的应用，在曲线上找到最优的点，得到相对应的precision，recall，f1
+score等指标，去调整模型的阈值，从而得到一个符合具体应用的模型。</p></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2018/06/03/format%20%E5%87%BD%E6%95%B0%E5%B8%B8%E7%94%A8%E8%AF%AD%E6%B3%95/" rel="prev" title="format 函数常用语法">
+                  <i class="fa fa-chevron-left"></i> format 函数常用语法
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2018/07/15/CTR%20%E9%A2%84%E4%BC%B0%E6%A8%A1%E5%9E%8B%E7%AE%80%E4%BB%8B--%E9%9D%9E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AF%87/" rel="next" title="CTR 预估模型简介--非深度学习篇">
+                  CTR 预估模型简介--非深度学习篇 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-pen"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

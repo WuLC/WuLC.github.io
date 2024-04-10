@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id: "JmI6QmP3fMkLet6B",ck: "JmI6QmP3fMkLet6B"})</script>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wulc.me","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.15.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="这一讲主要介绍了挖掘频繁项集中的经典方法 FP-growth，以及如何通过 MapReduce 实现这个算法，通过MapReduce实现的 FP-growth 也称为 PFP，这个方法不仅能够挖掘频繁项集，还能够挖掘非频繁项集。原视频在这里，需要自备梯子。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="分布式机器学习(2)-Infrequent Pattern Mining using MapReduce">
+<meta property="og:url" content="https://wulc.me/2018/02/11/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0(2)-Infrequent%20Pattern%20Mining%20using%20MapReduce/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="这一讲主要介绍了挖掘频繁项集中的经典方法 FP-growth，以及如何通过 MapReduce 实现这个算法，通过MapReduce实现的 FP-growth 也称为 PFP，这个方法不仅能够挖掘频繁项集，还能够挖掘非频繁项集。原视频在这里，需要自备梯子。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/image_1c5s43rc91en7uks12ji49518fs9.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1c6h1582b13lr1h1f14v46fhd1u13.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1c6h170i0v2jhn6v871v7g1dvj1g.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1c6hdlsfq1hvc126tsvlfarno11t.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1c6hds4av12hr1j421m2gk8h1dmg2a.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1c6he1m4fk03eo412dro4m1ain2n.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1c5saqi2j1is3156872reg9rdam.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1c6hmpeev1f601ocpg0o17me1q4j34.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1c6hn2fhsikv18ok1pccnbj1m4g3h.png">
+<meta property="article:published_time" content="2018-02-11T04:00:37.000Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.157Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="分布式">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/image_1c5s43rc91en7uks12ji49518fs9.png">
+
+
+<link rel="canonical" href="https://wulc.me/2018/02/11/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0(2)-Infrequent%20Pattern%20Mining%20using%20MapReduce/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wulc.me/2018/02/11/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0(2)-Infrequent%20Pattern%20Mining%20using%20MapReduce/","path":"2018/02/11/分布式机器学习(2)-Infrequent Pattern Mining using MapReduce/","title":"分布式机器学习(2)-Infrequent Pattern Mining using MapReduce"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>分布式机器学习(2)-Infrequent Pattern Mining using MapReduce | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">吴良超的学习笔记</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%91%E7%B9%81%E9%A1%B9%E6%8C%96%E6%8E%98"><span class="nav-number">1.</span> <span class="nav-text">频繁项挖掘</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fp-growth-%E7%AE%97%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">FP-growth 算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mapreduce-%E5%AE%9E%E7%8E%B0-fp-growth"><span class="nav-number">3.</span> <span class="nav-text">MapReduce 实现 FP-growth</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">253</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2018/02/11/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0(2)-Infrequent%20Pattern%20Mining%20using%20MapReduce/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="分布式机器学习(2)-Infrequent Pattern Mining using MapReduce | 吴良超的学习笔记">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          分布式机器学习(2)-Infrequent Pattern Mining using MapReduce
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-02-11 12:00:37" itemprop="dateCreated datePublished" datetime="2018-02-11T12:00:37+08:00">2018-02-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-tags"></i>
+      </span>
+      <span class="post-meta-item-text">标签</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">分布式</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>这一讲主要介绍了挖掘频繁项集中的经典方法 <a
+target="_blank" rel="noopener" href="https://dl.acm.org/citation.cfm?doid=335191.335372">FP-growth</a>，以及如何通过
+MapReduce 实现这个算法，通过MapReduce实现的 FP-growth 也称为 <a
+target="_blank" rel="noopener" href="https://dl.acm.org/citation.cfm?doid=1454008.1454027">PFP</a>，这个方法不仅能够挖掘频繁项集，还能够挖掘非频繁项集。原视频在<a
+target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=eCrhaUCqiiE&amp;t=4400s">这里</a>，需要自备梯子。</p>
+<span id="more"></span>
+<h2 id="频繁项挖掘">频繁项挖掘</h2>
+<p>频繁项集挖掘（Frequent Itemset
+Mining）指的是将那些共同出现较为频繁的项集找出来，其中一个经典的例子就是啤酒和尿布。下图展示了频繁项挖掘中的一些基本概念</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1c5s43rc91en7uks12ji49518fs9.png"
+alt="基本概念" />
+<figcaption aria-hidden="true">基本概念</figcaption>
+</figure>
+<ul>
+<li>Transaction：每一行就是一个 Transaction，表示一个订单</li>
+<li>Item &amp; ItemSet：每个 Transaction 包含了若干个
+Item，表示订单中的商品，任意数量的 Item 可组成一个 ItemSet</li>
+<li>Support：表示某个 ItemSet 出现的次数</li>
+</ul>
+<p>挖掘频繁项集有两个基本方法：Apriori 和 FP-growth，其中 Apriori
+需要对原始数据进行多次的扫描，导致速度很慢。这里不展开讲述，具体可参考<a
+target="_blank" rel="noopener" href="http://www.cnblogs.com/fengfenggirl/p/associate_apriori.html">这篇文章</a>。</p>
+<p>这里讲述的是 FP-growth 算法，该算法通过构建一棵 prefix
+tree，使得只需要遍历两次原始的数据，下面先介绍这个算法的流程，再介绍如何通过
+MapReduce 实现。</p>
+<h2 id="fp-growth-算法">FP-growth 算法</h2>
+<p>FP-growth 算法首先需要构建一棵 FP-tree ，FP-tree 是一棵 prefix
+tree，构造的方法跟一般的 prefix tree 一样，但是在构造前需要对每个
+transaction 中的 items
+按照统一的规则排序（可以按照item出现的频率，也可以按照item的名称，总之各个transaction保持一致即可）</p>
+<p>由于原始的 items 已经按照items名称排序，因此这里直接按照构建prefix
+tree 的方法构建 FP-tree 即可，如下图所示是读入前两条记录的构建结果</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1c6h1582b13lr1h1f14v46fhd1u13.png"
+alt="prefix tree 1" />
+<figcaption aria-hidden="true">prefix tree 1</figcaption>
+</figure>
+<p>按照这种方法可以构建出整棵 FP-tree 如下图所示</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1c6h170i0v2jhn6v871v7g1dvj1g.png"
+alt="prefix tree 2" />
+<figcaption aria-hidden="true">prefix tree 2</figcaption>
+</figure>
+<p><strong>这里需要注意的是上述的过程忽略了一步，就是在构造 FP-tree
+前还还需要设定一个 min-support 值，这个值表示某个 item 至少要出现
+min-support 次，如果小于 min-support 次，则将这个 item 从所有的
+transaction 中剔除，再按照上面的方法构造 prefix tree。</strong></p>
+<p>这么做的原因一是出现频率不高的 itemset
+中的item被认为是相关度较低的，二是当输入很大的时候，构造出来的树也会很大，因此可通过设定阈值，去掉
+infrequent
+item。但是从我们前面讲的内容可知，这样做其实已经去掉了部分长尾数据。</p>
+<p><strong>构造完 FP-tree 后，挖掘频繁项集时需要先指定一个
+item，再挖掘与这个 item
+相关的频繁项集</strong>，挖掘与这个item相关的频繁项集需要构造
+Conditional FP-tree，所谓的 Conditional FP-Tree，就是与该 item
+相关的所有 transaction 所组成的 FP-tree。如要挖掘与 e 这个 item
+相关的频繁项集，则构造 Conditional FP-tree 过程如下</p>
+<p>首先需要找到以 e 为叶子节点的所有 branch 组成的 tree，如下图 (a)
+所示</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1c6hdlsfq1hvc126tsvlfarno11t.png"
+alt="conditional FP-tree 1" />
+<figcaption aria-hidden="true">conditional FP-tree 1</figcaption>
+</figure>
+<p>接着更新父节点的计数为子节点的计数之和，并且去掉 e
+这个叶子节点，如下图所示</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1c6hds4av12hr1j421m2gk8h1dmg2a.png"
+alt="conditional FP-tree 2" />
+<figcaption aria-hidden="true">conditional FP-tree 2</figcaption>
+</figure>
+<p>在这个过程中需要去掉那些 support 数不满足 min-support 的item，这里令
+min-support 为2，,则由于上图中的 b 的support 数只有 1，需要去掉 b 这个
+item，如下图所示</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1c6he1m4fk03eo412dro4m1ain2n.png"
+alt="conditional FP-tree 3" />
+<figcaption aria-hidden="true">conditional FP-tree 3</figcaption>
+</figure>
+<p>构造出 e 的 conditional FP-tree 后，只需要挖掘出 conditional FP-tree
+中的频繁项集，并在所有的频繁项集后加上 e 即可，如从 conditional FP-tree
+中挖掘出的频繁项集为 <code>&#123;a:2, d:2&#125;</code> 和 <code>&#123;c:2&#125;</code>,
+则关于 e 的频繁项集为 <code>&#123;a:2, d:2, e:2&#125;</code> 和
+<code>&#123;c:2, e:2&#125;</code>。这样实际上是在解决一个递归问题了。</p>
+<h2 id="mapreduce-实现-fp-growth">MapReduce 实现 FP-growth</h2>
+<p>一般来说，挖掘频繁项集的原始数据都相当庞大，因此构造出来的 FP-tree
+也会很大，当内存无法存储 FP-tree 时，一种解决方法就是通过提高
+min-support 的值，从而将 FP-tree
+的大小降低，但是根据之前讲的长尾效应，这样做会将长尾数据切掉。</p>
+<p>另外一种方法就是通过分布式的方式实现该算法，通过分布式使得能够 构建
+FP-tree 时支持更小的
+min-support，从而能够挖掘非频繁项集。这里采用的分布式框架就是
+MapReduce，下面讲述的是这个方法实现的细节。</p>
+<p>下面首先介绍一下MapReduce 的编程范式，输入、中间结果和输出均是
+key-value pairs, 中间的 shuffling 过程目的就是要将 key 相同的 pairs
+交给同一个 worker 处理。</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1c5saqi2j1is3156872reg9rdam.png"
+alt="mapreduce" />
+<figcaption aria-hidden="true">mapreduce</figcaption>
+</figure>
+<p>在具体的实现上，shuffling 过程可通过对 key 做 hash 后，再取模（worker
+的数量）决定这个 kv 对由哪个 worker 来负责。</p>
+<p>另外数据的传输是通过分布式文件系统实现的，也就是需要通过反复写磁盘来进行数据的传输，这导致了
+MapReduce 的速度无法快起来。</p>
+<p>从上面可知，找到 item A 和 item B
+的频繁项集这两个任务是不相关的，只需要分别找出 item A 和 item B 的
+conditional FP-tree 即可，因此可以分别交给两个 worker 进行处理。</p>
+<p>通过 MapReduce 实现的 FP-growth，<strong>每一次的 map + reduce
+过程能够输出 item 对应的 conditional FP-tree</strong>，下图所示的是 map
+过程，能够从 transaction 中输出各个 item 对应的 conditional
+transaction</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1c6hmpeev1f601ocpg0o17me1q4j34.png"
+alt="PFP map" />
+<figcaption aria-hidden="true">PFP map</figcaption>
+</figure>
+<p>上图中最左边的 map input 是最开始的 transactions,
+经过排序和过滤掉非频繁项后能够得到各个 item 对应的conditional
+transaction，作为 map output 输入到 reduce 过程中，reduce
+过程如下图所示，reduce 能够将相同的 key(item) 的conditional transactions
+聚合在一起，进而构建出这个 item 对应的conditional FP-tree。</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1c6hn2fhsikv18ok1pccnbj1m4g3h.png"
+alt="PFP reduce" />
+<figcaption aria-hidden="true">PFP reduce</figcaption>
+</figure>
+<p>得到这个 item 的 conditional FP-tree 后，可对这棵 conditional FP-tree
+进行相同的 MapReduce 操作，因此，<strong>原始的 FP-growth
+算法递归一次在这里就是一个 MapReduce Job。</strong></p>
+<p>上面的实现方法实际上就是 <a
+target="_blank" rel="noopener" href="https://dl.acm.org/citation.cfm?doid=1454008.1454027">PFP(Parallel
+FP-growth)</a> 算法，目前在 spark 框架中有<a
+target="_blank" rel="noopener" href="https://spark.apache.org/docs/2.1.0/mllib-frequent-pattern-mining.html">相应的实现</a>，可以直接调用。</p>
+<p>最后需要注意的一点是，PFP
+虽然能够挖掘出非频繁项集，也就是长尾数据的尾巴部分，但是却无法判断出这些非频繁项集中那些项集是有效的，那些是噪声。</p>
+<p>综上，本文主要介绍了频繁项挖掘中的 FP-growth 算法以及如何通过
+MapReduce 实现这个算法，通过 MapReduce 实现的版本能够支持更小的
+min-support，因此能够挖掘出非频繁项集，也就是长尾数据中的尾巴部分，但是这个方法不能判断出那些非频繁项集是有效的。</p>
+<hr />
+<p>参考</p>
+<p><a
+target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=eCrhaUCqiiE&amp;t=4400s">分布式机器学习系列讲座
+- 01 Infrequent Pattern Mining using MapReduce</a> <a
+target="_blank" rel="noopener" href="http://www.cnblogs.com/pinard/p/6307064.html">FP
+Tree算法原理总结</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+              <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" rel="tag"><i class="fa fa-tag"></i> 分布式</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2018/02/08/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0(1)-A%20New%20Era/" rel="prev" title="分布式机器学习(1)-A New Era">
+                  <i class="fa fa-chevron-left"></i> 分布式机器学习(1)-A New Era
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2018/02/18/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0(3)-Application%20Driven/" rel="next" title="分布式机器学习(3)-Application Driven">
+                  分布式机器学习(3)-Application Driven <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-pen"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

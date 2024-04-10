@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id: "JmI6QmP3fMkLet6B",ck: "JmI6QmP3fMkLet6B"})</script>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wulc.me","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.15.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="LeetCode 上的这两道题 343. Integer Break 和 377. Combination Sum IV 从名字上来看没有什么联系，但是实际上两个题目都是通过动态规划来降低了求解时间复杂度，并且面对这种题目一开始往往难以往动态规划方向去想，特此记录。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LeetCode 解题报告(343, 377)-动态规划求解数字的组合方案">
+<meta property="og:url" content="https://wulc.me/2017/06/28/LeetCode%20%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A(343,%20377)-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E6%B1%82%E8%A7%A3%E6%95%B0%E5%AD%97%E7%9A%84%E7%BB%84%E5%90%88%E6%96%B9%E6%A1%88/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="LeetCode 上的这两道题 343. Integer Break 和 377. Combination Sum IV 从名字上来看没有什么联系，但是实际上两个题目都是通过动态规划来降低了求解时间复杂度，并且面对这种题目一开始往往难以往动态规划方向去想，特此记录。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2017-06-28T12:14:02.000Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.143Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="动态规划">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://wulc.me/2017/06/28/LeetCode%20%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A(343,%20377)-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E6%B1%82%E8%A7%A3%E6%95%B0%E5%AD%97%E7%9A%84%E7%BB%84%E5%90%88%E6%96%B9%E6%A1%88/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wulc.me/2017/06/28/LeetCode%20%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A(343,%20377)-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E6%B1%82%E8%A7%A3%E6%95%B0%E5%AD%97%E7%9A%84%E7%BB%84%E5%90%88%E6%96%B9%E6%A1%88/","path":"2017/06/28/LeetCode 解题报告(343, 377)-动态规划求解数字的组合方案/","title":"LeetCode 解题报告(343, 377)-动态规划求解数字的组合方案"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>LeetCode 解题报告(343, 377)-动态规划求解数字的组合方案 | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">吴良超的学习笔记</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">253</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2017/06/28/LeetCode%20%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A(343,%20377)-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E6%B1%82%E8%A7%A3%E6%95%B0%E5%AD%97%E7%9A%84%E7%BB%84%E5%90%88%E6%96%B9%E6%A1%88/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="LeetCode 解题报告(343, 377)-动态规划求解数字的组合方案 | 吴良超的学习笔记">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          LeetCode 解题报告(343, 377)-动态规划求解数字的组合方案
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2017-06-28 20:14:02" itemprop="dateCreated datePublished" datetime="2017-06-28T20:14:02+08:00">2017-06-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-tags"></i>
+      </span>
+      <span class="post-meta-item-text">标签</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" itemprop="url" rel="index"><span itemprop="name">动态规划</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>LeetCode 上的这两道题 <a
+target="_blank" rel="noopener" href="https://leetcode.com/problems/integer-break/#/description">343.
+Integer Break</a> 和 <a
+target="_blank" rel="noopener" href="https://leetcode.com/problems/combination-sum-iv/#/description">377.
+Combination Sum IV</a>
+从名字上来看没有什么联系，但是实际上两个题目都是通过动态规划来降低了求解时间复杂度，并且面对这种题目一开始往往难以往动态规划方向去想，特此记录。</p>
+<span id="more"></span>
+<p>对我而言，之所以不会一开始就想到动态规划，原因是这两个题目要求解的问题均是以某种方式构造某个数字时，总共的方案有几种或者最优的方案是哪种。一开始往往就是往数学或者
+dfs 方向去想，而不会想到通过动态规划建立一个从 1
+到目标数字的数组来记录各个状态的答案。</p>
+<p>对于问题 <a
+target="_blank" rel="noopener" href="https://leetcode.com/problems/integer-break/#/description">343.
+Integer Break</a>,
+该问题属于求解组成某个数字的最优方案的问题，首先需要注意的是<strong>只把数字分为两部分</strong>，这样能够简化问题，然后对于这两部分都取最优时，则这两部分的乘积就是这种分法的最优解。那对于这两部分，可以很自然地想到均通过递归去求解最优，但是这种方法或导致很多重复的计算，比如说将
+8 分为 6 和 2 时，需要计算 6 和 2 的最优解，但是进一步将 6 分为 4 和 2
+时，还要计算 2 的最优解，这样显然会导致 多次计算 2 的最优解。</p>
+<p>解决这个问题就是通过动态规划建立的数组记录数字 2
+的最优解，需要求解时直接从数组中取即可，这时候动态规划的数组就有点类似
+cache 的作用，实现的 java 代码如下,其中 <code>dp[i]</code> 表示数字 i
+的最优解（即分解的数字的乘积最大）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Solution</span> </span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">integerBreak</span><span class="params">(<span class="type">int</span> n)</span> </span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">int</span>[] dp = <span class="keyword">new</span> <span class="title class_">int</span>[n+<span class="number">1</span>];</span><br><span class="line">        dp[<span class="number">1</span>] = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">2</span>; i &lt;= n; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">max</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">1</span>; j &lt;= (i &gt;&gt; <span class="number">1</span>); j++)</span><br><span class="line">            &#123;</span><br><span class="line">                max = Math.max( Math.max(dp[j], j) * Math.max(i - j, dp[i-j]), max);</span><br><span class="line">            &#125;</span><br><span class="line">            dp[i] = max;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp[n];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>针对 LeetCode
+的评测方法（建立一个对象，输入多组评测数据），上面的代码还能该继续优化，就是为这个对象建立一个全局的数组记录各个数字的最优解，供多组评测数据使用，当评测数字在数组中已经有答案了就不必再求解，反之递增数组。实现的
+Java 代码如下，代码中的 <code>cache</code> list 与上面方法中的
+<code>dp</code> 数组的作用相同</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Solution</span> </span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> List&lt;Integer&gt; cache = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;Integer&gt;();</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">integerBreak</span><span class="params">(<span class="type">int</span> n)</span> </span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> cache.size(); i &lt;= n; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">max</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">1</span>; j &lt;= (i &gt;&gt; <span class="number">1</span>); j++)</span><br><span class="line">            &#123;</span><br><span class="line">                max = Math.max( Math.max(cache.get(j), j) * Math.max(i - j, cache.get(i-j)), max);</span><br><span class="line">            &#125;</span><br><span class="line">            cache.add(max);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> cache.get(n);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>针对问题 <a
+target="_blank" rel="noopener" href="https://leetcode.com/problems/combination-sum-iv/#/description">377.
+Combination Sum IV</a>，一开始想的是通过 dfs
+来求解，但是题目中允许重复的数字，并且不同的顺序被认为是不同的组合方案，这样就使得如果通过
+dfs 求解，时间复杂度会非常大。</p>
+<p>通过动态规划求解，通过 <code>dp</code> 数组中的 <code>dp[i]</code>
+表示数字 i
+的组合方式的数目，可以同时解决上面提到的重复数字和数字的顺序问题。</p>
+<p>则 <code>dp[i+1]</code> 可以考虑所有数字与已有的
+<code>dp[j] (j=0，1，...i)</code> 的组合，实现的 Java 代码如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Solution</span> </span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">combinationSum4</span><span class="params">(<span class="type">int</span>[] nums, <span class="type">int</span> target)</span> </span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">int</span>[] dp = <span class="keyword">new</span> <span class="title class_">int</span>[target+<span class="number">1</span>];</span><br><span class="line">        dp[<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">        Arrays.sort(nums);</span><br><span class="line">        <span class="type">int</span> count;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt;= target; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            count = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>; j &lt; nums.length; j++)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span> (nums[j] &gt; i) <span class="keyword">break</span>;</span><br><span class="line">                count += dp[i - nums[j]];</span><br><span class="line">            &#125;</span><br><span class="line">            dp[i] = count;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp[target];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>往往会听到说动态规划的难点在构造递推关系，这没错，但是还有一个难点就是想到题目可以通过动态规划去求解，其实只要能往动态规划方向去想，递推关系往往也不难得到。因此，本文的主要作用还是要提醒<strong>面对这种求解目标数字的最优构造方案或者构造方案数目的时候，可以往动态规划方向去想，建立一个从1到目标数字的数组记录各个数字的结果，而不是仅仅拘泥于目标数字。</strong></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Java/" rel="tag"><i class="fa fa-tag"></i> Java</a>
+              <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" rel="tag"><i class="fa fa-tag"></i> 动态规划</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2017/06/18/%E5%A6%82%E4%BD%95%E7%94%A8%E6%95%B0%E6%8D%AE%E6%AD%A6%E8%A3%85%E8%BF%90%E8%90%A5%E5%B7%A5%E4%BD%9C/" rel="prev" title="如何用数据武装运营工作">
+                  <i class="fa fa-chevron-left"></i> 如何用数据武装运营工作
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2017/07/06/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%AD%E6%A0%B7%E6%9C%AC%E6%AF%94%E4%BE%8B%E4%B8%8D%E5%B9%B3%E8%A1%A1%E7%9A%84%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95/" rel="next" title="机器学习中样本比例不平衡的处理方法">
+                  机器学习中样本比例不平衡的处理方法 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-pen"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

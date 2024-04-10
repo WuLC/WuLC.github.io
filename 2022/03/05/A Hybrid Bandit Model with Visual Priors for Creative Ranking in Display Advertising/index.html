@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id: "JmI6QmP3fMkLet6B",ck: "JmI6QmP3fMkLet6B"})</script>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wulc.me","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.15.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="之前的文章 Dynamic Creative Optimization in Online Display Advertising中提到，广告创意往往可分为创意生成、创意优选和创意投放三大块，本文主要讲创意优选这部分的一些做法，这个过程一般会涉及到 E&amp;E 的过程。 本文的主要内容是选自阿里发表的一篇 paper：A Hybrid Bandit Model with Visual Prio">
+<meta property="og:type" content="article">
+<meta property="og:title" content="A Hybrid Bandit Model with Visual Priors for Creative Ranking in Display Advertising">
+<meta property="og:url" content="https://wulc.me/2022/03/05/A%20Hybrid%20Bandit%20Model%20with%20Visual%20Priors%20for%20Creative%20Ranking%20in%20Display%20Advertising/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="之前的文章 Dynamic Creative Optimization in Online Display Advertising中提到，广告创意往往可分为创意生成、创意优选和创意投放三大块，本文主要讲创意优选这部分的一些做法，这个过程一般会涉及到 E&amp;E 的过程。 本文的主要内容是选自阿里发表的一篇 paper：A Hybrid Bandit Model with Visual Prio">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/VAM_HBM.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/ListNetAlgorithm.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/vam_label_smoothing.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/HBM_training_serving.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/HybridBanditModel.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/VAM_HBM_sCTR.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/VAM_HBM_regret.jpg">
+<meta property="article:published_time" content="2022-03-05T13:53:19.000Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.220Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="计算广告">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/VAM_HBM.jpg">
+
+
+<link rel="canonical" href="https://wulc.me/2022/03/05/A%20Hybrid%20Bandit%20Model%20with%20Visual%20Priors%20for%20Creative%20Ranking%20in%20Display%20Advertising/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wulc.me/2022/03/05/A%20Hybrid%20Bandit%20Model%20with%20Visual%20Priors%20for%20Creative%20Ranking%20in%20Display%20Advertising/","path":"2022/03/05/A Hybrid Bandit Model with Visual Priors for Creative Ranking in Display Advertising/","title":"A Hybrid Bandit Model with Visual Priors for Creative Ranking in Display Advertising"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>A Hybrid Bandit Model with Visual Priors for Creative Ranking in Display Advertising | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">吴良超的学习笔记</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#vam"><span class="nav-number">1.</span> <span class="nav-text">VAM</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#list-wise-loss"><span class="nav-number">1.1.</span> <span class="nav-text">list-wise loss</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vam-loss"><span class="nav-number">1.2.</span> <span class="nav-text">VAM loss</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#noise-mitigation"><span class="nav-number">1.3.</span> <span class="nav-text">noise mitigation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hbm"><span class="nav-number">2.</span> <span class="nav-text">HBM</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C"><span class="nav-number">3.</span> <span class="nav-text">实验</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">4.</span> <span class="nav-text">小结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">253</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2022/03/05/A%20Hybrid%20Bandit%20Model%20with%20Visual%20Priors%20for%20Creative%20Ranking%20in%20Display%20Advertising/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="A Hybrid Bandit Model with Visual Priors for Creative Ranking in Display Advertising | 吴良超的学习笔记">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          A Hybrid Bandit Model with Visual Priors for Creative Ranking in Display Advertising
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-03-05 21:53:19" itemprop="dateCreated datePublished" datetime="2022-03-05T21:53:19+08:00">2022-03-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-tags"></i>
+      </span>
+      <span class="post-meta-item-text">标签</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A/" itemprop="url" rel="index"><span itemprop="name">计算广告</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>之前的文章 <a
+href="https://wulc.me/2022/02/01/Dynamic%20Creative%20Optimization%20in%20Online%20Display%20Advertising/">Dynamic
+Creative Optimization in Online Display
+Advertising</a>中提到，广告创意往往可分为创意生成、创意优选和创意投放三大块，本文主要讲创意优选这部分的一些做法，这个过程一般会涉及到
+E&amp;E 的过程。</p>
+<p>本文的主要内容是选自阿里发表的一篇 paper：<a
+target="_blank" rel="noopener" href="https://arxiv.org/abs/2102.04033">A Hybrid Bandit Model with
+Visual Priors for Creative Ranking in Display Advertising</a>，paper
+通过 list-wise
+的训练方式达到对同一计划下的候选创意进行排序(即优选)的目标；list-wise
+可以算作 Exploitation 部分，paper 还通过了一个 bandit model 达到
+Exploration
+的目的，总体的做法比较合理，也在业界实际场景验证了有效性，值得一看。</p>
+<span id="more"></span>
+<p>paper 里提出的方法主要分为两大模块：VAM(visual-aware ranking model)
+和 HBM(hybrid bandit model), 总体的模块图如下所示，VAM 即上面提到的基于
+list-wise 优选做 exploitation 模块，HBM 则是基于 badnit model 做
+exploration 模块，下面也主要从这两个模块进行介绍。</p>
+<figure>
+<img data-src="https://wulc.me/imgs/VAM_HBM.jpg" alt="architecture" />
+<figcaption aria-hidden="true">architecture</figcaption>
+</figure>
+<h2 id="vam">VAM</h2>
+<h3 id="list-wise-loss">list-wise loss</h3>
+<p>list-wise 是 learning to rank 里一种建模方式，另外两种分别是
+point-wise 和 pair-wise，常见的 ctr/cvr 预估都是采用 point-wise
+的方式；</p>
+<p>关于这几种建模方式可参考下面两篇 paper，两篇都是 Microsoft 发表的
+paper，第一篇讲了 point-wise -&gt; pair-wise 的过程, 第二篇讲了
+pair-wise 到 list-wise 的过程</p>
+<ul>
+<li><a
+target="_blank" rel="noopener" href="https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/MSR-TR-2010-82.pdf">From
+RankNet to LambdaRank to LambdaMART: An Overview</a></li>
+<li><a
+target="_blank" rel="noopener" href="https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr-2007-40.pdf">Learning
+to Rank: From Pairwise Approach to Listwise Approach</a></li>
+</ul>
+<p>VAM 采用的 list-wise loss 即是第二篇 paper 中的提出的
+loss，其流程如下图所示，更详细的推导可参考上面第二篇 paper</p>
+<!-- ![listnet algorithm][6] -->
+<p><img data-src="https://wulc.me/imgs/ListNetAlgorithm.jpg" height="50%" width="50%"></p>
+<h3 id="vam-loss">VAM loss</h3>
+<p>回到 VAM，上图的 query 相当于商品(product)，而 list 则是每个 product
+对应的所有创意(一个 product 往往会有多个候选的创意)</p>
+<p>因此，list 中的每个 item 的 prediction <span
+class="math inline">\(p_{m}^{n}\)</span>和 ground truth <span
+class="math inline">\(y_{rank}(C_m^n)\)</span> 表示如下,
+每个符号含义可参考最上面的总体框架图右上角</p>
+<p><span class="math display">\[p_{m}^{n} =
+\frac{\exp(s_m^n)}{\sum_{i=1}^{M}\exp(s_i^n)}\]</span></p>
+<p><span class="math display">\[y_{rank}(C_m^n) = \frac{\exp(CTR(C_m^n),
+T) }{\sum_{i=1}^{M}\exp(\exp(CTR(C_i^n), T)}\]</span></p>
+<p><span class="math inline">\(y_{rannk}(C_m^n)\)</span> 中的 <span
+class="math inline">\(T\)</span> 的作用是
+<code>adjust the scale of the value so that make the probability of top1 sample close to 1</code>，则对于第
+<span class="math inline">\(n\)</span> 个 product, 其 list-wise loss
+如下所示</p>
+<p><span
+class="math display">\[L_{rank}^{n}=-\sum_{m}y_{rank}(C_m^n)\log(p_{m}^{n})\]</span></p>
+<p>除了常规的 list-wise loss, paper 里还添加了一项 point-wise 的
+auxiliary regression loss，其含义也比较直观，就是让 VAM 的 prediction
+尽可能接近其真实的 CTR 值，其表示如下</p>
+<p><span class="math display">\[L_{reg}^{n}=\sum_{m} ||CTR(C_m^n) -
+s_m^n||_{2}\]</span></p>
+<p>根据原文的描述<strong><code>making the outputs close to the real CTRs will significantly stabilize the bandit learning procedure</code></strong>，其作用是让后续的
+HBM 训练更加稳定，则第 <span class="math inline">\(n\)</span> 个 list
+的总体 loss 如下所示（实验中 <span class="math inline">\(\gamma\)</span>
+= 0.5）</p>
+<p><span class="math display">\[L^{n} = L_{rank}^{n} + \gamma
+L_{reg}^{n}\]</span></p>
+<h3 id="noise-mitigation">noise mitigation</h3>
+<p>这里的 noise mitigation 指的是部分创意的 impression
+会比较少，统计的后验 CTR 波动性较大(极端的比如只曝光一次)，</p>
+<p>一个粗暴的方法是对 impression 卡个阈值，小于阈值的 item
+就不作为训练数据，但这样可能会导致训练的数据量过少，paper 里采用了如下 2
+种方法</p>
+<p>第一种方法是label smoothing, 也是这篇 paper 提出的方法 <a
+target="_blank" rel="noopener" href="http://www.cs.cmu.edu/~xuerui/papers/ctr.pdf">Click-Through Rate
+Estimation for Rare Events in Online
+Advertising</a>，其思想是基于贝叶斯学派给点击数 clicks 和 CTR
+值整个先验分布，这样遇到极端值时也有分布约束，导致最终的值不会太离谱，</p>
+<figure>
+<img data-src="https://wulc.me/imgs/vam_label_smoothing.jpg"
+alt="label smoothing" />
+<figcaption aria-hidden="true">label smoothing</figcaption>
+</figure>
+<p>第二种方法是 weighted sampling，就是给点击数少的样本更小的权重，paper
+的做法是对点击数取了个 log 变换作为这个样本的 weight。</p>
+<h2 id="hbm">HBM</h2>
+<p>HBM 本质上是一个 <a
+target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Bayesian_linear_regression#:~:text=In%20statistics,%20Bayesian%20linear%20regression,the%20context%20of%20Bayesian%20inference.">Bayesian
+Linear
+Regression</a>，从名字大概就能猜测，这个是贝叶斯学派的方法，即认为模型参数是服从一个分布，通过从分布里采样达到
+exploration 的目的，其推导过程如下</p>
+<p>假设线上的数据按照如下方式产生, <span
+class="math inline">\(y\)</span> 表示是否点击，<span
+class="math inline">\(f^T\)</span> 表示通过 VAM 抽取出来的 visual
+representation, <span class="math inline">\(\widetilde{w}\)</span> 和
+<span class="math inline">\(\epsilon\)</span> 则是模型的参数</p>
+<p><span class="math display">\[y = f^T\widetilde{w} +
+\epsilon\]</span></p>
+<p>paper 里将 <span class="math inline">\(\epsilon\)</span>
+先验分布假设为一个正态分布即 <span class="math inline">\(\epsilon
+\thicksim N(0, \sigma^2)\)</span>, 同样将 <span
+class="math inline">\(\widetilde{w}|\sigma^2\)</span>
+假设为一个正态分布，两者互为共轭</p>
+<p><span class="math display">\[\sigma^2 \thicksim IG(a, b)\]</span></p>
+<p><span class="math display">\[\widetilde{w}|\sigma^2 \thicksim N(\mu,
+\epsilon^2 \Sigma^{-1}) \]</span></p>
+<p>参考上面 wiki 的推导过程，总体模型的 training 和 serving
+过程如下所示</p>
+<figure>
+<img data-src="https://wulc.me/imgs/HBM_training_serving.jpg"
+alt="hbm_train_serving" />
+<figcaption aria-hidden="true">hbm_train_serving</figcaption>
+</figure>
+<p>公式 18 可以认为是 training 过程(对于贝叶斯方法，有个特定的名字<a
+target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Bayesian_inference">Bayesian
+inference</a>)，在贝叶斯的方法中，更新模型就是更新假定的 distribution
+中的各个参数，本例中就是上面两个分布中的 <span
+class="math inline">\(a\)</span>、<span
+class="math inline">\(b\)</span>、<span
+class="math inline">\(\mu\)</span>、<span
+class="math inline">\(\Sigma^{-1}\)</span>,
+这里使用的是解析法，但是很多问题解析法是无法解决的，因此常常会利用 Monte
+Carlo sampling 一类方法，</p>
+<p>而 serving 则是从 training 得到的分布中抽样得到 <span
+class="math inline">\(w(t)\)</span>, 计算最终的 score，</p>
+<p>上面的计算 score 的方法是第 <span class="math inline">\(n\)</span> 个
+product 下所有 creative 共用一套参数 <span
+class="math inline">\(w^n\)</span>, paper 还提出了针对每个 creative
+也应该有一套参数，即针对第 <span class="math inline">\(n\)</span> 个
+product 下的第 <span class="math inline">\(m\)</span> 个
+creative，计算的 score 应该是</p>
+<p><span class="math display">\[y_m^n = {f_m^n}^{T}w^n +
+{f_m^n}^{T}w_m^n\]</span></p>
+<p>paper 这样做的原因是</p>
+<blockquote>
+<p>This simple linear assumption works well for small datasets, but
+becomes inferior when dealing with industrial data. For example, bright
+and vivid colors will be more attractive for women’s top while concise
+colors are more proper for 3C digital accessories. In addition to this
+product-wise characteristic, a cre- ative may contain a unique designed
+attribute that is not expressed by the shared weights. Hence, it is
+helpful to have weights that have both shared and non-shared
+components.</p>
+</blockquote>
+<p>所以 paper 根据曝光量算对 score 算了一个权重 <span
+class="math inline">\(\lambda\)</span>, 其计算方法如下</p>
+<p><span class="math display">\[\lambda =
+(1+e^{\frac{-impression(I^n)+\theta_2}{\theta_1}})^{-1}\]</span></p>
+<p>则最终的 socre 如下</p>
+<p><span class="math display">\[y_m^n = (1-\lambda){f_m^n}^{T}w^n +
+\lambda{f_m^n}^{T}w_m^n\]</span></p>
+<p>这里的思想是在某个 product 的曝光量充足时，更加相信其 product-wise 的
+score，反之则更相信 creative-wise 的 socre</p>
+<p><strong>但是笔者对这里的做法存疑，笔者认为这个 <span
+class="math inline">\(\lambda\)</span> 参数应该做在 creative 粒度，当
+creative 粒度的数据充足时，应该更相信creative-wise 的 socre，反之更相信
+product-wise 的 score。</strong></p>
+<p><strong>因为如果每个 creative 都有足够的后验数据来进行训练，那做到
+creative 粒度的个性化参数效果上应该会是最好的，但是问题是现实是很多
+creative 的后验数据非常系数甚至是没有后验数据的，这个时候采用
+product-wise 的 score 相当于是做了一个 clustering，笔者认为这样更加 make
+sense</strong></p>
+<p>因此，HBM 的算法流程如下图所示</p>
+<!-- ![HBM_algo][13] -->
+<p><img data-src="https://wulc.me/imgs/HybridBanditModel.jpg" height="50%" width="50%"></p>
+<h2 id="实验">实验</h2>
+<p>paper 里采用了 2 个评估指标：Simulated CTR(sCTR) 和 Cumulative
+regret, 前者模拟 online learning 过程，后者则是评估 bandit model
+，两者计算方法如下，但是好像这两个指标不是非常通用？</p>
+<!-- ![sCTR][14] -->
+<p><img data-src="https://wulc.me/imgs/VAM_HBM_sCTR.jpg" height="50%" width="50%"></p>
+<!-- ![regret][15] -->
+<p><img data-src="https://wulc.me/imgs/VAM_HBM_regret.jpg" height="50%" width="50%"></p>
+<p>采用的评估数据集有 2
+个，一个是自建的，另一个是公开数据集，效果上自然也是 paper
+提出的效果最好，但是 paper 没有做在线的 ab
+实验，逼近离线指标跟线上的效果还是有 diff 的</p>
+<h2 id="小结">小结</h2>
+<p>总的来说，这篇 paper 提出一种 creative selection 的方法，由 VAM + HBM
+组成，笔者认为有以下几点值得学习</p>
+<ol type="1">
+<li>VAM 利用投后数据(ctr), 通过 list-wise 方法学习出 creative 的 visual
+representation</li>
+<li>HBM 利用 VAM 的 visual representation 通过 bandit model，来实现
+exploration 部分，同时考虑了 product-wise 和 creative-wise 建模和预估
+score 的融合</li>
+</ol>
+<p>但是也有以下几点笔者是存疑的</p>
+<ol type="1">
+<li>product-wise 和 creative-wise 的分数时，<span
+class="math inline">\(\lambda\)</span>参数只考虑到 product-wise
+的信息，没能很好体现 creative-wise的权重，具体原因上面说了</li>
+<li>广告系统通常是召回+精排的环节，精排往往是 creative
+粒度的，上面提出的系统未必能完整地融入现有的广告系统，倒是 VAM
+训练得到的 visual representation 作为精排模型的一个 feature
+是一种可能的方法</li>
+<li>VAM 已经可以对候选创意做优选了，为什么还需要 HBM 来做
+exploration？或者说 exploration 是为了拿什么收益?
+根据笔者的经验，在广告系统中 exploration 意味着破坏原来系统 feedback
+loop
+所形成的分布，这往往会破坏系统由于马太效应形成的稳态，往往会造成收入的下降，相对应兑换的是一些生态指标或者信仰指标的提升。</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A/" rel="tag"><i class="fa fa-tag"></i> 计算广告</a>
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/02/01/Dynamic%20Creative%20Optimization%20in%20Online%20Display%20Advertising/" rel="prev" title="Dynamic Creative Optimization in Online Display Advertising">
+                  <i class="fa fa-chevron-left"></i> Dynamic Creative Optimization in Online Display Advertising
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/04/04/Long%20Tail%20Problem%20In%20Item%20Recommendation/" rel="next" title="Long Tail Problem In Item Recommendation">
+                  Long Tail Problem In Item Recommendation <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-pen"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

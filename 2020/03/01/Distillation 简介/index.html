@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id: "JmI6QmP3fMkLet6B",ck: "JmI6QmP3fMkLet6B"})</script>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wulc.me","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.15.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="本文简单了描述机器学习中的蒸馏（distillation）技术的原理，distillation 可简单分为 model distillation 和 feature distillation。顾名思义，蒸馏是对原来的模型&#x2F;特征进行了压缩，其原因可能是为了减少模型的大小（model distillation）、或者某些特征只能在 training 时获取，serving 无法获取(feature d">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Distillation 简介">
+<meta property="og:url" content="https://wulc.me/2020/03/01/Distillation%20%E7%AE%80%E4%BB%8B/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="本文简单了描述机器学习中的蒸馏（distillation）技术的原理，distillation 可简单分为 model distillation 和 feature distillation。顾名思义，蒸馏是对原来的模型&#x2F;特征进行了压缩，其原因可能是为了减少模型的大小（model distillation）、或者某些特征只能在 training 时获取，serving 无法获取(feature d">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/ModelDistillationVSFeatureDistillation.png">
+<meta property="og:image" content="https://wulc.me/imgs/DistillationTrainingAndServing.png">
+<meta property="og:image" content="https://wulc.me/imgs/SynchronousTraining.png">
+<meta property="article:published_time" content="2020-03-01T04:00:37.000Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.206Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/ModelDistillationVSFeatureDistillation.png">
+
+
+<link rel="canonical" href="https://wulc.me/2020/03/01/Distillation%20%E7%AE%80%E4%BB%8B/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wulc.me/2020/03/01/Distillation%20%E7%AE%80%E4%BB%8B/","path":"2020/03/01/Distillation 简介/","title":"Distillation 简介"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Distillation 简介 | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">吴良超的学习笔记</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">基本原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%AD%E7%BB%83%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="nav-number">2.</span> <span class="nav-text">训练注意事项</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.</span> <span class="nav-text">实现</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">253</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2020/03/01/Distillation%20%E7%AE%80%E4%BB%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Distillation 简介 | 吴良超的学习笔记">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Distillation 简介
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-03-01 12:00:37" itemprop="dateCreated datePublished" datetime="2020-03-01T12:00:37+08:00">2020-03-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-tags"></i>
+      </span>
+      <span class="post-meta-item-text">标签</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>本文简单了描述机器学习中的蒸馏（distillation）技术的原理，distillation
+可简单分为 model distillation 和 feature
+distillation。顾名思义，蒸馏是对原来的模型/特征进行了压缩，其原因可能是为了减少模型的大小（model
+distillation）、或者某些特征只能在 training 时获取，serving
+无法获取(feature
+distillation)；在实际业务中可根据具体场景灵活地应用这两类技术。</p>
+<span id="more"></span>
+<h2 id="基本原理">基本原理</h2>
+<p>Distillation 可分为 Model Distillation 和 Feature
+Distillation，其思想都是在训练时同时训练两个模型：teacher 模型和 student
+模型，而在 serving 时只用 student 模型。这里的假设是：<strong>teacher
+模型比起 student 模型，在模型结构上更复杂(Model Distillation)
+，或在特征集上更为丰富(Feature Distillation) ；因此其准确率也会比
+student 模型要好。</strong></p>
+<p>如下图所示是 Model Distillation和Feature Distillation示例
+（下面的图和公式基本摘自 <a
+target="_blank" rel="noopener" href="https://arxiv.org/pdf/1907.05171.pdf">Privileged Features
+Distillation for E-Commerce Recommendations</a>）</p>
+<figure>
+<img data-src="https://wulc.me/imgs/ModelDistillationVSFeatureDistillation.png"
+alt="MD vs FD" />
+<figcaption aria-hidden="true">MD vs FD</figcaption>
+</figure>
+<p>那如何利用 teacher 模型指导 student
+模型学得更好？<strong>基本的做法是将 teacher 模型的输出作为 soft
+label(相对于作为 ground truth 的 hard label）, 为 student 模型添加额外的
+loss 项</strong>；如下公式 (1) 所示</p>
+<p><span class="math display">\[\min_{W_s} (1-\lambda)L_s(y,
+f_s(X;W_s))+\lambda*L_d(f_t(X;W_t),f_s(X;W_s)) \tag{1}\]</span></p>
+<p>上式中各项符号含义如下</p>
+<ul>
+<li><span class="math inline">\(f_s(X; W_s)\)</span> ：student
+模型的预估值</li>
+<li><span class="math inline">\(f_t(X;W_t)\)</span> ： teacher
+模型的预估值</li>
+<li><span class="math inline">\(L_s\)</span> ：student 模型原始的
+loss</li>
+<li><span class="math inline">\(L_d\)</span> ：利用 teacher
+模型预估值输出作为 soft label 计算的 distillation loss;</li>
+<li><span class="math inline">\(\lambda\)</span>：平衡 <span
+class="math inline">\(L_s\)</span> 和 <span
+class="math inline">\(L_d\)</span> 的超参</li>
+</ul>
+<p>上面公式（1）是 Model Distillation 的典型做法，可以看到输入 teacher
+模型和 student 模型的特征都是相同的即 <span
+class="math inline">\(X\)</span> ；而公式(2)描述的 Feature Distillation
+则认为 teacher 模型的特征（<span class="math inline">\(X^*\)</span>）比
+student 模型的特征(<span class="math inline">\(X\)</span>)
+更为丰富，</p>
+<p><span class="math display">\[\min_{W_s} (1-\lambda)L_s(y,
+f_s(X;W_s))+\lambda\*L_d(f_t(X^\*;W_t),f_s(X;W_s)) \tag{2}\]</span></p>
+<p>上面两条公式是 Distillation
+的核心思想了，且在使用<strong>理论上应该首先训练好 teacher 网络，再训练
+student 网络；但是在实际训练的时候，为了加快训练速度，会令 teacher
+模型和 student
+模型同时进行训练</strong>；因此最终的损失函数变为了如下公式(3)
+形式，其中 <span class="math inline">\(L_s\)</span> 和 <span
+class="math inline">\(L_t\)</span> 是 logloss， 而 <span
+class="math inline">\(L_d\)</span> 是 cross entropy loss</p>
+<p><span class="math display">\[\min_{W_s, W_t} (1-\lambda)L_s(y,
+f_s(X;W_s)) +  \lambda\*L_d(f_t(X^\*;W_t),f_s(X;W_s)) + L_t(y,
+f_t(X^\*;W_t))\tag{3}\]</span></p>
+<p>综上，在 training 和 serving 时的模型结构分别如下所示</p>
+<figure>
+<img data-src="https://wulc.me/imgs/DistillationTrainingAndServing.png"
+alt="trainingAndServing" />
+<figcaption aria-hidden="true">trainingAndServing</figcaption>
+</figure>
+<h2 id="训练注意事项">训练注意事项</h2>
+<p>上面提到，distillation 需要训练 teacher 和 student
+两个网络，因此也有两种训练模式：</p>
+<p>（1）先训练 teacher 网络，再训练 student 网络，也被称为 asynchronous
+training （2）同时训练 teacher 网络和 student 网络，也被称为 synchronous
+training</p>
+<p>理论上应该采用方式(1),
+但是由于需要<strong>串行训练两个模型，会导致训练的时间过长</strong>,
+因此才提出了方式（2）的方法；而方式 (2) 会带来训练效果不稳定的问题,
+其原因是在 teacher 在训练初期，其效果往往还不好，而将其输出结果作为
+label 很容易导致 student 网络学飞了</p>
+<p>因此更常用的做法在这两个之间做个权衡，<strong>基本做法就是在训练的初期，将公式(3)
+中的 <span class="math inline">\(\lambda\)</span>
+设为0，然后后面逐渐增大 <span class="math inline">\(\lambda\)</span>
+这个值</strong></p>
+<p>上面提到的paper在这点上提出了一个更简单策略，就是在 <span
+class="math inline">\(k\)</span> 个 step 后才让 teacher 网络的输出作为
+loss 影响 student 网络，<span class="math inline">\(k\)</span>
+是一个拍定的超参，因此其详细训练方式如下</p>
+<figure>
+<img data-src="https://wulc.me/imgs/SynchronousTraining.png"
+alt="synchronous training" />
+<figcaption aria-hidden="true">synchronous training</figcaption>
+</figure>
+<h2 id="实现">实现</h2>
+<p>tensorflow 提供的一个distillation 的实现 <a
+target="_blank" rel="noopener" href="https://github.com/tensorflow/tensor2tensor/blob/master/tensor2tensor/models/distillation.py">distillation.py</a>，使用见
+stack-overflow 上的 <a
+target="_blank" rel="noopener" href="https://stackoverflow.com/questions/53291939/how-do-i-use-tensor2tensors-distillation-py-to-distill-the-knowledge-from-a-tea?answertab=active#tab-top">这个回答</a></p>
+<p>核心代码如下所示，注释写得已经非常清晰了，下面默认的模式是先训练好了
+Teacher 网络，再训练 Student 网络，也就是上面提到的 asynchronous
+training 模式；但是也可以比较容易将下面的逻辑改成 synchronous training
+的。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### Teacher Network</span></span><br><span class="line"><span class="keyword">with</span> tf.variable_scope(<span class="string">&quot;teacher&quot;</span>):</span><br><span class="line">  teacher_outputs = self.teacher_model.body(features)</span><br><span class="line">  tf.logging.info(<span class="string">&quot;teacher output shape: %s&quot;</span> % teacher_outputs.get_shape())</span><br><span class="line">  teacher_outputs = tf.reduce_mean(teacher_outputs, axis=[<span class="number">1</span>, <span class="number">2</span>])</span><br><span class="line">  teacher_logits = tf.layers.dense(teacher_outputs, hp.num_classes)</span><br><span class="line"></span><br><span class="line">  teacher_task_xent = tf.nn.softmax_cross_entropy_with_logits_v2(</span><br><span class="line">      labels=one_hot_targets, logits=teacher_logits)</span><br><span class="line">  outputs = teacher_logits</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> is_distill:</span><br><span class="line">  <span class="comment"># Load teacher weights</span></span><br><span class="line">  tf.train.init_from_checkpoint(hp.teacher_dir, &#123;<span class="string">&quot;teacher/&quot;</span>: <span class="string">&quot;teacher/&quot;</span>&#125;)</span><br><span class="line">  <span class="comment"># Do not train the teacher</span></span><br><span class="line">  trainable_vars = tf.get_collection_ref(tf.GraphKeys.TRAINABLE_VARIABLES)</span><br><span class="line">  <span class="keyword">del</span> trainable_vars[:]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">### Student Network</span></span><br><span class="line"><span class="keyword">if</span> is_distill:</span><br><span class="line">  <span class="keyword">with</span> tf.variable_scope(<span class="string">&quot;student&quot;</span>):</span><br><span class="line">    student_outputs = self.student_model.body(features)</span><br><span class="line">    tf.logging.info(</span><br><span class="line">        <span class="string">&quot;student output shape: %s&quot;</span> % student_outputs.get_shape())</span><br><span class="line">    student_outputs = tf.reduce_mean(student_outputs, axis=[<span class="number">1</span>, <span class="number">2</span>])</span><br><span class="line">    student_logits = tf.layers.dense(student_outputs, hp.num_classes)</span><br><span class="line"></span><br><span class="line">    student_task_xent = tf.nn.softmax_cross_entropy_with_logits_v2(</span><br><span class="line">        labels=one_hot_targets, logits=student_logits)</span><br><span class="line">    teacher_targets = tf.nn.softmax(teacher_logits / hp.distill_temperature)</span><br><span class="line">    student_distill_xent = tf.nn.softmax_cross_entropy_with_logits_v2(</span><br><span class="line">        labels=tf.stop_gradient(teacher_targets),</span><br><span class="line">        logits=student_logits / hp.distill_temperature)</span><br><span class="line">    <span class="comment"># scale soft target obj. to match hard target obj. scale</span></span><br><span class="line">    student_distill_xent *= hp.distill_temperature**<span class="number">2</span></span><br><span class="line"></span><br><span class="line">    outputs = student_logits</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Summaries</span></span><br><span class="line">    tf.summary.scalar(<span class="string">&quot;distill_xent&quot;</span>, student_distill_xent)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> is_distill:</span><br><span class="line">  phase_loss = teacher_task_xent</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">  phase_loss = hp.task_balance * student_task_xent</span><br><span class="line">  phase_loss += (<span class="number">1</span> - hp.task_balance) * student_distill_xent</span><br><span class="line"></span><br><span class="line">losses = &#123;<span class="string">&quot;training&quot;</span>: phase_loss&#125;</span><br><span class="line">outputs = tf.reshape(outputs, [-<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, outputs.shape[<span class="number">1</span>]])</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> outputs, losses</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2019/10/03/%E3%80%8ASmart%20Pacing%20for%20Effective%20Online%20Ad%20Campaign%20Optimization%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" rel="prev" title="《Smart Pacing for Effective Online Ad Campaign Optimization》阅读笔记">
+                  <i class="fa fa-chevron-left"></i> 《Smart Pacing for Effective Online Ad Campaign Optimization》阅读笔记
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/05/17/Modeling%20Delayed%20Feedback%20in%20Display%20Advertising%20%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" rel="next" title="《Modeling Delayed Feedback in Display Advertising》 阅读笔记">
+                  《Modeling Delayed Feedback in Display Advertising》 阅读笔记 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-pen"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

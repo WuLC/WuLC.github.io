@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id: "JmI6QmP3fMkLet6B",ck: "JmI6QmP3fMkLet6B"})</script>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wulc.me","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.15.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Embedding-based Retrieval in Facebook Search 是 FB 在 2020 年发表的一篇搜索场景下如何做向量化召回的 paper，整篇文章读下来，就像是一个奋战在一线的工程师向你娓娓道来他们是怎么从 0 到 1 构建一个召回系统，从训练数据与特征的选取, 到模型的 training 与 serving、再到把新的召回策略融入现有的 ranking system">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《Embedding-based Retrieval in Facebook Search》阅读笔记">
+<meta property="og:url" content="https://wulc.me/2020/08/30/%E3%80%8AEmbedding-based%20Retrieval%20in%20Facebook%20Search%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="Embedding-based Retrieval in Facebook Search 是 FB 在 2020 年发表的一篇搜索场景下如何做向量化召回的 paper，整篇文章读下来，就像是一个奋战在一线的工程师向你娓娓道来他们是怎么从 0 到 1 构建一个召回系统，从训练数据与特征的选取, 到模型的 training 与 serving、再到把新的召回策略融入现有的 ranking system">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/RetrivalSystem.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/ModelOverview.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/LocationFeature.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/FeatureEffectiveness.jpg">
+<meta property="article:published_time" content="2020-08-30T13:37:39.000Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.104Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="计算广告">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/RetrivalSystem.jpg">
+
+
+<link rel="canonical" href="https://wulc.me/2020/08/30/%E3%80%8AEmbedding-based%20Retrieval%20in%20Facebook%20Search%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wulc.me/2020/08/30/%E3%80%8AEmbedding-based%20Retrieval%20in%20Facebook%20Search%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/","path":"2020/08/30/《Embedding-based Retrieval in Facebook Search》阅读笔记/","title":"《Embedding-based Retrieval in Facebook Search》阅读笔记"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>《Embedding-based Retrieval in Facebook Search》阅读笔记 | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">吴良超的学习笔记</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#system-overview"><span class="nav-number">1.</span> <span class="nav-text">System Overview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#model"><span class="nav-number">2.</span> <span class="nav-text">Model</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="nav-number">2.1.</span> <span class="nav-text">损失函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%AD%E7%BB%83%E6%A0%B7%E6%9C%AC"><span class="nav-number">2.2.</span> <span class="nav-text">训练样本</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#feature-engineering"><span class="nav-number">3.</span> <span class="nav-text">Feature Engineering</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#serving"><span class="nav-number">4.</span> <span class="nav-text">Serving</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#later-stage-optimization"><span class="nav-number">5.</span> <span class="nav-text">Later-stage Optimization</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">小结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">253</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2020/08/30/%E3%80%8AEmbedding-based%20Retrieval%20in%20Facebook%20Search%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="《Embedding-based Retrieval in Facebook Search》阅读笔记 | 吴良超的学习笔记">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          《Embedding-based Retrieval in Facebook Search》阅读笔记
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-08-30 21:37:39" itemprop="dateCreated datePublished" datetime="2020-08-30T21:37:39+08:00">2020-08-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-tags"></i>
+      </span>
+      <span class="post-meta-item-text">标签</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A/" itemprop="url" rel="index"><span itemprop="name">计算广告</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2006.11632">Embedding-based Retrieval
+in Facebook Search</a> 是 FB 在 2020
+年发表的一篇搜索场景下如何做向量化召回的
+paper，整篇文章读下来，就像是一个奋战在一线的工程师向你娓娓道来他们是怎么从
+0 到 1 构建一个召回系统，从训练数据与特征的选取, 到模型的 training 与
+serving、再到把新的召回策略融入现有的 ranking system, 整篇 paper
+并没有太多的公式与推导，但是却有很多在实战中总结出来的经验，而且这些经验相信也可以推广搜索以外的推荐/广告领域。本文主要是根据笔者对这篇
+paper 的理解做一些提炼，推荐读原文。</p>
+<span id="more"></span>
+<p>笔者认为这篇 paper 值得关注的点如下</p>
+<ol type="1">
+<li><strong>召回模型的负样本的选取</strong>（为什么不能只选取曝光未点击的样本作为负样本，easy
+negative 与 hard negative）</li>
+<li>新的召回策略如何克服当前 ranking system 的 bias</li>
+<li>构建一个召回系统的常规流程及每个流程中的一些经验</li>
+</ol>
+<p>后面介绍的内容与 paper 中的基本保持一致，且主要介绍其中一些关键点</p>
+<h2 id="system-overview">System Overview</h2>
+<p>在推荐、广告和搜索的场景下基本的架构都是召回(Retrival)+精排（Ranking），因为这三者其实都是要在每条请求到来的时候从一个庞大的候选集中选取出topk个返回给用户，而召回作为这个流程的入口，面对的几乎是整个候选集，为了在延迟上满足要求，召回不会采用太复杂的模型和特征，且往往会对
+item 做倒排索引(Inverted Index)。</p>
+<p>paper 中的系统总体的架构如下，在每条请求到来的时候会实时计算用户的
+embedding，然后利用构建好的 document embedding 倒排索引做
+retrival，为了加速，在向量化召回中还会采用 Quantization 技术(在后面的
+serving 步骤中介绍)</p>
+<figure>
+<img data-src="https://wulc.me/imgs/RetrivalSystem.jpg" alt="sys overview" />
+<figcaption aria-hidden="true">sys overview</figcaption>
+</figure>
+<h2 id="model">Model</h2>
+<p>这里的 model 主要指上图中的 Query Embedding Model 与 Document
+Embedding Model，即生成 embedding
+的模型，采用的也是很经典的双塔模型，如下图所示; 这里的 unified embedding
+主要是指这个 embedding 输入的原始 feature 不仅仅包含 query 和 document
+本身的文本信息，还有对应的上下文信息(context)信息, 这种做法其实在 google
+2016 发表的那篇 Deep Neural Networks for YouTube Recommendations
+已经有了，而这也是 NN 模型比起 Matrix Factorization 等方法生成 embedding
+的优点；可以添加更多的 feature 到模型中</p>
+<figure>
+<img data-src="https://wulc.me/imgs/ModelOverview.jpg"
+alt="model overview" />
+<figcaption aria-hidden="true">model overview</figcaption>
+</figure>
+<h3 id="损失函数">损失函数</h3>
+<p>模型采用的损失函数是 triple loss，最早是在人脸识别中提出的一个
+loss，假设每条训练样本是 <span class="math inline">\((q^{(i)},d_+^{(i)},
+d_-^{(i)})\)</span>, 式子中的<span
+class="math inline">\(d_+^{(i)}\)</span> 表示与 query <span
+class="math inline">\(q^{(i)}\)</span> 相关的 document，而 <span
+class="math inline">\(d_-^{(i)}\)</span>表示与query <span
+class="math inline">\(q^{(i)}\)</span> 不相关的 document, 则 paper 中的
+loss 定义如下</p>
+<p><span class="math display">\[L=\sum_{i=1}^{N} \max(0,
+D(q^{(i)},d_+^{(i)}) - D(q^{(i)},d_-^{(i)}) + m)\]</span></p>
+<p>上式中的 <span class="math inline">\(m\)</span>
+是一个超参，表示正样本与负样本的 enforced margin，<strong>表示正负样本的
+distance 假如大于 m，则认为这个是一个 easy example
+不需要模型进一步学习去区分了</strong>；paper
+中提到了这个超参对结果影响较大，因为不同的任务的最优的 m
+往往不一样。</p>
+<p>上面的 D 表示距离函数(越小表示越相似)，paper 中采用的 distance 函数是
+<span class="math inline">\(D(q,d) = 1-cos(q, d)\)</span>,</p>
+<p>此外，<strong>针对 paper 中的训练样本对，其实也可以采用经典的 LTR
+中的 pariwise loss</strong>，具体可参考 <a
+target="_blank" rel="noopener" href="https://www.microsoft.com/en-us/research/uploads/prod/2016/02/MSR-TR-2010-82.pdf">From
+RankNet to LambdaRank to LambdaMART: An Overview</a></p>
+<p>此外，paper 中的
+<strong>采用的指标是离线评估的召回率（recall），采用的验证集是 10000 个
+search session 中每个 query 及其 target result</strong>(paper
+中并无明确给出这一标准，只是提到按照点击或人工评估方式来获取均可以)</p>
+<h3 id="训练样本">训练样本</h3>
+<p>训练样本的选取是 paper
+中的一个着重强调的一个点，且<strong>关键点在于负样本的选取</strong>，paper
+中选取的正样本是点击样本，而负样本则做了下面的两组对比</p>
+<ul>
+<li>随机选取负样本</li>
+<li>选取曝光未点击的样本作为负样本</li>
+</ul>
+<p>实验结果显示<strong>选取曝光未点击的样本作为负样本时，其效果比随机选取负样本要差很多</strong>；paper
+中对这一现象的解释是</p>
+<blockquote>
+<p>We believe it is because these negatives bias towards hard cases
+which might match the query in one or multiple factors, while the
+majority of documents in index are easy cases which do not match the
+query at alll. Having all negatives being such hard negatives will
+change the representativeness of the training data to the real retrieval
+task, which might impose non-trivial bias to the learned embeddings.</p>
+</blockquote>
+<p>笔者理解采用曝光未点击的样本作为负例，其实就是<strong>造成了 training
+与 serving 的不一致性</strong>，因为曝光未点击的样本大部分是 hard
+cases，即使最终未被点击，但是与 query
+也还是有一定相关性的，但是线上召回时面对的候选集是全部的候选，其中有绝大部分与本次
+query 无关的 easy cases。当负例全部采用 hard cases，实际上与最终的
+serving 就是不一致的，而 paper 中共则说这种行为 “might impose
+non-trivial bias to the learned embeddings”</p>
+<p>除了负例，paper
+中也探索了正例的选择，关于正例的选择做了下面两组的对比</p>
+<ul>
+<li>选取点击作为正例</li>
+<li>选取曝光作为正例</li>
+</ul>
+<p><strong>实验结果显示在数据量相同的情况下，两者效果基本一致</strong>，即使是在曝光的正例基础上叠加点击正例，结果也没有进一步的提升。</p>
+<p>关于正例的选择，虽然 paper
+中称两类正样本差别不大，但是<strong>笔者认为在实际中采用曝光样本作为正例更合适</strong>，原因如下</p>
+<ol type="1">
+<li>点击一般是比较稀疏的，数据量较少</li>
+<li>未点击的样本不应就不是好的样本，有可能只是位置等原因导致的，相比于点击样本，采样这样的样本一定程度上相当于做了
+Explore</li>
+</ol>
+<p><strong>hard mining</strong></p>
+<p>这部分内容是 paper
+中第六节的内容，但也是训练样本选取的一个关键点，因此放在这里一起说明。</p>
+<p>前面提到，选取负样本的时候不能选择曝光未点击的 hard
+cases，但是凡事有多个度，<strong>当负例中的样本都是很容易就能跟正例区分开的
+easy cases，模型也不一定能学得好</strong>，paper
+中对这一现象描述如下</p>
+<blockquote>
+<p>This motivated us believe that the model was not able to utilize
+social features properly yet, and it’s very likely because the negative
+training data were too easy as they were random samples which are
+usually with different names. To make the model better at
+differentiating between similar results, we can use samples that are
+closer to the positive examples in the embedding space as hard negatives
+in training.</p>
+</blockquote>
+<p>这里的 hard nagative
+指的就是那些与正例相似性较高的负例(现对于随机选取的负例)，但是<strong>这里的
+hard nagative 并不是那些曝光未点击的负例</strong>，paper
+中提出了两种方法来挖掘 hard nagative：online hard negative mining 和
+offline hard nagative mining，两种方法的基本流程如下</p>
+<p><strong>online hard negative mining</strong></p>
+<p>在每个 batch 的训练中，假设正样本对为 <span
+class="math inline">\(\lbrace(q^{(i)},d_+^{(i)})\rbrace_{i=1}^{n}\)</span>,
+则对于每个query <span class="math inline">\(q^{(i)}\)</span>, 会从 <span
+class="math inline">\(\lbrace d_+^{(1)} \dots d_+^{(j)} \dots d_+^{(n)}
+| j \ne i\rbrace\)</span> 中随机选出 k 个 document 作为 hard
+nagative，paper 中称其场景下 k=2
+是最优的，如果多了会导致模型的效果下降</p>
+<p>paper 中的实验数据表示加入这样的 hard nagative 后，在不同类型的 iterm
+的搜索上的召回率均有提升。</p>
+<p>但是实际上<strong>以这种方式选取出来的负样本还不够
+hard</strong>，原因也很简单，因为这些 negative 是属于不同的 query
+的，不同 query 的相关性不高，因此这些样本的相似性也不高，因此有了
+offline hard negative mining</p>
+<p><strong>offline hard nagative mining</strong></p>
+<p>offline hard nagative 的做法更像 LTR 的 pairwise 样本构造了，其选取
+negative 的方式是在每个 query 的所有 document 中，<strong>选择那些排序在
+101-500 的位置的样本作为 hard nagative</strong>；值得注意的是，选择那些
+hardest 的 negative 的效果并不是最优的（如排序在第二名的那些）</p>
+<p>上面提到的是负样本的 mining，但是同样也可以针对正样本做这样的 hard
+mining，但是 paper 这一块篇幅较少，细节说的也不是非常清晰，只是提到了
+"we mined potential target results for failed search sessions from
+searchers’ activity log", 大意就是从那些失败的 search session
+的日志中找到那些没被系统召回的但是 positive
+的样本，<strong>笔者猜测这些可能是因为工程上的失败导致没被 send
+出来但是日志里面已经显示排序的第一名的样本</strong></p>
+<p>综上，在召回样本的选取上，paper 强调了<strong>负样本中的要同时包含
+easy nagative 和 hard nagative，paper 的观点是 hard nagative 更关注
+non-text 的特征（如 social 特征等），而 easy nagative 则更关注 text
+的特征</strong>，因此需要混合两者使用，而混合的方式有两种，分别是</p>
+<p>(1)<strong>blending</strong>, 即混合两者一起来训练，paper
+中给出两者的最优比例大概是 easy:hard ≈ 100:1 (2)<strong>transfer
+learning from "hard" model to "easy" model</strong>, 即先用 hard
+nagative 训练模型，然后用 easy nagative 训练模型（但是 paper 提到从
+"easy" model 到 "hard" model并不能达到相同的效果）</p>
+<h2 id="feature-engineering">Feature Engineering</h2>
+<p>这里的 Feature Engineering 着重强调的是在 query 和 document 的 text
+feature 基础上加入一些其他的 context feature(paper
+中主要提出了两种，location feature 和 social embedding feature)
+能取得取得较大提升，下面简单介绍一些这几种 feature</p>
+<p><strong>text feature</strong></p>
+<p>对于文本特征的构建，paper 中采用的是 character n-gram 而不是 word
+n-gram，这里的 n-gram 其实就是把连续的 n 个 character 或 word 作为一个
+item 输入到 embedding table 中做 embedding lookup，<strong>paper
+中通过实验证明了采用 character n-gram 比起 word n-gram
+效果要更优，分析其优点如下</strong></p>
+<ol type="1">
+<li>embedding lookup table 的 size 更小，能更好的学习到 embedding table
+中的参数，其实就是降低了 model size</li>
+<li>对于出现在训练集以外的单词有更好的鲁棒性，因为 embedding 的粒度是
+character</li>
+</ol>
+<p><strong>location feature</strong></p>
+<p>paper 在 query 和 document 中均添加了了 localtion feature；对于
+query，添加的 feature 包括 searcher's
+<strong>city/region/country/language</strong>, 对于 document，则采用一些
+publicly available information 如一些 explicit group location 的 tag
+之类的</p>
+<p>下面是加入了 localtion feature 前后同一个 query 返回的 document
+的对比，可以看到加入 location feature 后，返回的搜索结果中的 document 的
+location 信息与 searcher 的更加相似</p>
+<figure>
+<img data-src="https://wulc.me/imgs/LocationFeature.jpg"
+alt="location feature" />
+<figcaption aria-hidden="true">location feature</figcaption>
+</figure>
+<p><strong>social embedding feature</strong></p>
+<p>关于这个 feature paper 中并无详细说明，猜测是通过类似 graph embedding
+的方式来得到这个 embedding，然后作为 feature 输入给召回模型</p>
+<p>下面是加了 location feature 和 social embedding feature
+后得效果提升情况</p>
+<figure>
+<img data-src="https://wulc.me/imgs/FeatureEffectiveness.jpg"
+alt="feature effectiveness" />
+<figcaption aria-hidden="true">feature effectiveness</figcaption>
+</figure>
+<h2 id="serving">Serving</h2>
+<p>serving 采用的是 ANN（Approximate Near Neighbor），且通过
+quantization 来进一步缩短向量间相似性的计算时间，quantization
+相当于是一种向量压缩的技术；关于 product quantization 可参考 <a
+target="_blank" rel="noopener" href="http://vividfree.github.io/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/2017/08/05/understanding-product-quantization">理解
+product quantization 算法</a> 这篇文章</p>
+<p>实际中的<strong>向量化召回系统往往会包含两个步骤，indexing 和
+scoring</strong>，indexing 是为了过滤大部分基本无关的候选，而 scoring
+则是在相关的候选中进行计算与排序，indexing 常用的技术有
+K-means、HNSW、LSH 等，而 scoring 则主要是各种 quantization
+及其变种方法</p>
+<p>上面这两个步骤在不同的地方的叫法可能也不一样，如在 paper
+中这两个步骤就被称为 coarse quantization 和 product quantization；coarse
+quantization 其实就是通过聚类的方法将整个候选库中的分为若干个
+clsuter，在query 到来的时候，选出 topk 个 cluster，并通过 product
+quantization 来计算出分数进行排序。具体工程实现上采用的是 facebook
+开源的 <a target="_blank" rel="noopener" href="https://github.com/facebookresearch/faiss">faiss</a>
+库，关于上面的步骤细节可参考 <a
+target="_blank" rel="noopener" href="https://blog.csdn.net/u013066730/article/details/106252573">PQ和IVF介绍</a></p>
+<p>而在这个过程中 paper 总结的一些经验如下</p>
+<ul>
+<li>对比 coarse quantization 的算法时，需要固定条数对比召回率(如 paper
+中采用的是 1-Recall@10)，其实这种做法也比较常见，因为不同的 coarse
+quantization 算法聚类的结果差别比较大，因此在固定 cluster 数量和召回时
+topk 中 k 的数值，得到的结果差异也会比较大</li>
+<li>当模型有较大(non-trivial)变动时，ann
+的一些超参也需要相应进行调整来适应新的模型</li>
+<li>PQ 算法中的 <a
+target="_blank" rel="noopener" href="http://kaiminghe.com/publications/pami13opq.pdf">OPQ</a>(Optimized
+Product Quantization) 效果一般较好，值得进行相应的尝试</li>
+<li>PQ 算法中对 embedding
+进行子空间划分时，划分的空间大小是个超参，理论上这个值越大，计算结果越精确，同时资源开销也越大；paper
+中的建议值是4, paper 中表示 “From empirical results, we found that the
+accuracy improvement is limited after x &gt; d/4.”</li>
+</ul>
+<p>实际 serving 的时候，<strong>只会实时计算 query 塔的 embedding，而
+document 塔的 embedding
+则会离线计算好并构建倒排索引</strong>，且在实际的系统中，新的 document
+会不断生成，因此还会计算新 document
+作为<strong>增量索引</strong>，而间隔一段时间好需要重新计算全量的倒排索引。</p>
+<h2 id="later-stage-optimization">Later-stage Optimization</h2>
+<p>这一部分主要描述了所有推荐系统现在存在的一个
+bias，就是训练数据都是由当前系统产生的并反哺给系统的，因此很可能会造成“马太效应”，即强者约强，弱者越弱；更广义来说，这也属于一个
+E&amp;E 问题.</p>
+<p>在 paper
+中，这一点体现在<strong>新的ANN召回的结果可能并不会被精排认可</strong>，paper
+中描述如下</p>
+<blockquote>
+<p>since the current ranking stages are designed for existing retrieval
+scenarios, this could result in new results returned from embedding
+based retrieval to be ranked sub-optimally by the existing rankers</p>
+</blockquote>
+<p>为了克服这个问题，paper 中提出了两种方法</p>
+<ol type="1">
+<li>将召回的 embedding 作为精排模型的特征，paper 中称这样做的 motivation
+是能更快让精排学到新召回的特性；embedding
+加入精排作为特征的方式有：embedding 作为 feature 直接加入精排模型、基于
+embedding 计算出的值加入精排模型(如 query embedding 与 document
+embedding 的 cosine similarity）等，其中效果最好是通过 cosine similarity
+计算出feature 加入精排模型。</li>
+<li>人为干预加入新召回后训练数据的分布。为了避免新召回的结果不被 ANN
+认可，paper
+中并不仅仅依赖系统自身产生的数据作为训练数据，而是通过人工的方式对被召回的结果重新打上
+label，但是在实际中感觉这个操作成本会比较高~</li>
+</ol>
+<h2 id="小结">小结</h2>
+<p>这篇 paper 主要讲了 FB 在搜索场景下构建一个 ANN
+召回系统的基本步骤，包括训练数据的选择、模型的训练、
+serving等，每一部分都给出了一些实战经验，值得参考；而其中比较值得关注的是负样本的选择，paper
+将负样本分为 easy negative 与 hard nagative 两大类，并通过实验证明只用
+easy nagative 或 hard nagative
+训练出来的都不是最优的，而是需要联合两者共同训练。</p>
+<p>此外，paper 最后还提到了 embedding ensemble 方法，基本的方法就是
+weighted concatentation(parallel，类似 bagging) 和 cascade
+model(cascade, 类似
+boosting)，但是笔者觉得召回阶段本来的候选就非常大，对耗时要求严格，如果再加上
+ensemble，耗时会更严重，在实际中是否具有可行性？ensemble
+做在精排是否更合理？</p>
+<p>最后，知乎上也有一篇针对这篇 paper 的解读，也值得看一下 <a
+target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/165064102">负样本为王：评Facebook的向量化召回算法</a>，而关于
+embedding 在推荐/广告上的各种应用推荐看 <a
+target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/143763320">推荐系统 embedding
+技术实践总结</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A/" rel="tag"><i class="fa fa-tag"></i> 计算广告</a>
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/07/19/%E3%80%8ABid%20Optimization%20by%20Multivariable%20Control%20in%20Display%20Advertising%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" rel="prev" title="《Bid Optimization by Multivariable Control in Display Advertising》阅读笔记">
+                  <i class="fa fa-chevron-left"></i> 《Bid Optimization by Multivariable Control in Display Advertising》阅读笔记
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/10/03/%E7%A8%8B%E5%BA%8F%E7%9A%84%E8%A1%A8%E7%A4%BA%E3%80%81%E8%BD%AC%E6%8D%A2%E4%B8%8E%E9%93%BE%E6%8E%A5-week10/" rel="next" title="程序的表示、转换与链接-week10、11">
+                  程序的表示、转换与链接-week10、11 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-pen"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

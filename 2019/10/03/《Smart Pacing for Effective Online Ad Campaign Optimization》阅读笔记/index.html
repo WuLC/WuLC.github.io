@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id: "JmI6QmP3fMkLet6B",ck: "JmI6QmP3fMkLet6B"})</script>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wulc.me","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.15.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="《Smart Pacing for Effective Online Ad Campaign Optimization》是 Yahoo 在 2015 发表的一篇关于 budget pacing 的论文，与之前写过的 Budget Pacing for Targeted Online Advertisements at LinkedIn 相似，目标也是把预算均匀花完，但是除了这个目标，这篇论文还提出">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《Smart Pacing for Effective Online Ad Campaign Optimization》阅读笔记">
+<meta property="og:url" content="https://wulc.me/2019/10/03/%E3%80%8ASmart%20Pacing%20for%20Effective%20Online%20Ad%20Campaign%20Optimization%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="《Smart Pacing for Effective Online Ad Campaign Optimization》是 Yahoo 在 2015 发表的一篇关于 budget pacing 的论文，与之前写过的 Budget Pacing for Targeted Online Advertisements at LinkedIn 相似，目标也是把预算均匀花完，但是除了这个目标，这篇论文还提出">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/ProbabilisticThrottilingVSBidModification.png">
+<meta property="og:image" content="https://wulc.me/imgs/AdjustWithoutPerformanceGoal.png">
+<meta property="og:image" content="https://wulc.me/imgs/AdjustWithPerformanceGoal.png">
+<meta property="og:image" content="https://wulc.me/imgs/SmartPacingExp1.png">
+<meta property="og:image" content="https://wulc.me/imgs/SmartPacingExp2.png">
+<meta property="og:image" content="https://wulc.me/imgs/SmartPacingExp3.png">
+<meta property="og:image" content="https://wulc.me/imgs/SmartPacingArchitecture.png">
+<meta property="article:published_time" content="2019-10-03T13:37:39.000Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.144Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="计算广告">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/ProbabilisticThrottilingVSBidModification.png">
+
+
+<link rel="canonical" href="https://wulc.me/2019/10/03/%E3%80%8ASmart%20Pacing%20for%20Effective%20Online%20Ad%20Campaign%20Optimization%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wulc.me/2019/10/03/%E3%80%8ASmart%20Pacing%20for%20Effective%20Online%20Ad%20Campaign%20Optimization%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/","path":"2019/10/03/《Smart Pacing for Effective Online Ad Campaign Optimization》阅读笔记/","title":"《Smart Pacing for Effective Online Ad Campaign Optimization》阅读笔记"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>《Smart Pacing for Effective Online Ad Campaign Optimization》阅读笔记 | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">吴良超的学习笔记</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E6%B5%81%E7%A8%8B"><span class="nav-number">2.</span> <span class="nav-text">算法流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E5%BB%BA%E6%A8%A1"><span class="nav-number">2.1.</span> <span class="nav-text">问题建模</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%B1%82%E8%A7%A3"><span class="nav-number">2.2.</span> <span class="nav-text">问题求解</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#campaigns-without-performance-goals"><span class="nav-number">2.2.1.</span> <span class="nav-text">Campaigns without
+Performance Goals</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#campaigns-with-performance-goals"><span class="nav-number">2.2.2.</span> <span class="nav-text">Campaigns with Performance
+Goals</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B6%85%E5%8F%82%E9%80%89%E5%8F%96"><span class="nav-number">2.3.</span> <span class="nav-text">超参选取</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E6%95%88%E6%9E%9C"><span class="nav-number">3.</span> <span class="nav-text">实验效果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B7%A5%E7%A8%8B%E5%AE%9E%E7%8E%B0"><span class="nav-number">4.</span> <span class="nav-text">工程实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">小结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">253</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2019/10/03/%E3%80%8ASmart%20Pacing%20for%20Effective%20Online%20Ad%20Campaign%20Optimization%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="《Smart Pacing for Effective Online Ad Campaign Optimization》阅读笔记 | 吴良超的学习笔记">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          《Smart Pacing for Effective Online Ad Campaign Optimization》阅读笔记
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2019-10-03 21:37:39" itemprop="dateCreated datePublished" datetime="2019-10-03T21:37:39+08:00">2019-10-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-tags"></i>
+      </span>
+      <span class="post-meta-item-text">标签</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A/" itemprop="url" rel="index"><span itemprop="name">计算广告</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>《<a target="_blank" rel="noopener" href="https://arxiv.org/abs/1506.05851">Smart Pacing for
+Effective Online Ad Campaign Optimization</a>》是 Yahoo 在 2015
+发表的一篇关于 budget pacing 的论文，与之前写过的 <a
+href="http://wulc.me/2018/10/25/%E3%80%8ABudget%20Pacing%20for%20Targeted%20Online%20Advertisements%20at%20LinkedIn%E3%80%8B%20%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/">Budget
+Pacing for Targeted Online Advertisements at LinkedIn</a>
+相似，目标也是把预算均匀花完，但是除了这个目标，这篇论文还提出了在预算均匀花完的基础上如何保成本的方法，算是一个多目标优化了。在离线环境和真实环境验证了方法的有效性，是实践性较强的一篇文章，值得一看。</p>
+<span id="more"></span>
+<h2 id="背景">背景</h2>
+<p>预算控制的做法目前可分为两大流派：Probabilistic throttling 和 Bid
+modification，其中 Probabilistic throttling 通过一个概率值(下图中的
+Pacing Rate)来决定是否计划参竞来控制预算花费速率，而 Bid modification
+则通过直接改价的方式来控制花费速率。两种方式的简单区别如下图所示，</p>
+<figure>
+<img data-src="https://wulc.me/imgs/ProbabilisticThrottilingVSBidModification.png"
+alt="two methods" />
+<figcaption aria-hidden="true">two methods</figcaption>
+</figure>
+<p>本文使用的方法属于第一种方式即 Probabilistic
+throttling，文章说这么做主要原因有以下三个</p>
+<ol type="1">
+<li>Probabilistic throttling 是直接影响 budget 花费的速度，而 Bid
+modification 则是通过改变 win rate 间接达到影响 budget
+花费的速度的，<strong>这种方式有可能导致 budget
+花费波动较大</strong></li>
+<li>bid
+landscape(即广告投放中的一些统计信息，能够反映投放的竞争情况，更详细可参考
+<a
+target="_blank" rel="noopener" href="https://developers.google.com/adwords/api/docs/guides/bid-landscapes">Bid
+Landscapes</a> 和 <a
+target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/32664649">DSP的bidding算法</a>)
+一般会随着时间变化而变化；以上两点使得通过 Bid modification 来达到
+budget pacing 比较困难</li>
+<li>使用 Probabilistic throttling 时能够将 pacing control 与 bid
+optimization 解耦，能够分别进行优化</li>
+</ol>
+<p>虽然文章是这么列出这三点优点，但是笔者觉得其中有个很大的问题：就是<strong>不进行
+bid modification 时, 假如当前的 bid 太小，即使 pacing rate 调到了 1
+也拿不到任何的 impression时 预算岂不是花不出去？</strong></p>
+<p>文章提到说 bid 有单独的一个 bid optimization module
+也许能解决这个额问题，但是并没有详细展开这个 module
+是如何工作的，是否能够解决上面的问题。</p>
+<p>这篇 paper 以及 Budget Pacing for Targeted Online Advertisements at
+LinkedIn 都是通过 Probabilistic throttling 进行 budget pacing 的，而通过
+bid modification 进行的 budget pacing 的 paper
+也不少，可以参考以下两篇</p>
+<ul>
+<li><a
+target="_blank" rel="noopener" href="http://theory.stanford.edu/~za/AdDelivery/ec224-abrams.pdf">Optimal
+delivery of sponsored search advertisements subject to budget
+constraints</a></li>
+<li><a
+target="_blank" rel="noopener" href="http://wwwconference.org/www2007/papers/paper089.pdf">Dynamics of
+bid optimization in online advertisement auctions</a></li>
+</ul>
+<h2 id="算法流程">算法流程</h2>
+<p>这部分主要描述文章是如何对问题进行建模和近似求解，主要思想是对一个计划的不同
+request 分层（根据ctr，cvr 等），在不同的分层采用不同的 pacing
+rate；并且根据实时的花费效果调整 pacing
+rate，根据是否需要优化效果，算法又分成了 Campaigns without Performance
+Goals 和 Campaigns with Performance Goals</p>
+<h3 id="问题建模">问题建模</h3>
+<p>文章里主要解决两大类问题，<strong>第一类是只让计划均匀花完预算即可，第二类则需要在预算均匀花完基础上保住点击成本(eCPC)</strong>,
+对应的方法在文章中称为 Campaigns without Performance Goals 和 Campaigns
+with Performance Goals，下面会分别介绍。</p>
+<p>文章约定了一些符号以便对问题进行建模</p>
+<ul>
+<li><span class="math inline">\(r_i\)</span>: 在第 <span
+class="math inline">\(i\)</span> 个请求参竞的概率，就是本文描述的 pacing
+rate, <span class="math inline">\(s_i \sim Bern(r_i)\)</span>
+则表示是否参竞这个事件</li>
+<li><span class="math inline">\(w_i\)</span>：赢得第 <span
+class="math inline">\(i\)</span> 个请求的概率</li>
+<li><span class="math inline">\(c_i\)</span>: 赢得第 <span
+class="math inline">\(i\)</span> 个请求的 cost</li>
+<li><span class="math inline">\(p_i\)</span>: 在第 <span
+class="math inline">\(i\)</span> 个请求能带来用户点击等行为的概率，<span
+class="math inline">\(q_i \sim Bern(p_i)\)</span>
+则表示是否带来点击这个事件</li>
+</ul>
+<p>通过上述符合可定义</p>
+<ul>
+<li><p><span class="math inline">\(C = \sum_i s_iw_ic_i\)</span>
+为计划的总 cost</p></li>
+<li><p><span class="math inline">\(P = \frac{C}{\sum_i s_i w_i
+q_i}\)</span> 为计划的 performance,
+即成本（如点击成本，转化成本等）,文中描述为 eCPC 即点击成本</p></li>
+</ul>
+<p>此外，计划在一天的总预算 <span class="math inline">\(B\)</span> 和总
+cost <span class="math inline">\(C\)</span> 都会被划分到 K
+个时间片内，以此来度量 budget pacing 的效果；即 <span
+class="math inline">\(B = \sum_{t=1}^{K}B^{(t)}\)</span>， <span
+class="math inline">\(C = \sum_{t=1}^{K}C^{(t)}\)</span>，则 budget
+pacing 的 error 定义如下</p>
+<p><span class="math display">\[\Omega(B, C) =
+\sqrt{\frac{1}{K}\sum_{t=1}^{K}(C^{(t)}-B^{(t)})^2}\]</span></p>
+<p>则对第一类问题即只需要 pacing 预算的问题文章建模如下</p>
+<p><span class="math display">\[
+\min_{r_i} P \\\
+s.t\quad C = B, \Omega(C, B) \le \epsilon
+\]</span></p>
+<p>上面的 <span class="math inline">\(\epsilon\)</span> 表示可容忍的
+pacing 误差，总体表示在满足预算均匀花完时最小化成本即 <span
+class="math inline">\(P\)</span></p>
+<p>上面建模中一个值得注意问题是<strong>最小化成本是否合理</strong>？由于文章是
+DSP
+视角出发进行建模的，从仅考虑广告主的利益角度来说，最小化成本是合理的；但是对于一个完整的广告系统即
+SSP，ADX 和 DSP 都在同一个平台时，这并不适用；如微信、抖音、微博等 app
+的广告，SSP、ADX 和 DSP 往往都由这个 app
+所在的公司运作，如果一味的最小化成本会损害平台的利益，因此<strong>更合理的做法是尽可能让广告主的真实成本与其预期成本接近</strong></p>
+<p>而对于第二类不仅需要 pacing 预算同时需要保证 performance
+的问题，文章建模如下</p>
+<p><span class="math display">\[
+\min_{r_i} \Omega(C, B) \\\
+s.t\quad P \le G,  B-C \le \epsilon
+\]</span></p>
+<p>上面的 <span class="math inline">\(G\)</span>
+表示广告主的目标成本，其他符号含义与前面描述一致，表示在广告主成本不超和预算花费不超的情况下，让预算更
+pacing 地花完。</p>
+<h3 id="问题求解">问题求解</h3>
+<p>文章对两种问题提出了两种上面建模，但是在实际求解时并没有对上面这两个最优化问题进行求解，而是通过启发式方法(heuristics)近似求解这个问题,
+这个启发式方法其实就是一个控制算法，
+而至于<strong>为什么启发式方法能够近似求解上面的最优化问题，文章并没有说明</strong>。</p>
+<p>文章的一个亮点是<strong>对一个广告计划的所有 requests
+做分层，分层的依据是 request 在这个计划的 ctr</strong>，而不同的 pacing
+rate 是不一样的，当一个 request 到来的时候，先判断这个 request
+属于哪一个层，然后再取出这个层对应的 pacing rate 作为最终的 pacing
+rate；<strong>ctr 越高的层，其对应的 pacing rate 就越大</strong></p>
+<p>而每个层的 pacing rate
+会在固定时间间隔进行调整，调整的方法就是下文要介绍的两个控制算法。</p>
+<h4 id="campaigns-without-performance-goals">Campaigns without
+Performance Goals</h4>
+<p>这部分的控制算法针对的问题是第一类问题即只需要保证 budget 被
+pacin'g</p>
+<p>根据上面的分层方法，假设每个广告计划的所有 requests 会被分成 <span
+class="math inline">\(L\)</span> 层，则在第 t-1 个时间片内各层的 pacing
+rate 记为 <span class="math inline">\(r^{(t-1)} = (r_1^{(t-1)},
+r_2^{(t-1)}...r_L^{(t-1)})\)</span>, 且各层的 cost 记为 <span
+class="math inline">\(c^{(t-1)} = (c_1^{(t-1)},
+c_2^{(t-1)}...c_L^{(t-1)})\)</span></p>
+<p>前面提到一天的总预算 <span class="math inline">\(B\)</span>
+会根据时间片划分成 <span class="math inline">\(K\)</span> 份小预算，即
+<span class="math inline">\(B = (B^{(1)}, B^{(2)}....B^{(K)})\)</span>,
+但是实际花费中不能保证每个时间片的 cost
+都刚好达到分配的预算值，因此<strong>如果前面的时间片中出现了少投或超投情况，就要把少投或超投那些部分均摊到后面的时间片中</strong>，所以每个时刻的预算需要根据前面的花费来调整，记的<strong>经过调整的预算为
+<span class="math inline">\(\hat{C}^{(t)}\)</span></strong>，则 <span
+class="math inline">\(\hat{C}^{(t)}\)</span> 可表示为</p>
+<p><span class="math display">\[\hat{C}^{(t)} = B^{(t)} + \frac{B_m -
+\sum_{i=t}^KB^{(i)}}{K-m}\]</span></p>
+<p>上式中的 <span class="math inline">\(B_m\)</span> 表示经过了 <span
+class="math inline">\(m\)</span> 个时间片后剩余的实际预算，分母 <span
+class="math inline">\(B_m - \sum_{i=t}^KB^{(i)}\)</span>
+表示当前预算花费是否超过了预期(&lt;0)或者不满足预期(&gt;0)，并通过分母均摊到后面的
+<span class="math inline">\(K-m\)</span> 个时间片中。</p>
+<p>则调整 <span class="math inline">\(L\)</span> 个的 pacing rate
+的控制算法如下图所示，图中的 <span class="math inline">\(R =
+\hat{C}^{(t)} - C^{(t-1)}\)</span>, 表示<strong>如果按照前一时间片的
+pacing rate 即 <span class="math inline">\(r^{(t-1)}\)</span>
+投放时，当前时间片的预算 <span
+class="math inline">\(\hat{C}^{(t)}\)</span> 能否花完</strong>。则当
+<span class="math inline">\(R &gt; 0\)</span> 时，需要提高当前时间片的
+pacing rate，反之需要降低 这一时间片的 pacing rate</p>
+<figure>
+<img data-src="https://wulc.me/imgs/AdjustWithoutPerformanceGoal.png"
+alt="AdjustWithoutPerformanceGoal" />
+<figcaption aria-hidden="true">AdjustWithoutPerformanceGoal</figcaption>
+</figure>
+<p><strong>上面的算法认为 pacing rate 的大小即 <span
+class="math inline">\(r^{(t)}\)</span> 与实际的 cost 即 <span
+class="math inline">\(c^{(t)}\)</span> 是成正比的，因此调整 pacing rate
+也会根据 cost 的变化比例来调整</strong></p>
+<p>除此之外，上面算法还有几点细节需要注意</p>
+<ol type="1">
+<li><span class="math inline">\(l&#39;\)</span> 层表示pacing rate
+为非0的最小的层</li>
+<li>当需要提升 pacing rate 时，是从第 <span
+class="math inline">\(L\)</span> 层到 <span
+class="math inline">\(l&#39;\)</span> 层进行的；而需要降低 pacing rate
+时，是从第 <span class="math inline">\(l&#39;\)</span> 层到第 <span
+class="math inline">\(L\)</span> 层进行的，其目的都是<strong>优先提升
+ctr 高的层的 pacing rate，优先降低 ctr 低的层的 pacing
+rate，从而达到上面最小化成本的目的</strong></li>
+<li>trial rate 的目的<strong>令 pacing rate 非 0
+的最小层的下一层以一个很小的 pacing rate 进行参竞（pacing rate
+会随着层数增加而增加）</strong>，目的是后面预算花费加速做准备， trail
+rate在这里是一个超参，是一个很小的值，后面会介绍该如何选取</li>
+</ol>
+<h4 id="campaigns-with-performance-goals">Campaigns with Performance
+Goals</h4>
+<p>这部分的控制算法除了要保证 budget 被 pacing
+花完，还要保证成本小于预设的成本；而每一层的成本在这里记为 <span
+class="math inline">\(e = (e_1, e_2...e_L)\)</span>, 其中 <span
+class="math inline">\(e_i = \frac{CPM}{1000*p_i}\)</span></p>
+<p>考虑了成本的算法在主要在上面的算法上增加了一个 ExpPerf
+函数，用于计算当前所有层的联合期望成本，该函数的定义如下</p>
+<p><span class="math display">\[ExpPerf(c^{(t-1)}, r^{(t-1)}, r^{(t)},
+e, i) = \frac{\sum_{j=i}^{L} \frac{c_j^{(t-1)}
+r_j^{(t)}}{r_j^{(t-1)}}}{\sum_{j=i}^{L} \frac{c_j^{(t-1)}
+r_j^{(t)}}{r_j^{(t-1)}e_j}}\]</span></p>
+<p>上面的式子中的分子可理解为各层在当前时间片的 cost
+之和，分母可理解为各层在当前时间片的点击数之和，因此总体就是当前的时间片所有层的联合期望成本</p>
+<p>则成本约束的 budget pacing 控制算法过程如下所示</p>
+<figure>
+<img data-src="https://wulc.me/imgs/AdjustWithPerformanceGoal.png"
+alt="AdjustWithPerformanceGoal" />
+<figcaption aria-hidden="true">AdjustWithPerformanceGoal</figcaption>
+</figure>
+<p>如果计算出当前的联合期望成本大于目标成本时，会<strong>从第 1 层到第 L
+层逐渐减少每层的 pacing rate</strong>，而这分为两种情况</p>
+<ol type="1">
+<li>如果当前层到第 L 层的联合期望成本大于目标成本，则当前层的 pacing
+rate 会直接置为 0；</li>
+<li>如果当前层到第 L 层的联合期望成本不大于目标成本，当前层的 pacing
+rate 会根据上面算法第 7
+行来调整，然后算法就终止了，根据文章描述其含义是<strong>调整当前的层使得总体的期望成本达到目标的期望成本</strong>；</li>
+</ol>
+<p>但是文章并没具体解释第七行的公式的含义，比如说如分母为0时，<span
+class="math inline">\(r_{l}^{(t)}\)</span> 岂不是变为无穷大？</p>
+<h3 id="超参选取">超参选取</h3>
+<p>上面提过的算法的流程中涉及到多个超参数，如层数 <span
+class="math inline">\(L\)</span> 以及 trial
+rate，下面介绍如何选取这两个超参</p>
+<p>对于一个新计划，决定其层数 <span class="math inline">\(L\)</span>
+的方法如下，首先找到与这个新计划最相似的老计划 <span
+class="math inline">\(a\)</span>, 并找到这个老计划最合适的 pacing rate
+<span class="math inline">\(r_G\)</span>, 则新计划的层数可计算为<span
+class="math inline">\(L = \lceil \frac{1}{r_G} \rceil\)</span>,
+计算的逻辑其实就是要找到这个计划最合适 pacing rate 粒度对应的层数。</p>
+<p>一旦层数决定后，在第一个时间片内会每个层都会通过 <span
+class="math inline">\(r_G\)</span>
+初始化，在第一个时间片积累了数据后，后面会根据上面提到的算法调整各层的
+pacing rate。</p>
+<p>前面提到 trail rate 的目的令 pacing rate 非 0
+的最小层的下一层以一个很小的 pacing rate 进行参竞，因为 pacing rate
+会随着层数增加而增加，本来这一层的 pacing rate 应该是 0
+的，但是这里给了一个很小的 trail
+rate，目的是为了让后面加快预算花费做准备。其设置方法如下</p>
+<p>将当前时间片的预算 <span class="math inline">\(\hat{C}^{(t)}\)</span>
+划分一小部分，记为 <span class="math inline">\(\lambda\)</span>(e.g.
+<span class="math inline">\(\lambda\)</span> = 1%), 假设当前层为第 <span
+class="math inline">\(l\)</span> 层，则其 trail rate = <span
+class="math inline">\(r_l^{(\*)} ×\frac{\lambda
+×\hat{C}^{(t)}}{c_l^{(\*)}}\)</span> ，而 <span
+class="math inline">\(r_l^{(\*)}\)</span> 和 <span
+class="math inline">\(c_l^{(\*)}\)</span> 则是 <span
+class="math inline">\(l\)</span> 层的历史pacing rate 和 cost。</p>
+<h2 id="实验效果">实验效果</h2>
+<p>文章对提出的方法进行了AB实验评估，并与论文 Budget Pacing for Targeted
+Online Advertisements at LinkedIn
+中的方法进行了比较，预算的花费时间定义为一天，而时间片定义为15分钟；超参的值为
+<span class="math inline">\(r_G = 0.01\)</span> 以及 <span
+class="math inline">\(\lambda = 1\%\)</span></p>
+<p>考察的指标主要有三个 1）performance 2）budget spending 3）spending
+pattern</p>
+<p>而作为对比的 baseline
+方法也是使用本文的方法，只是只有一层，下面是选取的三个计划进行 AB
+测试的效果，实验组的层数为 8；其中计划 1 和 3 是没有 performance
+目标也就是成本约束的，而计划 2 的 ecpc
+为2.5，从结果来看也能较好地满足成本约束</p>
+<figure>
+<img data-src="https://wulc.me/imgs/SmartPacingExp1.png" alt="exp1" />
+<figcaption aria-hidden="true">exp1</figcaption>
+</figure>
+<p>除此之外，还对比了两种方法在保证成本约束的效果，结果如下图所示，从结果来看，分层处理后能够有效降低成本，同时花费不变</p>
+<figure>
+<img data-src="https://wulc.me/imgs/SmartPacingExp2.png" alt="exp2" />
+<figcaption aria-hidden="true">exp2</figcaption>
+</figure>
+<p>同时文章与另外一篇论文 Budget Pacing for Targeted Online
+Advertisements at LinkedIn 中的 budget pacing
+方法进行了对比，结果如下所示</p>
+<figure>
+<img data-src="https://wulc.me/imgs/SmartPacingExp3.png" alt="exp3" />
+<figcaption aria-hidden="true">exp3</figcaption>
+</figure>
+<p>从结果来看，相比于 Budget Pacing for Targeted Online Advertisements
+at LinkedIn 中的方法，这篇文章调节 budget
+的花费得更为平缓，同时成本的控制也更好，因为 Budget Pacing for Targeted
+Online Advertisements at LinkedIn 论文中的方法没有考虑成本问题。</p>
+<h2 id="工程实现">工程实现</h2>
+<p>本文的方法的工程实现架构如下图所示，架构不复杂，左边的部分通过
+message queue(如 kafka) 搜集后验数据，用于更新 in-memory data source
+中各层的 pacing rate；右边的 Controller 则会利用 in-memory data source
+中的 pacing rate 进行 budget pacing</p>
+<figure>
+<img data-src="https://wulc.me/imgs/SmartPacingArchitecture.png"
+alt="architecture" />
+<figcaption aria-hidden="true">architecture</figcaption>
+</figure>
+<p>因为 pacing rate 是存储在内存中，存在丢失问题，因此会根据 message
+queue 中的日志进行恢复，其原理看起来跟 redis 的 AOF 模式恢复类似。</p>
+<h2 id="小结">小结</h2>
+<p>这篇文章主要提出了两个基于Probabilistic throttling的算法用于解决
+budget pacing 问题，
+第一个算法仅解决了如何让预算更平缓地花完，第二个算法在第一个算法的基础上，不仅让预算平缓花完，还能保成本。文章中的方法的一个亮点在于根据
+ctr 等指标将 request 分层，不同的层采用不同的 pacing rate，从而能够针对
+ctr 高的 request 给予更高的 pacing rate，而这也是文章中的算法能够优化
+performance 的原因。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A/" rel="tag"><i class="fa fa-tag"></i> 计算广告</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2019/07/10/%E8%B6%85%E5%8F%82%E6%90%9C%E7%B4%A2%E4%B8%AD%E7%9A%84%20Bayesian%20Optimization%20%E6%96%B9%E6%B3%95/" rel="prev" title="超参搜索中的 Bayesian Optimization 方法">
+                  <i class="fa fa-chevron-left"></i> 超参搜索中的 Bayesian Optimization 方法
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/03/01/Distillation%20%E7%AE%80%E4%BB%8B/" rel="next" title="Distillation 简介">
+                  Distillation 简介 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-pen"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

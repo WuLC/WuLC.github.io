@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id: "JmI6QmP3fMkLet6B",ck: "JmI6QmP3fMkLet6B"})</script>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wulc.me","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.15.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="本文的内容主要来源于该知乎 live，主要介绍了哪些行为数据是有价值的，以及广告领域中数据是如何交易的，最后还讨论了数据隐私的问题。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="有价值的数据应该如何交易">
+<meta property="og:url" content="https://wulc.me/2017/06/16/%E6%9C%89%E4%BB%B7%E5%80%BC%E7%9A%84%E6%95%B0%E6%8D%AE%E5%BA%94%E8%AF%A5%E5%A6%82%E4%BD%95%E4%BA%A4%E6%98%93/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="本文的内容主要来源于该知乎 live，主要介绍了哪些行为数据是有价值的，以及广告领域中数据是如何交易的，最后还讨论了数据隐私的问题。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/image_1bijcs38i1i2l1au243pm9u15sq1g.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1bijepnkc1uv2sthoap143vce82a.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1bijf1h1m1tk0os71sei1dgava02n.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1bijffr3s16rc1etl15nllao1pan34.png">
+<meta property="article:published_time" content="2017-06-16T13:37:39.000Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.085Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="计算广告">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/image_1bijcs38i1i2l1au243pm9u15sq1g.png">
+
+
+<link rel="canonical" href="https://wulc.me/2017/06/16/%E6%9C%89%E4%BB%B7%E5%80%BC%E7%9A%84%E6%95%B0%E6%8D%AE%E5%BA%94%E8%AF%A5%E5%A6%82%E4%BD%95%E4%BA%A4%E6%98%93/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wulc.me/2017/06/16/%E6%9C%89%E4%BB%B7%E5%80%BC%E7%9A%84%E6%95%B0%E6%8D%AE%E5%BA%94%E8%AF%A5%E5%A6%82%E4%BD%95%E4%BA%A4%E6%98%93/","path":"2017/06/16/有价值的数据应该如何交易/","title":"有价值的数据应该如何交易"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>有价值的数据应该如何交易 | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">吴良超的学习笔记</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%89%E4%BB%B7%E5%80%BC%E7%9A%84%E6%95%B0%E6%8D%AE%E5%88%86%E7%B1%BB"><span class="nav-number">1.</span> <span class="nav-text">有价值的数据分类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%B3%E7%AD%96%E8%A1%8C%E4%B8%BA"><span class="nav-number">1.1.</span> <span class="nav-text">决策行为</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E5%8A%A8%E8%A1%8C%E4%B8%BA"><span class="nav-number">1.2.</span> <span class="nav-text">主动行为</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%8A%E4%B8%BB%E5%8A%A8%E8%A1%8C%E4%B8%BA"><span class="nav-number">1.3.</span> <span class="nav-text">半主动行为</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A2%AB%E5%8A%A8%E8%A1%8C%E4%B8%BA"><span class="nav-number">1.4.</span> <span class="nav-text">被动行为</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A4%BE%E4%BA%A4%E5%85%B3%E7%B3%BB"><span class="nav-number">1.5.</span> <span class="nav-text">社交关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E6%88%B7-id"><span class="nav-number">1.6.</span> <span class="nav-text">用户 ID</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E6%96%B9%E6%95%B0%E6%8D%AE%E5%88%92%E5%88%86"><span class="nav-number">2.</span> <span class="nav-text">三方数据划分</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0dmp"><span class="nav-number">3.</span> <span class="nav-text">数据管理平台(DMP)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E6%96%B9-dmp"><span class="nav-number">3.1.</span> <span class="nav-text">第一方 DMP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E6%96%B9-dmp"><span class="nav-number">3.2.</span> <span class="nav-text">第三方 DMP</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%9A%84%E4%BA%A4%E6%98%93"><span class="nav-number">4.</span> <span class="nav-text">数据的交易</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%9A%90%E7%A7%81"><span class="nav-number">5.</span> <span class="nav-text">数据隐私</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">253</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2017/06/16/%E6%9C%89%E4%BB%B7%E5%80%BC%E7%9A%84%E6%95%B0%E6%8D%AE%E5%BA%94%E8%AF%A5%E5%A6%82%E4%BD%95%E4%BA%A4%E6%98%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="有价值的数据应该如何交易 | 吴良超的学习笔记">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          有价值的数据应该如何交易
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2017-06-16 21:37:39" itemprop="dateCreated datePublished" datetime="2017-06-16T21:37:39+08:00">2017-06-16</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-tags"></i>
+      </span>
+      <span class="post-meta-item-text">标签</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A/" itemprop="url" rel="index"><span itemprop="name">计算广告</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>本文的内容主要来源于<a
+target="_blank" rel="noopener" href="https://www.zhihu.com/lives/778740481268920320">该知乎
+live</a>，主要介绍了哪些行为数据是有价值的，以及广告领域中数据是如何交易的，最后还讨论了数据隐私的问题。</p>
+<span id="more"></span>
+<h2 id="有价值的数据分类">有价值的数据分类</h2>
+<p>数据有价值密度之分，并不是说数据量越多就一定越有效</p>
+<p>这里的数据主要指的是用户的行为数据和用户的标识数据，而有价值的用户行为数据主要有:
+决策行为、主动行为、半主动行为、被动行为，这些行为的价值递减，但是数据的量递增，因为有价值的数据一般量都不大</p>
+<h3 id="决策行为">决策行为</h3>
+<p>决策行为对应着<strong>转化(conversion)或预转化(pre-conversion)</strong>,
+也就是购买了商品或将商品加入了购物车。这些行为对应着非常明确的用户兴趣，价值也非常高</p>
+<h3 id="主动行为">主动行为</h3>
+<p>主动行为对应着<strong>搜索（search）、广告点击（Ad
+Click)、搜索点击（Search
+Click）</strong>，这种行为表明了用户已经有了明确的意图，但是最终决定还不清楚，价值也很高。</p>
+<p>需要注意的是，这些行为里面往往会有作弊的流量在里面，需要去除掉。</p>
+<h3 id="半主动行为">半主动行为</h3>
+<p>半主动行为对应着分享<strong>（share），网页浏览（page
+view)</strong>,这种数据的量最大，用户意图较弱，因为用户可能只是随意在浏览，这些数据也有一定价值。</p>
+<h3 id="被动行为">被动行为</h3>
+<p>被动行为是强加给用户的行为，如广告的浏览（注意不是点击，而是强推给用户浏览），这种行为甚至会有负面作用，价值基本可以忽略</p>
+<h3 id="社交关系">社交关系</h3>
+<p>社交关系指的是不直接利用用户的行为数据（有可能是用户的行为数据过于稀疏），而是利用与其在社交网络（微博、Facebook
+等）上有关联的的用户的信息进行定向。</p>
+<p>这种方法在某个人的行为不足而无法进行精准的行为定向时有效。</p>
+<h3 id="用户-id">用户 ID</h3>
+<p>用户 ID
+，也就是用户标示，是最重要的数据，因为所有的行为数据有效的前提是需要先确认这些行为数据是属于哪个用户的，标识一个用户的
+ID 在不同的环境下有不同的方法，下面是常见的场景和方法</p>
+<ol type="1">
+<li>web/wap 环境：使用
+cookie，生命周期短（1~2周），存续性差，但是跨域名的时候需要映射</li>
+<li>ios 应用：使用 IDFA（ID For Advertiser)，存续性好于 cookie，但 ios10
+有更严格的政策</li>
+<li>安卓应用：使用 Android ID，存续好于 IDFA；有些也使用
+IMEI（手机标识），但是 Google Play 上是不给用的</li>
+<li>无以上 ID 场景：使用 FingerPrint（IP+UserAgent -&gt; hash），存在
+http 头中，可作缺省标识;
+但是在移动端使用效果不是很好，因为几乎每个应用都有一个内置的浏览器</li>
+</ol>
+<h2 id="三方数据划分">三方数据划分</h2>
+<p>下面以广告中用到的用户数据为例讲述三方数据的划分，在广告中根据数据来源的不同可以将数据划分为第一方数据，第二方数据和第三方数据。</p>
+<p>如下图所示，第一方和第二方分别是指广告主和广告平台，而不直接参与广告交易的其他数据提供方统称为第三方。</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1bijcs38i1i2l1au243pm9u15sq1g.png"
+alt="三方数据" />
+<figcaption aria-hidden="true">三方数据</figcaption>
+</figure>
+<h2 id="数据管理平台dmp">数据管理平台(DMP)</h2>
+<p>第一方数据的收集和加工是广告市场上非常重要的环节，不过对于没有这方面技术积累的广告主而言，专门设团队进行数据加工是没有必要的，因此市场上出现了
+数据管理平台（DMP),专门从事此业务，而 DMP 又可划分为第一方 DMP 和第三方
+DMP。</p>
+<h3 id="第一方-dmp">第一方 DMP</h3>
+<p>第一方 DMP
+的目的是对广告主提供的第一方数据（也可结合公开市场第三方数据）进行加工，进而得到广告主指定的用户标签，用于支持网站业务运营和广告投放。</p>
+<p>需要注意的是第一方 DMP
+只能加工第一方数据，而不能使用第一方的数据，也就是不能把数据进行售卖（除非与广告主达成协议）</p>
+<p>因此，第一方的 DMP 的商业模式如下</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1bijepnkc1uv2sthoap143vce82a.png"
+alt="第一方DMP商业模式" />
+<figcaption aria-hidden="true">第一方DMP商业模式</figcaption>
+</figure>
+<h3 id="第三方-dmp">第三方 DMP</h3>
+<p>对于中小网站，其规模不大，没有利用数据的能力，只是单纯想将数据卖给需要数据的广告主，同时也没有加工数据的能力，因此产生了满足中小网站的这项需求的第三方
+DMP。</p>
+<p>第三方 DMP 与第一方 DMP
+的一个不同点在于服务对象的不同，另外一个不同点则是两者的加工标签的逻辑不一样，第一方
+DMP 是根据广告主的需求进行标签的加工，而第三方 DMP 则是根据 DMP
+其自己的逻辑进行加工然后售卖。</p>
+<p>第三方的 DMP 的商业模式如下所示</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1bijf1h1m1tk0os71sei1dgava02n.png"
+alt="第三方DMP的商业模式" />
+<figcaption aria-hidden="true">第三方DMP的商业模式</figcaption>
+</figure>
+<h2 id="数据的交易">数据的交易</h2>
+<p>上面提到的 DMP
+的一个重要功能就是售卖标签，实际上就是一种数据交易，这些标签一般售卖的对象是广告主，而广告主往往由于缺乏相应的技术而将手中定向委托给其他平台也就是
+DSP（Demand Side Platform），因此交易发生在 DMP 和 DSP 之间。</p>
+<p>同时由于往往存在着多个 DMP 和多个 DSP，假如 DMP 和 DSP
+间都要一一连接的话，那么通信的代价会非常大，因此在实际中往往是通过广告交易平台也就是
+ADX（AD Exchange)
+将两者联系起来，从而降低通信代价。整个数据交易的过程如下所示</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1bijffr3s16rc1etl15nllao1pan34.png"
+alt="数据交易怎么做" />
+<figcaption aria-hidden="true">数据交易怎么做</figcaption>
+</figure>
+<p>通过 ADX 进行 DMP 和 DSP 间的通信避免了 DMP 和 DSP
+直接通信的开销，因为实时竞价的时候 ADX 本来就要跟 DSP
+发生通信，因此没有增加二次通信。</p>
+<p>上面简单提到数据交易时的收费是按照实际的广告展示次数付费的，目前来说这种市场化的定价方式是唯一的选择，这种方式并没有限制数据供给次数，直觉上似乎是利润最大化的。</p>
+<p>但是这有可能间接地抬高了流量价格，而低估了数据价格。因为不限量地售卖标签，会导致竞价同一次展示的广告主的数目增加，因为有了标签，各个广告主能够更精准地定向到更多用户，因此更多的广告主的竞价抬高了流量的价格，
+而假如广告主的预算是一定的情况下，购买流量需要更多的钱，因此用于购买数据支出会变少。当然这只是宏观上的探讨，目前业界对此并没有一套完善的理论来指导。</p>
+<p>如果采用限量的售卖，那就要采用竞价的方式，而有了竞价，整个市场的活跃程度和价值会最大化。</p>
+<h2 id="数据隐私">数据隐私</h2>
+<p>在数据交易过程中不可避免地会设计到数据隐私的问题。针对数据隐私，欧盟负责隐私保护条例指定的委员会
+A29 制定了以下相关原则</p>
+<ol type="1">
+<li>Personal Identifiable
+Information（PII）不能使用，PII指的是可以主动接触到用户的信息，比如手机号、QQ号、微信号、e-mail等都不能使用</li>
+<li>用户可以要求系统停止记录和使用自己的行为数据，比如说网站会在网页上说明收集到的用户数据的作用，同时可让用户选择是否允许收集其数据，实际上对商业影响非常小，因为选择不允许收集的用户比例不大</li>
+<li>不能长期保存和使用用户的行为数据，实际上数据也具有时效性，时间太久远的数据基本上无价值</li>
+</ol>
+<p>另外一个数据隐私问题就是稀疏的行为数据带来的挑战，一个典型的例子就是
+Netflix
+推荐大赛中，有人从数据集里面发现了自己的同时是同性恋，原因是数据的稀疏性使得个人的行为数据更加容易被熟悉这个人的其他人所辨识。</p>
+<p>目前对于这个领域相关的研究课题是差分隐私（differential
+privacy）。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A/" rel="tag"><i class="fa fa-tag"></i> 计算广告</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2017/06/10/%E6%80%8E%E6%A0%B7%E7%94%A8%E6%95%B0%E6%8D%AE%E6%B4%9E%E5%AF%9F%E4%BD%A0%E7%9A%84%E7%94%A8%E6%88%B7/" rel="prev" title="怎样用数据洞察你的用户">
+                  <i class="fa fa-chevron-left"></i> 怎样用数据洞察你的用户
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2017/06/18/%E5%A6%82%E4%BD%95%E7%94%A8%E6%95%B0%E6%8D%AE%E6%AD%A6%E8%A3%85%E8%BF%90%E8%90%A5%E5%B7%A5%E4%BD%9C/" rel="next" title="如何用数据武装运营工作">
+                  如何用数据武装运营工作 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-pen"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

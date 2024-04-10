@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id: "JmI6QmP3fMkLet6B",ck: "JmI6QmP3fMkLet6B"})</script>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wulc.me","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.15.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="由于经常会混淆这几个概念，所以特意借该文比较详细地记录这几个概念的区别以及在Linux下如何查看这几个参数。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="物理CPU、CPU核数、逻辑CPU、超线程">
+<meta property="og:url" content="https://wulc.me/2016/01/06/%E7%89%A9%E7%90%86CPU%E3%80%81CPU%E6%A0%B8%E6%95%B0%E3%80%81%E9%80%BB%E8%BE%91CPU%E3%80%81%E8%B6%85%E7%BA%BF%E7%A8%8B/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="由于经常会混淆这几个概念，所以特意借该文比较详细地记录这几个概念的区别以及在Linux下如何查看这几个参数。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/2016-01-23_152653.png">
+<meta property="article:published_time" content="2016-01-06T12:08:55.000Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.146Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="操作系统">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/2016-01-23_152653.png">
+
+
+<link rel="canonical" href="https://wulc.me/2016/01/06/%E7%89%A9%E7%90%86CPU%E3%80%81CPU%E6%A0%B8%E6%95%B0%E3%80%81%E9%80%BB%E8%BE%91CPU%E3%80%81%E8%B6%85%E7%BA%BF%E7%A8%8B/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wulc.me/2016/01/06/%E7%89%A9%E7%90%86CPU%E3%80%81CPU%E6%A0%B8%E6%95%B0%E3%80%81%E9%80%BB%E8%BE%91CPU%E3%80%81%E8%B6%85%E7%BA%BF%E7%A8%8B/","path":"2016/01/06/物理CPU、CPU核数、逻辑CPU、超线程/","title":"物理CPU、CPU核数、逻辑CPU、超线程"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>物理CPU、CPU核数、逻辑CPU、超线程 | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">吴良超的学习笔记</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">1.</span> <span class="nav-text">基本概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%A8linxu%E4%B8%8B%E6%9F%A5%E7%9C%8B%E7%89%A9%E7%90%86cpu%E6%A0%B8%E5%BF%83%E6%95%B0%E9%80%BB%E8%BE%91cpu%E5%92%8C%E6%98%AF%E5%90%A6%E6%94%AF%E6%8C%81%E8%B6%85%E7%BA%BF%E7%A8%8B"><span class="nav-number">2.</span> <span class="nav-text">在Linxu下查看物理cpu、核心数、逻辑CPU和是否支持超线程</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">253</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2016/01/06/%E7%89%A9%E7%90%86CPU%E3%80%81CPU%E6%A0%B8%E6%95%B0%E3%80%81%E9%80%BB%E8%BE%91CPU%E3%80%81%E8%B6%85%E7%BA%BF%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="物理CPU、CPU核数、逻辑CPU、超线程 | 吴良超的学习笔记">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          物理CPU、CPU核数、逻辑CPU、超线程
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2016-01-06 20:08:55" itemprop="dateCreated datePublished" datetime="2016-01-06T20:08:55+08:00">2016-01-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-tags"></i>
+      </span>
+      <span class="post-meta-item-text">标签</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">操作系统</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>由于经常会混淆这几个概念，所以特意借该文比较详细地记录这几个概念的区别以及在Linux下如何查看这几个参数。</p>
+<span id="more"></span>
+<h2 id="基本概念">基本概念</h2>
+<ul>
+<li><strong>物理CPU</strong>：物理CPU就是插在主机上的真实的CPU硬件，在Linux下可以数不同的<code>physical id</code>
+来确认主机的物理CPU个数。</li>
+<li><strong>核心数</strong>：物理CPU下一层概念就是核心数，我们常常会听说多核处理器，其中的核指的就是核心数。在Linux下可以通过<code>cores</code>来确认主机的物理CPU的核心数。</li>
+<li><strong>逻辑CPU</strong>：核心数下一层的概念是逻辑CPU，逻辑CPU跟超线程技术有联系，<strong>假如物理CPU不支持超线程的，那么逻辑CPU的数量等于核心数的数量；如果物理CPU支持超线程，那么逻辑CPU的数目是核心数数目的两倍。</strong>在Linux下可以通过
+<code>processors</code> 的数目来确认逻辑CPU的数量。</li>
+<li><strong>超线程</strong>：超线程是英特尔开发出来的一项技术，使得单个处理器可以象两个逻辑处理器那样运行，这样单个处理器以并行执行线程。这里的单个处理器也可以理解为CPU的一个核心；这样便可以理解<strong>为什么开启了超线程技术后，逻辑CPU的数目是核心数的两倍了</strong>。</li>
+</ul>
+<h2
+id="在linxu下查看物理cpu核心数逻辑cpu和是否支持超线程">在Linxu下查看物理cpu、核心数、逻辑CPU和是否支持超线程</h2>
+<p>关于CPU的一些信息可在 <code>/proc/cpuinfo</code>
+这个文件中查看，这个文件显示的内容类似于下图所示</p>
+<p><img data-src="https://wulc.me/imgs/2016-01-23_152653.png" /></p>
+<p>可以看到里面的内容是以 processor
+（也就是逻辑CPU）为基本单元进行划分的，<strong>processor 下的
+<code>core id</code>表示这个逻辑CPU属于哪个核心，而<code>physical id</code>则表示这个核心或者说逻辑CPU属于哪个物理CPU。</strong>了解这些信息，便可以方便地查看上面说到的那些参数。</p>
+<ul>
+<li><p>查看物理CPU数量
+物理CPU就是不同的<code>phycical id</code>的个数，可通过下面命令实现：
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> /proc/cpuinfo | grep <span class="string">&#x27;physical id&#x27;</span> | <span class="built_in">uniq</span> |<span class="built_in">wc</span> -l</span><br></pre></td></tr></table></figure>
+uniq是为了去掉多个逻辑CPU属于同一个物理CPU的重复记录。</p></li>
+<li><p>查看核心数
+核心数就是不同<code>core id</code>的个数，可通过下面的命令实现
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> /proc/cpuinfo | grep <span class="string">&#x27;core id&#x27;</span> | <span class="built_in">uniq</span> |<span class="built_in">wc</span> -l</span><br></pre></td></tr></table></figure> 原理同上</p></li>
+<li><p>查看逻辑CPU数目 逻辑CPU就是<code>processor</code>的数目
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> /proc/cpuinfo | grep <span class="string">&#x27;processor&#x27;</span> | <span class="built_in">wc</span> -l</span><br></pre></td></tr></table></figure> 查看逻辑CPU时不需要去重</p></li>
+<li><p>查看是否支持超线程
+如果支持超线程就是说同一个core下会有两个processors，这样可以简单地观察<code>/proc/cpuinfo</code>中的内容，如果两个的processor下的core
+id相同，那么说明支持超线程。</p></li>
+</ul>
+<p>还有另外一种方法是查看siblings和cpu cores的数值是否一致，评判方法如下
+&gt; 如果"siblings"和"cpu
+cores"一致，则说明不支持超线程，或者超线程未打开。 如果"siblings"是"cpu
+cores"的两倍，则说明支持超线程，并且超线程已打开。</p>
+<p>另外，top命令中看到的CPU数目是逻辑CPU（输入top后再按1）。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="tag"><i class="fa fa-tag"></i> 操作系统</a>
+              <a href="/tags/Linux/" rel="tag"><i class="fa fa-tag"></i> Linux</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2016/01/04/%E4%BB%80%E4%B9%88%E6%89%8D%E7%AE%97%E6%98%AF%E7%9C%9F%E6%AD%A3%E7%9A%84%E7%BC%96%E7%A8%8B%E8%83%BD%E5%8A%9B%EF%BC%9F/" rel="prev" title="什么才算是真正的编程能力？">
+                  <i class="fa fa-chevron-left"></i> 什么才算是真正的编程能力？
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2016/01/08/LeetCode%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A(3)--%E5%8F%8C%E6%8C%87%E9%92%88%E6%89%BE%E6%9C%80%E9%95%BF%E4%B8%8D%E9%87%8D%E5%A4%8D%E5%AD%90%E4%B8%B2/" rel="next" title="LeetCode解题报告(3)--双指针找最长不重复子串">
+                  LeetCode解题报告(3)--双指针找最长不重复子串 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-pen"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

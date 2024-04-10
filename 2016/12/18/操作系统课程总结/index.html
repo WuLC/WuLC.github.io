@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id: "JmI6QmP3fMkLet6B",ck: "JmI6QmP3fMkLet6B"})</script>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wulc.me","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.15.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="本文为操作系统的课程小结，主要讲述 Linux 内核的一些知识，参考的主要教材为《Linux内核设计与实现(第3版)》，除此之外还参考了网络上的若干资料，因为Linux本来就是可以写若干本书的内容，所以这里只会涉及到博主上课时接触到的一些知识点，由于博主知识有限，个中定存在错漏地方，望不吝指出。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统课程总结">
+<meta property="og:url" content="https://wulc.me/2016/12/18/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="本文为操作系统的课程小结，主要讲述 Linux 内核的一些知识，参考的主要教材为《Linux内核设计与实现(第3版)》，除此之外还参考了网络上的若干资料，因为Linux本来就是可以写若干本书的内容，所以这里只会涉及到博主上课时接触到的一些知识点，由于博主知识有限，个中定存在错漏地方，望不吝指出。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b3i3p5eothk76t1tbq96ajik9.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b3sdbqevlfs1qdv217qog1acb1g.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b3tl18eari3e8j77e14fn14442a.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4071g0o1vf1a801ouoi451hel3h.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b41abhsb1rv1t8922r1f436o39.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b41b355s1phf5gu1t1nhh5118lm.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b438je76f681l1n146882itog9.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b459o3m316no1f0o1kqvhnvtdo9.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b45qltgkeb61kjs1brv18n717vo9.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b465ihrl16um2136e1l4lnvom.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b46965a11log1kgsapita91bdd1g.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b46af1oj1h4e1in01q605u11dd1t.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b46ahh71jfvtu1m2e1bolunm2a.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b46au0e31vsutbp75v1d341omv34.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b46b337k3lg1c431bik457do3h.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b46bfka6aej1ats115nfv179h4b.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b46f36m11v5i16h21j101pkl2he4o.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b47qm20g168d1fg6t5fcbpu0o9.png">
+<meta property="article:published_time" content="2016-12-18T09:01:56.000Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.185Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="操作系统">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/image_1b3i3p5eothk76t1tbq96ajik9.png">
+
+
+<link rel="canonical" href="https://wulc.me/2016/12/18/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wulc.me/2016/12/18/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/","path":"2016/12/18/操作系统课程总结/","title":"操作系统课程总结"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>操作系统课程总结 | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">吴良超的学习笔记</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E7%AB%A0%E5%86%85%E6%A0%B8%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">第一章：内核简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#linux-%E5%86%85%E6%A0%B8%E7%89%B9%E7%82%B9"><span class="nav-number">1.1.</span> <span class="nav-text">Linux 内核特点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E6%A0%B8%E7%89%88%E6%9C%AC%E5%8F%B7"><span class="nav-number">1.2.</span> <span class="nav-text">内核版本号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E6%A0%B8%E5%BA%94%E7%94%A8"><span class="nav-number">1.3.</span> <span class="nav-text">内核应用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E7%AB%A0%E5%86%85%E6%A0%B8%E7%9A%84%E7%BC%96%E8%AF%91%E4%B8%8E%E5%AE%89%E8%A3%85"><span class="nav-number">2.</span> <span class="nav-text">第二章：内核的编译与安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E7%AB%A0%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86"><span class="nav-number">3.</span> <span class="nav-text">第三章：进程管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E6%8F%8F%E8%BF%B0%E7%AC%A6"><span class="nav-number">3.1.</span> <span class="nav-text">进程描述符</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#task_struct-%E7%9A%84%E5%AD%98%E6%94%BE%E4%BD%8D%E7%BD%AE"><span class="nav-number">3.1.1.</span> <span class="nav-text">task_struct 的存放位置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#task_struct-%E7%9A%84%E7%BB%84%E6%88%90%E9%83%A8%E5%88%86"><span class="nav-number">3.1.2.</span> <span class="nav-text">task_struct 的组成部分</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E7%9A%84%E7%8A%B6%E6%80%81"><span class="nav-number">3.1.2.1.</span> <span class="nav-text">进程的状态</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%88%B6%E8%BF%9B%E7%A8%8B%E4%B8%8E%E5%AD%90%E8%BF%9B%E7%A8%8B"><span class="nav-number">3.1.2.2.</span> <span class="nav-text">父进程与子进程</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E7%9A%84%E8%8B%A5%E5%B9%B2id"><span class="nav-number">3.1.2.3.</span> <span class="nav-text">进程的若干ID</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B"><span class="nav-number">3.2.</span> <span class="nav-text">进程与线程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">3.2.1.</span> <span class="nav-text">线程基本概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E4%B8%8E%E8%BF%9B%E7%A8%8B%E7%9A%84%E6%AF%94%E8%BE%83"><span class="nav-number">3.2.2.</span> <span class="nav-text">线程与进程的比较</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F"><span class="nav-number">3.2.3.</span> <span class="nav-text">线程的实现方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B"><span class="nav-number">3.2.4.</span> <span class="nav-text">多线程模型</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E7%9A%84%E5%88%9B%E5%BB%BA%E5%92%8C%E7%BB%93%E6%9D%9F"><span class="nav-number">3.3.</span> <span class="nav-text">进程的创建和结束</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E5%88%9B%E5%BB%BA%E7%9A%84%E4%B8%A4%E4%B8%AA%E6%AD%A5%E9%AA%A4"><span class="nav-number">3.3.1.</span> <span class="nav-text">进程创建的两个步骤</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E7%9A%84%E7%BB%93%E6%9D%9F"><span class="nav-number">3.3.2.</span> <span class="nav-text">进程的结束</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%A1%E5%8F%B7"><span class="nav-number">3.4.</span> <span class="nav-text">信号</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">3.4.1.</span> <span class="nav-text">基本概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E7%9A%84%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="nav-number">3.4.2.</span> <span class="nav-text">相关的系统调用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%AF%E9%9D%A0%E7%9A%84%E4%BF%A1%E5%8F%B7%E6%9C%BA%E5%88%B6"><span class="nav-number">3.4.3.</span> <span class="nav-text">可靠的信号机制</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BF%A1%E5%8F%B7%E7%9A%84%E6%B3%A8%E5%86%8C%E4%B8%8E%E6%B3%A8%E9%94%80"><span class="nav-number">3.4.3.1.</span> <span class="nav-text">信号的注册与注销</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BF%A1%E5%8F%B7%E7%9A%84%E5%A4%84%E7%90%86"><span class="nav-number">3.4.3.2.</span> <span class="nav-text">信号的处理</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BF%A1%E5%8F%B7%E7%9B%B8%E5%85%B3%E5%87%BD%E6%95%B0"><span class="nav-number">3.4.3.3.</span> <span class="nav-text">信号相关函数</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E5%9B%9B%E7%AB%A0-%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6"><span class="nav-number">4.</span> <span class="nav-text">第四章 进程调度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B0%83%E5%BA%A6%E5%99%A8%E8%BF%90%E8%A1%8C%E7%9A%84%E6%97%B6%E6%9C%BA"><span class="nav-number">4.1.</span> <span class="nav-text">调度器运行的时机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B0%83%E5%BA%A6%E7%9B%AE%E6%A0%87"><span class="nav-number">4.2.</span> <span class="nav-text">调度目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B0%83%E5%BA%A6%E7%AD%96%E7%95%A5"><span class="nav-number">4.3.</span> <span class="nav-text">调度策略</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="nav-number">4.3.1.</span> <span class="nav-text">进程的类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E4%BC%98%E5%85%88%E7%BA%A7%E8%A1%A8%E7%A4%BA"><span class="nav-number">4.3.2.</span> <span class="nav-text">进程优先级表示</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B0%83%E5%BA%A6%E5%99%A8"><span class="nav-number">4.3.3.</span> <span class="nav-text">调度器</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%94%E7%AB%A0-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="nav-number">5.</span> <span class="nav-text">第五章 系统调用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5-1"><span class="nav-number">5.1.</span> <span class="nav-text">基本概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#apiposixc%E5%BA%93"><span class="nav-number">5.2.</span> <span class="nav-text">API、POSIX、C库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">5.3.</span> <span class="nav-text">系统调用的实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E5%85%AD%E7%AB%A0-%E5%86%85%E6%A0%B8%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">6.</span> <span class="nav-text">第六章 内核数据结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%83%E5%85%AB%E7%AB%A0-%E4%B8%AD%E6%96%AD%E5%92%8C%E4%B8%AD%E6%96%AD%E5%A4%84%E7%90%86"><span class="nav-number">7.</span> <span class="nav-text">第七、八章 中断和中断处理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5-2"><span class="nav-number">7.1.</span> <span class="nav-text">基本概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AD%E6%96%AD%E5%A4%84%E7%90%86%E7%A8%8B%E5%BA%8F"><span class="nav-number">7.2.</span> <span class="nav-text">中断处理程序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8A%E5%8D%8A%E9%83%A8%E5%92%8C%E4%B8%8B%E5%8D%8A%E9%83%A8"><span class="nav-number">7.3.</span> <span class="nav-text">上半部和下半部</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8A%E5%8D%8A%E9%83%A8"><span class="nav-number">7.4.</span> <span class="nav-text">上半部</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B3%A8%E5%86%8C%E4%B8%8E%E9%87%8A%E6%94%BE%E4%B8%AD%E6%96%AD%E7%A8%8B%E5%BA%8F"><span class="nav-number">7.4.1.</span> <span class="nav-text">注册与释放中断程序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%96%E5%86%99%E4%B8%AD%E6%96%AD%E5%A4%84%E7%90%86%E7%A8%8B%E5%BA%8F"><span class="nav-number">7.4.2.</span> <span class="nav-text">编写中断处理程序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%AD%E6%96%AD%E4%B8%8A%E4%B8%8B%E6%96%87"><span class="nav-number">7.4.3.</span> <span class="nav-text">中断上下文</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%AD%E6%96%AD%E5%A4%84%E7%90%86%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">7.4.4.</span> <span class="nav-text">中断处理的实现</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8B%E5%8D%8A%E9%83%A8"><span class="nav-number">7.5.</span> <span class="nav-text">下半部</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#softirqs%E6%9C%BA%E5%88%B6"><span class="nav-number">7.5.1.</span> <span class="nav-text">softirqs机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tasklet%E6%9C%BA%E5%88%B6"><span class="nav-number">7.5.2.</span> <span class="nav-text">tasklet机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#work-queue-%E6%9C%BA%E5%88%B6"><span class="nav-number">7.5.3.</span> <span class="nav-text">work queue 机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%89%E6%8B%A9%E4%BD%95%E7%A7%8D%E6%9C%BA%E5%88%B6"><span class="nav-number">7.5.4.</span> <span class="nav-text">选择何种机制</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B9%9D%E5%8D%81%E7%AB%A0-%E5%86%85%E6%A0%B8%E5%90%8C%E6%AD%A5"><span class="nav-number">8.</span> <span class="nav-text">第九、十章 内核同步</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5-3"><span class="nav-number">8.1.</span> <span class="nav-text">基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%BB%E9%94%81%E7%9A%84%E4%BA%A7%E7%94%9F%E6%9D%A1%E4%BB%B6"><span class="nav-number">8.1.1.</span> <span class="nav-text">死锁的产生条件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%BB%E9%94%81%E9%A2%84%E9%98%B2%E4%B8%8E%E6%AD%BB%E9%94%81%E9%81%BF%E5%85%8D"><span class="nav-number">8.1.2.</span> <span class="nav-text">死锁预防与死锁避免</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8C%E6%AD%A5%E7%9A%84%E6%9C%BA%E5%88%B6"><span class="nav-number">8.2.</span> <span class="nav-text">同步的机制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C"><span class="nav-number">8.2.1.</span> <span class="nav-text">原子操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%87%AA%E6%97%8B%E9%94%81"><span class="nav-number">8.2.2.</span> <span class="nav-text">自旋锁</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%A1%E5%8F%B7%E9%87%8F"><span class="nav-number">8.2.3.</span> <span class="nav-text">信号量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%87%AA%E6%97%8B%E9%94%81%E4%B8%8E%E4%BF%A1%E5%8F%B7%E9%87%8F%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="nav-number">8.2.4.</span> <span class="nav-text">自旋锁与信号量的对比</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%8C%E6%88%90%E5%8F%98%E9%87%8F"><span class="nav-number">8.2.5.</span> <span class="nav-text">完成变量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#bkl-%E5%A4%A7%E5%86%85%E6%A0%B8%E9%94%81"><span class="nav-number">8.2.6.</span> <span class="nav-text">BKL: 大内核锁</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A1%BA%E5%BA%8F%E9%94%81"><span class="nav-number">8.2.7.</span> <span class="nav-text">顺序锁</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A6%81%E6%AD%A2%E6%8A%A2%E5%8D%A0"><span class="nav-number">8.2.8.</span> <span class="nav-text">禁止抢占</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A1%BA%E5%BA%8F%E5%92%8C%E5%B1%8F%E9%9A%9C"><span class="nav-number">8.2.9.</span> <span class="nav-text">顺序和屏障</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">8.2.10.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E5%8D%81%E4%BA%8C%E7%AB%A0-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86"><span class="nav-number">9.</span> <span class="nav-text">第十二章 内存管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9E%E7%BB%AD%E5%88%86%E9%85%8D"><span class="nav-number">9.1.</span> <span class="nav-text">连续分配</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%95%E4%B8%80%E8%BF%9E%E7%BB%AD%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86"><span class="nav-number">9.1.1.</span> <span class="nav-text">单一连续存储管理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E5%8C%BA%E5%BC%8F%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86"><span class="nav-number">9.1.2.</span> <span class="nav-text">分区式存储管理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BC%99%E4%BC%B4%E7%B3%BB%E7%BB%9F"><span class="nav-number">9.1.3.</span> <span class="nav-text">伙伴系统</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A6%BB%E6%95%A3%E5%88%86%E9%85%8D"><span class="nav-number">9.2.</span> <span class="nav-text">离散分配</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A1%B5%E5%BC%8F%E7%AE%A1%E7%90%86"><span class="nav-number">9.2.1.</span> <span class="nav-text">页式管理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AE%B5%E5%BC%8F%E7%AE%A1%E7%90%86"><span class="nav-number">9.2.2.</span> <span class="nav-text">段式管理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A1%B5%E5%BC%8F%E7%AE%A1%E7%90%86-vs-%E6%AE%B5%E5%BC%8F%E7%AE%A1%E7%90%86"><span class="nav-number">9.2.3.</span> <span class="nav-text">页式管理 vs 段式管理</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#linux-%E4%B8%AD%E7%9A%84%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86"><span class="nav-number">9.3.</span> <span class="nav-text">linux 中的内存管理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A1%B5%E5%92%8C%E5%8C%BA"><span class="nav-number">9.3.1.</span> <span class="nav-text">页和区</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E5%92%8C%E9%87%8A%E6%94%BE"><span class="nav-number">9.3.2.</span> <span class="nav-text">内存分配和释放</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E5%8D%81%E4%BA%94%E7%AB%A0-%E8%BF%9B%E7%A8%8B%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4"><span class="nav-number">10.</span> <span class="nav-text">第十五章 进程地址空间</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5-4"><span class="nav-number">10.1.</span> <span class="nav-text">基本概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E6%8F%8F%E8%BF%B0%E7%AC%A6"><span class="nav-number">10.2.</span> <span class="nav-text">内存描述符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E7%9A%84%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F"><span class="nav-number">10.3.</span> <span class="nav-text">进程的内存区域</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#linux%E7%9A%84%E5%88%86%E9%A1%B5"><span class="nav-number">10.4.</span> <span class="nav-text">Linux的分页</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E5%8D%81%E4%B8%89%E7%AB%A0-%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="nav-number">11.</span> <span class="nav-text">第十三章 文件系统</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ext2-%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="nav-number">11.1.</span> <span class="nav-text">ext2 文件系统</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%BB%93%E6%9E%84"><span class="nav-number">11.1.1.</span> <span class="nav-text">文件系统结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E6%9F%A5%E6%89%BE"><span class="nav-number">11.1.2.</span> <span class="nav-text">文件查找</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ext2%E7%9A%84%E5%86%85%E5%AD%98%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">11.1.3.</span> <span class="nav-text">ext2的内存数据结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%88%9B%E5%BB%BA"><span class="nav-number">11.1.4.</span> <span class="nav-text">文件系统的创建</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ext3%E4%B8%8Eext4"><span class="nav-number">11.1.5.</span> <span class="nav-text">ext3与ext4</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9Fvfs"><span class="nav-number">11.2.</span> <span class="nav-text">虚拟文件系统（VFS）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5-5"><span class="nav-number">11.2.1.</span> <span class="nav-text">基本概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BB%E8%A6%81%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">11.2.2.</span> <span class="nav-text">主要的数据结构</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">253</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2016/12/18/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="操作系统课程总结 | 吴良超的学习笔记">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          操作系统课程总结
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2016-12-18 17:01:56" itemprop="dateCreated datePublished" datetime="2016-12-18T17:01:56+08:00">2016-12-18</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-tags"></i>
+      </span>
+      <span class="post-meta-item-text">标签</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">操作系统</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>本文为操作系统的课程小结，主要讲述 Linux
+内核的一些知识，参考的主要教材为《<a
+target="_blank" rel="noopener" href="https://book.douban.com/subject/6097773/">Linux内核设计与实现(第3版)</a>》，除此之外还参考了网络上的若干资料，因为Linux本来就是可以写若干本书的内容，所以这里只会涉及到博主上课时接触到的一些知识点，由于博主知识有限，个中定存在错漏地方，望不吝指出。</p>
+<span id="more"></span>
+<h2 id="第一章内核简介">第一章：内核简介</h2>
+<h3 id="linux-内核特点">Linux 内核特点</h3>
+<ul>
+<li><p>动态加载内核模块</p></li>
+<li><p>支持对称多处理（<a
+target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%B0%8D%E7%A8%B1%E5%A4%9A%E8%99%95%E7%90%86">SMP</a>）
+&gt;
+在计算领域，对称多处理是一种多处理机硬件架构，有两个或更多的相同的处理机（处理器）共享同一主存，由一个操作系统控制</p></li>
+<li><p>内核可抢占(Preemption): 要理解 Preemption 首先要了解操作系统的
+Context Switch &gt;Context Switch (上下文切换)
+指任何操作系统上下文(<strong>上下文简单说来就是一个环境，如进程上下文就是CPU的所有寄存器中的值、进程的状态以及堆栈上的内容，中断上下文就是硬件的参数和内核需要保存的一些其他环境</strong>)保存和恢复执行状态，以便于<strong>被安全地打断和稍后被正确地恢复执行</strong>。当发生进程调度时，<strong>进行进程切换就是上下文切换</strong>,一般操作系统中通常因以下三种方式引起上下文切换:
+&gt;1. <strong>Task Scheduling
+(任务调度)</strong>。任务调度一般是由<strong>调度器代码在内核空间</strong>完成的。
+通常需要将当前 CPU
+执行任务的代码，用户或内核栈，地址空间切换到下一个要运行任务的代码，用户或内核栈，地址空间。
+&gt;2. <strong>Interrupt (中断) 或 Exception
+(异常)</strong>。中断和异常是由硬件产生但由软件来响应和处理的。这个过程中，涉及到将用户态或内核态代码切换至中断处理代码。
+&gt;3. <strong>System Call
+(系统调用)</strong>。系统调用是由用户态代码主动调用，使用户进程陷入到内核态调用内核定义的各种系统调用服务。系统调用实质就是通过指令产生中断，也称为软中断。
+&gt;
+&gt;实际上，<strong>进程从用户态进入内核态的方式只有两种:中断和异常</strong>。(系统调用实际上最终是中断机制实现的)</p></li>
+</ul>
+<p>Preemption (抢占)
+是指操作系统允许满足某些重要条件(例如：优先级，公平性)的任务<strong>打断当前正在
+CPU
+上运行的任务而得到调度执行</strong>。并且这种打断不需要当前正在运行的任务的配合，同时被打断的程序可以在后来可以再次被调度恢复执行。</p>
+<ul>
+<li>线程的实现：内核并不区分线程和其他的一般进程，线程是一个标准的进程，与进程的最大区别在于是否有独立的地址空间</li>
+<li>设备管理: 所有设备都是文件</li>
+</ul>
+<h3 id="内核版本号">内核版本号</h3>
+<p><code>主版本号.从版本号.修订版本号</code>，从版本号为偶数时为稳定版本，奇数时为开发版</p>
+<h3 id="内核应用">内核应用</h3>
+<ul>
+<li>内核开发、移植</li>
+<li>驱动</li>
+<li>文件系统</li>
+<li>云计算与虚拟化</li>
+</ul>
+<h2 id="第二章内核的编译与安装">第二章：内核的编译与安装</h2>
+<p>简单教程：http://www.cnblogs.com/hdk1993/p/4910362.html</p>
+<p>补丁概念</p>
+<p>内核开发特点：</p>
+<ul>
+<li>不能访问c库，只能使用c的语法</li>
+<li>缺乏内存保护机制</li>
+<li>浮点数难以使用</li>
+<li>注意同步和并发（原因：竞争条件（可抢占多任务系统），解决方法：自旋锁和信号量）</li>
+<li>保持可移植性</li>
+</ul>
+<h2 id="第三章进程管理">第三章：进程管理</h2>
+<h3 id="进程描述符">进程描述符</h3>
+<p>内核通过一个任务队列（<code>task list</code>）组织所有的进程，任务队列是一个双向链表，结构如下图所示</p>
+<p><img data-src="https://wulc.me/imgs/image_1b3i3p5eothk76t1tbq96ajik9.png" /></p>
+<p>图中链表中每一项都是类型为 <code>task_struct</code>
+，称为<strong>进程描述符</strong>的结构。进程描述符包含了一个具体进程的所有信息，如：</p>
+<ul>
+<li>进程状态</li>
+<li>进程的地址空间</li>
+<li>PID</li>
+<li>指向父、子进程的指针</li>
+<li>打开的文件</li>
+<li>......</li>
+</ul>
+<h4 id="task_struct-的存放位置">task_struct 的存放位置</h4>
+<ul>
+<li>2.6 之前存放在进程的内核栈底</li>
+<li>2.6之后改为了通过内核栈底的一个结构（<code>thread_info</code>），这个结构中有一个指针指向其<code>task_structure</code></li>
+</ul>
+<blockquote>
+<p><strong>关于进程的内核栈和用户栈</strong>
+参考：http://blog.csdn.net/dlutbrucezhang/article/details/9326857
+每个进程都有自己的堆栈，内核在创建一个新的进程时，在创建进程控制块<code>task_struct</code>的同时，也为进程创建自己堆栈。<strong>一个进程有2个堆栈，用户堆栈和系统堆栈</strong>；用户堆栈的空间指向用户地址空间，内核堆栈的空间指向内核地址空间。当进程在用户态运行时，CPU
+堆栈指针寄存器指向的
+用户堆栈地址，使用用户堆栈，当进程运行在内核态时，CPU堆栈指针寄存器指向的是内核栈空间地址，使用的是内核栈；</p>
+<p>当进程由于中断或系统调用从用户态转换到内核态时，进程所使用的栈也要从用户栈切换到内核栈。进程因为中断（软中断或硬件产生中断），使得CPU切换到特权工作模式，此时进程陷入内核态，进程进入内核态后，首先把用户态的堆栈地址保存在内核堆栈中，然后设置堆栈指针寄存器的地址为内核栈地址，这样就完成了用户栈向内核栈的切换。当进程从内核态切换到用户态时，最后把保存在内核栈中的用户栈地址恢复到CPU栈指针寄存器即可，这样就完成了内核栈向用户栈的切换。</p>
+</blockquote>
+<h4 id="task_struct-的组成部分">task_struct 的组成部分</h4>
+<p><code>task_struct</code>中包含了进程的所有信息，如<strong>进程的状态，优先级，pid，父进程与子进程，运行的时间，与文件系统的交互情况，内存使用情况(<code>mm_struct</code>)</strong>等。</p>
+<p>这里详细介绍的几个重要组成部分：</p>
+<h5 id="进程的状态">进程的状态</h5>
+<p>广义来说，对所有操作系统而言，进程的状态一般可以分为<code>running</code>,<code>ready</code>和<code>block</code>状态，其中<code>running</code>表示进程正在cpu上跑,<code>ready</code>表示进程正在等待cpu分配执行的时间片，一旦分配了时间片即可进入<code>running</code>状态，而<code>block</code>表示当前的进程正在等待某些资源(如用户的输入)，只有得到了这些资源，才可进入<code>ready</code>状态。</p>
+<p>但是在 Linux
+中，为进程定义了五种状态，与上面所说的状态略有不同，每种状态定义如下：</p>
+<p><strong>1. R (task_running) : 可执行状态</strong></p>
+<p>只有在该状态的进程才可能在CPU上运行。而同一时刻可能有多个进程处于可执行状态，这些进程的<code>task_struct</code>结构（进程控制块）被放入对应CPU的<strong>可执行队列中</strong>（一个进程最多只能出现在一个CPU的可执行队列中）。进程调度器的任务就是从各个CPU的可执行队列中分别选择一个进程在该CPU上运行。这种状态包含了正在执行的进程和等待分配时间片的进程，即包含了上面的<code>running</code>和<code>ready</code>状态。</p>
+<p><strong>2. S (task_interruptible): 可中断的睡眠状态</strong></p>
+<p>处于这个状态的进程因为等待某某事件的发生（比如等待socket连接、等待信号量），而被挂起。这些进程的<code>task_struct</code>结构被放入<strong>对应事件的等待队列中</strong>。当这些事件发生时（由外部中断触发、或由其他进程触发），对应的等待队列中的一个或多个进程将被唤醒。</p>
+<p>通过<code>top</code>命令我们会看到，一般情况下，进程列表中的<strong>绝大多数进程都处于<code>task_interruptible</code>状态（除非机器的负载很高）</strong>。毕竟CPU就这么一两个，进程动辄几十上百个，如果不是绝大多数进程都在睡眠，CPU又怎么响应得过来。</p>
+<p><strong>3. D (task_uninterruptible): 不可中断的睡眠状态</strong></p>
+<p>与<code>task_interruptible</code>状态类似，进程处于睡眠状态，但是此刻进程是不可中断的。不可中断，指的并不是CPU不响应外部硬件的中断，而是指<strong>进程不响应异步信号</strong>。</p>
+<p>绝大多数情况下，进程处在睡眠状态时，总是应该能够响应异步信号的。但是<code>task_uninterruptible</code>
+状态的进程<strong>不接受外来的任何信号，因此无法用 <code>kill</code>
+杀掉这些处于D状态的进程</strong>，无论是 <code>kill</code>,
+<code>kill -9</code>还是<code>kill -15</code>，这种情况下，一个可选的方法就是reboot。</p>
+<p>处于<code>task_uninterruptible</code>状态的进程通常是在<strong>等待IO</strong>，比如磁盘IO，网络IO，其他外设IO，如果进程正在等待的IO在较长的时间内都没有响应，那么就被ps看到了，同时也就意味着很有可能有IO出了问题，可能是外设本身出了故障，也可能是比如挂载的远程文件系统已经不可访问了.</p>
+<p>而<strong><code>task_uninterruptible</code>状态存在的意义就在于，内核的某些处理流程是不能被打断的。</strong>如果响应异步信号，程序的执行流程中就会被插入一段用于处理异步信号的流程（这个插入的流程可能只存在于内核态，也可能延伸到用户态），于是原有的流程就被中断了。</p>
+<p>在<strong>进程对某些硬件进行操作时，可能需要使用<code>task_uninterruptible</code>状态对进程进行保护，以避免进程与设备交互的过程被打断，造成设备陷入不可控的状态</strong>。这种情况下的<code>task_uninterruptible</code>状态总是非常短暂的，通过ps命令基本上不可能捕捉到。</p>
+<p><strong>4. T(task_stopped or
+task_traced)：暂停状态或跟踪状态</strong></p>
+<p>向进程发送一个<code>sigstop</code>信号，它就会因响应该信号而进入<code>task_stopped</code>状态（除非该进程本身处于<code>task_uninterruptible</code>状态而不响应信号）。</p>
+<p>向进程发送一个<code>sigcont</code>信号，可以让其从<code>task_stopped</code>状态恢复到<code>task_running</code>状态。</p>
+<p><strong>当进程正在被跟踪时，它处于<code>task_traced</code>这个特殊的状态</strong>。“正在被跟踪”指的是进程暂停下来，等待跟踪它的进程对它进行操作。比如在调试的时候对被跟踪的进程下一个断点，<strong>进程在断点处停下来的时候就处于<code>task_traced</code>状态</strong>。而在其他时候，被跟踪的进程还是处于前面提到的那些状态。</p>
+<p>对于进程本身来说，<code>task_stopped</code>和<code>task_traced</code>状态很类似，都是表示进程暂停下来。而<code>task_traced</code>状态相当于在<code>task_stopped</code>之上多了一层保护，处于<code>task_traced</code>状态的进程不能响应<code>sigcont</code>信号而被唤醒。只能等到调试进程通过<code>ptrace</code>系统调用执行<code>ptrace_cont</code>、<code>ptrace_detach</code>等操作（通过ptrace系统调用的参数指定操作），或调试进程退出，被调试的进程才能恢复<code>task_running</code>状态。</p>
+<p><strong>5. Z (task_dead -
+exit_zombie)：退出状态，进程成为僵尸进程</strong></p>
+<p>在Linux进程的状态中，僵尸进程是非常特殊的一种，它是<strong>已经结束了的进程，但是没有从进程表中删除。太多了会导致进程表里面条目满了</strong>(PID数目有限)，进而导致系统崩溃，倒是不占用其他系统资源。</p>
+<p><strong>僵尸进程已经放弃了几乎所有内存空间，没有任何可执行代码，也不能被调度，仅仅在进程列表中保留一个位置，记载该进程的退出状态等信息供其他进程收集，除此之外，僵尸进程不再占有任何内存空间。</strong></p>
+<p>进程在退出的过程中，处于<code>TASK_DEAD</code>状态。在这个退出过程中，进程占有的所有资源将被回收，除了<code>task_struct</code>结构（以及少数资源）以外。于是进程就只剩下<code>task_struct</code>这么个空壳，故称为僵尸。</p>
+<p><strong>之所以保留<code>task_struct</code>，是因为<code>task_struct</code>里面保存了进程的退出码、以及一些统计信息，而其父进程很可能会关心这些信息</strong>。比如在shell中，<code>$?</code>变量就保存了最后一个退出的前台进程的退出码，而这个退出码往往被作为if语句的判断条件。</p>
+<p>当然，内核也可以将这些信息保存在别的地方，而将<code>task_struct</code>结构释放掉，以节省一些空间。但是<strong>使用<code>task_struct</code>结构更为方便，因为在内核中已经建立了从<code>pid</code>到<code>task_struct</code>查找关系，还有进程间的父子关系</strong>。释放掉<code>task_struct</code>，则需要建立一些新的数据结构，以便让父进程找到它的子进程的退出信息。</p>
+<p><strong>子进程在退出的过程中，内核会给其父进程发送一个信号，通知父进程来“收尸”。</strong>
+父进程可以通过 <code>wait</code>
+系列的系统调用（如<code>wait4、waitid</code>）来等待某个或某些子进程的退出，并获取它的退出信息。然后<code>wait</code>系列的系统调用会顺便将子进程的尸体（<code>task_struct</code>）也释放掉。</p>
+<p>但是<strong>如果他的父进程没调用<code>wait</code>或<code>waitpid()</code>等待子进程结束，那么它就一直保持僵尸状态，子进程的尸体（<code>task_struct</code>）也就无法释放掉。</strong></p>
+<p><strong>如果这时父进程结束了，那么init进程自动会接手这个子进程，为它收尸，它还是能被清除的。但是如果如果父进程是一个循环，不会结束，那么子进程就会一直保持僵尸状态，这就是为什么系统中有时会有很多的僵尸进程。</strong></p>
+<p><strong>当进程退出的时候，会将它的所有子进程都托管给别的进程</strong>（使之成为别的进程的子进程）。托管的进程可能是退出进程所在进程组的下一个进程（如果存在的话），或者是1号进程。</p>
+<p><strong>1号进程，就是pid为1的进程，又称init进程</strong>。linux系统启动后，第一个被创建的用户态进程就是init进程。它有两项使命：
+1）<strong>执行系统初始化脚本，创建一系列的进程</strong>（它们都是init进程的子孙）；
+2）<strong>在一个死循环中等待其子进程的退出事件，并调用waitid系统调用来完成“收尸”工作</strong></p>
+<p><strong>init进程不会被暂停、也不会被杀死（这是由内核来保证的）</strong>。它在等待子进程退出的过程中处于<code>task_interruptible</code>状态，“收尸”过程中则处于<code>task_running</code>状态。</p>
+<p><img data-src="https://wulc.me/imgs/image_1b3sdbqevlfs1qdv217qog1acb1g.png" /></p>
+<h5 id="父进程与子进程">父进程与子进程</h5>
+<ul>
+<li>进程<strong>只有一个父母</strong> ，在进程的
+<code>task_struct</code>中的<code>parent</code>表示</li>
+<li>进程可以有<strong>0个以上的子女</strong>，在进程的
+<code>task_struct</code>中的<code>children</code>表示
+比较有趣的一点是在windows 中并没有父子进程的概念。</li>
+</ul>
+<h5 id="进程的若干id">进程的若干ID</h5>
+<ul>
+<li><strong>pid</strong>：进程的ID,唯一标识一个进程,系统中可用的PID
+是有限制的, 因此系统中进程的总数也是有限制的</li>
+<li><strong>pgrp</strong>：进程的组id，进程</li>
+<li><strong>uid</strong>：启动进程的用户id</li>
+<li><strong>gid</strong>：启动进程的用户所在组的id</li>
+<li><strong>euid，egid</strong>
+：euid和egid又称为有效的uid和gid。出于系统安全的权限的考虑，运行程序时要检查euid和egid的合法性。通常，uid等于euid，gid等于egid。<strong>有时候，系统会赋予一般用户暂时拥有root的uid和gid(作为用户进程的euid和egid)，以便于进行运作。</strong>（特殊权限：suid，sgid）</li>
+</ul>
+<p>上面关于task_struct的组成所涉及到的只是很小一部分，更详细的内容可参考
+<a
+target="_blank" rel="noopener" href="https://book.douban.com/subject/6097773/">linux进程描述符task_struct详解</a>和<a
+target="_blank" rel="noopener" href="http://alick.blog.51cto.com/10786574/1786269">task_struct结构体字段介绍--Linux中的PCB</a>。</p>
+<h3 id="进程与线程">进程与线程</h3>
+<h4 id="线程基本概念">线程基本概念</h4>
+<p>按照教科书上的定义，进程是资源管理的最小单位，线程是程序执行的最小单位。在操作系统设计上，<strong>从进程演化出线程，最主要的目的就是更好的支持SMP以及减小（进程/线程）上下文切换开销。</strong></p>
+<p><strong>一个进程至少需要一个线程作为它的指令执行体，进程管理着资源（比如cpu、内存、文件等等），而将线程分配到某个cpu上执行。一个进程可以拥有多个线程，此时，如果进程运行在SMP机器上，它就可以同时使用多个cpu来执行各个线程，达到最大程度的并行，以提高效率</strong>；同时，即使是在单cpu的机器上，采用多线程模型来设计程序，正如当年采用多进程模型代替单进程模型一样，使设计更简洁、功能更完备，程序的执行效率也更高，例如采用多个线程响应多个输入，而此时多线程模型所实现的功能实际上也可以用多进程模型来实现，而与后者相比，<strong>线程的上下文切换开销就比进程要小多了</strong>，从语义上来说，同时响应多个输入这样的功能，实际上就是共享了除cpu以外的所有资源的。</p>
+<h4 id="线程与进程的比较">线程与进程的比较</h4>
+<p><strong>1)
+调度</strong>。在传统的操作系统中，拥有资源和独立调度的基本单位都是进程。在引入线程的操作系统中，线程是独立调度的基本单位，进程是资源拥有的基本单位。<strong>在同一进程中，线程的切换不会引起进程切换。在不同进程中进行线程切换,如从一个进程内的线程切换到另一个进程中的线程时，会引起进程切换。</strong></p>
+<p><strong>2)
+系统开销</strong>。由于<strong>创建或撤销进程时，系统都要为之分配或回收资源</strong>，如内存空间、
+I/O设备等，因此<strong>操作系统所付出的开销远大于创建或撤销线程时的开销</strong>。而线程切换时只需保存和设置少量寄存器内容，开销很小。此外，由于同一进程内的多个线程共享进程的地址空间，因此，这些线程之间的同步与通信非常容易实现，甚至无需操作系统的干预。</p>
+<p><strong>3)
+地址空间和其他资源（如打开的文件）</strong>：进程的地址空间之间互相独立，同一进程的各线程间共享进程的资源（包括地址空间），某进程内的线程对于其他进程不可见。</p>
+<p><strong>4) 通信方面</strong>： 进程间的通信方式有这样几种：</p>
+<ul>
+<li>共享内存</li>
+<li>消息队列</li>
+<li>有名管道</li>
+<li>无名管道</li>
+<li>信号</li>
+<li>文件</li>
+<li>socket</li>
+</ul>
+<p>线程间的通信方式上述进程间的方式都可沿用，且还有自己独特的几种</p>
+<ul>
+<li>互斥量</li>
+<li>自旋锁</li>
+<li>条件变量</li>
+<li>读写锁</li>
+<li>线程信号</li>
+<li>全局变量</li>
+</ul>
+<h4 id="线程的实现方式">线程的实现方式</h4>
+<p>线程的实现可以分为两类：用户级线程(<code>User-Level Thread, ULT</code>)和内核级线程(<code>Kemel-Level Thread,  KLT</code>)。<strong>前者更利于并发使用多处理器的资源，而后者则更多考虑的是上下文切换开销。</strong></p>
+<p>在用户级线程中，有关<strong>线程管理的所有工作都由应用程序完成，内核意识不到线程的存在</strong>。应用程序可以通过使用线程库设计成多线程程序。通常，应用程序从单线程起始，在该线程中开始运行，在其运行的任何时刻，可以通过调用线程库中的派生例程创建一个在相同进程中运行的新线程。下图(a)说明了用户级线程的实现方式。</p>
+<p>在内核级线程中，<strong>线程管理的所有工作由内核完成，应用程序没有进行线程管理的代码，只有一个到内核级线程的编程接口</strong>。内核为进程及其内部的每个线程维护上下文信息，调度也是在内核基于线程架构的基础上完成。下图(b)说明了内核级线程的实现方式。</p>
+<p>在一些系统中，使用组合方式的多线程实现。线程创建完全在用户空间中完成，线程的调度和同步也在应用程序中进行。一个应用程序中的多个用户级线程被映射到一些（小于或等于用户级线程的数目）内核级线程上。下图(c)说明了用户级与内核级的组合实现方式。</p>
+<p><img data-src="https://wulc.me/imgs/image_1b3tl18eari3e8j77e14fn14442a.png" /></p>
+<h4 id="多线程模型">多线程模型</h4>
+<p>有些系统<strong>同时支持用户线程和内核线程</strong>，由此产生了不同的多线程模型，即实现用户级线程和内核级线程的连接方式，如上面的图实际上就包含了三种经典的多线程模型。</p>
+<p><strong>1) 多对一模型</strong></p>
+<p>将多个用户级线程映射到一个内核级线程，线程管理在用户空间完成。</p>
+<p>此模式中，<strong>用户级线程对操作系统不可见</strong>（即透明）。</p>
+<p>优点：线程管理是在用户空间进行的，因而效率比较高。</p>
+<p>缺点：当<strong>一个线程在使用内核服务时被阻塞，那么整个进程都会被阻塞；多个线程不能并行地运行在多处理机</strong>上。</p>
+<p><strong>2) 一对一模型</strong></p>
+<p>将每个用户级线程映射到一个内核级线程。</p>
+<p>优点：当<strong>一个线程被阻塞后，允许另一个线程继续执行，所以并发能力较强</strong>。</p>
+<p>缺点：每创建一个用户级线程都需要创建一个内核级线程与其对应，这样创建线程的开销比较大，会影响到应用程序的性能。</p>
+<p><strong>3) 多对多模型</strong></p>
+<p>将 n 个用户级线程映射到 m 个内核级线程上，要求 m &lt;= n。</p>
+<p>特点：在多对一模型和一对一模型中取了个折中，克服了多对一模型的并发度不高的缺点，又克服了一对一模型的一个用户进程占用太多内核级线程，开销太大的缺点。又拥有多对一模型和一对一模型各自的优点，可谓集两者之所长</p>
+<p>需要注意的是<strong>在Linux
+中，从内核的角度来说，它并没有线程这个概念，内核把所有的线程都当成进程来实现。在内核中，线程看起来就像是一个与其他进程共享了一些资源的普通进程，每一个线程有其唯一的<code>task_struct</code></strong>；</p>
+<p>关于这个说法，可参考<a
+target="_blank" rel="noopener" href="http://mp.weixin.qq.com/s?__biz=MzA4MjA0MTc4NQ==&amp;mid=402087399&amp;idx=1&amp;sn=4cc1419e01df0142c1131b6843880087#rd">Linux线程的前世今生</a>
+&gt;在 Linux
+创建的初期，内核一直就没有实现“线程”这个东西。后来因为实际的需求，便逐步产生了<code>LinuxThreads</code>
+这个项目，其主要的贡献者是Xavier
+Leroy。<code>LinuxThreads</code>项目使用了 <code>clone()</code>
+这个系统调用对线程进行了模拟，按照《Linux内核设计与实现》的说法，调用
+<code>clone()</code> 函数参数是
+<code>clone(CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND, 0)</code>，即<strong>创建一个新的进程，同时让父子进程共享地址空间、文件系统资源、文件描述符、信号处理程序以及被阻断的信号等内容</strong>。也就是说，此时的所谓“线程”模型符合以上两本经典巨著的描述，即在内核看来，<strong>没有所谓的“线程”，我们所谓的“线程”其实在内核看来不过是和其他进程共享了一些资源的进程罢了</strong>。</p>
+<p>Linux 的内核线程</p>
+<ul>
+<li>内核线程是标准的进程，<strong>只存在于内核空间</strong></li>
+<li>内核线程<strong>没有地址空间</strong></li>
+<li>内核线程只能由其他内核线程创建</li>
+</ul>
+<h3 id="进程的创建和结束">进程的创建和结束</h3>
+<h4 id="进程创建的两个步骤">进程创建的两个步骤</h4>
+<p>进程的创建可以分为两个步骤： <strong>1)
+fork</strong>:创建一个子进程即复制当前的任务，新进程与其父进程的区别仅在于<strong>PID,
+PPID以及特定的资源(如某些资源的统计量，没有必要继承)</strong>。父子进程同时执行，因此调用一次返回两次。</p>
+<p><strong>2)
+exec</strong>：将一个程序装入地址空间并执行，只有子进程执行，重建其地址空间，区别于父进程。</p>
+<p>fork
+操作直接把所有资源复制给新创建的子进程，这种实现大批量的复制无疑或导致执行效率低下，因为行为是非常耗时的，因为它需要：</p>
+<ul>
+<li>为子进程的页表分配页面</li>
+<li>为子进程的页分配页面</li>
+<li>初始化子进程的页表</li>
+<li>把父进程的页复制到子进程相应的页中</li>
+</ul>
+<p>创建一个地址空间的这种方法涉及许多内存访问，消耗许多CPU周期，并且完全破坏了高速缓存中的内容。<strong>在大多数情况下，这样做常常是毫无意义的，因为许多子进程通过装入一个新的程序开始它们的执行，这样就完全丢弃了所继承的地址空间。</strong>所以
+linux
+采用了<strong>写时复制(<code>copy-on-write</code>)</strong>的策略。</p>
+<p>写时拷贝是一种可以推迟甚至免除拷贝数据的技术。<strong>内核此时并不复制整个进程地址空间，而是让父进程和子进程共享同一个拷贝。只有在需要写入的时候，数据才会被复制，从而使各个进程拥有各自的拷贝。</strong>也就是说，资源的复制只有在需要写入的时候才进行，在此之前，只是以只读方式共享。这种技术使地址空间上的页的拷贝被推迟到实际发生写入的时候。在页根本不会被写入的情况下—举例来说，fork()后立即调用exec()—它们就无需复制了。<strong>fork()的实际开销就是复制父进程的页表以及给子进程创建惟一的进程描述符。</strong></p>
+<p>实现的时候 <code>fork</code>
+通过<code>clone()</code>系统调用实现，<code>clone()</code>通过一系列的参数标志指定父子进程需要共享的资源，<code>clone()</code>调用<code>do_fork()</code>,而<code>do_fork()</code>调用<code>copy_process()</code>,而<code>copy_process()</code>做了以下事情：</p>
+<ul>
+<li>调用<code>dup_task_struct</code>复制内核栈、<code>thread_info</code>和<code>task_struct</code></li>
+<li>检查用户进程限额</li>
+<li>改变子进程<code>task_struct</code>结构中的部分内容，子进程状态置为<code>TASK_UNINTERRUPTIBLE</code></li>
+<li>为子进程获取一个有效的<code>PID</code></li>
+<li>根据传递给<code>clone()</code>的参数复制资源</li>
+<li>父子进程平分剩余的时间片</li>
+<li>返回指向子进程的指针</li>
+</ul>
+<p>除了 <code>fork</code> 以外，linux中还有一种创建进程的方式
+<code>vfork</code>，<code>vfork</code>与<code>fork</code>功能相同，<strong>子进程共享父进程的地址空间(内核连子进程的虚拟地址空间结构也不创建)。创建完成后父进程阻塞，直到子进程结束或执行<code>exec</code></strong>。<code>vfork</code>
+也是通过向<code>clone</code>系统调用传递特定的标志实现。</p>
+<h4 id="进程的结束">进程的结束</h4>
+<p>以下几种情况会出现进程的结束：
+1）正常结束(显示或隐式地调用<code>exit()</code>系统调用）
+2）进程收到不能忽略也不能处理的信号或异常</p>
+<p>执行<code>exit()</code>函数的过程：</p>
+<ul>
+<li>释放进程的<strong>地址空间</strong></li>
+<li>释放进程<strong>使用的资源</strong></li>
+<li>给其父进程发送一个信号，并标示自己的状态为<code>TASK_ZOMBIE</code></li>
+<li>调用调度程序，执行其他进程</li>
+</ul>
+<p>当父进程收到子进程结束信号时，收回子进程的
+<code>task_structure</code>和<code>thread_info</code>,没有回收就称为了僵尸进程。</p>
+<h3 id="信号">信号</h3>
+<h4 id="基本概念">基本概念</h4>
+<p>信号机制是<strong>进程之间相互传递消息的一种方法</strong>，信号全称为<strong>软中断信号</strong>，也有人称作软中断。<strong>在linux中每个信号有一个名字(以<code>SIG</code>开头)，且定义为一个整数，共有64个信号</strong>。</p>
+<p>软中断信号（signal，又简称为信号）用来<strong>通知进程发生了异步事件</strong>。进程之间可以互相通过系统调用<code>kill</code>发送软中断信号。内核也可以因为内部事件而给进程发送信号，通知进程发生了某个事件。注意，<strong>信号只是用来通知某进程发生了什么事件，并不给该进程传递任何数据。</strong></p>
+<p>信号来源分为硬件类和软件类：</p>
+<ul>
+<li><strong>硬件方式</strong>
+<ul>
+<li>用户输入：比如在终端上按下组合键ctrl+C，产生SIGINT信号；</li>
+<li>硬件异常：CPU检测到内存非法访问等异常，通知内核生成相应信号，并发送给发生事件的进程；</li>
+</ul></li>
+<li><strong>软件方式</strong>
+通过系统调用，发送signal信号：kill()，raise()，sigqueue()，alarm()，setitimer()，abort()等</li>
+</ul>
+<p><strong>收到信号的进程对各种信号有不同的处理方法。处理方法可以分为三类</strong>：
+1）类似中断的处理程序，对于需要处理的信号，进程可以<strong>指定处理函数</strong>，由该函数来处理。
+2）<strong>忽略某个信号</strong>，对该信号不做任何处理，就象未发生过一样。但是有些信号是不能忽略的，如<code>SIGKILL</code>、<code>SIGSTOP</code>和一些硬件异常信号
+3）对该信号的处理<strong>保留系统的默认值</strong>，这种缺省操作，<strong>对大部分的信号的缺省操作是使得进程终止</strong>。</p>
+<h4 id="相关的系统调用">相关的系统调用</h4>
+<p>上面的第一种处理方式是通过系统调用<code>signal</code>来指定进程对某个信号的处理行为。signal函数的定义如下
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;signal.h&gt;</span><br><span class="line">typedef void (*sighandler_t)(int);</span><br><span class="line">sighandler_t signal(int signum, sighandler_t handler);</span><br><span class="line">(返回值: 如果成功则返回先前的handler，否则返回SIG_ERR)</span><br><span class="line"></span><br><span class="line">“handler”可取下面的三个值中任意一个：</span><br><span class="line">用户定义的函数，或</span><br><span class="line">SIG_DEF(恢复参数signum所指信号的处理方法为默认值),或</span><br><span class="line">SIG_IGN(忽略参数signum所指的信号)</span><br></pre></td></tr></table></figure></p>
+<p>通过<code>kill()</code>系统调用可以给进程发送一个信号，kill函数的声明如下
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;sys/types.h&gt;</span><br><span class="line">#include &lt;signal.h&gt;</span><br><span class="line">int kill(pid_t pid, int sig);</span><br><span class="line">(返回值: 成功为0, 否则为-1)</span><br></pre></td></tr></table></figure></p>
+<p>而<code>raise()</code>系统调用可以说是<code>kill()</code>系统调用的一个特例，用于给当前进程发送一个信号，其定义如下：
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;signal.h&gt;</span><br><span class="line">int raise(int sig);</span><br><span class="line">  (返回值: 成功为0, 否则为-1)</span><br></pre></td></tr></table></figure></p>
+<p>除此之外，系统调用<code>alarm()</code>的功能是<strong>设置一个定时器，当定时器计时到达时，将发出一个信号<code>SIGALRM</code>给进程</strong>。该调用的声明格式如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">unsigned int alarm(unsigned int seconds);</span><br><span class="line">(Returned value: 0, or the number of seconds remaining of previous alarm)</span><br></pre></td></tr></table></figure>
+<p>而系统调用<code>pause</code>的作用是等待一个信号。该调用使得发出调用的进程进入睡眠，直到接收到一个信号为止。该调用的声明格式如下：
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int pause(void); </span><br></pre></td></tr></table></figure></p>
+<p>利用 <code>alarm</code> 函数和 <code>pause</code> 函数实现
+<code>sleep</code>,同时可参考<a
+target="_blank" rel="noopener" href="http://www.judymax.com/archives/235">这里</a> <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">unsigned int sleep1(unsigned int nsecs) &#123;</span><br><span class="line">    if ( signal(SIGALRM, sig_alrm) == SIG_ERR)</span><br><span class="line">        return(nsecs);</span><br><span class="line">    alarm(nsecs);     /* 开始计时 */  </span><br><span class="line">    pause();      /*定时信号来时被唤醒*/</span><br><span class="line">    return(alarm(0) ); /*关闭定时器 */</span><br><span class="line">&#125;</span><br><span class="line">int sig_alrm() &#123;</span><br><span class="line">   signal(SIGALRM, sig_alrm) ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="可靠的信号机制">可靠的信号机制</h4>
+<p>Linux系统共定义了64种信号，分为两大类：可靠信号与不可靠信号</p>
+<ul>
+<li>不可靠信号：
+也称为<strong>非实时信号，不支持排队，信号可能会丢失,</strong>
+比如发送多次相同的信号, 进程只能收到一次. 信号值取值区间为1~31；</li>
+<li>可靠信号： 也称为<strong>实时信号，支持排队, 信号不会丢失</strong>,
+发多少次, 就可以收到多少次. 信号值取值区间为32~64</li>
+</ul>
+<h5 id="信号的注册与注销">信号的注册与注销</h5>
+<ul>
+<li><strong>注册</strong></li>
+</ul>
+<p>在进程<strong>task_struct</strong>结构体中有一个未决信号的成员变量
+struct sigpending
+pending。<strong>每个信号在进程中注册都会把信号值加入到进程的未决信号集。</strong></p>
+<p>非实时信号发送给进程时，如果该信息已经在进程中注册过，不会再次注册，故信号会丢失；
+实时信号发送给进程时，不管该信号是否在进程中注册过，都会再次注册。故信号不会丢失；</p>
+<ul>
+<li><strong>注销</strong></li>
+</ul>
+<p>非实时信号：不可重复注册，最多只有一个sigqueue结构；当该结构被释放后，把该信号从进程未决信号集中删除，则信号注销完毕；
+实时信号：可重复注册，可能存在多个sigqueue结构；当该信号的所有sigqueue处理完毕后，把该信号从进程未决信号集中删除，则信号注销完毕；</p>
+<h5 id="信号的处理">信号的处理</h5>
+<p>内核处理进程收到的signal是在当前进程的上下文，故进程必须是Running状态。当进程唤醒或者调度后获取CPU，则会<strong>从内核态转到用户态时检测是否有signal等待处理</strong>，处理完，进程会把相应的未决信号从链表中去掉。</p>
+<p>也就是说signal信号处理时机为：
+<code>内核态 -&gt; signal信号处理 -&gt; 用户态</code>：</p>
+<ul>
+<li>在内核态，signal信号不起作用；</li>
+<li>在用户态，signal所有未被屏蔽的信号都处理完毕；</li>
+<li>当屏蔽信号，取消屏蔽时，会在下一次内核转用户态的过程中执行；</li>
+</ul>
+<h5 id="信号相关函数">信号相关函数</h5>
+<p>进程<strong>处理某个信号前，需要先在进程中安装此信号</strong>。安装过程主要是建立信号值和进程对相应信息值的动作。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">信号安装函数</span><br><span class="line">signal()：不支持信号传递信息，主要用于非实时信号安装；</span><br><span class="line">sigaction():支持信号传递信息，可用于所有信号安装；（通过sigaction实现signal函数）</span><br></pre></td></tr></table></figure>
+<p>信号的发送系统调用 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">kill()：用于向进程或进程组发送信号；</span><br><span class="line">sigqueue()：只能向一个进程发送信号，不能像进程组发送信号；主要针对实时信号提出，与sigaction()组合使用，当然也支持非实时信号的发送；</span><br><span class="line">alarm()：用于调用进程指定时间后发出SIGALARM信号；</span><br><span class="line">setitimer()：设置定时器，计时达到后给进程发送SIGALRM信号，功能比alarm更强大</span><br><span class="line">abort()：向进程发送SIGABORT信号，默认进程会异常退出。</span><br><span class="line">raise()：用于向进程自身发送信号；</span><br></pre></td></tr></table></figure></p>
+<p>信号阻塞函数： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">sigprocmask(int how, const sigset_t *set, sigset_t *oldset))：检测或更改(或两者)进程的信号掩码</span><br><span class="line">不同how参数，实现不同功能</span><br><span class="line">SIG_BLOCK：将set中的信号添加到进程阻塞信号集（并集）</span><br><span class="line">SIG_UNBLOCK：从进程阻塞信号集删除set中的信号(差集)</span><br><span class="line">SIG_SETMASK：将set指向信号集中的信号，设置成进程阻塞信号集</span><br><span class="line"></span><br><span class="line">sigpending(sigset_t *set))：获取已发送到进程，却被阻塞的所有信号，也就是当前未决的信号集</span><br><span class="line"></span><br><span class="line">sigsuspend(const sigset_t *mask))：用mask代替进程的原有掩码，并暂停进程执行，直到收到信号再恢复原有掩码并继续执行进程。（pause)</span><br></pre></td></tr></table></figure></p>
+<h2 id="第四章-进程调度">第四章 进程调度</h2>
+<p>调度器用于选择进程运行，分配CPU执行时间</p>
+<h3 id="调度器运行的时机">调度器运行的时机</h3>
+<ul>
+<li>进程阻塞在一个I/O操作上.</li>
+<li>硬件中断.</li>
+<li>进程时间片到.</li>
+<li>内核主动调用调度器</li>
+</ul>
+<h3 id="调度目标">调度目标</h3>
+<ul>
+<li>有效性：完成尽可能多的工作。</li>
+<li>交互性：尽快响应用户</li>
+<li>公平性：不允许任何进程饥饿。</li>
+</ul>
+<p>哪一个目标最重要取决于取决于目标场景</p>
+<ul>
+<li>桌面系统:交互性，尽快相应用户</li>
+<li>服务器:有效性，保证每个用户的请求都能够被完成</li>
+</ul>
+<h3 id="调度策略">调度策略</h3>
+<h4 id="进程的类型">进程的类型</h4>
+<ul>
+<li><p>I/O密集型进程:
+<strong>较多的交互性，高优先级，大时间片</strong>。如文本编辑</p></li>
+<li><p>CPU密集型进程:
+<strong>较少的交互性，低优先级，较小的时间片</strong>。如视频解码</p></li>
+</ul>
+<h4 id="进程优先级表示">进程优先级表示</h4>
+<p>在linux中用top或者ps命令会输出PRI/PR、NI这两个指标值，其含义如下</p>
+<blockquote>
+<p>PRI
+：进程优先权，代表这个进程可被执行的优先级，<strong>其值越小，优先级就越高</strong>，越早被执行
+NI
+：进程Nice值，可用于改变PRI的值，<code>PRI(new)=PRI(old)+nice</code>。</p>
+</blockquote>
+<p>在Linux系统中，Nice值的范围从-20到+19（不同系统的值范围是不一样的），每个进程都在其计划执行时被赋予一个nice值。在通常情况下，子进程会继承父进程的nice值，比如在系统启动的过程中，init进程会被赋予0，其他所有进程继承了这个nice值（因为其他进程都是init的子进程）。</p>
+<p>进程的nice值是可以被修改的，修改命令分别是<code>nice</code>和<code>renice</code>,
+对<strong>非 root 用户，只能将其底下的进程的 nice
+值变大而不能变小</strong>,若想变小，得要有相应的权限。对root用户，可以给其子进程赋予更小的nice值。</p>
+<p>进程抢占的时机</p>
+<ul>
+<li>当一个进程的优先级高于当前正在运行的进程的优先级</li>
+<li>当一个进程的时间片为0.</li>
+</ul>
+<h4 id="调度器">调度器</h4>
+<p>内核2.4是O(n)调度器，2.5及后改成了O(1)调度器，采用的新的数据结构为<strong>运行队列和优先级数组</strong>，同时改善了<strong>SMP的可拓展性</strong>。</p>
+<p>两种数据结构的解释如下 <strong>运行队列(<code>struct runqueue</code>
+)</strong>：给定处理器上可执行进程的链表，运行队列进行操作前要先锁住。
+<strong>优先级数组</strong>：Linux
+调度器维护两个优先级数组：<strong>活跃的和过期</strong>的数组。优先级数组是提供
+<code>O(1)</code> 调度的数据结构</p>
+<p>优先级数组是一个结构体，其定义如下所示： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">struct prio_array &#123; </span><br><span class="line">  int nr_active; /* 任务数目*/ </span><br><span class="line">  unsigned long bitmap[BITMAP_SIZE]; /* 优先级位图*/ </span><br><span class="line">  struct list_head queue[MAX_PRIO]; /* 优先级队列*/ </span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p><strong>调度器为每一个CPU维护了两个进程队列数组：active数组和expire数组。数组中的元素着保存某一优先级的进程队列指针。系统一共有140个不同的优先级，因此这两个数组大小都是140。同时该调度算法为每个优先级都设置一个可运行队列,
+即包含140个可运行状态的进程链表，每一条优先级链表上的进程都具有相同的优先级，而不同进程链表上的进程都拥有不同的优先级。</strong></p>
+<p>除此之外,
+每个优先级数组还包括一个优先级位图bitmap。该位图使用一个位(bit)来代表一个优先级，而140个优先级最少需要5个32位来表示，
+因此只需要一个<code>int[5]</code>就可以表示位图，该位图中的所有位都被置0，当某个优先级的进程处于可运行状态时，该优先级所对应的位就被置1。</p>
+<p>优先级数组中分为了活跃和过期两种，过期的优先级数组存放<strong>过期队列</strong>，活跃的优先级数组存放<strong>实际队列</strong>。</p>
+<p>过期队列是所有用完了时间片的进程。 实际队列是没有用完时间片的进程。
+当一个进程用完了时间片时，<strong>重新计算其时间片</strong>，并放入到过期队列中。
+当实际进程队列为空时，交换过期队列和实际队列。</p>
+<p><img data-src="https://wulc.me/imgs/image_1b4071g0o1vf1a801ouoi451hel3h.png" /></p>
+<p>重新计算时间片过程</p>
+<ul>
+<li><p><strong>动态优先级用于计算优先级</strong>
+<code>nice+进程交互性的奖励或罚分</code> 为了确定一个进程是否是交互性的,
+Linux记录了一个进程用于休眠和用于执行的时间（0-MAX_SLEEP_AVG，默认10ms）。一个进程从休眠恢复到执行时，优先级增加；运行一段时间后会减小。</p></li>
+<li><p><strong>静态优先级用于计算时间片</strong>
+进程创建时，子进程与父进程均分父进程剩余的时间片.
+任务的时间片用完时，基于任务的静态优先级重新计算时间片</p></li>
+</ul>
+<p>负载平衡程序 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">找最繁忙的运行队列</span><br><span class="line">选择一个优先级数组（过期的优先）</span><br><span class="line">选择优先级最高的链表</span><br><span class="line">选择一个不是正在运行的，不在高速缓冲的，可移动的进程抽取</span><br><span class="line">重复上述步骤，直至平衡</span><br></pre></td></tr></table></figure></p>
+<p>抢占可分为<strong>用户抢占和内核抢占</strong>： 用户抢占发生在</p>
+<ul>
+<li>从系统调用返回用户态</li>
+<li>从中断服务程序返回用户态</li>
+</ul>
+<p>内核抢占发生在</p>
+<ul>
+<li>中断服务程序正在执行，且返回内核空间之前</li>
+<li>内核代码再一次具有可抢占性时 处于核心态的任务直接调用schedule()</li>
+<li>内核中的任务阻塞</li>
+</ul>
+<p>实时调度策略
+<code>SCHED_FIFO</code>:先入先出方式调度的实时进程，即该进程一旦执行便一直运行到结束。
+<code>SCHED_RR</code>:
+通过时间片轮转的方式调度的实时进程。在运行了指定的时间片后会被抢占并重新调度。但如果没有其他优先级高于或等于它的实时进程与其竞争，它还会得到继续运行的机会。</p>
+<h2 id="第五章-系统调用">第五章 系统调用</h2>
+<h3 id="基本概念-1">基本概念</h3>
+<p>系统调用为用户空间进程提供一个访问内核接口，在Linux中，系统调用是唯一合法访问内核的入口。</p>
+<p>系统调用的目的主要有两个： 1）为用户空间提供一个统一接口。
+2）保证系统的安全和稳定</p>
+<h3 id="apiposixc库">API、POSIX、C库</h3>
+<p>API/POSIX/C库的区别与联系</p>
+<p><strong>一般情况下应用程序通过应用编程接口API，而不是直接通过系统调用来编程。在Unix世界，最流行的API是基于POSIX标准的,即POSIX说明API和系统调用之间关系，。</strong></p>
+<blockquote>
+<p>api是函数的定义，规定了这个函数的功能，跟内核无直接关系。它们<strong>可以实现成一个系统调用，也可以通过调用多个系统调用来实现，而完全不使用任何系统调用也不存在问题</strong>。实际上，API可以在各种不同的操作系统上实现，给应用程序提供完全相同的接口，而它们本身在这些系统上的实现却可能迥异。</p>
+</blockquote>
+<p>Linux的系统调用接口,像大多数Unix系统一样，以C 库的形式提供，C库实现了
+Unix系统的主要API，包括标准C库函数和系统调用。</p>
+<p><img data-src="https://wulc.me/imgs/image_1b41abhsb1rv1t8922r1f436o39.png" /></p>
+<h3 id="系统调用的实现">系统调用的实现</h3>
+<p>在Linux中, 每一个系统调用分配有一个<code>syscall</code>
+号.这是一个唯一的整数，用于指定系统调用.
+<code>syscall</code>号分配后，不能够改变或回收.</p>
+<p>一般地，系统调用都是通过<strong>软中断</strong>实现：产生一个<strong>异常</strong>，系统切换到内核模式，执行异常处理程序，即<strong>系统调用处理程序</strong>，在x86上，定义的软中断是函数<code>system_call()</code>。</p>
+<p><code>system_call()</code>函数检查系统调用号<code>syscall</code>，如合法，调用指定的系统调用。</p>
+<p><img data-src="https://wulc.me/imgs/image_1b41b355s1phf5gu1t1nhh5118lm.png" /></p>
+<p><strong>增加一个系统调用的过程</strong> 1.
+首先在系统调用表的最后加入一个表项。 2.
+对于每一种支持的体系结构，系统调用号必须定义在
+<code>&lt;asm/unistd.h&gt;</code>. 3. 系统调用必须被编译进内核映像。</p>
+<p><strong>实现一个新的系统调用的好处</strong>：
+1）系统调用容易使用容易实现。 2）系统调用的性能在Linux中非常快。
+<strong>缺点</strong>: 1）系统调用号需要官方授权给你。
+2）系统调用一旦进入稳定的内核，其接口就不能再改变，否则会影响用户空间的应用.
+3）需要<strong>将系统调用分别注册到每个需要支持的体系结构</strong>。
+4）系统调用在脚本中不宜使用，不能直接从文件系统访问。
+5）如果仅仅进行简单的信息交换，系统调用就大材小用</p>
+<p><strong>从用户空间访问系统调用：Linux
+提供了一组宏，用于直接访问系统调用</strong>。它设置寄存器内容，并执行<code>trap</code>指令。这些宏是
+<code>_syscalln()</code>, 这里n：0-6。</p>
+<h2 id="第六章-内核数据结构">第六章 内核数据结构</h2>
+<ul>
+<li>链表</li>
+<li>队列</li>
+<li>映射</li>
+<li>红黑树</li>
+</ul>
+<p>映射是键到值的关联关系。Linux中的映射是将一个唯一的标识符（UID）映射到一个指针，实现方式有：</p>
+<ul>
+<li>数组</li>
+<li>散列表</li>
+<li>自平衡二叉树</li>
+<li>Linux采用的方式：radix树（）</li>
+</ul>
+<p><strong>数据结构的选择原则如下</strong>：</p>
+<ul>
+<li>链表：主要操作是遍历数据</li>
+<li>队列：生产者消费者模式</li>
+<li>映射：映射一个UID到一个对象</li>
+<li>红黑树：存储大量数据，并且迅速检索</li>
+</ul>
+<p><strong>红黑树是一种自平衡二叉搜索树</strong>，具有以下性质：</p>
+<ul>
+<li>所有的节点或者红色，或者黑色</li>
+<li>所有叶节点都是黑色</li>
+<li>叶节点不包含数据</li>
+<li>所有非叶节点都有两个字节点</li>
+<li>如果一个节点是红色，则其子节点都是黑色</li>
+<li>在一个节点到其叶子节点的路径中，如果总是包含同样数目的黑色节点，则该路径相比其他路径是最短的</li>
+</ul>
+<h2 id="第七八章-中断和中断处理">第七、八章 中断和中断处理</h2>
+<h3 id="基本概念-2">基本概念</h3>
+<p>操作系统要管理硬件，就必须要能够与硬件通信。中断能够使硬件能够发出通知给处理器(CPU)，例如按下键盘时，键盘控制器就会发出一个中断请求；处理器(CPU)接收到中断请求后，会马上通知内核进行处理，因此硬件设备生成中断时并不会考虑与处理器的时钟同步，也就是说中断可以随时产生。</p>
+<p><strong>不同情况下对应的中断不同，每个中断都有一个唯一的数字标示，通常被称为中断号（IRQ）</strong>，如键盘和硬盘的中断号就不同。中断号的不同，内核处理的程序也不同，因此有一张表格用于记录每个中断号及其对应的处理程序，称为<strong>中断向量表</strong>。</p>
+<p>说到中断，常常会提及到异常。<strong>异常与中断不同，异常产生的时候必须考虑与处理器的时钟同步</strong>。实际上异常也常被称为同步中断。常见的异常有处理器执行过程中由于代码的缺陷而执行了错误指令（如除上0），或者是在执行期间出现了特殊情况（如缺页），必须依靠内核来处理的时候，处理器就会产生一个异常。前面说到的系统调用实际上就是通过异常来实现的，异常也可称为软中断。</p>
+<h3 id="中断处理程序">中断处理程序</h3>
+<p>由前面的简介可知，响应一个特定的中断，内核会执行一个与之对应的特定函数，这个函数就叫做<strong>中断处理程序</strong>。</p>
+<p>在Linux中，一个设备的中断处理程序是它设备驱动程序（管理设备的内核代码）的一部分，因此，中断处理程序实际上就是普通的C函数，与其他内核函数的真正区别在于这些程序运行于被称为<strong>中断上下文</strong>的特殊上下文中，该上下文不可被阻塞，也就是说进入中断服务程序后,
+不会被其他响应中断。</p>
+<h3 id="上半部和下半部">上半部和下半部</h3>
+<p>中断要求尽快处理，但是往往中断又要完成较多的工作量。考虑两者间做一个权衡，中断处理被分成了两个部分：<strong>上半部和下半部，上半部完成那些重要、有严格时限的、与硬件相关的工作，下半部则完成那些允许被稍后完成的工作</strong>。接收到一个中断后，上半部（实际上就是中断处理程序）会立即执行，然后返回中断前原先运行的程序，而下半部会在合适的时机在执行（通常下半部分在中断处理程序一返回就会马上运行）。中断处理程序的下半部分（如果有的话）几乎做了中断处理程序所有的事情。<strong>它们最大的不同是上半部分不可中断，而下半部分可中断。</strong>下面以网卡为例做简单说明：</p>
+<p>当网卡接收到来自网络的数据包的时候，网卡会向内核发出中断，内核通过网卡已注册的中断处理程序来做出应答，中断开始的时候，内核会快速拷贝网络数据包到系统内存，因为网卡上接收的网络数据包的缓存是固定的，而且相比于内存来说很小，假如数据包占满了缓存，后续的数据包只能被丢弃，所以这个任务是最紧急的，当网络数据包全被拷到内存后，中断任务算是完成了，这个它会将控制权返回给系统中断前原先运行的程序。至于处理数据包的操作会在下半部进行。</p>
+<p>尽管上半部和下半部的结合能够改善系统的响应能力，但是，Linux设备驱动中的中断处理并不一定要分成两个半部。如果中断要处理的工作本身就很少，则完全可以直接在上半部全部完成。</p>
+<h3 id="上半部">上半部</h3>
+<h4 id="注册与释放中断程序">注册与释放中断程序</h4>
+<p>对于设备的每一种中断，设备的驱动程序需要为其注册一个相关的中断处理程序，以便通知内核该如何处理该中断。</p>
+<p>驱动程序通过<code>request_irq()</code>函数注册一个中断处理程序。</p>
+<p>卸载驱动程序的时候，需要注销相应的中断处理程序，并释放中断线（设备的中断处理器与CPU的直连线），通过调用<code>free_irq()</code>
+实现</p>
+<h4 id="编写中断处理程序">编写中断处理程序</h4>
+<p>典型的定义 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">static irqreturn_t intr_handler (int irq, void *dev_id, struct pt_regs *regs)</span><br><span class="line"></span><br><span class="line">irq: 中断号</span><br><span class="line">dev_id: 区分共享中断线的多个设备</span><br><span class="line">regs: 保存中断前的处理器的寄存器和状态</span><br><span class="line">irqreturn_t：IRQ_NONE, IRQ_HANDLED</span><br></pre></td></tr></table></figure>
+Linux中的中断处理程序都是<strong>无须重入</strong>的，也就是说一个给定的中断处理程序正在执行的时候，<strong>相应的中断线在所有的处理器上都会被屏蔽，以防止在同一中断线上接收另外一个新的中断，</strong>但是其他的中断线上的中断能够被处理。</p>
+<h4 id="中断上下文">中断上下文</h4>
+<p>在讨论中断上下文之前先讨论一下进程上下文。</p>
+<p>用户空间的应用程序，通过系统调用，进入内核空间。这个时候用户空间的进程要传递
+很多变量、参数的值给内核，内核态运行的时候也要保存用户进程的一些寄存
+器值、变量等。<strong>所谓的“进程上下文”，可以看作是用户进程传递给内核的这些参数以及内核要保存的那一整套的变量和寄存器值和当时的环境等。</strong></p>
+<p>相对于进程而言，就是进程执行时的环境。具体来说就是各个变量和数据，包括所有的寄存器变量、进程打开的文件、内存信息等。<strong>一个进程的上下文可以分为三个部分:用户级上下文、寄存器上下文以及系统级上下文。</strong></p>
+<p>（1）用户级上下文: 正文、数据、用户堆栈以及共享存储区；
+（2）寄存器上下文:
+通用寄存器、程序寄存器(IP)、处理器状态寄存器(EFLAGS)、栈指针(ESP)；
+（3）系统级上下文:
+进程控制块<code>task_struct</code>、内存管理信息(<code>mm_struct</code>、<code>vm_area_struct</code>、<code>pgd</code>、<code>pte</code>)、内核栈。</p>
+<p>当<strong>发生进程调度时，进行进程切换就是上下文切换(context
+switch)</strong>.操作系统必须对上面提到的全部信息进行切换，新调度的进程才能运行。</p>
+<p>而对于中断上下文而言，硬件通过触发信号，导致内核调用中断处理程序，进入内核空间。这个过程中，硬件的
+一些变量和参数也要传递给内核，内核通过这些参数进行中断处理。所谓的“
+<strong>中断上下文”，其实也可以看作就是硬件传递过来的这些参数和内核需要保存的一些其他环境（主要是当前被打断执行的进程环境）</strong>。中断时，内核<em>不代表任何进程运行</em>，它一般只访问系统空间，而不会访问进程空间，内核在中断上下文中执行时一般不会阻塞。</p>
+<p><strong>Linux
+内核工作在进程上下文或者中断上下文。提供系统调用服务的内核代码代表发起系统调用的应用程序运行在进程上下文；另一方面，中断处理程序则代表硬件运行在中断上下文。中断上下文和特定进程无关。</strong></p>
+<p>运行在<strong>进程上下文的内核代码是可以被抢占的</strong>（Linux2.6）。但是一个<strong>中断上下文，通常都会始终占有CPU，不可以被打断</strong>。正因为如此，运行在中断上下文的代码就要受一些限制，不能做下面的事情：
+<strong>1、睡眠或者放弃CPU</strong>：这样做的后果是灾难性的，因为内核在进入中断之前会关闭进程调度，一旦睡眠或者放弃CPU，这时内核无法调度别的进程来执行，系统就会死掉。除此之外，在中断处理函数中调用一个内核API之前，应该仔细分析它以确保其内部不会触发阻塞等待。
+<strong>2、尝试获得信号量</strong>：如果获得不到信号量，代码就会睡眠，会产生和上面相同的情况
+<strong>3、执行耗时的任务</strong>：中断处理应该尽可能快，因为内核要响应大量服务和请求，中断上下文占用CPU时间太长会严重影响系统功能。
+<strong>4、访问用户空间的虚拟地址</strong>：因为中断上下文是和特定进程无关的，它是内核代表硬件运行在内核空间，所以在终端上下文无法访问用户空间的虚拟地址</p>
+<h4 id="中断处理的实现">中断处理的实现</h4>
+<p>中断处理系统在linux中的实现是非常依赖于体系结构的，例如要依赖于处理器，所使用的的中断控制器的类型，体系结构的设计及机器本身。</p>
+<p>下图是中断从硬件到内核进行处理的一个流程</p>
+<p><img data-src="https://wulc.me/imgs/image_1b438je76f681l1n146882itog9.png" /></p>
+<h3 id="下半部">下半部</h3>
+<p>下半部的任务主要是执行与中断相关的工作，这些工作没有被中断服务程序本身完成.
+下半部分并不需要指明一个确切时间，只要把这些任务推迟一点，让它们在系统不太忙并且中断恢复后执行就可以了。通常下半部分在中断处理程序一返回就会马上运行。内核中实现下半部的手段不断演化，目前已经从最原始的BH（bottom
+half）衍生出BH（在2.5中去除）、软中断（<code>softirqs</code>在2.3引入）、<code>tasklet</code>（在2.3引入）、工作队列（<code>work queue</code>在2.5引入）。</p>
+<h4 id="softirqs机制">softirqs机制</h4>
+<p>软中断结构定义如下： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">struct softirq_action &#123;</span><br><span class="line">               void (*sction) (struct softirq_action *);/*待执行的函数*/</span><br><span class="line">               void *data;  /*传给函数的指针*/</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+<code>kernel/softirq.c</code>定义了一个32个元素的结构数组,
+每个被注册的软中断都占据该数组的一项，因此最多可能有32个软中断，且下标小的软中断优先级高。</p>
+<p>中断处理程序在返回前触发它的软中断，使其在稍后执行。在执行过程中，一个软中断不会抢占另外一个软中断，唯一可以抢占软中断的是中断处理程序。执行就是遍历上面提到的结构数组，并处理那些有软中断的位置（值为1）。</p>
+<p>软中断保留给对<strong>时间要求最严格和最重要的下半部使用</strong>，如网络和SCSI设备。使用软中断的过程大致为<code>分配索引号-&gt;注册处理程序-&gt;触发软中断</code></p>
+<h4 id="tasklet机制">tasklet机制</h4>
+<p>tasklet
+是基于软中断实现的，与软中断相比，tasklet更常用，<strong>软中断一般用于那些执行频率很高和连续型要求很高的情况</strong>。</p>
+<p>引入tasklet，最主要的是考虑支持SMP，提高SMP多个cpu的利用率；不同的tasklet可以在不同的cpu上运行。tasklet可以理解为softirq的派生，所以它的调度时机和软中断一样。</p>
+<p>每个处理器都有一个用于辅助处理软中断的内核线程:<code>ksoftirqd/n</code>,当内核中出现大量软中断的时候，这些内核线程就会辅助处理他们。<strong>这个内核线程是对于重新触发的软中断是否立即处理的问题的一个折中</strong>，最终是不会立即处理这些重新触发的软中断，而是添加这样一个线程使得在软中断数目过多时也能够被迅速处理。</p>
+<h4 id="work-queue-机制">work queue 机制</h4>
+<p>工作队列可以把工作推后，然后交给一个内核线程去执行，这些内核线程被称为<strong>工作线程</strong>。工作队列一个很重要的特性就是<strong>允许工作重新调度和睡眠</strong>。</p>
+<h4 id="选择何种机制">选择何种机制</h4>
+<p>从设计上讲，Softirq提供最少的顺序保证，这需要Softirq处理函数采取一些额外的步骤保证数据安全，因为两个以上的同类型softirqs只能同时运行于不同的CPU。<strong>Softirq多用于时间要求严格和使用频度高的场合</strong>。</p>
+<p>如果代码不能很好地线程化，tasklet意义较大 Tasklets
+有一个简单的接口，由于两个同类型的不能同时运行，他们非常易于实现。</p>
+<p>如果你的延期的工作需要运行于进程上下文（重新调度和睡眠）,
+唯一的选择是work queue</p>
+<h2 id="第九十章-内核同步">第九、十章 内核同步</h2>
+<h3 id="基本概念-3">基本概念</h3>
+<p>在现代操作系统里，同一时间可能有多个内核执行流在执行，因此内核也需要一些同步机制来<strong>同步各执行单元对共享数据的访问</strong>。尤其是在多处理器系统上，更需要一些同步机制来同步不同处理器上的执行单元对共享的数据的访问。</p>
+<p><strong>临界区和竞争条件</strong>
+临界区：访问和操作共享数据的代码段。
+竞争条件：多个执行线程处于同一个临界区中。</p>
+<p>同步就是保证不安全的并发不发生，即竞争条件不发生。需要同步的情况有：</p>
+<ul>
+<li>中断</li>
+<li>Softirqs和tasklets</li>
+<li>内核抢占</li>
+<li>用户空间的睡眠和同步</li>
+<li>SMP</li>
+</ul>
+<h4 id="死锁的产生条件">死锁的产生条件</h4>
+<p>1.互斥(mutual exclusion)：系统存在着临界资源； 2.占有并等待(hold and
+wait)：已经得到某些资源的进程还可以申请其他新资源； 3.不可剥夺(no
+preemption)：已经分配的资源在其宿主没有释放之前不允许被剥夺；
+4.循环等待(circular
+waiting)：系统中存在多个（大于2个）进程形成的封闭的进程链，链中的每个进程都在等待它的下一个进程所占有的资源；</p>
+<h4 id="死锁预防与死锁避免">死锁预防与死锁避免</h4>
+<p><strong>死锁预防</strong>
+防止死锁的发生只需破坏死锁产生的四个必要条件之一即可 <strong>1)
+破坏互斥条件</strong></p>
+<p><strong>如果允许系统资源都能共享使用，则系统不会进入死锁状态</strong>。但有些资源根本不能同时访问，如打印机等临界资源只能互斥使用。所以，<strong>破坏互斥条件而预防死锁的方法不太可行，而且在有的场合应该保护这种互斥性</strong>。
+<strong>2) 破坏不剥夺条件</strong></p>
+<p>当<strong>一个已保持了某些不可剥夺资源的进程，请求新的资源而得不到满足时，它必须释放已经保持的所有资源，待以后需要时再重新申请</strong>。这意味着，一个进程已占有的资源会被暂时释放，或者说是被剥夺了，或从而破坏了不可剥夺条件。</p>
+<p>该策略实现起来比较复杂，<strong>释放已获得的资源可能造成前一阶段工作的失效，反复地申请和释放资源会增加系统开销，降低系统吞吐量。这种方法常用于状态易于保存和恢复的资源，如CPU的寄存器及内存资源</strong>，一般不能用于打印机之类的资源。
+<strong>3) 破坏请求和保持条件</strong></p>
+<p>釆用<strong>预先静态分配方法，即进程在运行前一次申请完它所需要的全部资源</strong>，在它的资源未满足前，不把它投入运行。一旦投入运行后，这些资源就一直归它所有，也不再提出其他资源请求，这样就可以保证系统不会发生死锁。</p>
+<p>这种方式实现简单，但缺点也显而易见，<strong>系统资源被严重浪费，其中有些资源可能仅在运行初期或运行快结束时才使用，甚至根本不使用。而且还会导致“饥饿”现象，当由于个别资源长期被其他进程占用时，将致使等待该资源的进程迟迟不能开始运行</strong>。
+<strong>4) 破坏循环等待条件</strong></p>
+<p>为了破坏循环等待条件，可釆用<strong>顺序资源分配法。首先给系统中的资源编号，规定每个进程，必须按编号递增的顺序请求资源，</strong>同类资源一次申请完。也就是说，只要进程提出申请分配资源Ri，则该进程在以后的资源申请中，只能申请编号大于Ri的资源。</p>
+<p>这种方法存在的问题是<strong>，编号必须相对稳定，这就限制了新类型设备的增加；</strong>尽管在为资源编号时已考虑到大多数作业实际使用这些资源的顺序，但也经常会发生作业使甩资源的顺序与系统规定顺序不同的情况，造成资源的浪费；此外，这种按规定次序申请资源的方法，也必然会给用户的编程带来麻烦。</p>
+<p><strong>死锁避免</strong></p>
+<p><strong>死锁的预防是通过破坏产生条件来阻止死锁的产生，但这种方法破坏了系统的并行性和并发性。。</strong></p>
+<p>死锁产生的前三个条件是死锁产生的必要条件，也就是说要产生死锁必须具备的条件，而不是存在这3个条件就一定产生死锁，那么<strong>只要在逻辑上回避了第四个条件就可以避免死锁</strong>。</p>
+<p><strong>避免死锁采用的是允许前三个条件存在，但通过合理的资源分配算法来确保永远不会形成环形等待的封闭进程链，从而避免死锁。</strong></p>
+<p>其主要思想如下：
+1.如果一个进程的当前请求的资源会导致死锁，系统拒绝启动该进程；
+2.如果一个资源的分配会导致下一步的死锁，系统就拒绝本次的分配；</p>
+<p>在这个思想下诞生出来的便是著名的<strong>银行家算法</strong>：把操作系统看做是银行家，操作系统管理的资源相当于银行家管理的资金，进程向操作系统请求分配资源相当于用户向银行家贷款。操作系统按照银行家制定的规则为进程分配资源，<strong>当进程首次申请资源时，要测试该进程对资源的最大需求量，如果系统现存的资源可以满足它的最大需求量则按当前的申请量分配资源，否则就推迟分配。当进程在执行中继续申请资源时，先测试该进程已占用的资源数与本次申请的资源数之和是否超过了该进程对资源的最大需求量。若超过则拒绝分配资源，若没有超过则再测试系统现存的资源能否满足该进程尚需的最大资源量，若能满足则按当前的申请量分配资源，否则也要推迟分配。</strong></p>
+<h3 id="同步的机制">同步的机制</h3>
+<h4 id="原子操作">原子操作</h4>
+<ul>
+<li>基本的操作</li>
+<li>不可中断</li>
+<li>不能分割的指令 <img data-src="https://wulc.me/imgs/image_1b459o3m316no1f0o1kqvhnvtdo9.png" /></li>
+</ul>
+<p>原子操作的两组接口 1. 原子整数操作：使用一种特殊的类型
+<code>atomic_t</code> 2. 原子位操作: 在位级别上进行操作</p>
+<h4 id="自旋锁">自旋锁</h4>
+<p>原子位和原子整数仅能对简单的整形变量进行原子操作，对于复杂的数据复杂的操作并不适用。需要更复杂的同步方法实现保护机制——锁。</p>
+<p>自旋锁：<strong>同一时刻只能被一个可执行线程持有，获得自旋锁时，如果已被别的线程持有则该线程进行循环等待锁重新可用然后继续向下执行。</strong></p>
+<p>使用自旋锁时要防止死锁：</p>
+<ul>
+<li>自旋锁<strong>不可递归</strong>，自旋处于等待中造成死锁；</li>
+<li>中断处理程序中，<strong>获取自旋锁前要先禁止本地中断</strong>，中断会打断正持有自旋锁的任务，中断处理程序有可能争用已经被持有的自旋锁，造成死锁。</li>
+</ul>
+<p><strong>读写自旋锁：将锁的用途直接分为读取和写入。</strong></p>
+<ul>
+<li>多个读者能同时持有读锁</li>
+<li>没有读者时只能有一个写者能持有写锁</li>
+</ul>
+<h4 id="信号量">信号量</h4>
+<p>信号量是<strong>睡眠锁</strong>。如果有一个任务试图获取信号量时，有一下两种情况：
+1）<strong>信号量未被占用</strong>：该任务获得成功信号量；
+2）<strong>信号量已被占用</strong>：信号量将任任务推进等待队列，让其睡眠，处理器继续工作；当信号量被释放后，唤醒信号量队列中的任务，并获取该信号量。</p>
+<p>信号量适用于长时间的持有。持有信号量的进程可以睡眠，但是不能试图获自旋锁。</p>
+<p>读写信号量，与读写自旋锁类似</p>
+<h4 id="自旋锁与信号量的对比">自旋锁与信号量的对比</h4>
+<p>自旋锁与信号量对比如下：</p>
+<table>
+<thead>
+<tr class="header">
+<th>需求</th>
+<th>建议使用锁</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>低开销加锁</td>
+<td>优先使用自旋锁</td>
+</tr>
+<tr class="even">
+<td>短期锁定</td>
+<td>优先使用自旋锁</td>
+</tr>
+<tr class="odd">
+<td>长期锁定</td>
+<td>优先使用信号量</td>
+</tr>
+<tr class="even">
+<td>中断上下文加锁</td>
+<td>自旋锁</td>
+</tr>
+<tr class="odd">
+<td>持有锁需要睡眠</td>
+<td>使用信号量</td>
+</tr>
+</tbody>
+</table>
+<h4 id="完成变量">完成变量</h4>
+<p>信号量的简易方法。
+一个任务在等待完成变量，另一个进程在进行某种工作。当一个进程完成工作后，使用完成变量去唤醒在等待的任务，使两个任务得以同步。</p>
+<h4 id="bkl-大内核锁">BKL: 大内核锁</h4>
+<p>大内核锁本质上是一个<strong>全局自旋锁</strong>，但是它又不同于自旋锁，自旋锁是不可以递归获得锁的，因为那样会导致死锁。<strong>但大内核锁可以递归获得锁。大内核锁用于保护整个内核，而自旋锁用于保护非常特定的某一共享资源</strong>。同时持有BLK是也可睡眠。</p>
+<p><strong>整个内核只有一个大内核锁</strong>，其实不难理解，内核只有一个，而大内核锁是保护整个内核的，当然有且只有一个就足够了。</p>
+<p>大内核锁是历史遗留，内核中用的非常少，一般保持该锁的时间较长，因此不提倡使用它。</p>
+<h4 id="顺序锁">顺序锁</h4>
+<p>内核2.6引入，类似于读者自旋锁，但是为写者赋予了较高的优先级，<strong>写者优先，读者正在读时允许写者写</strong>。</p>
+<h4 id="禁止抢占">禁止抢占</h4>
+<p>内核是可抢占的，被抢占的进程可能处于临界区。</p>
+<p>解决方法：使用自旋锁作为非抢占区的标志，因为一个自旋锁被持有，内核便不能进行抢占。</p>
+<h4 id="顺序和屏障">顺序和屏障</h4>
+<p>当处理器和硬件交互时，时常需要<strong>确保一个给定的读操作发生在其他读或写操作之前</strong>。在多处理器上，可能需要按写数据的顺序读数据。但是<strong>编译器和处理器为了提高效率，可能对读和写重新排序</strong>。但是，处理<strong>器提供了机器指令来确保顺序</strong>，指示编译器不要对给定点周围的指令序列进行重新排序。这些确保顺序的指令称为<strong>屏障(barrier)</strong>。</p>
+<p><code>rmb()</code>方法提供了一个“读”内存屏障，也就是说，<strong>在rmb()之前的读操作不会被重新排在该调用之后，同理，在rmb()之后的读操作不会被重新排在该调用之前。</strong>
+<code>wmb()</code>方法提供了一个“写”内存屏障，这个函数的功能和rmb()类似，区别仅仅是它是针对写而非读。</p>
+<h4 id="总结">总结</h4>
+<ul>
+<li>保证同步的最简单的方法, 原子操作</li>
+<li>自旋锁, 最常用的方式，轻量级，只能有一个保持者，忙等</li>
+<li>信号量, 睡眠锁，适用稍少</li>
+</ul>
+<h2 id="第十二章-内存管理">第十二章 内存管理</h2>
+<h3 id="连续分配">连续分配</h3>
+<p>连续分配是指为一个用户程序分配连续的内存空间。连续分配有单一连续存储管理和分区式储管理两种方式。</p>
+<h4 id="单一连续存储管理">单一连续存储管理</h4>
+<p>在这种管理方式中，<strong>内存被分为两个区域：系统区和用户区</strong>。应用程序装入到用户区，可使用用户区全部空间。其特点是，最简单，适用于单用户、单任务的操作系统。CP／M和
+DOS
+2．0以下就是采用此种方式。这种方式的最大优点就是易于管理。但也存在着一些问题和不足之处，例如对要求内存空间少的程序，造成内存浪费；程序全部装入，使得很少使用的程序部分也占用—定数量的内存。
+伙伴系统</p>
+<h4 id="分区式存储管理">分区式存储管理</h4>
+<p>为了支持多道程序系统和分时系统，支持多个程序并发执行，引入了分区式存储管理。分区式存储管理是<strong>把内存分为一些大小相等或不等的分区，操作系统占用其中一个分区，其余的分区由应用程序使用，每个应用程序占用一个或几个分区。</strong>分区式存储管理虽然可以支持并发，但难以进行内存分区的共享。</p>
+<p>分区式存储管理引人了两个新的问题：内碎片和外碎片。内碎片是占用分区内未被利用的空间，外碎片是占用分区之间难以利用的空闲分区(通常是小空闲分区)。</p>
+<p>为实现分区式存储管理，操作系统应维护的数据结构为<strong>分区表</strong>或分区链表。表中各表项一般包括每个分区的起始地址、大小及状态(是否已分配)。分配方式有固定分区和动态分区。</p>
+<p><strong>固定分区(nxedpartitioning)</strong></p>
+<p>固定式分区的特点是<strong>把内存划分为若干个固定大小的连续分区</strong>。分区大小可以相等：这种作法只适合于多个相同程序的并发执行(处理多个类型相同的对象)。分区大小也可以不等：有多个小分区、适量的中等分区以及少量的大分区。根据程序的大小，分配当前空闲的、适当大小的分区。</p>
+<p><strong>动态分区(dynamic partitioning)</strong></p>
+<p>动态分区的特点是动态创建分区：<strong>在装入程序时按其初始要求分配，或在其执行过程中通过系统调用进行分配或改变分区大小</strong>。</p>
+<p>与固定分区相比较其优点是：没有内碎片。但它却引入了另一种碎片——外碎片。动态分区的分区分配就是寻找某个空闲分区，其大小需大于或等于程序的要求。若是大于要求，则将该分区分割成两个分区，其中一个分区为要求的大小并标记为“占用”，而另一个分区为余下部分并标记为“空闲”。分区分配的先后次序通常是从内存低端到高端。动态分区的分区释放过程中有一个要注意的问题是，将相邻的空闲分区合并成一个大的空闲分区。</p>
+<h4 id="伙伴系统">伙伴系统</h4>
+<p>固定分区和动态分区方式都有不足之处。<strong>固定分区方式限制了活动进程的数目</strong>，当进程大小与空闲分区大小不匹配时，内存空间利用率很低。<strong>动态分区方式算法复杂，回收空闲分区时需要进行分区合并等，系统开销较大</strong>。伙伴系统方式是对以上两种内存方式的一种折衷方案。</p>
+<p><strong>伙伴系统规定，无论已分配分区或空闲分区，其大小均为 2 的 k
+次幂，k 为整数， l≤k≤m，其中</strong>：</p>
+<p>2^1 表示分配的最小分区的大小， 2^m 表示分配的最大分区的大小，</p>
+<p>假设系统的可利用空间容量为2^m个字， 则系统开始运行时，
+整个内存区是一个大小为2^m的空闲分区。在系统运行过中，
+由于不断的划分，可能会形成若干个不连续的空闲分区，将这些空闲分区根据分区的大小进行分类，<strong>对于每一类具有相同大小的所有空闲分区，单独设立一个空闲分区双向链表。这样，不同大小的空闲分区形成了k(0≤k≤m)个空闲分区链表</strong>。</p>
+<p>当需要为进程分配一个长度为n 的存储空间时:</p>
+<p>首先计算一个i 值，使
+<code>2^(i－1) &lt; n ≤ 2^i</code>，然后在空闲分区大小为2<sup>i的空闲分区链表中查找。若找到，即把该空闲分区分配给进程。否则，表明长度为2</sup>i的空闲分区已经耗尽，则在分区大小为2<sup>(i＋1)的空闲分区链表中寻找。若存在2</sup>(i＋1)的一个空闲分区，则把该空闲分区分为相等的两个分区，这两个分区称为一对伙伴，其中的一个分区用于配，而把另一个加入分区大小为2<sup>i的空闲分区链表中。若大小为2</sup>(i＋1)的空闲分区也不存在，则需要查找大小为2^(i＋2)的空闲分区，
+若找到则对其进行两次分割，以此类推。</p>
+<p>在最坏的情况下，可能需要对 2^k的空闲分区进行 k
+次分割才能得到所需分区。合并空闲内存的过程与分割的过程类似。</p>
+<h3 id="离散分配">离散分配</h3>
+<p>前面的几种存储管理方法中，为进程分配的空间是连续的，使用的地址都是物理地址。如果允许<strong>将一个进程分散到许多不连续的空间，就可以避免内存紧缩(将各个占用分区向内存一端移动，然后将各个空闲分区合并成为一个空闲分区)，减少碎片。基于这一思想，通过引入进程的逻辑地址，把进程地址空间与实际存储空间分离，增加存储管理的灵活性。</strong>地址空间和存储空间两个基本概念的定义如下：</p>
+<p><strong>地址空间</strong>：将源程序经过编译后得到的<strong>目标程序，存在于它所限定的地址范围内</strong>，这个范围称为地址空间。<strong>地址空间是逻辑地址的集合</strong>。</p>
+<p><strong>存储空间</strong>：指主存中一系列存储信息的<strong>物理单元的集合</strong>，这些单元的编号称为物理地址存储空间是物理地址的集合。</p>
+<p>根据分配时所采用的基本单位不同，可将离散分配的管理方式分为以下三种：
+<strong>页式存储管理、段式存储管理和段页式存储管理</strong>。其中段页式存储管理是前两种结合的产物。</p>
+<h4 id="页式管理">页式管理</h4>
+<p>将程序的<strong>逻辑地址空间划分为固定大小的页(page)，而物理内存划分为同样大小的页框(page
+frame)</strong>。程序加载时，可将任意一页放人内存中任意一个页框，这些页框不必连续，从而实现了离散分配。</p>
+<p>该方法需要CPU的硬件支持，来实现<strong>逻辑地址和物理地址之间的映射</strong>。在页式存储管理方式中<strong>地址结构由两部构成，前一部分是页号，后一部分为页内地址w（位移量）</strong>.</p>
+<p>页式管理方式的<strong>优点</strong>是：</p>
+<p>1）没有外碎片，每个内碎片不超过页的大小 2）一个程序不必连续存放。
+3）便于改变程序占用空间的大小(主要指随着程序运行，动态生成的数据增多，所要求的地址空间相应增长)。</p>
+<p><strong>缺点</strong>是：要求程序全部装入内存，没有足够的内存，程序就不能执行。</p>
+<p>每个进程有一个页表，用于完成逻辑页号(本进程的地址空间)到物理页面号(实际内存空间，也叫块号)的映射，如下图所示</p>
+<p><img data-src="https://wulc.me/imgs/image_1b45qltgkeb61kjs1brv18n717vo9.png" /></p>
+<h4 id="段式管理">段式管理</h4>
+<p>在段式存储管理中，<strong>将程序的地址空间划分为若干个段(segment)</strong>，为每个段分配一个连续的分区，而进程中的各个段可以不连续地存放在内存的不同分区中。程序加载时，操作系统为所有段分配其所需内存，这些段不必连续，物理内存的管理采用动态分区的管理方法。</p>
+<p>段式存储管理也需要硬件支持，实现逻辑地址到物理地址的映射。</p>
+<p>程序通过分段划分为多个模块，如代码段、数据段、共享段，<strong>这样做的优点是：可以分别编写和编译源程序的一个文件，并且可以针对不同类型的段采取不同的保护，也可以按段为单位来进行共享。</strong></p>
+<p>段式存储管理的优点是：<strong>没有内碎片，外碎片可以通过内存紧缩来消除</strong>；便于实现内存共享。缺点与页式存储管理的缺点相同，进程必须全部装入内存。</p>
+<p>类似页式管理的进程页表，段式管理中每个进程也有一张<strong>进程段表</strong>。</p>
+<h4 id="页式管理-vs-段式管理">页式管理 vs 段式管理</h4>
+<p>页式和段式系统有许多相似之处。比如，<strong>两者都采用离散分配方式，且都通过地址映射机构来实现地址变换</strong>。但概念上两者也有很多区别，主要表现在：</p>
+<p>1)、需求：是信息的物理单位，<strong>分页是为了实现离散分配方式，以减少内存的碎片，提高内存的利用率</strong>。或者说，分页仅仅是由于系统管理的需要，而不是用户的需要。段是信息的逻辑单位，它含有一组其意义相对完整的信息。<strong>分段的目的是为了更好地满足用户的需要。因为一条指令或一个操作数可能会跨越两个页的分界处，而不会跨越两个段的分界处。</strong></p>
+<p>2)、大小：<strong>页大小固定且由系统决定</strong>，把逻辑地址划分为页号和页内地址两部分，是由机器硬件实现的。<strong>段的长度不固定，且决定于用户所编写的程序</strong>，通常由编译系统在对源程序进行编译时根据信息的性质来划分。</p>
+<p>3)、逻辑地址表示：<strong>页式系统地址空间是一维的</strong>，即单一的线性地址空间，程序员只需利用一个标识符，即可表示一个地址。<strong>分段的作业地址空间是二维的</strong>，程序员在标识一个地址时，既需给出段名，又需给出段内地址。</p>
+<p>4)、段比页大，因而段表比页表短，可以缩短查找时间，提高访问速度。</p>
+<h3 id="linux-中的内存管理">linux 中的内存管理</h3>
+<h4 id="页和区">页和区</h4>
+<p>linux
+采用上面提到的页式管理方法。MMU以页为单位管理内存。对于32位，每个页的大小为
+4K；而对于64位而言每个页的大小为8K。内核用<code>struct page</code>结构体表示每个物理页,它们组织在<code>mem_map</code>数组中</p>
+<p>内核把页划分在不同的区(zone),总共3个区，具体如下：</p>
+<table>
+<thead>
+<tr class="header">
+<th>区</th>
+<th>描述</th>
+<th>物理内存（MB）</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ZONE_DMA</td>
+<td>DMA使用的页</td>
+<td>&lt;16</td>
+</tr>
+<tr class="even">
+<td>ZONE_NORMAL</td>
+<td>可正常寻址的页</td>
+<td>16 ~896</td>
+</tr>
+<tr class="odd">
+<td>ZONE_HIGHMEM</td>
+<td>动态映射的页</td>
+<td>&gt;896</td>
+</tr>
+</tbody>
+</table>
+<p>执行DMA操作的内存必须从<code>ZONE_DMA</code>区分配
+一般内存，既可从<code>ZONE_DMA</code>，也可从<code>ZONE_NORMAL</code>分配，但不能同时从两个区分配</p>
+<h4 id="内存分配和释放">内存分配和释放</h4>
+<p><strong>页的分配与释放</strong>：页的分配通过
+<code>alloc_pages</code> 函数实现，而释放则通过<code>__free_pages</code>
+实现</p>
+<p><strong>字节的分配与释放</strong>：字节的分配可通过<code>kmalloc</code>，<code>vmalloc</code>实现</p>
+<p>1）<code>kmalloc</code> <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">void * kmalloc(size_t size, gfp_t flags)</span><br></pre></td></tr></table></figure>
+该函数返回的是一个指向内存块的指针，其内存块大小至少为size,所<strong>分配的内存在物理内存中连续且保持原有的数据</strong>(不清零)，释放时通过<code>kfree</code>释放</p>
+<p>其中部分flags取值说明：</p>
+<p><code>GFP_USER</code>： 用于用户空间的分配内存，可能休眠；
+<code>GFP_KERNEL</code>：用于内核空间的内存分配，可能休眠；
+<code>GFP_ATOMIC</code>：用于原子性的内存分配，不会休眠；典型原子性场景有中断处理程序，软中断，tasklet等</p>
+<p>2）<code>vmalloc</code> <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">void * vmalloc(unsigned long size)</span><br></pre></td></tr></table></figure>
+该函数返回的是一个指向内存块的指针，其内存块大小至少为size,所分配的内存是<strong>逻辑上连续的，物理上可能连续也可能不连续。</strong></p>
+<p>与kmalloc不同，该函数没有flags,默认是可以休眠的。</p>
+<p><strong>Slab分配器</strong></p>
+<p>slab分配器是一种策略，用于缓存内核对象，其主要工作是<strong>针对一些经常分配并释放的对象</strong>，如进程描述符等，这些对象的大小一般比较小，<strong>如果直接采用伙伴系统来进行分配和释放，不仅会造成大量的内碎片，而且处理速度也太慢</strong>。而slab分配器是基于对象进行管理的，相同类型的对象归为一类(如进程描述符就是一类)，每当要申请这样一个对象，slab分配器就从存储某一类对象的高速缓存组中分配一个这样大小的单元出去，而当要释放时，将其重新保存在该列表中，而不是直接返回给伙伴系统。slab分配对象时，会使用最近释放的对象内存块，因此其驻留在CPU高速缓存的概率较高。</p>
+<p>其中高速缓存(cache),slab 和 对象的关系如下： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Cache: 存储某种类型的对象.</span><br><span class="line">Slab: 包含有缓存的对象（由cache划分出来）</span><br><span class="line">Object: 经常使用的数据结构，例如inode</span><br></pre></td></tr></table></figure> <img data-src="https://wulc.me/imgs/image_1b465ihrl16um2136e1l4lnvom.png" /></p>
+<p>slab有三种状态 <strong>Full</strong>：没有自由的对象
+<strong>Partial</strong>：部分自由，先从这里分配(<strong>减少了页的分配和释放</strong>)，再找empty的，如果两者都找不到，创建一个新的slab
+<strong>Empty</strong>：含有未分配的对象</p>
+<p><strong>选择哪种方法分配</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th>频繁分配和释放</th>
+<th>Slab分配器.</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>需要以页为单位分配内存</td>
+<td><code>alloc_pages()</code></td>
+</tr>
+<tr class="even">
+<td>从高端内存分配</td>
+<td><code>alloc_pages()</code></td>
+</tr>
+<tr class="odd">
+<td>默认</td>
+<td><code>kmalloc()</code></td>
+</tr>
+<tr class="even">
+<td>不需要连续的页</td>
+<td><code>vmalloc()</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="第十五章-进程地址空间">第十五章 进程地址空间</h2>
+<h3 id="基本概念-4">基本概念</h3>
+<p>进程地址空间指进程能够使用的地址范围，每一个进程看到的是一个不同的线性地址，一个进程使用的地址与另一个进程使用的地址无关。内核会通过增加或删除线性地址中的区域，动态修改进程地址空间。</p>
+<p>进程地址空间由进程可寻址的虚拟内存组成，<strong>linux采取的虚拟内存技术使得所有进程以虚拟方式共享内存</strong>。对于某个进程，它好像可以访问所以物理内存，而且它的地址空间可以远远大于物理内存.</p>
+<p>进程只能访问有效区域中的内存地址。<strong>如果进程访问的内存地址不再有效内存区域，或者以非法的方式访问有效区域，内核会杀掉这个进程并输出一个“<code>Segmentation Fault</code>”
+信息</strong></p>
+<h3 id="内存描述符">内存描述符</h3>
+<p>内核用一个称之为内存描述符的数据结构（<code>mm_struct</code>）表示一个进程的地址空间。<code>mm_struct</code>部分组元素如下：</p>
+<ul>
+<li><code>mmap</code>和<code>mm_rb</code>字段是不同的数据结构，但含有同样的东西，即地址空间中的所有内存区域</li>
+<li><code>mm_users</code> 字段表示使用这个地址空间的进程数目</li>
+<li><code>mmlist</code> 链表将所有<code>mm_struct</code>连接在一起</li>
+</ul>
+<p><strong>内存描述符的分配与释放</strong></p>
+<p><code>copy_mm()</code> 函数用于在
+<code>fork()</code>时复制父进程的内存描述符（使用<code>vfork()</code>的时候进程与子进程共享地址空间），当与指定的地址空间相关联的进程结束时，会调用<code>exit_mm()</code>
+函数</p>
+<h3 id="进程的内存区域">进程的内存区域</h3>
+<p>进程的地址空间可划分为不同的区域，应用在不同的场景，如下就是常见的几种内存区域：</p>
+<p>1）<strong>文本段（<code>text section</code>）</strong>，存放可执行文件的操作指令，也就是可执行文件的代码的内存映像，包含一些字符串、常量和只读数据
+2）数据段（<code>data section</code>），数据段用来存放可执行文件中已初始化全局变量，也就是存放程序<strong>静态变量和全局变量</strong>
+3）<code>bss section</code>，<strong>未初始化全局变量</strong>的内存映像
+4）堆（<code>heap</code>），堆是用于存放进程运行中被<strong>动态分配的内存区域，它的大小并不固定，可动态扩张或缩减。</strong>当进程调用<code>malloc</code>等函数分配内存时，新分配的内存就被动态添加到堆上（堆被扩张）；当利用<code>free</code>等函数释放内存时，被释放的内存从堆中被剔除（堆被缩减）
+5）栈（<code>stack</code>），栈是用户存放程序<strong>临时创建的局部变量</strong>，除此以外，在函数被调用时，其参数也会被压入发起调用的进程栈中</p>
+<p>每个内存区域均由以下参数刻画 1）起始地址 2）长度 3）访问权利</p>
+<p>内存区域由内存区域对象表示，存于<code>vm_area_struct</code>
+结构，也叫VMA，描述给定的地址空间上的一个独立的内存区域。VMA
+结构能够表示上面提到的多种类型的内存区域。</p>
+<p><code>task_struct</code>，<code>mm_struct,</code>
+<code>vm_area_struct</code>的关系如下所示</p>
+<p><img data-src="https://wulc.me/imgs/image_1b46965a11log1kgsapita91bdd1g.png" /></p>
+<p>VMA中还有VMA标志，用于指定内存区域中页的行为或信息，各标志及其含义如下
+<code>VM_READ</code>：页可读 <code>VM_WRITE</code>：页可写
+<code>VM_EXEC</code>：页可执行 对于代码:
+可被映射为<code>VM_READ</code>和<code>VM_EXEC</code>，但不能映射为<code>VM_WRITE</code>
+对于数据：可被映射为<code>VM_READ</code>和<code>VM_WRITE</code>，但不能映射为<code>VM_EXEC</code></p>
+<h3 id="linux的分页">Linux的分页</h3>
+<p>下面先以32位的系统为例讲述原始的分页</p>
+<p>每个地址可以通过一个32位的整数描述，其中整数的32为分配如下</p>
+<p><img data-src="https://wulc.me/imgs/image_1b46af1oj1h4e1in01q605u11dd1t.png" /></p>
+<ul>
+<li>页目录包含1024（2^10）个页表</li>
+<li>页表描述1024（2^10）个页</li>
+<li>每页大小 4 KB（2^12） (PAGE_SIZE)</li>
+<li>1024 * 1204 * 4KB = 4GB</li>
+<li>CR3 (在task_struct的TSS)含有页目录的物理基地址</li>
+</ul>
+<p>寻址时利用线性地址的低22<sub>31位从页目录找到对应的页表，然后利用线性地址的低12</sub>21为从页表找到对应的页，最后用低12位从页中找到最终地址。过程如下所示：</p>
+<p><img data-src="https://wulc.me/imgs/image_1b46ahh71jfvtu1m2e1bolunm2a.png" /></p>
+<p>上面是原始的两级分页，但是Linux使用<strong>3级分页</strong>，
+顶层页表是<code>page global directory (PGD)</code>，二级页表是<code>page middle directory (PMD)</code>，最后一级是
+<code>PTE</code>，整体如下所示</p>
+<p><img data-src="https://wulc.me/imgs/image_1b46au0e31vsutbp75v1d341omv34.png" /></p>
+<p>与task_struct 等关系如下图所示 <img data-src="https://wulc.me/imgs/image_1b46b337k3lg1c431bik457do3h.png" /></p>
+<h2 id="第十三章-文件系统">第十三章 文件系统</h2>
+<h3 id="ext2-文件系统">ext2 文件系统</h3>
+<p>ext2于1993 年创建，是ext的改进版本，具有如下的特点：</p>
+<ul>
+<li>支持UNIX所有标准的文件特征</li>
+<li>可管理大硬盘，一个分区的容量最大可达4TB</li>
+<li>它使用变长的目录项
+，支持255个字符的长文件名，可扩展到1012个字符</li>
+<li><strong>使用位图来管理数据块和节点的使用情况</strong></li>
+<li>使用了块组的概念，从而使数据的读和写更快，更有效，也使系统变得更安全可靠</li>
+</ul>
+<h4 id="文件系统结构">文件系统结构</h4>
+<p>整个ext2文件系统结构如下所示：</p>
+<p><img data-src="https://wulc.me/imgs/image_1b46bfka6aej1ats115nfv179h4b.png" /></p>
+<p>文件系统中存储的最小单位是块（
+Block），一个块究竟多大是在格式化时确定的，例如 <code>mke2fs</code>的
+<code>-b</code>选项可以设定块大小为 1024、 2048或
+4096字节。而上图中引导块（Boot Block）的大小是确定的，就是
+1KB，引导块是由
+PC标准规定的，用来<strong>存储磁盘分区信息和启动信息</strong>，任何文件系统都不能使用启动块。</p>
+<p>启动块之后才是
+ext2文件系统的开始，ext2将磁盘分区看成是<strong>由块组组成，每个块组包含一个或多个块</strong>。每个块组大小相同，顺序存放，且每个块组都由以下部分组成。</p>
+<p><strong>1）超级块(Super
+Block)</strong>：描述<strong>整个分区的文件系统信息</strong>，例如块大小、文件系统版本号、上次
+<code>mount</code>的时间等等。超级块在每个块组的开头都有一份拷贝。
+<strong>2）组描述符(Group Descriptor
+Table)</strong>：由很多块组描述符组成，<em>整个分区分成多少个块组就对应有多少个块组描述符</em>。每个块组描述符存储<strong>一个块组的描述信息</strong>，例如在这个块组中从哪里开始是
+inode 表，从哪里开始是数据块，空闲的 inode
+和数据块还有多少个等等。和超级块类似，块组描述符表在每个块组的开头也都有一份拷贝，这些信息是非常重要的，<strong>一旦超级块意外损坏就会丢失整个分区的数据，一旦块组描述符意外损坏就会丢失整个块组的数据，因此它们都有多份拷贝。</strong></p>
+<p><strong>3）块位图(Block
+Bitmap)</strong>。块位图就是用来<strong>描述整个块组中哪些块是空闲可用的</strong>，它本身占一个块，其中的每个
+bit代表本块组中的一个块，这个 bit为 1表示该块已用，这个 bit为
+0表示该块空闲可用。</p>
+<p>与此相联系的另一个问题是：在<strong>格式化一个分区时究竟会划出多少个块组</strong>呢？主要的限制在于块位图本身必须只占一个块。用
+mke2fs格式化时默认块大小是 1024字节，可以用
+-b参数指定块大小，现在设块大小指定为 b字节，那么一个块可以有 8b个
+bit，这样大小的一个块位图就可以表示
+8b个块的占用情况，因此一个块组最多可以有 8b个块，如果整个分区有
+s个块，那么就可以有 s/(8b)个块组。格式化时可以用
+-g参数指定一个块组有多少个块，但是通常不需要手动指定，
+mke2fs工具会计算出最优的数值。</p>
+<p><strong>4）索引节点位图(inode
+Bitmap)</strong>。和块位图类似，本身占一个块，其中每个 bit表示一个
+inode是否空闲可用。</p>
+<p><strong>5）索引接点表(inode
+table)</strong>。一个文件除了数据需要存储之外，<strong>一些描述信息也需要存储</strong>，例如文件类型（常规、目录、符号链接等），权限，文件大小，创建/
+修改/访问时间等，也就是
+<code>ls -l</code>命令看到的那些信息，这些信息存在
+inode中而不是数据块中。<strong>每个文件都有一个 inode，一个块组中的所有
+inode组成了 inode表。</strong></p>
+<p>inode表占多少个块在格式化时就要决定并写入块组描述符中，
+mke2fs格式化工具的默认策略是<strong>一个块组有多少个 8KB 就分配多少个
+inode</strong>。由于数据块占了整个块组的绝大部分，也可以近似认为数据块有多少个
+8KB就分配多少个 inode，换句话说，如果平均每个文件的大小是
+8KB，当分区存满的时候
+inode表会得到比较充分的利用，数据块也不浪费。<strong>如果这个分区存的都是很大的文件（比如电影），则数据块用完的时候
+inode会有一些浪费，如果这个分区存的都是很小的文件（比如源代码），则有可能数据块还没用完
+inode就已经用完了，数据块可能有很大的浪费。</strong>如果用户在格式化时能够对这个分区以后要存储的文件大小做一个预测，也可以用
+mke2fs的 -i 参数手动指定每多少个字节分配一个 inode。</p>
+<p><strong>6）数据块(Data
+Block)</strong>。数据块用来存储文件的具体内容，在linux中文件类型有以下几种</p>
+<ul>
+<li>普通文件</li>
+<li>目录</li>
+<li>符号连接</li>
+<li>字符设备特殊文件</li>
+<li>块设备特殊文件</li>
+<li>命名管道</li>
+<li>Socket</li>
+</ul>
+<p>于普通文件，文件的数据存储在数据块中。</p>
+<p>对于目录，该<strong>目录下的所有文件名及其inode存储在数据块</strong>中，除文件名之外，
+<code>ls -l</code>命令看到的其它信息都保存在该文件的inode中。注意这个概念：目录也是一种文件，是一种特殊类型的文件。</p>
+<p>对于符号链接，如果<strong>目标路径名较短则直接保存在
+inode中以便更快地查找，如果目标路径名较长则分配一个数据块来保存</strong>。</p>
+<p>设备文件、FIFO和socket
+等特殊文件<strong>没有数据块</strong>，即文件大小为0，设备文件的主设备号和次设备号保存在
+inode中。</p>
+<h4 id="文件查找">文件查找</h4>
+<p>文件查找的流程：
+1）从当前进程的根目录项中（<code>current→ fs → root</code>）找到它的<strong>根目录的inode编号</strong>
+2）根据该编号和超级块的<code>s_inodes_per_group</code>，计算出该<strong>inode所在的块组</strong>
+3）查找该块组中的<strong>inode表</strong>，找到描述根目录文件的inode
+4）根据该inode的描述，读取其数据块（如果是文件）或得到目录项列表（如果是目录，然后返回步骤（2）直到读到最终的文件）</p>
+<h4 id="ext2的内存数据结构">ext2的内存数据结构</h4>
+<p>为提高效率，尽量减少访问磁盘次数，在安装Ext2分区时，内存中存放着部分磁盘数据结构，并使用缓存技术保持磁盘数据结构更新。</p>
+<p>缓存模式共有4种</p>
+<ul>
+<li><code>Always cached</code>：一直缓存</li>
+<li><code>Fixed limit</code>：固定数量的数据结构保存在缓存中</li>
+<li><code>Dynamic</code>：只要索引节点或块使用，相关数据就保存在缓存中</li>
+<li><code>Never</code>：任何高速缓存中都不保存</li>
+</ul>
+<p>ext2 中的数据结构及其缓存情况如下所示</p>
+<p><img data-src="https://wulc.me/imgs/image_1b46f36m11v5i16h21j101pkl2he4o.png" /></p>
+<h4 id="文件系统的创建">文件系统的创建</h4>
+<p>创建Ext2文件系统实际上就是建立Ext2文件系统<strong>的磁盘数据结构与内存数据结构</strong>，在linux中通过mke2fs程序实现，这个程序实际上执行了以下两个步骤：
+1）格式化 2）创建文件系统</p>
+<h4 id="ext3与ext4">ext3与ext4</h4>
+<p>ext2 文件系统的下一个版本是 ext3 文件系统，它和 ext2
+文件系统在硬盘布局上是一样的，其差别仅仅是 ext3
+文件系统在硬盘上多出了一个特殊的
+inode（可以理解为一个特殊文件），用来<strong>记录文件系统的日志</strong>，也即所谓的
+journal。Ext4 支持更大的文件和无限量的子目录。</p>
+<h3 id="虚拟文件系统vfs">虚拟文件系统（VFS）</h3>
+<h4 id="基本概念-5">基本概念</h4>
+<p>为支持各种文件系统，Linux内核在用户进程（或C标准库）和具体的文件系统之间引入了一个抽象层，<strong>使得文件、目录、读写访问等概念成为抽象层的概念，因此各种文件系统看起来用起来都一样</strong>，该抽象层称之为“虚拟文件系统（VFS）”。类似于类和对象的关系，其中VFS是类，各种文件系统是具体的对象。</p>
+<p>VFS一方面提供一种操作文件、目录及其他对象的统一方法，使用户进程不必知道文件系统的细节。另一方面，VFS提供的各种方法必须和具体文件系统的实现达成一种妥协，毕竟对几十种文件系统类型进行统一管理并不是件容易的事。
+为此，VFS中定义了一个通用文件模型，以支持文件系统中对象（或文件）的统一视图。</p>
+<p>Linux对Ext文件系统族的支持是最好的，因为<strong>VFS抽象层的组织与Ext文件系统类似，这样在处理Ext文件系统时可以提高性能，因为在Ext和VFS之间转换几乎不会损失时间。</strong></p>
+<p><strong><code>task_struct</code> 结构中 VFS 相关的字段</strong></p>
+<ul>
+<li>fs – 包括root, pwd,指向<code>dentrie</code>的指针</li>
+<li>files – <strong>文件描述符矩阵</strong> fd[
+],每一个元素指向打开文件对象的指针</li>
+</ul>
+<h4 id="主要的数据结构">主要的数据结构</h4>
+<p><strong>1）超级块</strong> 对于每个已经挂载的文件系统，VFS
+在内核中都生成一个超级块结构（<code>struct super_block</code>实例），超级块代表一个已经安装的文件系统，用于存储文件系统的控制信息，例如文件系统类型、大小、所有inode对象、脏的inode链表等。</p>
+<p>超级块相关的文件系统操作为读、写、清除和删除inode。</p>
+<p><strong>2）inode</strong>
+VFS处理文件的关键是inode，每个<strong>文件或目录</strong>都有且只有一个对应的inode（<code>struct inode</code>实例），其中<strong>包含元数据(权限，拥有者，时间信息，大小，连接计数
+)和指向文件数据的指针</strong>，但inode并不包含文件名。系统中所有的inode都有一个<strong>特定的编号，用于唯一的标识各个inode</strong>。文件名可以随时更改，但是索引节点对文件是唯一的，并且随文件的存在而存在。</p>
+<p>inode和super
+block在存储介质中都是<strong>有实际映</strong>射的，即存储介质中也存在超级块和inode。但是<strong>由于不同类型的文件系统差异，超级块和inode的结构不尽相同</strong>。而<strong>VFS的作用就是通过具体的设备驱动获得某个文件系统中的超级块和inode节点，然后将其中的信息填充到内核中的<code>struct super_block</code>和<code>struct inode</code>中，以此来试图对不同文件系统进行统一管理。</strong></p>
+<p>inode的相关操作包括： <code>create</code> – 创建一个普通文件
+<code>link/unlink/rename</code> – 增加、删除、修改目录内容
+<code>symlink, readlink, follow_link</code> – 软连接操作
+<code>mkdir/rmdir</code> – 创建目录文件 <code>mknod</code> –
+创建设备文件 <code>truncate</code> – 修改文件大小
+<code>permission</code> – 检查访问权限</p>
+<p><strong>3）dentry</strong>
+VFS把目录当做文件对待，为了方便路径查找，VFS引入了目录项的概念，每个目录项代表路径中的一个特定部分如(<code>/bin/vi</code>中包含了<code>/</code>,<code>bin</code>和<code>vi</code>三个目录项目对象)。目录项对象通过
+dentry 结构体表示。<strong>dentry 结构的主要用途就是建立文件名和相关的
+inode 之间的联系。</strong></p>
+<p>目录项有三种有效状态</p>
+<ul>
+<li>used:表示该目录项对应一个有效的索引节点，且该对象正在被使用</li>
+<li>unused:
+表示该目录项对应一个有效的索引节点，但是该对象没有被使用</li>
+<li>negative:表示该目录项没有对应的有效索引节点</li>
+</ul>
+<p>由于块设备速度较慢（于内存而言），可能需要很长时间才能找到与一个文件名关联的inode。<strong>Linux使用目录项缓存来快速访问此前的查找操作结果。</strong>在VFS读取了一个目录或文件的数据之后，则创建一个
+dentry
+实例（<code>struct dentry</code>），以缓存找到的数据。Dentry缓存通过哈希表访问，因此时间较快。</p>
+<p><strong>4）打开的文件对象</strong>
+文件对象主要用于关联文件和进程，在打开文件的时候创建，主要描述一个打开文件的相关信息，包括当前的读写指针等，通过<code>struct file</code>结构体表示。</p>
+<p>在<code>task_struct</code>中有一个数组，数组中的每一个元素都是指向一个打开的文件对象，这个数组就称为<strong>文件描述符</strong>数组。</p>
+<p>上面提到的数据结构之间的关系如下所示 <img data-src="https://wulc.me/imgs/image_1b47qm20g168d1fg6t5fcbpu0o9.png" /></p>
+<p><strong>共享数据结构的情况：</strong></p>
+<ul>
+<li>在不同的目录上挂载同一个文件系统 ：<strong>共享超级块</strong></li>
+<li>通过不同的硬连接打开同一个文件：<strong>共享 inodes</strong></li>
+<li>打开同一个文件两次：<strong>共享 dentries</strong></li>
+<li>调用 dup()：<strong>共享打开文件对象</strong>，例如:
+2&gt;&amp;1</li>
+</ul>
+<p>参考： <a
+target="_blank" rel="noopener" href="http://alick.blog.51cto.com/10786574/1786269">task_struct结构体字段介绍--Linux中的PCB</a>
+<a
+target="_blank" rel="noopener" href="http://blog.csdn.net/tianlesoftware/article/details/6457487">Linux
+进程状态说明</a> <a
+target="_blank" rel="noopener" href="https://www.ibm.com/developerworks/cn/linux/kernel/l-thread/">Linux
+线程实现机制分析</a> <a
+target="_blank" rel="noopener" href="http://www.cnblogs.com/wuchanming/p/4495479.html">Linux进程管理——fork()和写时复制</a>
+<a
+target="_blank" rel="noopener" href="http://blog.csdn.net/cheyuxuan/article/details/9100607">linux中断处理的上半部和下半部</a>
+<a
+target="_blank" rel="noopener" href="http://www.cppblog.com/wolf/articles/67077.html">死锁的产生、预防和避免</a>
+<a
+target="_blank" rel="noopener" href="http://blog.chinaunix.net/uid-28748002-id-4273771.html">linux内存管理总结之进程地址空间</a>
+<a
+target="_blank" rel="noopener" href="http://blog.csdn.net/jnu_simba/article/details/11759809">Ext2文件系统布局，文件数据块寻址，VFS虚拟文件系统</a>
+<a
+target="_blank" rel="noopener" href="http://blog.csdn.net/jasonchen_gbd/article/details/51511261">Linux
+虚拟文件系统（VFS）介绍</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="tag"><i class="fa fa-tag"></i> 操作系统</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2016/11/28/%E3%80%8AReducing%20the%20Dimensionality%20of%20Data%20with%20Neural%20Networks%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" rel="prev" title="《Reducing the Dimensionality of Data with Neural Networks》阅读笔记">
+                  <i class="fa fa-chevron-left"></i> 《Reducing the Dimensionality of Data with Neural Networks》阅读笔记
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2016/12/20/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93--%E7%BB%84%E6%92%AD%E5%9F%BA%E7%A1%80/" rel="next" title="计算机网络课程总结--组播基础">
+                  计算机网络课程总结--组播基础 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-pen"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

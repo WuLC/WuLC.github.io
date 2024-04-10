@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id: "JmI6QmP3fMkLet6B",ck: "JmI6QmP3fMkLet6B"})</script>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wulc.me","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.15.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="本文主要介绍 python 中几个重要的 &quot;器&quot;（迭代器、生成器、上下文管理器）的原理、实现与使用，还有一个装饰器在前面一篇文章已经进行了介绍，本文主要参考了 Python 之旅 中的相关章节。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python 语法杂记--迭代器、生成器、上下文管理器">
+<meta property="og:url" content="https://wulc.me/2018/12/17/python%20%E8%AF%AD%E6%B3%95%E6%9D%82%E8%AE%B0--%E7%94%9F%E6%88%90%E5%99%A8%E3%80%81%E8%BF%AD%E4%BB%A3%E5%99%A8%E3%80%81%E4%B8%8A%E4%B8%8B%E6%96%87%E7%AE%A1%E7%90%86%E5%99%A8/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="本文主要介绍 python 中几个重要的 &quot;器&quot;（迭代器、生成器、上下文管理器）的原理、实现与使用，还有一个装饰器在前面一篇文章已经进行了介绍，本文主要参考了 Python 之旅 中的相关章节。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-12-17T04:00:37.000Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.197Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="python">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://wulc.me/2018/12/17/python%20%E8%AF%AD%E6%B3%95%E6%9D%82%E8%AE%B0--%E7%94%9F%E6%88%90%E5%99%A8%E3%80%81%E8%BF%AD%E4%BB%A3%E5%99%A8%E3%80%81%E4%B8%8A%E4%B8%8B%E6%96%87%E7%AE%A1%E7%90%86%E5%99%A8/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wulc.me/2018/12/17/python%20%E8%AF%AD%E6%B3%95%E6%9D%82%E8%AE%B0--%E7%94%9F%E6%88%90%E5%99%A8%E3%80%81%E8%BF%AD%E4%BB%A3%E5%99%A8%E3%80%81%E4%B8%8A%E4%B8%8B%E6%96%87%E7%AE%A1%E7%90%86%E5%99%A8/","path":"2018/12/17/python 语法杂记--生成器、迭代器、上下文管理器/","title":"python 语法杂记--迭代器、生成器、上下文管理器"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>python 语法杂记--迭代器、生成器、上下文管理器 | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">吴良超的学习笔记</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%AD%E4%BB%A3%E5%99%A8"><span class="nav-number">1.</span> <span class="nav-text">迭代器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#iterable"><span class="nav-number">1.1.</span> <span class="nav-text">iterable</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#iterator"><span class="nav-number">1.2.</span> <span class="nav-text">iterator</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%9F%E6%88%90%E5%99%A8"><span class="nav-number">2.</span> <span class="nav-text">生成器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#yield"><span class="nav-number">2.1.</span> <span class="nav-text">yield</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#send-throw-close"><span class="nav-number">2.2.</span> <span class="nav-text">send(), throw(),
+close()</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8A%E4%B8%8B%E6%96%87%E7%AE%A1%E7%90%86%E5%99%A8"><span class="nav-number">3.</span> <span class="nav-text">上下文管理器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#enter__-__exit__"><span class="nav-number">3.1.</span> <span class="nav-text">__enter__() &amp;
+__exit__()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#contextlib"><span class="nav-number">3.2.</span> <span class="nav-text">contextlib</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">253</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2018/12/17/python%20%E8%AF%AD%E6%B3%95%E6%9D%82%E8%AE%B0--%E7%94%9F%E6%88%90%E5%99%A8%E3%80%81%E8%BF%AD%E4%BB%A3%E5%99%A8%E3%80%81%E4%B8%8A%E4%B8%8B%E6%96%87%E7%AE%A1%E7%90%86%E5%99%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="python 语法杂记--迭代器、生成器、上下文管理器 | 吴良超的学习笔记">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          python 语法杂记--迭代器、生成器、上下文管理器
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-12-17 12:00:37" itemprop="dateCreated datePublished" datetime="2018-12-17T12:00:37+08:00">2018-12-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-tags"></i>
+      </span>
+      <span class="post-meta-item-text">标签</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>本文主要介绍 python 中几个重要的
+"器"（迭代器、生成器、上下文管理器）的原理、实现与使用，还有一个装饰器在前面一篇文章已经进行了介绍，本文主要参考了
+<a target="_blank" rel="noopener" href="http://funhacks.net/explore-python/">Python 之旅</a>
+中的相关章节。</p>
+<span id="more"></span>
+<h2 id="迭代器">迭代器</h2>
+<p>迭代器（iterator）就是用来遍历可迭代对象的（iterable），这两个概念要区分开。</p>
+<h3 id="iterable">iterable</h3>
+<p>像 list，tuple 等可以通过 <code>for..in..</code>
+进行遍历的对象就是可迭代对象，更严谨的定义则是：</p>
+<p><strong>含有 <code>__iter__()</code> 方法或
+<code>__getitem__()</code> 方法的对象称之为可迭代对象</strong>.</p>
+<p>可以使用 Python 内置的 hasattr()
+函数来判断一个对象是不是可迭代的：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">hasattr</span>((), <span class="string">&#x27;__iter__&#x27;</span>)</span><br><span class="line"><span class="literal">True</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">hasattr</span>([], <span class="string">&#x27;__iter__&#x27;</span>)</span><br><span class="line"><span class="literal">True</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">hasattr</span>(&#123;&#125;, <span class="string">&#x27;__iter__&#x27;</span>)</span><br><span class="line"><span class="literal">True</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">hasattr</span>(<span class="number">123</span>, <span class="string">&#x27;__iter__&#x27;</span>)</span><br><span class="line"><span class="literal">False</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">hasattr</span>(<span class="string">&#x27;abc&#x27;</span>, <span class="string">&#x27;__iter__&#x27;</span>)</span><br><span class="line"><span class="literal">False</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">hasattr</span>(<span class="string">&#x27;abc&#x27;</span>, <span class="string">&#x27;__getitem__&#x27;</span>)</span><br><span class="line"><span class="literal">True</span></span><br></pre></td></tr></table></figure>
+<p>另外，也可使用 isinstance() 进行判断：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> collections <span class="keyword">import</span> Iterable</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">isinstance</span>((), Iterable)        <span class="comment"># 元组</span></span><br><span class="line"><span class="literal">True</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">isinstance</span>([], Iterable)        <span class="comment"># 列表</span></span><br><span class="line"><span class="literal">True</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">isinstance</span>(&#123;&#125;, Iterable)        <span class="comment"># 字典</span></span><br><span class="line"><span class="literal">True</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">isinstance</span>(<span class="string">&#x27;abc&#x27;</span>, Iterable)     <span class="comment"># 字符串</span></span><br><span class="line"><span class="literal">True</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">isinstance</span>(<span class="number">100</span>, Iterable)       <span class="comment"># 数字</span></span><br><span class="line"><span class="literal">False</span></span><br></pre></td></tr></table></figure>
+<h3 id="iterator">iterator</h3>
+<p>迭代器是一个对象，但比较特别，它需要遵循迭代器协议，具体协议如下</p>
+<blockquote>
+<p>迭代器协议（iterator protocol）是指要实现对象的
+<code>__iter()__</code> 和 <code>next()</code> 方法（注意：Python3
+要实现 <code>__next__()</code> 方法），其中，<code>__iter()__</code>
+方法返回迭代器对象本身，<code>next()</code>
+方法返回容器的下一个元素，在没有后续元素时抛出 StopIteration 异常。</p>
+</blockquote>
+<p>这里需要注意的是，<strong>虽然元组、列表和字典等对象是可迭代的，但它们却不是迭代器</strong></p>
+<p>首先，可以使用 hasattr() 进行判断： <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">hasattr</span>((<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>), <span class="string">&#x27;__iter__&#x27;</span>)</span><br><span class="line"><span class="literal">True</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">hasattr</span>((<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>), <span class="string">&#x27;next&#x27;</span>)  <span class="comment"># 有 __iter__ 方法但是没有 next 方法，不是迭代器</span></span><br><span class="line"><span class="literal">False</span></span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">hasattr</span>([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], <span class="string">&#x27;__iter__&#x27;</span>)</span><br><span class="line"><span class="literal">True</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">hasattr</span>([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], <span class="string">&#x27;next&#x27;</span>)</span><br><span class="line"><span class="literal">False</span></span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">hasattr</span>(&#123;<span class="string">&#x27;a&#x27;</span>: <span class="number">1</span>, <span class="string">&#x27;b&#x27;</span>: <span class="number">2</span>&#125;, <span class="string">&#x27;__iter__&#x27;</span>)</span><br><span class="line"><span class="literal">True</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">hasattr</span>(&#123;<span class="string">&#x27;a&#x27;</span>: <span class="number">1</span>, <span class="string">&#x27;b&#x27;</span>: <span class="number">2</span>&#125;, <span class="string">&#x27;next&#x27;</span>)</span><br><span class="line"><span class="literal">False</span></span><br></pre></td></tr></table></figure></p>
+<p>同样也可以使用 <code>isinstance()</code> 进行判断：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> collections <span class="keyword">import</span> Iterator</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">isinstance</span>((), Iterator)</span><br><span class="line"><span class="literal">False</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">isinstance</span>([], Iterator)</span><br><span class="line"><span class="literal">False</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">isinstance</span>(&#123;&#125;, Iterator)</span><br><span class="line"><span class="literal">False</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">isinstance</span>(<span class="string">&#x27;&#x27;</span>, Iterator)</span><br><span class="line"><span class="literal">False</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">isinstance</span>(<span class="number">123</span>, Iterator)</span><br><span class="line"><span class="literal">False</span></span><br></pre></td></tr></table></figure>
+<p>虽然这些可迭代对象不是迭代器，但是<strong>可以使用 Python 内置的
+<code>iter()</code> 函数获得它们的迭代器对象</strong>，如下所示：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> collections <span class="keyword">import</span> Iterator</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">isinstance</span>(<span class="built_in">iter</span>([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]), Iterator)  <span class="comment"># 使用 iter() 函数，获得迭代器对象</span></span><br><span class="line"><span class="literal">True</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">isinstance</span>(<span class="built_in">iter</span>(<span class="string">&#x27;abc&#x27;</span>), Iterator)</span><br><span class="line"><span class="literal">True</span></span><br></pre></td></tr></table></figure>
+<p>事实上，<strong>Python 的 for 循环就是先通过内置函数
+<code>iter()</code> 获得一个迭代器，然后再不断调用 <code>next()</code>
+函数实现的</strong>，即：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> x <span class="keyword">in</span> [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]:</span><br><span class="line">    <span class="built_in">print</span> i</span><br></pre></td></tr></table></figure>
+<p>等价于</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">it = <span class="built_in">iter</span>([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>])</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        x = <span class="built_in">next</span>(it)</span><br><span class="line">        <span class="built_in">print</span> x</span><br><span class="line">    <span class="keyword">except</span> StopIteration:</span><br><span class="line">        <span class="comment"># 没有后续元素，退出循环</span></span><br><span class="line">        <span class="keyword">break</span></span><br></pre></td></tr></table></figure>
+<p>下面是一个斐波那契数列迭代器，根据迭代器的定义，我们需要实现
+<code>__iter()__</code> 和 <code>next()</code> 方法（在 Python3 中是
+<code>__next__()</code> 方法）</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Fib</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        self.a, self.b = <span class="number">0</span>, <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 返回迭代器对象本身</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__iter__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> self</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 返回容器下一个元素</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">next</span>(<span class="params">self</span>):</span><br><span class="line">        self.a, self.b = self.b, self.a + self.b</span><br><span class="line">        <span class="keyword">return</span> self.a</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    fib = Fib()    </span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> fib:</span><br><span class="line">        <span class="keyword">if</span> i &gt; <span class="number">10</span>:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        <span class="built_in">print</span> i</span><br></pre></td></tr></table></figure>
+<p>因此，关于迭代器和可迭代对象，需要注意下面三点</p>
+<p><strong>1.
+元组、列表、字典和字符串对象是可迭代的，但不是迭代器，不过我们可以通过
+<code>iter()</code> 函数获得一个迭代器对象</strong> <strong>2. Python 的
+for 循环实质上是先通过内置函数 <code>iter()</code>
+获得一个迭代器，然后再不断调用 <code>next()</code> 函数实现的</strong>
+<strong>3. 定义迭代器需要实现对象的 <code>__iter()__</code>和
+<code>next()</code> 方法（Python3 要实现 <code>__next__()</code>
+方法），其中，<code>__iter()__</code>
+方法返回迭代器对象本身，<code>next()</code>
+方法返回容器的下一个元素，在没有后续元素时抛出 StopIteration
+异常。</strong></p>
+<h2 id="生成器">生成器</h2>
+<h3 id="yield">yield</h3>
+<p><strong>生成器也是迭代器的一种</strong>，一个带有关键字
+<code>yield</code> 的函数就是一个生成器函数，而当我们使用 yield
+时，它帮我们自动创建了 <code>__iter__()</code> 和 <code>next()</code>
+方法，而且在没有数据时，也会抛出 <code>StopIteration</code>
+异常，非常简洁和高效。如下是一个简单的例子</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">def</span> <span class="title function_">generator_function</span>():</span><br><span class="line"><span class="meta">... </span>    <span class="built_in">print</span> <span class="string">&#x27;hello 1&#x27;</span></span><br><span class="line"><span class="meta">... </span>    <span class="keyword">yield</span> <span class="number">1</span></span><br><span class="line"><span class="meta">... </span>    <span class="built_in">print</span> <span class="string">&#x27;hello 2&#x27;</span></span><br><span class="line"><span class="meta">... </span>    <span class="keyword">yield</span> <span class="number">2</span></span><br><span class="line"><span class="meta">... </span>    <span class="built_in">print</span> <span class="string">&#x27;hello 3&#x27;</span></span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>g = generator_function()  <span class="comment"># 函数没有立即执行，而是返回了一个生成器</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>g.<span class="built_in">next</span>()  <span class="comment"># 当使用 next()(或 next(g))的时候开始执行，遇到 yield 暂停并返回</span></span><br><span class="line">hello <span class="number">1</span></span><br><span class="line"><span class="number">1</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>g.<span class="built_in">next</span>()    <span class="comment"># 从原来暂停的地方继续执行</span></span><br><span class="line">hello <span class="number">2</span></span><br><span class="line"><span class="number">2</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>g.<span class="built_in">next</span>()    <span class="comment"># 从原来暂停的地方继续执行，没有 yield，抛出异常</span></span><br><span class="line">hello <span class="number">3</span></span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File <span class="string">&quot;&lt;stdin&gt;&quot;</span>, line <span class="number">1</span>, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">StopIteration</span><br></pre></td></tr></table></figure>
+<p>从上面的例子可知，带有 yield 的函数执行过程如下</p>
+<p><strong>1.
+调用该函数的时候不会立即执行代码，而是返回了一个生成器对象；</strong>
+<strong>2. 当使用 <code>next()</code> (在 for 循环中会自动调用
+<code>next()</code>) 作用于返回的生成器对象时，函数开始执行，在遇到
+<code>yield</code> 的时候会『暂停』并返回 yield 后的值</strong>
+<strong>3. 当再次使用 <code>next()</code>
+的时候，函数会从原来『暂停』的地方继续执行，直到遇到 yield
+语句，如果没有 yield 语句，则抛出异常</strong>**</p>
+<p>相比于迭代器，生成器这样的 lazy evaluation
+能够节省更多的内存，同时让代码更加简洁，如前面定义的斐波那契数列迭代器，通过生成器实现的代码如下</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">def</span> <span class="title function_">fib</span>():</span><br><span class="line"><span class="meta">... </span>    a, b = <span class="number">0</span>, <span class="number">1</span></span><br><span class="line"><span class="meta">... </span>    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line"><span class="meta">... </span>        a, b = b, a + b</span><br><span class="line"><span class="meta">... </span>        <span class="keyword">yield</span> a</span><br><span class="line">...</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>f = fib()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">for</span> item <span class="keyword">in</span> f:</span><br><span class="line"><span class="meta">... </span>    <span class="keyword">if</span> item &gt; <span class="number">10</span>:</span><br><span class="line"><span class="meta">... </span>        <span class="keyword">break</span></span><br><span class="line"><span class="meta">... </span>    <span class="built_in">print</span> item</span><br><span class="line">...</span><br><span class="line"><span class="number">1</span></span><br><span class="line"><span class="number">1</span></span><br><span class="line"><span class="number">2</span></span><br><span class="line"><span class="number">3</span></span><br><span class="line"><span class="number">5</span></span><br><span class="line"><span class="number">8</span></span><br></pre></td></tr></table></figure>
+<h3 id="send-throw-close"><code>send()</code>, <code>throw()</code>,
+<code>close()</code></h3>
+<p>除了上面提到的
+yield，生成器还有一些其他的特殊方法：<code>send()</code>,
+<code>throw()</code> 和
+<code>close()</code>，分别用于给生成器发送消息、异常和关闭生成器。
+具体用法如下</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">In [<span class="number">2</span>]: <span class="keyword">def</span> <span class="title function_">generator_function</span>():</span><br><span class="line">   ...:     <span class="comment"># test send()</span></span><br><span class="line">   ...:     value1 = <span class="keyword">yield</span> <span class="number">0</span></span><br><span class="line">   ...:     <span class="built_in">print</span>(<span class="string">&#x27;value1 is &#x27;</span>, value1)</span><br><span class="line">   ...:</span><br><span class="line">   ...:     <span class="comment"># test throw()</span></span><br><span class="line">   ...:     <span class="keyword">try</span>:</span><br><span class="line">   ...:         <span class="keyword">yield</span> <span class="string">&#x27;Normal&#x27;</span></span><br><span class="line">   ...:     <span class="keyword">except</span> ValueError:</span><br><span class="line">   ...:         <span class="keyword">yield</span> <span class="string">&#x27;Error&#x27;</span></span><br><span class="line">   ...:</span><br><span class="line">   ...:     <span class="comment"># test close()</span></span><br><span class="line">   ...:     <span class="keyword">yield</span> <span class="number">1</span></span><br><span class="line">   ...:     <span class="keyword">yield</span> <span class="number">2</span></span><br><span class="line">   ...:     <span class="keyword">yield</span> <span class="number">3</span></span><br><span class="line">   ...:</span><br><span class="line"></span><br><span class="line">In [<span class="number">3</span>]: g = generator_function()</span><br><span class="line"></span><br><span class="line">In [<span class="number">4</span>]: <span class="built_in">next</span>(g)</span><br><span class="line">Out[<span class="number">4</span>]: <span class="number">0</span></span><br><span class="line"></span><br><span class="line">In [<span class="number">5</span>]: g.send(<span class="number">10</span>)</span><br><span class="line">value1 <span class="keyword">is</span>  <span class="number">10</span></span><br><span class="line">Out[<span class="number">5</span>]: <span class="string">&#x27;Normal&#x27;</span></span><br><span class="line"></span><br><span class="line">In [<span class="number">6</span>]: g.throw(ValueError)</span><br><span class="line">Out[<span class="number">6</span>]: <span class="string">&#x27;Error&#x27;</span></span><br><span class="line"></span><br><span class="line">In [<span class="number">7</span>]: <span class="built_in">next</span>(g)</span><br><span class="line">Out[<span class="number">7</span>]: <span class="number">1</span></span><br><span class="line"></span><br><span class="line">In [<span class="number">8</span>]: g.close()</span><br><span class="line"></span><br><span class="line">In [<span class="number">9</span>]: <span class="built_in">next</span>(g)</span><br><span class="line">---------------------------------------------------------------------------</span><br><span class="line">StopIteration                             Traceback (most recent call last)</span><br><span class="line">&lt;ipython-<span class="built_in">input</span>-<span class="number">9</span>-5f315c5de15b&gt; <span class="keyword">in</span> &lt;module&gt;()</span><br><span class="line">----&gt; <span class="number">1</span> <span class="built_in">next</span>(g)</span><br><span class="line"></span><br><span class="line">StopIteration:</span><br></pre></td></tr></table></figure>
+<p>在上面的代码中，先调用 <code>next()</code>
+方法，使函数开始执行，代码执行到 yield 0 的时候暂停，返回了
+0；接着，执行 <code>send()</code>
+方法，它会恢复生成器的运行，并将发送的值赋给上次中断时 yield
+表达式的执行结果，也就是 value1，这时控制台打印出 value1
+的值，并继续执行，直到遇到 yield 后暂停，此时返回 'Normal',
+因此，<strong>简单地说，<code>send()</code> 方法就是 <code>next()</code>
+的功能，加上传值给 yield</strong></p>
+<p>接着， <code>throw()</code> 方法向生成器函数传递了 ValueError
+异常，此时代码进入 except ValueError 语句，遇到 yield
+'Error'，暂停并返回 Error 字符串, 因此，<strong>简单的说，throw() 就是
+next() 的功能，加上传异常给 yield。</strong></p>
+<p>最后使用了 <code>close()</code>
+方法来关闭一个生成器。生成器被关闭后，再次调用 <code>next()</code>
+方法，不管能否遇到 yield 关键字，都会抛出 StopIteration 异常</p>
+<h2 id="上下文管理器">上下文管理器</h2>
+<h3 id="enter__-__exit__"><code>__enter__()</code> &amp;
+<code>__exit__()</code></h3>
+<p>上下文(context)在计算机中是个很常见的词汇，可以简单将其理解为运行时的环境，如进程上下文指的是进程在执行时
+CPU
+的所有寄存器中的值、进程的状态以及堆栈上的内容等，当系统需要切换到其他进程时，系统会保留当前进程的上下文，也就是运行时的环境，以便再次执行该进程。</p>
+<p>而在 python 中上下文管理器最常见的场景便是 <code>with</code>
+语句，<code>with</code>
+一般用于对资源进行访问的场景，确保执行过程中出现异常情况时也可以对资源进行回收，比如自动关闭文件等。</p>
+<p>类似迭代器协议（Iterator Protocol），上下文管理器（Context
+manager）也有上下文管理协议（Context Management Protocol）。</p>
+<ul>
+<li><strong>上下文管理器协议</strong>，是指要实现对象的
+<code>__enter__()</code> 和 <code>__exit__()</code> 方法。</li>
+<li><strong>上下文管理器</strong>也就是支持上下文管理器协议的对象，也就是实现了
+<code>__enter__()</code> 和 <code>__exit__()</code> 方法的对象。</li>
+</ul>
+<p>如下是一个简单的上下文管理器的例子</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> math <span class="keyword">import</span> sqrt, <span class="built_in">pow</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Point</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, x, y</span>):</span><br><span class="line">        <span class="built_in">print</span> <span class="string">&#x27;initialize x and y&#x27;</span></span><br><span class="line">        self.x, self.y = x, y</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__enter__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="built_in">print</span> <span class="string">&quot;Entering context&quot;</span></span><br><span class="line">        <span class="keyword">return</span> self</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__exit__</span>(<span class="params">self, <span class="built_in">type</span>, value, traceback</span>):</span><br><span class="line">        <span class="built_in">print</span> <span class="string">&quot;Exiting context&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">get_distance</span>(<span class="params">self</span>):</span><br><span class="line">        distance = sqrt(<span class="built_in">pow</span>(self.x, <span class="number">2</span>) + <span class="built_in">pow</span>(self.y, <span class="number">2</span>))</span><br><span class="line">        <span class="keyword">return</span> distance</span><br></pre></td></tr></table></figure>
+<p>使用 <code>with</code> 语句调用上下文管理器如下所示</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> Point(<span class="number">3</span>, <span class="number">4</span>) <span class="keyword">as</span> pt:</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&#x27;distance: &#x27;</span>, pt.get_distance()</span><br><span class="line"></span><br><span class="line"><span class="comment"># output</span></span><br><span class="line">initialize x <span class="keyword">and</span> y   <span class="comment"># 调用了 __init__ 方法</span></span><br><span class="line">Entering context     <span class="comment"># 调用了 __enter__ 方法</span></span><br><span class="line">distance:  <span class="number">5.0</span>       <span class="comment"># 调用了 get_distance 方法</span></span><br><span class="line">Exiting context      <span class="comment"># 调用了 __exit__ 方法</span></span><br></pre></td></tr></table></figure>
+<p>上面的 with 语句执行过程如下：</p>
+<ol type="1">
+<li>Point(3, 4) 生成了一个上下文管理器；</li>
+<li>调用上下文管理器的 <code>__enter__()</code> 方法，并<strong>将
+<code>__enter__()</code> 方法的返回值赋给 as 字句中的变量
+pt</strong>;</li>
+<li>执行语句体（指 with 语句包裹起来的代码块）内容，输出 distance；</li>
+<li><strong>不管执行过程中是否发生异常，都执行上下文管理器的
+<code>__exit__()</code> 方法</strong>。</li>
+</ol>
+<p>一般来说，<code>__exit__()</code>
+方法负责执行清理工作，如释放资源，关闭文件等。如果执行过程没有出现异常，或者语句体中执行了语句
+break/continue/return，则以 None 作为参数调用
+<code>__exit__(None, None, None)</code>；如果执行过程中出现异常，则使用
+<code>sys.exc_info</code> 得到的异常信息为参数调用
+<code>__exit__(exc_type, exc_value, exc_traceback)</code>.
+同时<strong>出现异常时，如果
+<code>__exit__(type, value, traceback)</code> 返回 False 或
+None，则会重新抛出异常，让 <code>with</code>
+之外的语句逻辑来处理异常；如果返回
+True，则忽略异常，不再对异常进行处理。</strong></p>
+<p>上面的 with 语句执行过程没有出现异常，下面是出现异常的情形：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> Point(<span class="number">3</span>, <span class="number">4</span>) <span class="keyword">as</span> pt:</span><br><span class="line">    pt.get_length()        <span class="comment"># 访问了对象不存在的方法</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># output</span></span><br><span class="line">initialize x <span class="keyword">and</span> y</span><br><span class="line">Entering context</span><br><span class="line">Exiting context</span><br><span class="line">---------------------------------------------------------------------------</span><br><span class="line">AttributeError                            Traceback (most recent call last)</span><br><span class="line">&lt;ipython-<span class="built_in">input</span>-<span class="number">216</span>-ab4a0e6b6b4a&gt; <span class="keyword">in</span> &lt;module&gt;()</span><br><span class="line">      <span class="number">1</span> <span class="keyword">with</span> Point(<span class="number">3</span>, <span class="number">4</span>) <span class="keyword">as</span> pt:</span><br><span class="line">----&gt; <span class="number">2</span>     pt.get_length()</span><br><span class="line"></span><br><span class="line">AttributeError: <span class="string">&#x27;Point&#x27;</span> <span class="built_in">object</span> has no attribute <span class="string">&#x27;get_length&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>对前面的 <code>__exit__()</code> 方法修改如下</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">__exit__</span>(<span class="params">self, <span class="built_in">type</span>, value, traceback</span>):</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&quot;Exception has been handled&quot;</span></span><br><span class="line">    <span class="built_in">print</span> <span class="string">&quot;Exiting context&quot;</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">True</span></span><br></pre></td></tr></table></figure>
+<p>则执行相同过的代码的结果如下</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> Point(<span class="number">3</span>, <span class="number">4</span>) <span class="keyword">as</span> pt:</span><br><span class="line">    pt.get_length()      <span class="comment"># 访问了对象不存在的方法</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># output</span></span><br><span class="line">initialize x <span class="keyword">and</span> y</span><br><span class="line">Entering context</span><br><span class="line">Exception has been handled</span><br><span class="line">Exiting context</span><br></pre></td></tr></table></figure>
+<h3 id="contextlib">contextlib</h3>
+<p>除了在类中定义 <code>__enter__</code> 和 <code>__exit__</code>
+方法来实现上下文管理器，我们还可以<strong>通过生成器函数和装饰器来实现上下文管理器</strong>，这个装饰器就在
+python 提供的 contextlib 模块中。如下是个简单的例子</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> contextlib <span class="keyword">import</span> contextmanager</span><br><span class="line"></span><br><span class="line"><span class="meta">@contextmanager</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">point</span>(<span class="params">x, y</span>):</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&#x27;before yield&#x27;</span></span><br><span class="line">    <span class="keyword">yield</span> x * x + y * y</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&#x27;after yield&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> point(<span class="number">3</span>, <span class="number">4</span>) <span class="keyword">as</span> value:</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&#x27;value is: %s&#x27;</span> % value</span><br><span class="line"></span><br><span class="line"><span class="comment"># output</span></span><br><span class="line">before <span class="keyword">yield</span></span><br><span class="line">value <span class="keyword">is</span>: <span class="number">25</span></span><br><span class="line">after <span class="keyword">yield</span></span><br></pre></td></tr></table></figure>
+<p>可以看到，<strong>yield 产生的值赋给了 as 子句中的 value
+变量</strong>。</p>
+<p>另外，需要强调的是，虽然<strong>通过使用 contextmanager
+装饰器，可以不必再编写 <code>__enter__</code> 和 <code>__exit__</code>
+方法，但是获取和清理资源的操作仍需要我们自己编写：获取资源的操作定义在
+yield 语句之前，释放资源的操作定义在 yield 语句之后。</strong></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/python/" rel="tag"><i class="fa fa-tag"></i> python</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2018/12/15/python%20%E8%AF%AD%E6%B3%95%E6%9D%82%E8%AE%B0--%E8%A3%85%E9%A5%B0%E5%99%A8%EF%BC%8C%E7%B1%BB%E7%9A%84%E7%89%B9%E6%AE%8A%E6%96%B9%E6%B3%95%EF%BC%8C%E5%B8%B8%E9%87%8F%E7%B1%BB/" rel="prev" title="python 语法杂记--装饰器，类的特殊方法，常量类">
+                  <i class="fa fa-chevron-left"></i> python 语法杂记--装饰器，类的特殊方法，常量类
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2018/12/21/ipdb%20%E4%BD%BF%E7%94%A8%E5%B0%8F%E8%AE%B0/" rel="next" title="ipdb 使用小记">
+                  ipdb 使用小记 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-pen"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

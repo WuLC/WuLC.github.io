@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id: "JmI6QmP3fMkLet6B",ck: "JmI6QmP3fMkLet6B"})</script>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wulc.me","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.15.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="本文主要介绍部署机器学习模型的一种自动化方式，如题所示，通过 Flask，Docker, Jenkins 和 Kubernets 实现。基本原理就是通过 Flask 提供 RESTful API 接收客户端的 predict 请求，然后将这个服务打包成一个 docker image 便于部署和迁移，当代码或模型更新时通过 Jenkins 触发自动构建新的 docker image，而通过 kube">
+<meta property="og:type" content="article">
+<meta property="og:title" content="通过 Flask, Docker, Jenkins 和 Kubernets 部署机器学习模型">
+<meta property="og:url" content="https://wulc.me/2019/04/19/%E9%80%9A%E8%BF%87%20Flask,%20Docker,%20Jenkins%20%E5%92%8C%20Kubernets%20%E9%83%A8%E7%BD%B2%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A8%A1%E5%9E%8B/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="本文主要介绍部署机器学习模型的一种自动化方式，如题所示，通过 Flask，Docker, Jenkins 和 Kubernets 实现。基本原理就是通过 Flask 提供 RESTful API 接收客户端的 predict 请求，然后将这个服务打包成一个 docker image 便于部署和迁移，当代码或模型更新时通过 Jenkins 触发自动构建新的 docker image，而通过 kube">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/deploy_ml_model.png">
+<meta property="og:image" content="https://wulc.me/imgs/deploy_ml_model_build_image.png">
+<meta property="og:image" content="https://wulc.me/imgs/deploy_ml_model_images_after_built.png">
+<meta property="og:image" content="https://wulc.me/imgs/deploy_ml_model_run_container.png">
+<meta property="og:image" content="https://wulc.me/imgs/deploy_ml_model_client_response.png">
+<meta property="og:image" content="https://wulc.me/imgs/deploy_ml_model_server_log.png">
+<meta property="og:image" content="https://wulc.me/imgs/deploy_ml_model_stop_container.png">
+<meta property="og:image" content="https://wulc.me/imgs/deploy_ml_model_jenkins_git_config.png">
+<meta property="og:image" content="https://wulc.me/imgs/deploy_ml_model_jenkins_trigger.png">
+<meta property="og:image" content="https://wulc.me/imgs/deploy_ml_model_build_with_jenkins.png">
+<meta property="og:image" content="https://wulc.me/imgs/deploy_ml_model_jenkins_log.png">
+<meta property="og:image" content="https://wulc.me/imgs/deploy_ml_model_ngrok_public_address.png">
+<meta property="og:image" content="https://wulc.me/imgs/deploy_ml_model_github_webhook.png">
+<meta property="og:image" content="https://wulc.me/imgs/deploy_ml_model_rebuild_block.png">
+<meta property="og:image" content="https://wulc.me/imgs/deploy_ml_model_ngrok_script.png">
+<meta property="og:image" content="https://wulc.me/imgs/deploy_ml_model_script_github_webhook.png">
+<meta property="og:image" content="https://wulc.me/imgs/deploy_ml_model_trigger_with_script.png">
+<meta property="og:image" content="https://wulc.me/imgs/deploy_ml_model_kubernets_structure.png">
+<meta property="og:image" content="https://wulc.me/imgs/deploy_ml_model_kubernets_info.png">
+<meta property="og:image" content="https://wulc.me/imgs/deploy_ml_model_kubernets_deploy.png">
+<meta property="og:image" content="https://wulc.me/imgs/deploy_ml_model_kubernets_proxy.png">
+<meta property="og:image" content="https://wulc.me/imgs/deploy_ml_model_kubernets_pod.png">
+<meta property="og:image" content="https://wulc.me/imgs/deploy_ml_model_kubernets_pod_info.png">
+<meta property="og:image" content="https://wulc.me/imgs/deploy_ml_model_kubernets_pod_log_exec.png">
+<meta property="og:image" content="https://wulc.me/imgs/deploy_ml_model_kubernets_service.png">
+<meta property="og:image" content="https://wulc.me/imgs/deploy_ml_model_kubernets_exopse_service.png">
+<meta property="og:image" content="https://wulc.me/imgs/deploy_ml_model_kubernets_pod_label.png">
+<meta property="og:image" content="https://wulc.me/imgs/deploy_ml_model_kubernets_change_pod_label.png">
+<meta property="og:image" content="https://wulc.me/imgs/deploy_ml_model_kubernets_delete_service.png">
+<meta property="og:image" content="https://wulc.me/imgs/deploy_ml_model_kubernets_scale.png">
+<meta property="og:image" content="https://wulc.me/imgs/deploy_ml_model_kubernets_scale_pods.png">
+<meta property="og:image" content="https://wulc.me/imgs/deploy_ml_model_kubernets_load_balance.png">
+<meta property="og:image" content="https://wulc.me/imgs/deploy_ml_model_kubernets_rolling_update.png">
+<meta property="og:image" content="https://wulc.me/imgs/deploy_ml_model_kubernets_before_update.png">
+<meta property="og:image" content="https://wulc.me/imgs/deploy_ml_model_kubernets_after_update.png">
+<meta property="og:image" content="https://wulc.me/imgs/deploy_ml_model_kubernets_rollback.png">
+<meta property="article:published_time" content="2019-04-19T04:00:37.000Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.124Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="工具使用">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/deploy_ml_model.png">
+
+
+<link rel="canonical" href="https://wulc.me/2019/04/19/%E9%80%9A%E8%BF%87%20Flask,%20Docker,%20Jenkins%20%E5%92%8C%20Kubernets%20%E9%83%A8%E7%BD%B2%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A8%A1%E5%9E%8B/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wulc.me/2019/04/19/%E9%80%9A%E8%BF%87%20Flask,%20Docker,%20Jenkins%20%E5%92%8C%20Kubernets%20%E9%83%A8%E7%BD%B2%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A8%A1%E5%9E%8B/","path":"2019/04/19/通过 Flask, Docker, Jenkins 和 Kubernets 部署机器学习模型/","title":"通过 Flask, Docker, Jenkins 和 Kubernets 部署机器学习模型"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>通过 Flask, Docker, Jenkins 和 Kubernets 部署机器学习模型 | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">吴良超的学习笔记</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#flask-%E6%8F%90%E4%BE%9B-restful-api"><span class="nav-number">1.</span> <span class="nav-text">Flask 提供 RESTful api</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%AD%E7%BB%83%E5%B9%B6%E4%BF%9D%E5%AD%98%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.1.</span> <span class="nav-text">训练并保存模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A0%E8%BD%BD%E6%A8%A1%E5%9E%8B%E5%B9%B6%E6%8F%90%E4%BE%9B%E8%B0%83%E7%94%A8-api"><span class="nav-number">1.2.</span> <span class="nav-text">加载模型并提供调用 api</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docker-%E6%89%93%E5%8C%85%E5%92%8C%E8%BF%90%E8%A1%8C%E7%A8%8B%E5%BA%8F"><span class="nav-number">2.</span> <span class="nav-text">Docker 打包和运行程序</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%93%E5%8C%85"><span class="nav-number">2.1.</span> <span class="nav-text">打包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C"><span class="nav-number">2.2.</span> <span class="nav-text">运行</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#jenkins%E6%88%96%E8%87%AA%E5%AE%9A%E4%B9%89%E8%84%9A%E6%9C%AC%E8%A7%A6%E5%8F%91%E8%87%AA%E5%8A%A8%E6%9E%84%E5%BB%BA"><span class="nav-number">3.</span> <span class="nav-text">Jenkins或自定义脚本触发自动构建</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#jenkins-%E8%87%AA%E5%8A%A8%E6%9E%84%E5%BB%BA"><span class="nav-number">3.1.</span> <span class="nav-text">Jenkins 自动构建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E8%84%9A%E6%9C%AC%E8%BF%9B%E8%A1%8C%E8%87%AA%E5%8A%A8%E6%9E%84%E5%BB%BA"><span class="nav-number">3.2.</span> <span class="nav-text">自定义脚本进行自动构建</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#kubernets"><span class="nav-number">4.</span> <span class="nav-text">Kubernets</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%9E%B6%E6%9E%84"><span class="nav-number">4.1.</span> <span class="nav-text">基本架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2deployment"><span class="nav-number">4.2.</span> <span class="nav-text">部署(deployment)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#pods"><span class="nav-number">4.2.1.</span> <span class="nav-text">Pods</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#service"><span class="nav-number">4.2.2.</span> <span class="nav-text">Service</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%B8%E7%BC%A9%E6%80%A7scaling"><span class="nav-number">4.3.</span> <span class="nav-text">伸缩性(scaling)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BB%9A%E5%8A%A8%E6%9B%B4%E6%96%B0rolling-updates"><span class="nav-number">4.4.</span> <span class="nav-text">滚动更新(rolling updates)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">253</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2019/04/19/%E9%80%9A%E8%BF%87%20Flask,%20Docker,%20Jenkins%20%E5%92%8C%20Kubernets%20%E9%83%A8%E7%BD%B2%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A8%A1%E5%9E%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="通过 Flask, Docker, Jenkins 和 Kubernets 部署机器学习模型 | 吴良超的学习笔记">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          通过 Flask, Docker, Jenkins 和 Kubernets 部署机器学习模型
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2019-04-19 12:00:37" itemprop="dateCreated datePublished" datetime="2019-04-19T12:00:37+08:00">2019-04-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-tags"></i>
+      </span>
+      <span class="post-meta-item-text">标签</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/" itemprop="url" rel="index"><span itemprop="name">工具使用</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>本文主要介绍部署机器学习模型的一种自动化方式，如题所示，通过 <a
+target="_blank" rel="noopener" href="http://flask.pocoo.org/">Flask</a>，<a
+target="_blank" rel="noopener" href="https://www.docker.com/">Docker</a>, <a
+target="_blank" rel="noopener" href="https://jenkins.io/">Jenkins</a> 和 <a
+target="_blank" rel="noopener" href="https://kubernetes.io">Kubernets</a> 实现。基本原理就是通过 Flask
+提供 <a
+target="_blank" rel="noopener" href="https://searchmicroservices.techtarget.com/definition/RESTful-API">RESTful
+API</a> 接收客户端的 predict 请求，然后将这个服务打包成一个 docker image
+便于部署和迁移，当代码或模型更新时通过 Jenkins 触发自动构建新的 docker
+image，而通过 kubernets
+管理容器则让整个服务具备伸缩性和可靠性。本文主要参考了 <a
+target="_blank" rel="noopener" href="https://medium.com/sfu-big-data/machine-learning-deployment-a-storm-in-a-teacup-10541ec3b0d6">Deploy
+a machine learning model in 10 minutes with Flask, Docker, and
+Jenkins</a>，并在其基础上进行了完善和拓展，如通过一个简单的 shell script
+实现 jenkins 的触发功能，并添加了 kubernets
+部分的介绍等。本文的对应的所有代码可从 <a
+target="_blank" rel="noopener" href="https://github.com/WuLC/DeployMachineLearningModel">DeployMachineLearningModel</a>
+获取。</p>
+<span id="more"></span>
+<p>下文基本可以依样画葫芦走一遍，为了避免不必要的麻烦，尽量不要在
+windows 下配置，虽然上述这些工具也提供了 windows
+的版本，但是使用起来总是出现各种问题；也不要在win10 的 wsl 中配置，因为
+docker 涉及到了 linux 底层的 cgroup，在 wsl 中并不能直接安装
+docker。本文的实验时最开始为了方便在上面提到的两个环境中进行了实验，结果是折腾了好久，最后通过在
+virtual box 中的 ubuntu 16.04 进行以下的实验。</p>
+<p>下图摘自文章前面提到的 Deploy a machine learning model in 10 minutes
+with Flask, Docker, and
+Jenkins，从中可以看到清晰看到整个部署和访问的流程</p>
+<figure>
+<img data-src="https://wulc.me/imgs/deploy_ml_model.png"
+alt="deploy model" />
+<figcaption aria-hidden="true">deploy model</figcaption>
+</figure>
+<h2 id="flask-提供-restful-api">Flask 提供 RESTful api</h2>
+<p>Flask 的作用主要是提供 RESTful api 供客户端进行 predict，像
+Google、Microsoft、Face++ 这些公司提供的 AI
+服务（即人脸识别，表情识别等），基本都是通过 RESTful api
+提供的，其基本原理是客户端将通过 POST
+请求将需要预测的样本发送到服务器，然后服务器提取样本进行预测并返回结果；且通常还需要附带
+id
+判别身份，从而进行相应的扣费，这里为了简单起见不会去考虑这些问题。</p>
+<p>通过 Flask 能够非常简单地在搭建一个 HTTP Server
+并在指定端口监听，如果接收到 POST
+请求便调用模型进行预测并返回，因此首先需要训练模型并将训练好的模型 load
+进内存，为了简单起见，这里的任务是 sklearn 内置的 iris 分类。</p>
+<h3 id="训练并保存模型">训练并保存模型</h3>
+<p>训练并持久化模型的代码如下所示，对应 <code>train_model.py</code>
+文件</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># coding: utf-8</span></span><br><span class="line"><span class="keyword">import</span> pickle</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> datasets</span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> tree</span><br><span class="line"></span><br><span class="line"><span class="comment"># simple demo for traing and saving model</span></span><br><span class="line">iris=datasets.load_iris()</span><br><span class="line">x=iris.data</span><br><span class="line">y=iris.target</span><br><span class="line"></span><br><span class="line"><span class="comment">#labels for iris dataset</span></span><br><span class="line">labels =&#123;</span><br><span class="line">  <span class="number">0</span>: <span class="string">&quot;setosa&quot;</span>,</span><br><span class="line">  <span class="number">1</span>: <span class="string">&quot;versicolor&quot;</span>,</span><br><span class="line">  <span class="number">2</span>: <span class="string">&quot;virginica&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=<span class="number">.25</span>)</span><br><span class="line">classifier=tree.DecisionTreeClassifier()</span><br><span class="line">classifier.fit(x_train,y_train)</span><br><span class="line">predictions=classifier.predict(x_test)</span><br><span class="line"></span><br><span class="line"><span class="comment">#export the model</span></span><br><span class="line">model_name = <span class="string">&#x27;model.pkl&#x27;</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;finished training and dump the model as &#123;0&#125;&quot;</span>.<span class="built_in">format</span>(model_name))</span><br><span class="line">pickle.dump(classifier, <span class="built_in">open</span>(model_name,<span class="string">&#x27;wb&#x27;</span>))</span><br></pre></td></tr></table></figure>
+<h3 id="加载模型并提供调用-api">加载模型并提供调用 api</h3>
+<p>通过 Flask 能够快速启动一个 http server
+并在不同的访问路径设置不同的处理函数，详细语法可参考<a
+target="_blank" rel="noopener" href="http://flask.pocoo.org/">官网教程</a>。</p>
+<p>本文的例子很简单，如下代码所示（对应源文件
+<code>server.py</code>)，首先把模型 load 进内存，然后设置了访问路径为
+<code>/api</code> 时调用模型进行
+predict，为了简单起见这里没做输入数据的检查和异常处理；最后
+<code>app.run</code> 启动了一个 server 并默认监听在 5000 端口。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># coding: utf-8</span></span><br><span class="line"><span class="keyword">import</span> pickle</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask, request, jsonify</span><br><span class="line"></span><br><span class="line">app = Flask(__name__)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Load the model</span></span><br><span class="line">model = pickle.load(<span class="built_in">open</span>(<span class="string">&#x27;model.pkl&#x27;</span>, <span class="string">&#x27;rb&#x27;</span>))</span><br><span class="line">labels = &#123;</span><br><span class="line">  <span class="number">0</span>: <span class="string">&quot;versicolor&quot;</span>,   </span><br><span class="line">  <span class="number">1</span>: <span class="string">&quot;setosa&quot;</span>,</span><br><span class="line">  <span class="number">2</span>: <span class="string">&quot;virginica&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/api&#x27;</span>, methods=[<span class="string">&#x27;POST&#x27;</span>]</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">predict</span>():</span><br><span class="line">    <span class="comment"># Get the data from the POST request.</span></span><br><span class="line">    data = request.get_json(force = <span class="literal">True</span>)</span><br><span class="line">    predict = model.predict(data[<span class="string">&#x27;feature&#x27;</span>])</span><br><span class="line">    <span class="keyword">return</span> jsonify(predict[<span class="number">0</span>].tolist())</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    app.run(debug = <span class="literal">True</span>, host = <span class="string">&#x27;0.0.0.0&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>利用以上两个文件，通过命令
+<code>python train_model.py &amp;&amp; python server.py</code>
+便可训练出一个模型并通过 http server 提供访问 api。</p>
+<p>客户端要进行预测时可通过如下代码（见源文件 <code>client.py</code>),
+这里的 <code>192.168.31.78</code> 是我的实验环境里面启动 httpserver
+的机器ip（<code>client.py</code> 里面使用的是 8000 端口，因为利用了
+docker 进行了端口映射，后文会对这一点进行讲解）</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># coding: utf-8</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="comment"># Change the value of experience that you want to test</span></span><br><span class="line">url = <span class="string">&#x27;http://192.168.31.78:5000/api&#x27;</span></span><br><span class="line">feature = [[<span class="number">5.8</span>, <span class="number">4.0</span>, <span class="number">1.2</span>, <span class="number">0.2</span>]]</span><br><span class="line">labels =&#123;</span><br><span class="line">  <span class="number">0</span>: <span class="string">&quot;setosa&quot;</span>,</span><br><span class="line">  <span class="number">1</span>: <span class="string">&quot;versicolor&quot;</span>,</span><br><span class="line">  <span class="number">2</span>: <span class="string">&quot;virginica&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">r = requests.post(url,json=&#123;<span class="string">&#x27;feature&#x27;</span>: feature&#125;)</span><br><span class="line"><span class="built_in">print</span>(labels[r.json()])</span><br></pre></td></tr></table></figure>
+<p>在同一局域网的机器运行上面的代码便能输出 <code>setosa</code>
+这个预测结果</p>
+<h2 id="docker-打包和运行程序">Docker 打包和运行程序</h2>
+<p>Docker 的安装参考 <a
+target="_blank" rel="noopener" href="https://docs.docker.com/install/linux/docker-ce/ubuntu/">Get
+Docker CE for Ubuntu</a>， 这里不再赘述</p>
+<h3 id="打包">打包</h3>
+<p>利用 Docker 可以将上述部署的环境打包成一个
+image，便于部署、迁移和弹性扩展（配合 Kubernets
+使用），因此下文主要描述如何通过 Dockerfile 构建 image，关于 Dockerfile
+的详细语法可参考 <a
+target="_blank" rel="noopener" href="https://docs.docker.com/engine/reference/builder/">文档</a>，这里只列出本文用到的一些语法。</p>
+<p>类似 shell 脚本，Dockerfile 里面是一系列的指令，作用是让 Docker 通过
+Dockerfile 和 <code>docker build</code> 命令自动构建出目标 image。</p>
+<p>在执行 docker build 命令时通过 -t 指定生成的 image 的
+tag，能够保存生成的 image，如
+<code>docker build -t shykes/myapp .</code>，最后的 <code>.</code> 表示
+Dockerfile 的目录，即这条命令是在 Dockerfile 所在目录下执行</p>
+<p>Dockerfile 的基本原理是首先通过 <code>FROM</code> 命令获取一个基本的
+image，然后在这个 image
+基础上通过各种命令配置好我们运行程序需要的环境，接着把我们的源文件复制到
+image 里，进行构建和运行。</p>
+<p>Dockerfile 中值得注意事项如下，为了保持原意这里不进行翻译</p>
+<ul>
+<li>each instruction is run independently, so <code>RUN cd /tmp</code>
+will not have any effect on the next instructions</li>
+<li>basic syntax is <code>INSTRUCTION arguments</code>， the
+<strong>instruction is not case-sensitive</strong>. However,
+<strong>convention is for them to be UPPERCASE</strong> to distinguish
+them from arguments more easily.</li>
+<li><strong>A Dockerfile must start with a <code>FROM</code>
+instruction</strong>. The FROM instruction specifies the Base Image from
+which you are building</li>
+<li><code>FROM</code> can appear multiple times within a single
+Dockerfile to create multiple images or use one build stage as a
+dependency for another</li>
+<li>Docker treats lines that begin with # as a comment</li>
+<li><code>RUN &lt;command&gt;</code> (the command is run in a shell,
+which by default is <code>/bin/sh -c</code> on Linux or
+<code>cmd /S /C</code> on Windows</li>
+<li><strong>There can only be one <code>CMD</code> instruction in a
+Dockerfile</strong>. If you list more than one CMD then only the last
+CMD will take effect.</li>
+<li><strong><code>RUN</code> v.s <code>CMD</code>. <code>RUN</code>
+actually runs a command and commits the result; <code>CMD</code> does
+not execute anything at build time, but specifies the intended command
+for the image.</strong></li>
+<li>The <code>WORKDIR</code> instruction sets the working directory for
+any <code>RUN, CMD, ENTRYPOINT, COPY</code> and <code>ADD</code>
+instructions that follow it in the Dockerfile. If the
+<code>WORKDIR</code> doesn’t exist, it will be created even if it’s not
+used in any subsequent Dockerfile instruction</li>
+<li><code>COPY &lt;src&gt;... &lt;dest&gt;</code>; <strong>The
+<code>COPY</code> instruction copies new files or directories from
+<code>&lt;src&gt;</code> and adds them to the filesystem of the
+container at the path <code>&lt;dest&gt;</code>;The
+<code>&lt;dest&gt;</code> is an absolute path, or a path relative to
+<code>WORKDIR</code>, If <code>&lt;dest&gt;</code> doesn’t exist, it is
+created along with all missing directories in its path.</strong></li>
+<li><code>ADD &lt;src&gt; &lt;dest&gt;</code>; The <code>ADD</code>
+instruction copies new files, directories or <strong>remote file
+URLs</strong> from <code>&lt;src&gt;</code> and adds them to the
+filesystem of the image at the path <code>&lt;dest&gt;</code></li>
+<li><code>COPY</code> v.s <code>ADD</code>. <code>COPY</code> only lets
+you copy in a <strong>local</strong> file or directory from your host
+(the machine building the Docker image) into the Docker image itself.
+<code>ADD</code> lets you do that too, but it also supports 2 other
+sources. First, with <code>ADD</code> you can use a <strong>remote
+URL</strong> instead of a local file / directory<strong>. Secondly, you
+can </strong>extract a tar file** from the source directly into the
+destination.</li>
+<li>Environment variables (declared with the <code>ENV</code> statement)
+can also be used in certain instructions as variables to be interpreted
+by the Dockerfile; Environment variables are notated in the Dockerfile
+either with <code>$variable_name</code> or
+<code>$&#123;variable_name&#125;</code></li>
+</ul>
+<p>因此，构建上述的环境的 Dockerfile 如下所示, 参考链接中的 Dockerfile
+中有两个 FROM 语句，分别表示 ubuntu 环境和 python 环境，且需要安装 pip
+等工具，这里直接通过 <code>nitincypher/docker-ubuntu-python-pip</code>
+提供这些功能</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># train and run the model with RESTful api</span></span><br><span class="line"><span class="keyword">FROM</span> nitincypher/docker-ubuntu-python-pip</span><br><span class="line"></span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> ./requirements.txt /app/requirements.txt</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">WORKDIR</span><span class="language-bash"> /app</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> pip install -r requirements.txt</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> . /app</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">CMD</span><span class="language-bash"> python /app/train_model.py &amp;&amp; python /app/server.py</span></span><br></pre></td></tr></table></figure>
+<p>实验的项目路径为 <code>/opt/src/DeployMachineLearningModel</code>,
+则构建 image 的命令为 <code>docker build -t deploy_ml_model .</code>,
+其过程如下所示,可以看到</p>
+<p>1)构建前系统的 docker images
+情况，由于之前已经运行过这条命令，因此依赖的
+<code>nitincypher/docker-ubuntu-python-pip</code> 也已经 pull
+到本地了。如果是第一次运行，则下载
+<code>nitincypher/docker-ubuntu-python-pip</code> 需要一定的时间 2)
+Dockerfile 中每条命令都是运行时的一个 step，在构建时不会运行
+<code>CMD</code> 的命令，而是通过 <code>docker run</code> 时才执行</p>
+<figure>
+<img data-src="https://wulc.me/imgs/deploy_ml_model_build_image.png"
+alt="build" />
+<figcaption aria-hidden="true">build</figcaption>
+</figure>
+<p>构建完成后可以看到系统中的多了 <code>deploy_ml_model</code> 这个
+image</p>
+<figure>
+<img data-src="https://wulc.me/imgs/deploy_ml_model_images_after_built.png"
+alt="after build" />
+<figcaption aria-hidden="true">after build</figcaption>
+</figure>
+<h3 id="运行">运行</h3>
+<p>接着需要运行这个 image，运行的 container 内部 Flask 在监听 5000
+端口，因此需要通过端口映射为外部机器可见的端口，通过命令
+<code>docker run -p 8000:5000 deploy_ml_model</code> 可通过运行 docker
+的机器的 8000 端口访问 container 内部提供的 api，如下所示</p>
+<figure>
+<img data-src="https://wulc.me/imgs/deploy_ml_model_run_container.png"
+alt="run container" />
+<figcaption aria-hidden="true">run container</figcaption>
+</figure>
+<p>将上面的客户端的代码的端口改成 8000 便是 <code>client.py</code>
+源文件了，运行 <code>client.py</code> 结果如下所示，</p>
+<figure>
+<img data-src="https://wulc.me/imgs/deploy_ml_model_client_response.png"
+alt="response" />
+<figcaption aria-hidden="true">response</figcaption>
+</figure>
+<p>此时的 server 接收到一个 POST 请求，输出的日志如下</p>
+<figure>
+<img data-src="https://wulc.me/imgs/deploy_ml_model_server_log.png"
+alt="server log" />
+<figcaption aria-hidden="true">server log</figcaption>
+</figure>
+<p>如果需要停止运行的 container，通过 <code>docker stop</code> 并指定
+container 的 id 即可， container id
+并不需要全输入，只需要输入能系统能区分不同 container
+的程度即可。该过程如下所示</p>
+<figure>
+<img data-src="https://wulc.me/imgs/deploy_ml_model_stop_container.png"
+alt="stop container" />
+<figcaption aria-hidden="true">stop container</figcaption>
+</figure>
+<h2
+id="jenkins或自定义脚本触发自动构建">Jenkins或自定义脚本触发自动构建</h2>
+<p>上面的构建流程中，只要每次代码或模型有更新便需要重新手动执行
+<code>docker build</code> 和 <code>docker run</code>, 而通过 jenkins
+或自定义的脚本便能让这个流程自动化，这个过程需要结合 Github
+实现，即当代码仓库有更新时，便自动构建新的 image。</p>
+<p>其基本原理是 Github 在 repository 发生变化时，会向指定的 url 发送一个
+POST 请求告知 repository 有更新，只要我们监听这个 url 并在收到这个 POST
+请求时进行更新即可，这个机制在 Github 中被称为 <a
+target="_blank" rel="noopener" href="https://developer.github.com/webhooks/">WebHooks</a>。Github
+提供的 WebHooks 中涵盖了多种更新情况，不同的更新对应于不同的
+event，可以在 Github 中自定义需要触发的事件，默认触发的是 PUSH
+事件（如commit、PR 等）。</p>
+<h3 id="jenkins-自动构建">Jenkins 自动构建</h3>
+<p>Jenkins 在 Ubuntu 下的安装参考 <a
+target="_blank" rel="noopener" href="https://jenkins.io/doc/book/installing/#debianubuntu">Installing
+Jenkins</a>，这里不再赘述</p>
+<p>Jenkins 是一个功能齐全的自动化构建工具，类似 Docker 通过 Dockerfile
+定义 image 的构建过程，jenkins 也能通过 Jenkinsfile
+定义工程的构建过程。</p>
+<p>但是本文只用到其接收到 Github 发送的 POST
+请求并触发其重新构建的功能，其配置流程如下，首先新建一个自由风格的项目，并配置其为
+Github 项目，管理源码的方式为 git，如下所示</p>
+<figure>
+<img data-src="https://wulc.me/imgs/deploy_ml_model_jenkins_git_config.png"
+alt="configure" />
+<figcaption aria-hidden="true">configure</figcaption>
+</figure>
+<p>然后配置触发方式和构建的命令如下图所示</p>
+<figure>
+<img data-src="https://wulc.me/imgs/deploy_ml_model_jenkins_trigger.png"
+alt="configure" />
+<figcaption aria-hidden="true">configure</figcaption>
+</figure>
+<p>配置并保存后便可直接 “立即构建” 进行项目的构建，jenkins
+会自动下载仓库并进行构建，通过控制台输出可以看到构建过程，该过程如下所示</p>
+<figure>
+<img data-src="https://wulc.me/imgs/deploy_ml_model_build_with_jenkins.png"
+alt="build" />
+<figcaption aria-hidden="true">build</figcaption>
+</figure>
+<p>点击控制台输出后显示的日志</p>
+<figure>
+<img data-src="https://wulc.me/imgs/deploy_ml_model_jenkins_log.png"
+alt="log" />
+<figcaption aria-hidden="true">log</figcaption>
+</figure>
+<p>上面提到了触发 jenkins 自动构建的原理，即当代码仓库有更新时，github
+会发送 POST 请求给 jenkins，然后 jenkins 会进行自动构建，这种情况下
+jenkins 首先需要有一个能够接受 github 的 POST 请求的 url，但是 jenkins
+当前是部署在局域网内部的，这时便需要借助 <a
+target="_blank" rel="noopener" href="https://ngrok.com/">ngrok</a> 这个工具来生成一个 github 能够访问的
+url 了</p>
+<p>ngrok 的作用就是为局域网内部的机器生成一个 public
+url，从而使得内部的服务能够被其他机器访问，其基本原理就是 ngrok
+在这个访问过程中提供了中转。ngrok 的下载和安装都很简单，可参考上面上面的
+ngrok 的官网，这里不再赘述。</p>
+<p>由于 jenkins 在本地的端口是8080，因此通过 ngrok 为 jenkins 生成
+public url 如下所示，可以看到生成了 http 和 https
+两个类型的地址；最下面显示的是最近的请求情况，可以看到 github
+发送了3个更新的 POST 请求</p>
+<figure>
+<img data-src="https://wulc.me/imgs/deploy_ml_model_ngrok_public_address.png"
+alt="ngrok" />
+<figcaption aria-hidden="true">ngrok</figcaption>
+</figure>
+<p>得到 public url 后，需要将其配置到 github 项目的 webhook 中，打开
+github 项目的地址，点击 setting 进行设置，设置如下所示，Payload URL
+为通过 ngrok 得到的 public url 加上 <code>/github-webhook/</code>
+路径，注意不能省略最后的斜杆，否则会出现 <a
+target="_blank" rel="noopener" href="https://github.com/spinnaker/spinnaker/issues/2067">403 No valid
+crumb was included in the request</a> 的错误</p>
+<figure>
+<img data-src="https://wulc.me/imgs/deploy_ml_model_github_webhook.png"
+alt="webhook" />
+<figcaption aria-hidden="true">webhook</figcaption>
+</figure>
+<p>点击 update webhook 后（第一次是 save）后，github 便会向 payload url
+发送一个 POST 请求，就是在上上一张图最下方显示的 POST 请求。</p>
+<p>这样当 github 的仓库有更新时就会自动触发 jenkins
+进行自动构建，但是由于前一个构建任务会一直运行 http server
+接受，因此会出现如下图的 already in progress 的问题，新的 build
+会被挂起，直到前一个build 被终止（通过 <code>docker stop</code>)
+关掉服务</p>
+<figure>
+<img data-src="https://wulc.me/imgs/deploy_ml_model_rebuild_block.png"
+alt="trigger build" />
+<figcaption aria-hidden="true">trigger build</figcaption>
+</figure>
+<p>针对这个问题，这个 issue <a
+target="_blank" rel="noopener" href="https://github.com/jenkinsci/ghprb-plugin/issues/379">Pushing new
+commit to existing PR does not stop previous build</a> 给出了通过配置
+jenkins
+的解决方法，但是我在我配置的环境中找不到这个设置选项，试了几遍后却依然找不到这个配置选项，所以就有了下面的自定义脚本进行自动构建。</p>
+<p>而针对这个问题，令一种解决方法是在构建命令时只写
+<code>docker build</code>, 每次都只是生成最新的 image；而
+<code>docker run</code>
+留给人工去启动，但是这样可能就显得不那么自动化了。</p>
+<h3 id="自定义脚本进行自动构建">自定义脚本进行自动构建</h3>
+<p>细想一下上面的触发构建过程，本地需要做的是 jenkins 接受 github
+发过来的 POST 请求然后启动 <code>docker build</code> 和
+<code>docker run</code>, 然后由于已经有 container
+在跑了，因此无法决定启动新的构建过程。</p>
+<p>那其实我们也可以<strong>自己建立一个 http server 接受 github 的 POST
+请求，在接受到请求后通过 <code>docker stop</code> 停掉当前正在运行的
+container 并开始新的构建过程</strong>，而借助前文描述的
+Flask，我们可以很容易建立一个接受 POST 请求的 http
+server，代码如下所示(见源文件 <code>hook_server.py</code>)</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask, jsonify</span><br><span class="line"><span class="keyword">import</span> subprocess</span><br><span class="line"></span><br><span class="line">app = Flask(__name__)</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/github_webhook&#x27;</span>, methods=[<span class="string">&#x27;POST&#x27;</span>]</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">rebuild</span>():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;new commits to github repository&#x27;</span>)</span><br><span class="line">    <span class="comment">## subprocess.run can just deal with the first change</span></span><br><span class="line">    <span class="comment">## since it stuck in it, use popen instead</span></span><br><span class="line">    <span class="comment"># subprocess.run([&#x27;sh&#x27;, &#x27;build_and_run.sh&#x27;])</span></span><br><span class="line">    subprocess.Popen([<span class="string">&#x27;sh&#x27;</span>, <span class="string">&#x27;build_and_run.sh&#x27;</span>])</span><br><span class="line">    <span class="keyword">return</span> jsonify(<span class="string">&#x27;got it&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    app.run(debug=<span class="literal">True</span>, host=<span class="string">&#x27;0.0.0.0&#x27;</span>, port=<span class="number">8081</span>)</span><br></pre></td></tr></table></figure>
+<p>为了保持一致性，这里的路径也选择为 <code>/github_webhook</code>,
+为了简单起见，处理的函数只是接受请求，没有对 POST
+请求做进一步的解析，接收到命令后通过 subprocess
+新创建一个进程执行重新构建并运行 docker image 的脚本
+<code>build_and_run.sh</code>, 注意这里要<strong>使用
+<code>subprocess.Popen</code> 而不是
+<code>subprocess.run</code></strong>, 因为 <code>subprocess.run</code>
+要等命令执行返回才能继续往下执行，而我们启动的服务也是一个 http
+server。如果使用 <code>subprocess.run</code>
+只能在第一次的更新时触发自动构建，之后会一直保持在新创建的进程中而无法处理
+github 发过来的新的请求，因此要使用 <code>subprocess.Popen</code>
+避免这个问题，两者更详细的区别可参考 <a
+target="_blank" rel="noopener" href="https://stackoverflow.com/questions/39187886/what-is-the-difference-between-subprocess-popen-and-subprocess-run">What
+is the difference between subprocess.popen and subprocess.run</a></p>
+<p>上面执行的脚本 <code>build_and_run.sh</code> 的具体内容如下, 首先通过
+git pull 更新代码，这里项目的代码的本地路径为
+"/opt/src/DeployMachineLearningModel/"，然后判断当前是否有正在运行的
+container，如果有则先 stop，然后再执行构建过程，在构建和运行之间通过
+<code>docker image rm</code>（等价于 <code>docker rmi</code>）删除
+docker 的 <code>&lt;none&gt;:&lt;none&gt;</code> images, 这些 images
+也被称为 dangling images, 是被覆盖的原来的
+image，会占用额外的磁盘空间，详细信息可参考 <a
+target="_blank" rel="noopener" href="https://www.projectatomic.io/blog/2015/07/what-are-docker-none-none-images/">What
+are Docker <code>&lt;none&gt;:&lt;none&gt;</code> images?</a>。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment"># update code</span></span><br><span class="line">project_dir=<span class="string">&quot;/opt/src/DeployMachineLearningModel/&quot;</span></span><br><span class="line"><span class="built_in">cd</span> <span class="variable">$project_dir</span> &amp;&amp; git pull</span><br><span class="line"></span><br><span class="line"><span class="comment"># build and run with new code</span></span><br><span class="line">running_container=$(docker ps | grep deploy_ml_model | awk  -F <span class="string">&#x27; &#x27;</span> <span class="string">&#x27;&#123;print $1&#125;&#x27;</span>)</span><br><span class="line"><span class="keyword">if</span> [ -n <span class="string">&quot;<span class="variable">$running_container</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;container id not empty, stop it firstly&quot;</span></span><br><span class="line">    docker stop <span class="variable">$running_container</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;empty container id&quot;</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line">docker build -t deploy_ml_model .</span><br><span class="line">docker image <span class="built_in">rm</span> -f $(docker images -f <span class="string">&quot;dangling=true&quot;</span> -q)</span><br><span class="line">docker run -p 8000:5000 deploy_ml_model</span><br></pre></td></tr></table></figure>
+<p>同样需要通过 ngrok 映射本地的 http server 到一个 public url 并将
+public url 添加到 github 项目的 webhook 中，如下图所示</p>
+<figure>
+<img data-src="https://wulc.me/imgs/deploy_ml_model_ngrok_script.png"
+alt="ngrok script" />
+<figcaption aria-hidden="true">ngrok script</figcaption>
+</figure>
+<figure>
+<img data-src="https://wulc.me/imgs/deploy_ml_model_script_github_webhook.png"
+alt="script github webhook" />
+<figcaption aria-hidden="true">script github webhook</figcaption>
+</figure>
+<p>通过 <code>python hook_server.py</code> 运行脚本监听指定的 repository
+是否有新的 commit，如果有，则触发运行 <code>build_and_run.sh</code>
+脚本，其过程如下所示</p>
+<figure>
+<img data-src="https://wulc.me/imgs/deploy_ml_model_trigger_with_script.png"
+alt="script trigger run" />
+<figcaption aria-hidden="true">script trigger run</figcaption>
+</figure>
+<h2 id="kubernets">Kubernets</h2>
+<p>通过上面的三个步骤，已经基本能够形成一个自动化的部署方案了，个人的自娱自乐基本也够了，但是上面还只是单点的服务，缺乏高可用性和伸缩性。</p>
+<p>针对这一点，Docker 会经常与 Kubernets 配合使用，Kubernets
+是专门为容器化应用的自动部署、拓展和管理的一个分布式系统。Kubernets
+的前身是 Google 内部的系统 Brog，而 google 也参与了 Kubernets
+的设计，Kubernets + 容器的部署方式应该会是未来的发展趋势，这里主要根据
+<a target="_blank" rel="noopener" href="https://kubernetes.io/docs/tutorials/kubernetes-basics/">Learn
+Kubernetes Basics</a> 总结 Kubernets
+的一些经典的使用方式。包括应用的部署，拓展，滚动更新等。</p>
+<p>由于实验环境需要多台机器，虽然 <a
+target="_blank" rel="noopener" href="https://kubernetes.io/docs/setup/minikube/">Minikube</a>
+能够在单机上实现 Kubernets sigle-node 集群，但是根据 <a
+target="_blank" rel="noopener" href="https://kubernetes.io/docs/tasks/tools/install-minikube/">Install
+Minikube</a> ，virtual box 中的虚拟机似乎不支持 VT-x or AMD-v
+virtualization，因此，这里直接使用 <a
+target="_blank" rel="noopener" href="https://kubernetes.io/docs/tutorials/kubernetes-basics/">Learn
+Kubernetes Basics</a> 提供的 shell 环境。</p>
+<h3 id="基本架构">基本架构</h3>
+<p>Kubernets cluster
+是经典主从架构（master-nodes)，主（master）负责管理集群，如调度、拓展、更新等，从（nodes)则负责计算或提供服务，每个
+node 通过 <strong>Kubelet</strong> 这个 agent 与 master
+通信，除此之外，node 中还要有容器运行环境如 Docker 或
+rkt。基本架构如下图所示</p>
+<figure>
+<img data-src="https://wulc.me/imgs/deploy_ml_model_kubernets_structure.png"
+alt="basic structure" />
+<figcaption aria-hidden="true">basic structure</figcaption>
+</figure>
+<p>Kubernets 提供的命令行程序 <strong>Kubectl</strong>（注意与node的
+Kubelet 区分）能够获取与集群通信，获取集群信息，部署应用等，如下图是通过
+kubectl 获取通过 Minikube 启动的 Kubernets 集群的一些信息</p>
+<ul>
+<li>kubectl cluster-info：提供 web 界面查看应用的具体信息</li>
+<li>kubectl nodes：显示所有的 nodes 的信息</li>
+</ul>
+<figure>
+<img data-src="https://wulc.me/imgs/deploy_ml_model_kubernets_info.png"
+alt="basic info" />
+<figcaption aria-hidden="true">basic info</figcaption>
+</figure>
+<h3 id="部署deployment">部署(deployment)</h3>
+<p>部署应用到 Kubernets 集群时，需要构建好要运行的 docker image
+的路径，部署使用的也是命令行程序 kubectl，命令是
+<code>kubectl run NAME --image=image_url</code>, NAME
+是指定的应用的名称，--image 则是指定的 image 的 url，通过
+<code>kubectl get deployments</code>
+可以看到当前部署的应用，如下图所示</p>
+<figure>
+<img data-src="https://wulc.me/imgs/deploy_ml_model_kubernets_deploy.png"
+alt="deploy with run" />
+<figcaption aria-hidden="true">deploy with run</figcaption>
+</figure>
+<p>在 Kubernets cluser
+中启动了应用后，外部网络是无法直接访问这个应用的，这点跟 Docker
+有点相似，需要做映射，但是为了调试的便利性，kubectl 提供了
+<code>kubectl proxy</code>
+这个命令，相当于把Cluster内部的地址映射到本地机器，启动之后可通过本机访问
+Kubernets cluser 内部 的应用。如下图所示是访问上面启动的应用</p>
+<figure>
+<img data-src="https://wulc.me/imgs/deploy_ml_model_kubernets_proxy.png"
+alt="kubectl proxy" />
+<figcaption aria-hidden="true">kubectl proxy</figcaption>
+</figure>
+<h4 id="pods">Pods</h4>
+<p><strong>上面通过 kubectl 进行部署后，Kubernets 会在 node 中创建了 Pod
+来容纳 container，一个 node 中可能有多个 pod，Kubernetes 的 master
+会根据 node 的资源情况在不同 node 中分配 pod</strong>；pod 是 container
+和 其所包含的资源的机器，其定义如下，</p>
+<blockquote>
+<p>A Pod is a Kubernetes abstraction that represents a group of one or
+more application <strong>containers</strong> (such as Docker or rkt),
+and some <strong>shared resources</strong> for those containers. Those
+resources include:</p>
+<ul>
+<li>Shared storage, as Volumes</li>
+<li>Networking, as a unique cluster IP address</li>
+<li>Information about how to run each container, such as the container
+image version or specific ports to use</li>
+</ul>
+</blockquote>
+<p><strong>Pod 相当于应用的“逻辑主机”</strong>，而 a group of containers
+值得是一个应用中有若干个联系紧密的 container 协作，这些 containers
+具有相同的IP。</p>
+<figure>
+<img data-src="https://wulc.me/imgs/deploy_ml_model_kubernets_pod.png"
+alt="pod" />
+<figcaption aria-hidden="true">pod</figcaption>
+</figure>
+<p>除了 <code>kubectl run</code>, kubectl 常用的命令一下这些</p>
+<ul>
+<li>kubectl get：列出当前系统的资源（pods、nodes等），后面跟着</li>
+<li>kubectl describe：列出资源的详细信息</li>
+</ul>
+<p>如下是通过这两条命令获取前面部署的应用的 pod 信息</p>
+<figure>
+<img data-src="https://wulc.me/imgs/deploy_ml_model_kubernets_pod_info.png"
+alt="pod info" />
+<figcaption aria-hidden="true">pod info</figcaption>
+</figure>
+<p>下面的命令则是查看 pod 的日志信息在 pod 中的 container
+执行命令，通过命令
+<code>export POD_NAME=$(kubectl get pods -o go-template --template '&#123; &#123;range .items&#125; &#125;&#123; &#123;.metadata.name&#125;&#125;&#123; &#123;"\n"&#125;&#125;&#123; &#123;end&#125;&#125;')</code>
+能够获取当前的 pod name</p>
+<ul>
+<li><code>kubectl logs $POD_NAME</code>：打印 pod 中的 container
+的日志信息</li>
+<li><strong><code>kubectl exec $POD_NAME</code>: 在 pod 中的 container
+执行命令</strong></li>
+</ul>
+<p>下面首先通过命令获取了 pod 的名称，然后通过 pod
+的名称查看其日志并执行命令，执行效果如下所示</p>
+<figure>
+<img data-src="https://wulc.me/imgs/deploy_ml_model_kubernets_pod_log_exec.png"
+alt="log exec" />
+<figcaption aria-hidden="true">log exec</figcaption>
+</figure>
+<h4 id="service">Service</h4>
+<p>Service 可以说是比 Pod 更高一级的概念，假设部署某个应用时指定其
+replicas 的数量是 3，那么就会有 3 个相互独立的 pods，每个 pod 都有自己的
+ip，，而 service 就是这些 pods 的集合。Service 管理着这些 pod
+的失败重启等，从而向上提供 Pod 的抽象；service 的概念如下图所示</p>
+<figure>
+<img data-src="https://wulc.me/imgs/deploy_ml_model_kubernets_service.png"
+alt="service" />
+<figcaption aria-hidden="true">service</figcaption>
+</figure>
+<p>关于 service 的定义如下</p>
+<blockquote>
+<p>A Service in Kubernetes is an abstraction which defines a logical set
+of <strong>Pods</strong> and a <strong>policy</strong> by which to
+access them</p>
+</blockquote>
+<p>除了 pods，service 中还有一项是 policy，指的是让 cluster 内部的 pod
+供外界进行访问的方式，service 可设置的访问方式有下面四种</p>
+<blockquote>
+<ol type="1">
+<li><strong>ClusterIP</strong> (default) - Exposes the Service on an
+internal IP in the cluster. This type makes the Service only reachable
+from within the cluster.</li>
+<li><strong>NodePort</strong> - Exposes the Service on the same port of
+each selected Node in the cluster using NAT. Makes a Service accessible
+from outside the cluster using
+<code>&lt;NodeIP&gt;:&lt;NodePort&gt;</code>. Superset of
+ClusterIP.</li>
+<li><strong>LoadBalancer</strong> - Creates an external load balancer in
+the current cloud (if supported) and assigns a fixed, external IP to the
+Service. Superset of NodePort.</li>
+<li><strong>ExternalName</strong> - Exposes the Service using an
+arbitrary name (specified by externalName in the spec) by returning a
+CNAME record with the name. No proxy is used. This type requires v1.7 or
+higher of kube-dns.</li>
+</ol>
+</blockquote>
+<p>通过 <code>kubectl expose</code> 能够让集群内部的 service
+供外界访问，如下指定的访问方式是 <code>NodePort</code>, kubernets
+默认会启动一个 keubernets 服务，就是第一条
+<code>kubectl get services</code> 所显示的内容, 而经过
+<code>kubectl expose</code> 的服务也会出现在其中，内部端口 8080
+被映射为了外部的 32066 端口，通过外部ip（命令中的 minikube ip） 和 32066
+端口便能访问内部的服务。</p>
+<figure>
+<img data-src="https://wulc.me/imgs/deploy_ml_model_kubernets_exopse_service.png"
+alt="expose" />
+<figcaption aria-hidden="true">expose</figcaption>
+</figure>
+<p>Service 通过 <a
+target="_blank" rel="noopener" href="https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/">Labels
+和 Selectors</a> 来区分同一个 service 中的不同 pod，label 就是一系列的
+key-value 对，<strong>label
+可结合具体的应用场景进行使用，如区分开发、测试和生产环境的
+pod；区分同一个 pod 的不同版本等。</strong></p>
+<p>部署时每个 pod 会被自动分配一个 label；通过
+<code>kubectl describe deployment</code> 查看其对应的 label，也可以在
+<code>kubectl get</code> 查看 pod 或 services 的信息时通过
+<code>-l</code> 参数指定具体的 pod 或 service，如下图所示</p>
+<figure>
+<img data-src="https://wulc.me/imgs/deploy_ml_model_kubernets_pod_label.png"
+alt="see label" />
+<figcaption aria-hidden="true">see label</figcaption>
+</figure>
+<p>通过 <code>kubectl label</code> 可更改 pod 的 label，如下图所示</p>
+<figure>
+<img data-src="https://wulc.me/imgs/deploy_ml_model_kubernets_change_pod_label.png"
+alt="change label" />
+<figcaption aria-hidden="true">change label</figcaption>
+</figure>
+<p>可以根据 label 删除 service，此时虽然外部无法访问 pod，但是集群内部的
+pod 仍然在运行，如下图所示</p>
+<figure>
+<img data-src="https://wulc.me/imgs/deploy_ml_model_kubernets_delete_service.png"
+alt="delete service" />
+<figcaption aria-hidden="true">delete service</figcaption>
+</figure>
+<h3 id="伸缩性scaling">伸缩性(scaling)</h3>
+<p>伸缩性就是改变运行同一个 image 的 pods 的数量，如下图所示</p>
+<figure>
+<img data-src="https://wulc.me/imgs/deploy_ml_model_kubernets_scale.png"
+alt="pod" />
+<figcaption aria-hidden="true">pod</figcaption>
+</figure>
+<p>可以通过 <code>kubectl scale</code> 命令指定 replica 的数量，也可以<a
+target="_blank" rel="noopener" href="https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/">自动伸缩</a>，如下图所示是将原来只有一个
+pod 的 deployment 拓展到 4 个 pod， 从
+<code>kubectl get deployments</code> 可以看到当前 deployment 可用的 pod
+的数量</p>
+<figure>
+<img data-src="https://wulc.me/imgs/deploy_ml_model_kubernets_scale_pods.png"
+alt="scale pod" />
+<figcaption aria-hidden="true">scale pod</figcaption>
+</figure>
+<p>而有了多个 pod, service 就要决定如何分配访问这些 pods
+的流量，上面提到的 service 设置的访问方式 LoadBalancer
+就是在这里使用(需要注意的是 NodePort 和 LoadBalancer
+是可以共存)，通过下面访问多次的结果，可以看到每次访问的 pod
+都不一样，从而实现了负载均衡</p>
+<figure>
+<img data-src="https://wulc.me/imgs/deploy_ml_model_kubernets_load_balance.png"
+alt="load balance" />
+<figcaption aria-hidden="true">load balance</figcaption>
+</figure>
+<h3 id="滚动更新rolling-updates">滚动更新(rolling updates)</h3>
+<p>有了多个 pods，在更新 images 时便可以进行 rolling
+update，即不是一次性地 stop 所有 pods 然后同时进行更新，而是先停掉部分的
+pods，然后进行更新，并根据这个方法更新所有的 pods。如下图所示</p>
+<figure>
+<img data-src="https://wulc.me/imgs/deploy_ml_model_kubernets_rolling_update.png"
+alt="rolling update" />
+<figcaption aria-hidden="true">rolling update</figcaption>
+</figure>
+<p>这样的好处是在更新时不会让服务停止，如下图所示是更新前 pod
+的一些信息，可以看到此时 image 的版本均为 v1</p>
+<figure>
+<img data-src="https://wulc.me/imgs/deploy_ml_model_kubernets_before_update.png"
+alt="before update" />
+<figcaption aria-hidden="true">before update</figcaption>
+</figure>
+<p>下面通过 <code>kubectl set</code> 更新上图所示的 deployment，使用了
+v2 版本的 image，在 <code>kubectl set</code> 后，可以看到原来的 pod 处于
+terminating 的状态，且多了四个新的 pod（可通过 AGE 区分），随着 update
+完成，只有新的 pods 在运行，image 版本均变为了 v2，通过
+<code>kubectl rollout status</code> 可以查看更新的情况。</p>
+<figure>
+<img data-src="https://wulc.me/imgs/deploy_ml_model_kubernets_after_update.png"
+alt="after update" />
+<figcaption aria-hidden="true">after update</figcaption>
+</figure>
+<p>除此之外，
+Kubernets中的每次更新都有版本记录，可进行回滚，如下图更新了一个不存在的
+image，从 <code>kubectl get pods</code> 可以看到新的 pod 的状态是
+ErrImagePull，通过 <code>kubectl rollout undo</code>
+即可进行版本的回滚，最后所有 pods 的状态均恢复正常，image 版本均为
+v2，如果再进行一次 <code>kubectl rollout undo</code>，那么 image
+版本就变为 v1 了。</p>
+<figure>
+<img data-src="https://wulc.me/imgs/deploy_ml_model_kubernets_rollback.png"
+alt="rollback" />
+<figcaption aria-hidden="true">rollback</figcaption>
+</figure>
+<h2 id="总结">总结</h2>
+<p>本文主要介绍了部署机器学习模型的一种方式，通过 Flask，Docker，Jenkins
+和 Kubernets 共同构建。Flask 负责加载模型并提供 RESTful api，Docker
+负责把程序及其依赖的环境打包成镜像，Jenkins
+则可以在代码仓库有更新时触发自动构建，生成最新的
+image，本文也通过自定义脚本的方式来实现了这一简单功能，但是 Jenkins
+是一个功能非常丰富的工具，在项目更大更复杂时，采用 Jenkins
+会更加方便。</p>
+<p>通过 Flask，Docker 和 Jenkins
+可以实现基本的自动化部署，但是此时的服务是单点的，不具备容灾性和伸缩性，通过
+Kubernets 则可以较好地解决这个问题，只需要提供打包好的镜像，Kubernets
+便能够提供伸缩性服务，滚动更新，回滚等操作。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+              <a href="/tags/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/" rel="tag"><i class="fa fa-tag"></i> 工具使用</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2019/03/25/Leetcode%20%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A(496,%20975,%20503)-next%20greater-smaller%20element/" rel="prev" title="Leetcode 解题报告(496, 975, 503)-next greater/smaller element">
+                  <i class="fa fa-chevron-left"></i> Leetcode 解题报告(496, 975, 503)-next greater/smaller element
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2019/04/20/Markdown%20%E5%9B%BE%E7%89%87%E5%85%8D%E8%B4%B9%E4%B8%8A%E4%BC%A0%E5%B7%A5%E5%85%B7/" rel="next" title="Markdown 图片免费上传工具">
+                  Markdown 图片免费上传工具 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-pen"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id: "JmI6QmP3fMkLet6B",ck: "JmI6QmP3fMkLet6B"})</script>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wulc.me","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.15.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="在机器学习中，常常会遇到样本比例不平衡的问题，如对于一个二分类问题，正负样本的比例是 10:1。这种现象往往是由于本身数据来源决定的，如信用卡的征信问题中往往就是正样本居多。样本比例不平衡往往会带来不少问题，但是实际获取的数据又往往是不平衡的，因此本文主要讨论面对样本不平衡时的解决方法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="机器学习中样本比例不平衡的处理方法">
+<meta property="og:url" content="https://wulc.me/2017/07/06/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%AD%E6%A0%B7%E6%9C%AC%E6%AF%94%E4%BE%8B%E4%B8%8D%E5%B9%B3%E8%A1%A1%E7%9A%84%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="在机器学习中，常常会遇到样本比例不平衡的问题，如对于一个二分类问题，正负样本的比例是 10:1。这种现象往往是由于本身数据来源决定的，如信用卡的征信问题中往往就是正样本居多。样本比例不平衡往往会带来不少问题，但是实际获取的数据又往往是不平衡的，因此本文主要讨论面对样本不平衡时的解决方法。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2017-07-06T12:08:55.000Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.176Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://wulc.me/2017/07/06/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%AD%E6%A0%B7%E6%9C%AC%E6%AF%94%E4%BE%8B%E4%B8%8D%E5%B9%B3%E8%A1%A1%E7%9A%84%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wulc.me/2017/07/06/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%AD%E6%A0%B7%E6%9C%AC%E6%AF%94%E4%BE%8B%E4%B8%8D%E5%B9%B3%E8%A1%A1%E7%9A%84%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95/","path":"2017/07/06/机器学习中样本比例不平衡的处理方法/","title":"机器学习中样本比例不平衡的处理方法"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>机器学习中样本比例不平衡的处理方法 | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">吴良超的学习笔记</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%90%9C%E9%9B%86%E6%9B%B4%E5%A4%9A%E7%9A%84%E6%95%B0%E6%8D%AE"><span class="nav-number">1.</span> <span class="nav-text">搜集更多的数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%94%B9%E5%8F%98%E8%AF%84%E5%88%A4%E6%8C%87%E6%A0%87"><span class="nav-number">2.</span> <span class="nav-text">改变评判指标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E6%95%B0%E6%8D%AE%E8%BF%9B%E8%A1%8C%E9%87%87%E6%A0%B7"><span class="nav-number">3.</span> <span class="nav-text">对数据进行采样</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%88%E6%88%90%E6%A0%B7%E6%9C%AC"><span class="nav-number">4.</span> <span class="nav-text">合成样本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%94%B9%E5%8F%98%E6%A0%B7%E6%9C%AC%E6%9D%83%E9%87%8D"><span class="nav-number">5.</span> <span class="nav-text">改变样本权重</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">253</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2017/07/06/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%AD%E6%A0%B7%E6%9C%AC%E6%AF%94%E4%BE%8B%E4%B8%8D%E5%B9%B3%E8%A1%A1%E7%9A%84%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="机器学习中样本比例不平衡的处理方法 | 吴良超的学习笔记">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          机器学习中样本比例不平衡的处理方法
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2017-07-06 20:08:55" itemprop="dateCreated datePublished" datetime="2017-07-06T20:08:55+08:00">2017-07-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-tags"></i>
+      </span>
+      <span class="post-meta-item-text">标签</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>在机器学习中，常常会遇到样本比例不平衡的问题，如对于一个二分类问题，正负样本的比例是
+10:1。这种现象往往是由于本身数据来源决定的，如信用卡的征信问题中往往就是正样本居多。样本比例不平衡往往会带来不少问题，但是实际获取的数据又往往是不平衡的，因此本文主要讨论面对样本不平衡时的解决方法。</p>
+<span id="more"></span>
+<p>样本不平衡往往会导致模型对样本数较多的分类造成过拟合，即总是将样本分到了样本数较多的分类中；除此之外，一个典型的问题就是
+<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Accuracy_paradox">Accuracy
+Paradox</a>，这个问题指的是模型的对样本预测的准确率很高，但是模型的泛化能力差。其原因是模型将大多数的样本都归类为样本数较多的那一类，如下所示</p>
+<table>
+<thead>
+<tr class="header">
+<th>category</th>
+<th>Predicted Negative</th>
+<th>Predicted Positive</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Negative Cases</td>
+<td>9700</td>
+<td>150</td>
+</tr>
+<tr class="even">
+<td>Positive Cases</td>
+<td>50</td>
+<td>100</td>
+</tr>
+</tbody>
+</table>
+<p>准确率为 <span class="math display">\[\frac{9700+100}{9700 + 150 + 50
++ 100} = 0.98\]</span></p>
+<p>而假如将所有的样本都归为预测为负样本，准确率会进一步上升，但是这样的模型显然是不好的，实际上，模型已经对这个不平衡的样本过拟合了。</p>
+<p>针对样本的不平衡问题，有以下几种常见的解决思路</p>
+<ol type="1">
+<li>搜集更多的数据</li>
+<li>改变评判指标</li>
+<li>对数据进行采样</li>
+<li>合成样本</li>
+<li>改变样本权重</li>
+</ol>
+<h2 id="搜集更多的数据">搜集更多的数据</h2>
+<p>搜集更多的数据，从而让正负样本的比例平衡，这种方法往往是最被忽视的方法，然而实际上，当搜集数据的代价不大时，这种方法是最有效的。</p>
+<p>但是需要注意，当搜集数据的场景本来产生数据的比例就是不平衡时，这种方法并不能解决数据比例不平衡问题。</p>
+<h2 id="改变评判指标">改变评判指标</h2>
+<p>改变评判指标，也就是不用准确率来评判和选择模型，原因就是我们上面提到的
+Accuracy Paradox
+问题。实际上有一些评判指标就是专门解决样本不平衡时的评判问题的，如准确率，召回率，F1值，ROC（AUC），<a
+target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Cohen%27s_kappa">Kappa</a> 等。</p>
+<p>根据<a
+target="_blank" rel="noopener" href="http://alexkong.net/2013/06/introduction-to-auc-and-roc/">这篇文章</a>，ROC
+曲线具有不随样本比例而改变的良好性质，因此能够在样本比例不平衡的情况下较好地反映出分类器的优劣。</p>
+<p>关于评判指标更详细的内容可参考文章： <a
+target="_blank" rel="noopener" href="http://machinelearningmastery.com/classification-accuracy-is-not-enough-more-performance-measures-you-can-use/">Classification
+Accuracy is Not Enough: More Performance Measures You Can Use</a></p>
+<h2 id="对数据进行采样">对数据进行采样</h2>
+<p>对数据采样可以有针对性地改变数据中样本的比例，采样一般有两种方式：<code>over-sampling</code>
+和
+<code>under-sampling</code>，前者是增加样本数较少的样本，其方式是直接复制原来的样本，而后者是减少样本数较多的样本，其方式是丢弃这些多余的样本。</p>
+<p>通常来说，当总样本数目较多的时候考虑
+<code>under-sampling</code>，而样本数数目较少的时候考虑
+<code>over-sampling</code>。</p>
+<p>关于数据采样更详细的内容可参考 <a
+target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Oversampling_and_undersampling_in_data_analysis">Oversampling
+and undersampling in data analysis</a></p>
+<h2 id="合成样本">合成样本</h2>
+<p>合成样本(Synthetic
+Samples)是为了增加样本数目较少的那一类的样本，合成指的是通过组合已有的样本的各个
+feature 从而产生新的样本。</p>
+<p>一种最简单的方法就是从各个 feature
+中随机选出一个已有值，然后拼接成一个新的样本，这种方法增加了样本数目较少的类别的样本数，作用与上面提到的
+<code>Over-sampling</code>
+方法一样，不同点在于上面的方法是单纯的复制样本，而这里则是拼接得到新的样本。</p>
+<p>这类方法中的具有代表性的方法是 SMOTE（Synthetic Minority
+Over-sampling Technique），这个方法通过在相似样本中进行 feature
+的随机选择并拼接出新的样本。</p>
+<p>关于 SMOTE 更详细的信息可参考论文 <a
+target="_blank" rel="noopener" href="http://www.jair.org/papers/paper953.html">SMOTE: Synthetic
+Minority Over-sampling Technique</a></p>
+<h2 id="改变样本权重">改变样本权重</h2>
+<p>改变样本权重指的是<strong>增大样本数较少类别的样本的权重</strong>，当这样的样本被误分时，其损失值要乘上相应的权重，从而让分类器更加关注这一类数目较少的样本。</p>
+<p>参考：</p>
+<p><a
+target="_blank" rel="noopener" href="http://machinelearningmastery.com/tactics-to-combat-imbalanced-classes-in-your-machine-learning-dataset/">8
+Tactics to Combat Imbalanced Classes in Your Machine Learning
+Dataset</a> <a
+target="_blank" rel="noopener" href="https://www.quora.com/In-classification-how-do-you-handle-an-unbalanced-training-set">In
+classification, how do you handle an unbalanced training set?</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2017/06/28/LeetCode%20%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A(343,%20377)-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E6%B1%82%E8%A7%A3%E6%95%B0%E5%AD%97%E7%9A%84%E7%BB%84%E5%90%88%E6%96%B9%E6%A1%88/" rel="prev" title="LeetCode 解题报告(343, 377)-动态规划求解数字的组合方案">
+                  <i class="fa fa-chevron-left"></i> LeetCode 解题报告(343, 377)-动态规划求解数字的组合方案
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2017/07/14/%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B%E7%9A%84%E4%B8%89%E5%A4%A7%E9%97%AE%E9%A2%98%E5%8F%8A%E6%B1%82%E8%A7%A3%E6%96%B9%E6%B3%95/" rel="next" title="隐马尔可夫模型的三大问题及求解方法">
+                  隐马尔可夫模型的三大问题及求解方法 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-pen"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

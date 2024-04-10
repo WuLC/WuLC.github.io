@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id: "JmI6QmP3fMkLet6B",ck: "JmI6QmP3fMkLet6B"})</script>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wulc.me","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.15.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="拓扑排序是有向图中一种较常用的排序方法，本文主要以LeetCode上的两道题目 207. Course Schedule 和 210. Course Schedule II 讲述如何拓扑排序的概念与使用方法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LeetCode 解题报告(207,210)--拓扑排序(Topological Sort)">
+<meta property="og:url" content="https://wulc.me/2016/07/27/LeetCode%20%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A(207,210)--%E6%8B%93%E6%89%91%E6%8E%92%E5%BA%8F/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="拓扑排序是有向图中一种较常用的排序方法，本文主要以LeetCode上的两道题目 207. Course Schedule 和 210. Course Schedule II 讲述如何拓扑排序的概念与使用方法。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/image_1aoot4m511enm1ingj7tuka1fn79.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1aoot6dd87n98il1o71u3juu6m.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1aoov0c3j1tollp313bh2nl1mhf13.png">
+<meta property="article:published_time" content="2016-07-27T12:40:34.000Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.230Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="图">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/image_1aoot4m511enm1ingj7tuka1fn79.png">
+
+
+<link rel="canonical" href="https://wulc.me/2016/07/27/LeetCode%20%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A(207,210)--%E6%8B%93%E6%89%91%E6%8E%92%E5%BA%8F/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wulc.me/2016/07/27/LeetCode%20%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A(207,210)--%E6%8B%93%E6%89%91%E6%8E%92%E5%BA%8F/","path":"2016/07/27/LeetCode 解题报告(207,210)--拓扑排序/","title":"LeetCode 解题报告(207,210)--拓扑排序(Topological Sort)"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>LeetCode 解题报告(207,210)--拓扑排序(Topological Sort) | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">吴良超的学习笔记</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">253</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2016/07/27/LeetCode%20%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A(207,210)--%E6%8B%93%E6%89%91%E6%8E%92%E5%BA%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="LeetCode 解题报告(207,210)--拓扑排序(Topological Sort) | 吴良超的学习笔记">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          LeetCode 解题报告(207,210)--拓扑排序(Topological Sort)
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2016-07-27 20:40:34" itemprop="dateCreated datePublished" datetime="2016-07-27T20:40:34+08:00">2016-07-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-tags"></i>
+      </span>
+      <span class="post-meta-item-text">标签</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E5%9B%BE/" itemprop="url" rel="index"><span itemprop="name">图</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>拓扑排序是有向图中一种较常用的排序方法，本文主要以LeetCode上的两道题目
+<a target="_blank" rel="noopener" href="https://leetcode.com/problems/course-schedule/">207. Course
+Schedule</a> 和 <a
+target="_blank" rel="noopener" href="https://leetcode.com/problems/course-schedule-ii/">210. Course
+Schedule II</a> 讲述如何拓扑排序的概念与使用方法。</p>
+<span id="more"></span>
+<p>LeetCode 上的两道题目是关于拓扑排序（Topological
+Sort）比较经典的两道题目，大意就是有0~(n-1)的n门课程需要修，但是有部分课程需要先修了别的课程才能修，问是否能修完所有课程。从题意可知，将这些课程及依赖关系表示成一个有向图，那么当图中存在闭环时是不可能修完所有课程的，因为形成闭环的几门课程相互依赖，无法选择第一门开始修的课程。</p>
+<p>因此题目就是要求<strong>判断一个有向图中是否存在闭环</strong>。</p>
+<p>最直观的思路就是通过深度优先搜索以每个点为起点遍历，判断每次的遍历中是否存在闭环，若存在则无法修完，反之则可以。</p>
+<p>针对<a target="_blank" rel="noopener" href="https://leetcode.com/problems/course-schedule/">207.
+Course Schedule</a>，利用上面的思路实现的代码如下所示 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">canFinish</span>(<span class="params">self, numCourses, prerequisites</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        :type numCourses: int</span></span><br><span class="line"><span class="string">        :type prerequisites: List[List[int]]</span></span><br><span class="line"><span class="string">        :rtype: bool</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        course = [[<span class="number">0</span> <span class="keyword">for</span> i <span class="keyword">in</span> xrange(numCourses)] <span class="keyword">for</span> j <span class="keyword">in</span> xrange(numCourses)]</span><br><span class="line">        <span class="keyword">for</span> s <span class="keyword">in</span> prerequisites:</span><br><span class="line">            course[s[<span class="number">0</span>]][s[<span class="number">1</span>]] = <span class="number">1</span></span><br><span class="line">            </span><br><span class="line">        visited = [<span class="number">0</span> <span class="keyword">for</span> i <span class="keyword">in</span> xrange(numCourses)]</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> xrange(numCourses):</span><br><span class="line">            <span class="keyword">if</span> self.dfs(course, i, visited)==<span class="literal">False</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">                </span><br><span class="line">        </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">dfs</span>(<span class="params">self, course, num, visited</span>):</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> xrange(<span class="built_in">len</span>(course[num])):</span><br><span class="line">            <span class="keyword">if</span> course[num][i] == <span class="number">1</span>:</span><br><span class="line">                visited[num] = <span class="number">1</span></span><br><span class="line">                <span class="keyword">if</span> visited[i] == <span class="number">1</span>:</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    <span class="keyword">if</span> self.dfs(course, i, visited) == <span class="literal">False</span>:</span><br><span class="line">                        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">                    visited[num] = <span class="number">0</span></span><br></pre></td></tr></table></figure></p>
+<p>这个方法的时间复杂度是<span
+class="math inline">\(O(n^2)\)</span>,n是图中所有点的数目。在提交时会提示TLE。</p>
+<p>其实解决这种问题还有更好的方法，就是下面要介绍的拓扑排序，拓扑排序实际上返回的结果是有向图中所有点依据有向边指向顺序的排列而成的点。下面是拓扑排序的两个例子，第一个是合法的拓扑排序的结果，第二个是非法的拓扑排序结果。</p>
+<p><img data-src="https://wulc.me/imgs/image_1aoot4m511enm1ingj7tuka1fn79.png" /></p>
+<p><img data-src="https://wulc.me/imgs/image_1aoot6dd87n98il1o71u3juu6m.png" /></p>
+<p>那么该如何获得一个有向图的拓扑排序的结果？</p>
+<p>最直观的方法步骤如下 （1）
+找到图中入度（indegree）为0的点，然后记录这个点并删除这个点的所有出度（outdegree），也就是连接了这个点的其他点的入度
+（2） 检查图中是否有入度为0的点，如果有重复步骤（1）</p>
+<p>重复步骤（1）-（2）直至无法找到入度为0的点，此时如果记录的点的数目与所有点的数目相同，那么说明图中不存在闭合的环，反之则存在。</p>
+<p>上面这种方法虽然比较直观，但是每次找到入度为0的点的时间复杂度是<span
+class="math inline">\(O(n)\)</span>,因此总的时间复杂度是<span
+class="math inline">\(O(n^2)\)</span>，n为图中所有点的数目。下面介绍一种利用队列将时间复杂度降为<span
+class="math inline">\(O(n+e)\)</span>,e为图中所有边的数目。</p>
+<p>这种方法特殊的地方在于<strong>利用了一个队列存储当前入度为0的点，每次队首元素出列时，将队首元素出度相连的所有点的入度减去1</strong>。因此还需要一个额外的空间存储每个点出度连接的所有点。整体的数据结构如下：</p>
+<p><img data-src="https://wulc.me/imgs/image_1aoov0c3j1tollp313bh2nl1mhf13.png" /></p>
+<p>图中的<code>In-Degree array</code>就是存储每个点的入度数的队列，而<code>Adjacency list</code>则是存储每个点通过出度连接的所有点的数据结构。</p>
+<p><strong>这个算法的具体流程如下：
+(1)遍历有向图中所有的边可以构造出上面提到的两个数据结构，时间复杂度为<span
+class="math inline">\(O(e)\)</span>
+(2)从<code>In-Degree array</code>中找所有点中入度数为0的点，构成初始队列，时间复杂度<span
+class="math inline">\(O(n)\)</span>
+(3)通过队首出列，调整与队首元素出度相连的所有点的入度数，并检查这些点的入度数是否为0，若是则入队列
+(4)重复步骤(3)直至队列为空，此时若从队列中出列的所有点的数目为原来有向图中所有点的数目，则图中不存在闭合的环，且出列的顺序是一种可行的遍历方法</strong>。步骤(3)(4)的时间复杂度为<span
+class="math inline">\(O(n+e)\)</span></p>
+<p>因此这个方法的时间复杂度为<span
+class="math inline">\(O(n+e)\)</span>,除了能够判断有向图中是否有闭合的环，也能够给出一种合理的遍历方法，因此能解决上面提到的<a
+target="_blank" rel="noopener" href="https://leetcode.com/problems/course-schedule/">207. Course
+Schedule</a> 和 <a
+target="_blank" rel="noopener" href="https://leetcode.com/problems/course-schedule-ii/">210. Course
+Schedule II</a>两个问题。</p>
+<p>下面是<a target="_blank" rel="noopener" href="https://leetcode.com/problems/course-schedule/">207.
+Course Schedule</a> 的解决方法 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">canFinish</span>(<span class="params">self, numCourses, prerequisites</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        :type numCourses: int</span></span><br><span class="line"><span class="string">        :type prerequisites: List[List[int]]</span></span><br><span class="line"><span class="string">        :rtype: bool</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        indegree = [<span class="number">0</span> <span class="keyword">for</span> i <span class="keyword">in</span> xrange(numCourses)] </span><br><span class="line">        connection = &#123;i:[] <span class="keyword">for</span> i <span class="keyword">in</span> xrange(numCourses)&#125;</span><br><span class="line">        <span class="keyword">for</span> link <span class="keyword">in</span> prerequisites:</span><br><span class="line">            connection[link[<span class="number">1</span>]].append(link[<span class="number">0</span>])</span><br><span class="line">            indegree[link[<span class="number">0</span>]] += <span class="number">1</span></span><br><span class="line">        zero_indegree = []</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> xrange(numCourses):</span><br><span class="line">            <span class="keyword">if</span> indegree[i] == <span class="number">0</span>:</span><br><span class="line">                zero_indegree.append(i)</span><br><span class="line">        i = <span class="number">0</span></span><br><span class="line">        <span class="keyword">while</span> i&lt;<span class="built_in">len</span>(zero_indegree):</span><br><span class="line">            <span class="keyword">for</span> node <span class="keyword">in</span> connection[zero_indegree[i]]:</span><br><span class="line">                indegree[node] -= <span class="number">1</span></span><br><span class="line">                <span class="keyword">if</span>  indegree[node] == <span class="number">0</span>:</span><br><span class="line">                    zero_indegree.append(node)</span><br><span class="line">            i += <span class="number">1</span></span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(zero_indegree) == numCourses:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br></pre></td></tr></table></figure> <a
+target="_blank" rel="noopener" href="https://leetcode.com/problems/course-schedule-ii/">210. Course
+Schedule
+II</a>的解决方法跟上面一样，只需要将<code>return True</code>改为<code>return zero_indegree</code>即可。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/python/" rel="tag"><i class="fa fa-tag"></i> python</a>
+              <a href="/tags/%E5%9B%BE/" rel="tag"><i class="fa fa-tag"></i> 图</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2016/07/23/python%E5%86%85%E7%BD%AE%E7%9A%84%E6%8E%92%E5%BA%8F%E5%87%BD%E6%95%B0/" rel="prev" title="python内置的排序函数">
+                  <i class="fa fa-chevron-left"></i> python内置的排序函数
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2016/08/05/Segment%20Tree%20%E7%AE%80%E4%BB%8B/" rel="next" title="Segment Tree 简介">
+                  Segment Tree 简介 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-pen"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

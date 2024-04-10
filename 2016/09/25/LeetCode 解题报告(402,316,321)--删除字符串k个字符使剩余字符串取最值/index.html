@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id: "JmI6QmP3fMkLet6B",ck: "JmI6QmP3fMkLet6B"})</script>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wulc.me","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.15.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="本文主要讲述如何解决这一类问题：给定一个含有数字或英文字母的字符串，从中删除k个字符，使得剩下的字符取得最小值或最大值。数字的大小的比较容易理解，而字母的大小则是按照其ASCII码来排列，如&#39;abc&#39;&gt;&#39;abd&#39;。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LeetCode 解题报告(402,316,321)--删除字符串k个字符使剩余字符串取最值">
+<meta property="og:url" content="https://wulc.me/2016/09/25/LeetCode%20%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A(402,316,321)--%E5%88%A0%E9%99%A4%E5%AD%97%E7%AC%A6%E4%B8%B2k%E4%B8%AA%E5%AD%97%E7%AC%A6%E4%BD%BF%E5%89%A9%E4%BD%99%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%8F%96%E6%9C%80%E5%80%BC/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="本文主要讲述如何解决这一类问题：给定一个含有数字或英文字母的字符串，从中删除k个字符，使得剩下的字符取得最小值或最大值。数字的大小的比较容易理解，而字母的大小则是按照其ASCII码来排列，如&#39;abc&#39;&gt;&#39;abd&#39;。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2016-09-25T14:29:11.000Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.088Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="栈">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://wulc.me/2016/09/25/LeetCode%20%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A(402,316,321)--%E5%88%A0%E9%99%A4%E5%AD%97%E7%AC%A6%E4%B8%B2k%E4%B8%AA%E5%AD%97%E7%AC%A6%E4%BD%BF%E5%89%A9%E4%BD%99%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%8F%96%E6%9C%80%E5%80%BC/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wulc.me/2016/09/25/LeetCode%20%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A(402,316,321)--%E5%88%A0%E9%99%A4%E5%AD%97%E7%AC%A6%E4%B8%B2k%E4%B8%AA%E5%AD%97%E7%AC%A6%E4%BD%BF%E5%89%A9%E4%BD%99%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%8F%96%E6%9C%80%E5%80%BC/","path":"2016/09/25/LeetCode 解题报告(402,316,321)--删除字符串k个字符使剩余字符串取最值/","title":"LeetCode 解题报告(402,316,321)--删除字符串k个字符使剩余字符串取最值"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>LeetCode 解题报告(402,316,321)--删除字符串k个字符使剩余字符串取最值 | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">吴良超的学习笔记</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">253</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2016/09/25/LeetCode%20%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A(402,316,321)--%E5%88%A0%E9%99%A4%E5%AD%97%E7%AC%A6%E4%B8%B2k%E4%B8%AA%E5%AD%97%E7%AC%A6%E4%BD%BF%E5%89%A9%E4%BD%99%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%8F%96%E6%9C%80%E5%80%BC/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="LeetCode 解题报告(402,316,321)--删除字符串k个字符使剩余字符串取最值 | 吴良超的学习笔记">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          LeetCode 解题报告(402,316,321)--删除字符串k个字符使剩余字符串取最值
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2016-09-25 22:29:11" itemprop="dateCreated datePublished" datetime="2016-09-25T22:29:11+08:00">2016-09-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-tags"></i>
+      </span>
+      <span class="post-meta-item-text">标签</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E6%A0%88/" itemprop="url" rel="index"><span itemprop="name">栈</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>本文主要讲述如何解决这一类问题：<strong>给定一个含有数字或英文字母的字符串，从中删除k个字符，使得剩下的字符取得最小值或最大值</strong>。数字的大小的比较容易理解，而字母的大小则是按照其ASCII码来排列，如'abc'&gt;'abd'。</p>
+<span id="more"></span>
+<p>下面以 LeetCode 上的几道题目为例进行讲解： <a
+target="_blank" rel="noopener" href="https://leetcode.com/problems/remove-k-digits/">402. Remove K
+Digits</a> <a
+target="_blank" rel="noopener" href="https://leetcode.com/problems/remove-duplicate-letters/">316.
+Remove Duplicate Letters</a> <a
+target="_blank" rel="noopener" href="https://leetcode.com/problems/create-maximum-number/">321. Create
+Maximum Number</a></p>
+<p>解决这类题目的关键点是<strong>借助栈这种数据结构，遍历给出的字符串，将当前元素与栈顶元素比较大小，从而决定是否要将当前元素出栈，最后栈内剩余元素就是所需结果。</strong>这只是大致的过程，具体的步骤需要根据题目的具体要求。下面以上面的题目为例讲解</p>
+<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/remove-k-digits/">402. Remove
+K Digits</a> 这个题目要求去掉给定字符串（全是数字）中的 k
+个字符，使得剩余的字符串表示的数字最小。根据我们上面说到的大致流程，这道题目的解决步骤如下：</p>
+<p>1.创建一个栈，以及记录当前已经删除的字符数量的计数器
+2.对于字符串中的每个字符，记为当前字符，先将其与栈顶元素比较（假如栈不为空），若当前字符小于栈顶元素，则将栈顶元素出栈，将计数器加一，重复该操作直到<strong>栈为空</strong>或<strong>栈顶元素小于当前元素</strong>或<strong>计数器等于k</strong>，然后将当前元素入栈</p>
+<p>具体的 python 代码如下所示： <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">removeKdigits</span>(<span class="params">self, num, k</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        :type num: str</span></span><br><span class="line"><span class="string">        :type k: int</span></span><br><span class="line"><span class="string">        :rtype: str</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        stack = []</span><br><span class="line">        remain = <span class="built_in">len</span>(num) - k</span><br><span class="line">        <span class="keyword">for</span> dig <span class="keyword">in</span> num:</span><br><span class="line">            <span class="keyword">while</span> k <span class="keyword">and</span> stack <span class="keyword">and</span> stack[-<span class="number">1</span>] &gt; dig:</span><br><span class="line">                stack.pop()</span><br><span class="line">                k -= <span class="number">1</span></span><br><span class="line">            stack.append(dig)</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;&#x27;</span>.join(stack[:remain]).lstrip(<span class="string">&#x27;0&#x27;</span>) <span class="keyword">or</span> <span class="string">&#x27;0&#x27;</span></span><br></pre></td></tr></table></figure></p>
+<p>最后<code>return</code>语句之所以要选取前<code>len(num) - k</code>个字符是因为
+result
+中可能会有多余这个数目的字符，如对于从小到大排列的字符串就会出现这种情况，另外还需要处理掉前缀0以及当结果为空的时候返回
+'0'</p>
+<p><a
+target="_blank" rel="noopener" href="https://leetcode.com/problems/remove-duplicate-letters/">316.
+Remove Duplicate Letters</a> 的要求跟 <a
+target="_blank" rel="noopener" href="https://leetcode.com/problems/remove-k-digits/">402. Remove K
+Digits</a>
+类似，只是这次要求删除的是字母，而且<strong>每个字符要求出现一次且只能出现一次</strong>。</p>
+<p>解决的思路跟上面的一样，只是因为要求每个字符出现且只出现一次，在入栈和出栈的时候需要特殊的限制条件。具体步骤入下</p>
+<p>1.创建一个栈，记录每个字符在字符串中出现的次数的table
+2.对于字符串中的每个字符，先判断其是否已在栈内，若已在栈内，将table中对应该字符的计数减去1，然后跳到字符串的下一字符；若不在栈内，<strong>栈顶元素大于当前字符且table内剩余的栈顶元素的个数大于1时，将栈顶元素出栈</strong>，重复该操作直到<strong>栈为空</strong>或<strong>栈顶元素小于当前元素</strong>，然后将当前字符入栈</p>
+<p>实现的 python 代码如下所示： <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">removeDuplicateLetters</span>(<span class="params">self, s</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        :type s: str</span></span><br><span class="line"><span class="string">        :rtype: str</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        result, stored, count = [], <span class="built_in">set</span>(), &#123;&#125;</span><br><span class="line">        <span class="keyword">for</span> char <span class="keyword">in</span> s:</span><br><span class="line">             count.setdefault(char, <span class="number">0</span>)</span><br><span class="line">             count[char] += <span class="number">1</span></span><br><span class="line">        <span class="keyword">for</span> char <span class="keyword">in</span> s:</span><br><span class="line">            <span class="keyword">if</span> char <span class="keyword">in</span> stored:</span><br><span class="line">                count[char] -= <span class="number">1</span></span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">while</span> result <span class="keyword">and</span> result[-<span class="number">1</span>] &gt; char <span class="keyword">and</span> count[result[-<span class="number">1</span>]] &gt; <span class="number">1</span>:</span><br><span class="line">                    count[result[-<span class="number">1</span>]] -= <span class="number">1</span></span><br><span class="line">                    stored.remove(result.pop())</span><br><span class="line">                stored.add(char)</span><br><span class="line">                result.append(char)</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;&#x27;</span>.join(result)</span><br></pre></td></tr></table></figure></p>
+<p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/create-maximum-number/">321.
+Create Maximum Number</a>
+题目要求与上面两题相比不是相似性不高，但是也是利用这种思想的，题目要求从两个数组
+<code>nums1</code> 和 <code>nums2</code>
+中共选出k个数字，从而使得这k个数字组成的数最大。</p>
+<p>解决方法就是先从 <code>nums1</code> 中选出 i 个数（0 &lt;= i &lt;=
+k）使得这i个数组成的数字最大，然后从 <code>nums2</code> 中选出 k-i
+个数，同样使得这 k-i
+个数组成的数字最大，最后将从两个数组中抽出的最大数字合并起来。</p>
+<p>实现的代码如下所示： <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">maxNumber</span>(<span class="params">self, nums1, nums2, k</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        :type nums1: List[int]</span></span><br><span class="line"><span class="string">        :type nums2: List[int]</span></span><br><span class="line"><span class="string">        :type k: int</span></span><br><span class="line"><span class="string">        :rtype: List[int]</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">max</span>(self.merge(self.single_max(nums1, i), self.single_max(nums2, k-i)) <span class="keyword">for</span> i <span class="keyword">in</span> xrange(k+<span class="number">1</span>) <span class="keyword">if</span> i &lt;= <span class="built_in">len</span>(nums1) <span class="keyword">and</span> (k-i) &lt;= <span class="built_in">len</span>(nums2))</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">single_max</span>(<span class="params">self, nums, k</span>):</span><br><span class="line">        drop = <span class="built_in">len</span>(nums) - k</span><br><span class="line">        stack = []</span><br><span class="line">        <span class="keyword">for</span> digit <span class="keyword">in</span> nums:</span><br><span class="line">            <span class="keyword">while</span> drop <span class="keyword">and</span> stack <span class="keyword">and</span> stack[-<span class="number">1</span>] &lt; digit:</span><br><span class="line">                stack.pop()</span><br><span class="line">                drop -= <span class="number">1</span></span><br><span class="line">            stack.append(digit)</span><br><span class="line">        <span class="keyword">return</span> stack[:k]</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">merge</span>(<span class="params">self, nums1, nums2</span>):</span><br><span class="line">        <span class="keyword">return</span> [<span class="built_in">max</span>(nums1,nums2).pop(<span class="number">0</span>) <span class="keyword">for</span> _ <span class="keyword">in</span> xrange(<span class="built_in">len</span>(nums1)+<span class="built_in">len</span>(nums2))]</span><br></pre></td></tr></table></figure></p>
+<p>上面的代码中 <code>max(num1, num2)</code>中的 <code>nums1</code> 和
+<code>nums2</code>是两个数组，比较的时候回比较两个数组的第一个元素，然后返回第一个元素较大的数组，若第一个元素相等，则比较第二个元素，依此类推；pop(0)则是删除并返回下标为0的元素，也就是第一个元素。通过这些语法可以简化代码</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/python/" rel="tag"><i class="fa fa-tag"></i> python</a>
+              <a href="/tags/%E6%A0%88/" rel="tag"><i class="fa fa-tag"></i> 栈</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2016/09/18/%E5%B8%B8%E7%94%A8%E6%95%B0%E5%AD%A6%E7%AC%A6%E5%8F%B7%E7%9A%84%20LaTeX%20%E8%A1%A8%E7%A4%BA%E6%96%B9%E6%B3%95/" rel="prev" title="常用数学符号的 LaTeX 表示方法">
+                  <i class="fa fa-chevron-left"></i> 常用数学符号的 LaTeX 表示方法
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2016/10/03/%E6%A6%82%E7%8E%87%E8%AE%BA%E4%B8%8E%E6%95%B0%E7%90%86%E7%BB%9F%E8%AE%A1%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86(1)--%E4%B8%80%E7%BB%B4%E9%9A%8F%E6%9C%BA%E5%8F%98%E9%87%8F%E7%9A%84%E5%88%86%E5%B8%83%E7%B1%BB%E5%9E%8B/" rel="next" title="概率论与数理统计知识整理(1)--一维随机变量的分布类型">
+                  概率论与数理统计知识整理(1)--一维随机变量的分布类型 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-pen"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

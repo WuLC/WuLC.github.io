@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id: "JmI6QmP3fMkLet6B",ck: "JmI6QmP3fMkLet6B"})</script>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wulc.me","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.15.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="最近在看 python 一些语法知识，虽然 python 代码写了不少，但是对于一些高级语法的了解还不够深入；因此本文主要记录了一些比较生疏的知识点，主要包括了装饰器，类的特殊方法，常量类这三个方面的知识。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python 语法杂记--装饰器，类的特殊方法，常量类">
+<meta property="og:url" content="https://wulc.me/2018/12/15/python%20%E8%AF%AD%E6%B3%95%E6%9D%82%E8%AE%B0--%E8%A3%85%E9%A5%B0%E5%99%A8%EF%BC%8C%E7%B1%BB%E7%9A%84%E7%89%B9%E6%AE%8A%E6%96%B9%E6%B3%95%EF%BC%8C%E5%B8%B8%E9%87%8F%E7%B1%BB/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="最近在看 python 一些语法知识，虽然 python 代码写了不少，但是对于一些高级语法的了解还不够深入；因此本文主要记录了一些比较生疏的知识点，主要包括了装饰器，类的特殊方法，常量类这三个方面的知识。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-12-15T04:00:37.000Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.083Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="python">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://wulc.me/2018/12/15/python%20%E8%AF%AD%E6%B3%95%E6%9D%82%E8%AE%B0--%E8%A3%85%E9%A5%B0%E5%99%A8%EF%BC%8C%E7%B1%BB%E7%9A%84%E7%89%B9%E6%AE%8A%E6%96%B9%E6%B3%95%EF%BC%8C%E5%B8%B8%E9%87%8F%E7%B1%BB/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wulc.me/2018/12/15/python%20%E8%AF%AD%E6%B3%95%E6%9D%82%E8%AE%B0--%E8%A3%85%E9%A5%B0%E5%99%A8%EF%BC%8C%E7%B1%BB%E7%9A%84%E7%89%B9%E6%AE%8A%E6%96%B9%E6%B3%95%EF%BC%8C%E5%B8%B8%E9%87%8F%E7%B1%BB/","path":"2018/12/15/python 语法杂记--装饰器，类的特殊方法，常量类/","title":"python 语法杂记--装饰器，类的特殊方法，常量类"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>python 语法杂记--装饰器，类的特殊方法，常量类 | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">吴良超的学习笔记</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A3%85%E9%A5%B0%E5%99%A8"><span class="nav-number">1.</span> <span class="nav-text">装饰器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E5%B8%A6%E5%8F%82%E6%95%B0%E7%9A%84%E5%87%BD%E6%95%B0%E8%BF%9B%E8%A1%8C%E8%A3%85%E9%A5%B0"><span class="nav-number">1.1.</span> <span class="nav-text">对带参数的函数进行装饰</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%A6%E5%8F%82%E6%95%B0%E7%9A%84%E8%A3%85%E9%A5%B0%E5%99%A8"><span class="nav-number">1.2.</span> <span class="nav-text">带参数的装饰器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A7%81%E6%9C%89%E6%88%90%E5%91%98"><span class="nav-number">2.</span> <span class="nav-text">私有成员</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B1%BB%E6%96%B9%E6%B3%95-vs-%E9%9D%99%E6%80%81%E6%96%B9%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">类方法 vs 静态方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%AD%94%E6%B3%95%E6%96%B9%E6%B3%95"><span class="nav-number">4.</span> <span class="nav-text">魔法方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#new__"><span class="nav-number">4.1.</span> <span class="nav-text">__new__</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#str__-__repr__"><span class="nav-number">4.2.</span> <span class="nav-text">__str__ &amp;
+__repr__</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#iter__"><span class="nav-number">4.3.</span> <span class="nav-text">__iter__</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#getitem__-__setitem__-__delitem__"><span class="nav-number">4.4.</span> <span class="nav-text">__getitem__
+&amp; __setitem__ &amp; __delitem__</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#call__"><span class="nav-number">4.5.</span> <span class="nav-text">__call__</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#slots__"><span class="nav-number">4.6.</span> <span class="nav-text">__slots__</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E9%87%8F%E7%B1%BB"><span class="nav-number">5.</span> <span class="nav-text">常量类</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">253</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2018/12/15/python%20%E8%AF%AD%E6%B3%95%E6%9D%82%E8%AE%B0--%E8%A3%85%E9%A5%B0%E5%99%A8%EF%BC%8C%E7%B1%BB%E7%9A%84%E7%89%B9%E6%AE%8A%E6%96%B9%E6%B3%95%EF%BC%8C%E5%B8%B8%E9%87%8F%E7%B1%BB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="python 语法杂记--装饰器，类的特殊方法，常量类 | 吴良超的学习笔记">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          python 语法杂记--装饰器，类的特殊方法，常量类
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-12-15 12:00:37" itemprop="dateCreated datePublished" datetime="2018-12-15T12:00:37+08:00">2018-12-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-tags"></i>
+      </span>
+      <span class="post-meta-item-text">标签</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>最近在看 python 一些语法知识，虽然 python
+代码写了不少，但是对于一些高级语法的了解还不够深入；因此本文主要记录了一些比较生疏的知识点，主要包括了装饰器，类的特殊方法，常量类这三个方面的知识。</p>
+<span id="more"></span>
+<h2 id="装饰器">装饰器</h2>
+<p><strong>装饰器本质上是一个高阶函数，以被装饰的函数为参数，并返回一个包装后的函数给被装饰函数。</strong></p>
+<p>装饰器的一般使用形式如下： <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@decorator</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">func</span>():</span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure></p>
+<p>等价于下面的形式： <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">func</span>():</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line">func = decorator(func)</span><br></pre></td></tr></table></figure></p>
+<p>装饰器可以定义多个，离函数定义最近的装饰器先被调用，比如：
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@decorator_one</span></span><br><span class="line"><span class="meta">@decorator_two</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">func</span>():</span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure></p>
+<p>等价于：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">func</span>():</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">func = decorator_one(decorator_two(func))</span><br></pre></td></tr></table></figure>
+<h3 id="对带参数的函数进行装饰">对带参数的函数进行装饰</h3>
+<p>对带参数的函数进行装饰这个需求很常见，简单来说，<strong>装饰带参数的函数时，需要将参数传递给装饰器内部需要返回的函数(也叫内嵌包装函数)</strong>，也就是说内嵌包装函数的参数跟被装饰函数的参数对应，如下所示</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">makeitalic</span>(<span class="params">func</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">wrapped</span>(<span class="params">*args, **kwargs</span>):</span><br><span class="line">        ret = func(*args, **kwargs)</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;&lt;i&gt;&#x27;</span> + ret + <span class="string">&#x27;&lt;/i&gt;&#x27;</span></span><br><span class="line">    <span class="keyword">return</span> wrapped</span><br><span class="line"></span><br><span class="line"><span class="meta">@makeitalic</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">hello</span>(<span class="params">name</span>):</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;hello %s&#x27;</span> % name</span><br><span class="line"></span><br><span class="line"><span class="meta">@makeitalic</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">hello2</span>(<span class="params">name1, name2</span>):</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;hello %s, %s&#x27;</span> % (name1, name2)</span><br></pre></td></tr></table></figure>
+<p>可以看到，装饰器内部需要返回的函数 <code>wrapped</code> 带上了参数
+<code>(*args, **kwargs)</code>, 目的是为了适应可变参数。使用如下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>hello(<span class="string">&#x27;python&#x27;</span>)</span><br><span class="line"><span class="string">&#x27;&lt;i&gt;hello python&lt;/i&gt;&#x27;</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>hello2(<span class="string">&#x27;python&#x27;</span>, <span class="string">&#x27;java&#x27;</span>)</span><br><span class="line"><span class="string">&#x27;&lt;i&gt;hello python, java&lt;/i&gt;&#x27;</span></span><br></pre></td></tr></table></figure>
+<h3 id="带参数的装饰器">带参数的装饰器</h3>
+<p>上面的例子，我们增强了函数 hello 的功能，给它的返回加上了标签
+<code>&lt;i&gt;...&lt;/i&gt;</code>，现在，我们想改用标签
+<code>&lt;b&gt;...&lt;/b&gt;</code> 或
+<code>&lt;p&gt;...&lt;/p&gt;</code>。是不是要像前面一样，再定义一个类似
+<code>makeitalic</code>
+的装饰器呢？其实，我们可以可以使用带参数的装饰器，简单来说，就是<strong>在原来的装饰器基础上再封装一层函数，将标签作为参数，返回一个装饰器</strong>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">wrap_in_tag</span>(<span class="params">tag</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">decorator</span>(<span class="params">func</span>):</span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">wrapped</span>(<span class="params">*args, **kwargs</span>):</span><br><span class="line">            ret = func(*args, **kwargs)</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&#x27;&lt;&#x27;</span> + tag + <span class="string">&#x27;&gt;&#x27;</span> + ret + <span class="string">&#x27;&lt;/&#x27;</span> + tag + <span class="string">&#x27;&gt;&#x27;</span></span><br><span class="line">        <span class="keyword">return</span> wrapped</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> decorator</span><br></pre></td></tr></table></figure>
+<p>现在，我们可以根据需要生成想要的装饰器了：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">makebold = wrap_in_tag(&#x27;b&#x27;)  # 根据 &#x27;b&#x27; 返回 makebold 生成器`</span><br><span class="line">@makebold</span><br><span class="line">def hello(name):</span><br><span class="line">    return &#x27;hello %s&#x27; % name</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; hello(&#x27;world&#x27;)</span><br><span class="line">&#x27;&lt;b&gt;hello world&lt;/b&gt;&#x27;</span><br></pre></td></tr></table></figure>
+<p>上面的形式也可以写得更加简洁： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">@wrap_in_tag(&#x27;b&#x27;)</span><br><span class="line">def hello(name):</span><br><span class="line">    return &#x27;hello %s&#x27; % name</span><br></pre></td></tr></table></figure></p>
+<p>这就是带参数的装饰器，其实就是在装饰器外面多了一层包装，根据不同的参数返回不同的装饰器。</p>
+<h2 id="私有成员">私有成员</h2>
+<p>python 不像 C++ 有 private
+之类的关键字，但是<strong>可以在属性或方法的名称前面加上两个下划线
+<code>__</code>, 来限制用户访问对象的属性或方法</strong>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">1</span>]: <span class="keyword">class</span> <span class="title class_">Animal</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">   ...:     <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, name</span>):</span><br><span class="line">   ...:         self.__name = name</span><br><span class="line">   ...:     <span class="keyword">def</span> <span class="title function_">greet</span>(<span class="params">self</span>):</span><br><span class="line">   ...:         <span class="built_in">print</span> (<span class="string">&#x27;Hello, I am %s.&#x27;</span> % self.__name)</span><br><span class="line">   ...:</span><br><span class="line"></span><br><span class="line">In [<span class="number">2</span>]: a = Animal(<span class="string">&quot;dog&quot;</span>)</span><br><span class="line"></span><br><span class="line">In [<span class="number">3</span>]: a.__name</span><br><span class="line">---------------------------------------------------------------------------</span><br><span class="line">AttributeError                            Traceback (most recent call last)</span><br><span class="line">&lt;ipython-<span class="built_in">input</span>-<span class="number">5</span>-5d5520ef9fe0&gt; <span class="keyword">in</span> &lt;module&gt;()</span><br><span class="line">----&gt; <span class="number">1</span> a.__name</span><br><span class="line"></span><br><span class="line">AttributeError: <span class="string">&#x27;Animal&#x27;</span> <span class="built_in">object</span> has no attribute <span class="string">&#x27;__name&#x27;</span></span><br><span class="line"></span><br><span class="line">In [<span class="number">4</span>]: a.greet()</span><br><span class="line">Hello, I am dog.</span><br></pre></td></tr></table></figure>
+<h2 id="类方法-vs-静态方法">类方法 vs 静态方法</h2>
+<p>python
+中的类有两个特殊的方法：<strong>类方法和静态方法</strong>，两个方法主要有以下特点</p>
+<ol type="1">
+<li>两个方法均是<strong>属于类</strong>而不是属于对象的</li>
+<li>两个方法都是通过内置的装饰器定义（<code>@classmethod</code> 和
+<code>@staticmethod</code>）</li>
+<li>类方法可以访问类属性，静态方法则不能</li>
+</ol>
+<p>如下是类方法的一个例子</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    bar = <span class="number">1</span></span><br><span class="line"><span class="meta">    @classmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">class_foo</span>(<span class="params">cls</span>):</span><br><span class="line">        <span class="built_in">print</span> <span class="string">&#x27;Hello, &#x27;</span>, cls</span><br><span class="line">        <span class="built_in">print</span> cls.bar</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>A.class_foo()   <span class="comment"># 直接通过类来调用方法</span></span><br><span class="line">Hello,  &lt;<span class="keyword">class</span> <span class="string">&#x27;__main__.A&#x27;</span>&gt;</span><br><span class="line"><span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>在上面，我们使用了 <code>classmethod</code> 装饰方法
+<code>class_foo</code>，它就变成了一个类方法，<code>class_foo</code>
+的参数是 <strong><code>cls</code>，代表类本身</strong>，当我们使用
+<code>A.class_foo()</code> 时，cls 就会接收 A 作为参数。另外，被
+<code>classmethod</code> 装饰的方法由于持有 cls
+参数，因此我们可以在方法里面调用类的属性、方法，比如 cls.bar</p>
+<p>上面的类方法是可以修改类的属性的，静态方法定义方式类似，但是不会改变类和实例状态；如下所示，静态方法没有
+self 和 cls
+参数，因此没法改变类的属性，可以把它看成是一个普通的函数，甚至可以把它写到类外面，但是有时候，类就是需要这么一类方法，如果写到外面，一是不利于类的完整性，二是不利于命名空间的整洁性。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line"><span class="meta">    @staticmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">static_foo</span>():</span><br><span class="line">        <span class="built_in">print</span> <span class="string">&#x27;Hello&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>a = A()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>a.static_foo()</span><br><span class="line">Hello</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>A.static_foo()</span><br><span class="line">Hello</span><br></pre></td></tr></table></figure>
+<p>那么，这两个方法该在什么时候使用呢？参考 <a
+target="_blank" rel="noopener" href="https://www.geeksforgeeks.org/class-method-vs-static-method-python/">class
+method vs static method in Python</a> 如下</p>
+<blockquote>
+<p>We generally use class method to create factory methods. Factory
+methods return class object ( similar to a constructor ) for different
+use cases. We generally use static methods to create utility
+functions.</p>
+</blockquote>
+<p>如下是个比较形象的例子</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Python program to demonstrate </span></span><br><span class="line"><span class="comment"># use of class method and static method. </span></span><br><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> date </span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span>: </span><br><span class="line">	<span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, name, age</span>): </span><br><span class="line">		self.name = name </span><br><span class="line">		self.age = age </span><br><span class="line">	</span><br><span class="line">	<span class="comment"># a class method to create a Person object by birth year. </span></span><br><span class="line"><span class="meta">	@classmethod</span></span><br><span class="line">	<span class="keyword">def</span> <span class="title function_">fromBirthYear</span>(<span class="params">cls, name, year</span>): </span><br><span class="line">		<span class="keyword">return</span> cls(name, date.today().year - year) </span><br><span class="line">	</span><br><span class="line">	<span class="comment"># a static method to check if a Person is adult or not. </span></span><br><span class="line"><span class="meta">	@staticmethod</span></span><br><span class="line">	<span class="keyword">def</span> <span class="title function_">isAdult</span>(<span class="params">age</span>): </span><br><span class="line">		<span class="keyword">return</span> age &gt; <span class="number">18</span></span><br><span class="line"></span><br><span class="line">person1 = Person(<span class="string">&#x27;mayank&#x27;</span>, <span class="number">21</span>) </span><br><span class="line">person2 = Person.fromBirthYear(<span class="string">&#x27;mayank&#x27;</span>, <span class="number">1996</span>) </span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span> person1.age </span><br><span class="line"><span class="built_in">print</span> person2.age </span><br><span class="line"></span><br><span class="line"><span class="comment"># print the result </span></span><br><span class="line"><span class="built_in">print</span> Person.isAdult(<span class="number">22</span>) </span><br></pre></td></tr></table></figure>
+<h2 id="魔法方法">魔法方法</h2>
+<p>以双下划线 <code>__</code> 包裹起来的方法，比如最常见的
+<code>__init__</code>，这些方法被称为魔法方法（magic
+method）或特殊方法（special method）,这些方法可以给 Python
+的类提供特殊功能，方便我们定制一个类。</p>
+<h3 id="new__"><code>__new__</code></h3>
+<p>在 Python 中，<strong>当我们创建一个类的实例时，类会先调用
+<code>__new__(cls[, ...])</code> 来创建并返回实例，然后
+<code>__init__</code>
+方法再对该实例（self）中的变量进行初始化</strong>。</p>
+<p>关于 <code>__new__</code> 和 <code>__init__</code>
+有以下几点需要注意：</p>
+<ol type="1">
+<li><code>__new__</code> 是在 <code>__init__</code> 之前被调用的</li>
+<li><code>__new__</code> 是类方法，<code>__init__</code> 是实例方法</li>
+<li>重载 <code>__new__</code> 方法，需要返回类的实例</li>
+</ol>
+<p>一般情况下，我们不需要重载 <code>__new__</code>
+方法。但在某些情况下，我们想控制实例的创建过程，这时可以通过重载
+<code>__new__</code> 方法来实现。 比如说，下面的例子通过了
+<code>__new__</code> 来实现单例模式</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Singleton</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    _instance = <span class="literal">None</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__new__</span>(<span class="params">cls, *args, **kw</span>):</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> cls._instance:</span><br><span class="line">            cls._instance = <span class="built_in">super</span>(Singleton, cls).__new__(cls, *args, **kw)  </span><br><span class="line">        <span class="keyword">return</span> cls._instance  </span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyClass</span>(<span class="title class_ inherited__">Singleton</span>):  </span><br><span class="line">    a = <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<h3 id="str__-__repr__"><code>__str__</code> &amp;
+<code>__repr__</code></h3>
+<p>这两个方法主要是在直接打印类时候调用的，通过下面两个例子可以比较直观地看到如何使用</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Foo</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, name</span>):</span><br><span class="line">        self.name = name</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__str__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;Foo object (name: %s)&#x27;</span> % self.name</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">print</span> Foo(<span class="string">&#x27;ethan&#x27;</span>)      <span class="comment"># 使用 print</span></span><br><span class="line">Foo <span class="built_in">object</span> (name: ethan)</span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">str</span>(Foo(<span class="string">&#x27;ethan&#x27;</span>))       <span class="comment"># 使用 str</span></span><br><span class="line"><span class="string">&#x27;Foo object (name: ethan)&#x27;</span></span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>Foo(<span class="string">&#x27;ethan&#x27;</span>)             <span class="comment"># 直接显示</span></span><br><span class="line">&lt;__main__.Foo at <span class="number">0x10c37a490</span>&gt;</span><br></pre></td></tr></table></figure>
+<p>可以看到，<strong>使用 print 和 str 输出的是 <code>__str__</code>
+方法返回的内容</strong>，但如果直接显示则不能，因为这个是
+<code>__repr__</code> 方法负责的, 如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Foo</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, name</span>):</span><br><span class="line">        self.name = name</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__repr__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;Foo object (name: %s)&#x27;</span> % self.name</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>Foo(<span class="string">&#x27;ethan&#x27;</span>)</span><br><span class="line"><span class="string">&#x27;Foo object (name: ethan)&#x27;</span></span><br></pre></td></tr></table></figure>
+<h3 id="iter__"><code>__iter__</code></h3>
+<p>在某些情况下，我们希望实例对象可被用于 <code>for...in</code>
+循环，这时我们需要在类中定义 <code>__iter__</code> 和
+<code>next</code>（在 Python3 中是
+<code>__next__</code>）方法，其中，<strong><code>__iter__</code>
+返回一个迭代对象，<code>next</code>
+返回容器的下一个元素</strong>，在没有后续元素时抛出
+<code>StopIteration</code> 异常</p>
+<p>如下是一个斐波那契数列的例子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Fib</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        self.a, self.b = <span class="number">0</span>, <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__iter__</span>(<span class="params">self</span>):  <span class="comment"># 返回迭代器对象本身</span></span><br><span class="line">        <span class="keyword">return</span> self      </span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">next</span>(<span class="params">self</span>):      <span class="comment"># 返回容器下一个元素</span></span><br><span class="line">        self.a, self.b = self.b, self.a + self.b</span><br><span class="line">        <span class="keyword">return</span> self.a    </span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>fib = Fib()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">for</span> i <span class="keyword">in</span> fib:</span><br><span class="line"><span class="meta">... </span>    <span class="keyword">if</span> i &gt; <span class="number">10</span>:</span><br><span class="line"><span class="meta">... </span>        <span class="keyword">break</span></span><br><span class="line"><span class="meta">... </span>    <span class="built_in">print</span> i</span><br><span class="line">...</span><br><span class="line"><span class="number">1</span></span><br><span class="line"><span class="number">1</span></span><br><span class="line"><span class="number">2</span></span><br><span class="line"><span class="number">3</span></span><br><span class="line"><span class="number">5</span></span><br><span class="line"><span class="number">8</span></span><br></pre></td></tr></table></figure>
+<h3 id="getitem__-__setitem__-__delitem__"><code>__getitem__</code>
+&amp; <code>__setitem__</code> &amp; <code>__delitem__</code></h3>
+<p>有时，我们希望可以使用 <code>obj[n]</code>
+这种方式对实例对象进行取值，比如对斐波那契数列，我们希望可以取出其中的某一项，这时我们需要在类中实现
+<code>__getitem__</code> 方法，比如下面的例子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Fib</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__getitem__</span>(<span class="params">self, n</span>):</span><br><span class="line">        a, b = <span class="number">1</span>, <span class="number">1</span></span><br><span class="line">        <span class="keyword">for</span> x <span class="keyword">in</span> xrange(n):</span><br><span class="line">            a, b = b, a + b</span><br><span class="line">        <span class="keyword">return</span> a</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>fib = Fib()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>fib[<span class="number">0</span>], fib[<span class="number">1</span>], fib[<span class="number">2</span>], fib[<span class="number">3</span>], fib[<span class="number">4</span>], fib[<span class="number">5</span>]</span><br><span class="line">(<span class="number">1</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">8</span>)</span><br></pre></td></tr></table></figure>
+<p>类似地，<code>__setitem__</code> 用于设置值，<code>__delitem__</code>
+用于删除值，让我们看下面一个例子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Point</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        self.coordinate = &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__getitem__</span>(<span class="params">self, key</span>):</span><br><span class="line">        <span class="keyword">return</span> self.coordinate.get(key)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__setitem__</span>(<span class="params">self, key, value</span>):</span><br><span class="line">        self.coordinate[key] = value</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__delitem__</span>(<span class="params">self, key</span>):</span><br><span class="line">        <span class="keyword">del</span> self.coordinate[key]</span><br><span class="line">        <span class="built_in">print</span> <span class="string">&#x27;delete %s&#x27;</span> % key</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__len__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">len</span>(self.coordinate)</span><br></pre></td></tr></table></figure>
+<p>在上面，我们定义了一个 Point 类，它有一个属性
+coordinate（坐标），是一个字典，让我们看看使用：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; p = Point()</span><br><span class="line">&gt;&gt;&gt; p[&#x27;x&#x27;] = 2    # 对应于 p.__setitem__(&#x27;x&#x27;, 2)</span><br><span class="line">&gt;&gt;&gt; p[&#x27;y&#x27;] = 5    # 对应于 p.__setitem__(&#x27;y&#x27;, 5)</span><br><span class="line">&gt;&gt;&gt; len(p)        # 对应于 p.__len__</span><br><span class="line">2</span><br><span class="line">&gt;&gt;&gt; p[&#x27;x&#x27;]        # 对应于 p.__getitem__(&#x27;x&#x27;)</span><br><span class="line">2</span><br><span class="line">&gt;&gt;&gt; del p[&#x27;x&#x27;]    # 对应于 p.__delitem__(&#x27;x&#x27;)</span><br><span class="line">&gt;&gt;&gt; len(p)</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+<h3 id="call__"><code>__call__</code></h3>
+<p>我们一般使用 obj.method()
+来调用对象的方法，那能不能直接在实例本身上调用呢？在 Python
+中，只要我们在类中定义 <code>__call__</code>
+方法，就可以对实例进行调用，比如下面的例子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Point</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, x, y</span>):</span><br><span class="line">        self.x, self.y = x, y</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__call__</span>(<span class="params">self, z</span>):</span><br><span class="line">        <span class="keyword">return</span> self.x + self.y + z</span><br></pre></td></tr></table></figure>
+<p>使用如下：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>p = Point(<span class="number">3</span>, <span class="number">4</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">callable</span>(p)     <span class="comment"># 使用 callable 判断对象是否能被调用</span></span><br><span class="line"><span class="literal">True</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>p(<span class="number">6</span>)            <span class="comment"># 传入参数，对实例进行调用，对应 p.__call__(6)</span></span><br><span class="line"><span class="number">13</span>                  <span class="comment"># 3+4+6</span></span><br></pre></td></tr></table></figure>
+<h3 id="slots__"><code>__slots__</code></h3>
+<p><code>__slots__</code>
+跟前面的方法不太一样，因为这是一个类的属性，当我们创建了一个类的实例后，我们还可以给该实例绑定任意新的属性和方法，如下</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Point</span>(<span class="title class_ inherited__">object</span>):    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, x=<span class="number">0</span>, y=<span class="number">0</span></span>):</span><br><span class="line">        self.x = x</span><br><span class="line">        self.y = y</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>p = Point(<span class="number">3</span>, <span class="number">4</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>p.z = <span class="number">5</span>    <span class="comment"># 绑定了一个新的属性</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>p.z</span><br><span class="line"><span class="number">5</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>p.__dict__</span><br><span class="line">&#123;<span class="string">&#x27;x&#x27;</span>: <span class="number">3</span>, <span class="string">&#x27;y&#x27;</span>: <span class="number">4</span>, <span class="string">&#x27;z&#x27;</span>: <span class="number">5</span>&#125;</span><br></pre></td></tr></table></figure>
+<p>这样其实是违背了 OOP
+的封装性的理念，而且会消耗更多的内存，为了禁止这一属性，可以使用
+<code>__slots__</code> 来告诉 Python
+只给一个固定集合的属性分配空间，对上面的代码做一点改进，如下：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Point</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    __slots__ = (<span class="string">&#x27;x&#x27;</span>, <span class="string">&#x27;y&#x27;</span>)       <span class="comment"># 只允许使用 x 和 y</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, x=<span class="number">0</span>, y=<span class="number">0</span></span>):</span><br><span class="line">        self.x = x</span><br><span class="line">        self.y = y</span><br></pre></td></tr></table></figure>
+<p>我们给 <code>__slots__</code>
+设置了一个元组，来限制类能添加的属性。现在，如果想绑定一个新的属性，就会出错了</p>
+<h2 id="常量类">常量类</h2>
+<p>在 Python 中使用常量一般来说有以下两种方式：</p>
+<ol type="1">
+<li>通过命名风格来提醒使用者该变量代表的意义为常量，如常量名所有字母大写，用下划线连接各个单词，PEP8
+给出的编程风格就是这样的</li>
+<li>通过自定义的类实现常量功能。这要求符合<strong>命名全部为大写</strong>和<strong>值一旦绑定便不可再修改</strong>
+这两个条件。下面是一种较为常见的解决办法，将常量放到同一个文件中</li>
+</ol>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># FileName：constant.py</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">_const</span>:</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">ConstError</span>(<span class="title class_ inherited__">TypeError</span>):</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">ConstCaseError</span>(<span class="title class_ inherited__">ConstError</span>):</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__setattr__</span>(<span class="params">self, name, value</span>):</span><br><span class="line">        <span class="keyword">if</span> name <span class="keyword">in</span> self.__dict__:</span><br><span class="line">            <span class="keyword">raise</span> self.ConstError, <span class="string">&quot;Can&#x27;t change const value!&quot;</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> name.isupper():</span><br><span class="line">            <span class="keyword">raise</span> self.ConstCaseError, <span class="string">&#x27;const &quot;%s&quot; is not all letters are capitalized&#x27;</span> %name</span><br><span class="line">        self.__dict__[name] = value</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line">sys.modules[__name__] = _const()</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> constant</span><br><span class="line">constant.MAX_COUNT = <span class="number">10</span></span><br><span class="line">constant.JOBS = <span class="number">5</span></span><br><span class="line">constant.PROCESSES = <span class="number">8</span></span><br></pre></td></tr></table></figure>
+<p>简单解释一下，对象的所有属性及属性的值都存储在 <code>__dict__</code>
+中， 上面的 <code>__setattr__</code>
+方法在对象每次创建新常量的时候会判断常量是否已经被定义过，如果已经定义过则
+raise error，从而确保了已经创建的常量不可修改。</p>
+<p><code>sys.modules[__name__] = _const()</code> 则确保了当上面的文件被
+import 时，其 module 名称(也就是 <code>__name__</code>
+的值，当文件被运行时 <code>__name__</code> 的值为 <code>__main__</code>,
+被 import 时 <code>__name__</code> 的值则是 module 名称)对应的是一个
+<code>_const()</code>
+对象，从而可以直接通过其创建常量。因此，使用的方法如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">import constant</span><br><span class="line">print(constant.MAX_COUNT)</span><br></pre></td></tr></table></figure>
+<hr />
+<p>参考：</p>
+<p><a
+target="_blank" rel="noopener" href="https://www.geeksforgeeks.org/class-method-vs-static-method-python/">class
+method vs static method in Python</a> <a
+target="_blank" rel="noopener" href="https://docs.python.org/3/reference/datamodel.html">Data model</a>
+<a target="_blank" rel="noopener" href="http://funhacks.net/explore-python/">Python 之旅</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/python/" rel="tag"><i class="fa fa-tag"></i> python</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2018/12/07/Makefile%20%E8%AF%AD%E6%B3%95%E8%AF%A6%E8%A7%A3(2)-%E5%8F%98%E9%87%8F%E3%80%81%E6%9D%A1%E4%BB%B6%E5%88%A4%E6%96%AD%E4%B8%8E%E5%87%BD%E6%95%B0/" rel="prev" title="Makefile 语法详解(2)-变量、条件判断与函数">
+                  <i class="fa fa-chevron-left"></i> Makefile 语法详解(2)-变量、条件判断与函数
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2018/12/17/python%20%E8%AF%AD%E6%B3%95%E6%9D%82%E8%AE%B0--%E7%94%9F%E6%88%90%E5%99%A8%E3%80%81%E8%BF%AD%E4%BB%A3%E5%99%A8%E3%80%81%E4%B8%8A%E4%B8%8B%E6%96%87%E7%AE%A1%E7%90%86%E5%99%A8/" rel="next" title="python 语法杂记--迭代器、生成器、上下文管理器">
+                  python 语法杂记--迭代器、生成器、上下文管理器 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-pen"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

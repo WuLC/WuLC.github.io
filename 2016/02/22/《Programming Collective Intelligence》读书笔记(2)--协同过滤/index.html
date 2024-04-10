@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id: "JmI6QmP3fMkLet6B",ck: "JmI6QmP3fMkLet6B"})</script>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wulc.me","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.15.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="《Programming Collective Intelligence》（中文名为《集体智慧编程》），是一本关于数据挖掘的书籍，每一章都会通过一个实际的例子来讲述某个机器学习算法，同时会涉及到数据的采集和处理等，是一本实践性很强的书籍。 本文是关于本书的第二章 Making Recommendations 的前半部分。主要讲述了寻找用户相似性和物品相似性的方法，并在这个基础上讲述如何为用户推荐物">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《Programming Collective Intelligence》读书笔记(2)--协同过滤">
+<meta property="og:url" content="https://wulc.me/2016/02/22/%E3%80%8AProgramming%20Collective%20Intelligence%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0(2)--%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="《Programming Collective Intelligence》（中文名为《集体智慧编程》），是一本关于数据挖掘的书籍，每一章都会通过一个实际的例子来讲述某个机器学习算法，同时会涉及到数据的采集和处理等，是一本实践性很强的书籍。 本文是关于本书的第二章 Making Recommendations 的前半部分。主要讲述了寻找用户相似性和物品相似性的方法，并在这个基础上讲述如何为用户推荐物">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/pearson-2-small.png">
+<meta property="og:image" content="https://wulc.me/imgs/2016-03-01_220750.png">
+<meta property="article:published_time" content="2016-02-22T14:31:17.000Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.166Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="集体智慧编程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/pearson-2-small.png">
+
+
+<link rel="canonical" href="https://wulc.me/2016/02/22/%E3%80%8AProgramming%20Collective%20Intelligence%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0(2)--%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wulc.me/2016/02/22/%E3%80%8AProgramming%20Collective%20Intelligence%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0(2)--%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4/","path":"2016/02/22/《Programming Collective Intelligence》读书笔记(2)--协同过滤/","title":"《Programming Collective Intelligence》读书笔记(2)--协同过滤"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>《Programming Collective Intelligence》读书笔记(2)--协同过滤 | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">吴良超的学习笔记</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%BB%E6%89%BE%E7%94%A8%E6%88%B7%E7%9B%B8%E4%BC%BC%E6%80%A7%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E6%B3%95"><span class="nav-number">1.</span> <span class="nav-text">寻找用户相似性的几种方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AC%A7%E5%87%A0%E9%87%8C%E5%BE%97%E8%B7%9D%E7%A6%BB"><span class="nav-number">1.1.</span> <span class="nav-text">欧几里得距离</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9A%AE%E5%B0%94%E9%80%8A%E7%9B%B8%E5%85%B3%E7%B3%BB%E6%95%B0"><span class="nav-number">1.2.</span> <span class="nav-text">皮尔逊相关系数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%AD%A3%E7%9A%84%E4%BD%99%E5%BC%A6%E7%9B%B8%E4%BC%BC%E6%80%A7"><span class="nav-number">1.3.</span> <span class="nav-text">修正的余弦相似性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%80%E7%9B%B8%E4%BC%BC%E7%9A%84%E5%89%8Dn%E4%B8%AA%E7%94%A8%E6%88%B7"><span class="nav-number">1.4.</span> <span class="nav-text">计算最相似的前n个用户</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E7%94%A8%E6%88%B7%E6%8E%A8%E8%8D%90%E7%89%A9%E5%93%81"><span class="nav-number">2.</span> <span class="nav-text">为用户推荐物品</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%BB%E6%89%BE%E7%89%A9%E5%93%81%E9%97%B4%E7%9A%84%E7%9B%B8%E4%BC%BC%E6%80%A7"><span class="nav-number">3.</span> <span class="nav-text">寻找物品间的相似性</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">253</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2016/02/22/%E3%80%8AProgramming%20Collective%20Intelligence%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0(2)--%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="《Programming Collective Intelligence》读书笔记(2)--协同过滤 | 吴良超的学习笔记">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          《Programming Collective Intelligence》读书笔记(2)--协同过滤
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2016-02-22 22:31:17" itemprop="dateCreated datePublished" datetime="2016-02-22T22:31:17+08:00">2016-02-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-tags"></i>
+      </span>
+      <span class="post-meta-item-text">标签</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E9%9B%86%E4%BD%93%E6%99%BA%E6%85%A7%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">集体智慧编程</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>《Programming Collective
+Intelligence》（中文名为《集体智慧编程》），是一本关于数据挖掘的书籍，每一章都会通过一个实际的例子来讲述某个机器学习算法，同时会涉及到数据的采集和处理等，是一本实践性很强的书籍。</p>
+<p><strong>本文是关于本书的第二章 Making Recommendations
+的前半部分。主要讲述了寻找用户相似性和物品相似性的方法，并在这个基础上讲述如何为用户推荐物品。</strong></p>
+<span id="more"></span>
+<p>推荐这个功能在很多网站或软件都有实现，如淘宝，当当，网易云音乐等。实现推荐的算法也许有很多。本文主要讲的是<strong>协同过滤</strong>。</p>
+<p>下面分为这几部分来讲述： <strong>1.寻找用户相似性的几种方法
+2.基于用户相似性为用户推荐物品 3.寻找物品相似性的方法</strong></p>
+<p>在讲述之前假定一下的数据集： <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 电影评分数据集,用于后面的的测试</span></span><br><span class="line"><span class="comment"># critics 字典里面每一项是一个用户对若干部电影的评分</span></span><br><span class="line">critics=&#123;<span class="string">&#x27;Lisa Rose&#x27;</span>: &#123;<span class="string">&#x27;Lady in the Water&#x27;</span>: <span class="number">2.5</span>, <span class="string">&#x27;Snakes on a Plane&#x27;</span>: <span class="number">3.5</span>,<span class="string">&#x27;Just My Luck&#x27;</span>: <span class="number">3.0</span>, <span class="string">&#x27;Superman Returns&#x27;</span>: <span class="number">3.5</span>, <span class="string">&#x27;You, Me and Dupree&#x27;</span>: <span class="number">2.5</span>,<span class="string">&#x27;The Night Listener&#x27;</span>: <span class="number">3.0</span>&#125;,</span><br><span class="line"><span class="string">&#x27;Gene Seymour&#x27;</span>: &#123;<span class="string">&#x27;Lady in the Water&#x27;</span>: <span class="number">3.0</span>, <span class="string">&#x27;Snakes on a Plane&#x27;</span>: <span class="number">3.5</span>,<span class="string">&#x27;Just My Luck&#x27;</span>: <span class="number">1.5</span>, <span class="string">&#x27;Superman Returns&#x27;</span>: <span class="number">5.0</span>, <span class="string">&#x27;The Night Listener&#x27;</span>: <span class="number">3.0</span>,<span class="string">&#x27;You, Me and Dupree&#x27;</span>: <span class="number">3.5</span>&#125;,</span><br><span class="line"><span class="string">&#x27;Michael Phillips&#x27;</span>: &#123;<span class="string">&#x27;Lady in the Water&#x27;</span>: <span class="number">2.5</span>, <span class="string">&#x27;Snakes on a Plane&#x27;</span>: <span class="number">3.0</span>,<span class="string">&#x27;Superman Returns&#x27;</span>: <span class="number">3.5</span>, <span class="string">&#x27;The Night Listener&#x27;</span>: <span class="number">4.0</span>&#125;,</span><br><span class="line"><span class="string">&#x27;Claudia Puig&#x27;</span>: &#123;<span class="string">&#x27;Snakes on a Plane&#x27;</span>: <span class="number">3.5</span>, <span class="string">&#x27;Just My Luck&#x27;</span>: <span class="number">3.0</span>,</span><br><span class="line"> <span class="string">&#x27;The Night Listener&#x27;</span>: <span class="number">4.5</span>, <span class="string">&#x27;Superman Returns&#x27;</span>: <span class="number">4.0</span>,<span class="string">&#x27;You, Me and Dupree&#x27;</span>: <span class="number">2.5</span>&#125;,</span><br><span class="line"><span class="string">&#x27;Mick LaSalle&#x27;</span>: &#123;<span class="string">&#x27;Lady in the Water&#x27;</span>: <span class="number">3.0</span>, <span class="string">&#x27;Snakes on a Plane&#x27;</span>: <span class="number">4.0</span>,<span class="string">&#x27;Just My Luck&#x27;</span>: <span class="number">2.0</span>, <span class="string">&#x27;Superman Returns&#x27;</span>: <span class="number">3.0</span>, <span class="string">&#x27;The Night Listener&#x27;</span>: <span class="number">3.0</span>,<span class="string">&#x27;You, Me and Dupree&#x27;</span>: <span class="number">2.0</span>&#125;,</span><br><span class="line"><span class="string">&#x27;Jack Matthews&#x27;</span>: &#123;<span class="string">&#x27;Lady in the Water&#x27;</span>: <span class="number">3.0</span>, <span class="string">&#x27;Snakes on a Plane&#x27;</span>: <span class="number">4.0</span>,<span class="string">&#x27;The Night Listener&#x27;</span>: <span class="number">3.0</span>, <span class="string">&#x27;Superman Returns&#x27;</span>: <span class="number">5.0</span>, <span class="string">&#x27;You, Me and Dupree&#x27;</span>: <span class="number">3.5</span>&#125;,</span><br><span class="line"><span class="string">&#x27;Toby&#x27;</span>: &#123;<span class="string">&#x27;Snakes on a Plane&#x27;</span>: <span class="number">4.5</span>, <span class="string">&#x27;You, Me and Dupree&#x27;</span>: <span class="number">1.0</span>,<span class="string">&#x27;Superman Returns&#x27;</span>: <span class="number">4.0</span>&#125;&#125;</span><br></pre></td></tr></table></figure></p>
+<h2
+id="寻找用户相似性的几种方法"><strong>寻找用户相似性的几种方法</strong></h2>
+<h3 id="欧几里得距离">欧几里得距离</h3>
+<p>基于上面的数据集，最容易想到的第一种方法就是衡量他们所评的<strong>分数的距离</strong>。这个怎么理解呢？比如说A对两部电影的评分是1和2，B对两部电影的评分书3和4。那么他们评分的距离就是<span
+class="math inline">\(\sqrt{(1-3)^2+(2-4)^2
+}\)</span>。如果有多部电影则以此类推。这<strong>相当与把一个用户所有评分用多维空间中的一个点来表示，用户间的相似性用点间的距离来衡量，距离越小，相似度越高。</strong>原文称这种距离为欧几里得距离分数（Euclidean
+Distance score）。 通过python实现也很简单： <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 通过欧几里得距离找用户相似性，为了使返回数值越大，表示相似性越高，对得出的距离取倒数即可，范围为（0,1）</span></span><br><span class="line"><span class="keyword">import</span> math</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">similarUserWithEuclidean</span>(<span class="params">scores,user1,user2</span>):</span><br><span class="line">    commom = [movie <span class="keyword">for</span> movie <span class="keyword">in</span> scores[user1] <span class="keyword">if</span> movie <span class="keyword">in</span> scores[user2]]</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(commom) == <span class="number">0</span>:  <span class="comment">#没有相同喜爱的电影</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    total = <span class="built_in">sum</span>([math.<span class="built_in">pow</span>(scores[user1][movie] - scores[user2][movie], <span class="number">2</span>) <span class="keyword">for</span> movie <span class="keyword">in</span> commom])</span><br><span class="line">    similarity=math.sqrt(total)</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>/(total+<span class="number">1</span>)  </span><br></pre></td></tr></table></figure></p>
+<p>上面实现的方法虽然简单，但是存在着<strong>分数膨胀(grade
+inflation)</strong>的问题,比如说A和B两个人的评判标准不一样，A比较苛刻，给三部电影打的分数是1、2、1，但是B要求不会那么高，给两部电影打分为4、5、4，如果用第一种方法那他们在二维空间中的距离将会比较大，从而被判为无相似性。那么他们真的是没有相似性吗？</p>
+<p>虽然他们在分数值上存在区别，但是<strong>两个人在每部电影的评分差上保持一致性，也可认为他们是相似用户。</strong>因为在对于好和不好的标准上每个人都会有自己的度量，也许对于A来说2就算是好的了，但是对于B来说好的标准是5。假如对于多部电影两者的评分趋势一致，那么可认为两者的品味也是差不多的，可以认为他们有相似性。通过<strong>皮尔逊相关系数（Pearson
+Correlation Coefficient）</strong>可以实现上面的功能。</p>
+<h3 id="皮尔逊相关系数">皮尔逊相关系数</h3>
+<p>皮尔逊相关系数取值范围为[-1,1],数值为正表示正相关，且越大表示相关性越强；数值为负则为负相关，越小则负相关性越强。计算公式如下：</p>
+<p><span class="math display">\[sim = \frac{\sum_{c \in I_{ij}}(R_{i,c}
+- \overline{R_i})(R_{j,c} - \overline{R_j})}{\sqrt{\sum_{c \in I_{ij}}
+(R_{i,c} - \overline{R_i})^2} \sqrt{\sum_{c \in I_{ij}} (R_{j,c} -
+\overline{R_j})^2} }\]</span></p>
+<p>公式中的符号意义如下：</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>符号</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(I_{ij}\)</span></td>
+<td>用户 <span class="math inline">\(i\)</span> 和用户 <span
+class="math inline">\(j\)</span>
+的公共评分集，也就是两者都有评分的物品的集合</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(R_{i,c}\)</span></td>
+<td>用户 <span class="math inline">\(i\)</span> 对物品c的评分</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(R_{j,c}\)</span></td>
+<td>用户 <span class="math inline">\(j\)</span> 对物品c的评分</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\overline {R_i}\)</span></td>
+<td>用户 <span class="math inline">\(i\)</span> 对 <span
+class="math inline">\(I_{ij}\)</span> 中物品评分的均值</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(\overline {R_j}\)</span></td>
+<td>用户 <span class="math inline">\(j\)</span> 对 <span
+class="math inline">\(I_{ij}\)</span> 中物品评分的均值</td>
+</tr>
+</tbody>
+</table>
+<p>皮尔逊系数的公式初看有点长，但是如果对概率论了解的同学可知，对于变量
+<span class="math inline">\(X\)</span> 和 <span
+class="math inline">\(Y\)</span> ，上面的皮尔逊系数的表达式其实就是<span
+class="math display">\[\frac{X和Y的协方差}{X的标准差\*Y的标准差}\]</span>，而这就是概率论中对相关系数的定义。<strong>实际上概率论中的相关系数就是皮尔逊提出的这个皮尔逊相关系数率</strong>(这里需要注意的是，对于不同测量尺度的变数，有不同的相关系数可用，而我们接触到的概率论教材里，大多是都是讲皮尔逊相关系数，实际上还有<a
+target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E7%9B%B8%E5%85%B3">其他的相关系数</a>)。</p>
+<p>用图像直观表示皮尔逊相关系数如下所示，假设r为互相关系数：</p>
+<p><img data-src="https://wulc.me/imgs/pearson-2-small.png" /></p>
+<p>且一般认为r值范围和相关性的对应关系如下，0表示两者无关：</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">相关性强弱</th>
+<th style="text-align: center;">对应的r值</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">High correlation</td>
+<td style="text-align: center;">0.5~1.0 or -0.5~ -1.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Medium correlation</td>
+<td style="text-align: center;">0.3 ~ 0.5 or -0.3~ -0.5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Low correlation</td>
+<td style="text-align: center;">0.1~0.3 or -0.1~ -0.3</td>
+</tr>
+</tbody>
+</table>
+<p>关于皮尔逊系数更详细的资料可参考该链接：http://www.statisticshowto.com/what-is-the-pearson-correlation-coefficient</p>
+<p>实现该功能的代码如下： <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 通过 Pearson Correlation Coefficient 计算两个用户的相似性,数值绝对值越大相关性，正负表示正相关或负相关</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">similarUserWithPearson</span>(<span class="params">scores,user1,user2</span>):</span><br><span class="line">    commom = [movie <span class="keyword">for</span> movie <span class="keyword">in</span> scores[user1] <span class="keyword">if</span> movie <span class="keyword">in</span> scores[user2]]</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(commom) == <span class="number">0</span>:  <span class="comment">#no common item of the two users</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    average1 = <span class="built_in">float</span>(<span class="built_in">sum</span>(scores[user1][movie] <span class="keyword">for</span> movie <span class="keyword">in</span> scores[user1]))/<span class="built_in">len</span>(scores[user1])</span><br><span class="line">    average2 = <span class="built_in">float</span>(<span class="built_in">sum</span>(scores[user2][movie] <span class="keyword">for</span> movie <span class="keyword">in</span> scores[user2]))/<span class="built_in">len</span>(scores[user2])</span><br><span class="line">    <span class="comment"># denominator</span></span><br><span class="line">    multiply_sum = <span class="built_in">sum</span>( (scores[user1][movie]-average1) * (scores[user2][movie]-average2) <span class="keyword">for</span> movie <span class="keyword">in</span> commom )</span><br><span class="line">    <span class="comment"># member</span></span><br><span class="line">    pow_sum_1 = <span class="built_in">sum</span>( math.<span class="built_in">pow</span>(scores[user1][movie]-average1, <span class="number">2</span>) <span class="keyword">for</span> movie <span class="keyword">in</span> commom )</span><br><span class="line">    pow_sum_2 = <span class="built_in">sum</span>( math.<span class="built_in">pow</span>(scores[user2][movie]-average2, <span class="number">2</span>) <span class="keyword">for</span> movie <span class="keyword">in</span> commom )</span><br><span class="line">    </span><br><span class="line">    modified_cosine_similarity = <span class="built_in">float</span>(multiply_sum)/math.sqrt(pow_sum_1*pow_sum_2)</span><br><span class="line">    <span class="keyword">return</span> modified_cosine_similarity </span><br></pre></td></tr></table></figure></p>
+<p>上面两种方法是书中提到的，并且计算皮尔逊相关系数的方法与原书有区别，但是结果是一样的。只是原书上对公式进行了进一步的简化。除此之外，还有一类比较常用的方法是<strong>通过余弦相似性（Cosine
+Similarity）判断用户相似性</strong>。原理也是<strong>用空间中的一个多维向量表示用户对所有电影的评分，用户间的相似性可以通过向量间的夹角表示，取值范围也是（-1,1）。但是因为这种方法也存在上面提到的分数膨胀(grade
+inflation)，在此基础上提出了修正的余弦相似度（Adjusted Cosine
+Similarity）</strong>。</p>
+<h3 id="修正的余弦相似性">修正的余弦相似性</h3>
+<p>修正的余弦相似度跟上面提到的皮尔逊系数很相似，包括计算公式，区别在于<strong>皮尔逊系数是依据双方共同评分项进行计算，而修正的余弦相似度则对所有项都进行运算</strong>。比如说一部电影A有评分，B没有评分，那么计算皮尔逊系数时就不能采用这不电影作为计算的数据集，但是计算修正的余弦相似性则可以利用这个数据。</p>
+<p>修正的余弦相似性的计算公式如下</p>
+<p><span class="math display">\[sim = \frac{\sum_{c \in I_{ij}}(R_{i,c}
+- \overline{R_i})(R_{j,c} - \overline{R_j})}{\sqrt{\sum_{c \in I_i}
+(R_{i,c} - \overline{R_i})^2} \sqrt{\sum_{c \in I_j} (R_{j,c} -
+\overline{R_j})^2} }\]</span></p>
+<p>公式中的符号意义如下：</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>符号</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(I_{ij}\)</span></td>
+<td>用户 <span class="math inline">\(i\)</span> 和用户 <span
+class="math inline">\(j\)</span>
+的公共评分集，也就是均被两者评分的物品的集合</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(I_i\)</span></td>
+<td>被用户 <span class="math inline">\(i\)</span>
+评分了的物品的集合</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(I_j\)</span></td>
+<td>被用户 <span class="math inline">\(j\)</span>
+评分了的物品的集合</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(R_{i,c}\)</span></td>
+<td>用户 <span class="math inline">\(i\)</span> 对物品c的评分</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(R_{j,c}\)</span></td>
+<td>用户 <span class="math inline">\(j\)</span> 对物品c的评分</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\overline {R_i}\)</span></td>
+<td>用户 <span class="math inline">\(i\)</span> 所有评分的均值</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(\overline {R_j}\)</span></td>
+<td>用户 <span class="math inline">\(j\)</span> 所有评分的均值</td>
+</tr>
+</tbody>
+</table>
+<p>这条公式跟上面的皮尔逊相关系数很相似，皮尔逊相关系数的公式如下：</p>
+<p><span class="math display">\[sim = \frac{\sum_{c \in I_{ij}}(R_{i,c}
+- \overline{R_i})(R_{j,c} - \overline{R_j})}{\sqrt{\sum_{c \in I_{ij}}
+(R_{i,c} - \overline{R_i})^2} \sqrt{\sum_{c \in I_{ij}} (R_{j,c} -
+\overline{R_j})^2} }\]</span></p>
+<p><strong>两者的区别在于分母上，皮尔逊系数的分母采用的评分集是两个用户的共同评分集（就是两个用户都对这个物品有评价），而修正的余弦系数则采用两个用户各自的评分集。</strong></p>
+<p>采用修正的余弦系数的实现代码如下：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">user_similarity_on_modified_cosine</span>(<span class="params">scores, user1, user2</span>):</span><br><span class="line">    commom = [movie <span class="keyword">for</span> movie <span class="keyword">in</span> scores[user1] <span class="keyword">if</span> movie <span class="keyword">in</span> scores[user2]]</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(commom) == <span class="number">0</span>:  <span class="comment">#no common item of the two users</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    average1 = <span class="built_in">float</span>(<span class="built_in">sum</span>(scores[user1][movie] <span class="keyword">for</span> movie <span class="keyword">in</span> scores[user1]))/<span class="built_in">len</span>(scores[user1])</span><br><span class="line">    average2 = <span class="built_in">float</span>(<span class="built_in">sum</span>(scores[user2][movie] <span class="keyword">for</span> movie <span class="keyword">in</span> scores[user2]))/<span class="built_in">len</span>(scores[user2])</span><br><span class="line">    <span class="comment"># denominator</span></span><br><span class="line">    multiply_sum = <span class="built_in">sum</span>( (scores[user1][movie]-average1) * (scores[user2][movie]-average2) <span class="keyword">for</span> movie <span class="keyword">in</span> commom )</span><br><span class="line">    <span class="comment"># member</span></span><br><span class="line">    pow_sum_1 = <span class="built_in">sum</span>( math.<span class="built_in">pow</span>(scores[user1][movie]-average1, <span class="number">2</span>) <span class="keyword">for</span> movie <span class="keyword">in</span> scores[user1] )</span><br><span class="line">    pow_sum_2 = <span class="built_in">sum</span>( math.<span class="built_in">pow</span>(scores[user2][movie]-average2, <span class="number">2</span>) <span class="keyword">for</span> movie <span class="keyword">in</span> scores[user2] )</span><br><span class="line">    </span><br><span class="line">    modified_cosine_similarity = <span class="built_in">float</span>(multiply_sum)/math.sqrt(pow_sum_1*pow_sum_2)</span><br><span class="line">    <span class="keyword">return</span> modified_cosine_similarity </span><br></pre></td></tr></table></figure>
+<h3 id="计算最相似的前n个用户">计算最相似的前n个用户</h3>
+<p>通过上面任意一种方法找出用户相似度后，可以根据相似度的大小排序，找出前n个最相似的用户，实现代码如下：
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">findSimilarUsers</span>(<span class="params">scores,user,similarFunction = similarUserWithPearson</span>):</span><br><span class="line">    similarUser = [(similarFunction(critics, user, otherUser), otherUser) <span class="keyword">for</span> otherUser <span class="keyword">in</span> scores <span class="keyword">if</span> otherUser!=user]</span><br><span class="line">    <span class="comment"># 使用了dict会将含有kv对的列表封装成一个字典,无法利用列表自带的排序函数sort</span></span><br><span class="line">    <span class="comment"># similarDict = dict([(similarFunction(user,otherUser),otherUser) for otherUser in scores if otherUser!=user])</span></span><br><span class="line">    similarUser.sort()</span><br><span class="line">    similarUser.reverse()</span><br><span class="line">    <span class="comment">#也可将上面两行改成:similarUser.sort(reverse = True)</span></span><br><span class="line">    <span class="keyword">return</span> similarUser <span class="comment"># 返回相似度从高到低排序的一个列表</span></span><br></pre></td></tr></table></figure> ### 小结</p>
+<p>传统的计算相似度的方法就是上面提到的三种：<strong>余弦相似度、修正的余弦相似度和相关相似性（也就是计算皮尔逊系数）</strong>。下面是分别采用上面三种方法为测试数据集中的用户<code>Lisa Rose</code>找到前6个最相似用户的结果。完整的代码见文末</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"># 欧几里得距离，第一个值是分数，第二个值是具体的用户</span><br><span class="line">(0.4444444444444444, &#x27;Michael Phillips&#x27;)</span><br><span class="line">(0.3333333333333333, &#x27;Mick LaSalle&#x27;)</span><br><span class="line">(0.2857142857142857, &#x27;Claudia Puig&#x27;)</span><br><span class="line">(0.2222222222222222, &#x27;Toby&#x27;)</span><br><span class="line">(0.21052631578947367, &#x27;Jack Matthews&#x27;)</span><br><span class="line">(0.14814814814814814, &#x27;Gene Seymour&#x27;)</span><br><span class="line"></span><br><span class="line"># 皮尔逊系数，第一个值是分数，第二个值是具体的用户</span><br><span class="line">(0.9345507010964664, &#x27;Toby&#x27;)</span><br><span class="line">(0.747017880833996, &#x27;Jack Matthews&#x27;)</span><br><span class="line">(0.5940885257860046, &#x27;Mick LaSalle&#x27;)</span><br><span class="line">(0.5477225575051661, &#x27;Claudia Puig&#x27;)</span><br><span class="line">(0.39605901719066977, &#x27;Gene Seymour&#x27;)</span><br><span class="line">(0.3872983346207417, &#x27;Michael Phillips&#x27;)</span><br><span class="line"></span><br><span class="line"># 修正的余弦相似度，第一个值是分数，第二个值是具体的用户</span><br><span class="line">(0.8093446482740976, &#x27;Toby&#x27;)</span><br><span class="line">(0.747017880833996, &#x27;Jack Matthews&#x27;)</span><br><span class="line">(0.5940885257860046, &#x27;Mick LaSalle&#x27;)</span><br><span class="line">(0.4743416490252569, &#x27;Claudia Puig&#x27;)</span><br><span class="line">(0.39605901719066977, &#x27;Gene Seymour&#x27;)</span><br><span class="line">(0.33541019662496846, &#x27;Michael Phillips&#x27;)</span><br></pre></td></tr></table></figure>
+<p>从结果可以看到，<strong>修正的余弦相似度和皮尔逊系数大小虽然不一样，但是预测的整体用户相似度分布一致。</strong></p>
+<h2 id="为用户推荐物品"><strong>为用户推荐物品</strong></h2>
+<p>经过第一步找出相似用户后，可以直接对相似用户之间进行物品推荐，如A和B相似，且B有部分喜欢的电影A没看过，就可以为A推荐这部分电影。</p>
+<p><strong>为了使得推荐结果更具有代表性，需要考虑多几位相似用户，同时也是为了有更多可推荐的选择</strong>，因为可能B看过而A没看过的电影也不多。</p>
+<p>实现思路如下：为A找出了若干位相似用户，每个用户都有一个相似度系数（就是上面的皮尔森系数），找出他们看过而A没看过电影集合T。将每个用户的相似度乘上用户对集合T中某部电影的评分便可作为这部电影的得分，得分越高，代表推荐性越强。这乍一看还比较合理。但是一分析也存在一个问题，就是假如一部电影实际上都符合这一批用户的，但是看过的人很少，其他一些不太符合的电影因为看过的人多而的得分高。这就导致了误判。怎么解决呢？</p>
+<p><strong>这里需要引入一个因子来调和这种不平衡性，使得结果能够合理，既然这种不平衡是由于评分的人数不同而引起的，那么就可以从这里着手。将上面相加得到的总分除以对这部电影有评分的所有用户的相似性。</strong></p>
+<p>例如下图就是为上面Toby推荐的结果：</p>
+<p><img data-src="https://wulc.me/imgs/2016-03-01_220750.png" /></p>
+<p>实现的代码如下： <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 给用户推荐物品，物品的评分采用与其他用户的相似度乘上其他用户的实际评分</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">recommendItem</span>(<span class="params">scores,user</span>):</span><br><span class="line">    userSimilarity = findSimilarUsers(scores, user)</span><br><span class="line">    swapUserSimilarity = &#123;v:k <span class="keyword">for</span> k, v <span class="keyword">in</span> userSimilarity&#125; <span class="comment"># 交换键值，将存储kv对的列表转换为字典，交换后为无序</span></span><br><span class="line">    allMovies = []</span><br><span class="line">    <span class="keyword">for</span> (k,v) <span class="keyword">in</span> critics.items():</span><br><span class="line">        <span class="keyword">for</span> movie <span class="keyword">in</span> v:</span><br><span class="line">            <span class="keyword">if</span> movie <span class="keyword">not</span> <span class="keyword">in</span> allMovies:</span><br><span class="line">                allMovies.append(movie)</span><br><span class="line">    itemScore = []</span><br><span class="line">    <span class="keyword">for</span> movie <span class="keyword">in</span> allMovies:</span><br><span class="line">        scoreSum = <span class="number">0</span></span><br><span class="line">        similaritySum = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> similarity, otherUser <span class="keyword">in</span> userSimilarity:</span><br><span class="line">            <span class="keyword">if</span> critics[otherUser].has_key(movie):</span><br><span class="line">                scoreSum += critics[otherUser][movie] * similarity</span><br><span class="line">                similaritySum += swapUserSimilarity[otherUser]</span><br><span class="line">        itemScore.append((scoreSum/similaritySum, movie))</span><br><span class="line"></span><br><span class="line">    itemScore.sort(reverse=<span class="literal">True</span>)</span><br><span class="line">    recommend_movies = [] <span class="comment"># 为user推荐的电影</span></span><br><span class="line">    <span class="built_in">print</span> <span class="string">&#x27;all movies ranking:&#x27;</span></span><br><span class="line">    <span class="keyword">for</span> i,j <span class="keyword">in</span> itemScore:</span><br><span class="line">        <span class="built_in">print</span> i,j</span><br><span class="line">        <span class="keyword">if</span> j <span class="keyword">not</span> <span class="keyword">in</span> critics[user]:</span><br><span class="line">            recommend_movies.append(j)</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&#x27;recommended movies for %s:%s&#x27;</span> %(user, recommend_movies)</span><br></pre></td></tr></table></figure></p>
+<h2 id="寻找物品间的相似性"><strong>寻找物品间的相似性</strong></h2>
+<p>上面的推荐方法是通过寻找相似用户进行推荐，是一种“A喜欢这个物品，跟他相似的B也可能喜欢这件物品”思想；除此之外，还有一种思想就是“A喜欢物品1，也可能喜欢相似的物品2”。在这里判断1和2的相似性就成了关键，也就是如何寻找物品间的相似性。</p>
+<p>乍一看会没有思路，但是实际上很简单，只需要对原始数据做个简单的转换。上面一开始给出的数据集是一个用户对多部电影的评价，现在把换成同一部电影不同用户的评价即可.
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">将</span><br><span class="line"><span class="string">&#x27;Lisa Rose&#x27;</span>: &#123;<span class="string">&#x27;Lady in the Water&#x27;</span>: <span class="number">2.5</span>, <span class="string">&#x27;Snakes on a Plane&#x27;</span>: <span class="number">3.5</span>&#125;,</span><br><span class="line"><span class="string">&#x27;Gene Seymour&#x27;</span>: &#123;<span class="string">&#x27;Lady in the Water&#x27;</span>: <span class="number">3.0</span>, <span class="string">&#x27;Snakes on a Plane&#x27;</span>: <span class="number">3.5</span>&#125;&#125;</span><br><span class="line">转换为</span><br><span class="line">&#123;<span class="string">&#x27;Lady in the Water&#x27;</span>:&#123;<span class="string">&#x27;Lisa Rose&#x27;</span>:<span class="number">2.5</span>,<span class="string">&#x27;Gene Seymour&#x27;</span>:<span class="number">3.0</span>&#125;,</span><br><span class="line"><span class="string">&#x27;Snakes on a Plane&#x27;</span>:&#123;<span class="string">&#x27;Lisa Rose&#x27;</span>:<span class="number">3.5</span>,<span class="string">&#x27;Gene Seymour&#x27;</span>:<span class="number">3.5</span>&#125;&#125; etc..</span><br></pre></td></tr></table></figure></p>
+<p>这样上面求用户相似性的方法是不是同样可以用来求物品间的相似性了？这种基于物品相似性的方法称为基于物品的协同过滤，而上面基于用户相似性的方法则称为基于用户的协同过滤。</p>
+<p>文中完整代码见<a
+target="_blank" rel="noopener" href="https://github.com/WuLC/MachineLearningAlgorithm/blob/master/python/CollaborativeFiltering.py">这里</a></p>
+<p>文章为笔者总结，如有错误，烦请指出</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+              <a href="/tags/%E9%9B%86%E4%BD%93%E6%99%BA%E6%85%A7%E7%BC%96%E7%A8%8B/" rel="tag"><i class="fa fa-tag"></i> 集体智慧编程</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2016/02/20/Hadoop2-6-0%E5%AE%89%E8%A3%85%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/" rel="prev" title="Hadoop2.6.0安装注意事项">
+                  <i class="fa fa-chevron-left"></i> Hadoop2.6.0安装注意事项
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2016/02/24/python%E8%BF%9E%E6%8E%A5mysql%E5%8F%8A%E5%85%B6%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/" rel="next" title="python连接mysql及其注意事项">
+                  python连接mysql及其注意事项 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-pen"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

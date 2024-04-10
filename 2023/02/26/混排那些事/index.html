@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id: "JmI6QmP3fMkLet6B",ck: "JmI6QmP3fMkLet6B"})</script>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wulc.me","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.15.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="混排，往往是的推荐系统的最后一个环节，在这个阶段，自然内容（后面简称item）需要与营销内容（后面简称 ad）进行混合，生成最终推送给用户的 list 如果以 Long Term Value(LTV)的视角来看,这是个在 LT 和 V 之间做 trade-off 的过程，ad 如果出得过多，必然会挤压 item 的数量和位置，进而影响用户体验和留存即 LT，但相应的广告收入，或者说 Average">
+<meta property="og:type" content="article">
+<meta property="og:title" content="混排的那些事儿">
+<meta property="og:url" content="https://wulc.me/2023/02/26/%E6%B7%B7%E6%8E%92%E9%82%A3%E4%BA%9B%E4%BA%8B/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="混排，往往是的推荐系统的最后一个环节，在这个阶段，自然内容（后面简称item）需要与营销内容（后面简称 ad）进行混合，生成最终推送给用户的 list 如果以 Long Term Value(LTV)的视角来看,这是个在 LT 和 V 之间做 trade-off 的过程，ad 如果出得过多，必然会挤压 item 的数量和位置，进而影响用户体验和留存即 LT，但相应的广告收入，或者说 Average">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/Rerank_optimize.png">
+<meta property="og:image" content="https://wulc.me/imgs/Rerank_solution.png">
+<meta property="og:image" content="https://wulc.me/imgs/Rerank_constraint.png">
+<meta property="og:image" content="https://wulc.me/imgs/Rerank_algorithm.png">
+<meta property="og:image" content="https://wulc.me/imgs/Rerank_shadowbid.png">
+<meta property="og:image" content="https://wulc.me/imgs/Rerank_gap_effect.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/Rerank_gap_effect_logit.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/Rerank_gap_effect_algo.jpg">
+<meta property="article:published_time" content="2023-02-26T13:53:19.000Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.222Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="计算广告">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/Rerank_optimize.png">
+
+
+<link rel="canonical" href="https://wulc.me/2023/02/26/%E6%B7%B7%E6%8E%92%E9%82%A3%E4%BA%9B%E4%BA%8B/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wulc.me/2023/02/26/%E6%B7%B7%E6%8E%92%E9%82%A3%E4%BA%9B%E4%BA%8B/","path":"2023/02/26/混排那些事/","title":"混排的那些事儿"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>混排的那些事儿 | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">吴良超的学习笔记</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BB%BA%E6%A8%A1%E6%96%B9%E6%A1%88"><span class="nav-number">1.</span> <span class="nav-text">建模方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BB%BA%E6%A8%A1%E5%85%B3%E9%94%AE%E9%97%AE%E9%A2%98%E8%AE%A8%E8%AE%BA"><span class="nav-number">2.</span> <span class="nav-text">建模关键问题讨论</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#shadow-bid-alpha-%E7%9A%84%E8%AE%A1%E7%AE%97"><span class="nav-number">2.1.</span> <span class="nav-text">shadow bid \(\alpha\) 的计算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u_iou_ia-%E5%92%8C-r_i%E7%9A%84%E8%AE%A1%E7%AE%97"><span class="nav-number">2.2.</span> <span class="nav-text">\(u_{i}^{o}\)、\(u_{i}^{a}\) 和 \(r_{i}\)的计算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#position-bias"><span class="nav-number">2.3.</span> <span class="nav-text">position bias</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#gap-effect"><span class="nav-number">2.4.</span> <span class="nav-text">gap effect</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#item-%E4%B8%8E-ad-%E4%BB%B7%E5%80%BC%E5%BA%A6%E9%87%8F%E7%9A%84%E5%8F%A6%E4%B8%80%E7%A7%8D%E6%80%9D%E8%B7%AF"><span class="nav-number">3.</span> <span class="nav-text">item 与 ad
+价值度量的另一种思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A1%AC%E8%A7%84%E5%88%99%E6%98%AF%E5%90%A6%E6%9C%80%E4%BC%98"><span class="nav-number">4.</span> <span class="nav-text">硬规则是否最优</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">小结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">253</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2023/02/26/%E6%B7%B7%E6%8E%92%E9%82%A3%E4%BA%9B%E4%BA%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="混排的那些事儿 | 吴良超的学习笔记">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          混排的那些事儿
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-02-26 21:53:19" itemprop="dateCreated datePublished" datetime="2023-02-26T21:53:19+08:00">2023-02-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-tags"></i>
+      </span>
+      <span class="post-meta-item-text">标签</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A/" itemprop="url" rel="index"><span itemprop="name">计算广告</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>混排，往往是的推荐系统的最后一个环节，在这个阶段，自然内容（后面简称item）需要与营销内容（后面简称
+ad）进行混合，生成最终推送给用户的 list</p>
+<p>如果以 Long Term Value(LTV)的视角来看,这是个在 LT 和 V 之间做
+trade-off 的过程，ad 如果出得过多，必然会挤压 item
+的数量和位置，进而影响用户体验和留存即 LT，但相应的广告收入，或者说
+Average revenue per user(<a
+target="_blank" rel="noopener" href="https://www.investopedia.com/terms/a/arpu.asp">ARPU</a>)
+会提升，反之亦然</p>
+<p>所以业界往往的做法是定一个用户体验的约束，在这个约束下尽可能优化 ad
+的效率，即达到收入最大化，因此很自然可以把这个建模成一个最优化问题，LinkedIn
+在 2020 年的这篇 paper就是这么做的，<a
+target="_blank" rel="noopener" href="https://dl.acm.org/doi/pdf/10.1145/3394486.3403391">Ads Allocation
+in Feed via Constrained Optimization</a></p>
+<p>直观地看混排这个问题，有 2 个子问题需要解决 （1）怎么计算每个 item 或
+ad 在每个位置上的价值：因为 item 和 ad
+是各自排序的，目标不同，最终的值的量纲也不同，这么把两者的 scale
+拉到可比范围是一个需要讨论的问题 （2）怎么分配能让最终 list
+价值最大化：在 item 和 ad 的价值确认后，怎么插入 item 和 ad
+的位置，从而达到整个 list 的最大化</p>
+<p>上面提到的 LinkedIn 的 paper
+重点是在解决第二个问题，部分内容也涉及到第一个问题 ；本文会先讲一下这篇
+paper 的建模方法，然后讨论下计算 item 和 ad
+价值的一些思路，混排中一些其他需要注意的事项</p>
+<span id="more"></span>
+<h2 id="建模方案">建模方案</h2>
+<p>paper
+把问题建模成如下图最优化问题（单次请求的最优，目前不考虑请求间的优化）</p>
+<p><img data-src="https://wulc.me/imgs/Rerank_optimize.png" height="30%" width="30%"></p>
+<p>各符号含义如下</p>
+<ul>
+<li><span class="math inline">\(i\)</span>: 一次请求中位置的 index</li>
+<li><span class="math inline">\(x_i\)</span>: 是否在第 i 个位置插入
+ad</li>
+<li><span class="math inline">\(j\)</span>: 请求的 index</li>
+<li><span class="math inline">\(u_{i}^{o}\)</span>: item 在第 i 个位置的
+engagement utility（可理解为内容本身的价值，item和ad都有）</li>
+<li><span class="math inline">\(u_{i}^{a}\)</span>: ad 在第 i 个位置的
+engagement utility</li>
+<li><span class="math inline">\(r_{i}\)</span>: ad 在第 i 个位置的
+revenue utility（可理解为商业价值，item没有这个价值）</li>
+<li><span class="math inline">\(C\)</span>: 全局 engagement utility
+的一个门槛, 一种可能的方式是设置成可能最大的 engagement
+utility（没有广告） 的一个百分比</li>
+</ul>
+<p>通过对偶拉格朗日可以求解出如下的解，式子中的 <span
+class="math inline">\(\alpha\)</span>
+是上面第一个约束的拉格朗日乘数；这个变量的物理含义是一个 bid，paper
+称其为 “shadow bid”，作用是把 engagement utility 的 scale 变换至 revenue
+utility 的 scale；则最终在位置 i 插入 ad 或 item 的价值如下图表 1
+所示</p>
+<p><img data-src="https://wulc.me/imgs/Rerank_solution.png" height="40%" width="40%"></p>
+<p>上面的最优化问题的约束只是总体 list 的 engagement utility
+要大于特定预制，但混排往往还有一些硬约束，在paper中提到的是：top slot 和
+min gap
+，分别表示第一个广告的位置约束，两个广告最小间隔的约束；除了这两个约束，一些常见的约束还有
+showtime gap 约束（出现广告的评率）、adload
+约束等(广告出现比例的约束)</p>
+<p><img data-src="https://wulc.me/imgs/Rerank_constraint.png" height="30%" width="30%"></p>
+<p>这两个约束并没有直接体现在最优化的建模里，而是体现在最后的混排算法里，整个算法流程如下</p>
+<p><img data-src="https://wulc.me/imgs/Rerank_algorithm.png" height="40%" width="40%"></p>
+<h2 id="建模关键问题讨论">建模关键问题讨论</h2>
+<p>上面的建模虽然比较直观，但涉及到的一些需要解决的关键问题，</p>
+<h3 id="shadow-bid-alpha-的计算">shadow bid <span
+class="math inline">\(\alpha\)</span> 的计算</h3>
+<p>paper 提到的 shadow bid，在经济学上称为<a
+target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%BD%B1%E5%AD%90%E4%BB%B7%E6%A0%BC">影子价格</a>，物理含义是表示的是增加一个单位的资源所带来的边际收益，关于影子价格更多讨论可参考
+<a
+target="_blank" rel="noopener" href="https://www.zhihu.com/question/23510001">线性规划中的影子价格怎么理解？</a></p>
+<p>这里的影子价格 <span class="math inline">\(\alpha\)</span> 是一个关于
+<span class="math inline">\(C\)</span> 的函数，paper
+提到获取这个值的三种方法，</p>
+<p><img data-src="https://wulc.me/imgs/Rerank_shadowbid.png" height="40%" width="40%"></p>
+<p>从上图可知，基本思路是 （1）确定 <span
+class="math inline">\(C\)</span> 的值之后求解原问题，得到 <span
+class="math inline">\(\alpha\)</span> （2）通过在线 ab
+实验来确定这个参数
+（3）离线回放（感觉这里跟第一个是重合的，因为求解原问题也是需要回放历史数据，只是用多长的历史数据，以及更新频率有多大）</p>
+<h3 id="u_iou_ia-和-r_i的计算"><span
+class="math inline">\(u_{i}^{o}\)</span>、<span
+class="math inline">\(u_{i}^{a}\)</span> 和 <span
+class="math inline">\(r_{i}\)</span>的计算</h3>
+<p>关于这几个值的获取，paper 并没有提供明确的方法，只是提到了
+<strong><span class="math inline">\(u_{i}^{a}\)</span>、 <span
+class="math inline">\(u_{i}^{o}\)</span> and <span
+class="math inline">\(r_{i}\)</span> are drawn from the same
+distribution as was the historical data</strong></p>
+<p>但如果真的这么做，存在的问题必然是历史数据会很稀疏，容易出现新的 item
+或 ad
+没有数据，或者把统计历史数据的维度拉得更大，这样容易导致效果变差，数据没区分性；因此，最终还是需要往预估方向去做</p>
+<p>如果考虑实际的业务，<span class="math inline">\(u_{i}^{o}\)</span> 和
+<span class="math inline">\(r_{i}\)</span> 的值比较好获取，直接取原本
+item 排序和 ad 排序中各自的分数即可，但 <span
+class="math inline">\(u_{i}^{a}\)</span> 的值应该如何获取？（其实这里的
+<span class="math inline">\(u_{i}^{o}\)</span> 和 <span
+class="math inline">\(r_{i}\)</span>
+的值的获取还有个问题，就是怎么获取一个 item 或 ad 在所有位置的 <span
+class="math inline">\(u\)</span> 或 <span
+class="math inline">\(r\)</span>，这部分在下面的 position bias
+会讨论）</p>
+<p>如果让 ad 直接走推荐侧的模型，在物理意义上是 make sense
+的，但可能会存在 2 个问题（1）ad 的特征未必能跟 item
+的完全对齐（2）需要保证 <span class="math inline">\(u_{i}^{a} \lt
+u_{i}^{o}\)</span></p>
+<p>这里第二个问题尤为重要，因为如果这个不成立，上面的最优化问题最终的解会是全出
+ad，这显然是不合理的，那如何做这一点的保证，笔者现在也没想到很好的方法；比如说在推荐模型做
+multi-head，一个 head 预估 item，一个 head 预估 ad，通过 regularization
+尽量保证 item head 要大于 ad head，但也没法做严格的保证</p>
+<h3 id="position-bias">position bias</h3>
+<p>这个问题在上面的 <span
+class="math inline">\(u_{i}^{o}\)</span>、<span
+class="math inline">\(u_{i}^{a}\)</span> 和 <span
+class="math inline">\(r_{i}\)</span> 的获取讨论中提到了</p>
+<p>如果在计算 <span class="math inline">\(u_{i}^{o}\)</span>、<span
+class="math inline">\(u_{i}^{a}\)</span> 和 <span
+class="math inline">\(r_{i}\)</span>
+不考虑位置信息，那必然是有偏的，因为不同位置的 ctr、cvr 等天然不一致</p>
+<p>paper 里提到了一种方法，也是实际比较常用的：<strong>training
+阶段使用实际的 position，serving 阶段使用统一的
+position，同时保留一张映射表，映射不同位置跟 serving 时使用的统一位置的
+discount，映射表可通过后验数据统计获取得到，最终预估值乘上这个 discount
+就能等到不同位置的预估值</strong></p>
+<p>这种做法的缺点是这张映射表需要经常更新，所以更好的做法是把这张表做到模型里，让模型训练过程中就能学到这个变化，预估阶段同时预估所有的位置的
+score</p>
+<h3 id="gap-effect">gap effect</h3>
+<p>对于推荐而言，往往序准确就可以了，但 a<strong>d
+因为涉及到实际扣费，会要求 ctr，cvr
+预估足够准确</strong>，才能避免扣费不准确，引起广告主的客诉等问题</p>
+<p>除了上面的 position bias 会影响 ctr 准确性，两个 ad 之间的 gap
+大小也会影响 ad 的 ctr 等，如下图所示，ad 的 gap 之间如果过小，ad
+的点击率会过低，但 item 不会出现这种情况，本质上还是因为 ad
+的密集度过高，即使前面提到了有min-gap 这一类硬规则</p>
+<p><img data-src="https://wulc.me/imgs/Rerank_gap_effect.jpg" height="40%" width="40%"></p>
+<p>paper 提出的做法是给增加一个 gap 特征来捕捉这个信息，paper
+做了如下推导，最终生效的形式跟 position_discount 有点像，等价于在原来的
+ctr 基础上乘上一个 gap_discount, 下图中的 <span
+class="math inline">\(g\)</span> 是 <a
+target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Logit">Logit function</a>, <span
+class="math inline">\(y_{ij}\)</span> 表示是否发生点击（还可进一步把
+<span class="math inline">\(\beta\)</span>
+参数化，做成个性化的参数）</p>
+<p><img data-src="https://wulc.me/imgs/Rerank_gap_effect_logit.jpg" height="40%" width="40%"></p>
+<p>而如果在上面的混排算法上加上 gap effect 的影响，会有如下的流程</p>
+<p><img data-src="https://wulc.me/imgs/Rerank_gap_effect_algo.jpg" height="40%" width="40%"></p>
+<h2 id="item-与-ad-价值度量的另一种思路">item 与 ad
+价值度量的另一种思路</h2>
+<p>paper 认为 item 价值是 engagement utility，ad 的价值是 engagement
+utility + revenue utility</p>
+<p>而上面也提到了获取 ad 的 engagement utility
+会比较难，因此可以也可以考虑使用另一种思路来度量 item 和 ad 的价值</p>
+<p>因为涉及到扣费，ad 的价值是比较好衡量的，一般采用的是 ecpm = bid ×
+ctr ×
+cvr（为了讨论方便，此处省略hidden_cost），因此很自然的一个想法是，<strong>能否为每个
+item 也赋予一个 bid，这样也能在 item 侧算出一个类似 ecpm 的指标，与 ad
+侧能进行比较</strong></p>
+<p>紧接着的问题是，item 侧的 bid 的含义是什么？ad 侧的 bid
+是有明确的物理含义的：广告主愿意为一个转化付的钱（还会叠加调价策略修改原始的广告主出价），但在
+item 侧并没有广告主这一角色，由谁来出这个 bid 呢？</p>
+<p>最直观的方法就是基于 ad 和 item 各自预估值的量级的差异，拍一个 item
+侧的全局固定的 bid，但这样显然不是最优的，而且这个 bid
+的量级也需要及时监控和更新，因为随着迭代，两边的预估值的 sacle
+会发生变化</p>
+<p>而如果从另一个角度来看，ad
+更多是表达广告主的诉求，目标就是要更多的用户转化；item
+更多是平台的诉求，
+目标是要为平台带来更多的用户和留存时间；留存时间越长，也意味着可供平台变现的流量会更多，或者说<strong>用户指标其实也是跟平台长期收入挂钩的</strong>；因此可以基于大盘来测算用户指标与平台收入的关系，以
+stay_duration 为例，可以对 stay_duration 分桶，测算 stay_duration
+与平台长期收入指标的相关关系，建立一个函数 <span
+class="math inline">\(f\)</span> 使得 <span class="math inline">\(bid =
+f(stay_duration)\)</span>, 当然这里的变量也不一定是
+stay_duration，也可以是考虑 dislike、active
+等各种信号，关键是要<strong>把用户在平台的留存、活跃等信息，与平台长期收入量化挂钩，然后基于这个收入倒推出一个
+item 侧的 bid</strong></p>
+<p>对于 ad 而言，如果与 item 混排时，把 ad 插在 items 的第 <span
+class="math inline">\(k\)</span> 位带来的收益, 不仅仅是广告本身的
+ecpm，还可进一步考虑由于广告插入给总体 items 带来的损失（VCG
+计费的思想），即<strong>混排时 ad 的价值也可以考虑成“ad 带来收益 - item
+后移的损失”</strong>；这样的话如果插入的位置导致 item
+后移的损失较大，则总体的 ad 价值会下降，避免对 item 的挤压</p>
+<h2 id="硬规则是否最优">硬规则是否最优</h2>
+<p>上面提到了混排中存在着各种硬规则，比如说广告出现的首位，广告之间的min_gap，show_time
+gap等，从技术角度来说，这样的离散的硬规则显然不是最优的，会极大限制算法的搜索空间；而从业务的角度，这种硬规则往往是业务发展初期拍定的，随着业务发展，对当前业务是否合理也是需要重新评估的</p>
+<p>举个例子，一个对 ad 敏感和一个对 ad
+不敏感的用户，使用同一套硬规则并不是最优的，因为同样的广告频率，在敏感用户那转化率会比较低，同时对用户的留存影响也会比较大（相对于不敏感的用户）；而如果给对
+ad 不敏感的用户出更多的 ad，同时减少敏感用户的ad，打平总体的 ad
+数，最终总体的 engagement utility 和 revenue utility
+理论上也是更优的</p>
+<p>具体的实现上，一般需要设置一套规则和计算方法，能够计算出硬规则中的所有可能情况下的
+utility，然后加入到 list 的总体价值中</p>
+<p>而这其实也涉及到推荐或广告系统里的优化的一个方向，就是个性化，一般大盘策略上对所有用户都相同的超参或策略，都会有个性化的空间</p>
+<p>当然在这个过程也要注意个性化往往也会有个限制，以混排为例，需要对不敏感的用户有体验保护，不能逮住这部分用户一个劲地薅</p>
+<h2 id="小结">小结</h2>
+<p>本文从 LinkedIn 的一篇 paper
+展开，介绍了混排需要解决的问题以及一种建模方法，paper
+的建模不复杂，关键是建模中使用的各个 utility 的获取，paper
+在这部分并没有说得比较详细，可能也是因为这部分跟实际业务耦合比较紧密；因此，本文后面也讨论了一种
+item 和 ad 价值可能的计算方式：为 item 计算一个 bid， 同时考虑 ad 插入对
+item 的影响</p>
+<p>另外，paper 也提到了 position bias 、gap effect
+等在混排中常见的问题，本文针对 paper
+提出的方法和业界的一些做法做了讨论</p>
+<p>最后，也探讨了一个比较比较开放的问题，就是混排中涉及到的 hard
+rule，hard rule 一般是红线，但从技术视角来看肯定不是最优的，同时 hard
+rule 是否合理，以及如何从业务角度和技术角度来 soften the hard rule，拿到
+engagement utility 和 revenue utility
+两部分的收益，也许是个值得讨论的问题</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A/" rel="tag"><i class="fa fa-tag"></i> 计算广告</a>
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/02/05/%E5%81%9A%E4%B8%80%E4%B8%AA%E6%B8%85%E9%86%92%E7%9A%84%E5%82%BB%E7%93%9C/" rel="prev" title="做一个清醒的傻瓜">
+                  <i class="fa fa-chevron-left"></i> 做一个清醒的傻瓜
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/03/19/A%20Survey%20of%20Multi-Domain/" rel="next" title="A Survey of Multi-Domain">
+                  A Survey of Multi-Domain <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-pen"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id: "JmI6QmP3fMkLet6B",ck: "JmI6QmP3fMkLet6B"})</script>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wulc.me","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.15.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="从互联网搜集的一些比较有趣的题目，通过python实现，换成其他语言大多也能实现。题目会尽量保持更新,如果您有好的项目推荐，欢迎在评论区留言。 github地址:https:&#x2F;&#x2F;github.com&#x2F;WuLC&#x2F;show-me-the-code  Talk is cheap. Show me the code.--Linus Torvalds">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一些有意思的题目">
+<meta property="og:url" content="https://wulc.me/2016/05/28/%E4%B8%80%E4%BA%9B%E6%9C%89%E6%84%8F%E6%80%9D%E7%9A%84%E9%A2%98%E7%9B%AE/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="从互联网搜集的一些比较有趣的题目，通过python实现，换成其他语言大多也能实现。题目会尽量保持更新,如果您有好的项目推荐，欢迎在评论区留言。 github地址:https:&#x2F;&#x2F;github.com&#x2F;WuLC&#x2F;show-me-the-code  Talk is cheap. Show me the code.--Linus Torvalds">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/result1.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/aVhbegV.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/nPDlpme.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/rOHbUzg.png">
+<meta property="og:image" content="https://wulc.me/imgs/iuz0Pbv.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1aoqu2cj46e018hhp4g27d1fs19.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1atfr8u7f180e1lm61ns91321qsr9.png">
+<meta property="article:published_time" content="2016-05-28T13:44:10.000Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.103Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="python">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/result1.jpg">
+
+
+<link rel="canonical" href="https://wulc.me/2016/05/28/%E4%B8%80%E4%BA%9B%E6%9C%89%E6%84%8F%E6%80%9D%E7%9A%84%E9%A2%98%E7%9B%AE/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wulc.me/2016/05/28/%E4%B8%80%E4%BA%9B%E6%9C%89%E6%84%8F%E6%80%9D%E7%9A%84%E9%A2%98%E7%9B%AE/","path":"2016/05/28/一些有意思的题目/","title":"一些有意思的题目"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>一些有意思的题目 | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">吴良超的学习笔记</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">253</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2016/05/28/%E4%B8%80%E4%BA%9B%E6%9C%89%E6%84%8F%E6%80%9D%E7%9A%84%E9%A2%98%E7%9B%AE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="一些有意思的题目 | 吴良超的学习笔记">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          一些有意思的题目
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2016-05-28 21:44:10" itemprop="dateCreated datePublished" datetime="2016-05-28T21:44:10+08:00">2016-05-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-tags"></i>
+      </span>
+      <span class="post-meta-item-text">标签</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>从互联网搜集的一些比较有趣的题目，通过python实现，换成其他语言大多也能实现。题目会尽量保持更新,如果您有好的项目推荐，欢迎在评论区留言。</p>
+<p>github地址:https://github.com/WuLC/show-me-the-code</p>
+<blockquote>
+<p>Talk is cheap. Show me the code.--Linus Torvalds</p>
+</blockquote>
+<span id="more"></span>
+<hr />
+<p><strong>第 0000 题：</strong>将你的 QQ
+头像（或者微博头像）右上角加上红色的数字，类似于微信未读信息数量那种提示效果。
+类似于图中效果</p>
+<figure>
+<img data-src="https://wulc.me/imgs/result1.jpg" alt="头像" />
+<figcaption aria-hidden="true">头像</figcaption>
+</figure>
+<p><strong>第 0001 题：</strong>做为 Apple Store App
+独立开发者，你要搞限时促销，为你的应用<strong>生成激活码</strong>（或者优惠券），使用
+Python 如何生成 200 个激活码（或者优惠券）？</p>
+<p><strong>第 0002 题</strong>：将 0001 题生成的 200
+个激活码（或者优惠券）保存到 <strong>MySQL</strong> 关系型数据库中。</p>
+<p><strong>第 0003 题：</strong>将 0001 题生成的 200
+个激活码（或者优惠券）保存到 <strong>Redis</strong>
+非关系型数据库中。</p>
+<p><strong>第 0004
+题：</strong>任一个英文的纯文本文件，统计其中的单词出现的个数。</p>
+<p><strong>第 0005
+题：</strong>你有一个目录，装了很多照片，把它们的尺寸变成都不大于
+iPhone5 分辨率的大小。</p>
+<p><strong>第 0006 题：</strong>你有一个目录，放了你一个月的日记，都是
+txt，为了避免分词的问题，假设内容都是英文，请统计出你认为每篇日记最重要的词。</p>
+<p><strong>第 0007
+题：</strong>有个目录，里面是你自己写过的程序，统计一下你写过多少行代码。包括空行和注释，但是要分别列出来。</p>
+<p><strong>第 0008
+题：</strong>一个HTML文件，找出里面的<strong>正文</strong>。</p>
+<p><strong>第 0009
+题：</strong>一个HTML文件，找出里面的<strong>链接</strong>。</p>
+<p><strong>第 0010 题：</strong>使用 Python
+生成类似于下图中的<strong>字母验证码图片</strong>,同时写出识别验证码的程序。</p>
+<figure>
+<img data-src="https://wulc.me/imgs/aVhbegV.jpg" alt="字母验证码" />
+<figcaption aria-hidden="true">字母验证码</figcaption>
+</figure>
+<ul>
+<li><a
+target="_blank" rel="noopener" href="http://stackoverflow.com/questions/2823316/generate-a-random-letter-in-python">阅读资料</a></li>
+</ul>
+<p><strong>第 0011 题：</strong> 敏感词文本文件
+filtered_words.txt，里面的内容为以下内容，当用户输入敏感词语时，则打印出
+Freedom，否则打印出 Human Rights。</p>
+<pre><code>北京
+程序员
+公务员
+领导
+牛比
+牛逼
+你娘
+你妈
+love
+sex
+jiangge</code></pre>
+<p><strong>第 0012 题：</strong> 敏感词文本文件
+filtered_words.txt，里面的内容 和 0011题一样，当用户输入敏感词语，则用
+星号 *
+替换，例如当用户输入「北京是个好城市」，则变成「**是个好城市」。</p>
+<p><strong>第 0013 题：</strong> 用 Python 写一个爬图片的程序,爬<a
+target="_blank" rel="noopener" href="https://www.zhihu.com/question/24340705">这个链接</a>的壁纸</p>
+<p><strong>第 0014 题：</strong> 纯文本文件 student.txt为学生信息,
+里面的内容（包括花括号）如下所示：</p>
+<pre><code>&#123;
+    &quot;1&quot;:[&quot;张三&quot;,150,120,100],
+    &quot;2&quot;:[&quot;李四&quot;,90,99,95],
+    &quot;3&quot;:[&quot;王五&quot;,60,66,68]
+&#125;</code></pre>
+<p>请将上述内容写到 student.xls 文件中，如下图所示：</p>
+<figure>
+<img data-src="https://wulc.me/imgs/nPDlpme.jpg" alt="student.xls" />
+<figcaption aria-hidden="true">student.xls</figcaption>
+</figure>
+<ul>
+<li><a
+target="_blank" rel="noopener" href="http://www.cnblogs.com/skynet/archive/2013/05/06/3063245.html">阅读资料</a>
+腾讯游戏开发 XML 和 Excel 内容相互转换</li>
+</ul>
+<p><strong>第 0015 题：</strong> 纯文本文件 city.txt为城市信息,
+里面的内容（包括花括号）如下所示：</p>
+<pre><code>&#123;
+    &quot;1&quot; : &quot;上海&quot;,
+    &quot;2&quot; : &quot;北京&quot;,
+    &quot;3&quot; : &quot;成都&quot;
+&#125;</code></pre>
+<p>请将上述内容写到 city.xls 文件中，如下图所示：</p>
+<figure>
+<img data-src="https://wulc.me/imgs/rOHbUzg.png" alt="city.xls" />
+<figcaption aria-hidden="true">city.xls</figcaption>
+</figure>
+<p><strong>第 0016 题：</strong> 纯文本文件 numbers.txt,
+里面的内容（包括方括号）如下所示：</p>
+<pre><code>[
+    [1, 82, 65535], 
+    [20, 90, 13],
+    [26, 809, 1024]
+]</code></pre>
+<p>请将上述内容写到 numbers.xls 文件中，如下图所示：</p>
+<figure>
+<img data-src="https://wulc.me/imgs/iuz0Pbv.png" alt="numbers.xls" />
+<figcaption aria-hidden="true">numbers.xls</figcaption>
+</figure>
+<p><strong>第 0017 题：</strong> 将第 0014 题中的 student.xls
+文件中的内容写到 student.xml 文件中，如</p>
+<p>下所示：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;root&gt;
+&lt;students&gt;
+&lt;!-- 
+    学生信息表
+    &quot;id&quot; : [名字, 数学, 语文, 英文]
+--&gt;
+&#123;
+    &quot;1&quot; : [&quot;张三&quot;, 150, 120, 100],
+    &quot;2&quot; : [&quot;李四&quot;, 90, 99, 95],
+    &quot;3&quot; : [&quot;王五&quot;, 60, 66, 68]
+&#125;
+&lt;/students&gt;
+&lt;/root&gt;</code></pre>
+<p><strong>第 0018 题：</strong> 将 第 0015 题中的 city.xls
+文件中的内容写到 city.xml 文件中，如下所示：</p>
+<pre><code>&lt;?xmlversion=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;root&gt;
+&lt;citys&gt;
+&lt;!-- 
+    城市信息
+--&gt;
+&#123;
+    &quot;1&quot; : &quot;上海&quot;,
+    &quot;2&quot; : &quot;北京&quot;,
+    &quot;3&quot; : &quot;成都&quot;
+&#125;
+&lt;/citys&gt;
+&lt;/root&gt;</code></pre>
+<p><strong>第 0019 题：</strong> 将 第 0016 题中的 numbers.xls
+文件中的内容写到 numbers.xml 文件中，如下</p>
+<p>所示：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;root&gt;
+&lt;numbers&gt;
+&lt;!-- 
+    数字信息
+--&gt;
+
+[
+    [1, 82, 65535],
+    [20, 90, 13],
+    [26, 809, 1024]
+]
+
+&lt;/numbers&gt;
+&lt;/root&gt;</code></pre>
+<p><strong>第 0020 题：</strong> 使用 Python
+语言开发服务器端口扫描器，用来检测目标服务器上有哪些端口开放。</p>
+<p><strong>第 0021 题：</strong> 通常，登陆某个网站或者
+APP，需要使用用户名和密码。密码是如何加密后存储起来的呢？请使用 Python
+对密码加密。</p>
+<ul>
+<li><p>阅读资料 <a
+target="_blank" rel="noopener" href="http://zhuoqiang.me/password-storage-and-python-example.html">用户密码的存储与
+Python 示例</a></p></li>
+<li><p>阅读资料 <a
+target="_blank" rel="noopener" href="http://www.pythoncentral.io/hashing-strings-with-python/">Hashing
+Strings with Python</a></p></li>
+<li><p>阅读资料 <a
+target="_blank" rel="noopener" href="http://stackoverflow.com/questions/2572099/pythons-safest-method-to-store-and-retrieve-passwords-from-a-database">Python's
+safest method to store and retrieve passwords from a
+database</a></p></li>
+</ul>
+<p><strong>第 0022 题：</strong> 使用 Python 的 Web 框架，做一个 Web
+版本 留言簿 应用。</p>
+<p><a target="_blank" rel="noopener" href="http://v2ex.com/t/151643#reply53">阅读资料：Python 有哪些
+Web 框架</a></p>
+<ul>
+<li><figure>
+<img data-src="https://wulc.me/imgs/image_1aoqu2cj46e018hhp4g27d1fs19.png"
+alt="留言簿参考" />
+<figcaption aria-hidden="true">留言簿参考</figcaption>
+</figure></li>
+</ul>
+<p><strong>第 0023 题：</strong>
+通过有道翻译提供的API写一个支持命令行翻译单词的工具，效果如下图：</p>
+<p><img data-src="https://wulc.me/imgs/image_1atfr8u7f180e1lm61ns91321qsr9.png" /></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/python/" rel="tag"><i class="fa fa-tag"></i> python</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2016/05/23/python%20%E8%AF%AD%E6%B3%95%E6%9D%82%E8%AE%B0/" rel="prev" title="Python语法杂记">
+                  <i class="fa fa-chevron-left"></i> Python语法杂记
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2016/05/28/%E5%85%B3%E9%94%AE%E8%AF%8D%E6%8A%BD%E5%8F%96%E7%AE%97%E6%B3%95%E7%9A%84%E7%A0%94%E7%A9%B6/" rel="next" title="关键词抽取算法的研究">
+                  关键词抽取算法的研究 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-pen"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

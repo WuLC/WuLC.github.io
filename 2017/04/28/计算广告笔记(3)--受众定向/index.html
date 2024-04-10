@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id: "JmI6QmP3fMkLet6B",ck: "JmI6QmP3fMkLet6B"})</script>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wulc.me","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.15.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="这一讲主要介绍了受众定向的概念和若干种定向的方法。 受众定向概念 受众定向是目前广告系统的核心部分，要做的就是根据人群划分进行广告售卖和优化。 受众定向可以认为是为 AUC（Ad，User，Context）打标签的过程，上下文标签可以认为是即时受众标签，如下所示是AUC上的标签类别">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计算广告笔记(3)--受众定向">
+<meta property="og:url" content="https://wulc.me/2017/04/28/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A%E7%AC%94%E8%AE%B0(3)--%E5%8F%97%E4%BC%97%E5%AE%9A%E5%90%91/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="这一讲主要介绍了受众定向的概念和若干种定向的方法。 受众定向概念 受众定向是目前广告系统的核心部分，要做的就是根据人群划分进行广告售卖和优化。 受众定向可以认为是为 AUC（Ad，User，Context）打标签的过程，上下文标签可以认为是即时受众标签，如下所示是AUC上的标签类别">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/image_1bemrnn561kk85bhka521jii9.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1bi17ii0n2qr1s3169rersvho1t.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1bi0joe626h46ri1vhc137216o9m.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1ben0lcj01qsn1j1m2ji1o9a11ao1g.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1ben1h50a2kf1kou1rea1qad1l7e1t.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1ben1i4ub15gve341f251kp89b92a.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1ben1to0fpsr1unj1aao66qu232n.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1ben5m1qh1idkc571i9v1n21u3p34.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1bi41ptsp1junofgd5satp1d3dm.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1bi59lp0fpu112r111hoq6m1d702a.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1bep1f616m1h1k4e1jtl1tp61jrn13.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1ben9omrm1ko71qrkp2kl6u13bc4o.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1benb74qa1au91vh21t2b1kifi55.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1bep5kb521id3iav1vlo7dcl3a9.png">
+<meta property="article:published_time" content="2017-04-28T13:37:39.000Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.187Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="计算广告">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/image_1bemrnn561kk85bhka521jii9.png">
+
+
+<link rel="canonical" href="https://wulc.me/2017/04/28/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A%E7%AC%94%E8%AE%B0(3)--%E5%8F%97%E4%BC%97%E5%AE%9A%E5%90%91/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wulc.me/2017/04/28/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A%E7%AC%94%E8%AE%B0(3)--%E5%8F%97%E4%BC%97%E5%AE%9A%E5%90%91/","path":"2017/04/28/计算广告笔记(3)--受众定向/","title":"计算广告笔记(3)--受众定向"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>计算广告笔记(3)--受众定向 | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">吴良超的学习笔记</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%97%E4%BC%97%E5%AE%9A%E5%90%91%E6%A6%82%E5%BF%B5"><span class="nav-number">1.</span> <span class="nav-text">受众定向概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A1%8C%E4%B8%BA%E5%AE%9A%E5%90%91"><span class="nav-number">2.</span> <span class="nav-text">行为定向</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8A%E4%B8%8B%E6%96%87%E5%AE%9A%E5%90%91"><span class="nav-number">3.</span> <span class="nav-text">上下文定向</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%8A%E5%9C%A8%E7%BA%BF%E6%8A%93%E5%8F%96%E7%B3%BB%E7%BB%9F"><span class="nav-number">3.1.</span> <span class="nav-text">半在线抓取系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E9%A2%98%E6%A8%A1%E5%9E%8B"><span class="nav-number">3.2.</span> <span class="nav-text">主题模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%8F%E9%AA%8C%E8%B4%9D%E5%8F%B6%E6%96%AFempirical-bayes11"><span class="nav-number">3.3.</span> <span class="nav-text">经验贝叶斯(Empirical
+Bayes)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8E%E7%BB%8F%E9%AA%8C%E8%B4%9D%E5%8F%B6%E6%96%AF%E7%9C%8Blda"><span class="nav-number">3.4.</span> <span class="nav-text">从经验贝叶斯看LDA</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#topic-model%E7%9A%84%E5%B9%B6%E8%A1%8C%E5%8C%96"><span class="nav-number">3.5.</span> <span class="nav-text">Topic model的并行化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%8A%A0%E5%B7%A5%E5%92%8C%E4%BA%A4%E6%98%93"><span class="nav-number">4.</span> <span class="nav-text">数据加工和交易</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B2%BE%E5%87%86%E5%B9%BF%E5%91%8A%E4%B8%9A%E5%8A%A1%E7%9A%84%E8%8B%A5%E5%B9%B2%E5%80%BC%E5%BE%97%E6%8E%A2%E8%AE%A8%E7%9A%84%E8%A7%82%E7%82%B9"><span class="nav-number">4.1.</span> <span class="nav-text">精准广告业务的若干值得探讨的观点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%89%E4%BB%B7%E5%80%BC%E7%9A%84%E6%95%B0%E6%8D%AE"><span class="nav-number">4.2.</span> <span class="nav-text">有价值的数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0data-management-platform"><span class="nav-number">4.3.</span> <span class="nav-text">数据管理平台(Data
+Management Platform)</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">253</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2017/04/28/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A%E7%AC%94%E8%AE%B0(3)--%E5%8F%97%E4%BC%97%E5%AE%9A%E5%90%91/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="计算广告笔记(3)--受众定向 | 吴良超的学习笔记">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          计算广告笔记(3)--受众定向
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2017-04-28 21:37:39" itemprop="dateCreated datePublished" datetime="2017-04-28T21:37:39+08:00">2017-04-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-tags"></i>
+      </span>
+      <span class="post-meta-item-text">标签</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A/" itemprop="url" rel="index"><span itemprop="name">计算广告</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>这一讲主要介绍了受众定向的概念和若干种定向的方法。</p>
+<h2 id="受众定向概念">受众定向概念</h2>
+<p>受众定向是目前广告系统的核心部分，要做的就是根据人群划分进行广告售卖和优化。</p>
+<p>受众定向可以认为是为
+AUC（Ad，User，Context）打标签的过程，上下文标签可以认为是即时受众标签，如下所示是AUC上的标签类别</p>
+<span id="more"></span>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1bemrnn561kk85bhka521jii9.png"
+alt="AUC上的标签系统" />
+<figcaption aria-hidden="true">AUC上的标签系统</figcaption>
+</figure>
+<p>标签的两大主要作用 1.
+建立面向广告主的流量售卖体系，注意这些特征需要有具体的意义才能展现给广告主，一般通过事先定义而不是通过文本聚类方法获取
+2. 为各估计模块(如CTR预测)提供原始特征</p>
+<p>下图的定向方式从右到左效果逐渐变好，从上到下表示不同阶段的定向方式；</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1bi17ii0n2qr1s3169rersvho1t.png"
+alt="定向方式" />
+<figcaption aria-hidden="true">定向方式</figcaption>
+</figure>
+<p>上图中的 <span class="math inline">\(f(u)\)</span>, <span
+class="math inline">\(f(c)\)</span>, <span
+class="math inline">\(f(a,u)\)</span> 含义如下：</p>
+<p><span
+class="math inline">\(f(u)\)</span>：用户标签，即根据用户历史行为给用户打上的标签
+<span
+class="math inline">\(f(c)\)</span>：上下文标签，即根据用户当前的访问行为得到的即时标签
+<span
+class="math inline">\(f(a,u)\)</span>：定制化标签，也是一种用户标签，但是是针对某一广告主而言</p>
+<p>除了上面提到的三种标签还有一中标签 <span
+class="math inline">\(f(a)\)</span>
+表示广告标签，便于与上下文标签或用户标签做匹配。广告标签常常有两种选择
+1）直接将广告投放中的广告主、广告计划、广告组、关键词等直接作为标签
+2）用人工的方式归类</p>
+<p>除此之外，各种定向方式中的数字表示该方式有利于某个个阶段需要遵循的原则，各个阶段及其需要遵循原则如下所示</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1bi0joe626h46ri1vhc137216o9m.png"
+alt="各阶段主要原则" />
+<figcaption aria-hidden="true">各阶段主要原则</figcaption>
+</figure>
+<p>各种定向方式含义如下所示：
+<strong>重定向</strong>：如果用户曾经访问过广告主的网站，就会给用户推该广告主的广告。（品牌广告较为常用）
+<strong>上下文</strong>：用户目前浏览的网页内容相关的广告
+<strong>行为</strong>：根据用户的历史行为进行推荐
+<strong>网站/频道</strong>：根据网站的属性投放与该网站内容相关的某一领域的广告（如汽车广告）
+<strong>Hyper-local</strong>：将定位做得更细（如定位到某条街道的小饭馆，一般在移动广告较容易实现）
+<strong>Look-alike</strong>：一般来说重定向的量比较少，该方式可以找到与广告主提供的种子用户相似的用户进行广告投放
+<strong>人口属性</strong>：人口，性别，教育水平，收入水平等，主要给广告商看，效果不是很好
+<strong>地域</strong>：主要给广告商看，效果不是特别好</p>
+<p>下面介绍一下audience targeting 在业界的一种商业模式</p>
+<p>Audience Science 是一个做audience
+targeting的第三方发公司，其核心业务有两个：</p>
+<ol type="1">
+<li>主要提供面向publisher（如NewYork
+Times）的数据加工服务，从publisher提供的数据中提取出用户标签供 publisher
+使用</li>
+<li>直接运营ad
+network，并帮助广告主进行campaign管理和优化；该过程中会通过上面提取出来的用户标签优化效果，同时使用标签创造的营收按照一定比例跟publisher分成</li>
+</ol>
+<h2 id="行为定向">行为定向</h2>
+<p>根据用户的历史行为给用户打上标签(上面提到的<span
+class="math inline">\(f(u)\)</span>)，下面是九种重要原始行为(按信息强度排序，往往强度越大，量越少)</p>
+<ol type="1">
+<li>Transaction, 就是用户购买行为</li>
+<li>Pre-transaction, 用户购买前的一些行为，如商品浏览、加入购物车等</li>
+<li>Paid search click, 搜索广告中的点击行为</li>
+<li>Ad click, 广告的点击行为</li>
+<li>Search click, 搜索引擎上的点击行为</li>
+<li>Search, 搜索引擎上的搜索行为</li>
+<li>Share, 分享行为，如微博等</li>
+<li>Page View,
+浏览页面的行为，注意这个页面不是上面搜索出来的页面，而是用户在某个站点中只能看到的页面（如贴吧），量大但是效果一般</li>
+<li>Ad view，看某个广告的次数，但是带来的效果往往是负面的</li>
+</ol>
+<p>行为定向计算的一种方式如下 (<span
+class="math inline">\(t^{(i)}(u)\)</span>表示用户 <span
+class="math inline">\(u\)</span> 在标签 <span
+class="math inline">\(i\)</span> 上的强度)</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1ben0lcj01qsn1j1m2ji1o9a11ao1g.png"
+alt="定向行为计算" />
+<figcaption aria-hidden="true">定向行为计算</figcaption>
+</figure>
+<p>上面的方式比较简单，但是在海量数据中首先要做的是shallow的挖掘。</p>
+<p>行为定向的还有其他一些问题：如 session log 和 long-term 行为定向</p>
+<p><strong>Session log</strong></p>
+<p>session log 关系到怎么从日志文件中提取出所需数据，有以下两点建议</p>
+<ol type="1">
+<li>将各种行为日志整理成<strong>以用户ID为key的形式</strong>，完成作弊和无效行为标注，作为各数据处理模块的输入源</li>
+<li>可以将targeting变成<strong>局部计算</strong>，大大方便整个流程</li>
+</ol>
+<p><strong>Long-term 行为定向</strong></p>
+<p>Long-term
+行为定向指的是如何从用户的长期行为中提取出用户的标签，常用的有两种方法：滑动窗口方式和时间衰减方式。</p>
+<p>滑动窗口方式：直接将前面 <span class="math inline">\(T\)</span>
+天的行为标签进行相加。下面的公式中 <span
+class="math inline">\(f\)</span> 为 long-term 标签，下标为日期</p>
+<p><span class="math display">\[f_d^{(i)}(u) = \sum_{j=0}^T
+t_{d-j}^{(i)}(u)\]</span></p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1ben1h50a2kf1kou1rea1qad1l7e1t.png"
+alt="滑动窗口方式" />
+<figcaption aria-hidden="true">滑动窗口方式</figcaption>
+</figure>
+<p>时间衰减方式：按照时间衰减方式，对前n天的标签进行相加，时间越长，权重越小。这种方式<strong>空间复杂度低</strong>，仅需昨天的
+<span class="math inline">\(f\)</span> 和今天的 <span
+class="math inline">\(t\)</span></p>
+<p><span class="math display">\[f_d^{(i)}(u) = t_{d}^{(i)}(u) + \alpha
+f_{d-1}^{(i)}(u)\]</span></p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1ben1i4ub15gve341f251kp89b92a.png"
+alt="指数衰减方式" />
+<figcaption aria-hidden="true">指数衰减方式</figcaption>
+</figure>
+<p>实际中上面两种方法的效果差异不大，但是时间衰减方式的计算代价较小。<span
+class="math inline">\(T\)</span> 的选择与实际商品相关，如汽车的 <span
+class="math inline">\(T\)</span> 往往较大，而运动鞋的 <span
+class="math inline">\(T\)</span>
+往往不大，目前这个值主要是根据经验来设。</p>
+<p><strong>如何评判为用户打的标签？</strong></p>
+<p>受众定向评测可以借助Reach/CTR曲线，该曲线如下所示，横轴表示reach到的用户，纵轴表示广告点击率</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1ben1to0fpsr1unj1aao66qu232n.png"
+alt="Reach/CTR曲线" />
+<figcaption aria-hidden="true">Reach/CTR曲线</figcaption>
+</figure>
+<p>上图从左到右阈值设置逐渐变小，设为0时，可以reach到所有人，但是这个时候就相当于无定向投放了</p>
+<p>注意拐点以及该曲线是否服从一个递减的趋势；如果不是递减，可能标签没意义，而拐点可以知道设置在哪一个值能够将有更强的购买倾向的人群与其他人群分开。</p>
+<h2 id="上下文定向">上下文定向</h2>
+<p>上下文定向指的是根据用户的访问内容给用户打标签 (上面提到的 <span
+class="math inline">\(f(c)\)</span>)，这样的定向中有一些根据广告请求中的参数经过简单运算就可以得到，如地域定向，频道/URL
+定向、操作系统定向等。另外一类则是根据上下文页面的一些特征标签，如关键词、主题、分类等进行定向，下面重点讨论这种上下文定向方式。</p>
+<p>上下文定向（打标签）主要有以下几种思路：
+1）用规则将页面归类到一些频道或主题分类，如将 auto.sohu.com
+归类到“汽车”的分类中 2）提取页面的关键词
+3）提取页面的入链锚文本中的关键词，这需要一个全网的爬虫作支持
+4）提取网页流量来源中的搜索关键词，这种方法除了页面内容，也需要页面访问的日志数据作支持
+5）用主题模型将页面内容映射到语义空间的一组主题上</p>
+<h3 id="半在线抓取系统">半在线抓取系统</h3>
+<p>确定了对上下文页面打标签的方法后，在在线广告投放时，页面标签系统需要某个查询
+url
+返回其对应的标签。在广告系统中，可以通过<strong>半在线(Near-line)上下文定向系统</strong>实现这个事情，如下就是一个
+Near-line 上下文定向系统</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1ben5m1qh1idkc571i9v1n21u3p34.png"
+alt="near-line 上下文定向系统" />
+<figcaption aria-hidden="true">near-line 上下文定向系统</figcaption>
+</figure>
+<p>该系统用一个缓存(Redis)来保存每个 URL
+对应的标签，当在线广告请求到达的时候，执行如下操作</p>
+<ol type="1">
+<li>如果请求的上下文 URL 在缓存中存在，直接返回其对应的标签</li>
+<li>如果 URL
+在缓存中不存在，为了广告请求能够及时得到处理，立刻返回空的标签集合，同时向后台的抓取队列中加入此
+URL 进行抓取和存储</li>
+<li>考虑到页面的内容会不定期更新，可以设置缓存合适的 TTL 以自动更新 URL
+对应的标签</li>
+</ol>
+<p>步骤 2
+中能够返回空标签的原因是在广告系统中，某一次展示时标签的缺失带来的影响是可以忍受的，因为对于广告系统而言，这部分只是起到一个锦上添花的作用。</p>
+<h3 id="主题模型">主题模型</h3>
+<p>除了直接提取页面内容的关键词作为页面的特征以外，还可以通过主题模型（Topic
+models）这一类模型对文本进行聚类得到文本的主题分布情况。</p>
+<p>主题模型分两大类：<strong>有监督和无监督的</strong>。有监督指的是预先定义好主题的集合，用监督学习的方法将文档映射到这一集合的元素上；无监督指的是不预先定义主题集合，而是控制主题的总个数或聚类程度，用非监督的方法自动学习出主题集合以及文档到这些主题的映射函数。</p>
+<p>广告中的主题挖掘有两种用途</p>
+<ol type="1">
+<li>用于广告效果优化的特征提取</li>
+<li>用于售卖给广告主的标签体系</li>
+</ol>
+<p>对于第一种用途,
+用有监督或非监督的方法都可以；对于第二种用途，应该优先考虑采用监督学习的方法，因为这样可以预先定义好对广告主有意义而且可解释的标签体系。下面先介绍非监督方法，再介绍监督方法。</p>
+<p><strong>非监督方法</strong></p>
+<p>非监督的主题模型的发展经历了 <strong>LSA -&gt; PLSA -&gt;
+LDA</strong> 的过程，下面简单介绍这三种模型。</p>
+<p>LSA(Latent Semantic Analysis) 有时也叫 LSI(Latent Semantic
+Indexing)，这种方法实际上是将 SVD 分解应用到了 “文本-单词”
+矩阵中，即</p>
+<p><span class="math display">\[X \approx U \Sigma V^T\]</span></p>
+<p><span class="math inline">\(X\)</span>
+矩阵中的值有多种选择：0-1，出现次数，TF-IDF值。则 <span
+class="math inline">\(U\)</span>
+矩阵的一行对应的就是一篇文本在各个主题上的分布， <span
+class="math inline">\(V\)</span>
+矩阵每行对应的就是一个单词在各个主题上的分布，而选择奇异值的个数则决定了隐含主题的个数，也就是代表文本或词语的向量的维度。通过比较向量间的余弦相似性，便可比较文本或单词间的相似性。</p>
+<p>这样的方法虽然直观，但是有几个问题，一是分解后矩阵 <span
+class="math inline">\(U\)</span>、<span class="math inline">\(V\)</span>
+中可能存在着负值，二是这些数值在概率上没有意义。为了解决这些问题，便提出了PLSA。</p>
+<p>PLSA(Probabilistic Latent Semantic
+Analysis)可以说是概率化了的LSA，但是采用的方法与 LSA 完全不同，PLSA
+没有涉及到 SVD，而是采用混合模型的做法。</p>
+<p>PLSA
+方法假设文本包含多个主题，这些主题服从多项式分布，而每个主题下的有多个词，这些词也服从多项式分布。假设有
+M 篇文档，每篇文档有 N 个词，则生成这 M
+篇文档的过程通过有向图模型表示如下</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1bi41ptsp1junofgd5satp1d3dm.png"
+alt="PLSA" />
+<figcaption aria-hidden="true">PLSA</figcaption>
+</figure>
+<p>在有向图模型中，灰色的点表示能够观察到的点，其他白色的点表示需要求解的点，而最后需要求解的点是没有入度的点，其他的有入度和出度的点会被积分积掉，框及其框内符号表示框里面的内容重复若干次</p>
+<p>而上图中 <span class="math inline">\(d\)</span> 表示文本，<span
+class="math inline">\(c\)</span> 表示主题， <span
+class="math inline">\(w\)</span> 表示词语，且文本 <span
+class="math inline">\(d\)</span> 中生成词语 <span
+class="math inline">\(w_i\)</span> 的概率是</p>
+<p><span class="math display">\[P(w_i|d) = \sum_c P(c|d)
+P(w_i|c)\]</span></p>
+<p>其中 <span class="math inline">\(P(c|d)、
+P(w|c)\)</span>均服从多项式分布</p>
+<p>则整篇文本生成的概率为</p>
+<p><span class="math display">\[P(d) = \prod_i P(w_i|d) \]</span></p>
+<p>这个模型跟混合高斯模型（mixture of
+Gaussian）非常相似，都是融合了多个指数族分布的模型，这一类模型也可以称为混合模型，而求解这一类的问题的方法便是
+EM 算法，这里不详细展开。除此之外，假如将上面 PLSA
+中文本主题服从的多项式分布改为伽马分布，将主题下的词语服从的多项式分布改为泊松分布，那么
+PLSA 就变为了GaP(Gamma-Poisson)模型。</p>
+<p>LDA(Latent Dirichlet Allocation) 则是在 PLSA
+的基础上为其两个多项式分布加上了贝叶斯先验, 先验选为 Dirichelet
+分布，原因是更多是数学上的便利性，因为Dirichelet 是 multinational
+的共轭先验，容易求解。</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1bi59lp0fpu112r111hoq6m1d702a.png"
+alt="LDA" />
+<figcaption aria-hidden="true">LDA</figcaption>
+</figure>
+<p>上图中 <span class="math inline">\(\alpha\)</span>, <span
+class="math inline">\(\beta\)</span> 表示参数为 <span
+class="math inline">\(\alpha\)</span>, <span
+class="math inline">\(\beta\)</span>
+的狄利赫里分布，这两个分布分别是文本的主题概率分布和主题下词语的概率分布的先验分布。文本的主题概率分布的先验分布为</p>
+<p><span class="math display">\[ \theta_i \sim Dir(\alpha),~i=1, 2...M
+\]</span></p>
+<p><span class="math inline">\(\theta_i\)</span> 表示第 <span
+class="math inline">\(i\)</span> 篇文档的主题分布，而 <span
+class="math inline">\(\theta_{i,k}（k=1,2...K）\)</span> 表示第 <span
+class="math inline">\(i\)</span> 篇文档中包含第 <span
+class="math inline">\(k\)</span> 个主题的概率</p>
+<p>而主题下的词语的概率分布的先验分布为</p>
+<p><span class="math display">\[ \phi _k \sim Dir(\beta),~k=1,2...K
+\]</span></p>
+<p><span class="math inline">\(\phi_k\)</span> 表示第 <span
+class="math inline">\(k\)</span> 个主题下的词语分布，而 <span
+class="math inline">\(\phi_{k,j}（j=1,2...V）\)</span> 表示第 <span
+class="math inline">\(k\)</span> 个主题中包含第 <span
+class="math inline">\(j\)</span> 个词的概率，<span
+class="math inline">\(V\)</span> 为语料库的词表的大小</p>
+<p>确认先验分布后，文档中的主题分布以及主题下的词语分布均服从多项式分布，与
+PLSA 相同，求解 LDA 得思路是先求解出其最终的联合概率分布，然后通过 Gibbs
+Sampling 收敛到该概率。</p>
+<h3 id="经验贝叶斯empirical-bayes11">经验贝叶斯(<a
+target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Empirical_Bayes_method">Empirical
+Bayes</a>)</h3>
+<p>如下图模型, 如何确定hyperparameter <span
+class="math inline">\(\eta\)</span>?</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1bep1f616m1h1k4e1jtl1tp61jrn13.png"
+alt="经验贝叶斯" />
+<figcaption aria-hidden="true">经验贝叶斯</figcaption>
+</figure>
+<p>用 Empirical Bayes 估计的解为：<span class="math display">\[\widehat
+\eta = arg \max_{\eta} \int
+\prod_{k=1}^{K}p(D_k|\theta_k)p(\theta_k|\eta)d\theta_k\]</span></p>
+<p>当 <span class="math inline">\(p(x|\theta)\)</span>
+为指数族分布，<span class="math inline">\(p(\theta|\eta)\)</span>
+为其共轭先验时，可用EM求解, 其中E-step为Bayesian inference过程, 由 <span
+class="math inline">\(\eta^{old}\)</span> 得到后验参数 <span
+class="math inline">\(\widetilde \eta_k^{old}\)</span> ,
+而M-step为:<span class="math display">\[(\theta,
+ln[g(\theta)])_{\eta^{new}} = \frac{1}{K}\sum_{k=1}^{K}(\theta,
+ln(g(\theta)))_{\widetilde \eta_k^{old}}\]</span></p>
+<h3 id="从经验贝叶斯看lda">从经验贝叶斯看LDA</h3>
+<p>LDA可以视为PLSI的经验贝叶斯版本，由于PLSI不是指数族分布，而是其混合分布，因此其贝叶斯版本不能使用前面的EM算法。工程上常用的求解方法有两种：Deterministic
+inference 和 Probabilistic inference</p>
+<p><strong>Deterministic inference</strong>：
+可用变分近似，假设z和θ的后验分布独立迭代求解过程与EM非常相似，称为VBEM，但是在大多数问题上无法保证收敛到局部最优</p>
+<p><strong>Probabilistic inference</strong>:
+可用Gibbs-sampling(Markov-chain Monte-Carlo, MCMC
+的一种)，以概率1收敛到局部最优值；还有一种方法是 Collapsed
+Gibbs-sampling</p>
+<h3 id="topic-model的并行化">Topic model的并行化</h3>
+<ul>
+<li>EM及VBEM的并行化较为简单
+<ul>
+<li>E-step(mapper): 可以方便地并行计算</li>
+<li>M-step(reducer): 累加E-step各部分统计量后更新模型</li>
+<li>将更新后的模型分发到新的E-step各个计算服务器上</li>
+</ul></li>
+<li>AD-LDA: Gibbs Sampling的并行化
+<ul>
+<li>Mapper: 在部分data上分别进行Gibbs sampling</li>
+<li>Reducer: 全局Update</li>
+</ul></li>
+</ul>
+<p><span class="math display">\[n_{i,j} \leftarrow
+n_{i,j}+\sum_p(n_{i,j,p} - n_{i,j}),~n_{i,j,p}\leftarrow
+n_{i,j}\]</span></p>
+<p>文档的Topic
+model抽取可以认为是一个大量(而非海量)数据运算，采用类MPI架构的分布式计算架构(例如spark)会比
+MapReduce 效率更高</p>
+<p>虽然LDA能够聚类，但是supervisord learning 对标签体系更有意义。</p>
+<h2 id="数据加工和交易">数据加工和交易</h2>
+<p>精准的广告业务是什么？下面的图将数据的加工过程类比于石油的加工和提炼的过程，在这个过程中，实际上与媒体的关系已经不大了。</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1ben9omrm1ko71qrkp2kl6u13bc4o.png"
+alt="精准广告业务" />
+<figcaption aria-hidden="true">精准广告业务</figcaption>
+</figure>
+<h3
+id="精准广告业务的若干值得探讨的观点">精准广告业务的若干值得探讨的观点</h3>
+<ul>
+<li>越精准的广告，给市场带来的价值越大</li>
+<li>媒体利益与广告主利益是相博弈的关系</li>
+<li>精准投放加上大数据可以显著提高营收</li>
+<li>人群覆盖率较低的数据来源是不需要的（长尾？）</li>
+<li>不同的广告产品应该采用不同的投放机</li>
+</ul>
+<h3 id="有价值的数据">有价值的数据</h3>
+<p>下面列出了一些在广告系统中有价值的数据</p>
+<ul>
+<li>用户标识
+<ul>
+<li>除上下文和地域外各种定向的基础，需要长期积累和不断建设</li>
+<li>可以通过多家第三方ID绑定不断优化</li>
+</ul></li>
+<li>用户行为
+<ul>
+<li>业界公认有效行为数据（按有效性排序）</li>
+<li>交易，预交易，搜索广告点击，广告点击，搜索，搜索点击，网页浏览，分享，广告浏览</li>
+<li>需去除网络热点话题带来的偏差</li>
+<li>越靠近demand的行为对转化越有贡献</li>
+<li>越主动的行为越有效</li>
+</ul></li>
+<li>广告商(Demand)数据
+<ul>
+<li>简单的cookie植入可以用于retargeting。</li>
+<li>对接广告商种子人群可以做look-alike，提高覆盖率。</li>
+</ul></li>
+<li>用户属性和精确地理位置
+<ul>
+<li>非媒体广告网络很难获取，需通过第三方数据对接。</li>
+<li>移动互联和HTML5为获得地理位置提供了便利性。</li>
+</ul></li>
+<li>社交网络
+<ul>
+<li>朋友关系为用户兴趣和属性的平滑提供了机会</li>
+<li>实名社交网络的人口属性信息相对准确</li>
+</ul></li>
+</ul>
+<h3 id="数据管理平台data-management-platform">数据管理平台(Data
+Management Platform)</h3>
+<ul>
+<li>目的:
+<ul>
+<li>为网站提供数据加工和对外交易能力(如Audience Science)</li>
+<li>加工跨媒体用户标签，在交易市场中售卖</li>
+<li>是否应直接从事广告交易存在争议</li>
+</ul></li>
+<li>关键特征:
+<ul>
+<li>定制化用户划分</li>
+<li>统一的对外数据接口：demand端提供给supply端</li>
+</ul></li>
+<li>代表:
+<ul>
+<li>Bluekai, AudienceScience</li>
+</ul></li>
+</ul>
+<p>DMP的系统架构示意图如下所示</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1benb74qa1au91vh21t2b1kifi55.png"
+alt="DMP架构" />
+<figcaption aria-hidden="true">DMP架构</figcaption>
+</figure>
+<p>DMP主要是Data highway部分，主要完成两个工作： 1. 挖掘出各个用户的标签
+2. 利用挖掘出来的用户的标签，售卖或使用</p>
+<p>这里介绍一个Data Highway 的工具：<strong>Scribe</strong></p>
+<ul>
+<li>大规模分布式日志收集系统，可以准实时收集大量日志到
+HDFS，利用Thrift实现底层服务</li>
+<li>类似工具: Flume, Chukwa</li>
+</ul>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1bep5kb521id3iav1vlo7dcl3a9.png"
+alt="scribe" />
+<figcaption aria-hidden="true">scribe</figcaption>
+</figure>
+<p>这个工具在 Facebook 经过实践，验证了其面对大规模数据时的可靠性。</p>
+<p>下面介绍一下audience targeting 在业界的一种商业模式
+上面提到了Bluekai这个公司，其核心业务主要有以下两个：</p>
+<ol type="1">
+<li>为中小网站主提供数据加工和变现的方式</li>
+<li>通过汇聚众多中小网站用户资料和行为数据，加工成受众定向标签，通过Data
+exchange对外售卖</li>
+</ol>
+<p>Bluekai
+提供大量细分类别、开放体系上的标签，如“对宝洁洗发水感兴趣的人”，“想去日本旅游的人”；靠数据出售变现，并与提供数据的网站主分成，但是并不直接运营广告业务；对于设计用户隐私的问题，用户可以看到自己的资料被谁使用，也可以选择“捐给慈善机构”</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A/" rel="tag"><i class="fa fa-tag"></i> 计算广告</a>
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2017/04/25/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A%E7%AC%94%E8%AE%B0(2)--%E5%90%88%E7%BA%A6%E5%B9%BF%E5%91%8A%E7%B3%BB%E7%BB%9F/" rel="prev" title="计算广告笔记(2)--合约广告系统">
+                  <i class="fa fa-chevron-left"></i> 计算广告笔记(2)--合约广告系统
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2017/05/07/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A%E7%AC%94%E8%AE%B0(4)--%E7%AB%9E%E4%BB%B7%E5%B9%BF%E5%91%8A%E7%B3%BB%E7%BB%9F/" rel="next" title="计算广告笔记(4)--竞价广告系统">
+                  计算广告笔记(4)--竞价广告系统 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-pen"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

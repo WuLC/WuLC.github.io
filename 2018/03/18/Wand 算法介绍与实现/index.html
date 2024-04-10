@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id: "JmI6QmP3fMkLet6B",ck: "JmI6QmP3fMkLet6B"})</script>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wulc.me","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.15.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="本文主要介绍 Wand(Weak And) 算法的原理和实现, Wand 算法是一个搜索算法，应用在 query 有多个关键词或标签，同时每个document 也有多个关键词或标签的情形（如搜索引擎）；尤其是在 query 中的关键词或标签较多的时候，通过 Wand 能够快速的选择出 Top n 个相关的 document，算法的原始论文见 Efficient Query Evaluation u">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Wand 算法介绍与实现">
+<meta property="og:url" content="https://wulc.me/2018/03/18/Wand%20%E7%AE%97%E6%B3%95%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%AE%9E%E7%8E%B0/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="本文主要介绍 Wand(Weak And) 算法的原理和实现, Wand 算法是一个搜索算法，应用在 query 有多个关键词或标签，同时每个document 也有多个关键词或标签的情形（如搜索引擎）；尤其是在 query 中的关键词或标签较多的时候，通过 Wand 能够快速的选择出 Top n 个相关的 document，算法的原始论文见 Efficient Query Evaluation u">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/image_1c8smp7961m9shgd1oqpnvgngp9.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1c8spjme31hqsbd81h88b3d6ob13.png">
+<meta property="article:published_time" content="2018-03-18T04:00:37.000Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.225Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="计算广告">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/image_1c8smp7961m9shgd1oqpnvgngp9.png">
+
+
+<link rel="canonical" href="https://wulc.me/2018/03/18/Wand%20%E7%AE%97%E6%B3%95%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%AE%9E%E7%8E%B0/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wulc.me/2018/03/18/Wand%20%E7%AE%97%E6%B3%95%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%AE%9E%E7%8E%B0/","path":"2018/03/18/Wand 算法介绍与实现/","title":"Wand 算法介绍与实现"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Wand 算法介绍与实现 | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">吴良超的学习笔记</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#wand-%E5%8E%9F%E7%90%86%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.</span> <span class="nav-text">Wand 原理介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#wand-%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%BB%A3%E7%A0%81"><span class="nav-number">2.</span> <span class="nav-text">Wand 的实现代码</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">253</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2018/03/18/Wand%20%E7%AE%97%E6%B3%95%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%AE%9E%E7%8E%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Wand 算法介绍与实现 | 吴良超的学习笔记">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Wand 算法介绍与实现
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-03-18 12:00:37" itemprop="dateCreated datePublished" datetime="2018-03-18T12:00:37+08:00">2018-03-18</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-tags"></i>
+      </span>
+      <span class="post-meta-item-text">标签</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A/" itemprop="url" rel="index"><span itemprop="name">计算广告</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>本文主要介绍 Wand(Weak And) 算法的原理和实现, Wand
+算法是一个搜索算法，应用在 query 有多个关键词或标签，同时每个document
+也有多个关键词或标签的情形（如搜索引擎）；尤其是在 query
+中的关键词或标签较多的时候，通过 Wand 能够快速的选择出 Top n 个相关的
+document，算法的原始论文见 <a
+target="_blank" rel="noopener" href="http://7viirv.com1.z0.glb.clouddn.com/4331f68fcd_wand.pdf">Efficient
+Query Evaluation using a Two-Level Retrieval
+Process</a>，本文主要讲述这个算法的原理以及通过 python
+实现这个算法。</p>
+<span id="more"></span>
+<p>一般来说，检索往往会利用倒排索引，倒排索引能够根据 query
+中的关键词快速检索到候选文档，然而当候选文档集合较大时，遍历整个候选文档所需要的时间也很大。</p>
+<p>但是检索需要得到的往往只是 Top n
+个结果，在遍历候选文档过程中能否跳过一些与 query
+相关性较低的文档，从而加速检索的过程呢？Wand 算法就是干这个事的。</p>
+<h2 id="wand-原理介绍">Wand 原理介绍</h2>
+<p><strong>Wand
+算法通过计算每个词的贡献上限来估计文档的相关性上限，并与预设的阈值比较，进而跳过一些相关性一定达不到要求的文档，从而得到提速的效果。</strong></p>
+<p>上面这句话涵盖了Wand 算法的思想，下面进行详细说明：</p>
+<p>Wand 算法首先要估计<strong>每个词对相关性贡献的上限（upper
+bound）</strong>，最简单的相关性就是
+TF-IDF，一般IDF是固定的，因此只需要估计一个词在各个文档中的词频TF上限(即这个词在各个文档中最大的TF)，该步骤通过线下计算即可完成。</p>
+<p>线下计算出各个词的相关性上限，可以计算出<strong>一个 query
+和一个文档的相关性上限值</strong>，就是他们共同出现的词的相关性上限值的和，通过与预设的阈值比较，如果query
+与文档的相关性大于阈值，则进行下一步的计算，否则丢弃。</p>
+<p>在上面过程中，如果还是将 query
+和一个一个文档分别计算相关性，并没有减少时间复杂度， Wand
+算法通过一种巧妙的方式使用倒排索引，从而能够跳过一些相关性肯定达不到要求的文档。</p>
+<p>Wand 算法步骤如下</p>
+<ol type="1">
+<li>建立倒排索引，记录每个单词所在的所有文档ID(DID)，ID
+按照从小到大排序</li>
+<li>初始化 posting 数组，使得 posting[pTerm] 为词 pTerm
+倒排索引中第一个文档的 index</li>
+<li>初始化 curDoc = 0（文档ID从1开始）</li>
+</ol>
+<p>接着可以执行下面的 next 函数(摘自原始论文),</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1c8smp7961m9shgd1oqpnvgngp9.png"
+alt="next function" />
+<figcaption aria-hidden="true">next function</figcaption>
+</figure>
+<p>上面流程中用到的几个函数的含义如下</p>
+<p><strong>1. sort(terms, posting)</strong>：根据 posting
+数组指向的当前文档 ID，对所有的 terms 从小到大排序。如下是三个 term
+及其对应的索引文档的 ID，此时的 posting 数组为 <code>[1, 0, 1]</code>,
+则根据各个 term 当前文档 ID 排序的结果应该是 t1, t2, t3</p>
+<p>t0: [3, <strong>26</strong>] t1: [<strong>4</strong>, 10, 100] t2:
+[2, <strong>5</strong>, 56]</p>
+<p><strong>2. findPivotTerm(terms,
+θ)</strong>：按照之前得到的排序，从第一个 term 开始累加各个 term
+的相关性贡献的上限（upper
+bound，UB），这个在之前已经通过离线计算出来；直到累加和大于等于设定的阈值
+θ, 返回当前的 term。这里应用<a
+target="_blank" rel="noopener" href="http://www.cnblogs.com/daremen/p/3289694.html">这篇文章</a>的一个例子，下面为通过
+sort(terms, posting) 后的倒排索引，假设阈值 θ = 8</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1c8spjme31hqsbd81h88b3d6ob13.png"
+alt="pivot term" />
+<figcaption aria-hidden="true">pivot term</figcaption>
+</figure>
+<p>对于doc 2，其可能的最大得分为2&lt;8<br />
+对于doc 4，其可能的最大得分为2+1=3&lt;8<br />
+对于doc 5，其可能的最大得分为2+1+4=7&lt;8<br />
+对于doc 23，其可能的最大得分为2+1+4+3=10&gt;8 因此，t3 为pivotTerm，doc
+23 为pivot</p>
+<p><strong>3.
+pickTerm(terms[0..pTerm])</strong>：在0到pTerm(不包含pTerm)中选择一个term，关于选择策略，当然是以<strong>可以跳过最多的文档</strong>为原则，论文中选择了
+IDF 最大的term。以上面的图为例子，此时可以选择 t2, t1 或 t4, 根据其 IDF
+值选择最大的 term 即可</p>
+<p><strong>4. aterm.iterator.next(n)</strong>：返回 aterm
+这个单词对应的倒排索引中的文档ID(DID)，这个DID要满足DID &gt;= n。则
+<code>posting[aterm] ← aterm.iterator.next(n)</code> 其实就是更新了
+aterm 在 posting 数组中的当前文档，从而跳过 aterm
+对应的索引中一些不必要计算的文档。</p>
+<p>还是以上面的图为例子，假如选择的 aterm 为 t2, 则 t2 中指向 2
+的指针要往后移动直至 DID &gt;= 23 ,这样便跳过了部分不必计算文档。</p>
+<p><strong>实际上，t1, t4 也可以执行上面这个操作，因为在 doc 23 之前的
+doc 的得分不可能达到阈值 θ(因为 DID 是经过排序的) ，所以t2、t1、t4对应的
+posting
+数组中的项都可以直接跳到大于等于doc23的位置，但是论文中每次只选择一个
+term ，虽然多迭代几次也能达到同样效果，但是我认为这里可以三个 Term
+可以一起跳。</strong></p>
+<p>介绍了上面过程中几个重要函数，下面来看一下上面的几个分支分别表示情况</p>
+<ol type="1">
+<li><code>if (pTerm = null) return (NoMoreDocs)</code>表示当前所有 term
+的 upper bound 和达不到阈值 θ ，结束算法</li>
+<li><code>if (pivot = lastID) return (NoMoreDocs)</code>
+表示当前已经没有满足相关性大于阈值 θ 的文档，结束算法</li>
+<li><code>if (pivot ≤ curDoc)</code> 表示当前 pivot 指向的 DID
+已经计算过相关性，需要跳过，这部分代码会在下面第4步执行后在进入循环时执行</li>
+<li><code>if (posting[0].DID = pivot)</code> 表示当前 pivot
+对应的文档的相关性有可能满足大于阈值 θ ，返回这篇文档的 ID
+并计算这篇文档和 query
+的相关性；<strong><code>posting[0].DID = pivot</code>
+表示从第一个term到当前的term所指向的文档都是同一篇</strong></li>
+<li><code>if (posting[0].DID = pivot) 对应的else语句</code>
+表示前面遍历过的那些 term 的当前 DID 都不可能满足大于阈值
+θ，因此需要跳过，也正是这里大大减少了需要计算相关性的文档数量</li>
+</ol>
+<h2 id="wand-的实现代码">Wand 的实现代码</h2>
+<p>实现 Wand 算法的 Python 代码见<a
+target="_blank" rel="noopener" href="https://github.com/WuLC/CodeSnippets/blob/master/Wand.py">这里</a>，参考<a
+target="_blank" rel="noopener" href="http://www.cnblogs.com/daremen/p/3289694.html">这篇文章</a>的代码进行了修改，并增加了评估文档和query相似性的函数，代码中有以下几点需要注意</p>
+<ol type="1">
+<li>当一个 term 对应的所有 document
+遍历完后，有两种处理方法。第一种方法是直接删除，这样会降低每次排序的时间复杂度和内存占用率，但是每次删除时候是要在一个有序列表内删除，时间复杂度为
+<span class="math inline">\(O(n)\)</span>, <span
+class="math inline">\(n\)</span> 为 terms 的个数；第二种方法是在每个
+term 的 document list
+最后增加一个比所有文档ID都要大的数(LastID)，这样被遍历完的term会自然被排序到最后，整个代码更加简洁。两种方法都尝试了一下，详细代码可见上面的代码连接的提交历史</li>
+<li><code>pickTerm</code> 方法原论文采用的是选择 idf
+最大值的term，这里直接选择第一个，因为代码仅用于阐述算法的流程，各个
+term 没有 idf 值。当然，如果有各个 term 的 idf 值，是可以根据 idf
+选择的</li>
+<li>上面伪代码的算法流程中最后的 else 语句是选择 pivotTerm
+中的任意一个并跳过相关性低的文档，但是从前面的解释可知，可以 pivotTerm
+前面的所有 term 都可进行这一操作，因此代码里面的这部分跟伪代码不同</li>
+</ol>
+<p>这里还是给出完整代码，可以对照着上面的伪代码看，命名方法基本都保持了一致，如有错漏，欢迎指出</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> heapq</span><br><span class="line"></span><br><span class="line">UB = &#123;<span class="string">&quot;t0&quot;</span>:<span class="number">0.5</span>,<span class="string">&quot;t1&quot;</span>:<span class="number">1</span>,<span class="string">&quot;t2&quot;</span>:<span class="number">2</span>,<span class="string">&quot;t3&quot;</span>:<span class="number">3</span>,<span class="string">&quot;t4&quot;</span>:<span class="number">4</span>&#125; <span class="comment">#upper bound of term&#x27;s value</span></span><br><span class="line">LAST_ID = <span class="number">999999999999</span> <span class="comment"># a large number, larger than all the doc id in the inverted index</span></span><br><span class="line">THETA = <span class="number">2</span> <span class="comment"># theta, threshold for chechking whether to calculate the relevence between query and doc</span></span><br><span class="line">TOPN = <span class="number">3</span> <span class="comment">#max result number </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">WAND</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, InvertIndex</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;init inverted index and necessary variable&quot;&quot;&quot;</span></span><br><span class="line">        self.result_list = [] <span class="comment">#result list</span></span><br><span class="line">        self.inverted_index = InvertIndex <span class="comment">#InvertIndex: term -&gt; docid1, docid2, docid3 ...</span></span><br><span class="line">        self.current_doc = <span class="number">0</span></span><br><span class="line">        self.current_inverted_index = &#123;&#125; <span class="comment">#posting</span></span><br><span class="line">        self.query_terms = []</span><br><span class="line">        self.sort_terms = []</span><br><span class="line">        self.threshold = THETA</span><br><span class="line">        self.last_id = LAST_ID</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init_query</span>(<span class="params">self, query_terms</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;init variable with query&quot;&quot;&quot;</span></span><br><span class="line">        self.current_doc = <span class="number">0</span></span><br><span class="line">        self.current_inverted_index = &#123;&#125;</span><br><span class="line">        self.query_terms = []</span><br><span class="line">        self.sort_terms = []</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> term <span class="keyword">in</span> query_terms:</span><br><span class="line">            <span class="keyword">if</span> term <span class="keyword">in</span> self.inverted_index:  <span class="comment"># terms may not appear in inverted_index</span></span><br><span class="line">                doc_id = self.inverted_index[term][<span class="number">0</span>]</span><br><span class="line">                self.query_terms.append(term)</span><br><span class="line">                self.current_inverted_index[term] = [doc_id, <span class="number">0</span>] <span class="comment">#[ docid, index ]</span></span><br><span class="line">                self.sort_terms.append([doc_id, term])</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__pick_term</span>(<span class="params">self, pivot_index</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;select the term before pivot_index in sorted term list</span></span><br><span class="line"><span class="string">         paper recommends returning the term with max idf, here we just return the firt term,</span></span><br><span class="line"><span class="string">         also return the index of the term instead of the term itself for speeding up&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__find_pivot_term</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;find pivot term&quot;&quot;&quot;</span></span><br><span class="line">        score = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(self.sort_terms)):</span><br><span class="line">            score += UB[self.sort_terms[i][<span class="number">1</span>]]</span><br><span class="line">            <span class="keyword">if</span> score &gt;= self.threshold:</span><br><span class="line">                <span class="keyword">return</span> [self.sort_terms[i][<span class="number">1</span>], i] <span class="comment">#[term, index]</span></span><br><span class="line">        <span class="keyword">return</span> [<span class="literal">None</span>, <span class="built_in">len</span>(self.sort_terms)]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__iterator_invert_index</span>(<span class="params">self, change_term, docid, pos</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;find the new_doc_id in the doc list of change_term such that new_doc_id &gt;= docid,</span></span><br><span class="line"><span class="string">        if no new_doc_id satisfy, the self.last_id&quot;&quot;&quot;</span></span><br><span class="line">        doc_list = self.inverted_index[change_term]</span><br><span class="line">        <span class="comment"># new_doc_id, new_pos = self.last_id, len(doc_list)-1 # the case when new_doc_id not exists</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(pos, <span class="built_in">len</span>(doc_list)):</span><br><span class="line">            <span class="keyword">if</span> doc_list[i] &gt;= docid:   <span class="comment"># since doc_list contains self.last_id, this inequation will always be satisfied</span></span><br><span class="line">                new_pos = i</span><br><span class="line">                new_doc_id = doc_list[i]</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">return</span> [new_doc_id, new_pos]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__advance_term</span>(<span class="params">self, change_index, doc_id </span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;change the first doc of term self.sort_terms[change_index] in the current inverted index</span></span><br><span class="line"><span class="string">        return whether the action succeed or not&quot;&quot;&quot;</span></span><br><span class="line">        change_term = self.sort_terms[change_index][<span class="number">1</span>]</span><br><span class="line">        pos = self.current_inverted_index[change_term][<span class="number">1</span>]</span><br><span class="line">        new_doc_id, new_pos = self.__iterator_invert_index(change_term, doc_id, pos)</span><br><span class="line">        self.current_inverted_index[change_term] = [new_doc_id, new_pos]</span><br><span class="line">        self.sort_terms[change_index][<span class="number">0</span>] = new_doc_id</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__next</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">            self.sort_terms.sort() <span class="comment">#sort terms by doc id</span></span><br><span class="line">            pivot_term, pivot_index = self.__find_pivot_term() <span class="comment">#find pivot term &gt; threshold</span></span><br><span class="line">            <span class="keyword">if</span> pivot_term == <span class="literal">None</span>: <span class="comment">#no more candidate</span></span><br><span class="line">                <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">            pivot_doc_id = self.current_inverted_index[pivot_term][<span class="number">0</span>]</span><br><span class="line">            <span class="keyword">if</span> pivot_doc_id == self.last_id: <span class="comment"># no more candidate</span></span><br><span class="line">                <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">            <span class="keyword">if</span> pivot_doc_id &lt;= self.current_doc:</span><br><span class="line">                change_index = self.__pick_term(pivot_index)</span><br><span class="line">                self.__advance_term(change_index, self.current_doc + <span class="number">1</span>)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                first_doc_id = self.sort_terms[<span class="number">0</span>][<span class="number">0</span>]</span><br><span class="line">                <span class="keyword">if</span> pivot_doc_id == first_doc_id:</span><br><span class="line">                    self.current_doc = pivot_doc_id</span><br><span class="line">                    <span class="keyword">return</span> self.current_doc <span class="comment"># return the doc for fully calculating</span></span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    <span class="comment"># pick all preceding term instead of just one, then advance all of them to pivot</span></span><br><span class="line">                    change_index = <span class="number">0</span></span><br><span class="line">                    <span class="keyword">while</span> change_index &lt; pivot_index:</span><br><span class="line">                        self.__advance_term(change_index, pivot_doc_id)</span><br><span class="line">                        change_index += <span class="number">1</span></span><br><span class="line">            <span class="comment"># print(self.sort_terms, self.current_doc, pivot_doc_id)</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__insert_heap</span>(<span class="params">self, doc_id, score</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;store the Top N result&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(self.result_list) &lt; TOPN:</span><br><span class="line">            heapq.heappush(self.result_list, (score, doc_id))</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            heapq.heappushpop(self.result_list, (score, doc_id))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__calculate_doc_relevence</span>(<span class="params">self, docid</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;fully calculate relevence between doc and query&quot;&quot;&quot;</span></span><br><span class="line">        score = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> term <span class="keyword">in</span> self.query_terms:</span><br><span class="line">            <span class="keyword">if</span> docid <span class="keyword">in</span> self.inverted_index[term]:</span><br><span class="line">                score += UB[term]</span><br><span class="line">        <span class="keyword">return</span> score</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">perform_query</span>(<span class="params">self, query_terms</span>):</span><br><span class="line">        self.__init_query(query_terms)</span><br><span class="line">        <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">            candidate_docid = self.__<span class="built_in">next</span>()</span><br><span class="line">            <span class="keyword">if</span> candidate_docid == <span class="literal">None</span>:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            <span class="comment">#insert candidate_docid to heap</span></span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&#x27;candidata doc&#x27;</span>, candidate_docid)</span><br><span class="line">            full_doc_score = self.__calculate_doc_relevence(candidate_docid)</span><br><span class="line">            self.__insert_heap(candidate_docid, full_doc_score)</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;result list &quot;</span>, self.result_list)</span><br><span class="line">        <span class="keyword">return</span> self.result_list</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    testIndex = &#123;&#125;</span><br><span class="line">    testIndex[<span class="string">&quot;t0&quot;</span>] = [<span class="number">1</span>, <span class="number">3</span>, <span class="number">26</span>, LAST_ID]</span><br><span class="line">    testIndex[<span class="string">&quot;t1&quot;</span>] = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">4</span>, <span class="number">10</span>, <span class="number">100</span>, LAST_ID]</span><br><span class="line">    testIndex[<span class="string">&quot;t2&quot;</span>] = [<span class="number">2</span>, <span class="number">3</span>, <span class="number">6</span>, <span class="number">34</span>, <span class="number">56</span>, LAST_ID]</span><br><span class="line">    testIndex[<span class="string">&quot;t3&quot;</span>] = [<span class="number">1</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">23</span>, <span class="number">70</span>, <span class="number">200</span>, LAST_ID]</span><br><span class="line">    testIndex[<span class="string">&quot;t4&quot;</span>] = [<span class="number">5</span>, <span class="number">14</span>, <span class="number">78</span>, LAST_ID]</span><br><span class="line">    </span><br><span class="line">    w = WAND(testIndex)</span><br><span class="line">    final_result = w.perform_query([<span class="string">&quot;t0&quot;</span>, <span class="string">&quot;t1&quot;</span>, <span class="string">&quot;t2&quot;</span>, <span class="string">&quot;t3&quot;</span>, <span class="string">&quot;t4&quot;</span>])</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;=================final result=======================&quot;</span>)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">reversed</span>(<span class="built_in">range</span>(<span class="built_in">len</span>(final_result))):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;doc &#123;0&#125;, relevence score &#123;1&#125;&quot;</span>.<span class="built_in">format</span>(final_result[i][<span class="number">1</span>], final_result[i][<span class="number">0</span>]))</span><br></pre></td></tr></table></figure>
+<hr />
+<p>参考资料</p>
+<p><a target="_blank" rel="noopener" href="http://www.cnblogs.com/daremen/p/3289694.html">wand(weak
+and)算法基本思路</a> <a
+target="_blank" rel="noopener" href="https://yanyiwu.com/work/2014/08/18/wand-core-shuli.html">WAND算法核心部分梳理</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A/" rel="tag"><i class="fa fa-tag"></i> 计算广告</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2018/03/10/%E5%A4%A7%E8%A7%84%E6%A8%A1%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A1%86%E6%9E%B6%E7%9A%84%E5%9B%9B%E9%87%8D%E5%A2%83%E7%95%8C/" rel="prev" title="大规模机器学习框架的四重境界">
+                  <i class="fa fa-chevron-left"></i> 大规模机器学习框架的四重境界
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2018/03/31/%E5%85%B1%E4%BA%AB%E9%94%AE%E9%BC%A0%E7%A5%9E%E5%99%A8%20Synergy/" rel="next" title="共享键鼠神器 Synergy">
+                  共享键鼠神器 Synergy <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-pen"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

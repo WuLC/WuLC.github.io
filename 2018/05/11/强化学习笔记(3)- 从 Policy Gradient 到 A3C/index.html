@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id: "JmI6QmP3fMkLet6B",ck: "JmI6QmP3fMkLet6B"})</script>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wulc.me","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.15.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="在之前的文章 强化学习笔记(2)-从 Q-Learning 到 DQN 中，我们已经知道 Q-Learning 系列方法是基于 value 的方法， 也就是通过计算每一个状态动作的价值，然后选择价值最大的动作执行。这是一种间接的做法，那有没有更直接的做法呢？有！那就是直接更新策略。本文要介绍的 Policy Gradient 就是这类 policy-based 的方法， 除此之外，还会介绍结合了">
+<meta property="og:type" content="article">
+<meta property="og:title" content="强化学习笔记(3)- 从 Policy Gradient 到 A3C">
+<meta property="og:url" content="https://wulc.me/2018/05/11/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(3)-%20%E4%BB%8E%20Policy%20Gradient%20%E5%88%B0%20A3C/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="在之前的文章 强化学习笔记(2)-从 Q-Learning 到 DQN 中，我们已经知道 Q-Learning 系列方法是基于 value 的方法， 也就是通过计算每一个状态动作的价值，然后选择价值最大的动作执行。这是一种间接的做法，那有没有更直接的做法呢？有！那就是直接更新策略。本文要介绍的 Policy Gradient 就是这类 policy-based 的方法， 除此之外，还会介绍结合了">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/image_1cd6euujcj611hh21ih71fa38mlm.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1cd4k6vg5g78tcq1dg6gasrss9.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1cd6dk9spft51pi59smheenb89.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1cd5bb8ke1d9b1e1d1qcq1ta410f9m.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1cd6k6nr7c9mqcc1bthhs4ibs13.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1cd746v6om9cmoh1nul1io01fg19.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1cd7766d16uk2l812unadu2gt9.png">
+<meta property="article:published_time" content="2018-05-11T14:21:25.000Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.194Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="强化学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/image_1cd6euujcj611hh21ih71fa38mlm.png">
+
+
+<link rel="canonical" href="https://wulc.me/2018/05/11/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(3)-%20%E4%BB%8E%20Policy%20Gradient%20%E5%88%B0%20A3C/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wulc.me/2018/05/11/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(3)-%20%E4%BB%8E%20Policy%20Gradient%20%E5%88%B0%20A3C/","path":"2018/05/11/强化学习笔记(3)- 从 Policy Gradient 到 A3C/","title":"强化学习笔记(3)- 从 Policy Gradient 到 A3C"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>强化学习笔记(3)- 从 Policy Gradient 到 A3C | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">吴良超的学习笔记</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#policy-gradient"><span class="nav-number">1.</span> <span class="nav-text">Policy Gradient</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3"><span class="nav-number">1.1.</span> <span class="nav-text">基本思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%84%E5%88%A4%E6%8C%87%E6%A0%87%E7%9A%84%E9%80%89%E6%8B%A9"><span class="nav-number">1.2.</span> <span class="nav-text">评判指标的选择</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#actor-critic"><span class="nav-number">2.</span> <span class="nav-text">Actor-Critic</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#deep-deterministic-policy-gradientddpg"><span class="nav-number">3.</span> <span class="nav-text">Deep Deterministic
+Policy Gradient(DDPG)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#asynchronous-advantage-actor-critica3c"><span class="nav-number">4.</span> <span class="nav-text">Asynchronous Advantage
+Actor-Critic(A3C)</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">253</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2018/05/11/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(3)-%20%E4%BB%8E%20Policy%20Gradient%20%E5%88%B0%20A3C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="强化学习笔记(3)- 从 Policy Gradient 到 A3C | 吴良超的学习笔记">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          强化学习笔记(3)- 从 Policy Gradient 到 A3C
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-05-11 22:21:25" itemprop="dateCreated datePublished" datetime="2018-05-11T22:21:25+08:00">2018-05-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-tags"></i>
+      </span>
+      <span class="post-meta-item-text">标签</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">强化学习</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>在之前的文章 <a
+href="http://wulc.me/2018/05/09/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%282%29-%E4%BB%8E%20Q-Learning%20%E5%88%B0%20DQN/">强化学习笔记(2)-从
+Q-Learning</a> 到 DQN 中，我们已经知道 Q-Learning 系列方法是基于 value
+的方法，
+也就是通过计算每一个状态动作的价值，然后选择价值最大的动作执行。这是一种间接的做法，那有没有更直接的做法呢？有！那就是<strong>直接更新策略</strong>。本文要介绍的
+Policy Gradient 就是这类 policy-based 的方法， 除此之外，还会介绍结合了
+policy-based 和 value-based 的 Actor-Critic 方法，以及在 Actor-Critic
+基础上的 DDPG、A3C方法。</p>
+<span id="more"></span>
+<h2 id="policy-gradient">Policy Gradient</h2>
+<h3 id="基本思想">基本思想</h3>
+<p>Policy Gradient 就是通过更新 Policy Network
+来直接更新策略的。那什么是 Policy
+Network？实际上就是一个神经网络，<strong>输入是状态，输出直接就是动作（不是Q值）</strong>，且一般输出有两种方式：一种是概率的方式，即输出某一个动作的概率；另一种是确定性的方式，即输出具体的某一个动作。</p>
+<p>如果要更新 Policy Network
+策略网络，或者说要使用梯度下降的方法来更新网络，需要有一个目标函数，对于所有强化学习的任务来说，其实目标都是使所有带衰减
+reward 的累加期望最大。即如下式所示</p>
+<p><span class="math inline">\(L(\theta) = \mathbb E(r_1+\gamma r_2 +
+\gamma^2 r_3 + ...|\pi(,\theta))\)</span></p>
+<p>这个损失函数和 Policy Network
+策略网络简直没有什么直接联系，reward是环境给出的，跟参数 <span
+class="math inline">\(\theta\)</span>
+没有直接运算上的关系。那么该如何能够计算出损失函数关于参数的梯度 <span
+class="math inline">\(\nabla_{\theta} L(\theta)\)</span>?</p>
+<p>上面的问题没法给出更新策略，我们不妨换一个思路来考虑问题。</p>
+<p>假如我们现在有一个 Policy Network
+策略网络，输入状态，输出动作的概率。然后执行完动作之后，我们可以得到reward，或者result。那么这个时候，我们有个非常简单的想法：<strong>如果某一个动作得到reward多，那么我们就使其出现的概率增大，如果某一个动作得到的reward少，那么我们就使其出现的概率减小。</strong></p>
+<p>当然，用 reward 来评判动作的好坏是不准确的，甚至用 result
+来评判也是不准确的（因为任何一个 reward，result
+都依赖于大量的动作才导致的，不能只将功劳或过错归于当前的动作上。但是这样给了我们一个新的思路：<strong>如果能够构造一个好的动作评判指标，来判断一个动作的好与坏，那么我们就可以通过改变动作的出现概率来优化策略！</strong></p>
+<p>假设这个评价指标是 <span class="math inline">\(f(s,a)\)</span>,
+我们的 Policy Network 输出的 <span
+class="math inline">\(\pi(a|s,\theta)\)</span> 是概率,
+那么可以通过极大似然估计的方法来优化这个目标。比如说我们可以构造如下目标函数</p>
+<p><span class="math inline">\(L(\theta) = \sum
+log\pi(a|s,\theta)f(s,a)\)</span></p>
+<p>比如说，对于某局游戏，假如最终赢了，那么认为这局游戏中每一步都是好的，如果输了，那么认为都是不好的。好的
+<span class="math inline">\(f(s,a)\)</span>
+就是1，不好的就是-1，然后极大化上面的目标函数即可。</p>
+<p>实际上，除了极大化上面的目标函数，还可以直接对 <span
+class="math inline">\(f(s,a)\)</span> 进行极大化，如这篇博文 <a
+target="_blank" rel="noopener" href="https://blog.csdn.net/jinzhuojun/article/details/72851548">Deep
+Reinforcement Learning: Pong from Pixels</a> 中直接最大化 <span
+class="math inline">\(f(x)\)</span> 也就是 <span
+class="math inline">\(f(s, a)\)</span>
+的期望，可以看到，最后的结果跟上面的目标函数是一致的。</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1cd6euujcj611hh21ih71fa38mlm.png"
+alt="max f(s,a)" />
+<figcaption aria-hidden="true">max f(s,a)</figcaption>
+</figure>
+<h3 id="评判指标的选择">评判指标的选择</h3>
+<p>从上面的推导也可知道，在 Policy Gradient 中，<strong>如何确定评价指标
+<span class="math inline">\(f(s,a)\)</span> 是关键。</strong>
+上面提到了一种简单地根据回合的输赢来判断这个回合中的每一步到底是好是坏。但是其实我们更加希望的是每走一步就能够获取到这一步的具体评价，因此出现了很多其他的直接给出某个时刻的评估的评价方式。如这篇论文
+<a target="_blank" rel="noopener" href="https://arxiv.org/abs/1506.02438">High-dimensional continuous
+control using generalized advantage estimation</a>
+里就对比了若干种评价指标。</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1cd4k6vg5g78tcq1dg6gasrss9.png"
+alt="select judge function" />
+<figcaption aria-hidden="true">select judge function</figcaption>
+</figure>
+<p>上面公式（1）中的 <span class="math inline">\(\Psi_t\)</span> 就是 t
+时刻的评价指标。从上图可以看到我们可以使用reward，使用 Q、A 或者 TD
+来作为动作的评价指标。那这些方法的区别在哪里？</p>
+<p>根据这篇文章 <a
+target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/26882898">DRL之Policy Gradient,
+Deterministic Policy Gradient与Actor-Critic</a>, 本质的区别在于 variance
+和 bias 的问题</p>
+<blockquote>
+<p>用reward来作为动作的评价是最直接的，采用上图第3种做法reward-baseline是很常见的一种做法。这样做bias比较低，但是variance很大，也就是reward值太不稳定，会导致训练不会。</p>
+<p>那么采用Q值会怎样呢？Q值是对reward的期望值，使用Q值variance比较小，bias比较大。一般我们会选择使用A，Advantage。A=Q-V，是一个动作相对当前状态的价值。本质上V可以看做是baseline。对于上图第3种做法，也可以直接用V来作为baseline。但是还是一样的问题，A的variance比较大。为了平衡variance和bias的问题，使用TD会是比较好的做法，既兼顾了实际值reward，又使用了估计值V。在TD中，TD(lambda)平衡不同长度的TD值，会是比较好的做法。</p>
+<p>在实际使用中，需要根据具体的问题选择不同的方法。有的问题reward很容易得到，有的问题reward非常稀疏。reward越稀疏，也就越需要采用估计值。</p>
+</blockquote>
+<p><strong>以上就是 Policy Gradient 的核心思想，通过 policy network
+输出的 softmax 概率 和获取的reward(通过评估指标获取)构造目标函数，然后对
+policy network 进行更新。从而避免了原来的 reward 和 policy network
+之间是不可微的问题。也因为Policy
+Gradient的这个特点，目前的很多传统监督学习的问题因为输出都是softmax的离散形式，都可以改造成Policy
+Gradient的方法来实现，调节得当效果会在监督学习的基础上进一步提升。</strong></p>
+<h2 id="actor-critic">Actor-Critic</h2>
+<p>上面提到的多种评估指标其实已经涵盖了 Actor-Critic 的思想，原始的
+Policy Gradient
+往往采用的回合更新，也就是要到一轮结束后才能进行更新。如某盘游戏，假如最后的结果是胜利了，那么可以认为其中的每一步都是好的，反之则认为其中的每一步都是不好的。其更新过程如下，图片摘自
+<a
+target="_blank" rel="noopener" href="http://202.38.196.91/cache/5/03/www0.cs.ucl.ac.uk/878f680a35c2cc35e046a7fd7f9c9fb8/pg.pdf">David
+Silver 的 Policy Gradient 课件</a> ，这种方法也叫 Monte-Carlo Policy
+Gradient</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1cd6dk9spft51pi59smheenb89.png"
+alt="Policy Gradient Update" />
+<figcaption aria-hidden="true">Policy Gradient Update</figcaption>
+</figure>
+<p>图中的 <span class="math inline">\(\log \pi_{\theta}(s_t,
+a_t)\)</span> 是 policy network 输出的概率，<span
+class="math inline">\(v_t\)</span> 是当前这一局的结果。这是 policy
+gradient
+最基本的更新形式。但是这个方法显然是有问题的，最后的结果好久并不能说明其中每一步都好。因此一个很直观的想法就是能不能抛弃回合更新的做法，而采用单步更新？Actor-Critic
+干的就是这个事情。</p>
+<p>要采用单步更新，意味着我们需要为每一步都即时做出评估。Actor-Critic
+中的 Critic 负责的就是评估这部分工作，而 Actor
+则是负责选择出要执行的动作。这就是 Actor-Critic
+的思想。从上面论文中提出的各种评价指标可知，看到 Critic
+的输出有多种形式，可以采用 Q值、V值 或 TD 等。</p>
+<p>因此 Actor-Critic 的思想就是从 Critic
+评判模块(采用深度神经网络居多)得到对动作的好坏评价，然后反馈给
+Actor(采用深度神经网络居多) 让 Actor
+更新自己的策略。从具体的训练细节来说，Actor 和 Critic
+分别采用不同的目标函数进行更新， 如可参考这里的代码 <a
+target="_blank" rel="noopener" href="https://morvanzhou.github.io/tutorials/machine-learning/reinforcement-learning/6-1-actor-critic/">Actor-Critic
+(Tensorflow)</a>，下面要说的 DDPG 也是这么做的。</p>
+<h2 id="deep-deterministic-policy-gradientddpg">Deep Deterministic
+Policy Gradient(DDPG)</h2>
+<p>上面提到的的 Policy Gradient
+处理问题其实还是局限在动作个数是离散和有限的情况，但是对于某些输出的值是连续的问题，上面的方法就不管用了，比如说自动驾驶控制的速度，机器人控制移动的幅度等。</p>
+<p>最开始这篇论文 <a
+target="_blank" rel="noopener" href="http://proceedings.mlr.press/v32/silver14.pdf">Deterministic
+Policy Gradient Algorithms</a> 提出了输出连续动作值的 DPG(Deterministic
+Policy Gradient) ; 然后 论文 <a
+target="_blank" rel="noopener" href="https://arxiv.org/abs/1509.02971">Continuous control with deep
+reinforcement learning</a> 基于 DPG 做了改进，提出了 DDPG(Deep
+Deterministic Policy Gradient)。</p>
+<p>这里 DPG 不详细展开说了，简而言之，主要就是证明了 deterministic
+policy gradient不仅存在，而且是model-free形式且是action-value
+function的梯度。因此 policy 不仅仅可以通过
+概率分布表示，也就将动作空间推到了无限大的。具体的理论课参考这篇文章 <a
+target="_blank" rel="noopener" href="https://blog.csdn.net/jinzhuojun/article/details/72851548">深度增强学习（DRL）漫谈
+- 从AC（Actor-Critic）到A3C（Asynchronous Advantage
+Actor-Critic）</a></p>
+<p>DDPG 相对于 DPG 的核心改进是引入了 Deep
+Learning，采用深度神经网络作为 DPG 中的策略函数 <span
+class="math inline">\(μ\)</span> 和 <span
+class="math inline">\(Q\)</span> 函数的模拟，即 Actor 网络和 Critic
+网络；然后使用深度学习的方法来训练上述神经网络。两者的关系类似于 DQN 和
+Q-learning 的关系。</p>
+<p>DDPG 的网络结构为 Actor 网络 + Critic 网络，对于状态 <span
+class="math inline">\(s\)</span>, 先通过 Actor 网络获取 action <span
+class="math inline">\(a\)</span>, 这里的 <span
+class="math inline">\(a\)</span> 是一个向量；然后将 <span
+class="math inline">\(a\)</span> 输入 Critic 网络，输出的是 Q
+值，目标函数就是极大化 Q 值，但是更新的方法两者又有一些区别。论文中显示
+DDPG 算法流程如下</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1cd5bb8ke1d9b1e1d1qcq1ta410f9m.png"
+alt="DDPG" />
+<figcaption aria-hidden="true">DDPG</figcaption>
+</figure>
+<p>从算法的流程可知，Actor 网络和 Critic
+网络是分开训练的，但是两者的输入输出存在联系，Actor 网络输出的 action 是
+Critic 网络的输入，同时 Critic 网络的输出会被用到 Actor
+网路进行反向传播。</p>
+<p>原始论文没有给出两个网路的具体示意图，这里给出一张<a
+target="_blank" rel="noopener" href="https://blog.csdn.net/jinzhuojun/article/details/72851548">这篇文章</a>画的示意图，可以看到，Critic
+跟之前提到的 DQN 有点类似，但是这里的输入是 state + action，输出是一个 Q
+值而不是各个动作的 Q 值。</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1cd6k6nr7c9mqcc1bthhs4ibs13.png"
+alt="network visulization" />
+<figcaption aria-hidden="true">network visulization</figcaption>
+</figure>
+<p>由于在 DDPG
+中，我们不再用单一的概率值表示某个动作，而是用向量表示某个动作，由于向量空间可以被认为是无限的，因此也能够跟无限的动作空间对应起来。</p>
+<h2 id="asynchronous-advantage-actor-critica3c">Asynchronous Advantage
+Actor-Critic(A3C)</h2>
+<p>在提出 DDPG 后，DeepMind 在这个基础上提出了效果更好的 Asynchronous
+Advantage Actor-Critic（A3C），详见论文 <a
+target="_blank" rel="noopener" href="https://arxiv.org/pdf/1602.01783.pdf">Asynchronous Methods for
+Deep Reinforcement Learning</a></p>
+<p>A3C 算法和DDPG类似，通过 DNN 拟合 policy function 和 value
+function的估计。但是<strong>不同点</strong>在于 1. A3C 中有多个 agent
+对网络进行 asynchronous update，这样带来了样本间的相关性较低的好处，因此
+A3C 中也没有采用 Experience Replay 的机制；这样 A3C 便支持 online
+的训练模式了 2. A3C 有两个输出，其中一个 softmax output 作为 policy
+<span class="math inline">\(\pi(a_t|s_t;\theta)\)</span>，而另一个linear
+output为 value function <span
+class="math inline">\(V(s_t;\theta_v)\)</span> 3. A3C 中的Policy network
+的评估指标采用的是上面比较了多种评估指标的论文中提到的 Advantage
+Function(即A值) 而不是 DDPG 中单纯的 Q 值。</p>
+<p>整体的结构如下所示，图片摘自<a
+target="_blank" rel="noopener" href="https://blog.csdn.net/jinzhuojun/article/details/72851548">这篇文章</a>。</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1cd746v6om9cmoh1nul1io01fg19.png"
+alt="A3C" />
+<figcaption aria-hidden="true">A3C</figcaption>
+</figure>
+<p>从上面的如可知，输出包含两部分，value network
+的部分可以用来作为连续动作值的输出，而 policy network
+可以作为离散动作值的概率输出，因此能够同时解决前面提到的两类问题。</p>
+<p>两个网络的更新公式如下</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1cd7766d16uk2l812unadu2gt9.png"
+alt="A3C update" />
+<figcaption aria-hidden="true">A3C update</figcaption>
+</figure>
+<p>A3C
+通过创建多个agent，在多个环境实例中并行且异步的执行和学习，有个潜在的好处是不那么依赖于GPU或大型分布式系统，实际上A3C可以跑在一个多核CPU上，而工程上的设计和优化也是这篇文章的一个重点。</p>
+<p>综上，本文主要介绍了 Policy Gradient 这一类的方法，最基础的 Policy
+Gradient 是回合更新的，通过引入 Critic 后变成了单步更新，而这种结合了
+policy 和 value 的方法也叫 Actor-Critic，Critic
+有多种可选的方法。对于输出动作为连续值的情形，前面那些输出动作概率分布的方法无能为力，因此提出了
+DPG 和 DDPG，DDPG 对 DPG 的改进在于引入深度神经网络去拟合 policy
+function 和 value function。在 DDPG 基础上又提出了效果更好的
+A3C，这个方法在 DDPG 上引入了多个 agent 对网络进行 asynchronous
+update，不仅取得了更好的效果，而且降低了训练的代价。</p>
+<hr />
+<p>参考</p>
+<ol type="1">
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/21725498">深度增强学习之Policy
+Gradient方法1</a></li>
+<li><a target="_blank" rel="noopener" href="http://karpathy.github.io/2016/05/31/rl/">Deep
+Reinforcement Learning: Pong from Pixels</a></li>
+<li><a
+target="_blank" rel="noopener" href="https://blog.csdn.net/jinzhuojun/article/details/72851548">深度增强学习（DRL）漫谈
+- 从AC（Actor-Critic）到A3C（Asynchronous Advantage
+Actor-Critic）</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/25239682">深度强化学习（Deep
+Reinforcement Learning）入门：RL base &amp; DQN-DDPG-A3C
+introduction</a></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+              <a href="/tags/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 强化学习</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2018/05/09/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(2)-%E4%BB%8E%20Q-Learning%20%E5%88%B0%20DQN/" rel="prev" title="强化学习笔记(2)-从 Q-Learning 到 DQN">
+                  <i class="fa fa-chevron-left"></i> 强化学习笔记(2)-从 Q-Learning 到 DQN
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2018/06/03/format%20%E5%87%BD%E6%95%B0%E5%B8%B8%E7%94%A8%E8%AF%AD%E6%B3%95/" rel="next" title="format 函数常用语法">
+                  format 函数常用语法 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-pen"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

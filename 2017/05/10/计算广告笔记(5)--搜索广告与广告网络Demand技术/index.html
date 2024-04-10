@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id: "JmI6QmP3fMkLet6B",ck: "JmI6QmP3fMkLet6B"})</script>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wulc.me","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.15.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="本文是刘鹏老师的计算广告学中的一些笔记。本文是第五章: 搜索广告与广告网络Demand技术。主要介绍搜索广告中的几个典型问题以及广告网络中demand端需要用到的技术">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计算广告笔记(5)--搜索广告与广告网络Demand技术">
+<meta property="og:url" content="https://wulc.me/2017/05/10/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A%E7%AC%94%E8%AE%B0(5)--%E6%90%9C%E7%B4%A2%E5%B9%BF%E5%91%8A%E4%B8%8E%E5%B9%BF%E5%91%8A%E7%BD%91%E7%BB%9CDemand%E6%8A%80%E6%9C%AF/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="本文是刘鹏老师的计算广告学中的一些笔记。本文是第五章: 搜索广告与广告网络Demand技术。主要介绍搜索广告中的几个典型问题以及广告网络中demand端需要用到的技术">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/image_1bgt5kq0e1ona1hsp1m1a1mr214g1m.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1bgt781vpmed2b61k9hrkrd41g.png">
+<meta property="article:published_time" content="2017-05-10T13:37:39.000Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.227Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="计算广告">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/image_1bgt5kq0e1ona1hsp1m1a1mr214g1m.png">
+
+
+<link rel="canonical" href="https://wulc.me/2017/05/10/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A%E7%AC%94%E8%AE%B0(5)--%E6%90%9C%E7%B4%A2%E5%B9%BF%E5%91%8A%E4%B8%8E%E5%B9%BF%E5%91%8A%E7%BD%91%E7%BB%9CDemand%E6%8A%80%E6%9C%AF/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wulc.me/2017/05/10/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A%E7%AC%94%E8%AE%B0(5)--%E6%90%9C%E7%B4%A2%E5%B9%BF%E5%91%8A%E4%B8%8E%E5%B9%BF%E5%91%8A%E7%BD%91%E7%BB%9CDemand%E6%8A%80%E6%9C%AF/","path":"2017/05/10/计算广告笔记(5)--搜索广告与广告网络Demand技术/","title":"计算广告笔记(5)--搜索广告与广告网络Demand技术"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>计算广告笔记(5)--搜索广告与广告网络Demand技术 | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">吴良超的学习笔记</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%90%9C%E7%B4%A2%E5%B9%BF%E5%91%8A%E7%9A%84%E7%89%B9%E7%82%B9"><span class="nav-number">1.</span> <span class="nav-text">搜索广告的特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%90%9C%E7%B4%A2%E5%B9%BF%E5%91%8A%E7%9A%84%E5%85%B8%E5%9E%8B%E9%97%AE%E9%A2%98"><span class="nav-number">2.</span> <span class="nav-text">搜索广告的典型问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E8%AF%8D%E6%89%A9%E5%B1%95query-expansion"><span class="nav-number">2.1.</span> <span class="nav-text">查询词扩展(Query
+Expansion)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E7%9B%B8%E5%85%B3%E7%9A%84%E6%90%9C%E7%B4%A2%E5%B9%BF%E5%91%8A%E5%86%B3%E7%AD%96"><span class="nav-number">2.2.</span> <span class="nav-text">用户相关的搜索广告决策</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9F%AD%E6%97%B6%E7%94%A8%E6%88%B7%E8%A1%8C%E4%B8%BA%E5%8F%8D%E9%A6%88"><span class="nav-number">2.3.</span> <span class="nav-text">短时用户行为反馈</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%81%E5%BC%8F%E8%AE%A1%E7%AE%97%E5%B9%B3%E5%8F%B0"><span class="nav-number">3.</span> <span class="nav-text">流式计算平台</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B9%BF%E5%91%8A%E7%BD%91%E7%BB%9C-demand-%E7%AB%AF%E6%8A%80%E6%9C%AF"><span class="nav-number">4.</span> <span class="nav-text">广告网络 demand 端技术</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#roi%E4%BC%98%E5%8C%96%E8%83%BD%E5%8A%9B"><span class="nav-number">4.1.</span> <span class="nav-text">ROI优化能力</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">253</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2017/05/10/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A%E7%AC%94%E8%AE%B0(5)--%E6%90%9C%E7%B4%A2%E5%B9%BF%E5%91%8A%E4%B8%8E%E5%B9%BF%E5%91%8A%E7%BD%91%E7%BB%9CDemand%E6%8A%80%E6%9C%AF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="计算广告笔记(5)--搜索广告与广告网络Demand技术 | 吴良超的学习笔记">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          计算广告笔记(5)--搜索广告与广告网络Demand技术
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2017-05-10 21:37:39" itemprop="dateCreated datePublished" datetime="2017-05-10T21:37:39+08:00">2017-05-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-tags"></i>
+      </span>
+      <span class="post-meta-item-text">标签</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A/" itemprop="url" rel="index"><span itemprop="name">计算广告</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>本文是刘鹏老师的<a
+target="_blank" rel="noopener" href="http://study.163.com/course/courseMain.htm?courseId=321007">计算广告学</a>中的一些笔记。本文是第五章:
+搜索广告与广告网络Demand技术。主要介绍搜索广告中的几个典型问题以及广告网络中demand端需要用到的技术</p>
+<span id="more"></span>
+<h2 id="搜索广告的特点">搜索广告的特点</h2>
+<p>搜索广告与显示广告不同的特点在于</p>
+<ul>
+<li>用户定向标签 <span class="math inline">\(f(u)\)</span>:
+远远弱于上下文影响（query），一般可以忽略</li>
+<li>Session内的短时用户搜索行为作用很重要</li>
+<li>上下文定向标签 <span class="math inline">\(f(c)\)</span>:
+关键词</li>
+</ul>
+<p>搜索广告是一种典型的位置竞价模式，如下是搜索广告中常见的三种位置</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1bgt5kq0e1ona1hsp1m1a1mr214g1m.png"
+alt="搜索广告中的位置" />
+<figcaption aria-hidden="true">搜索广告中的位置</figcaption>
+</figure>
+<p>根据上图，可知搜索广告中的位置一般分为北，南，东三个广告区块，根据各位置的reference
+ctr决定，各位置在竞价系统中的位次 reference ctr
+可以通过ε流量较准确测定出</p>
+<h2 id="搜索广告的典型问题">搜索广告的典型问题</h2>
+<p>搜索广告中需要考虑的几个典型问题如下</p>
+<ol type="1">
+<li>查询词扩展(Query Expansion)</li>
+<li>用户相关的搜索广告决策</li>
+<li>短时用户行为反馈</li>
+</ol>
+<h3 id="查询词扩展query-expansion"><strong>查询词扩展(Query
+Expansion)</strong></h3>
+<p>目的是 supply
+端为了赚取更多的利润，同时拓展了广告主的竞价范围，常见的思路有以下三种</p>
+<p>（1）<strong>基于推荐的方法</strong>：挖掘(session,
+query)矩阵找到相关query, 可类比(user,
+item)矩阵，这种方法利用的是搜索数据
+（2）<strong>基于语义的方法</strong>：用topic
+model或概念化的方法中找语义相关query，这种方法利用的是其他文档数据
+（3）<strong>基于收益的方法</strong>：根据实际eCPM统计得到变现能力最好的相关query，这种方法利用的是广告数据</p>
+<h3
+id="用户相关的搜索广告决策"><strong>用户相关的搜索广告决策</strong></h3>
+<p>首先需要明确结果个性化对于搜索广告作用有限，原因是上下文信息(c)太强,
+个人兴趣基本可以忽略；同时搜索页上的结果需要保证主题上某种一致性</p>
+<p>但是广告展示条数是可以深度个性化的，因为约一半的用户无法明确区分广告与搜索结果，在平均广告条数的约束下，可以对每个用户的广告条数进行个性化，以最大化营收。因此这又一个约束优化问题！</p>
+<p>另外可以根据同一 session
+内的行为调整广告结果，如在第一页没点的广告是否要放到第二页。</p>
+<h3 id="短时用户行为反馈"><strong>短时用户行为反馈</strong></h3>
+<p>短时用户行为的定义如下，狭义来说是用户在一个session内的行为，广义来说是
+用户在短时间(一般为一到两天)内的行为</p>
+<p>通过短时用户行为反馈，可以实现： <strong>（1）短时受众定向</strong>:
+根据短时行为为用户打上的标签 <strong>（2）短时点击反馈</strong>:
+根据短时广告交互计算的动态特征</p>
+<p>而短时用户行为计算需要准实时(分钟级)对用户行为进行加工，不适合在Hadoop上进行
+可以利用<strong>流式计算(stream computing)平台</strong>,
+如S4（雅虎开源的一个流式计算平台）, Storm等</p>
+<h2 id="流式计算平台">流式计算平台</h2>
+<p>前面提到了流式计算平台，下面以 storm 为例简单讲述</p>
+<p>Storm
+是一个大规模实时数据处理框架，能够自动完成数据分发和可靠性管理,开发者只需要关注处理逻辑，数据流基本在网络和内存进行（极端情况下会有磁盘调度）</p>
+<p>Storm 计算逻辑类似Map/Reduce,
+区别在<strong>调度数据而非调度计算</strong>，其拓扑及任务分配如下（spout
+是输入，根据输入的 key 分发到不同的 Bolt 上处理，最后将结果组成）</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1bgt781vpmed2b61k9hrkrd41g.png"
+alt="storm" />
+<figcaption aria-hidden="true">storm</figcaption>
+</figure>
+<h2 id="广告网络-demand-端技术">广告网络 demand 端技术</h2>
+<p>广告购买平台 (Trading Desk) 是 demand 端的一种产品，其目的是
+&gt;Allows advertisers buy audience across publishers and ad
+networks</p>
+<p>其关键特征有</p>
+<ul>
+<li>连接到不同媒体和广告网络，为广告商提供universal marketplace</li>
+<li>非实时竞价campaign的<strong>ROI优化能力</strong></li>
+<li>经常由代理公司孵化出来</li>
+</ul>
+<h3 id="roi优化能力">ROI优化能力</h3>
+<p>ROI优化目标是给定总预算，在多广告网络中采买并优化ROI</p>
+<p>ROI 优化其中若干关键问题有</p>
+<p>（1）在合适的流量segment上投放广告；如SEM中的选词、显示广告网络中的标签组合选择等</p>
+<p>（2）在每个投放上合理地出价以优化ROI；与实时竞价不同，采买方无法控制每次展示的出价(因此一般采用每次点击固定价格的策略)，但是因为
+<span class="math inline">\(u, c\)</span>
+的取值未知，需要在各流量分割上估计其分布并合理出价</p>
+<p>（3）对每个segment的量以及Market price进行预估，以完成整体的优化</p>
+<p>在这个领域有代表性的公司有
+EfficientFrontier，这个公司的核心业务是为搜索广告主提供大量关键词情形下的
+ROI
+优化服务，并收取固定比例的提成；广告主只需要提供预算、关键词、受众类型等信息即可，EfficientFrontier
+会通过计算为其提供最优方案</p>
+<p>其核心技术为 <a
+target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Portfolio_optimization">Portfolio
+Optimization</a>，原是金融领域内的一个优化算法，目前正在向显示广告领域扩张，需要注意的是除了算法以外，长时间数据积累也很重要</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A/" rel="tag"><i class="fa fa-tag"></i> 计算广告</a>
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2017/05/07/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A%E7%AC%94%E8%AE%B0(4)--%E7%AB%9E%E4%BB%B7%E5%B9%BF%E5%91%8A%E7%B3%BB%E7%BB%9F/" rel="prev" title="计算广告笔记(4)--竞价广告系统">
+                  <i class="fa fa-chevron-left"></i> 计算广告笔记(4)--竞价广告系统
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2017/05/14/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A%E7%AC%94%E8%AE%B0(6)--%E5%B9%BF%E5%91%8A%E4%BA%A4%E6%98%93%E5%B8%82%E5%9C%BA(Ad%20Exchange)/" rel="next" title="计算广告(6)--广告交易市场(Ad Exchange)">
+                  计算广告(6)--广告交易市场(Ad Exchange) <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-pen"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

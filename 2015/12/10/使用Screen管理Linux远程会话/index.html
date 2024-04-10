@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id: "JmI6QmP3fMkLet6B",ck: "JmI6QmP3fMkLet6B"})</script>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wulc.me","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.15.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="通过 SSH 或者 telent 远程登录到 Linux服务器执行一些长时间运行的任务，比如系统备份、ftp 传输等等。因为他们执行的时间太长了。必须等待它执行完毕，在此期间可不能关掉窗口或者断开连接，否则这个任务就会被杀掉，一切半途而废了。 本文分析了这个问题的原因以及解决方法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用Screen管理Linux远程会话">
+<meta property="og:url" content="https://wulc.me/2015/12/10/%E4%BD%BF%E7%94%A8Screen%E7%AE%A1%E7%90%86Linux%E8%BF%9C%E7%A8%8B%E4%BC%9A%E8%AF%9D/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="通过 SSH 或者 telent 远程登录到 Linux服务器执行一些长时间运行的任务，比如系统备份、ftp 传输等等。因为他们执行的时间太长了。必须等待它执行完毕，在此期间可不能关掉窗口或者断开连接，否则这个任务就会被杀掉，一切半途而废了。 本文分析了这个问题的原因以及解决方法。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2015-12-10T12:15:44.000Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.217Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="工具使用">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://wulc.me/2015/12/10/%E4%BD%BF%E7%94%A8Screen%E7%AE%A1%E7%90%86Linux%E8%BF%9C%E7%A8%8B%E4%BC%9A%E8%AF%9D/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wulc.me/2015/12/10/%E4%BD%BF%E7%94%A8Screen%E7%AE%A1%E7%90%86Linux%E8%BF%9C%E7%A8%8B%E4%BC%9A%E8%AF%9D/","path":"2015/12/10/使用Screen管理Linux远程会话/","title":"使用Screen管理Linux远程会话"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>使用Screen管理Linux远程会话 | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">吴良超的学习笔记</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E5%85%B3%E6%8E%89%E7%AA%97%E5%8F%A3%E6%96%AD%E5%BC%80%E8%BF%9E%E6%8E%A5%E4%BC%9A%E4%BD%BF%E5%BE%97%E6%AD%A3%E5%9C%A8%E8%BF%90%E8%A1%8C%E7%9A%84%E7%A8%8B%E5%BA%8F%E6%AD%BB%E6%8E%89"><span class="nav-number">1.</span> <span class="nav-text">为什么关掉窗口&#x2F;断开连接会使得正在运行的程序死掉？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E4%BE%8B%E4%BA%8C"><span class="nav-number">1.1.</span> <span class="nav-text">测试例二</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8screen%E7%AE%A1%E7%90%86%E8%BF%9C%E7%A8%8B%E4%BC%9A%E8%AF%9D"><span class="nav-number">2.</span> <span class="nav-text">使用screen管理远程会话</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E6%96%B0%E7%9A%84%E4%BC%9A%E8%AF%9D"><span class="nav-number">2.1.</span> <span class="nav-text">创建新的会话</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E5%85%A5%E5%B7%B2%E5%88%9B%E5%BB%BA%E4%BC%9A%E8%AF%9D"><span class="nav-number">2.2.</span> <span class="nav-text">进入已创建会话</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#screen%E7%9A%84%E4%B8%80%E4%BA%9B%E5%B8%B8%E7%94%A8%E5%8F%82%E6%95%B0%E5%A6%82%E4%B8%8B%E6%89%80%E7%A4%BA"><span class="nav-number">2.3.</span> <span class="nav-text">screen的一些常用参数如下所示</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">253</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2015/12/10/%E4%BD%BF%E7%94%A8Screen%E7%AE%A1%E7%90%86Linux%E8%BF%9C%E7%A8%8B%E4%BC%9A%E8%AF%9D/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="使用Screen管理Linux远程会话 | 吴良超的学习笔记">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          使用Screen管理Linux远程会话
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2015-12-10 20:15:44" itemprop="dateCreated datePublished" datetime="2015-12-10T20:15:44+08:00">2015-12-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-tags"></i>
+      </span>
+      <span class="post-meta-item-text">标签</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/" itemprop="url" rel="index"><span itemprop="name">工具使用</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>通过 SSH 或者 telent 远程登录到
+Linux服务器执行一些长时间运行的任务，比如系统备份、ftp
+传输等等。因为他们执行的时间太长了。必须等待它执行完毕，在此期间可不能关掉窗口或者断开连接，否则这个任务就会被杀掉，一切半途而废了。
+本文分析了这个问题的原因以及解决方法。 <span id="more"></span></p>
+<h2
+id="为什么关掉窗口断开连接会使得正在运行的程序死掉">为什么关掉窗口/断开连接会使得正在运行的程序死掉？</h2>
+<p><strong>元凶：SIGHUP 信号</strong>
+在Linux/Unix中，有这样几个概念：</p>
+<ul>
+<li><p><strong>进程组（process
+group）</strong>：一个或多个进程的集合，每一个进程组有唯一一个<strong>进程组ID</strong>，即<strong>组长进程的ID</strong>。</p></li>
+<li><p><strong>会话（session）</strong>：一个或多个进程组的集合，开始于用户登录，终止与用户退出，此期间所有进程都属于这个会话。一个会话一般包含一个<strong>会话首进程、一个前台进程组和一个后台进程组</strong>。</p></li>
+<li><p><strong>守护进程（daemon）</strong>：Linux大多数服务都是通过守护进程实现的，完成许多系统任务如0号进程为调度进程，是内核一部分；1号进程为init进程,负责内核启动后启动Linux系统。守护进程不因为用户、终端或者其他的变化而受到影响。</p></li>
+</ul>
+<p>当<strong>终端接口检测到网络连接断开，将挂断信号（SIGHUP）发送给控制进程（会话期首进程）</strong>。而挂断信号默认的动作是终止程序。如果会话期首进程终止，则该信号发送到<strong>该会话期前台进程组</strong>。</p>
+<p>也就是说：ssh打开以后，bash等都是他的子程序，一旦ssh关闭，系统将所有<strong>前台进程</strong>杀掉。（<strong>后台进程和守护进程不会被关闭</strong>！！！）
+　　 ## 测试案例 ### 测试例一
+打开两个SSH终端窗口，在其中一个运行了一个循环打印的python脚本。执行命令如下：
+<code>[root@localhost ~]# python test.py</code>
+<code>test.py</code>内容如下： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">while True:</span><br><span class="line">    print &quot;hehe&quot;</span><br></pre></td></tr></table></figure>
+另外一个终端用<code>pstree -p</code>查看当前的进程树。显示如下
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# pstree -p</span><br><span class="line">（省略）</span><br><span class="line">├─sshd(958)─┬─sshd(1282)───bash(1286)───pstree(1436)</span><br><span class="line">│           └─sshd(1410)───bash(1414)───python(1433)</span><br></pre></td></tr></table></figure>
+可以看到2个bash进程代表了2个终端，pstree是当前进程正在运行的程序，而python进程则是另外一个终端正在运行的程序。</p>
+<p>关掉启动python的终端，在刚刚执行pstree的终端上查找pid为1433的进程（也就是原来的python进程），发现没有这个pid的进程，说明python随着终端的关闭而终止了，此时输入<code>pstree -p</code>变为了下面这样：
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# pstree -p</span><br><span class="line">（省略）</span><br><span class="line">├─sshd(958)──sshd(1282)───bash(1286)───pstree(1436)</span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<h3 id="测试例二">测试例二</h3>
+<p>步骤同例一，只是在执行python脚本时将其放到后台执行，执行命令如下：
+<code>[root@localhost ~]# python test.py &amp;</code>
+这样在关闭执行python的中断后，<strong>python进程并没有被中断</strong>，通过<code>pstree -p</code>查看到进程数类似于下面的情况：
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(省略)</span><br><span class="line">├─python(1493)</span><br><span class="line">├─sshd(958)───sshd(1282)───bash(1286)───pstree(1497)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+因为python执行的是个后台进程，而SIGHup信号只会发送给前台进程组，当父进程结束后，其原来子进程中的后台进程会成为孤儿进程被init进程收养。详见<a
+href="http://wulc.me/2015/12/05/%E5%AD%A4%E5%84%BF%E8%BF%9B%E7%A8%8B%E5%92%8C%E5%83%B5%E5%B0%B8%E8%BF%9B%E7%A8%8B/">孤儿进程和僵尸进程</a></p>
+<p>注：网上一些资料显示执行某些复杂程序的时候，只加<code>&amp;</code>也会终止，但是博主还没遇到过这种情况，因为我不会这样去执行一个执行时间较长的程序。</p>
+<p>同样,nohup命令可以达到这个目的，值得注意的是nohup命令只是使得程序忽略SIGHUP信号，还需要使用标记&amp;把它放在后台运行。这种情况能够保证程序不会被终止。
+<code>nohup &lt;command&gt; [argument…] &amp;</code></p>
+<h2 id="使用screen管理远程会话">使用screen管理远程会话</h2>
+<p>虽然nohup和后台进程很容易使用，但还是比较“简陋”的，对于简单的命令能够应付过来，对于复杂的需要人机交互的任务就麻烦了。</p>
+<p>其实我们可以使用一个更为强大的实用程序screen。</p>
+<p>简单来说，Screen是一个可以在多个进程之间多路复用一个<strong>物理终端</strong>的窗口管理器。Screen中有会话的概念，用户可以在一个screen会话中创建多个screen窗口。</p>
+<h3 id="创建新的会话">创建新的会话</h3>
+<p>在screen中创建一个新的会话有2种方式</p>
+<p><strong>1．直接在命令行键入screen命令</strong>
+<code>[root@localhost ~]# screen</code>
+Screen将创建一个执行shell的全屏窗口。你可以执行任意shell程序，就像在ssh窗口中那样。在该窗口中键入exit退出该窗口，如果这是该screen会话的唯一窗口，该screen会话退出，否则screen自动切换到前一个窗口。
+也可通过<code>screen -S name</code> 来为启动的session取名字。
+<strong>2．Screen命令后跟你要执行的程序</strong> [root@localhost ~]#
+python test.py Screen创建一个执行python
+test.py的单窗口会话，终止进程将退出该窗口/会话。</p>
+<h3 id="进入已创建会话">进入已创建会话</h3>
+<p>即使关闭了启动所有终端，在screen会话中启动的进程也不会终止，再次连接时可通过<code>screen -ls</code>查看已经启动的screen会话(detached状态)，用<code>screen -r name</code>恢复指定会话，也可在会话中通过exit退出screen会话。
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# screen -ls</span><br><span class="line">There is a screen on:</span><br><span class="line">	1518.lc	(Detached)</span><br><span class="line">1 Socket in /var/run/screen/S-root.</span><br><span class="line">重新连接会话</span><br><span class="line">[root@localhost ~]# screen -r lc或screen -r 1518</span><br><span class="line">退出当前screen会话</span><br><span class="line">[root@localhost ~]#exit</span><br></pre></td></tr></table></figure></p>
+<h3 id="screen的一些常用参数如下所示">screen的一些常用参数如下所示</h3>
+<ul>
+<li><strong>分享操作</strong></li>
+</ul>
+<p><code>screen -x name</code>进入一个还在连接着（attached）的screen，然后所有操作能够被另外所有正在连着的screen看到</p>
+<ul>
+<li><strong>分屏</strong></li>
+<li>创建一个新的窗口：ctrl+a+S
+（注意是大写的s）,此时新的窗口还没启动bash</li>
+<li>启动新窗口的bash：ctrl+a+c</li>
+<li>切换窗口：ctrl+a+tab</li>
+<li>关掉当前窗口:ctrl+a+X（注意是大写的x）</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Linux/" rel="tag"><i class="fa fa-tag"></i> Linux</a>
+              <a href="/tags/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/" rel="tag"><i class="fa fa-tag"></i> 工具使用</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2015/12/08/%E4%BB%A5%E5%A4%AA%E7%BD%91%E4%B8%AD%E7%9A%84MTU%E4%B8%8EMSS/" rel="prev" title="以太网中的MTU与MSS">
+                  <i class="fa fa-chevron-left"></i> 以太网中的MTU与MSS
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2015/12/12/%E4%B8%BA%E4%BB%80%E4%B9%88%E7%9B%B8%E7%88%B1%E5%AE%B9%E6%98%93-%E7%9B%B8%E5%AE%88%E4%B8%8D%E6%98%93%EF%BC%9F/" rel="next" title="为什么相爱容易,相守不易？">
+                  为什么相爱容易,相守不易？ <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-pen"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

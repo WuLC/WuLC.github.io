@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id: "JmI6QmP3fMkLet6B",ck: "JmI6QmP3fMkLet6B"})</script>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wulc.me","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.15.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="《Forecasting High-Dimensional Data》 是 Yahoo! 一篇关于流量预估的论文。在合约广告中，需要提前预估某个定向下的流量情况，从而进行合理的售卖和分配。但是由于定向的组合非常多（广告主的多样的需求导致的），而工程上不允许为每个可能的定向预估其流量，因此这篇论文提出了先预估一些基本定向的流量，然后通过 correlation model 从基本定向的流量计算出各种">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《Forecasting High-Dimensional Data》阅读笔记">
+<meta property="og:url" content="https://wulc.me/2018/11/15/%E3%80%8AForecasting%20High-Dimensional%20Data%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="《Forecasting High-Dimensional Data》 是 Yahoo! 一篇关于流量预估的论文。在合约广告中，需要提前预估某个定向下的流量情况，从而进行合理的售卖和分配。但是由于定向的组合非常多（广告主的多样的需求导致的），而工程上不允许为每个可能的定向预估其流量，因此这篇论文提出了先预估一些基本定向的流量，然后通过 correlation model 从基本定向的流量计算出各种">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/image_1cstndv791jqh17tnago65f10679.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1csvl3andohv1od31prus551h4l26.png">
+<meta property="article:published_time" content="2018-11-15T13:37:39.000Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.230Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="计算广告">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/image_1cstndv791jqh17tnago65f10679.png">
+
+
+<link rel="canonical" href="https://wulc.me/2018/11/15/%E3%80%8AForecasting%20High-Dimensional%20Data%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wulc.me/2018/11/15/%E3%80%8AForecasting%20High-Dimensional%20Data%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/","path":"2018/11/15/《Forecasting High-Dimensional Data》阅读笔记/","title":"《Forecasting High-Dimensional Data》阅读笔记"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>《Forecasting High-Dimensional Data》阅读笔记 | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">吴良超的学习笔记</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E5%AE%9A%E4%B9%89"><span class="nav-number">1.</span> <span class="nav-text">问题定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%80%9D%E8%B7%AF"><span class="nav-number">2.</span> <span class="nav-text">解决思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E6%80%BB%E8%A7%88"><span class="nav-number">3.</span> <span class="nav-text">系统总览</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#correlation-model"><span class="nav-number">4.</span> <span class="nav-text">Correlation Model</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#full-independence-model-fim"><span class="nav-number">4.1.</span> <span class="nav-text">Full Independence Model (FIM)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#partwise-independence-model-pim"><span class="nav-number">4.2.</span> <span class="nav-text">Partwise Independence Model
+(PIM)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sampling-based-joint-modelsjm"><span class="nav-number">4.3.</span> <span class="nav-text">Sampling-based Joint
+Model(SJM)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E6%95%88%E6%9E%9C"><span class="nav-number">5.</span> <span class="nav-text">实验效果</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE"><span class="nav-number">5.1.</span> <span class="nav-text">数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87"><span class="nav-number">5.2.</span> <span class="nav-text">评估指标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%88%E6%9E%9C%E5%AF%B9%E6%AF%94"><span class="nav-number">5.3.</span> <span class="nav-text">效果对比</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">253</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2018/11/15/%E3%80%8AForecasting%20High-Dimensional%20Data%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="《Forecasting High-Dimensional Data》阅读笔记 | 吴良超的学习笔记">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          《Forecasting High-Dimensional Data》阅读笔记
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-11-15 21:37:39" itemprop="dateCreated datePublished" datetime="2018-11-15T21:37:39+08:00">2018-11-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-tags"></i>
+      </span>
+      <span class="post-meta-item-text">标签</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A/" itemprop="url" rel="index"><span itemprop="name">计算广告</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>《<a target="_blank" rel="noopener" href="https://dl.acm.org/citation.cfm?id=1807277">Forecasting
+High-Dimensional Data</a>》 是 Yahoo!
+一篇关于流量预估的论文。在合约广告中，需要提前预估某个定向下的流量情况，从而进行合理的售卖和分配。但是由于定向的组合非常多（广告主的多样的需求导致的），而工程上不允许为每个可能的定向预估其流量，因此这篇论文提出了<strong>先预估一些基本定向的流量，然后通过
+correlation model
+从基本定向的流量计算出各种定向下的流量情况</strong>，具有较强的工程性，也是之前提到的文章
+《<a
+href="http://wulc.me/2018/10/25/%E3%80%8ABudget%20Pacing%20for%20Targeted%20Online%20Advertisements%20at%20LinkedIn%E3%80%8B%20%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/">Budget
+Pacing for Targeted Online Advertisements at LinkedIn</a>》
+中采用的流量预估方法。</p>
+<span id="more"></span>
+<h2 id="问题定义">问题定义</h2>
+<p>前面简单提到了文章解决的问题的背景，文章将一个最基本的定向（如性别为男）称为一个
+attribute，而每个广告主的需要的流量就是若干个 attribute 的
+combination，因此 combination
+的数量是非常庞大的，<strong>文章要求的就是如何有效地预估所有 combination
+的流量情况</strong>。</p>
+<p>一个最直观的思路就是统计出某个 combination
+的历史数据，然后训练模型并进行预估。但是这个方法最致命的地方在于统计
+combination
+的历史数据以及模型训练所需的耗时在实际中是无法容忍的，需要数小时（文章要求需要在数百毫秒内返回某个
+combination
+的流量预估值）。那可以将这些放到离线来做么？答案也是不可以的，因为我们不知道哪些
+combination 在未来会用到，因此所有的 combination
+都需要进行预估，而这个数量过于庞大了。</p>
+<h2 id="解决思路">解决思路</h2>
+<p>文章提出的解决思路是<strong>先对一小部分有代表性的 combination
+进行上面的历史统计和预估操作</strong>，这里的<strong>有代表性的流量</strong>可以从统计的历史数据中得到（如访问量最多的combination
+等），也可以手工选择等；然后<strong>结合文章提到的 correlation
+model，可以从这一小部分的 combination 中预估出所有的 combination
+的流量情况</strong>。</p>
+<p>下面具体详细介绍整体的解决思路</p>
+<h2 id="系统总览">系统总览</h2>
+<p>文章提出的方法系统图如下，每个的 Historical Data Point
+实际上就是一个历史 query，包含了某些 attribute
+的组合，这些数据主要有两个用途</p>
+<p>（1）送入到 Historical Data Aggregator 中对某些有代表性的 Selected
+Attribute Combinations
+进行历史统计，并通过模型进行时间序列的预估，这里的时间序列预估使用了 <a
+target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Autoregressive_integrated_moving_average">SARIMA</a>
+模型 （2）用于构建 Correlation Model，并与上面若干 Selected Attribute
+Combinations 的预估结果共同对在线的 query 返回预估值</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1cstndv791jqh17tnago65f10679.png"
+alt="system" />
+<figcaption aria-hidden="true">system</figcaption>
+</figure>
+<p>可以看到<strong>文章的重点在于 correlation model 的构建以及
+correlation model 在 online 部分是如何工作的</strong>。</p>
+<h2 id="correlation-model">Correlation Model</h2>
+<p>上文提到了对一部分有代表性的 combination（也就是上图中的 Selected
+Attribute Combinations）进行时间序列预估，这里记为 <span
+class="math inline">\(Q = \lbrace Q_1, Q_2,... Q_m \rbrace\)</span>,
+称其为 base queries。则对于一个在线的 query <span
+class="math inline">\(q\)</span>, 其<strong>预估步骤如下</strong></p>
+<ol type="1">
+<li>选择 <span class="math inline">\(Q\)</span> 中某个 base query <span
+class="math inline">\(Q_k\)</span>, 使得 <span class="math inline">\(q
+\subseteq Q_k\)</span></li>
+<li>计算 <span class="math inline">\(Q_k\)</span> 在未来时间 <span
+class="math inline">\(T\)</span> 内的流量，记为 <span
+class="math inline">\(B(Q_k, T)\)</span></li>
+<li>计算 <span class="math inline">\(q\)</span> 在 <span
+class="math inline">\(Q_k\)</span> 中出现的概率，记为 <span
+class="math inline">\(R(q|Q_k)\)</span></li>
+<li>返回 <span class="math inline">\(q\)</span> 的预估结果为 <span
+class="math inline">\(B(Q_k, T) \times R(q|Q_k)\)</span></li>
+</ol>
+<p>Correlation Model 所做的事情就是第3步：计算比例。</p>
+<p>而在第一步中，<strong>必然会存在某个 <span
+class="math inline">\(Q_k\)</span>，使得<span class="math inline">\(q
+\subseteq Q_k\)</span></strong>, 为什么呢？</p>
+<p>假设总共有 n 个 attribute，那么只要将每个 attribute 作为一个 base
+query（这样 <span class="math inline">\(Q\)</span> 中便有了 n 个 base
+queries），则 attribute 的任意 combination 肯定会属于 Q 中的某几个 base
+queries 的。那如果<strong>不止一个 <span
+class="math inline">\(Q_k\)</span>，使得<span class="math inline">\(q
+\subseteq Q_k\)</span></strong> 时该怎么办？这时候就需要选择一个最小的
+<span class="math inline">\(Q_k\)</span>, 这里的最小指的是不存在某个
+<span class="math inline">\(Q_l\)</span> 同时满足 <span
+class="math inline">\(q \subseteq Q_l\)</span> 且 <span
+class="math inline">\(Q_l \subseteq
+Q_k\)</span>。举个简单的例子，假如有两个 base queries <span
+class="math inline">\(Q1 = a_1 , Q_2 = a1 \wedge a_2\)</span>,
+则对于某个 query <span class="math inline">\(q = a1 \wedge a_2 \wedge
+a_3\)</span>，应该选择 <span class="math inline">\(Q_2\)</span> 作为
+<span class="math inline">\(Q_k\)</span>。</p>
+<p>下面分别讲述文中提到的三种 correlation model</p>
+<h3 id="full-independence-model-fim">Full Independence Model (FIM)</h3>
+<p>FIM 实际上就是个 Naive Bayes，假设了每个 attribute
+是相互独立的，也就是</p>
+<p><span class="math display">\[R(Gender = male \wedge Age &lt; 30|Q_k)
+= R(Gender = male|Q_k) \times R(Age &lt; 30|Q_k)\]</span></p>
+<p>也就是只要为 <span class="math inline">\(Q_k\)</span> 每个单独的
+attribute 计算其比例 <span class="math inline">\(R(.| Q_k)\)</span>
+即可。具体计算方法如下</p>
+<p>令 <span class="math inline">\(P_t\)</span> 是截止到时间 <span
+class="math inline">\(t\)</span> 时所有的访问量，<span
+class="math inline">\(|Q_k \wedge P_t|\)</span> 为这些访问量中满足 <span
+class="math inline">\(|Q_k|\)</span> 的那些访问量，<span
+class="math inline">\(|a_i \in (Q_k \wedge P_t)|\)</span> 为满足 <span
+class="math inline">\(|Q_k|\)</span> 的那些访问量中同时满足 attribute
+<span class="math inline">\(a_i\)</span>的，则对于
+attribute，其计算公式如下</p>
+<p><span class="math display">\[R(a_i|Q_k) = \frac{|a_i \in (Q_k \wedge
+P_t)|}{|Q_k \wedge P_t|}\]</span></p>
+<h3 id="partwise-independence-model-pim">Partwise Independence Model
+(PIM)</h3>
+<p>将所有的 attribute 都认为是相互独立的显然是不合理的，因为有某些
+attribute 之间是相互关联的，比如说年龄和收入一般是存在关联的，因为 PIM
+实际上就是将某些可能有关联的 attribute 的比例一起计算。即</p>
+<p><span class="math display">\[R(Gender = male \wedge Age &lt; 30
+\wedge Incom &gt; 10000|Q_k) = R(Gender = male|Q_k) \times R(Age &lt; 30
+\wedge Incom &gt; 10000|Q_k)\]</span>,
+而比例的计算公式也跟上面的类似</p>
+<h3 id="sampling-based-joint-modelsjm">Sampling-based Joint
+Model(SJM)</h3>
+<p>上面的两种方法均假设了 attribute
+之间的的相互独立性，这依然会存在一定的局限性，能够完全避免独立性的假设呢？这篇文章提出的
+Sampling-based Joint Model(SJM) 就避免了独立性的假设。</p>
+<p>虽然说是 model ，但是方法还是统计，只是为了避免数量太大，首先做了
+sampling，选出经过 sample 后的数据并记为 <span
+class="math inline">\(S\)</span>，然后计算 base query <span
+class="math inline">\(|Q_k|\)</span> 在 <span
+class="math inline">\(S\)</span> 中的数量 <span
+class="math inline">\(|Q_k \cap S|\)</span>,
+这部分会在离线做，然后在线来了一个 query <span
+class="math inline">\(q\)</span> 后，会计算在 <span
+class="math inline">\(S\)</span> 中满足 <span
+class="math inline">\(q\)</span> 的数量并记为 <span
+class="math inline">\(n\)</span>。则比例计算公式就很简单了</p>
+<p><span class="math display">\[R(q|Q_k) = \frac{n}{|Q_k \cap
+S|}\]</span></p>
+<p>整个过程思路非常简单，没有涉及到 attribute，因此也没有 attribute
+independent
+的假设。但是关键的问题在于如何高效地算出上面的分子和分母的那些计数。论文使用的是bitmap
+index, 且使用了论文 <a
+target="_blank" rel="noopener" href="https://dl.acm.org/citation.cfm?id=1132864">Optimizing bitmap
+indices with efficient compression</a> 中提出的关于 bitmap index
+的一种改进方法。</p>
+<h2 id="实验效果">实验效果</h2>
+<h3 id="数据">数据</h3>
+<p>实验采用的数据是
+Yahoo！部分页面过去一年的历史访问数据，其中一半用于进行 time-series
+forecasting，另一半用于验证效果（按时间划分），且对于某些 combination
+用了过去四年累积的数据进行 forecasting。Correlation Model
+则用了过去一周的数据进行训练，且 SJM 采样得到了 20 million 的数据。</p>
+<h3 id="评估指标">评估指标</h3>
+<p>工程上的评估指标有 speed 和 space，就是时间和空间的评估。</p>
+<p>效果上的评估指标主要就是 accuracy，采用的是 absolute percentage error
+(APE), 假设预估值为 <span class="math inline">\(F\)</span>, 真实值为
+<span class="math inline">\(A\)</span>, 则 APE 的定义如下</p>
+<p><span class="math display">\[APE = \frac{|F-A|}{A}\]</span></p>
+<p>APE 针对的是单个 query，但是往往希望的是验证一系列 query
+的效果，其指标为 Root Mean Square Error (RMSE)，定义如下, <span
+class="math inline">\(w_q\)</span> 表示每个 query 的权重，这个值被设为
+query 在过去两年的合约中出现的次数</p>
+<p><span class="math display">\[RMSE = \sqrt{\frac{\sum_{q \in
+Q}w_qAPE^2(q)}{\sum_{q \in Q}w_q}}\]</span></p>
+<h3 id="效果对比">效果对比</h3>
+<p>下面是三个模型的 RMSE（取了对数） 效果对比，横轴的 forecast horizon
+表示预估未来多少天的时的效果。可以看到假设 attribute independent
+会降低最后的效果。</p>
+<p>除此之外，每个模型在进行 online 是返回结果的耗时都要小于 50 毫秒；且
+FIM 和 PIM 模型的内存占比大概是 500
+MB，因为这两个模型只需要存储比例值和预估的趋势曲线，但是 SJM
+的内存大概到了 20GB（20 million的data points），空间主要由 bit-map index
+消耗。</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1csvl3andohv1od31prus551h4l26.png"
+alt="对比" />
+<figcaption aria-hidden="true">对比</figcaption>
+</figure>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A/" rel="tag"><i class="fa fa-tag"></i> 计算广告</a>
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2018/10/31/Code%20Complete%20%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0-%E5%88%9B%E5%BB%BA%E9%AB%98%E8%B4%A8%E9%87%8F%E7%9A%84%E4%BB%A3%E7%A0%81(2)/" rel="prev" title="Code Complete 阅读笔记-创建高质量的代码(2)">
+                  <i class="fa fa-chevron-left"></i> Code Complete 阅读笔记-创建高质量的代码(2)
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2018/11/24/C++%20%E7%BC%96%E8%AF%91%E5%88%9D%E6%AD%A5/" rel="next" title="C++ 编译初步">
+                  C++ 编译初步 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-pen"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

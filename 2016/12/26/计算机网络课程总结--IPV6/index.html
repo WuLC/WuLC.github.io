@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id: "JmI6QmP3fMkLet6B",ck: "JmI6QmP3fMkLet6B"})</script>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wulc.me","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.15.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="本文主要讲述 IPV6 的一些基础知识，包括 IPV6 的术语，地址，一些基本协议以及从IPV4过渡到IPV6的的一些技术等。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计算机网络课程总结--IPV6">
+<meta property="og:url" content="https://wulc.me/2016/12/26/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93--IPV6/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="本文主要讲述 IPV6 的一些基础知识，包括 IPV6 的术语，地址，一些基本协议以及从IPV4过渡到IPV6的的一些技术等。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4sbuojv11kt1t3q1kv16iuglfm.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4scnmhp153gv0dimp1puc1f5c13.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4sd4ro61uug13818dl84g1bcj1g.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4sdak1jc5j5n8l8m16e11ril1t.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4sf3pvl180k10k7b0cm8g1trb2a.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4sgcgl0lgr1l5ha1c11bb1prk2n.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4sihd6cvkg9bpkmgvtf1jfp3h.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4sjdh5h1h1a3rqe3315pp1pje3u.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4sjrjjcs81a9sfmu29avan4b.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4sndbb88pa17l8r291rrhb669.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4snpafi1q9d1jd96ph150gj69m.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4svnst0154e1l8a1dcn1kfb1ras9.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4t02ipn1eu11vja1ht04pcuujm.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4t1koot79sakbke432p9b9.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4t28ah47ooa731b0n13ce76am.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4t3ot285554is49mbi11al913.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4t40s8m1h0t17u11pqfs2idac1g.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4t4g51f1uca1vd8ua31u80pea1t.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4t4igjcvm0umj1ofm1gvc1tch2a.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4t4jpqm1f2o9tnjjjcin107m2n.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4t5h5qo1a7jepqvb674d1t8l34.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4t5t1qn1g6dmthhs71fps19rl3h.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4t7ujoi1s0010q511td1fjir5s9.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4t9h85q1q6t1jeo2ae131517n2m.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4tbvn0s6ut1k9rlri1u4bb1m9.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4td6gl71s651ddh5p5rr1e8cm.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4tdscaq191a6t81vqpn26lm213.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4teq8bo15gdtnoni61hme8701t.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4tjslmh14gp1unf16qg9un4ot2n.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4tkj09h1l3jg7bobd1f5i1mq834.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4tkrng6qbl1flp1r7en9a1h9q4b.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4tkrvd51b29vs517np1jk0b9a4o.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4tks9g21uhsuga1dsh1riecji55.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4tksuvu3n41oc8onl1u01rtp5i.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1b4tl0vca1bva1d5f1t04qer189s6c.png">
+<meta property="article:published_time" content="2016-12-26T13:37:39.000Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.097Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="计算机网络">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/image_1b4sbuojv11kt1t3q1kv16iuglfm.png">
+
+
+<link rel="canonical" href="https://wulc.me/2016/12/26/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93--IPV6/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wulc.me/2016/12/26/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93--IPV6/","path":"2016/12/26/计算机网络课程总结--IPV6/","title":"计算机网络课程总结--IPV6"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>计算机网络课程总结--IPV6 | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">吴良超的学习笔记</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#ipv6%E5%9C%B0%E5%9D%80"><span class="nav-number">1.</span> <span class="nav-text">IPV6地址</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ipv4%E5%9C%B0%E5%9D%80"><span class="nav-number">1.1.</span> <span class="nav-text">IPV4地址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ipv6%E5%9C%B0%E5%9D%80%E8%A1%A8%E7%A4%BA"><span class="nav-number">1.2.</span> <span class="nav-text">IPV6地址表示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E6%92%AD%E5%9C%B0%E5%9D%80"><span class="nav-number">1.3.</span> <span class="nav-text">单播地址</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%93%BE%E8%B7%AF%E6%9C%AC%E5%9C%B0%E5%9C%B0%E5%9D%80"><span class="nav-number">1.3.1.</span> <span class="nav-text">链路本地地址</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%8E%AF%E5%9B%9E%E5%9C%B0%E5%9D%80"><span class="nav-number">1.3.2.</span> <span class="nav-text">环回地址</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%AA%E6%8C%87%E5%AE%9A%E5%9C%B0%E5%9D%80"><span class="nav-number">1.3.3.</span> <span class="nav-text">未指定地址</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AB%99%E7%82%B9%E6%9C%AC%E5%9C%B0%E5%9C%B0%E5%9D%80"><span class="nav-number">1.3.4.</span> <span class="nav-text">站点本地地址</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ipv4%E5%85%BC%E5%AE%B9%E5%9C%B0%E5%9D%80"><span class="nav-number">1.3.5.</span> <span class="nav-text">IPV4兼容地址</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%AF%E8%81%9A%E5%90%88%E5%85%A8%E7%90%83%E5%8D%95%E6%92%AD%E5%9C%B0%E5%9D%80"><span class="nav-number">1.3.6.</span> <span class="nav-text">可聚合全球单播地址</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%84%E6%92%AD%E5%9C%B0%E5%9D%80"><span class="nav-number">1.4.</span> <span class="nav-text">组播地址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%BB%E6%92%AD%E5%9C%B0%E5%9D%80"><span class="nav-number">1.5.</span> <span class="nav-text">任播地址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ipv6%E5%9C%B0%E5%9D%80%E9%85%8D%E7%BD%AE"><span class="nav-number">1.6.</span> <span class="nav-text">IPV6地址配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%97%A0%E7%8A%B6%E6%80%81%E5%9C%B0%E5%9D%80%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AEnd%E5%8D%8F%E8%AE%AE"><span class="nav-number">1.6.1.</span> <span class="nav-text">无状态地址自动配置（ND协议）</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#rs%E5%92%8Cra"><span class="nav-number">1.6.1.1.</span> <span class="nav-text">RS和RA</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ns%E5%92%8Cna"><span class="nav-number">1.6.1.2.</span> <span class="nav-text">NS和NA</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%89%8D%E7%BC%80%E9%87%8D%E6%96%B0%E7%BC%96%E5%88%B6"><span class="nav-number">1.6.1.3.</span> <span class="nav-text">前缀重新编制</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%89%E7%8A%B6%E6%80%81%E5%9C%B0%E5%9D%80%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AEdhcpv6"><span class="nav-number">1.6.2.</span> <span class="nav-text">有状态地址自动配置（DHCPv6）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ipv6%E6%8A%A5%E6%96%87"><span class="nav-number">2.</span> <span class="nav-text">IPV6报文</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E5%A4%B4%E4%B8%8Ev4%E5%AF%B9%E6%AF%94"><span class="nav-number">2.1.</span> <span class="nav-text">基本头(与v4对比)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8B%93%E5%B1%95%E5%A4%B4"><span class="nav-number">2.2.</span> <span class="nav-text">拓展头</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#icmpv6%E5%8D%8F%E8%AE%AE"><span class="nav-number">3.</span> <span class="nav-text">ICMPv6协议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ipv6%E8%B7%AF%E7%94%B1"><span class="nav-number">4.</span> <span class="nav-text">IPV6路由</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#on-link"><span class="nav-number">4.1.</span> <span class="nav-text">on-link</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#off-link"><span class="nav-number">4.2.</span> <span class="nav-text">off-link</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%87%E6%B8%A1%E6%8A%80%E6%9C%AF"><span class="nav-number">5.</span> <span class="nav-text">过渡技术</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8C%E6%A0%88"><span class="nav-number">5.1.</span> <span class="nav-text">双栈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9A%A7%E9%81%93"><span class="nav-number">5.2.</span> <span class="nav-text">隧道</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BF%BB%E8%AF%91%E8%BD%AC%E6%8D%A2"><span class="nav-number">5.3.</span> <span class="nav-text">翻译&#x2F;转换</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">253</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2016/12/26/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93--IPV6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="计算机网络课程总结--IPV6 | 吴良超的学习笔记">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          计算机网络课程总结--IPV6
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2016-12-26 21:37:39" itemprop="dateCreated datePublished" datetime="2016-12-26T21:37:39+08:00">2016-12-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-tags"></i>
+      </span>
+      <span class="post-meta-item-text">标签</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>本文主要讲述 IPV6 的一些基础知识，包括 IPV6
+的术语，地址，一些基本协议以及从IPV4过渡到IPV6的的一些技术等。</p>
+<span id="more"></span>
+<p>IPV6的出现最主要的原因是因为 IPV4 存在着一些不足，主要有</p>
+<ul>
+<li>地址不足</li>
+<li>端到端模式无法实施(NAT)</li>
+<li>Qos和性能问题</li>
+<li>配置复杂</li>
+<li>安全问题</li>
+<li>路由表的膨胀</li>
+<li>移动性支持不足</li>
+</ul>
+<p>其中最主要的就是地址不足。</p>
+<p>在介绍IPV6的具体知识前，首先了解IPV6中的一些基本术语</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1b4sbuojv11kt1t3q1kv16iuglfm.png"
+alt="IPV6基本属于" />
+<figcaption aria-hidden="true">IPV6基本属于</figcaption>
+</figure>
+<p>从上图可知，IPV6 中有以下术语</p>
+<ul>
+<li>领节点：不跨越网段的两台主机</li>
+<li>局域网段：交换机某个端口下的网络</li>
+<li>链路：路由器某个端口下的网络</li>
+<li>子网(site)：一个机构管辖的所有网络（不同于IPV4中的子网）</li>
+</ul>
+<h2 id="ipv6地址">IPV6地址</h2>
+<h3 id="ipv4地址">IPV4地址</h3>
+<p>讲述IPV6地址前，首先回顾一下IPV4地址，IPV4的地址长度为32位，通过点分十进制表示，点分十进制的规则如下</p>
+<ul>
+<li>将32位IP地址分为4个8位组</li>
+<li>每个8位组之间用圆点 “.” 分隔</li>
+<li>每个8位组转化为对应的十进制数</li>
+</ul>
+<p>每个地址被划分为网路地址和主机地址两部分。地址可分为ABCD四类，每一类的地址范围如下图所示</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1b4scnmhp153gv0dimp1puc1f5c13.png"
+alt="IPV4地址" />
+<figcaption aria-hidden="true">IPV4地址</figcaption>
+</figure>
+<h3 id="ipv6地址表示">IPV6地址表示</h3>
+<p>IPV6
+地址长度是<strong>128位</strong>，通过冒分16进制表示，冒分16进制将128位划分为8组，组与组之间通过冒号隔开，每一组16位，用四个16进制数表示，如下所示</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1b4sd4ro61uug13818dl84g1bcj1g.png"
+alt="IPV6 地址" />
+<figcaption aria-hidden="true">IPV6 地址</figcaption>
+</figure>
+<p>但是这样表示出来的地址往往在8各组中有很多组是全0的，为了书写的简便，定义了以下的规则：
+1）忽略前导0，
+2）忽略全0，用双冒号代替，注意一个地址最多只能有一个双冒号</p>
+<p>如下是运用了这两条规则的一个简单例子</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1b4sdak1jc5j5n8l8m16e11ril1t.png"
+alt="IPV6简便书写的规则" />
+<figcaption aria-hidden="true">IPV6简便书写的规则</figcaption>
+</figure>
+<p>除此之外，IPV6中通过<code>/XX</code>表示地址前缀，替代了IPV4中子网掩码的概念。</p>
+<p>IPV6中的地址根据其作用域可以分为单播地址(Unicast
+Address)，组播地址(Multicast Address)和任播地址(Anycast
+Address)三大类。IPV6中没有广播地址的概念。</p>
+<h3 id="单播地址">单播地址</h3>
+<p>IPV6 单播地址用于唯一标识支持 IPV6 的设备上的接口，与 IPV4 类似，源
+IPV6 地址必须是单播地址。在IPV6中，单播地址分为六类</p>
+<ol type="1">
+<li>链路本地地址(Link Local Address)</li>
+<li>环回地址(Loopback Address )</li>
+<li>未指定地址(Unspecified Address)</li>
+<li>站点本地地址(Site Local Address)</li>
+<li>IPV4兼容地址(IPV4 Compatible Address )</li>
+<li>可聚合全球单播地址(Aggregate Global Unicast Address)</li>
+</ol>
+<h4 id="链路本地地址">链路本地地址</h4>
+<p>IPV4也有链路本地地址(169.254.0.0/16),但是在IPV4中，该地址的主要被用于地址自动配置：<strong>当主机不能从DHCP服务器处获得IP地址时，它会使用链路本地地址作为自己的地址</strong>。</p>
+<p>但是在IPV6中，链路本地地址用于与<strong>同一链路</strong>（同一个路由器端口下的网络）中的其他设备通信，而且也只能用于同一链路中，因此，<strong>路由器不会转发具有本地链路源地址或目的地址的数据包</strong>。需要注意的是，<strong>每个支持
+IPV6
+的网络接口均需要有链路本地地址</strong>。有了链路本地地址，就可以与与同一子网中的其他支持
+IPV6
+的设备通信，包括与默认网关（路由器）通信。所以假如只需要在局域网内通信，可以不需要全局单播地址。</p>
+<p>支持 IPV6 的主机在<strong>启动时自动创建</strong> IPV6
+链路本地地址。链路本地地址格式为 <code>FE80::/64</code> ，如下图所示</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1b4sf3pvl180k10k7b0cm8g1trb2a.png"
+alt="链路本地地址" />
+<figcaption aria-hidden="true">链路本地地址</figcaption>
+</figure>
+<p>链路本地地址前64位为<code>FE80:0:0:0</code>，后64位为EUI-64地址，EUI-64地址通过mac地址变换过来，变换规则如下所示</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1b4sgcgl0lgr1l5ha1c11bb1prk2n.png"
+alt="EUI-64地址变换过程" />
+<figcaption aria-hidden="true">EUI-64地址变换过程</figcaption>
+</figure>
+<p>注意上图中前24位mac地址中用 u
+标记的位表示要对原来的位取反。如下为一个简单的例子 <img data-src="https://wulc.me/imgs/image_1b4sihd6cvkg9bpkmgvtf1jfp3h.png"
+alt="本地链路地址的生成" /></p>
+<p>链路本地地址的用途包括：
+1）主机使用本地路由器的链路本地地址作为<strong>默认网关</strong> IPV6
+地址。 2）路由器使用链路本地地址<strong>交换动态路由协议消息</strong>。
+3）转发 IPV6
+数据包时，路由器的路由表使用链路本地地址<strong>确定下一跳</strong>路由器。</p>
+<h4 id="环回地址">环回地址</h4>
+<p>与IPV4的127.0.0.1类似，在IPV6中对应为<code>::1/128</code> 或简单的
+<code>::1</code>。</p>
+<p>通过环回地址启用 ping 命令，从而测试本地主机的 IP
+协议是否正确安装。</p>
+<h4 id="未指定地址">未指定地址</h4>
+<p>未指定地址是全 0 地址，使用压缩格式表示为 <code>::/128</code> 或
+<code>::</code> 。</p>
+<p>未指定地址不能分配给接口，仅可作为 IPV6
+数据包的<strong>源地址</strong>。
+未指定地址的作用在于当设备<strong>尚无永久 IPV6
+地址时</strong>或数据包的源地址与目的地址不相关时，使用未指定地址用作源地址。</p>
+<h4 id="站点本地地址">站点本地地址</h4>
+<p>站点本地地址是IPV6的私网地址，就像IPV4中的私网保留地址（<code>10.0.0.0/8</code>,
+<code>172.16.0.0/12</code>,<code>192.168.0.0/16</code>）一样。站点本地地址的前缀范围为
+<code>FC00::/10</code>。</p>
+<p>最初的 IPV6
+规范定义了用于特定用途的本地站点地址，但是因为站点本地地址规范中有很多不明之处，因此，IETF
+已经弃用本地站点地址，开始倾向于唯一本地地址。</p>
+<h4 id="ipv4兼容地址">IPV4兼容地址</h4>
+<p>兼容IPV4的IPV6地址，用于过渡时期在IPV4网络上建立自动隧道，以传输IPV6数据包。其中高96位设为0，后面的32位的IPV4地址，即地址为<code>::IPV4</code>.</p>
+<h4 id="可聚合全球单播地址">可聚合全球单播地址</h4>
+<p>可聚合全球单播地址是由IANA分配的可在全球路由的<strong>公网IP</strong>，地址由格式前缀
+<code>001</code>
+标识，设计目标是聚合或汇总该地址以便产生有效的路由基础结构</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1b4sjdh5h1h1a3rqe3315pp1pje3u.png"
+alt="可聚合全球单播地址" />
+<figcaption aria-hidden="true">可聚合全球单播地址</figcaption>
+</figure>
+<p>从上图可知，ISP商分配的前缀位为前48位，Site部分则是由ISP下一级的组织机构用于划分子网，最后是64位的接口ID。</p>
+<p>接口ID的产生方式有三种 1. EUI-64(前面讲述过，通过mac生成) 2. 随机生成
+3. 手工配置</p>
+<h3 id="组播地址">组播地址</h3>
+<p>IPV6中没有广播的概念，IPV6中通过组播代替广播。</p>
+<p>IPV6中组播地址前八位均为1，因此组播地址总是以<code>ff</code>开头，具体的组播地址格式如下</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1b4sjrjjcs81a9sfmu29avan4b.png"
+alt="IPV6组播格式" />
+<figcaption aria-hidden="true">IPV6组播格式</figcaption>
+</figure>
+<p>其中</p>
+<ul>
+<li>Flags:用来表示permanent(0000)或transient(0001)组播组</li>
+<li>Scope:表示组播组的范围 &gt;0：预留 1：节点本地范围 2：链路本地范围
+5：站点本地范围</li>
+<li>Group ID:组播组ID</li>
+</ul>
+<p>一些众所周知的组播地址如下图所示</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1b4sndbb88pa17l8r291rrhb669.png"
+alt="众所周知的组播地址" />
+<figcaption aria-hidden="true">众所周知的组播地址</figcaption>
+</figure>
+<p>除此之外还有有一种特殊的组播地址：Solicited-node节点地址（被请求节点组播地址），主要用于重复地址检测和获取邻居节点的链路层地址。</p>
+<p>地址构成为
+<strong>前104位</strong>：<code>FF02::1:FF/104</code>（64个零）
+<strong>后24位</strong>：单播地址的后24位</p>
+<p>凡是单播地址后24位相同的接口会自动加入相应的请求节点组播组，如下为一个实例</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1b4snpafi1q9d1jd96ph150gj69m.png"
+alt="请求组播组地址实例" />
+<figcaption aria-hidden="true">请求组播组地址实例</figcaption>
+</figure>
+<p>关于组播更详细的信息可参考<a
+href="http://wulc.me/2016/12/20/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93--%E7%BB%84%E6%92%AD%E5%9F%BA%E7%A1%80/">这篇文章</a>。</p>
+<h3 id="任播地址">任播地址</h3>
+<p>在IP网络上通过一个任播地址标识<strong>一组提供特定服务的主机</strong>，同时服务访问方并不关心提供服务的具体是哪一台主机(比如<strong>DNS</strong>或者<strong>镜像服务</strong>)，访问该地址的报文可以被IP网络路由到这一组目标中的<strong>任何一台主机</strong>上，一般来说，目标地址为任播地址的数据报将发送给最近的一个服务主机。</p>
+<p>综合上面提到的地址，可以知道一个接口上可以具有的IPV6地址如下所示</p>
+<table>
+<thead>
+<tr class="header">
+<th>地址类型</th>
+<th>具体地址</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>链路本地地址</td>
+<td>FE80::/10</td>
+</tr>
+<tr class="even">
+<td>环回地址</td>
+<td>::1/128</td>
+</tr>
+<tr class="odd">
+<td>所有节点组播地址</td>
+<td>FF01::1,FF02::1</td>
+</tr>
+<tr class="even">
+<td>可聚合全球单播地址</td>
+<td>2000::/3</td>
+</tr>
+<tr class="odd">
+<td>被请求节点组播地址</td>
+<td>FF02::1:FF00:/104</td>
+</tr>
+<tr class="even">
+<td>主机所属组播地址</td>
+<td>FF00::/8</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ipv6地址配置">IPV6地址配置</h3>
+<p>IPV6中地址配置方式有三种 1. 手工配置 2. 无状态地址自动配置（ND协议）
+3. 有状态地址自动配置（DHCPv6）</p>
+<p>手动配置一般不常用，各系统均有自己的配置方式，这里不详细展开。下面主要讨论自动配置的两种方式。</p>
+<h4 id="无状态地址自动配置nd协议">无状态地址自动配置（ND协议）</h4>
+<p>无状态地址自动配置指的是无须任何配置即可和外界通信，达到了真正的即插即用。
+无状态地址自动配置通过<strong>ND(Neighbor
+Discovery,邻居发现)协议</strong>实现，主要包括如何自动获取地址以及实现重复地址检测(DAD)</p>
+<h5 id="rs和ra"><strong>RS和RA</strong></h5>
+<p>ND协议中有两种重要的消息：<strong>RS和RA</strong>。其中，RS(Router
+Solicitation)由主机发出，作用是促使路由器发送RA(Router
+advertisment)消息,RA消息中包含了路由器前缀等信息，主机会利用路由器的前缀加上自己的EUI-64地址作为自己的IPV6地址。这两种消息都是以<strong>ICMPv6报文</strong>的形式出现，也是5种ND协议消息中的两种。具体过程如下图所示</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1b4svnst0154e1l8a1dcn1kfb1ras9.png"
+alt="RS和RA消息" />
+<figcaption aria-hidden="true">RS和RA消息</figcaption>
+</figure>
+<p>注意RS消息的目的地址是<code>FF02::2</code>,也就是主机先整个链路的路由器请求RA消息,RA消息的目的地址是<code>FF01::1</code>，也就是路由器向整个链路的主机发送RS消息。</p>
+<p>因此为了避免RS泛滥，节点启动时<strong>最多只能发送3个RS</strong>，而路由器也会主动周期性地发送RA（默认值200秒）。主机在收到路由器的RA之后，自动设置默认路由器，建立默认路由器列表、前缀列表及其它参数。</p>
+<p>需要注意的是，<strong>自动配置的IPV6地址在系统中有一个生存周期</strong>，跟优先时间和有效时间有关，对应着以下4种状态</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1b4t02ipn1eu11vja1ht04pcuujm.png"
+alt="IPV6地址生存时间" />
+<figcaption aria-hidden="true">IPV6地址生存时间</figcaption>
+</figure>
+<p>在使用的时候需要遵循以下规则</p>
+<p>1.在<code>Preferred Lifetime</code>周期内的前缀生成的地址，<strong>任何上层应用都可不受限制地使用</strong>
+2.在超过 <code>Preferred Lifetime</code>
+但未超过<code>Valid Lifetime</code>周期内的前缀生成的地址，正在使用该地址的上层应用可继续使用，但任何新的上层应用不能使用这个地址
+3.在超过<code>Valid Lifetime</code>周期内的前缀构造的地址，任何上层应用都不能使用该地址
+<strong>一个链路本地地址的优先时间和有效时间是无限的，即永不超时！</strong></p>
+<h5 id="ns和na"><strong>NS和NA</strong></h5>
+<p>在自动配置地址后需要检测该地址在链路上是否与其他地址重复(链路上的主机的mac地址可能重复，从而EUI-64重复)，该过程称为DAD(Duplicate
+Address
+Detection),<strong>所有的IPV6单播地址，不管是自动配置还是手动配置，都必须要通过DAD</strong>。</p>
+<p>结合上面地址的生存周期，一个地址在<strong>分配给一个接口之后且通过重复地址检测之前</strong>称为tentative地址，即试验地址。</p>
+<p>DAD机制是ND协议的一部分，因此通过ND协议中的<code>NS/NA</code>两种消息实现。DAD的基本流程:
+1. 节点组播发送NS(Neighbor Solicitation)消息 2. 如果收到NA(Neighbor
+Advertisment)消息，就证明地址重复 3.
+如果尝试若干次发送请求，都没有收到邻居通告，即可启用该地址</p>
+<p>过程如下所示</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1b4t1koot79sakbke432p9b9.png"
+alt="NS和NA" />
+<figcaption aria-hidden="true">NS和NA</figcaption>
+</figure>
+<p>注意上面的<strong>NS消息的目的地址是被请求节点的组播地址</strong>，就是单播地址最后24位相同的主机都会加入的一个组播。而NA消息的目的地址是<code>FF02::1</code>,原因是NS消息中的源地址是未指定地址，发出NA的主机并不知道NS是由那一台主机发出的。</p>
+<p>当其他主机收到NS后，会有以下两种情形
+1）NS接收者如果发现其中的目标地址对它而言是<strong>tentative</strong>的，则<strong>主动放弃使用</strong>这个地址；
+2）NS接收者如果发现其中的目标地址是一个它<strong>正在使用</strong>的地址，则<strong>发送NA</strong>消息，请求发起者
+将放弃使用这个试验地址</p>
+<p>结合上面的RS和RA，4中ND消息交互入下</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1b4t28ah47ooa731b0n13ce76am.png"
+alt="四种ND消息交互" />
+<figcaption aria-hidden="true">四种ND消息交互</figcaption>
+</figure>
+<h5 id="前缀重新编制">前缀重新编制</h5>
+<p>前缀重新编制允许网络从以前的前缀平稳地过渡到新的前缀，提供对用户透明的网络重新编址能力。</p>
+<p>在前缀重新编址时，路由器会继续通告<strong>当前前缀</strong>，只是<strong>优先时间和有效时间被减小到接近0</strong>，同时，路由器开始通告新的前缀，这样，链路中<strong>至少有两个前缀共存</strong>。</p>
+<p>节点收到优先时间和有效时间被减小到接近0的RA时，会发现当前前缀的生命周期较短，停止使用；同时开始用新的前缀配置接口，并进行DAD，通过后，获得新的地址使用。</p>
+<p><strong>在转换期间，节点有两个单播地址使用</strong>，旧的地址基于旧的前缀，用以维持以前已经建立的连接；新的地址，基于新的前缀，用来建立新的连接。当旧的前缀的有效时间递减为0时，旧的前缀完全废止，此时，RA中只包含新的前缀</p>
+<h4 id="有状态地址自动配置dhcpv6">有状态地址自动配置（DHCPv6）</h4>
+<p>有状态的自动配置依赖于DHCPv6实现，DHCPv6是DHCP的升级版本。</p>
+<p>但是既然有了无状态自动配置，为什么还需要DHCPv6呢？主要有以下几个原因</p>
+<ul>
+<li>需要动态指定DNS服务时</li>
+<li>当不希望MAC地址成为IPV6地址的一部分时(安全性）</li>
+<li>当需要良好的扩展性时</li>
+</ul>
+<p>在讲述DHCPv6前，先介绍一下原始的DHCP协议</p>
+<p>DHCP的过程非常自然，主要包括下面三步
+1）DHCP客户发送<strong>广播请求</strong>
+2）DHCP服务器<strong>单播应答</strong>
+3）DHCP客户接收应答，获取IP等信息</p>
+<p>具体过程使用四种package来实现这个过程
+1）DHCP客户机在本地发送<code>DHCP DISCOVER</code>广播包；
+2）DHCP服务器单播发送携带租约信息的<code>DHCP OFFER</code>包；
+3）DHCP客户机确认租约信息并发送<code>DHCP REQUEST</code>广播包；
+4）DHCP服务器单播送回<code>DHCP ACK</code>確认完成IP地址租用</p>
+<p>DHCP有三种地址分配机制：
+1）自动分配方式－由DHCP分配一个<strong>永久</strong>的IP
+2）手动分配方式－网络管理员<strong>预先安排分配</strong>，由DHCP转达
+3）动态分配方式－由DHCP分配具有<strong>租约期</strong>的IP</p>
+<p>相比于DHCP，DHCPv6有了以下的改变 1.
+使用<strong>UDP</strong>来交换报文，端口546/547（V4：67/68） 2.
+使用本地链路地址或其它机制获得的地址来发送和接收DHCPv6报文 3.
+没有了广播，客户机只需发送给保留的链路范围组播地址（FF02::1:2,all dhcp
+relay agents and servers ） 4.
+DHCP中使用的四种package在DHCPv6中依次变为<code>DHCP Solicit</code>,
+<code>DHCP Advertis</code>, <code>DHCP Request</code>,
+<code>DHCP Relay</code>.</p>
+<p>其过程如下所示： <img data-src="https://wulc.me/imgs/image_1b4t3ot285554is49mbi11al913.png"
+alt="DHCPv6" /></p>
+<p>当客户端已经记录了地址和其他配置信息，只需要DNS server、NTP
+server等信息的时候，可以通过DHCPv6快速配置来快速获得所需地址。这个过程只需要两个消息的交互，过程如下所示：
+<img data-src="https://wulc.me/imgs/image_1b4t40s8m1h0t17u11pqfs2idac1g.png"
+alt="DHCPv6快速配置" /></p>
+<h2 id="ipv6报文">IPV6报文</h2>
+<p>IPV6的报文主要由三部分组成 1.
+基本头（固定40字节，v4不固定，为20~60字节范围内） 2.
+拓展头（可选，0~n字节，v4中没有） 3. 有效负载（即上层传输数据）</p>
+<h3 id="基本头与v4对比">基本头(与v4对比)</h3>
+<p>v4与v6的报文对比如下所示</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1b4t4g51f1uca1vd8ua31u80pea1t.png"
+alt="v4与v6报文对比" />
+<figcaption aria-hidden="true">v4与v6报文对比</figcaption>
+</figure>
+<p>且v4的报文的具体字段如下所示</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1b4t4igjcvm0umj1ofm1gvc1tch2a.png"
+alt="v4报文具体字段" />
+<figcaption aria-hidden="true">v4报文具体字段</figcaption>
+</figure>
+<p>v6的报文的具体字段如下所示 <img data-src="https://wulc.me/imgs/image_1b4t4jpqm1f2o9tnjjjcin107m2n.png"
+alt="v6报文具体字段" /></p>
+<p>v6在v4字段的基础上有删除，也有修正的项，其中</p>
+<p><strong>修正的项</strong>有</p>
+<ul>
+<li>服务类型→业务等级</li>
+<li>TTL→跳数限制</li>
+<li>数据总长度→净荷长度(因为头部固定长度为40个字节)</li>
+<li>地址32位→128位</li>
+<li>协议→下一个头(next header,也是指示具体的协议的，不要被名称误导)</li>
+</ul>
+<p><strong>删除的项</strong>有</p>
+<ul>
+<li>报头长</li>
+<li>标志和分段偏移量(与分片相关)</li>
+<li>报头校验和</li>
+</ul>
+<p><strong>增加的项</strong>为</p>
+<ul>
+<li>流标记</li>
+</ul>
+<p>下图是一个抓取到的ICMPv6的具体package <img data-src="https://wulc.me/imgs/image_1b4t5h5qo1a7jepqvb674d1t8l34.png"
+alt="ICMPv6 package" /></p>
+<h3 id="拓展头">拓展头</h3>
+<p>除此之外，IPV6将一些IP层的<strong>可选功能</strong>实现在上层封装和IPV6基本头部之后的扩展头部中，主要的扩展报头有：</p>
+<ul>
+<li>逐跳选项</li>
+<li>路由报头</li>
+<li>分段报头</li>
+<li>认证报头</li>
+<li>封装安全有效载荷报头</li>
+<li>目标选项</li>
+</ul>
+<p>每一种扩展报头其实也有自己特定的协议号，例如：路由报头为43，AH报头为51。上图中抓到的ICMPv6包的协议号为58(0x3a转为10进制)，其他一些常见的协议号如下所示</p>
+<table>
+<thead>
+<tr class="header">
+<th>协议号</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>逐跳扩展头</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>ICMPv4</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td>TCP</td>
+</tr>
+<tr class="even">
+<td>17</td>
+<td>UDP</td>
+</tr>
+<tr class="odd">
+<td>43</td>
+<td>路由扩展头(使数据分组经过指定的中间节点)</td>
+</tr>
+<tr class="even">
+<td>58</td>
+<td>ICMPv6</td>
+</tr>
+<tr class="odd">
+<td>89</td>
+<td>OSPF</td>
+</tr>
+</tbody>
+</table>
+<p>每一个基本报头和扩展报头的<code>NextHeader</code>字段标识后面紧接的内容，如下图所示</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1b4t5t1qn1g6dmthhs71fps19rl3h.png"
+alt="拓展报头" />
+<figcaption aria-hidden="true">拓展报头</figcaption>
+</figure>
+<h2 id="icmpv6协议">ICMPv6协议</h2>
+<p>ICMPv6协议与回声请求、抑制消息、重定向、参数错误等功能相关，相关的命令为<code>ping</code>、<code>traceroute</code></p>
+<p>ICMP报文格式为<code>Type+Code+CheckSum</code>,其报文的格式以及在整个分组的位置如下所示</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1b4t7ujoi1s0010q511td1fjir5s9.png"
+alt="ICMPv6分组格式和位置" />
+<figcaption aria-hidden="true">ICMPv6分组格式和位置</figcaption>
+</figure>
+<p>ICMPv6报文类型可分为两种
+(1)<strong>差错报文</strong>(Type=0~127)：通告IPV6分组传输中出现的错误。如目标不可达、数据包超长、超时、参数问题
+(2)<strong>信息报文</strong>(Type=128~255)：提供诊断和附加的主机功能。如回声请求(Type=128)和应答(Type=129)，ND协议等</p>
+<p>ICMPv6的三个实际应用为</p>
+<ul>
+<li>ping</li>
+<li>tracert(HopLim与v4中的TTL意思相同) &gt;第一个请求：HopLim=1
+第一跳路由器收到，发送超时(HopLim=0)消息 得到第一跳路由器的信息
+第二个请求：HopLim=2 第二跳路由器收到，发送超时消息
+得到第二跳路由器的信息
+注意：HopLim的最大值为30，且为了让每一个请求都返回超时信息，通常设置ICMPv6报文的端口不可达。</li>
+<li>PMTU发现：通过试探的方式发现路径允许的最大的MTU,如下为一个简单的过程。</li>
+</ul>
+<p>1)源机向目的机发送MTU=1500字节的IPV6数据包
+2)路由器B向源发送超长消息，指定MTU=1400字节
+3)源机向目的机发送MTU=1400字节的IPV6数据包
+4)路由器C向源发送超长消息，指定MTU=1300字节
+5)源机向目的机发送MTU=1300字节的IPV6数据包
+6)此后，该路径的MTU都使用1300字节</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1b4t9h85q1q6t1jeo2ae131517n2m.png"
+alt="PMTU发现" />
+<figcaption aria-hidden="true">PMTU发现</figcaption>
+</figure>
+<h2 id="ipv6路由">IPV6路由</h2>
+<p>在讲述IPV6的路由之前先回顾IPV4的路由，IPV4的路由可以分为两大类：同一网络的路由和不同网络的路由。</p>
+<p>同一网络间主机的通信主要依赖于ARP协议，根据目标IP查询其对应的mac地址，然后两者便可通信，中间可以不经过路由器。</p>
+<p>不同网络间的通信则需要借助路由器,其过程如下所示 <img data-src="https://wulc.me/imgs/image_1b4tbvn0s6ut1k9rlri1u4bb1m9.png"
+alt="IPV4路由过程" /></p>
+<p>而对于 IPV6 的路由也可分为两种情况：
+<strong>on-link</strong>：源机和目的机在<strong>同一链路</strong>的数据转发
+<strong>off-link</strong>：源机和目的机<strong>不在同链路</strong>的数据转发</p>
+<p>通过地址前缀判断源和目的是否在同一链路。</p>
+<h3 id="on-link">on-link</h3>
+<p>处于同一链路的两条主机要通信就要知道对方的mac地址，在IPV4中通过ARP实现,ARP是通过广播实现的，但是IPV6中并没有广播的概念。在IPV6中，通过ND协议来完成这个地址解析的工作。</p>
+<p>ND协议在我们介绍无状态地址自动配置的时候已经介绍过，但是除了无状态地址自动配置外，ND协议还被用于<strong>地址解析和路由重定向</strong>。</p>
+<p>ND协议共有五种报文，五种报文都是以<strong>ICMPv6报文</strong>的形式出现，如下图所示</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1b4td6gl71s651ddh5p5rr1e8cm.png"
+alt="NS五种报文" />
+<figcaption aria-hidden="true">NS五种报文</figcaption>
+</figure>
+<p>其地址解析过程如下：</p>
+<p>1）首先查找邻居缓存表（IPV6 nc），没有则进行地址解析
+（类似于查找ARP表）
+2）源主机发送组播<strong>NS报文</strong>，该报文的目的地址为<strong>目标IPV6地址所对应的被请求节点组播地址</strong>（Solicited-node），在其中也包含了自己的链路层地址
+3）目标主机收到NS报文后，就会了解到发送主机的IPV6地址和相应链路层地址；同时由于目标主机正在使用报文内的目标地址，所以会目标主机向源主机<strong>单播</strong>发一个邻接点公告报文（NA），该报文中包含自己的链路层地址。</p>
+<p><strong>这里需要注意的是最后的NA报文是单播的，而在无状态地址自动配置中NA报文是组播，原因在于无状态地址自动配置的时候发送NS的主机还没有有效的地址，而这里的主机已经有了，只是要找到另外一台主机的mac地址而已。</strong></p>
+<p>下图便是上面提的地址解析过程 <img data-src="https://wulc.me/imgs/image_1b4tdscaq191a6t81vqpn26lm213.png"
+alt="IPV6地址解析" /></p>
+<h3 id="off-link">off-link</h3>
+<p>当源和目的不在同一链路的时候，需要考虑两个问题</p>
+<p>1.主机发给哪个路由器？（主机-路由器）
+2.路由器发给哪个路由器？（路由器-路由器）</p>
+<p>对于第一个问题，支持IPV6的主机有一个数据结构<code>DestinationCache</code>，要发送数据到某个目的地址的时候，首先查询这个数据结构，如果查不到，就查路由表，让后将查到的信息记录在这个数据结构中。</p>
+<p>如果查询到的目的地址是on-link的，将目的地址本身加入DC表的nexthop域；如果目的地址是off-link的，将路由表中的下一跳加入DC的nexthop域。</p>
+<p>在这个过程中，会涉及到重定向的问题，重定向的作用其实就是给主机发送更好的路由。下图为一个简单的例子</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1b4teq8bo15gdtnoni61hme8701t.png"
+alt="路由重定向" />
+<figcaption aria-hidden="true">路由重定向</figcaption>
+</figure>
+<p>当 PC1 要与 PC2 通信时，首先会先向 RT1
+查询，RT1查询后发现RT2可以直接提供这个路由，于是RT1告诉PC1以后如果要与PC2通信直接找RT2就好了，效率会更高，这就是路由重定向。</p>
+<p>实际中，RT1发现<strong>报文的出口和入口相同或者源地址跟报文下一跳同属一个网段</strong>，则发出重定向报文，重定向报文就是ND报文中的最后一种报文(其他四种是RS，RA，NS，NA)</p>
+<p>对于问题2，也就是路由器与路由器之间的传输，就需要依靠路由表了。路由表中的路由根据是否需要人工配置而分为静态路由和动态路由，其中静态路由需要人工配置，动态路由则通过协议学习，在IPV6中的动态路由协议主要有<code>RIPng</code>，<code>OSPFv3</code>和<code>BGP4+</code>。</p>
+<p><strong>RIPng</strong>保留了RIP的主要特点</p>
+<ul>
+<li>距离矢量采用跳数，16跳为不可达</li>
+<li>工作机制不变；</li>
+<li>仍然采用水平分割、毒性逆转、触发更新等技术减少路由环的发生</li>
+</ul>
+<p>主要改变的地方：</p>
+<ul>
+<li>组播代替广播：主机不再受骚扰</li>
+<li>下一跳信息由单独的<code>R Table Entry</code>表示 （RTE）</li>
+<li>安全考虑：不单独设置验证，由IPV6本身保证</li>
+<li>只用于IP网络：不再支持其他网络协议</li>
+</ul>
+<p>同样，<strong>OSPFv3</strong>保留了OSPFv2的主要工作机理</p>
+<ul>
+<li>采用链路状态数据库</li>
+<li>与邻接路由器同步</li>
+<li>DR选举、SPF算法、area区域支持</li>
+</ul>
+<p>主要改变的地方</p>
+<ul>
+<li>地址信息从LSA中移除；（LSU载荷中包含地址信息）</li>
+<li>RouterID仍然采用32位，但不再跟地址有关</li>
+<li>重新定义了LSA（如增加了link-LSA、Intra-Area-Prefix-LAS等，即LSDB的内容发生了变化）</li>
+<li>不再支持认证</li>
+</ul>
+<h2 id="过渡技术">过渡技术</h2>
+<p>从IPV4到IPV6的过渡被认为要经过三个阶段</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1b4tjslmh14gp1unf16qg9un4ot2n.png"
+alt="v4到v6的过渡" />
+<figcaption aria-hidden="true">v4到v6的过渡</figcaption>
+</figure>
+<p>过渡的技术共分为三类</p>
+<ul>
+<li>双栈：网络设备上运行IPV6/IPV4双协议栈</li>
+<li>隧道：IPV6网络上承载IPV4分组，或相反</li>
+<li>翻译/转换：地址、分组、端口的转换</li>
+</ul>
+<h3 id="双栈">双栈</h3>
+<p>一般基础设施设备，如路由器、交换机、公用服务器等，需要运行和支持双栈，非基础设置则可运行单协议或双协议。</p>
+<h3 id="隧道">隧道</h3>
+<p>根据创建方式可以大致分为两类 1）<strong>手动隧道</strong>：事前配置
+2）<strong>自动隧道</strong>：创建和拆除都依赖当前网络条件</p>
+<p>根据实际的网络环境又可以分为两类隧道</p>
+<ul>
+<li>IPV6分组通过IPV4网络的隧道</li>
+<li>IPV4分组通过IPV6网络的隧道</li>
+</ul>
+<p>IPV6分组通过IPV4网络时，IPV6分组作为数据部分搭载到IPV4分组中，在这种情形下，IPV4分组头部的<code>protocol=41</code>，如下图所示。</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1b4tkj09h1l3jg7bobd1f5i1mq834.png"
+alt="v6 over v4" />
+<figcaption aria-hidden="true">v6 over v4</figcaption>
+</figure>
+<p>根据IPV4网络位置的不同，在不同的位置建立</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1b4tkrng6qbl1flp1r7en9a1h9q4b.png"
+alt="隧道1" />
+<figcaption aria-hidden="true">隧道1</figcaption>
+</figure>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1b4tkrvd51b29vs517np1jk0b9a4o.png"
+alt="隧道2" />
+<figcaption aria-hidden="true">隧道2</figcaption>
+</figure>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1b4tks9g21uhsuga1dsh1riecji55.png"
+alt="隧道3" />
+<figcaption aria-hidden="true">隧道3</figcaption>
+</figure>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1b4tksuvu3n41oc8onl1u01rtp5i.png"
+alt="隧道4" />
+<figcaption aria-hidden="true">隧道4</figcaption>
+</figure>
+<p>IPV4分组通过IPV6网络的情况跟上面一样。</p>
+<h3 id="翻译转换">翻译/转换</h3>
+<p>翻译/转换就是从IPV4转换到IPV6，或反过来，不仅发生在网络层，还有传输层和应用层。如下图所示是一个翻译/转换的例子。</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1b4tl0vca1bva1d5f1t04qer189s6c.png"
+alt="翻译/转换" />
+<figcaption aria-hidden="true">翻译/转换</figcaption>
+</figure>
+<p>注意：<strong>当双栈和隧道都无法使用的时候，才使用翻译/转换技术</strong>；适用纯IPV4节点和纯IPV6节点间的通信。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="tag"><i class="fa fa-tag"></i> 计算机网络</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2016/12/25/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93--BGP%E5%8D%8F%E8%AE%AE/" rel="prev" title="计算机网络课程总结--BGP协议">
+                  <i class="fa fa-chevron-left"></i> 计算机网络课程总结--BGP协议
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2016/12/27/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93--RIP%E4%B8%8EOSPF/" rel="next" title="计算机网络课程总结--RIP与OSPF">
+                  计算机网络课程总结--RIP与OSPF <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-pen"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

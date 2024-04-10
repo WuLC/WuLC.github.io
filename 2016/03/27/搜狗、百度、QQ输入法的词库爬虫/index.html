@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id: "JmI6QmP3fMkLet6B",ck: "JmI6QmP3fMkLet6B"})</script>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wulc.me","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.15.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="本文主要讲述了通过 python 实现的用于下载搜狗、百度、QQ三个输入法的词库的爬虫的实现原理。主要利用了python自带的urllib2、Queue、re、threading模块，并分别通过单线程和多线程实现。最后会给出完整的源码地址。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="搜狗、百度、QQ输入法的词库爬虫">
+<meta property="og:url" content="https://wulc.me/2016/03/27/%E6%90%9C%E7%8B%97%E3%80%81%E7%99%BE%E5%BA%A6%E3%80%81QQ%E8%BE%93%E5%85%A5%E6%B3%95%E7%9A%84%E8%AF%8D%E5%BA%93%E7%88%AC%E8%99%AB/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="本文主要讲述了通过 python 实现的用于下载搜狗、百度、QQ三个输入法的词库的爬虫的实现原理。主要利用了python自带的urllib2、Queue、re、threading模块，并分别通过单线程和多线程实现。最后会给出完整的源码地址。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2016-03-27T03:08:18.000Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.160Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="爬虫">
+<meta property="article:tag" content="广度优先搜索">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://wulc.me/2016/03/27/%E6%90%9C%E7%8B%97%E3%80%81%E7%99%BE%E5%BA%A6%E3%80%81QQ%E8%BE%93%E5%85%A5%E6%B3%95%E7%9A%84%E8%AF%8D%E5%BA%93%E7%88%AC%E8%99%AB/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wulc.me/2016/03/27/%E6%90%9C%E7%8B%97%E3%80%81%E7%99%BE%E5%BA%A6%E3%80%81QQ%E8%BE%93%E5%85%A5%E6%B3%95%E7%9A%84%E8%AF%8D%E5%BA%93%E7%88%AC%E8%99%AB/","path":"2016/03/27/搜狗、百度、QQ输入法的词库爬虫/","title":"搜狗、百度、QQ输入法的词库爬虫"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>搜狗、百度、QQ输入法的词库爬虫 | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">吴良超的学习笔记</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8E%9F%E7%90%86%E5%8F%8A%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="nav-number">1.</span> <span class="nav-text">原理及注意事项</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%8F%90%E5%8F%96%E8%AF%8D%E5%BA%93%E5%88%86%E7%B1%BB"><span class="nav-number">1.1.</span> <span class="nav-text">正则表达式提取词库分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bfs%E9%81%8D%E5%8E%86%E6%9F%90%E4%B8%80%E5%88%86%E7%B1%BB%E7%9A%84%E6%89%80%E6%9C%89%E9%A1%B5%E9%9D%A2"><span class="nav-number">1.2.</span> <span class="nav-text">BFS遍历某一分类的所有页面</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%95%E7%BA%BF%E7%A8%8B%E4%B8%8B%E8%BD%BD"><span class="nav-number">2.</span> <span class="nav-text">单线程下载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B8%8B%E8%BD%BD"><span class="nav-number">3.</span> <span class="nav-text">多线程下载</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">253</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2016/03/27/%E6%90%9C%E7%8B%97%E3%80%81%E7%99%BE%E5%BA%A6%E3%80%81QQ%E8%BE%93%E5%85%A5%E6%B3%95%E7%9A%84%E8%AF%8D%E5%BA%93%E7%88%AC%E8%99%AB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="搜狗、百度、QQ输入法的词库爬虫 | 吴良超的学习笔记">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          搜狗、百度、QQ输入法的词库爬虫
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2016-03-27 11:08:18" itemprop="dateCreated datePublished" datetime="2016-03-27T11:08:18+08:00">2016-03-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-tags"></i>
+      </span>
+      <span class="post-meta-item-text">标签</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E7%88%AC%E8%99%AB/" itemprop="url" rel="index"><span itemprop="name">爬虫</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E5%B9%BF%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/" itemprop="url" rel="index"><span itemprop="name">广度优先搜索</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>本文主要讲述了通过 python
+实现的用于下载搜狗、百度、QQ三个输入法的词库的爬虫的实现原理。主要利用了python自带的<code>urllib2</code>、<code>Queue</code>、<code>re</code>、<code>threading</code>模块，并分别通过单线程和多线程实现。最后会给出完整的源码地址。</p>
+<span id="more"></span>
+<h2 id="原理及注意事项">原理及注意事项</h2>
+<p>爬取每个输入法的实现原理都一样，步骤如下：</p>
+<p>（1）获取输入法词库的分类 （2）下载各个分类并按分类在本地存储</p>
+<p>其中（1）实现的关键点是正则表达式提取网页中的词库分类，（2）实现的关键点是通过广度优先搜索（bfs）来遍历某一类别的所有页面。</p>
+<h3 id="正则表达式提取词库分类">正则表达式提取词库分类</h3>
+<p>步骤（1）通过解释词库分类的网页源码来获取具体分类（以搜狗输入法为例，词库分类的网页为http://pinyin.sogou.com/dict/
+)。先人工观察网页源码的结构，一般同一级的分类的在源码中的
+<code>href</code>(超链接)的结构都是一样的，仅仅是id或名字不同，这就可以<strong>通过正则表达式来提取网页中的分类，并用嵌套的字典来存储多级分类</strong>。</p>
+<h3 id="bfs遍历某一分类的所有页面">BFS遍历某一分类的所有页面</h3>
+<p>步骤（1）提供了词库的分类，步骤（2）需要考虑的就是怎么下载某一类词库。因为词库文件的数量较多，所以<strong>即使是某一类的词库往往也会分多个页面来展示（常见的如通过点击上一页、下一页跳转），所以要完整下载这一类的词库必须遍历这一类词库的所有页面。</strong></p>
+<p>这里采用BFS来实现，实现步骤如下：
+1）先通过正则表达式分析当前访问页面的源码，获取<strong>当前页面可以跳转到的其他页面的url</strong>，然后将这些URL放入到<strong>队列</strong>中作为待访问的URL
+2）通过正则表达式获取分析当前访问的页面的源码，获取可以下载的词库文件的url存入一个临时的列表（List）中，并开始逐一下载各个文件
+3）将当前页面url放入到一个集合（set）中，标记为已访问的url，防止下一次重复访问
+4）从队列中取出下一个url，到步骤3）的集合中检查url是否被访问，如果被访问过则继续取下一个，否则将这个url设为当前url并回到步骤1）</p>
+<p>按照上面的步骤一直循环执行直到队列为空，这样便可下载了某一类的词库。如法炮制，便可下载所有类的词库了。</p>
+<p>这里需要注意的是，在下载词库文件的时候有可能会出现<strong>防盗链</strong>的问题。简单来说就是<strong>下载词库文件的http请求头中的来源（Referer）不属于本站的就拒绝下载，返回403
+forbidden。</strong>这种设计就是为了防止爬虫的整站下载，在爬取过程中发现搜狗输入法中有防盗链，而百度、QQ输入法则没有。解决方法也很简单，就是在<strong>下载文件是构造一个http请求头（headers），设置里面的<code>Refererr</code>为该站的任一url即可。</strong></p>
+<h2 id="单线程下载">单线程下载</h2>
+<p>单线程下载的注意事项上面基本提到了，下面贴出QQ输入法单线程下载的关键代码，注意这个代码直接执行会报错，可执行的完整代码见文末。
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下载某一类别的关键代码，具体代码见文末链接</span></span><br><span class="line">    queue =Queue.Queue()  <span class="comment"># 存放待访问url</span></span><br><span class="line">    visited = <span class="built_in">set</span>()       <span class="comment"># 已经访问过的url</span></span><br><span class="line">    downloaded = <span class="built_in">set</span>()    <span class="comment"># 已经下载过的文件</span></span><br><span class="line">    firstURL = <span class="string">&#x27;&#x27;</span>         <span class="comment"># url入口</span></span><br><span class="line">    queue.put(firstURL)</span><br><span class="line">    <span class="comment"># bfs遍历直至队列为空</span></span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">not</span> queue.empty():</span><br><span class="line">        currentURL = queue.get()</span><br><span class="line">        <span class="keyword">if</span> currentURL <span class="keyword">in</span> visited:</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            visited.add(currentURL)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            response = urllib2.urlopen(currentURL)</span><br><span class="line">        <span class="keyword">except</span> :</span><br><span class="line">            </span><br><span class="line">        <span class="comment"># 找到链接到其他页面的连接</span></span><br><span class="line">        data = response.read()</span><br><span class="line">        pagePattern = re.<span class="built_in">compile</span>(<span class="string">&#x27;&amp;page=(\d+)&quot;&#x27;</span>)</span><br><span class="line">        pageList = re.findall(pagePattern,data)</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> pageList:</span><br><span class="line">            pageURL = smallCateURL+<span class="string">&#x27;&amp;page=&#x27;</span>+i</span><br><span class="line">            queue.put(pageURL)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 下载当前页面存在的文件</span></span><br><span class="line">        filePattern = re.<span class="built_in">compile</span>(<span class="string">&#x27;&lt;a href=&quot;/dict_detail\?dict_id=(\d+)&quot;&gt;(.*?)&lt;/a&gt;&#x27;</span>)</span><br><span class="line">        fileList = re.findall(filePattern,data)</span><br><span class="line">        <span class="keyword">for</span> <span class="built_in">id</span>, name <span class="keyword">in</span> fileList:</span><br><span class="line">             fileURL = <span class="string">&#x27;http://dict.qq.pinyin.cn/download?dict_id=&#x27;</span>+<span class="built_in">id</span></span><br><span class="line">             filePath = cateDir.decode(<span class="string">&#x27;utf8&#x27;</span>)+<span class="string">&#x27;/&#x27;</span>+name.decode(<span class="string">&#x27;gbk&#x27;</span>)+<span class="string">&#x27;.qpyd&#x27;</span></span><br><span class="line">             <span class="comment"># 文件已存在则不下载</span></span><br><span class="line">             <span class="keyword">if</span> fileURL <span class="keyword">in</span> downloaded:</span><br><span class="line">                 <span class="keyword">continue</span></span><br><span class="line">             <span class="keyword">else</span>:</span><br><span class="line">                 downloaded.add(fileURL)</span><br><span class="line">                 downloadSingleFile(fileURL) <span class="comment">#下载这个文件</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="多线程下载">多线程下载</h2>
+<p>单线程虽然能够下载词库文件，但是消耗的时间过长，这时候可通过多线程来下载。关于python多线程实现以及python多线程是否能够提高效率可以参考<a
+href="http://wulc.me/2016/03/26/python%E4%B8%AD%E7%9A%84%E5%A4%9A%E7%BA%BF%E7%A8%8B/">这篇文章</a>。<strong>因为爬虫属于IO密集型的任务，所以可以通过多线程来提高下载效率。</strong>实测多线程开到10个的时候，下载速度比原来快了7倍。</p>
+<p>多线程下载实现的思路与单线程的类似，只是在<strong>下载某一类别的词库时采用多线程完成</strong>，这就需要注意下面几个方面：</p>
+<ul>
+<li>线程完成下载的时间不一样，<strong>早完成的线程需要等到最后一个线程下载完成才能一起开始下一个类别的下载</strong>,可通过python的Queue模块中的<code>join()</code>方法和<code>task_done()</code>方法实现</li>
+<li>需要<strong>用线程锁保护可能会被修改的变量</strong>，采用python的队列数据结构（Queue）则不用，因为python的Queue模块已经实现了这个锁的功能，具体参见<a
+target="_blank" rel="noopener" href="https://docs.python.org/2/library/queue.html">Queue — A
+synchronized queue class</a></li>
+</ul>
+<p>关于队列模块中的<code>join()</code>方法和<code>task_done()</code>方法，<a
+target="_blank" rel="noopener" href="https://docs.python.org/2/library/queue.html">官方文档</a>说明如下：</p>
+<blockquote>
+<p>If a join() is currently blocking, it will resume when all items have
+been processed (meaning that a task_done() call was received for every
+item that had been put() into the queue).</p>
+</blockquote>
+<p>也就是说Queue调用了join方法后，必须要收到每个取出的item（这里为url）返回的task_done()消息才会继续执行，否则会一直block等待，这就实现了我们说到的早完成的线程需要等到最后一个线程下载完成才能一起开始下一个类别的下载。</p>
+<p>实现的关键代码如下： <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 构建自己的线程类</span></span><br><span class="line">queue =Queue.Queue()  <span class="comment"># 存放待访问url</span></span><br><span class="line">visited = <span class="built_in">set</span>()       <span class="comment"># 已经访问过的url</span></span><br><span class="line">downloaded = <span class="built_in">set</span>()    <span class="comment"># 已经下载过的文件</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">downloadThread</span>(threading.Thread):</span><br><span class="line">    <span class="comment"># 重写run函数</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">run</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">            <span class="keyword">if</span> queue.empty(): <span class="comment"># 防止一开始队列内容太少导致后创建的线程退出</span></span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            currentURL = queue.get()</span><br><span class="line">            <span class="comment"># 查看url是否被访问过，需要用锁保护</span></span><br><span class="line">            threadingLock.acquire()</span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                <span class="keyword">if</span> currentURL <span class="keyword">in</span> visited:</span><br><span class="line">                    queue.task_done() <span class="comment"># 不可少，否则queue调用了join()会一直block下去</span></span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    visited.add(currentURL)</span><br><span class="line">            <span class="keyword">finally</span>:</span><br><span class="line">                threadingLock.release()</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 解析当前页面</span></span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                response = urllib2.urlopen(currentURL)</span><br><span class="line">            <span class="keyword">except</span> :</span><br><span class="line">                </span><br><span class="line">            <span class="comment"># 找到链接到其他页面的连接</span></span><br><span class="line">            data = response.read()</span><br><span class="line">            pageList = re.findall(pagePattern,data)</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> pageList:</span><br><span class="line">                pageURL = smallCateURL+<span class="string">&#x27;&amp;page=&#x27;</span>+i</span><br><span class="line">                queue.put(pageURL)</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 下载当前页面存在的文件</span></span><br><span class="line">            fileList = re.findall(filePattern,data)</span><br><span class="line">            <span class="keyword">for</span> <span class="built_in">id</span>, name <span class="keyword">in</span> fileList:</span><br><span class="line">                fileURL = <span class="string">&#x27;http://dict.qq.pinyin.cn/download?dict_id=&#x27;</span>+<span class="built_in">id</span></span><br><span class="line">                filePath = downloadDir.decode(<span class="string">&#x27;utf8&#x27;</span>)+<span class="string">&#x27;/&#x27;</span>+name.decode(<span class="string">&#x27;gbk&#x27;</span>)+<span class="string">&#x27;.qpyd&#x27;</span></span><br><span class="line"></span><br><span class="line">                <span class="comment"># 检查文件是否被下载</span></span><br><span class="line">                threadingLock.acquire()</span><br><span class="line">                <span class="keyword">try</span>:</span><br><span class="line">                    <span class="keyword">if</span> fileURL <span class="keyword">in</span> downloaded:</span><br><span class="line">                        <span class="keyword">continue</span></span><br><span class="line">                    <span class="keyword">else</span>:</span><br><span class="line">                        downloaded.add(fileURL)</span><br><span class="line">                <span class="keyword">finally</span>:</span><br><span class="line">                    threadingLock.release()</span><br><span class="line">                downloadSingleFile.downloadSingleFile(fileURL, filePath, logFile)</span><br><span class="line">           <span class="comment">#告诉queue当前任务已完成，否则因为queue调用了join，会一直block下去</span></span><br><span class="line">            queue.task_done()  </span><br></pre></td></tr></table></figure></p>
+<p>最后，下载三个输入法的词库的python源码已放到github上，链接https://github.com/WuLC/ThesaurusSpider</p>
+<p>文章为博主个人总结，如有错误，欢迎交流指正</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/python/" rel="tag"><i class="fa fa-tag"></i> python</a>
+              <a href="/tags/%E7%88%AC%E8%99%AB/" rel="tag"><i class="fa fa-tag"></i> 爬虫</a>
+              <a href="/tags/%E5%B9%BF%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/" rel="tag"><i class="fa fa-tag"></i> 广度优先搜索</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2016/03/26/python%E4%B8%AD%E7%9A%84%E5%A4%9A%E7%BA%BF%E7%A8%8B/" rel="prev" title="python中的多线程">
+                  <i class="fa fa-chevron-left"></i> python中的多线程
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2016/03/29/LeetCode%20%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A(22)--%E7%94%9F%E6%88%90%E6%89%80%E6%9C%89%E5%90%88%E6%B3%95%E7%9A%84%E5%B5%8C%E5%A5%97%E6%8B%AC%E5%8F%B7/" rel="next" title="LeetCode 解题报告(22)--生成所有合法的嵌套括号">
+                  LeetCode 解题报告(22)--生成所有合法的嵌套括号 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-pen"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

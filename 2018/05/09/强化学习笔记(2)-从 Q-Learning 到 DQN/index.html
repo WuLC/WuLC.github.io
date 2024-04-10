@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id: "JmI6QmP3fMkLet6B",ck: "JmI6QmP3fMkLet6B"})</script>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wulc.me","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.15.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="在上一篇文章强化学习笔记(1)-概述中，介绍了通过 MDP 对强化学习的问题进行建模，但是由于强化学习往往不能获取 MDP 中的转移概率，解决 MDP 的 value iteration 和 policy iteration 不能直接应用到解决强化学习的问题上，因此出现了一些近似的算法来解决这个问题，本文要介绍的就是基于 value iteration 而发展出来的 Q-Learning 系列方法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="强化学习笔记(2)-从 Q-Learning 到 DQN">
+<meta property="og:url" content="https://wulc.me/2018/05/09/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(2)-%E4%BB%8E%20Q-Learning%20%E5%88%B0%20DQN/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="在上一篇文章强化学习笔记(1)-概述中，介绍了通过 MDP 对强化学习的问题进行建模，但是由于强化学习往往不能获取 MDP 中的转移概率，解决 MDP 的 value iteration 和 policy iteration 不能直接应用到解决强化学习的问题上，因此出现了一些近似的算法来解决这个问题，本文要介绍的就是基于 value iteration 而发展出来的 Q-Learning 系列方法">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/image_1cd24g4og10s14pd133n3cvunnm.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1cd24f88k2ae10911ipacg01cv49.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1cd2kiaol19ft2kb1dr4ricnorm.png">
+<meta property="article:published_time" content="2018-05-09T14:21:25.000Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.232Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="强化学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/image_1cd24g4og10s14pd133n3cvunnm.png">
+
+
+<link rel="canonical" href="https://wulc.me/2018/05/09/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(2)-%E4%BB%8E%20Q-Learning%20%E5%88%B0%20DQN/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wulc.me/2018/05/09/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(2)-%E4%BB%8E%20Q-Learning%20%E5%88%B0%20DQN/","path":"2018/05/09/强化学习笔记(2)-从 Q-Learning 到 DQN/","title":"强化学习笔记(2)-从 Q-Learning 到 DQN"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>强化学习笔记(2)-从 Q-Learning 到 DQN | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">吴良超的学习笔记</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#q-learning"><span class="nav-number">1.</span> <span class="nav-text">Q-Learning</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sarsa"><span class="nav-number">2.</span> <span class="nav-text">Sarsa</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dqn"><span class="nav-number">3.</span> <span class="nav-text">DQN</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">253</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2018/05/09/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(2)-%E4%BB%8E%20Q-Learning%20%E5%88%B0%20DQN/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="强化学习笔记(2)-从 Q-Learning 到 DQN | 吴良超的学习笔记">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          强化学习笔记(2)-从 Q-Learning 到 DQN
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-05-09 22:21:25" itemprop="dateCreated datePublished" datetime="2018-05-09T22:21:25+08:00">2018-05-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-tags"></i>
+      </span>
+      <span class="post-meta-item-text">标签</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">强化学习</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>在上一篇文章<a
+href="http://wulc.me/2018/05/05/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%281%29-%E6%A6%82%E8%BF%B0/">强化学习笔记(1)-概述</a>中，介绍了通过
+MDP 对强化学习的问题进行建模，但是由于强化学习往往不能获取 MDP
+中的转移概率，解决 MDP 的 value iteration 和 policy iteration
+不能直接应用到解决强化学习的问题上，因此出现了一些近似的算法来解决这个问题，本文要介绍的就是基于
+value iteration 而发展出来的 Q-Learning 系列方法，包括 Q-Learning、Sarsa
+和 DQN。</p>
+<span id="more"></span>
+<h2 id="q-learning">Q-Learning</h2>
+<p>Q-Learning
+是一个强化学习中一个很经典的算法，其出发点很简单，就是用一张表存储在各个状态下执行各种动作能够带来的
+reward，如下表表示了有两个状态 <span class="math inline">\(s_1,
+s_2\)</span>，每个状态下有两个动作 <span class="math inline">\(a_1,
+a_2\)</span>, 表格里面的值表示 reward</p>
+<table>
+<thead>
+<tr class="header">
+<th>-</th>
+<th>a1</th>
+<th>a2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>s1</td>
+<td>-1</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td>s2</td>
+<td>-5</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<p>这个表示实际上就叫做 Q-Table，里面的每个值定义为 <span
+class="math inline">\(Q(s, a)\)</span>, 表示在状态 <span
+class="math inline">\(s\)</span> 下执行动作 <span
+class="math inline">\(a\)</span>
+所获取的reward，那么选择的时候可以采用一个贪婪的做法，即选择价值最大的那个动作去执行。</p>
+<p>这样问题就来了，就是 Q-Table
+要如何获取？答案是随机初始化，然后通过不断执行动作获取环境的反馈并通过算法更新
+Q-Table。下面重点讲如何通过算法更新 Q-Table。</p>
+<p><strong>当我们处于某个状态 <span class="math inline">\(s\)</span>
+时，根据 Q-Table 的值选择的动作 <span class="math inline">\(a\)</span>,
+那么从表格获取的 reward 为 <span
+class="math inline">\(Q(s,a)\)</span>，此时的 reward
+并不是我们真正的获取的 reward，而是预期获取的 reward，那么真正的 reward
+在哪？我们知道执行了动作 <span class="math inline">\(a\)</span>
+并转移到了下一个状态 <span class="math inline">\(s&#39;\)</span>
+时，能够获取一个即时的 reward（记为<span
+class="math inline">\(r\)</span>）, 但是除了即时的
+reward，还要考虑所转移到的状态 <span
+class="math inline">\(s&#39;\)</span> 对未来期望的reward，因此真实的
+reward (记为 <span
+class="math inline">\(Q&#39;(s,a)\)</span>)由两部分组成：即时的 reward
+和未来期望的 reward，且未来的 reward
+往往是不确定的，因此需要加个折扣因子 <span
+class="math inline">\(\gamma\)</span>,则真实的 reward
+表示如下</strong></p>
+<p><span class="math display">\[Q&#39;(s,a) = r +
+\gamma\max_{a&#39;}Q(s&#39;,a&#39;)\]</span></p>
+<p><span class="math inline">\(\gamma\)</span> 的值一般设置为 0 到 1
+之间，设为0时表示只关心即时回报，设为 1
+时表示未来的期望回报跟即时回报一样重要。</p>
+<p>有了真实的 reward 和预期获取的 reward，可以很自然地想到用 supervised
+learning那一套，求两者的误差然后进行更新，在 Q-learning
+中也是这么干的，更新的值则是原来的 Q(s, a)，更新规则如下</p>
+<p><span class="math display">\[Q(s, a) = Q(s, a) + \alpha(Q&#39;(s, a)
+- Q(s,a))\]</span></p>
+<p>更新规则跟梯度下降非常相似，这里的 <span
+class="math inline">\(\alpha\)</span> 可理解为学习率。</p>
+<p>更新规则也很简单，可是这一类采用了贪心思想的算法往往都会有这么一个问题：算法是否能够收敛，是收敛到局部最优还是全局最优？</p>
+<p>关于收敛性，可以参考 <a
+target="_blank" rel="noopener" href="http://users.isr.ist.utl.pt/~mtjspaan/readingGroup/ProofQlearning.pdf">Convergence
+of Q-learning: a simple proof</a>，这个文档
+证明了这个算法能够收敛，且根据知乎上这个问题 <a
+target="_blank" rel="noopener" href="https://www.zhihu.com/question/49787932">RL两大类算法的本质区别？（Policy
+Gradient 和 Q-Learning)</a>，原始的 Q-Learning
+理论上能够收敛到最优解，但是通过 Q 函数近似 Q-Table
+的方法则未必能够收敛到最优解（如DQN）。</p>
+<p>除此之外， Q-Learning 中还存在着探索与利用(Exploration and
+Exploition)的问题,
+大致的意思就是不要每次都遵循着当前看起来是最好的方案，而是会选择一些当前看起来不是最优的策略，这样也许会更快探索出更优的策略。</p>
+<p>Exploration and Exploition 的做法很多，Q-Learning 采用了最简单的
+<span class="math inline">\(\epsilon\)</span>-greedy, 就是每次有 <span
+class="math inline">\(\epsilon\)</span> 的概率是选择当前 Q-Table
+里面值最大的action的，1 - <span class="math inline">\(\epsilon\)</span>
+的概率是随机选择策略的。</p>
+<p>Q-Learning 算法的流程如下，图片摘自<a
+target="_blank" rel="noopener" href="https://morvanzhou.github.io/tutorials/machine-learning/ML-intro/4-03-q-learning/">这里</a></p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1cd24g4og10s14pd133n3cvunnm.png"
+alt="Q-Learning" />
+<figcaption aria-hidden="true">Q-Learning</figcaption>
+</figure>
+<p>上面的流程中的 Q 现实 就是上面说的 <span
+class="math inline">\(Q&#39;(s,a)\)</span>, Q 估计就是上面说的 <span
+class="math inline">\(Q(s,a)\)</span>。</p>
+<p>下面的 python 代码演示了更新通过 Q-Table 的算法, 参考了这个 <a
+target="_blank" rel="noopener" href="https://github.com/MorvanZhou/Reinforcement-learning-with-tensorflow">repo</a>
+上的代码，初始化主要是设定一些参数，并建立 Q-Table,
+<code>choose_action</code> 是根据当前的状态
+<code>observation</code>，并以 <span
+class="math inline">\(\epsilon\)</span>-greedy 的策略选择当前的动作；
+<code>learn</code> 则是更新当前的
+Q-Table，<code>check_state_exist</code> 则是检查当前的状态是否已经存在
+Q-Table 中，若不存在要在 Q-Table 中创建相应的行。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">QTable</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, actions, learning_rate=<span class="number">0.01</span>, reward_decay=<span class="number">0.9</span>, e_greedy=<span class="number">0.9</span></span>):</span><br><span class="line">        self.actions = actions  <span class="comment"># a list</span></span><br><span class="line">        self.lr = learning_rate</span><br><span class="line">        self.gamma = reward_decay</span><br><span class="line">        self.epsilon = e_greedy</span><br><span class="line">        self.q_table = pd.DataFrame(columns=self.actions, dtype=np.float64)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">choose_action</span>(<span class="params">self, observation</span>):</span><br><span class="line">        self.check_state_exist(observation)</span><br><span class="line">        <span class="comment"># action selection</span></span><br><span class="line">        <span class="keyword">if</span> np.random.uniform() &lt; self.epsilon:</span><br><span class="line">            <span class="comment"># choose best action</span></span><br><span class="line">            state_action = self.q_table.ix[observation, :]</span><br><span class="line">            state_action = state_action.reindex(np.random.permutation(state_action.index))     <span class="comment"># some actions have same value</span></span><br><span class="line">            action = state_action.argmax()</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># choose random action</span></span><br><span class="line">            action = np.random.choice(self.actions)</span><br><span class="line">        <span class="keyword">return</span> action</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">learn</span>(<span class="params">self, s, a, r, s_</span>):</span><br><span class="line">        self.check_state_exist(s_)</span><br><span class="line">        q_predict = self.q_table.ix[s, a]</span><br><span class="line">        <span class="keyword">if</span> s_ != <span class="string">&#x27;terminal&#x27;</span>:</span><br><span class="line">            q_target = r + self.gamma * self.q_table.ix[s_, :].<span class="built_in">max</span>()  <span class="comment"># next state is not terminal</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            q_target = r  <span class="comment"># next state is terminal</span></span><br><span class="line">        self.q_table.ix[s, a] += self.lr * (q_target - q_predict)  <span class="comment"># update</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">check_state_exist</span>(<span class="params">self, state</span>):</span><br><span class="line">        <span class="keyword">if</span> state <span class="keyword">not</span> <span class="keyword">in</span> self.q_table.index:</span><br><span class="line">            <span class="comment"># append new state to q table</span></span><br><span class="line">            self.q_table = self.q_table.append(</span><br><span class="line">                pd.Series(</span><br><span class="line">                    [<span class="number">0</span>]*<span class="built_in">len</span>(self.actions),</span><br><span class="line">                    index=self.q_table.columns,</span><br><span class="line">                    name=state,</span><br><span class="line">                )</span><br><span class="line">            )</span><br></pre></td></tr></table></figure>
+<h2 id="sarsa">Sarsa</h2>
+<p>Sarsa 跟 Q-Learning 非常相似，也是基于 Q-Table
+进行决策的。不同点在于<strong>决定下一状态所执行的动作的策略</strong>，Q-Learning
+在当前状态更新 Q-Table
+时会用到下一状态Q值最大的那个动作，但是下一状态未必就会选择那个动作；但是
+Sarsa
+会在当前状态先决定下一状态要执行的动作，并且用下一状态要执行的动作的 Q
+值来更新当前状态的 Q
+值；说的好像很绕，但是看一下下面的流程便可知道这两者的具体差异了，图片摘自<a
+target="_blank" rel="noopener" href="https://morvanzhou.github.io/tutorials/machine-learning/ML-intro/4-04-sarsa/">这里</a></p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1cd24f88k2ae10911ipacg01cv49.png"
+alt="Q-Learning vs Sarsa" />
+<figcaption aria-hidden="true">Q-Learning vs Sarsa</figcaption>
+</figure>
+<p>那么，这两者的区别在哪里呢？<a
+target="_blank" rel="noopener" href="https://studywolf.wordpress.com/2013/07/01/reinforcement-learning-sarsa-vs-q-learning/">这篇文章</a>里面是这样讲的</p>
+<blockquote>
+<p>This means that SARSA takes into account the control policy by which
+the agent is moving, and incorporates that into its update of action
+values, where Q-learning simply assumes that an optimal policy is being
+followed.</p>
+</blockquote>
+<p>简单来说就是 Sarsa 在执行action时会考虑到全局（如更新当前的 Q
+值时会先确定下一步要走的动作）， 而 Q-Learning 则显得更加的贪婪和"短视",
+每次都会选择当前利益最大的动作(不考虑 <span
+class="math inline">\(\epsilon\)</span>-greedy)，而不考虑其他状态。</p>
+<p>那么该如何选择，根据这个问题：<a
+target="_blank" rel="noopener" href="https://stats.stackexchange.com/questions/326788/when-to-choose-sarsa-vs-q-learning">When
+to choose SARSA vs. Q Learning</a>，有如下结论</p>
+<blockquote>
+<p>If your goal is to train an optimal agent in simulation, or in a
+low-cost and fast-iterating environment, then Q-learning is a good
+choice, due to the first point (learning optimal policy directly). If
+your agent learns online, and you care about rewards gained whilst
+learning, then SARSA may be a better choice.</p>
+</blockquote>
+<p>简单来说就是如果要在线学习，同时兼顾 reward
+和总体的策略(如不能太激进，agent 不能很快挂掉)，那么选择
+Sarsa；而如果没有在线的需求的话，可以通过 Q-Learning 线下模拟找到最好的
+agent。所以也称 Sarsa 为on-policy，Q-Leanring 为 off-policy。</p>
+<h2 id="dqn">DQN</h2>
+<p>我们前面提到的两种方法都以依赖于
+Q-Table，但是其中存在的一个问题就是当 Q-Table
+中的状态比较多，可能会导致整个 Q-Table 无法装下内存。因此，DQN
+被提了出来，DQN 全称是 Deep Q Network，Deep
+指的是通的是深度学习，其实就是通过神经网络来拟合整张 Q-Table。</p>
+<p>DQN
+能够解决状态无限，动作有限的问题；具体来说就是将当前状态作为输入，输出的是各个动作的
+Q 值。以 Flappy Bird 这个游戏为例，输入的状态近乎是无限的（当前 bird
+的位置和周围的水管的分布位置等），但是输出的动作只有两个(飞或者不飞)。实际上，已经有人通过
+DQN 来玩这个游戏了，具体可参考这个 <a
+target="_blank" rel="noopener" href="https://github.com/yenchenlin/DeepLearningFlappyBird">DeepLearningFlappyBird</a></p>
+<p>所以在 DQN 中的核心问题在于如何训练整个神经网络，其实训练算法跟
+Q-Learning 的训练算法非常相似，需要利用 Q 估计和 Q
+现实的差值，然后进行反向传播。</p>
+<p>这里放上提出 DQN 的原始论文 <a
+target="_blank" rel="noopener" href="https://www.cs.toronto.edu/~vmnih/docs/dqn.pdf">Playing atari with
+deep reinforcement learning</a> 中的算法流程图</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1cd2kiaol19ft2kb1dr4ricnorm.png"
+alt="DQN" />
+<figcaption aria-hidden="true">DQN</figcaption>
+</figure>
+<p>上面的算法跟 Q-Learning 最大的不同就是多了 <strong>Experience
+Replay</strong>
+这个部分，实际上这个机制做的事情就是先进行反复的实验，并将这些实验步骤获取的
+sample 存储在 memory 中，每一步就是一个
+sample，每个sample是一个四元组，包括：当前的状态，当前状态的各种action的
+Q
+值，当前采取的action获得的即时回报，下一个状态的各种action的Q值。拿到这样一个
+sample 后，就可以根据上面提到的 Q-Learning
+更新算法来更新网络，只是这时候需要进行的是反向传播。</p>
+<p><strong>Experience Replay
+机制的出发点是按照时间顺序所构造的样本之间是有关的(如上面的 <span
+class="math inline">\(\phi(s_{t+1})\)</span> 会受到 <span
+class="math inline">\(\phi(s_{t})\)</span> 的影响)、非静态的（highly
+correlated and
+non-stationary），这样会很容易导致训练的结果难以收敛。通过 Experience
+Replay
+机制对存储下来的样本进行随机采样，在一定程度上能够去除这种相关性，进而更容易收敛。</strong>当然，这种方法也有弊端，就是训练的时候是
+offline 的形式，无法做到 online 的形式。</p>
+<p>除此之外，上面算法流程图中的 aciton-value function
+就是一个深度神经网络，因为神经网络是被证明有万有逼近的能力的，也就是能够拟合任意一个函数；一个
+episode 相当于 一个 epoch；同时也采用了 <span
+class="math inline">\(\epsilon\)</span>-greedy 策略。代码实现可参考上面
+FlappyBird 的 DQN 实现。</p>
+<p>上面提到的 DQN 是最原始的的网络，后面Deepmind
+对其进行了多种改进，比如说 Nature DQN 增加了一种新机制 <strong>separate
+Target Network</strong>，就是计算上图的<span
+class="math inline">\(y_j\)</span> 的时候不采用网络 <span
+class="math inline">\(Q\)</span>, 而是采用另外一个网络(也就是 Target
+Network) <span class="math inline">\(Q&#39;\)</span>, 原因是上面计算
+<span class="math inline">\(y_j\)</span> 和 Q 估计都采用相同的网络 <span
+class="math inline">\(Q\)</span>，这样<strong>使得Q大的样本，y也会大，这样模型震荡和发散可能性变大</strong>，其原因其实还是两者的关联性较大。而采用另外一个独立的网络使得训练震荡发散可能性降低，更加稳定。一般
+<span class="math inline">\(Q&#39;\)</span> 会直接采用旧的 <span
+class="math inline">\(Q\)</span>, 比如说 10 个 epoch 前的 <span
+class="math inline">\(Q\)</span>.</p>
+<p>除此之外，大幅度提升 DQN 玩 Atari 性能的主要就是 Double
+DQN，Prioritised Replay 还有 Dueling Network
+三大方法；这里不详细展开，有兴趣可参考这两篇文章：<a
+target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/21547911">DQN从入门到放弃6
+DQN的各种改进</a> 和 <a
+target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/25239682">深度强化学习（Deep
+Reinforcement Learning）入门：RL base &amp; DQN-DDPG-A3C
+introduction</a>。</p>
+<p>综上，本文介绍了强化学习中基于 value 的方法：包括 Q-Learning 以及跟
+Q-Learning 非常相似的 Sarsa，同时介绍了通过 DQN 解决状态无限导致
+Q-Table过大的问题。需要注意的是 DQN
+只能解决动作有限的问题，对于动作无限或者说动作取值为连续值的情况，需要依赖于
+policy gradient
+这一类算法，而这一类算法也是目前更为推崇的算法，在下一章将介绍 Policy
+Gradient 以及结合 Policy Gradient 和 Q-Learning 的 Actor-Critic
+方法。</p>
+<hr />
+<p>参考</p>
+<ol type="1">
+<li><a
+target="_blank" rel="noopener" href="https://morvanzhou.github.io/tutorials/machine-learning/ML-intro/4-03-q-learning/">Q
+Learning</a></li>
+<li><a
+target="_blank" rel="noopener" href="https://morvanzhou.github.io/tutorials/machine-learning/ML-intro/4-04-sarsa/">Sarsa</a></li>
+<li><a
+target="_blank" rel="noopener" href="https://stats.stackexchange.com/questions/326788/when-to-choose-sarsa-vs-q-learning">When
+to choose SARSA vs. Q Learning</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/21421729">DQN从入门到放弃5
+深度解读DQN算法</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/25239682">深度强化学习（Deep
+Reinforcement Learning）入门：RL base &amp; DQN-DDPG-A3C
+introduction</a></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+              <a href="/tags/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 强化学习</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2018/05/05/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(1)-%E6%A6%82%E8%BF%B0/" rel="prev" title="强化学习笔记(1)-概述">
+                  <i class="fa fa-chevron-left"></i> 强化学习笔记(1)-概述
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2018/05/11/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(3)-%20%E4%BB%8E%20Policy%20Gradient%20%E5%88%B0%20A3C/" rel="next" title="强化学习笔记(3)- 从 Policy Gradient 到 A3C">
+                  强化学习笔记(3)- 从 Policy Gradient 到 A3C <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-pen"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id: "JmI6QmP3fMkLet6B",ck: "JmI6QmP3fMkLet6B"})</script>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wulc.me","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.15.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="本文是刘鹏老师的计算广告学中的一些笔记。本文是第六章: 广告交易市场(Ad Exchange)。主要介绍目前最常见的实时竞价的广告交易模式，分别介绍了这一模式下的供给方平台(SSP) 和 需求方平台(DSP), 并且重点介绍了 DSP， 因为在这一交易模式下，DSP 负责了绝大多数的关键任务。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计算广告(6)--广告交易市场(Ad Exchange)">
+<meta property="og:url" content="https://wulc.me/2017/05/14/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A%E7%AC%94%E8%AE%B0(6)--%E5%B9%BF%E5%91%8A%E4%BA%A4%E6%98%93%E5%B8%82%E5%9C%BA(Ad%20Exchange)/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="本文是刘鹏老师的计算广告学中的一些笔记。本文是第六章: 广告交易市场(Ad Exchange)。主要介绍目前最常见的实时竞价的广告交易模式，分别介绍了这一模式下的供给方平台(SSP) 和 需求方平台(DSP), 并且重点介绍了 DSP， 因为在这一交易模式下，DSP 负责了绝大多数的关键任务。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/image_1bh52n8jlgdtn59np2hgqlao9.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1bh54herr190014ap1tqr16c4km4m.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1bh5a836ap321v1pm491hi1l5n13.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1bh5a917b1a32h00pij1f2u1no1g.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1bh6jcr5hpcd190f1umf1kk1h6s9.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1bh73cv05tlrughefn1mh41qenm.png">
+<meta property="og:image" content="https://wulc.me/imgs/image_1bh76incp1j3j1kg6oa11idl12nk13.png">
+<meta property="article:published_time" content="2017-05-14T13:37:39.000Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.095Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="计算广告">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/image_1bh52n8jlgdtn59np2hgqlao9.png">
+
+
+<link rel="canonical" href="https://wulc.me/2017/05/14/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A%E7%AC%94%E8%AE%B0(6)--%E5%B9%BF%E5%91%8A%E4%BA%A4%E6%98%93%E5%B8%82%E5%9C%BA(Ad%20Exchange)/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wulc.me/2017/05/14/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A%E7%AC%94%E8%AE%B0(6)--%E5%B9%BF%E5%91%8A%E4%BA%A4%E6%98%93%E5%B8%82%E5%9C%BA(Ad%20Exchange)/","path":"2017/05/14/计算广告笔记(6)--广告交易市场(Ad Exchange)/","title":"计算广告(6)--广告交易市场(Ad Exchange)"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>计算广告(6)--广告交易市场(Ad Exchange) | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">吴良超的学习笔记</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B9%BF%E5%91%8A%E4%BA%A4%E6%98%93%E5%B9%B3%E5%8F%B0adx"><span class="nav-number">1.</span> <span class="nav-text">广告交易平台(Adx)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#adx-%E7%9A%84%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E5%9B%BE"><span class="nav-number">1.1.</span> <span class="nav-text">Adx 的系统架构图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cookie-mapping-%E7%9A%84%E6%8A%80%E6%9C%AF"><span class="nav-number">1.2.</span> <span class="nav-text">cookie mapping 的技术</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%9B%E5%BA%94%E6%96%B9%E5%B9%B3%E5%8F%B0supply-side-platform"><span class="nav-number">2.</span> <span class="nav-text">供应方平台（supply side
+platform）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9C%80%E6%B1%82%E6%96%B9%E5%B9%B3%E5%8F%B0demand-side-platform"><span class="nav-number">3.</span> <span class="nav-text">需求方平台（Demand Side
+Platform）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#dsp-%E7%9A%84%E6%9E%B6%E6%9E%84"><span class="nav-number">3.1.</span> <span class="nav-text">DSP 的架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dsp-%E6%B5%81%E9%87%8F%E9%A2%84%E6%B5%8B"><span class="nav-number">3.2.</span> <span class="nav-text">DSP 流量预测</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dsp-%E7%82%B9%E5%87%BB%E4%BB%B7%E5%80%BC%E9%A2%84%E4%BC%B0"><span class="nav-number">3.3.</span> <span class="nav-text">DSP 点击价值预估</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dsp-%E9%87%8D%E5%AE%9A%E5%90%91retargeting"><span class="nav-number">3.4.</span> <span class="nav-text">DSP 重定向（retargeting）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B0%E5%AE%A2%E6%8E%A8%E8%8D%90look-alike"><span class="nav-number">3.5.</span> <span class="nav-text">新客推荐（look-alike）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B9%BF%E5%91%8A%E6%B5%81%E9%87%8F%E4%BA%A4%E6%98%93%E6%96%B9%E5%BC%8F"><span class="nav-number">4.</span> <span class="nav-text">广告流量交易方式</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">253</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2017/05/14/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A%E7%AC%94%E8%AE%B0(6)--%E5%B9%BF%E5%91%8A%E4%BA%A4%E6%98%93%E5%B8%82%E5%9C%BA(Ad%20Exchange)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="计算广告(6)--广告交易市场(Ad Exchange) | 吴良超的学习笔记">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          计算广告(6)--广告交易市场(Ad Exchange)
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2017-05-14 21:37:39" itemprop="dateCreated datePublished" datetime="2017-05-14T21:37:39+08:00">2017-05-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-tags"></i>
+      </span>
+      <span class="post-meta-item-text">标签</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A/" itemprop="url" rel="index"><span itemprop="name">计算广告</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>本文是刘鹏老师的<a
+target="_blank" rel="noopener" href="http://study.163.com/course/courseMain.htm?courseId=321007">计算广告学</a>中的一些笔记。本文是第六章:
+广告交易市场(Ad
+Exchange)。主要介绍目前最常见的实时竞价的广告交易模式，分别介绍了这一模式下的供给方平台(SSP)
+和 需求方平台(DSP), 并且重点介绍了 DSP， 因为在这一交易模式下，DSP
+负责了绝大多数的关键任务。</p>
+<span id="more"></span>
+<h2 id="广告交易平台adx">广告交易平台(Adx)</h2>
+<p>广告交易平台的关键特征是用<strong>实时竞价(RTB)</strong>方式连接广告和
+(上下文，用户)，按照<strong>展示</strong>上的竞价收取广告主费用</p>
+<p>实时竞价指的是事先不对广告做retrieval，而是在需要展示的时候向下游的
+DSP 展示目前的 context，让各个 DSP
+通过竞价的方式获取这次展示的机会。其流程如下</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1bh52n8jlgdtn59np2hgqlao9.png"
+alt="RTB 过程" />
+<figcaption aria-hidden="true">RTB 过程</figcaption>
+</figure>
+<p>从上图可知，RTB 是一个多方参与的过程，而从实现上可以分为两个阶段</p>
+<p>1）cookie mapping：目的是将 supply 网站和 demand
+端的用户对应起来；实际中通过 Adx（代表supply） 与 DSP（代表demand）
+来进行直接的mapping，后面会提到这方面的具体技术 2）ad
+call：指有广告展示机会到来，这时 Adx 通知各个 DSP 进行竞价，DSP
+根据自身需求出价，出价最高者获得投放机会。</p>
+<p>这种模式的出现是由于广告主需要的定制化受众定向在原来的广告网络上无法得到满足，举例来说：京东商城需要对其用户进行重定向投放广告，但是在广告网络上是采买不到这种流量的，因为哪些用户是京东的只有京东自己知道，因此需要让
+demand 端对流量进行选择才能达到深度定制化的要求。</p>
+<p>这种主要技术难点在于 1） Adx与DSP之间的用户身份同步，一般通过 cookie
+mapping 实现 2） DSP数量较多时的服务和带宽成本优化</p>
+<p>但是存在着的潜在问题是： 1）
+<strong>存在浏览数据的泄露风险</strong>。指的是某些DSP目的并不是获取广告，而是获取
+Adx
+展示的用户浏览数据；即每次出价都很低，保证自己不会赢得广告的展示机会，但是却能获得了
+Adx 提供的用户 cookie
+及其访问的url，为其日后进行受众定向积累数据基础。</p>
+<p>2） <strong>多一次 round trip，对 latency
+有较大影响。</strong>在之前的广告体系（合约广告，竞价广告）中，supply
+端只需要先广告网络进行请求，广告网络根据其 retrieval
+以及相关广告主的出价返回相关的广告即可，但是在实时竞价中，Adx 还需要等待
+DSP 的出价以及通知获得展示机会的 DSP
+进行广告的投放，这样无疑会增加投放的 latency 。</p>
+<p>除了实时竞价，广告交易平台另外一个重要的特点是按<strong>展示</strong>计费而不是按照点击收费，其商业逻辑在于<strong>将点击率和点击价值的预估全放到
+demand 端</strong>。</p>
+<h3 id="adx-的系统架构图">Adx 的系统架构图</h3>
+<p>Ad Exchange
+的系统架构很简单，原因是其不需要存储广告之类的信息，只需要将广告展示机会告诉给每个
+DSP ，然后进行竞价拍卖选出出价最高的那个
+DSP。其难点在于系统的吞吐量大且对 latency
+的要求严格。其系统架构图如下</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1bh54herr190014ap1tqr16c4km4m.png"
+alt="Ad Exchange 系统架构" />
+<figcaption aria-hidden="true">Ad Exchange 系统架构</figcaption>
+</figure>
+<p>其流程如下 1）某个 User 访问某个网站，网站通知 Adx 目前有一次展示机会
+2）Adx 通过 RTBD 接口向各个 DSP 询价，从而获取
+DSP提供的各个广告（相当于图中的 Ad retrieval） 3）Adx
+通过出价进行排序，并选择出价最高的广告展示给用户（相当于图中的 Ad
+ranking） 4）Adx 在日志中记录该广告的展示记录</p>
+<h3 id="cookie-mapping-的技术">cookie mapping 的技术</h3>
+<p>cookie mapping 需要弄清楚三个问题：<strong>谁发起 cookie mapping
+的请求？在哪里发起的请求？谁存mapping表？</strong></p>
+<p>下面以两个例子说明，第一个例子是 DSP 与 Adx 间的cookie
+mapping，第二个例子是 DMP 与媒体的 cookie mapping。</p>
+<p>下面是 DSP 与 Adx 的 cookie mapping 的过程</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1bh5a836ap321v1pm491hi1l5n13.png"
+alt="DSP与Adx" />
+<figcaption aria-hidden="true">DSP与Adx</figcaption>
+</figure>
+<p>这个例子中 cookie mapping 由 DSP 发起，在有 DSP
+代码的广告主网站发起，mapping表存在DSP。其具体流程为</p>
+<p>1）DSP 在广告主网站中嵌入 JS 代码，有用户访问时，选择性加载一个 DSP
+域名下的 iframe 2）DSP 根据其记录判断该用户是否需要 cookie
+mapping，返回包含多个 beacon 的动态 HTML，这里的多个 <a
+target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Web_beacon#Overview">beacon</a>
+目的是为了与<strong>多个 Adx</strong> 交换 cookie。 3）通过某个beacon
+向对应的 Adx 发送 cookie 映射请求，并带有 <strong>Adx
+标识（xid），DSP标识（did）和 DAP cookie（dck）</strong> 三个参数。
+4）Adx 通过302 重定向向 DSP 返回 <strong>Adx
+标识（xid）及其域名下的cookie（xck)</strong> 5) DSP 返回一个 1x1 的
+beacon 并记录下 <strong>Adx 方的 cookie（xcd） 与己方的 cookie（dck）
+的对应关系。</strong></p>
+<p>下面是媒体与 DMP 的 cookie mapping 的过程</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1bh5a917b1a32h00pij1f2u1no1g.png"
+alt="DMP与媒体" />
+<figcaption aria-hidden="true">DMP与媒体</figcaption>
+</figure>
+<p>这个例子中 cookie mapping 由媒体方发起，在媒体的页面上发起，并且
+cookie mapping 的表由 DMP 保存。其过程如下</p>
+<ol type="1">
+<li>用户访问媒体网站时，媒体网站向媒体的 cookie
+映射服务请求一段负责此功能的 JS 代码 2）媒体的 cookie 映射服务返回该段
+JS 代码 3）该 JS 代码判断是否需要映射，如果需要，则先 DMP
+发送映射请求，并传送两个参数：<strong>媒体的标识（mid）以及媒体方的
+cookie（mck）</strong> 4）DMP 返回一个 1x1 的beacon，并记录下媒体方
+cookie(mck) 和己方的 cookie(dck) 对应关系。</li>
+</ol>
+<h2 id="供应方平台supply-side-platform">供应方平台（supply side
+platform）</h2>
+<p>SSP 完全代表着媒体方的利益</p>
+<p>广告市场中，媒体变现流量方式一般有三种</p>
+<ol type="1">
+<li>合约广告，与广告主签订合约进行投放（CPM 结算）</li>
+<li>竞价广告，将广告位托管给广告网络，广告网络根据人群售卖给广告主（CPC
+结算）</li>
+<li>实时竞价（按展示结算）</li>
+</ol>
+<p>而 SSP
+应该能够为媒体提供上面的所有变现方式，通过组合以上方式达到收益最大化(称为收益管理，Yield
+Optimizer)</p>
+<p>综合以上可知，SSP的关键特征是</p>
+<ul>
+<li>提供媒体端的用户划分和售卖能力</li>
+<li>可以灵活接入多种变现方式</li>
+<li>收益管理</li>
+</ul>
+<p>整个行业有代表性的公式有： AdMeld，Rubicon，Pubmatic</p>
+<h2 id="需求方平台demand-side-platform">需求方平台（Demand Side
+Platform）</h2>
+<p>将决策交到 demand 端,</p>
+<p>维基上对 <a
+target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Demand-side_platform">DSP</a>
+的定义如下</p>
+<blockquote>
+<p>A demand-side platform (DSP) is a system that allows buyers of
+digital advertising inventory to manage <strong>multiple ad exchange and
+data exchange</strong> accounts through one interface.</p>
+</blockquote>
+<p>DSP 为广告主提供的便利之处在于，广告主主需要通过 DSP
+的一个接口就可以获取各式各样的流量，从而进行定制化广告投放。</p>
+<p>DSP的关键特征如下</p>
+<ol type="1">
+<li>定制化用户划分</li>
+<li>跨媒体流量采购</li>
+<li>通过 ROI 估计来支持 RTB</li>
+</ol>
+<p>DSP 的代表公司有 InviteMedia 和 MediaMath</p>
+<h3 id="dsp-的架构">DSP 的架构</h3>
+<p>DSP 的架构示意图如下</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1bh6jcr5hpcd190f1umf1kk1h6s9.png"
+alt="DSP" />
+<figcaption aria-hidden="true">DSP</figcaption>
+</figure>
+<p>复杂部分在于计算部分，就是要估计 <strong>eCPM = CTR *
+clickValue</strong>，CTR 表示点击率， clickValue
+表示点击价值，后面会详细介绍，在这里 DSP 需要同时计算 CTR 和
+clickValue，复杂度自然大大提升。</p>
+<h3 id="dsp-流量预测">DSP 流量预测</h3>
+<p>流量预测指的是给定一组受众定向标签组合以及一个 eCPM
+的阈值，估算在将来某个时间段内符合这些受众标签组合的条件、且市场价在该
+eCPM 阈值以下的广告展示量。</p>
+<p>DSP 也需要预测流量以决定采买策略，因为 DSP 与广告主是 CPM
+结算的，DSP只要将市场中符合广告主的那部分低价的流量买下来才能获取更大的利润。</p>
+<p>但是由于 DSP
+无法拿到所有的流量情况，因此无法像攻击方那样通过历史流量那样进行流量预测，这个问题目前没有一个公认的较好的解决方法</p>
+<h3 id="dsp-点击价值预估">DSP 点击价值预估</h3>
+<p>点击价值指的是上面提到 <strong>eCPM = CTR * clickValue</strong> 中的
+clickValue。一般衡量该点击的价值的指标是点击后的转化率</p>
+<p>这个问题的挑战有</p>
+<p>1）训练数据非常稀疏（最终得到的训练数据的比例是
+<code>点击率*转化率</code>）
+2）价值的预估与广告主类型强烈相关的行为模式（比如说游戏领域与电商领域不能相同的方法预估）</p>
+<p>这个问题目前也没有很好的解决方法，但是有以下两点原则供参考</p>
+<p>1）模型估计的时候，用较大的 bias 换较小的
+variance，以达到稳定估计的目的
+2）充分利用广告商类型的层级结构以及转化流程上的特征</p>
+<h3 id="dsp-重定向retargeting">DSP 重定向（retargeting）</h3>
+<p>什么是重定向呢？假如有一个电商网站，每天有几千人访问。当然，这几千人里面大部分当时并没有买东西就离开了。而重定向就是说这些人到了别的网站，就在该网站的广告位上投放该电商的广告，这样一来，用户点击广告和进而下单购买的比例都会相当高。</p>
+<p>如下是一个重定向的例子</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1bh73cv05tlrughefn1mh41qenm.png"
+alt="retargeting" />
+<figcaption aria-hidden="true">retargeting</figcaption>
+</figure>
+<p>重定向的分类</p>
+<p><strong>1.网站重定向。</strong>就是上面提到的方法
+<strong>2.搜索重定向。</strong>根据用户在搜索引擎上与广告主相关的搜索行为
+<strong>3.个性化重定向。</strong>对用户购买流程的追踪和推荐，即根据用户在广告主网站上关注的具体产品和购买阶段，推送商品粒度的广告。对于广告主而言，可以视为一个站外推荐引擎。</p>
+<p>上面提到了推荐算法，这里对推荐算法做一个简单的介绍，推荐算法可以分为两大类：<strong>基于协同过滤的算法和基于内容算法</strong></p>
+<p>基于协同过滤的算法又可分为两种
+1）内存方法（非参数方法）：neighbor-based methods，User-based/Item-based
+top-N 2）模型方法（参数方法）:matrix factorization, bayesian belief
+nets</p>
+<p>基于内容的推荐算法指的是从 user 和 item
+提取出相同的特征向量，或者说将两者映射到相同的向量空间中再比较两者的相似性。</p>
+<p><strong>推荐算法的本质是对 user-item
+这一系数矩阵的参数化或非参数化的描述，而推荐算法选择的关键也是探索合适的
+bias 与 variance 的平衡，以适应问题的数据的稀疏性。</strong></p>
+<p>重定向的典型代表公司是： Magnetic 和 Criteo</p>
+<h3 id="新客推荐look-alike">新客推荐（look-alike）</h3>
+<p>上面的重定向针对的是广告主已经有的客户，但是对于中小电商，仅仅对老用户定向营销远远不够；而对于某些类型的广告商如银行，大多数用户无法通过重定向渠道捕获。这时候就产生了新客推荐（look-alike）的需求。</p>
+<p>新客推荐指的是由广告商提供一部分种子用户，DSP
+通过网络行为的相似性为其找到潜在用户。需要注意的是尽量利用非 demand
+端的数据，避免在广告主之间倒卖用户。</p>
+<h2 id="广告流量交易方式">广告流量交易方式</h2>
+<p>目前为止介绍了多种广告流量的交易形式，可以说交易的方式发展趋势为：合约广告-&gt;竞价广告-&gt;实时竞价广告，对应着下图从右到左的顺序。而发展到竞价广告之后，更加强调了
+supply 端和 demand 端的分工的专业化。</p>
+<figure>
+<img data-src="https://wulc.me/imgs/image_1bh76incp1j3j1kg6oa11idl12nk13.png"
+alt="广告流量交易方式" />
+<figcaption aria-hidden="true">广告流量交易方式</figcaption>
+</figure>
+<p><strong>优先销售</strong>有两种模式
+1）CPT结算，即传统广告的销售方式，技术要求低 2）GD：CPM 结算 +
+人群定向</p>
+<p><strong>程序交易</strong>包括竞价广告（Ad
+network）和实时竞价广告（Adx），其对应的 supply 端和 demand
+端负责的任务也不同，但是其目的均是如何将自身的资源或需求分发到多个点（网络）上从而获取最大的利益。</p>
+<p>1）demad：network optimization + RTBS 2）supply：portfolio selection
++ RTBS</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A/" rel="tag"><i class="fa fa-tag"></i> 计算广告</a>
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2017/05/10/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A%E7%AC%94%E8%AE%B0(5)--%E6%90%9C%E7%B4%A2%E5%B9%BF%E5%91%8A%E4%B8%8E%E5%B9%BF%E5%91%8A%E7%BD%91%E7%BB%9CDemand%E6%8A%80%E6%9C%AF/" rel="prev" title="计算广告笔记(5)--搜索广告与广告网络Demand技术">
+                  <i class="fa fa-chevron-left"></i> 计算广告笔记(5)--搜索广告与广告网络Demand技术
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2017/05/15/ImageNet%20Classification%20with%20Deep%20Convolutional%20Neural%20Networks%20%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" rel="next" title="《ImageNet Classification with Deep Convolutional Neural Networks》阅读笔记">
+                  《ImageNet Classification with Deep Convolutional Neural Networks》阅读笔记 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-pen"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

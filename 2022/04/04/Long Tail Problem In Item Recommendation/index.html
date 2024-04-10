@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id: "JmI6QmP3fMkLet6B",ck: "JmI6QmP3fMkLet6B"})</script>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon.ico">
+  <link rel="mask-icon" href="/imgs/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="VcC-PHB4Om9SIR3Roqm7k1N-SHiBtQ6c3LJLVMKgU4U">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wulc.me","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.15.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="长尾问题在推荐&#x2F;广告系统是一个较为常见的问题(这里主要针对 item 的长尾)，原因可能比较多，笔者理解的主要原因是由于系统存在 feedback loop(即训练数据由模型产生，同时又会被模型用于训练) 的特性，在没有外部干预的情况下，马太效应会天然导致头部效应的现象比较严重，少部分的 item 主导了整个系统。 比如说推荐系统中，很多视频&#x2F;文章并没有展示机会，在训练集中压根没出现过，高热的视频">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Long Tail Problem In Item Recommendation">
+<meta property="og:url" content="https://wulc.me/2022/04/04/Long%20Tail%20Problem%20In%20Item%20Recommendation/index.html">
+<meta property="og:site_name" content="吴良超的学习笔记">
+<meta property="og:description" content="长尾问题在推荐&#x2F;广告系统是一个较为常见的问题(这里主要针对 item 的长尾)，原因可能比较多，笔者理解的主要原因是由于系统存在 feedback loop(即训练数据由模型产生，同时又会被模型用于训练) 的特性，在没有外部干预的情况下，马太效应会天然导致头部效应的现象比较严重，少部分的 item 主导了整个系统。 比如说推荐系统中，很多视频&#x2F;文章并没有展示机会，在训练集中压根没出现过，高热的视频">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/DualTransfer_MIRec.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/DualTransfer_Notataion.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/DualTransfer_baselearner.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/DualTransfer_metalearner.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/DualTransfer_manyshot_dataset.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/DualTransfer_fewshot_dataset.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/DualTransfer_training.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/DualTransfer_prediction.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/DualTransfer_CL_compare.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/SelfSupervisedLearningFramework.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/SelfSupervisedTraining.jpg">
+<meta property="article:published_time" content="2022-04-04T08:08:44.000Z">
+<meta property="article:modified_time" content="2023-07-16T15:28:28.162Z">
+<meta property="article:author" content="良超">
+<meta property="article:tag" content="计算广告">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/DualTransfer_MIRec.jpg">
+
+
+<link rel="canonical" href="https://wulc.me/2022/04/04/Long%20Tail%20Problem%20In%20Item%20Recommendation/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wulc.me/2022/04/04/Long%20Tail%20Problem%20In%20Item%20Recommendation/","path":"2022/04/04/Long Tail Problem In Item Recommendation/","title":"Long Tail Problem In Item Recommendation"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Long Tail Problem In Item Recommendation | 吴良超的学习笔记</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">吴良超的学习笔记</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#dual-transfer-learning-framework"><span class="nav-number">1.</span> <span class="nav-text">Dual Transfer Learning
+Framework</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#model-level"><span class="nav-number">1.1.</span> <span class="nav-text">model-level</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#item-level"><span class="nav-number">1.2.</span> <span class="nav-text">item-level</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#training-serving"><span class="nav-number">1.3.</span> <span class="nav-text">training &amp; serving</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#experiment"><span class="nav-number">1.4.</span> <span class="nav-text">experiment</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#self-supervised-learning-framework"><span class="nav-number">2.</span> <span class="nav-text">Self-supervised Learning
+Framework</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ssl-framework"><span class="nav-number">2.1.</span> <span class="nav-text">SSL Framework</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#two-stage-data-augmentation"><span class="nav-number">2.2.</span> <span class="nav-text">two-stage data augmentation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#training-serving-1"><span class="nav-number">2.3.</span> <span class="nav-text">training &amp; serving</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#experiment-1"><span class="nav-number">2.4.</span> <span class="nav-text">experiment</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">3.</span> <span class="nav-text">小结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="良超"
+      src="/files/profile.jpg">
+  <p class="site-author-name" itemprop="name">良超</p>
+  <div class="site-description" itemprop="description">盈亏同源，享受生活的随机性</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">253</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WuLC" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WuLC" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liangchaowu5@gmail.com" title="E-Mail → mailto:liangchaowu5@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2022/04/04/Long%20Tail%20Problem%20In%20Item%20Recommendation/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Long Tail Problem In Item Recommendation | 吴良超的学习笔记">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Long Tail Problem In Item Recommendation
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-04-04 16:08:44" itemprop="dateCreated datePublished" datetime="2022-04-04T16:08:44+08:00">2022-04-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-tags"></i>
+      </span>
+      <span class="post-meta-item-text">标签</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A/" itemprop="url" rel="index"><span itemprop="name">计算广告</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>长尾问题在推荐/广告系统是一个较为常见的问题(这里主要针对 item
+的长尾)，原因可能比较多，笔者理解的主要原因是由于系统存在 feedback
+loop(即训练数据由模型产生，同时又会被模型用于训练)
+的特性，在没有外部干预的情况下，马太效应会天然导致头部效应的现象比较严重，少部分的
+item 主导了整个系统。</p>
+<p>比如说推荐系统中，很多视频/文章并没有展示机会，在训练集中压根没出现过，高热的视频/文章在不同的用户中排序都比较靠前，进而得到多次被推荐的机会；在广告系统中，部分计划的消耗会特别高，而一些计划压根投不出去；这导致了用户或者广告主体验不佳，而这种现象往往也会被归为生态问题。</p>
+<p>既然没有干预时，系统天然的特性导致了头部效应(或者说二八效应)比较严重，那强行干预系统的分布能不能改变这个问题？答案是可以的，而且目前绝大部分的方法都是在做这一类事情，常用手段往往有
+2 种</p>
+<p>（1）策略层面，根据系统和业务特性设计规则，比如说对长尾的 item
+有特定的扶持，强行让这些 item 能触达到更多的用户
+（2）模型层面，<strong>核心思想就是让模型能更好地学习到 long tail item
+的 representation</strong>，因为这个问题的根本原因就是 long tail item
+的样本过少，进而导致模型学习的不好；而具体的手段比较多，这部分会在后面详细介绍。</p>
+<p>这篇文章主要介绍的几篇
+paper都是模型层面的，因为策略层面的往往需要根据实际业务需求来拍一些规则，模型层面的一些方法更为通用。</p>
+<span id="more"></span>
+<h2 id="dual-transfer-learning-framework">Dual Transfer Learning
+Framework</h2>
+<p>这个方法来自 google 的一篇 paper, <a
+target="_blank" rel="noopener" href="https://arxiv.org/abs/2010.15982">A Model of Two Tales: Dual
+Transfer Learning Framework for Improved Long-tail Item
+Recommendation</a></p>
+<p>paper 名字中提到的 dual transfer learning，分别是 model-level 和
+item-level 的 transfer learning，简单来说，前者让样本少的模型(few-shot
+model)的参数尽可能往样本多的模型(many-shot
+model)的参数靠拢(这里根据样本量分为 2 个模型来建模)，后者则是让 long
+tail item 的 representation 与 head item 的尽可能接近，这里的
+representation 其实就是上面提到的 few-shot model 和 many-shot model
+吐出来的 embedding，因此 paper 提出的总体框架如下如所示</p>
+<figure>
+<img data-src="https://wulc.me/imgs/DualTransfer_MIRec.jpg" alt="MIRec" />
+<figcaption aria-hidden="true">MIRec</figcaption>
+</figure>
+<p>上图中的一些符号含义如下</p>
+<!-- ![notation][3] -->
+<p><img data-src="https://wulc.me/imgs/DualTransfer_Notataion.jpg" height="50%" width="50%"></p>
+<p>从上图中可以看到，根据样本量分为了 many-shot model 和 few-shot model
+两个模型来分别建模，核心是 meta-level knowledge transfer 和 curriculum
+transfer，分别对应前面的 model-level 和 item-level, 下面分别介绍</p>
+<h3 id="model-level">model-level</h3>
+<p>其思想比较简单，就是要学习一个 meta learner <span
+class="math inline">\(\mathcal{F}\)</span>, 其输入和输出都是 few-shot
+model 的 parameter，监督信号是输出的 parameter 要与 many-shot model 的
+parameter 接近，最终作用方式是在 loss 上</p>
+<p>base learner 的 loss 是常规的 softmax loss，<span
+class="math inline">\(r(u,i)\)</span> 取值为 1/0 表示是否有 feedback(如
+click 等)</p>
+<!-- ![base learner][4] -->
+<p><img data-src="https://wulc.me/imgs/DualTransfer_baselearner.jpg" height="50%" width="50%"></p>
+<p>meta learner <span class="math inline">\(\mathcal{F}\)</span>
+则是采用了 mse 的 loss，并且作为一个 regularization 项加到 few-shot
+model 原始的 loss 上，则最终 few-shot model 的 loss 如下公式(5)所示</p>
+<!-- ![meta learner][5] -->
+<p><img data-src="https://wulc.me/imgs/DualTransfer_metalearner.jpg" height="50%" width="50%"></p>
+<p>meta learner <span class="math inline">\(\mathcal{F}\)</span>
+具体的结构有很多种，这里采用的是简单的 fully connected layer</p>
+<h3 id="item-level">item-level</h3>
+<p>这部分主要通过 <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2007.12865">curriculum
+learning</a> 来训练模型，curriculum learning
+的基本思想是在训练时组织好样本进模型的顺序，前面的综述的链接里的话是这么说的</p>
+<blockquote>
+<p>Curriculum learning (CL) is a training strategy that trains a machine
+learning model from easier data to harder data, which imitates the
+meaningful learning order in human curricula. As an easy-to-use plug-in,
+the CL strategy has demonstrated its power in improving the
+generalization capacity and convergence rate of various models in a wide
+range of scenarios such as computer vision and natural language
+processing etc.</p>
+</blockquote>
+<p>回到 paper 里，这部分主要做的则是构造好上面提到的两个 training
+dataset：<span class="math inline">\(\Omega^{*}\)</span> 和 <span
+class="math inline">\(\Omega(k)\)</span></p>
+<!-- ![many-shot dataset][7] -->
+<p><img data-src="https://wulc.me/imgs/DualTransfer_manyshot_dataset.jpg" height="50%" width="50%"></p>
+<p><span class="math inline">\(\Omega(k)\)</span>
+的构造方法如下，这部分样本包含 2 部分 item，一部分是 <span
+class="math inline">\(I_{h}(k)\)</span> 中那些刚好有 k 个sample 的
+item，另一部分则是 <span class="math inline">\(I_{t}(k)\)</span>
+中的全部 sample</p>
+<!-- ![few-shot dataset][8] -->
+<p><img data-src="https://wulc.me/imgs/DualTransfer_fewshot_dataset.jpg" height="50%" width="50%"></p>
+<p>paper 里称这么做主要有以下 2 个原因，但是笔者觉得核心还是把 long tail
+item 的样本单独出来，不至于被 head item dominate</p>
+<blockquote>
+<ol type="1">
+<li>tail items are fully trained in both the many-shot model and
+few-shot model to ensure the high quality of the learned item
+representations in both many-shot and few-shot models (2）In the
+few-shot model training, the distribution of tail items relatively keeps
+the same as the original distribution. It can alleviate the bias among
+tail items that brings by the new distribution</li>
+</ol>
+</blockquote>
+<h3 id="training-serving">training &amp; serving</h3>
+<p>因此，总体的 training 流程如下图所示,
+可以分为两个阶段，阶段一是通过常规的方法训练 many-shot
+model，阶段二则是通过 many-shot model 的 parameter 和 meta learner
+来训练 few-shot model</p>
+<!-- ![train][9] -->
+<p><img data-src="https://wulc.me/imgs/DualTransfer_training.jpg" height="50%" width="50%"></p>
+<p>而最终模型 serving 时，则是会对两个 model 输出的 score
+做一个常规的加权</p>
+<!-- ![serving][10] -->
+<p><img data-src="https://wulc.me/imgs/DualTransfer_prediction.jpg" height="50%" width="50%"></p>
+<h3 id="experiment">experiment</h3>
+<p>paper 里的实验用了 2 个公开的数据集，MovieLens1M 和
+Bookcrossing，采用的评估指标是Hit Ratio at top K (HR@K) 和 NDCG at top K
+(NDCG@K) ，这里的 HR@K 其实就是召回率</p>
+<p>实验预期的目标是在总体效果不变差的前提下，提升 long tail item
+的表现；因此上面的两个评估指标 HR@K 和 NDCG@K 分别在all item、head item
+和 tail item 上进行了评估</p>
+<p>paper 里的实验着重回答了以下四个问题</p>
+<blockquote>
+<p>RQ1: How well does the dual transfer learning framework MIRec perform
+compared to the state-of-the-art methods? RQ2: How do different
+components (meta-learning and curriculum learning) of MIRec perform
+individually? Could they complement each other? RQ3: How does our
+proposed curriculum learning strategy compare with the alternatives?
+RQ4: Besides downstream task performance, are we actually learning
+better representations for tail items? Could we see the differences
+visually?</p>
+</blockquote>
+<p>第一个问题是跟其他的 sota 方法比较，结论是 paper
+提出的最好，具体数据这里就不贴了</p>
+<p>第二个问题是做了一个消融实验，结论是单独的 meta-learning 或
+curriculum learning 都是正向的，且加起来效果最好</p>
+<p>第三个问题是对比不同的 curriculum learning strategy 对 training 和
+validation 时的 loss 的值的影响；主要对比了 head2tail 和 tail2head
+两个策略，前者先用 head item 训练，再用 tail item
+训练，后者则刚好相反，这部分效果如下图所示，也可以归纳出以下 3
+点结论</p>
+<blockquote>
+<ol type="1">
+<li>Compared to the tail item loss in different curriculums (column 3),
+our proposed curriculum can bring a two-stage decent for both the
+training and validation loss</li>
+<li><strong>When the model is trained based on only head/tail items, the
+validation performance for the other part of items decreases</strong>.
+The different changes of head and tail loss indicate the large
+variations between head and tail items</li>
+<li>It is easily to get validation loss increases if the model is
+trained purely based on head/tail items, as shown in first column of the
+first two rows</li>
+</ol>
+</blockquote>
+<figure>
+<img data-src="https://wulc.me/imgs/DualTransfer_CL_compare.jpg"
+alt="CL compare" />
+<figcaption aria-hidden="true">CL compare</figcaption>
+</figure>
+<p>第四个问题是对学习出来的 embedding 进行可视化，主要想说明通过 paper
+的方法学到的方法在可视化上后区分性也比较强，不过只做了两个 case
+分析，数据有限，这里就不贴出来了</p>
+<h2 id="self-supervised-learning-framework">Self-supervised Learning
+Framework</h2>
+<p>这个方法来自 google 的另一篇 paper <a
+target="_blank" rel="noopener" href="https://arxiv.org/abs/2110.04596">Self-supervised Learning for
+Large-scale Item Recommendations</a>, 也是在解决 item
+的长尾问题，提升的点也主要在 representation learning 上，如 paper
+描述所示</p>
+<blockquote>
+<p>The framework is designed to tackle the label sparsity problem by
+learning better latent relationship of item features. Specifically, SSL
+improves item representation learning as well as serving as additional
+regularization to improve generalization. Furthermore, we propose a
+novel data augmentation method that utilizes feature correlations within
+the proposed framework.</p>
+</blockquote>
+<h3 id="ssl-framework">SSL Framework</h3>
+<p>paper 提出的总体的 framework
+如下图所示，基本符号的含义都在图片下方的注释里，</p>
+<!-- ![ssl framework][13] -->
+<p><img data-src="https://wulc.me/imgs/SelfSupervisedLearningFramework.jpg" height="50%" width="50%"></p>
+<p>而上图中的 <span class="math inline">\(x_i\)</span>、<span
+class="math inline">\(x_j\)</span> 表示训练时一个 batch
+中的两条样本(推荐中的样本往往有三种含义，query/item/query-item
+pair，paper 里特指的是
+item)，这里的核心思想是<strong>同一条样本经过不同的变换后的
+representation 应该还是相似的，不同的样本则相反</strong></p>
+<p>因此，通过 <span class="math inline">\(h, g, \mathcal{H},
+\mathcal{G}\)</span> 得到的 representation 中，<span
+class="math inline">\((z_i, z_i^{&#39;})\)</span> 是正例，而 <span
+class="math inline">\((z_i, z_j^{&#39;})\)</span>
+是负例，因此，对于一个包含 <span class="math inline">\(N\)</span>
+条样本的 batch 中，第 <span class="math inline">\(i\)</span> 条样本的
+self supervised 的 loss 形式如下</p>
+<p><span class="math display">\[\mathcal{L}_{self}(x_i) = -\log
+\frac{\exp(s(z_i, z_i^{&#39;})/\tau)}{\sum_{j=1}^{N}\exp(s(z_i,
+z_j^{&#39;})/\tau)}\]</span></p>
+<p>上面公式中的 <span class="math inline">\(\tau\)</span>
+为一个超参(softmax temperature),<span class="math inline">\(s(z_i,
+z_j^{&#39;})\)</span> 为两个 embedding 的 cosin 相似性，即 <span
+class="math inline">\(s(z_i, z_j^{&#39;})=&lt; z_i,
+z_j^{&#39;}&gt;/(||z_i|| \cdot ||z_j^{&#39;}||)\)</span></p>
+<p>总体的 batch 内的 self supervised loss 为</p>
+<p><span class="math display">\[\mathcal{L}_{self}(\lbrace x_i \rbrace;
+\mathcal{H}, \mathcal{G}) = - \frac{1}{N} \sum_{i=1}^{N} \log
+\frac{\exp(s(z_i, z_i^{&#39;})/\tau)}{\sum_{j=1}^{N}\exp(s(z_i,
+z_j^{&#39;})/\tau)}\]</span></p>
+<p>得到 embedding 的两个 emcoder： <span
+class="math inline">\(\mathcal{H}\)</span> 和 <span
+class="math inline">\(\mathcal{G}\)</span>，在 paper
+中是共享参数的(这部分在后面讲模型结构时也会提及)</p>
+<p>而如果两种 data augmentation 方法 <span
+class="math inline">\(h\)</span> 和 <span
+class="math inline">\(g\)</span> 也是相同的话，上面的 <span
+class="math inline">\(\mathcal{L}_{self}(\lbrace x_i \rbrace;
+\mathcal{H}, \mathcal{G})\)</span>
+会退化成如下形式，此时损失函数的目标是不同样本的相似性 <span
+class="math inline">\(s(z_i, z_j^{&#39;})\)</span> 尽可能小</p>
+<p><span class="math display">\[-\frac{1}{N} \sum_{i=1}^{N} \log
+\frac{\exp(1/\tau)}{ \exp(1/\tau) + \sum_{j \ne i}\exp(s(z_i,
+z_j^{&#39;})/\tau)}\]</span></p>
+<h3 id="two-stage-data-augmentation">two-stage data augmentation</h3>
+<p>这里主要讲上面框架提到的两种 data augmentation 方法： <span
+class="math inline">\(h\)</span> 和 <span
+class="math inline">\(g\)</span> ，paper 称这个方法的关键在于：<strong>A
+good transformation and data augmentation should make minimal amount of
+assumptions on the data such that it can be generally applicable to a
+large variety of tasks and models</strong>.</p>
+<p>paper 里采用的方法则是 mask, 这里借鉴了 bert 的思想，但是这里没有
+sequence 的概念，因此这里 mask 掉的是 item feature，实际使用的是一个
+two-stage 的方法，即 masking + dropout, 两个方法主要操作如下</p>
+<blockquote>
+<p><strong>Masking</strong>. Apply a masking pattern on the set of item
+features. We use a <strong>default embedding</strong> in the input layer
+to represent the features that are masked. <strong>Dropout</strong>.For
+categorical features with <strong>multiple values,we drop out each value
+with a certain probability</strong>. It further reduces input
+information and increase the hardness of SSL task.</p>
+</blockquote>
+<p>至于具体的 mask 方法，paper 里没有采用随机
+mask，而是基于特征之间的互信息(<a
+target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Mutual_information">mutual
+information</a>)来进行 mask，核心思想是 <strong>mask
+掉相关性较强的特征</strong>，paper 这样做的原因是
+<code>the SSL contrastive learning task may exploit the shortcut of highly correlated features between the two augmented examples, making the SSL task too easy</code></p>
+<p>具体的方法的方法是每次每次随机选择一个 feature <span
+class="math inline">\(f_{seed}\)</span>，通过预先计算好的互信息选择与这个
+feature 最相关的 <span class="math inline">\(k/2\)</span> 个
+feature，最终 mask 掉的是这 <span class="math inline">\(k/2 + 1\)</span>
+个 feature</p>
+<h3 id="training-serving-1">training &amp; serving</h3>
+<p>前面的 self supervised loss（ <span
+class="math inline">\(\mathcal{L}_{self}(\lbrace x_i
+\rbrace)\)</span>）只是一个辅助的 loss,</p>
+<p>而主任务的 loss 是计算 query-item 的 loss，paper 这里采用的是 batch
+softmax loss，形式跟self supervised loss其实是一样的，只是计算相似性从
+item-item 变为了 query-item，具体形式如下</p>
+<p><span class="math display">\[\mathcal{L}_{main} = -\frac{1}{N}
+\sum_{i=1}^{N} \log \frac{\exp(s(q_i,
+x_i)/\tau)}{\sum_{j=1}^{N}\exp(s(q_i, x_j)/\tau)}\]</span></p>
+<p>则总体的 loss 为</p>
+<p><span class="math display">\[\mathcal{L} = \mathcal{L}_{main} +
+\alpha \mathcal{L}_{self}\]</span></p>
+<p>则最终的模型如下所示，注意这里的 3 个 item twoer 的参数是共享的</p>
+<figure>
+<img data-src="https://wulc.me/imgs/SelfSupervisedTraining.jpg"
+alt="train" />
+<figcaption aria-hidden="true">train</figcaption>
+</figure>
+<p>至于 serving，由于只是加了一个 auxiliary loss，所以按正常预估即可</p>
+<h3 id="experiment-1">experiment</h3>
+<p>实验主要回答了如下 4 个问题</p>
+<blockquote>
+<p>RQ1: Does the proposed SSL Framework improve deep models for
+recommendations?</p>
+<p>RQ2:SSL is designed to improve primary supervised task through
+introduced SSL task on unlabeled examples. What is the impact of the
+amount of training data on the improvement from SSL?</p>
+<p>RQ3: How do the SSL parameters, i.e., loss multiplier <span
+class="math inline">\(\alpha\)</span> and dropout rate in data
+augmentation, affect model quality?</p>
+<p>RQ4: How does RFM perform compared to CFM? What is the benefit of
+leveraging feature correlations in data augmentation?</p>
+</blockquote>
+<p>RQ1，通过与其他 3 个 baseline 进行了比较，采用了 2
+个公开数据，评估指标是 MAP@10/50 和 Recall@10/50, 跟前一篇 paper
+一样，做了总体 item、head item 和 tail item 各自的评估</p>
+<p>RQ2 主要回答数据量对 SSL
+的影响，结论是数据量越多，效果越好，感觉这个结论比较符合直觉，不知道
+paper 为什么要单独拎出来说</p>
+<p>RQ3 主要回答 <span class="math inline">\(\alpha\)</span>
+大小对效果的影响，paper 里对比 spread-out regularization loss 和 paper
+提出的 self supervised loss，结论是取相同的值时均是 self supervised loss
+效果更好，关于 <a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1708.06320.pdf">spread-out
+regularization loss</a> 可参考这篇 paper，也是一种 constrasive
+loss，但是没有 data augmentation</p>
+<p>RQ4 主要回答随机 mask 的方法(RFM) 和基于相关性 mask
+的方法(CFM)哪种效果更好，结论是CFM在四项指标上效果均优于 RFM</p>
+<p>此外，paper 还补充了在线 ab 实验，结论也是比较显著的</p>
+<h2 id="小结">小结</h2>
+<p>本文主要介绍了从模型层面缓解长尾问题的两篇 paper，两篇 paper
+的核心思想都是要更好地学习到长尾 item 的 representation</p>
+<p>第一篇提出了一个 dual transfer framework(model-level + item-level),
+通过 2 个模型分别建模 head item 和 tail item，在 model-level 令 tail
+item 的模型参数往 head item 的模型学习，而在 item-level 通过 curriculum
+learning 组织样本进模型的顺序，serving
+阶段需要用两个模型的预估分融合</p>
+<p>第二篇 paper 则提出了 self-supervised learning framework, 通过
+in-batch 的 data augmentation 方法(mask + dropout)，增加一个 auxiliary
+loss，其目标是同一个 item 经过变换后的 embedding 应该是相似的，不同 item
+的则相反；离线和在线的实验都验证了有效性。</p>
+<p>笔者感觉实际业界中，第一种方法的成本要高于第二种，而第一种方法没有做在线的
+ab 实验不知道具体在线效果，且第二种方法这种通过 in-batch
+样本来构造新的样本对的 self-supervised learning，普适性会更好</p>
+<p>除了推荐领域的，CV 领域也有一篇关于长尾问题的综述，<a
+target="_blank" rel="noopener" href="https://arxiv.org/abs/2110.04596">Deep Long-Tailed Learning: A
+Survey</a>，总体的方法论会更全，思路也涵盖了上面说的两篇 paper，但是 cv
+跟 recommendation 还是有不少差异的(比如 recommendation 的 item 数往往比
+cv 的要多得多)，具体在业务的应用也不确定，这里就不详细展开了。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A/" rel="tag"><i class="fa fa-tag"></i> 计算广告</a>
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/03/05/A%20Hybrid%20Bandit%20Model%20with%20Visual%20Priors%20for%20Creative%20Ranking%20in%20Display%20Advertising/" rel="prev" title="A Hybrid Bandit Model with Visual Priors for Creative Ranking in Display Advertising">
+                  <i class="fa fa-chevron-left"></i> A Hybrid Bandit Model with Visual Priors for Creative Ranking in Display Advertising
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/05/04/%E6%8A%95%E8%B5%84%E8%BF%99%E4%BB%B6%E4%BA%8B(1)-%E8%AE%A4%E7%9F%A5%E4%B8%8E%E5%BF%83%E6%80%81/" rel="next" title="投资这件事(1)-认知与心态">
+                  投资这件事(1)-认知与心态 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-pen"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良超</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>
