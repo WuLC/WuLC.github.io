@@ -55,7 +55,6 @@
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
-<link rel="alternate" href="/atom.xml" title="吴良超的学习笔记" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
@@ -156,7 +155,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">253</span>
+          <span class="site-state-item-count">257</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -191,6 +190,302 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2023/02/26/%E6%B7%B7%E6%8E%92%E9%82%A3%E4%BA%9B%E4%BA%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 吴良超的学习笔记">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2023/02/26/%E6%B7%B7%E6%8E%92%E9%82%A3%E4%BA%9B%E4%BA%8B/" class="post-title-link" itemprop="url">混排的那些事儿</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-02-26 21:53:19" itemprop="dateCreated datePublished" datetime="2023-02-26T21:53:19+08:00">2023-02-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-tags"></i>
+      </span>
+      <span class="post-meta-item-text">标签</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A/" itemprop="url" rel="index"><span itemprop="name">计算广告</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>混排，往往是的推荐系统的最后一个环节，在这个阶段，自然内容（后面简称item）需要与营销内容（后面简称
+ad）进行混合，生成最终推送给用户的 list</p>
+<p>如果以 Long Term Value(LTV)的视角来看,这是个在 LT 和 V 之间做
+trade-off 的过程，ad 如果出得过多，必然会挤压 item
+的数量和位置，进而影响用户体验和留存即 LT，但相应的广告收入，或者说
+Average revenue per user(<a
+target="_blank" rel="noopener" href="https://www.investopedia.com/terms/a/arpu.asp">ARPU</a>)
+会提升，反之亦然</p>
+<p>所以业界往往的做法是定一个用户体验的约束，在这个约束下尽可能优化 ad
+的效率，即达到收入最大化，因此很自然可以把这个建模成一个最优化问题，LinkedIn
+在 2020 年的这篇 paper就是这么做的，<a
+target="_blank" rel="noopener" href="https://dl.acm.org/doi/pdf/10.1145/3394486.3403391">Ads Allocation
+in Feed via Constrained Optimization</a></p>
+<p>直观地看混排这个问题，有 2 个子问题需要解决 （1）怎么计算每个 item 或
+ad 在每个位置上的价值：因为 item 和 ad
+是各自排序的，目标不同，最终的值的量纲也不同，这么把两者的 scale
+拉到可比范围是一个需要讨论的问题 （2）怎么分配能让最终 list
+价值最大化：在 item 和 ad 的价值确认后，怎么插入 item 和 ad
+的位置，从而达到整个 list 的最大化</p>
+<p>上面提到的 LinkedIn 的 paper
+重点是在解决第二个问题，部分内容也涉及到第一个问题 ；本文会先讲一下这篇
+paper 的建模方法，然后讨论下计算 item 和 ad
+价值的一些思路，混排中一些其他需要注意的事项</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/02/26/%E6%B7%B7%E6%8E%92%E9%82%A3%E4%BA%9B%E4%BA%8B/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2023/02/05/%E5%81%9A%E4%B8%80%E4%B8%AA%E6%B8%85%E9%86%92%E7%9A%84%E5%82%BB%E7%93%9C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 吴良超的学习笔记">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2023/02/05/%E5%81%9A%E4%B8%80%E4%B8%AA%E6%B8%85%E9%86%92%E7%9A%84%E5%82%BB%E7%93%9C/" class="post-title-link" itemprop="url">做一个清醒的傻瓜</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-02-05 21:53:19" itemprop="dateCreated datePublished" datetime="2023-02-05T21:53:19+08:00">2023-02-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-tags"></i>
+      </span>
+      <span class="post-meta-item-text">标签</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E8%AF%BB%E4%B9%A6/" itemprop="url" rel="index"><span itemprop="name">读书</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E5%A1%94%E5%8B%92%E5%B8%83/" itemprop="url" rel="index"><span itemprop="name">塔勒布</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>随机性，如同带刺的玫瑰，危险而又迷人；随机性可能会给你带来生活中的惊喜，但也有可能会降临足以毁灭生活的灾难</p>
+<p>在去年的<a
+href="https://wulc.me/2023/01/01/2022%20%E5%B0%8F%E7%BB%93/">年度小结</a>提到，22
+年最大的感悟，是生活存在非常多的随机性，正是这些随机性导致了无法预测和无人知晓的未来；1
+月份在查资料过程中看到了塔勒布的<a
+target="_blank" rel="noopener" href="https://book.douban.com/series/45353">“不确定性”四部曲</a>：《随机漫步的傻瓜》、《黑天鹅》、《反脆弱》和《非对称风险》，相比于笔者简单的感悟，这几本书花了很大功夫来描述随机性这件事情</p>
+<p>如果单纯看随机性，很容易让我们陷入虚无主义中，因为没什么是确定的，或者说没什么是能够坚信的，因为随机性几乎主导了一切。幸运的是，书里给出了还给出了一些也许可供参考的方法论，虽然作者行文有时候较为晦涩，但总体还是值得一读的。本文主要是
+《随机漫步的傻瓜》和《黑天鹅》两本书的一些笔记以及拓展，祝开卷有益。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/02/05/%E5%81%9A%E4%B8%80%E4%B8%AA%E6%B8%85%E9%86%92%E7%9A%84%E5%82%BB%E7%93%9C/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://wulc.me/2023/01/01/2022%20%E5%B0%8F%E7%BB%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/files/profile.jpg">
+      <meta itemprop="name" content="良超">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴良超的学习笔记">
+      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 吴良超的学习笔记">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2023/01/01/2022%20%E5%B0%8F%E7%BB%93/" class="post-title-link" itemprop="url">2022 小结</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-01-01 21:53:19" itemprop="dateCreated datePublished" datetime="2023-01-01T21:53:19+08:00">2023-01-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-tags"></i>
+      </span>
+      <span class="post-meta-item-text">标签</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/tags/%E9%97%B2%E8%AF%9D%E5%87%A0%E5%8F%A5/" itemprop="url" rel="index"><span itemprop="name">闲话几句</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>2022
+的最后一个月，在全国“喜阳阳”的氛围中度过了，写这篇文章时，恢复了差不多一周多，基本也没什么症状了。但回想下今年发生的各种事情，真的是可以用魔幻来形容，这个魔幻不仅仅指防疫政策的
+180
+度大转弯，更是发生在身上的各种事情，这些事情基本都可以总计为计划赶不上变化，或者说未来无人知晓</p>
+<p>一直都有写年度总结的习惯，而这么魔幻的一年，更值得写篇文章纪念下，正好也是元旦放假，趁着这几天把过去一年发生的事情梳理了一下~</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/01/01/2022%20%E5%B0%8F%E7%BB%93/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -872,309 +1167,6 @@ href="https://wulc.me/2022/05/04/%E6%8A%95%E8%B5%84%E8%BF%99%E4%BB%B6%E4%BA%8B%2
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2022/05/04/%E6%8A%95%E8%B5%84%E8%BF%99%E4%BB%B6%E4%BA%8B(1)-%E8%AE%A4%E7%9F%A5%E4%B8%8E%E5%BF%83%E6%80%81/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://wulc.me/2022/04/04/Long%20Tail%20Problem%20In%20Item%20Recommendation/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/files/profile.jpg">
-      <meta itemprop="name" content="良超">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="吴良超的学习笔记">
-      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 吴良超的学习笔记">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/04/04/Long%20Tail%20Problem%20In%20Item%20Recommendation/" class="post-title-link" itemprop="url">Long Tail Problem In Item Recommendation</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2022-04-04 16:08:44" itemprop="dateCreated datePublished" datetime="2022-04-04T16:08:44+08:00">2022-04-04</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-tags"></i>
-      </span>
-      <span class="post-meta-item-text">标签</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/tags/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A/" itemprop="url" rel="index"><span itemprop="name">计算广告</span></a>
-        </span>
-          ，
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>长尾问题在推荐/广告系统是一个较为常见的问题(这里主要针对 item
-的长尾)，原因可能比较多，笔者理解的主要原因是由于系统存在 feedback
-loop(即训练数据由模型产生，同时又会被模型用于训练)
-的特性，在没有外部干预的情况下，马太效应会天然导致头部效应的现象比较严重，少部分的
-item 主导了整个系统。</p>
-<p>比如说推荐系统中，很多视频/文章并没有展示机会，在训练集中压根没出现过，高热的视频/文章在不同的用户中排序都比较靠前，进而得到多次被推荐的机会；在广告系统中，部分计划的消耗会特别高，而一些计划压根投不出去；这导致了用户或者广告主体验不佳，而这种现象往往也会被归为生态问题。</p>
-<p>既然没有干预时，系统天然的特性导致了头部效应(或者说二八效应)比较严重，那强行干预系统的分布能不能改变这个问题？答案是可以的，而且目前绝大部分的方法都是在做这一类事情，常用手段往往有
-2 种</p>
-<p>（1）策略层面，根据系统和业务特性设计规则，比如说对长尾的 item
-有特定的扶持，强行让这些 item 能触达到更多的用户
-（2）模型层面，<strong>核心思想就是让模型能更好地学习到 long tail item
-的 representation</strong>，因为这个问题的根本原因就是 long tail item
-的样本过少，进而导致模型学习的不好；而具体的手段比较多，这部分会在后面详细介绍。</p>
-<p>这篇文章主要介绍的几篇
-paper都是模型层面的，因为策略层面的往往需要根据实际业务需求来拍一些规则，模型层面的一些方法更为通用。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/04/04/Long%20Tail%20Problem%20In%20Item%20Recommendation/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://wulc.me/2022/03/05/A%20Hybrid%20Bandit%20Model%20with%20Visual%20Priors%20for%20Creative%20Ranking%20in%20Display%20Advertising/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/files/profile.jpg">
-      <meta itemprop="name" content="良超">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="吴良超的学习笔记">
-      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 吴良超的学习笔记">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/03/05/A%20Hybrid%20Bandit%20Model%20with%20Visual%20Priors%20for%20Creative%20Ranking%20in%20Display%20Advertising/" class="post-title-link" itemprop="url">A Hybrid Bandit Model with Visual Priors for Creative Ranking in Display Advertising</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2022-03-05 21:53:19" itemprop="dateCreated datePublished" datetime="2022-03-05T21:53:19+08:00">2022-03-05</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-tags"></i>
-      </span>
-      <span class="post-meta-item-text">标签</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/tags/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A/" itemprop="url" rel="index"><span itemprop="name">计算广告</span></a>
-        </span>
-          ，
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>之前的文章 <a
-href="https://wulc.me/2022/02/01/Dynamic%20Creative%20Optimization%20in%20Online%20Display%20Advertising/">Dynamic
-Creative Optimization in Online Display
-Advertising</a>中提到，广告创意往往可分为创意生成、创意优选和创意投放三大块，本文主要讲创意优选这部分的一些做法，这个过程一般会涉及到
-E&amp;E 的过程。</p>
-<p>本文的主要内容是选自阿里发表的一篇 paper：<a
-target="_blank" rel="noopener" href="https://arxiv.org/abs/2102.04033">A Hybrid Bandit Model with
-Visual Priors for Creative Ranking in Display Advertising</a>，paper
-通过 list-wise
-的训练方式达到对同一计划下的候选创意进行排序(即优选)的目标；list-wise
-可以算作 Exploitation 部分，paper 还通过了一个 bandit model 达到
-Exploration
-的目的，总体的做法比较合理，也在业界实际场景验证了有效性，值得一看。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/03/05/A%20Hybrid%20Bandit%20Model%20with%20Visual%20Priors%20for%20Creative%20Ranking%20in%20Display%20Advertising/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://wulc.me/2022/02/01/Dynamic%20Creative%20Optimization%20in%20Online%20Display%20Advertising/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/files/profile.jpg">
-      <meta itemprop="name" content="良超">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="吴良超的学习笔记">
-      <meta itemprop="description" content="盈亏同源，享受生活的随机性">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 吴良超的学习笔记">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/02/01/Dynamic%20Creative%20Optimization%20in%20Online%20Display%20Advertising/" class="post-title-link" itemprop="url">Dynamic Creative Optimization in Online Display Advertising</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2022-02-01 21:53:19" itemprop="dateCreated datePublished" datetime="2022-02-01T21:53:19+08:00">2022-02-01</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-tags"></i>
-      </span>
-      <span class="post-meta-item-text">标签</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/tags/%E8%AE%A1%E7%AE%97%E5%B9%BF%E5%91%8A/" itemprop="url" rel="index"><span itemprop="name">计算广告</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>最近在研究广告创意相关内容,
-笔者根据当前的调研，将这个领域划分为<strong>创意生成、创意优选和创意投放</strong>三大块，每一块的具体职责如下</p>
-<ul>
-<li>创意生成：利用素材(标题、图片、视频、落地页等)生成候选创意(用户看到的广告)</li>
-<li>创意优选：从计划的候选创意(一个计划下的候选往往有多个)中选择 topk
-个用于投放</li>
-<li>创意投放：将优选出来的创意投放至线上</li>
-</ul>
-<p>严格来说，这三部分其实也并非泾渭分明，比如前两部分可以统一理解为创意生成(从最原始的素材生成最终要投放的创意)，后两部分可以统一理解为创意投放过程(从候选中选出来并投放至线上)。</p>
-<p>本文主要侧重讲述与创意投放相关的一篇 paper,
-而且偏向于上面提到第三块内容(没有基于 E&amp;E 的优选过程)，paper
-的标题是 <a
-target="_blank" rel="noopener" href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3863663">Dynamic
-Creative Optimization in Online Display Advertising</a>，这篇 paper
-将素材在线投放问题建模成一个二部图匹配问题，并提供了严格求解的方法和在线的近似求解方法。更重要的是，这种建模的方法不局限于创意领域，能应用到更多投放场景下。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/02/01/Dynamic%20Creative%20Optimization%20in%20Online%20Display%20Advertising/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
