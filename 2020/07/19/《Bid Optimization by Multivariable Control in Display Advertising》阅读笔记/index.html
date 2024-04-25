@@ -34,6 +34,7 @@
 <meta property="og:image" content="https://wulc.me/imgs/bid_optimization_LP1.jpg">
 <meta property="og:image" content="https://wulc.me/imgs/bid_optimization_dual_problem_LP2.jpg">
 <meta property="og:image" content="https://wulc.me/imgs/bidding_optimization_Complementary_Slackness.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/bid_optimize_f6.jpg">
 <meta property="og:image" content="https://wulc.me/imgs/bid_optimization_classify_situation.jpg">
 <meta property="og:image" content="https://wulc.me/imgs/bid_optimization_cbid.jpg">
 <meta property="og:image" content="https://wulc.me/imgs/bid_optimization_cbid_graph.jpg">
@@ -47,7 +48,7 @@
 <meta property="og:image" content="https://wulc.me/imgs/bid_optimization_performance.jpg">
 <meta property="og:image" content="https://wulc.me/imgs/bid_optimization_evaluation_result.jpg">
 <meta property="article:published_time" content="2020-07-19T13:37:39.000Z">
-<meta property="article:modified_time" content="2024-04-20T13:32:32.221Z">
+<meta property="article:modified_time" content="2024-04-25T17:09:08.667Z">
 <meta property="article:author" content="良超">
 <meta property="article:tag" content="计算广告">
 <meta property="article:tag" content="机器学习">
@@ -356,11 +357,10 @@ class="math inline">\(r_i^{*}\)</span>
 分别表示原问题和对偶问题的最优解，后面带 <code>*</code>
 上标的符号均表示最优解，至此为止，上面都是基于最优化理论推导出来的一些公式，但是<strong>接下来这一步就有点跳了</strong>，paper
 中直接令最优出价公式为</p>
-<p><span class="math display">\[bid^{*} = \frac{1}{p^{*}+q^{*}} × CTR_i
-× CVR_i + \frac{q^{*}}{p^{*}+q^{*}} × C × CTR_i \tag{6}\]</span></p>
+<p><img data-src="https://wulc.me/imgs/bid_optimize_f6.jpg" height="50%" width="50%"></p>
 <p>则上面那些公式中表示给广告主带来的价值 <span
 class="math inline">\(v_i\)</span> 可写成 <span
-class="math inline">\(v_i = bid_i - wp_i\)</span>,
+class="math inline">\(v_{i} = bid_{i} - wp_{i}\)</span>,
 将公式（6）代入这个式子，再将 <span class="math inline">\(v_i\)</span>
 代入上图中的公式(8)，可得到下面的公式（10）及其分类讨论的结果</p>
 <figure>
