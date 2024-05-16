@@ -42,7 +42,7 @@
 <meta property="og:image" content="https://wulc.me/imgs/charTable.jpg">
 <meta property="og:image" content="https://wulc.me/imgs/staticLibrary.jpg">
 <meta property="article:published_time" content="2020-05-31T13:37:39.000Z">
-<meta property="article:modified_time" content="2023-07-16T15:28:28.125Z">
+<meta property="article:modified_time" content="2024-05-16T16:04:13.847Z">
 <meta property="article:author" content="良超">
 <meta property="article:tag" content="C++">
 <meta property="article:tag" content="读书">
@@ -331,32 +331,37 @@ Overflow），操作系统这时候就会直接把你的程序杀掉</strong>。
 </ul></li>
 </ul>
 <h2 id="编译与链接概述">编译与链接概述</h2>
-<p>编译的过程(预编译-&gt;编译-&gt;汇编-&gt;链接) - 预编译（生成
-<code>.i</code> 文件）：主要是处理 <code>#</code>
+<p>编译的过程(预编译-&gt;编译-&gt;汇编-&gt;链接)</p>
+<ul>
+<li>预编译（生成 <code>.i</code> 文件）：主要是处理 <code>#</code>
 开头的语句，如进行宏展开、将被 include
-的文件插入到对应的地方（递归执行） - 编译（生成 <code>.s</code>
+的文件插入到对应的地方（递归执行）</li>
+<li>编译（生成 <code>.s</code>
 文件）：将代码编译成汇编代码，包括词法分析、语法分析、语义分析和生成汇编代码的优化；虽然不同语言都可通过
 gcc 来统一编译，但是 gcc
-对于对于不同的语言调用了不同的编译程序（如c是cc1，c++是cclplus，java是jc1）
--
-汇编（生成<code>.o</code>文件）：将汇编代码逐条转换成机器指令（有查找表）
-- 链接（生成可执行文件）：静态链接与动态链接</p>
-<p>其中编译这个步骤常常涉及到以下几个过程 -
-词法分析：将源码分割成一系列的token，利用
-lex，编译器开发者只需要定义词法规则 - 语法分析：生成语法树，利用
-yacc，编译器开发者只需要定义语法规则 -
-语义分析：确定语句是否合法（编译器只能分析静态语义），为语法树中的每个节点标记出其类型</p>
+对于对于不同的语言调用了不同的编译程序（如c是cc1，c++是cclplus，java是jc1）</li>
+<li>汇编（生成<code>.o</code>文件）：将汇编代码逐条转换成机器指令（有查找表）</li>
+<li>链接（生成可执行文件）：静态链接与动态链接</li>
+</ul>
+<p>其中编译这个步骤常常涉及到以下几个过程</p>
+<ul>
+<li>词法分析：将源码分割成一系列的token，利用
+lex，编译器开发者只需要定义词法规则</li>
+<li>语法分析：生成语法树，利用 yacc，编译器开发者只需要定义语法规则</li>
+<li>语义分析：确定语句是否合法（编译器只能分析静态语义），为语法树中的每个节点标记出其类型</li>
+</ul>
 <p>编译器的前端和后端 -
 前端：生成与机器无关的中间代码（即前面的词法和语法分析步骤） -
 后端：将中间代码转换成目标机器代码 -
 跨平台编译器，使用同一个前端和不同后端</p>
 <p>关于编译器的架构可参考这篇文章：<a
 target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/102250532">LLVM概述——基础架构</a></p>
-<p>链接基本概念 -
-处理各模块间的相互引用（如引用了其他模块的函数，需要在运行时知道这个函数的地址）
--
-<strong>从原理上来说，链接就是把一些指令对于其他符号的地址的引用加以修正</strong>
-- 库是一些常用代码被编译成目标文件后打包存放</p>
+<p>链接基本概念</p>
+<ul>
+<li>处理各模块间的相互引用（如引用了其他模块的函数，需要在运行时知道这个函数的地址）</li>
+<li><strong>从原理上来说，链接就是把一些指令对于其他符号的地址的引用加以修正</strong></li>
+<li>库是一些常用代码被编译成目标文件后打包存放</li>
+</ul>
 <h2 id="目标文件的格式">目标文件的格式</h2>
 <ul>
 <li>目标文件就是源代码编译后但是未进行链接的那些中间文件（windows 的

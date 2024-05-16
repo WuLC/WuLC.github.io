@@ -67,7 +67,7 @@
 <meta property="og:image" content="https://wulc.me/imgs/image_1b4tksuvu3n41oc8onl1u01rtp5i.png">
 <meta property="og:image" content="https://wulc.me/imgs/image_1b4tl0vca1bva1d5f1t04qer189s6c.png">
 <meta property="article:published_time" content="2016-12-26T13:37:39.000Z">
-<meta property="article:modified_time" content="2023-07-16T15:28:28.097Z">
+<meta property="article:modified_time" content="2024-05-16T16:04:13.851Z">
 <meta property="article:author" content="良超">
 <meta property="article:tag" content="计算机网络">
 <meta name="twitter:card" content="summary">
@@ -435,10 +435,10 @@ alt="IPV6组播格式" />
 </figure>
 <p>其中</p>
 <ul>
-<li>Flags:用来表示permanent(0000)或transient(0001)组播组</li>
-<li>Scope:表示组播组的范围 &gt;0：预留 1：节点本地范围 2：链路本地范围
-5：站点本地范围</li>
-<li>Group ID:组播组ID</li>
+<li><p>Flags:用来表示permanent(0000)或transient(0001)组播组</p></li>
+<li><p>Scope:表示组播组的范围 &gt;0：预留 1：节点本地范围
+2：链路本地范围 5：站点本地范围</p></li>
+<li><p>Group ID:组播组ID</p></li>
 </ul>
 <p>一些众所周知的组播地址如下图所示</p>
 <figure>
@@ -701,13 +701,13 @@ alt="ICMPv6分组格式和位置" />
 (2)<strong>信息报文</strong>(Type=128~255)：提供诊断和附加的主机功能。如回声请求(Type=128)和应答(Type=129)，ND协议等</p>
 <p>ICMPv6的三个实际应用为</p>
 <ul>
-<li>ping</li>
-<li>tracert(HopLim与v4中的TTL意思相同) &gt;第一个请求：HopLim=1
+<li><p>ping</p></li>
+<li><p>tracert(HopLim与v4中的TTL意思相同) &gt;第一个请求：HopLim=1
 第一跳路由器收到，发送超时(HopLim=0)消息 得到第一跳路由器的信息
 第二个请求：HopLim=2 第二跳路由器收到，发送超时消息
 得到第二跳路由器的信息
-注意：HopLim的最大值为30，且为了让每一个请求都返回超时信息，通常设置ICMPv6报文的端口不可达。</li>
-<li>PMTU发现：通过试探的方式发现路径允许的最大的MTU,如下为一个简单的过程。</li>
+注意：HopLim的最大值为30，且为了让每一个请求都返回超时信息，通常设置ICMPv6报文的端口不可达。</p></li>
+<li><p>PMTU发现：通过试探的方式发现路径允许的最大的MTU,如下为一个简单的过程。</p></li>
 </ul>
 <p>1)源机向目的机发送MTU=1500字节的IPV6数据包
 2)路由器B向源发送超长消息，指定MTU=1400字节

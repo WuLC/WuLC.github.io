@@ -32,8 +32,9 @@
 <meta property="og:description" content="之前写的 An Overview Of An Ad System, 从技术原理上介绍了各个模块（召回、精排、出价、冷启动等）的基本职责和原理，几年过去了，这部分的认知虽然还没过时，但是经历了更多业务后，对整体的商业化也有一个新的认知，本文尝试从另一个更系统的角度去理解一个广告系统 传统认知中的 ad system 一般是三方：广告主&#x2F;代理、平台、用户；但是随着内容平台（抖音、快手、小红书、哔哩哔哩">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://wulc.me/imgs/YAOAS_relationship.jpg">
+<meta property="og:image" content="https://wulc.me/imgs/bilibili_up.jpg">
 <meta property="article:published_time" content="2024-04-05T08:08:44.000Z">
-<meta property="article:modified_time" content="2024-04-28T15:33:31.146Z">
+<meta property="article:modified_time" content="2024-05-16T16:04:13.844Z">
 <meta property="article:author" content="良超">
 <meta property="article:tag" content="计算广告">
 <meta name="twitter:card" content="summary">
@@ -146,7 +147,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B9%B3%E5%8F%B0"><span class="nav-number">1.</span> <span class="nav-text">平台</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%93%E9%AA%8Cc-%E7%AB%AF%E4%B8%8E-b-%E7%AB%AF"><span class="nav-number">1.1.</span> <span class="nav-text">体验：C 端与 B 端</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%98%E7%8E%B0%E5%B9%B3%E5%8F%B0%E4%B8%8E%E5%88%9B%E4%BD%9C%E8%80%85"><span class="nav-number">1.2.</span> <span class="nav-text">变现：平台与创作者</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B9%B3%E5%8F%B0-1"><span class="nav-number">1.2.1.</span> <span class="nav-text">平台</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%94%A8%E6%88%B7"><span class="nav-number">2.</span> <span class="nav-text">用户</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%81%E9%87%8F%E7%AD%96%E7%95%A5"><span class="nav-number">2.1.</span> <span class="nav-text">流量策略</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B4%A0%E6%9D%90"><span class="nav-number">2.2.</span> <span class="nav-text">素材</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E4%B8%8E%E7%BB%8F%E8%90%A5"><span class="nav-number">2.3.</span> <span class="nav-text">客户与经营</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%B1%BB%E5%9E%8B"><span class="nav-number">2.3.1.</span> <span class="nav-text">客户类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%8C%E4%B8%9A%E5%8C%96"><span class="nav-number">2.3.2.</span> <span class="nav-text">行业化</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%9B%E4%BD%9C%E8%80%85"><span class="nav-number">3.</span> <span class="nav-text">创作者</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B0%B4%E4%B8%8B%E4%B8%8E%E6%B0%B4%E4%B8%8A"><span class="nav-number">3.1.</span> <span class="nav-text">水下与水上</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B9%B3%E5%8F%B0"><span class="nav-number">1.</span> <span class="nav-text">平台</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%93%E9%AA%8Cc-%E7%AB%AF%E4%B8%8E-b-%E7%AB%AF"><span class="nav-number">1.1.</span> <span class="nav-text">体验：C 端与 B 端</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%98%E7%8E%B0%E5%B9%B3%E5%8F%B0%E4%B8%8E%E5%88%9B%E4%BD%9C%E8%80%85"><span class="nav-number">1.2.</span> <span class="nav-text">变现：平台与创作者</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B9%B3%E5%8F%B0-1"><span class="nav-number">1.2.1.</span> <span class="nav-text">平台</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E4%BD%9C%E8%80%85"><span class="nav-number">1.2.2.</span> <span class="nav-text">创作者</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%9F%E6%80%81%E5%AE%A2%E6%88%B7%E5%88%9B%E4%BD%9C%E8%80%85%E4%B8%8E%E5%86%85%E5%AE%B9"><span class="nav-number">1.3.</span> <span class="nav-text">生态：客户、创作者与内容</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7"><span class="nav-number">2.</span> <span class="nav-text">客户</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A1%8C%E4%B8%9A%E5%8C%96"><span class="nav-number">2.1.</span> <span class="nav-text">行业化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ka-%E4%B8%8E-smb"><span class="nav-number">2.2.</span> <span class="nav-text">KA 与 SMB</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%9A%90%E7%A7%81"><span class="nav-number">2.3.</span> <span class="nav-text">数据隐私</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%8F%E8%90%A5"><span class="nav-number">2.4.</span> <span class="nav-text">经营</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%9B%E4%BD%9C%E8%80%85-1"><span class="nav-number">3.</span> <span class="nav-text">创作者</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B0%B4%E4%B8%8B%E4%B8%8E%E6%B0%B4%E4%B8%8A"><span class="nav-number">3.1.</span> <span class="nav-text">水下与水上</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E5%AE%B9%E5%8A%A0%E7%83%AD"><span class="nav-number">3.2.</span> <span class="nav-text">内容加热</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%94%A8%E6%88%B7"><span class="nav-number">4.</span> <span class="nav-text">用户</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%81%E9%87%8F%E7%AD%96%E7%95%A5"><span class="nav-number">4.1.</span> <span class="nav-text">流量策略</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B4%A0%E6%9D%90"><span class="nav-number">4.2.</span> <span class="nav-text">素材</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">小结</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -266,9 +267,7 @@ Overview Of An Ad System</a>,
 UGC
 内容，创作者在商业变现中的影响也越来越难被忽视，所以这里基于三方增加了代表创作者的第四方，如下图所示</p>
 <p><img data-src="https://wulc.me/imgs/YAOAS_relationship.jpg" height="80%" width="80%"></p>
-<p>以上的四方比较复杂的关系，一般是在“一方流量”（参考一方数据的概念）上存在，如抖音/快手/小红书/哔哩哔哩等有能力搭建自己的一方流量的变现团队，同时需要考虑
-app
-上的各种生态问题；相较于“一方流量”，“三方流量”的场景一般只需要关注客户和平台的关系，典型的就是联盟的场景（穿山甲、优量汇、快手联盟等），对用户侧没有强体验约束，因为本质上联盟就是个倒卖流量的生意，关于一方流量和三方流量，会在最后会简单提一下；本文大部分重点在一方流量</p>
+<p>以上的四方比较复杂的关系，一般是在“一方流量”（参考一方数据的概念）上存在，如抖音/快手/小红书/哔哩哔哩等有能力搭建自己的一方流量的变现团队，同时需要考虑平台上的各种生态问题；相较于“一方流量”，“三方流量”的场景一般只需要关注客户和平台的关系，典型的就是联盟的场景（穿山甲、优量汇、快手联盟等），对用户侧没有强体验约束，因为本质上联盟就是个倒卖流量的生意，关于三方流量，会在最后会简单提一下，本文大部分重点在一方流量</p>
 <span id="more"></span>
 <p>上图中的箭头可以理解为一方与另一方之间的需要交付的目标，以平台为例，作为连接各方的枢纽，平台需要承担以下的职责</p>
 <ul>
@@ -296,7 +295,9 @@ load
 端交付的体验，就是广告主的体验；一般直接的度量指标就是广告主的 nps
 调研，但这个指标往往没法做直接的优化；而计划起量、掉量、跑量、成本、系统
 variance 等问题，都会影响广告主的体验，直接或间接地影响广告主的 nps
-以及在平台上的长期预算，所以往往也会有一些专项来优化这些部分</p>
+以及在平台上的长期预算，解决这些问题是有可能提升 B
+端的用户体验的；其中成本问题是基础也是最重要，往往是通过 ctr、cvr
+的预估准确性做基本保障，同时通过“出价+计费”的方式来做兜底，另外针对计划的掉量、拿量波动的问题有稳定性专项、针对计划的起量问题有冷启动专项等</p>
 <p>商业化的目标，粗略来说，就是在对 C
 端用户体验损害的红线约束内，最大化商业化收入， C
 端的用户体验这部分有比较明确的度量指标：ad load 与 dau
@@ -308,92 +309,205 @@ B 端的广告主能够在平台长期投入更多预算</p>
 <h2 id="变现平台与创作者">变现：平台与创作者</h2>
 <p>变现也分为两部分：平台变现与创作者变现：平台变现就是常规的通过卖流量的广告变现，创作者变现指的创作者通过为客户或平台创作好内容获得报酬，也是近几年在内容平台发展过程中逐步衍生出来的一个方向</p>
 <h3 id="平台-1">平台</h3>
-<p>平台的变现即广告变现，往往需要把下面三件事情做好</p>
-<p>（1）排序效率：提升链路的排序效率，如模型 auc，链路一致性
-（2）流量策略：根据流量需要交付的目标（消耗、体验、生态等），明确链路的排序公式以及相关的流量策略
-（3）客户产品：为了服务于客户的诉求（营销目标多样性、成本、跑量、低门槛投放等），需要为客户提供的各种广告主产品，这部分会在客户部分</p>
-<p>从技术原理上来讲，是上面这几件事情，其实做的事情都是平台匹配效率最大化，或者说流量售卖效率的最大化，因为本质上<code>收入 = cpm × ad_load</code>
-；ad_load 基本是一个固定的值（虽然有很多变相扩 load
-的方法），在技术方向上的需要优化的点就是 cpm 的增长</p>
-<p>如果简单拆解 <code>cpm ≈ bid × ctr × cvr</code>，为了提升
-cpm，需要分别考虑这几项；先看 bid，可以理解为广告主的出价（nobid
+<p>平台的变现即广告变现，往往需要把下面三件事情做好，而一些互联网公司也会根据这几个方向来建设相应的组织架构（排序组、流量组、行业组）</p>
+<p><strong>1、排序效率</strong>：提升链路的排序效率，如模型
+auc，链路一致性</p>
+<p><strong>2、流量机制</strong>：明确链路的排序公式和一些辅助策略，以满足流量需要交付的目标（消耗、体验、生态等）</p>
+<p><strong>3、客户产品</strong>：服务于客户的诉求（营销目标多样性、成本、跑量、低门槛投放、数据隐私等）为客户提供的各种广告主产品，这部分会在客户部分详细展开</p>
+<p>从技术原理上来讲，上面这几件事情都是在让平台匹配效率最大化，或者说流量售卖效率的最大化，因为本质上
+<code>收入 = cpm × ad_load</code> ；ad_load
+基本是一个固定的值（虽然有很多变相扩 load
+的方法如全域推广），在技术方向上的需要优化的点就是 cpm
+的增长；如果简单拆解 cpm，可以粗略认为
+<code>cpm ≈ bid × ctr × cvr</code>，为了提升
+cpm，需要分别考虑这几项：bid、ctr、cvr</p>
+<ul>
+<li><strong>因素一：bid</strong></li>
+</ul>
+<p>先看 bid，直观上看就是竞价流量的 bid 平均水位，对于大部分的 oCPX
+广告，这里的 bid 也往往是广告主的平均出价水位（nobid
 类产品没有广告主出价，但是 bid
-也能一定程度上反映广告主的预算），首先系统不能在广告主的 bid
+也能一定程度上反映广告主的预算），系统不能在广告主的 bid
 基础上无约束地提，因为广告主的出价表达了其对转化成本的预期，如果一个劲儿地提
-bid，不一定能保证</p>
-<p>模型效果提升，链路一致性，前链路</p>
-<p>平台需要让流量售卖的效率最大化，排序是非常重要的一部分</p>
+bid，成本是没法很好地保证的，所以这里的 bid
+基本上能理解为“广告主在某个媒体平台上愿意为一个转化出的价格”，而影响广告主出的
+bid 高低有很多，这里重点讲以下 2 个因素：</p>
+<p>（1）<strong>广告主的生意模式</strong>：一个比较关键的因素是转化对于广告主而言有没有除了这个转化以外的价值</p>
+<p>一般的白牌商家的预算都属于纯效果预算，都是有比较严格的 roi
+的考核的，这种情况下广告主愿意出的价格在各个媒体上也是比较固定的，与之相反的是纯品牌预算，即对转化基本没有太多考核，像
+gd
+很多时候就是在溢价买流量，这个时候广告主会根据平台的影响力，或者说流量价值来出价；</p>
+<p>往往很多预算其实是介于纯效果预算和纯品牌预算之间的，所以广告主的出价的时候也会根据平台的转化是否能带来外溢价值，来对出价做相应的调整;
+如广告主在小红书等种草平台是能接受赞藏、加粉等成本，比抖音、快手等竞品要更高，因为在广告主心里会认为这些种草平台的一个转化能够带来更多外溢价值</p>
+<p>（2）<strong>平台的竞争激烈程度</strong>：即广告主能否在平台上卷起来</p>
+<p>在一个媒体平台上，如果竞争不够激烈，如最极端情况下只有一个广告主，那转化的定价权基本上就掌握在广告主的手里（而这也是广告主生态需要解决的问题之一）；当广告主数量变多后，蓝海变成红海，广告主在总体
+roi
+还是为正的前提下，还是有动力降低自己的利润、在平台提升转化出价的成本来做营销的</p>
+<p>所以，假设广告主出价是理性的，那要提高公式里的
+bid，平台长期要做的就是提升其流量价值（比较虚的概念，与市场认可度与声量相关），满足更多广告主的营销诉求，引入更多的广告主进入平台，营造一个良性的竞争环境，这部分主要上面提到的第
+3 部分即客户产品来承当，当然也会涉及到第 1 部分（如
+ctr、cvr预估准确性）第 2 部分（如流量策略影响广告主生态）</p>
 <ul>
-<li><p>排序的一致性问题: ltr 与 ecpm</p></li>
-<li><p>出价与排序计费分离</p></li>
+<li><strong>因素二：ctr × cvr</strong></li>
 </ul>
-<p>LTR 主要存在的问题： bid 敏感性、 feedback loop 问题【引入特征，与
-cvr 任务做 co-train】</p>
-<p>recpm 主要存在的问题：粗精排一致性问题、对深转的不好（深转往往有多个
-bid）</p>
-<p>feedback loop 和粗精排一致性看起来就是矛盾的</p>
-<p>粗精排一致性指标 precision：send 的候选在粗排 topK 的比例</p>
-<p>recall：近线流量中前 ad_count 候选（对应原始流量的
-send）在粗排中的序能否在前 recall_num rank bid auc: 粗排的 rank_bid
-与精排 rank_bid 计算的 reg_auc【针对有 rank bid 的场景】</p>
-<table style="width:7%;">
-<colgroup>
-<col style="width: 6%" />
-</colgroup>
-<tbody>
-<tr class="odd">
-<td>召回上，LTR 对 bid 不如 ecpm 敏感，且往往 LTR
-作用在召回，掌控着入口，提价效果不一定能马上显露出来（因为 LTR
-还是会学精排的 sorted_ecpm）</td>
-</tr>
-<tr class="even">
-<td>LTR 偏 exploitaion，往往从 ltr 切为 ecpm 会有损</td>
-</tr>
-<tr class="odd">
-<td>有一些工作会融合LTR 和 ecpm 作为新的 loss（ecpm_loss相当于一个
-sorted_ecpm 的回归任务）</td>
-</tr>
-</tbody>
-</table>
-<p>LTR-&gt;recpm 是为了减缓 feedback loop，同时在精排前也考虑 bid
-的特征</p>
-<p>feedback loop 会影响客户生态；实验中召回打破 feedback
-loop，生命周期显著延长</p>
-<p>recpm 里的 r2s 也是会存在 feedback loop 问题，下掉会有损 ###
-创作者</p>
-<p>变现: B（蒲公英） or 平台（口碑通）</p>
-<p>内容加热 ## 生态：客户、创作者与内容</p>
-<p>规模与生态</p>
-<p>规模先起来，然后做生态的治理</p>
-<p>客户、素材均是如此</p>
-<h1 id="用户">用户</h1>
-<p>用户体验的红线指标，load 限制，混排的首位、min-gap 限制</p>
-<h2 id="流量策略">流量策略</h2>
+<p>其他两项是 ctr 和 cvr，因为比较相似，就放在这里一并说了，提升 ctr 和
+cvr 也有多个因素，这里重点说以下两个</p>
+<ol type="1">
+<li>首先能想到的就是模型的排序效率，模型的职责就是在用户到来时，为用户选择出
+ctr、cvr 最高的 item，所以模型的 auc 提升，理论上是能够带来 ctr、cvr
+的提升</li>
+</ol>
+<p>但实际上在广告系统里排序公式不是 ctr，cvr 最大化，往往是
+<code>ecpm + hidden_cost</code>, 前者 <code>ecpm=bid × ctr × cvr</code>
+是收入最大化，后者 hidden_cost
+则是为了满足收入以外的目标而加上的各项（如冷启动、掉量等问题）；因此，提升模型的
+auc ，不一定能带来最终的 ctr、cvr 提升，因为本身的排序公式就不是仅由
+ctr、cvr 决定的（比如说 ctr、cvr 不是最高的但是 bid
+足够高，综合起来是有可能排在第一位的）</p>
+<p>但是总体来说，模型长期的迭代预期是能带来后验 ctr、cvr
+上涨的，因为对于广告主来说，用低 ctr、cvr
+素材但是高出价不是一种良性的方式，且不是平台所提倡的（平台会引导广告主制作好素材）；因此，对于广告主而言，通过制作好素材提升
+ctr、cvr 来跑量，才是一种更加可持续的方式</p>
+<p>（2）另一个重要的因素就是素材，素材质量的优劣直接影响着用户的点击率、转化率等指标，需要提高优质素材的供给；比如说通过撮合平台让
+K 给 B 提供更多高质量素材，通过 AIGC
+的方式生成更多优质素材等，然后平台侧结合模型的排序效率、素材优选等方式，提升总体的
+ctr、cvr，平台侧侧这些动作的一些拓展文章可参考 <a
+href="https://wulc.me/2022/02/01/Dynamic%20Creative%20Optimization%20in%20Online%20Display%20Advertising/">Dynamic
+Creative Optimization in Online Display Advertising</a> 和 <a
+href="https://wulc.me/2022/03/05/A%20Hybrid%20Bandit%20Model%20with%20Visual%20Priors%20for%20Creative%20Ranking%20in%20Display%20Advertising/">A
+Hybrid Bandit Model with Visual Priors for Creative Ranking in Display
+Advertising</a></p>
+<p>这部分主要上面提到的第 1 部分（模型效率）和第 2
+部分（排序公式，hidden_cost 的组成）来支持</p>
+<h3 id="创作者">创作者</h3>
+<p>创作者随着内容平台的发展而发展，当前已经在广告系统中是一个重要组成方，肩负着创作好素材的职责，与之相关的就是创作者变现这个大话题，毕竟创作者不能单纯“用爱发电”，而是需要有稳定的收入来支撑做内容</p>
+<p>创作者的变现的途径有很多，包括来自 B
+端（如商单推广、直播带货）、来自平台（如平台的补贴）、来自 C
+端（如直播打赏、充电等）等，参考 <a
+target="_blank" rel="noopener" href="https://www.bilibili.com/read/cv33268874/">B
+站的创作者变现介绍</a></p>
+<p><img data-src="https://wulc.me/imgs/bilibili_up.jpg" height="80%" width="80%"></p>
+<p>来自 B
+端的商单是最常见的方式，客户（以下简称B）侧找到创作者（以下简称K）侧写对应的推广的内容，这是一个典型的撮合过程，很多内容平台也建立相关的官方平台（<a
+target="_blank" rel="noopener" href="https://www.xingtu.cn/">星图</a>、<a
+target="_blank" rel="noopener" href="https://pgy.xiaohongshu.com/">蒲公英</a>、<a
+target="_blank" rel="noopener" href="https://k.kuaishou.com/">聚星</a>、<a
+target="_blank" rel="noopener" href="https://huahuo.bilibili.com/">花火</a>）来促成 B 与 K 的合作，B
+侧走官方平台报备，除了需要为 K
+提供一口价结算或效果化结算（即根据转化数来结算），还需要为平台提供一定比例的佣金，这部分的内容我们称为“水上内容”</p>
+<p>但除了“水上内容”，还有不少内容会走“水下”，即 B 与 K
+不走以上提到的官方平台，而是直接达成合作，B
+是有动力去做这件事的，因为这样最直接的收益就是 B
+侧没有了额外的需要支付的佣金，且内容更贴近 ugc
+的（一些平台对于走了撮合的内容是要打标的）；但是对于平台而言，肯定是希望这些内容都能够走官方合作平台的，一是佣金；二是平台会希望能够对
+K 制作的内容了解并有一定的管控能力，包括了解 K
+变现的行业、粉丝量分布，并通过影响 K 的商机分配来影响 K
+内容制作方向等</p>
+<p>因此，在创作者变现上，平台的愿景往往是（1）更多的创作者能够在平台变现（走水上的方式），变现人数与撮合流水能够持续增长（2）为平台共享贡献好的内容</p>
+<p>而在这个过程中，平台需要解决的一个大问题，就是
+<strong>“水下翻水上”</strong>，即如何让 B
+侧更多的预算走水上，这部分会在后面创作者重点介绍</p>
+<p>除了来自 B
+端，平台的补贴也是创作者变现的一个来源，一般的补贴包括现金和流量两种；如很多内容平台都会有创作者激励计划，即根据内容播放量或浏览量来给创作者结算；也会有一些流量扶持，如流量券、特定话题下作品的流量扶持等</p>
+<h2 id="生态客户创作者与内容">生态：客户、创作者与内容</h2>
+<p>生态一般是平台发展到一定规模后才需要考虑的问题；这里的生态指的是非红线的生态问题，即不会一旦出现了平台就要倒闭的那种（比如政治敏感话题）；而是短期不管看不出什么大问题，但是放任不管，不利于平台长期可持续发展，如计划冷启动、广告主的多样性、素材多样性、创作者变现分布等等</p>
+<p>这是个比较典型的规模与生态的问题，规模小的时候这类问题不显著，或者说当时阶段增长是最重要的点，但是当规模变大后，必然会出现一些不健康的问题，通俗点讲就是“林子大了，什么鸟都有”，这个时候生态问题就不能忽略了</p>
 <ul>
-<li><p>频控</p></li>
-<li><p>分人群策略</p></li>
+<li>客户生态</li>
 </ul>
-<p>敏感人群</p>
+<p>常见的客户生态包括：客户结构（如大广告主与小广告主、广告主的行业分布情况）、客户操作习惯（如频繁改出价、复制计划、微改素材等行为）等</p>
+<p>前面提到，最极端情况下平台只有一个广告主，这样流量的定价权就在这个广告主手里了；因此平台肯定希望提升广告主的多样性，让平台总体
+cpm 水位能在广告主的竞争中水涨船高</p>
+<p>但是广告系统里往往又存在着马太效应，即大部分的钱是由小部分的广告主花的；其原因是很多长尾的中小广告主由于竞价能力、投放经验不足等问题与大广告主不太可比，这部分广告主在投放链路中会由于数据量少，链路相关模型学习不充分等原因，进一步加剧这个问题。这个时候需要平台对这部分中小的广告主做一些特定的优化，成立对应的中小专项来优化，这部分的一些手段会在客户部分详细说明</p>
+<p>另外一个常见的客户生态问题就是客户的投放操作问题，比如说频繁改出价，正常
+oCPX
+广告中，广告主的出价就是其对转化成本的预期，而这个成本理论上应该是固定的，不过会因为在投放初期由于没有固定成本预期而去调价做试探，比如说一个点赞在不同媒体平台上的成本是不一样的，广告主在一个平台切换到另一个平台后需要做调整，但这种改动也不会很频繁；所以频繁改动出价往往是广告主
+hack 平台的一种手段，如把出价从低调到高来 hack
+赔付的漏洞，或者在预算不足的时候出一个很大的 bid 来 hack
+刹车漏洞，因次平台要有相应的规则来回避这些问题，同时需要有相应的投放引导</p>
+<p>除了出价，广告主往往也存在不断复制计划来 hack
+系统的行为，因为系统的排序模型往往会使用很多 id 类特征，带来的就是系统的
+variance 问题，如两个计划的投放设置、素材都一致，但是很可能因为计划 id
+不一致，导致投放效果的不一致，所以广告主有动力通过复制计划来跑更多的量，但这样给平台带来的问题有（1）工程上的压力（召回的计划或素材变多了）（2）素材重复度高，这其实也算是素材生态问题，微改素材的问题也属于同一类问题；因此，平台侧需要考虑使用
+id 类特征带来的问题，或者使用了 id
+类特征后需要通过额外的策略来保证广告主的复制是无效的，如平台的计划裁剪与复制的策略</p>
 <ul>
-<li>混排</li>
+<li>创作者生态</li>
 </ul>
-<p>量纲的统一，start_pos 与 gap 的约束</p>
-<h2 id="素材">素材</h2>
-<p>质量与，多样性 # 客户</p>
-<p>平台需要给客户交付的是，成本与跑量：成本一定，跑量最大化</p>
-<p>投放便利性：营销目标/产品多样性，投放产品易用性（托管、低门槛投放）</p>
-<h2 id="客户与经营">客户与经营</h2>
-<p>经营：优质商品/服务</p>
-<h3 id="客户类型">客户类型</h3>
-<p>KA 客户与 smb 客户</p>
-<p>smb 的低门槛投放：托管、素材</p>
-<p>经营</p>
-<h3 id="行业化">行业化</h3>
+<p>创作者的生态，跟客户一样，也需要分结构和行业来看，因为创作者变现本身也是个供需的生意，需要明确分粉丝段或分行业的供需问题，如创作者变现的粉丝量分布是否健康，是否只有头部作者有变现，但大部分长尾的创作者压根没有变现；行业上也是类似的，因为内容平台是希望提升其内容的多样性的，对应的需要提升创作者行业的多样性，因为创作者是
+ugc 平台素材的一个很重要的供给</p>
+<p>除了上面的问题，创作者的生态还存在“水下”问题，即创作者的撮合不走官方撮合平台，而是
+B 直接找 K
+来达成合作，这会影响平台对营销内容的管控、平台的营收等；这部分会在创作者部分详细展开</p>
+<ul>
+<li>内容生态</li>
+</ul>
+<p>在内容生态上，除了一些红线问题（如政治、色情内容等），更多的生态问题在于内容的多样性、质量等问题上</p>
+<p>内容多样性问题前面也提到，分别涉及到客户投流内容多样性和创作者创作的内容多样性</p>
+<p>对于客户，多样性问题体现在客户投放不把重心放在素材制作，而是放在了计划复制等各种投放的“骚操作”上，导致素材重复度高，用户审美疲劳，长期对广告交付的用户体验指标、广告相关转化率都有负向影响；针对这一点，需要平台侧应做相关的引导，引导客户去把精力放到素材制作上，巨量引擎的
+<a
+target="_blank" rel="noopener" href="https://www.oceanengine.com/baike/juliangguanggaoshengjiban1.html">创意型自动化投放平台</a>
+做的就是这件事情</p>
+<p>对于创作者，多样性问题体现在其内容是否足够多样，一般而言，内容的多样性与创作者的多样性挂钩，因为往往每个创作者都有自己的创作偏好；因此平台首先需要引进足够多样的创作者，同时平台侧会希望能够有相应的抓手来影响创作者的创作倾向，一般是商机和流量，即把商机和流量更多倾向给平台侧需要扶持的创作者类型</p>
+<p>内容质量问题是个很泛的问题，如视频拍摄质量、内容非原创、内容反智、营销感强等等都算内容质量问题，这些一般需要依靠审核（人+机）的方式来识别与降权；另外针对创作者的撮合往往还存在着“代写代发”的问题，即创作者并非在真诚分享，而是直接发布
+B 写好的笔记（B
+为了更多创作者为品牌背书会这么做，创作者也只需要发布写好的笔记就能拿到钱），这样不仅容易导致总体内容营销感强，同时也会带来创作者变现变现的不良风气和现象，需要平台抑制这种风气</p>
+<h1 id="客户">客户</h1>
+<p>前面提到，客户在内容平台上有营销诉求；服务于客户的各种诉求，如成本、跑量、低门槛投放、营销目标多样性、数据隐私等，平台需要为客户提供的各种投放产品以满足诉求</p>
+<p>同时，平台需要给客户交付好投放体验与投放效果，投放体验主要是客户在平台上投放时，产品的易用性是否好，理解成本是否低；投放效果的目标一般是成本稳定，跑量最大化，同时也会有跑量稳定性等诉求</p>
+<p>在投放效果中，成本问题是基础也是最重要，在技术上首先需要通过 ctr、cvr
+的预估准确性做基本保障（即有 calibration
+模块），同时通过出价和计费来做兜底，出价就是在做保成本的事情；</p>
+<h2 id="行业化">行业化</h2>
+<p>一般广告系统在发展到一定的规模后，就会出现行业化的优化诉求，其原因是一个
+电商、游戏、网服、</p>
 <p>行业有不同特点，需要精细化建设</p>
-<h1 id="创作者">创作者</h1>
-<p>创作者变现</p>
+<h2 id="ka-与-smb">KA 与 SMB</h2>
+<p>KA（Key Account）、SMB（Small and Medium-sized Business）</p>
+<p>但是广告系统里往往又存在着马太效应，即大部分的钱是由小部分的广告主花的；其原因是很多长尾的中小广告主由于竞价能力、投放经验不足等问题与大广告主不太可比，这部分广告主在投放链路中会由于数据量少，链路相关模型学习不充分等原因，进一步加剧这个问题。这个时候需要平台对这部分中小的广告主做一些特定的优化，成立对应的中小专项来优化，这部分的一些手段会在客户部分详细说明</p>
+<p>smb 的低门槛投放：托管、素材</p>
+<p>投放便利性：营销目标/产品多样性，投放产品易用性（托管、低门槛投放）</p>
+<h2 id="数据隐私">数据隐私</h2>
+<h2 id="经营">经营</h2>
+<p>客户需要提供优质商品/服务</p>
+<h1 id="创作者-1">创作者</h1>
+<p>很多时候K 与 B</p>
 <h2 id="水下与水上">水下与水上</h2>
-<p>内容加热能力</p>
+<p>1、撮合能力的升级</p>
+<p>2、水上权益透出</p>
+<p>3、与水下有差异的分发机制</p>
+<h2 id="内容加热">内容加热</h2>
+<h1 id="用户">用户</h1>
+<p>在商业系统中，与用户较为相关就是体验相关的事项，量化的指标往往是 dau
+loss；从这个角度来讲，商业化就是在用 dau loss
+来换钱，且需要持续把这个兑换比变得更高；但 dau loss
+需要长期的实验才能观测到显著的变化，所以往往会把 dau loss
+拆解出很多中间指标(如使用时长、次留、负反馈等)进行观测</p>
+<p>为了防止 dau loss 超红线， ad load
+限制是最基础的约束，在此之上就是各种体验的流量策略，包括频控、排序公式加入体验项、混排约束等</p>
+<h2 id="流量策略">流量策略</h2>
+<p>频控是最常见的体验策略，即控制同一内容/同类内容等在 xx
+天内不能给用户曝光超过 xx
+次之类的，这类频控比较硬，所以往往也会有针对不同给用户 xx
+是不同的软频控策略，本质上其实是个分人群策略</p>
+<p>排序公式里加入体验项也是常见手段，商业化的分发公式中的基础项 ecpm
+，是以收入最大化作为目标的，在 hidden_cost
+中可以加入负反馈项、停留时长项等影响相关的体验项，但这破坏了以收入最大化的分发目标，对收入来说肯定不是最优的，而这本质上就是在用收入来兑换相关的体验</p>
+<p>混排一般会有较多的约束，其目的也是约束广告对用户体验的损害，如广告的首位，广告位置之间的
+gap 约束，广告曝光的时间 gap
+的限制，但是很多策略其实都在尝试把硬规则软化，所以也有一些思路是把这些比较硬的规则做成软化的
+loss，详见 <a
+href="https://wulc.me/2023/02/26/%E6%B7%B7%E6%8E%92%E9%82%A3%E4%BA%9B%E4%BA%8B/#%E7%A1%AC%E8%A7%84%E5%88%99%E6%98%AF%E5%90%A6%E6%9C%80%E4%BC%98">混排的那些事儿</a></p>
+<p>上面提到的这些策略，其实都在做的都是个性化策略，或者说分人群策略；因为不同用户之间的差异是比较大的，如果对用户做聚类，一般可以从
+“价值 × 对广告敏感” 的角度把用户划分成 4
+个类比；不同类比的用户往往需要不同策略（个性化策略），如广告多出在高价值低敏感的用户，少出在低价值高敏感的用户上，带来的
+dau 收益和商业化收入的收益，肯定是要更大的</p>
+<p>回到上面的软频控、排序公式加入体验项打分、混排硬约束的软化，其实都是在做分人群的策略，都会把广告更多地出在那些高价值低敏感的用户，这不是个显式的策略，是各个策略基于后验数据建模，再作用到系统上的自然结果</p>
+<p>值得注意的是，高价值不敏感用户的标签并非会一直不变，当各类营销内容（电商、直播、广告）都在挑这部分人群时，有可能因为营销内容过多而离开平台；所以监控
+dau loss 时，也可以分人群做监控，把这部分核心人群单独监控起来</p>
+<h2 id="素材">素材</h2>
+<p>另一个优化用户体验的重要方向就是素材了，包括素材的质量与多样性，这部分在前面都提及到了，这里就不再展开</p>
+<h1 id="小结">小结</h1>
 <!-- flag of hidden posts -->
     </div>
 

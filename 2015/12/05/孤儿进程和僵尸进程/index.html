@@ -33,7 +33,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://wulc.me/imgs/2016-01-06_120845.png">
 <meta property="article:published_time" content="2015-12-05T12:06:27.000Z">
-<meta property="article:modified_time" content="2023-07-16T15:28:28.136Z">
+<meta property="article:modified_time" content="2024-05-16T16:04:13.848Z">
 <meta property="article:author" content="良超">
 <meta property="article:tag" content="操作系统">
 <meta property="article:tag" content="Linux">
@@ -295,9 +295,10 @@
 可通过top命令查看当前是否有僵尸进程，如下图0 zombie表示没有僵尸进程 <img data-src="https://wulc.me/imgs/2016-01-06_120845.png"
 alt="top查看僵尸进程" /></p>
 <p>假如该值不为0，可以通过<code>ps</code>和<code>grep</code>命令查找僵尸进程,如:
-<code>ps -A -o stat,ppid,pid,cmd | grep -e '^[Zz]'</code> 命令注解： -A
-参数列出所有进程 -o 自定义输出字段 我们设定显示字段为 stat（状态）,
-ppid（进程父id）, pid(进程id)，cmd（命令）这四个参数 因为状态为
+<code>ps -A -o stat,ppid,pid,cmd | grep -e '^[Zz]'</code> 命令注解：</p>
+<p>-A 参数列出所有进程 -o 自定义输出字段 我们设定显示字段为
+stat（状态）, ppid（进程父id）, pid(进程id)，cmd（命令）这四个参数
+因为状态为
 z或者Z的进程为僵尸进程，所以我们使用grep抓取stat状态为zZ进程。</p>
 <p>找到这些进程后，可以直接kill掉僵尸进程，如果僵尸进程的数量比较多，也可以kill掉其父进程的pid让init经常回收这些僵尸进程的资源。</p>
 <p>参考资料： [1] http://www.cnblogs.com/Anker/p/3271773.html [2]

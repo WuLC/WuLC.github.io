@@ -32,7 +32,7 @@
 <meta property="og:description" content="《python简明教程》python入门的一个非常好的文档。如需下载，请点击这里(密码：grjj)。最近又看了一遍，把里面一些容易忽略的知识点记录下来。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2015-11-19T04:00:37.000Z">
-<meta property="article:modified_time" content="2023-07-16T15:28:28.198Z">
+<meta property="article:modified_time" content="2024-05-16T16:04:13.846Z">
 <meta property="article:author" content="良超">
 <meta property="article:tag" content="python">
 <meta name="twitter:card" content="summary">
@@ -377,8 +377,10 @@ str*i可以重复输出i个str</p></li>
 </ul>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">list1=[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>]</span><br><span class="line">list2=[i*<span class="number">2</span> <span class="keyword">for</span> i <span class="keyword">in</span> list1 <span class="keyword">if</span> i&gt;<span class="number">2</span>] <span class="comment">#list2=[6,8,10]</span></span><br></pre></td></tr></table></figure>
 <p>也可从一个列表导出一个字典(dict只能接受一个参数，这里为一个列表)
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">l1=[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]</span><br><span class="line">timesten=<span class="built_in">dict</span>([(v,v*<span class="number">10</span>) <span class="keyword">for</span> v <span class="keyword">in</span> l1 <span class="keyword">if</span> i &gt;<span class="number">1</span>])<span class="comment">#timesten=&#123;2:20,3:30&#125;</span></span><br></pre></td></tr></table></figure> -
-函数形参为元组和字典：可用*和**加在形参前，代表这是元组和字典，但是不加也能够正常使用。加上的目的是为了能让函数接受不定参数,例子如下：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">l1=[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]</span><br><span class="line">timesten=<span class="built_in">dict</span>([(v,v*<span class="number">10</span>) <span class="keyword">for</span> v <span class="keyword">in</span> l1 <span class="keyword">if</span> i &gt;<span class="number">1</span>])<span class="comment">#timesten=&#123;2:20,3:30&#125;</span></span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>函数形参为元组和字典：可用*和**加在形参前，代表这是元组和字典，但是不加也能够正常使用。加上的目的是为了能让函数接受不定参数,例子如下：</li>
+</ul>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">add</span>(<span class="params">x, *args</span>):</span><br><span class="line">    total = x</span><br><span class="line">    <span class="keyword">for</span> arg <span class="keyword">in</span> args:</span><br><span class="line">        total += arg</span><br><span class="line">    <span class="keyword">return</span> total</span><br></pre></td></tr></table></figure>
 <p>这里的 <code>*args</code>
 表示参数数目不定，可以看成一个元组，把第一个参数后面的参数当作元组中的元素。运行</p>

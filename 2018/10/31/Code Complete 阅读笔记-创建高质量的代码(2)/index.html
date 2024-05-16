@@ -33,7 +33,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://wulc.me/imgs/image_1cr7k9der10aa1s21qbdoqj1pif9.png">
 <meta property="article:published_time" content="2018-10-31T14:21:25.000Z">
-<meta property="article:modified_time" content="2023-07-16T15:28:28.117Z">
+<meta property="article:modified_time" content="2024-05-16T16:04:13.834Z">
 <meta property="article:author" content="良超">
 <meta property="article:tag" content="编程">
 <meta name="twitter:card" content="summary">
@@ -284,10 +284,10 @@ programming）</h2>
 <p>需要注意的是，断言只是在开发阶段被编译到目标代码中，而在生成产品代码是并不编译进去，以降低系统的性能。</p>
 <p>关于使用断言，有如下的建议</p>
 <ul>
-<li><strong>用错误处理代码来处理预期会发生的情况，而用断言来处理绝对不应该发生的状况</strong></li>
-<li><strong>避免把执行代码放到断言中</strong>，因为这样会导致关闭断言时，编译器很可能就把这些代码排除在外,正确的做法是先将执行代码的结果在断言外用变量存起来，如下所示
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// bad</span><br><span class="line">assert PerformAction() == True</span><br><span class="line"></span><br><span class="line">//good</span><br><span class="line">result = PerformAction() </span><br><span class="line">assert result == True</span><br></pre></td></tr></table></figure></li>
-<li><strong>用断言来注解并验证前条件（precondition）和后条件（postcondition）</strong>。简单来说，前条件就是在执行函数前需要为函数准备好的条件，后条件则是在函数执行后要完成的任务。</li>
+<li><p><strong>用错误处理代码来处理预期会发生的情况，而用断言来处理绝对不应该发生的状况</strong></p></li>
+<li><p><strong>避免把执行代码放到断言中</strong>，因为这样会导致关闭断言时，编译器很可能就把这些代码排除在外,正确的做法是先将执行代码的结果在断言外用变量存起来，如下所示
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// bad</span><br><span class="line">assert PerformAction() == True</span><br><span class="line"></span><br><span class="line">//good</span><br><span class="line">result = PerformAction() </span><br><span class="line">assert result == True</span><br></pre></td></tr></table></figure></p></li>
+<li><p><strong>用断言来注解并验证前条件（precondition）和后条件（postcondition）</strong>。简单来说，前条件就是在执行函数前需要为函数准备好的条件，后条件则是在函数执行后要完成的任务。</p></li>
 </ul>
 <h3 id="错误处理技术">错误处理技术</h3>
 <p>上面提到用断言来处理绝对不应该发生的状况，而用错误处理代码来处理预期会发生的情况，如网络阻塞等。那么该怎么处理那些可能发生的错误呢？本章给出了如下可行的方法</p>

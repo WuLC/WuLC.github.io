@@ -32,7 +32,7 @@
 <meta property="og:description" content="文章主要记录了 spark 2.1.0 集群部署注意事项以及如何通过 Jupyter Notebook 访问 spark 集群。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2017-09-13T13:37:39.000Z">
-<meta property="article:modified_time" content="2023-07-16T15:28:28.138Z">
+<meta property="article:modified_time" content="2024-05-16T16:04:13.843Z">
 <meta property="article:author" content="良超">
 <meta property="article:tag" content="分布式">
 <meta property="article:tag" content="spark">
@@ -268,27 +268,28 @@ Notebook 访问 spark 集群。</p>
 https://spark.apache.org/docs/latest/spark-standalone.html</p>
 <p>一些需要注意的事项如下</p>
 <ul>
-<li>每台机器需要先安装 Java，并配置环境变量 <code>JAVA_HOME</code> 和
-<code>PATH</code></li>
-<li>安装包解压到每台机器上，保持目录一致性，master 能够通过密钥 ssh
-到其他 workers</li>
-<li>修改 <code>/etc/hosts</code> 文件，保证每台主机能够通过主机名称 ping
-通其他机器，注意，如果原来 <code>/etc/hosts</code> 文件中有类似于
+<li><p>每台机器需要先安装 Java，并配置环境变量 <code>JAVA_HOME</code> 和
+<code>PATH</code></p></li>
+<li><p>安装包解压到每台机器上，保持目录一致性，master 能够通过密钥 ssh
+到其他 workers</p></li>
+<li><p>修改 <code>/etc/hosts</code> 文件，保证每台主机能够通过主机名称
+ping 通其他机器，注意，如果原来 <code>/etc/hosts</code> 文件中有类似于
 <code>127.0.0.1 hostname</code> 的解释需要注释掉（因为会与前面设置
-<code>ip hostname</code>冲突）</li>
-<li>master 创建 <code>conf/slaves</code>,每行包含一个 worker 的
-hostname</li>
-<li>各个主机的 python
+<code>ip hostname</code>冲突）</p></li>
+<li><p>master 创建 <code>conf/slaves</code>,每行包含一个 worker 的
+hostname</p></li>
+<li><p>各个主机的 python
 路径和版本要一致，在各台主机上的<code>conf/spark-env.sh</code>中定义如下
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export PYSPARK_PYTHON=/opt/miniconda2/bin/python</span><br><span class="line">export PYSPARK_DRIVER_PYTHON=ipython</span><br></pre></td></tr></table></figure></li>
-<li>通过 <code>sbin</code> 中的script <code>start-all.sh</code>
-启动整个集群</li>
-<li>默认情况下 worker(slave) 所有的 cores 都会使用，但是内存默认只会使用
-1g(可通过 <code>http://SparkMaster:8080/</code>查看，SparkMaster 为
-master 的ip)，如果需要修改可用的资源，需要修改
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export PYSPARK_PYTHON=/opt/miniconda2/bin/python</span><br><span class="line">export PYSPARK_DRIVER_PYTHON=ipython</span><br></pre></td></tr></table></figure></p></li>
+<li><p>通过 <code>sbin</code> 中的script <code>start-all.sh</code>
+启动整个集群</p></li>
+<li><p>默认情况下 worker(slave) 所有的 cores
+都会使用，但是内存默认只会使用 1g(可通过
+<code>http://SparkMaster:8080/</code>查看，SparkMaster 为 master
+的ip)，如果需要修改可用的资源，需要修改
 <code>conf/spark-defaults.conf</code> 文件，如下是设置了每个 worker 分配
 4 个 core 和 6g 内存给 executor，同时设定了 driver program 使用的 core
-的数量和内存大小。 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">spark.executor.cores            4</span><br><span class="line">spark.executor.memory           6g</span><br><span class="line">spark.driver.cores              4</span><br><span class="line">spark.driver.memory             6g</span><br></pre></td></tr></table></figure></li>
+的数量和内存大小。 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">spark.executor.cores            4</span><br><span class="line">spark.executor.memory           6g</span><br><span class="line">spark.driver.cores              4</span><br><span class="line">spark.driver.memory             6g</span><br></pre></td></tr></table></figure></p></li>
 </ul>
 <p><strong>这里需要注意的是 <code>conf/spark-env.sh</code>
 也有内存和cores相关的设定，但是设定的是可使用的最大值，并不是实际的使用值，设定实际的使用值必须要在文件
