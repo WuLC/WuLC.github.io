@@ -24,19 +24,21 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"wulc.me","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.15.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="没有银弹 I don’t believe there is any magic system that will automatically make you huge profits, and you should be wary of anyone who says otherwise, especially if they want to sell it to you. Instead, s">
+    <meta name="description" content="This is not a book about automating trading strategies. It’s possible to trade systematically using an entirely manual process with just a spreadsheet to speed up calculations, so automation is not ne">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Systematic Trading">
 <meta property="og:url" content="https://wulc.me/2023/11/10/Systematic%20Trading/index.html">
 <meta property="og:site_name" content="吴良超的学习笔记">
-<meta property="og:description" content="没有银弹 I don’t believe there is any magic system that will automatically make you huge profits, and you should be wary of anyone who says otherwise, especially if they want to sell it to you. Instead, s">
+<meta property="og:description" content="This is not a book about automating trading strategies. It’s possible to trade systematically using an entirely manual process with just a spreadsheet to speed up calculations, so automation is not ne">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wulc.me/imgs/data_first_vs_idea_first.jpg">
 <meta property="article:published_time" content="2023-11-10T13:53:19.000Z">
-<meta property="article:modified_time" content="2024-04-04T06:34:24.801Z">
+<meta property="article:modified_time" content="2024-05-20T15:56:35.412Z">
 <meta property="article:author" content="良超">
 <meta property="article:tag" content="读书">
 <meta property="article:tag" content="量化交易">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wulc.me/imgs/data_first_vs_idea_first.jpg">
 
 
 <link rel="canonical" href="https://wulc.me/2023/11/10/Systematic%20Trading/">
@@ -132,7 +134,7 @@
   
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           文章目录
@@ -145,6 +147,9 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#introduction"><span class="nav-number">1.</span> <span class="nav-text">Introduction</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#three-types-of-traders"><span class="nav-number">1.1.</span> <span class="nav-text">three types of traders</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#avoid-mistake-instead-of-silver-bullet"><span class="nav-number">1.2.</span> <span class="nav-text">avoid mistake instead of
+silver bullet</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#why-system-trading"><span class="nav-number">1.3.</span> <span class="nav-text">why system trading</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#avoid-flawed-human-brain-with-systematic-trading-rules"><span class="nav-number">2.</span> <span class="nav-text">Avoid
+Flawed Human Brain with Systematic Trading Rules</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#flawed-human-brain"><span class="nav-number">2.1.</span> <span class="nav-text">flawed human brain</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#systematic-trading-rules"><span class="nav-number">2.2.</span> <span class="nav-text">systematic trading rules</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -259,54 +264,42 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <p>没有银弹</p>
-<p><strong>I don’t believe there is any magic system that will
-automatically make you huge profits</strong>, and you should be wary of
-anyone who says otherwise, especially if they want to sell it to
-you.</p>
-<p>Instead, <strong>success in systematic trading is mostly down to
-avoiding common mistakes</strong> such as over complicating your system,
-being too optimistic about likely returns, taking excessive risks, and
-trading too often. I will help you avoid these errors. This won’t
-guarantee vast returns, but it will make failure less likely.</p>
-<p>My main aim isn’t just to give you a single predefined system for
-trading, but to provide you with a modular framework which can be
-adapted to meet your needs. Part three describes the framework in
-detail. Just like you can choose different engines and tyres on a car,
-my framework includes options for different trading rules and position
-sizing calculations.</p>
-<p>这本书把交易者分为三种类型</p>
+        <p>This is not a book about automating trading strategies. It’s possible
+to trade systematically using an entirely manual process with just a
+spreadsheet to speed up calculations, so automation is not
+necessary.</p>
+<h2 id="introduction">Introduction</h2>
+<h3 id="three-types-of-traders">three types of traders</h3>
+<p>There are three types of traders in this book. To a certain extent,
+these three types are determined and classified by the degree of
+automation with which they execute transactions.</p>
 <ol type="1">
-<li>Asset allocating investor</li>
+<li><strong>asset allocating investor</strong></li>
 </ol>
 <blockquote>
 <p>Asset allocators can use systematic methods to avoid the short-term
 chasing of fads and fashions that they know will reduce their returns.
 They might be lazy and wise amateur investors, or managing institutional
 portfolios with long horizons such as pension funds.</p>
-</blockquote>
-<blockquote>
 <p>Asset allocators are sceptical about those who claim to get extra
 returns from frequent trading. For this reason the basic asset
 allocation example assumes you can’t forecast how asset prices will
 perform.</p>
 </blockquote>
 <ol start="2" type="1">
-<li>Semi-automatic trader</li>
+<li><strong>semi-automatic trader</strong></li>
 </ol>
 <blockquote>
 <p>Semi-automatic traders think they are superior to simple rules when
 it comes to forecasting by how much prices will go up or down; instead
 they make their own educated guesses</p>
-</blockquote>
-<blockquote>
 <p>they would like to place those bets inside a systematic framework
 which will ensure their positions and risk are properly managed. This
 frees them up to spend more time making the right call on the
 market.</p>
 </blockquote>
 <ol start="3" type="1">
-<li>Staunch systems trader</li>
+<li><strong>staunch systems trader</strong></li>
 </ol>
 <blockquote>
 <p>The staunch systems trader is a true believer in the benefits of
@@ -315,6 +308,82 @@ allocating investor, they embrace the use of systematic trading rules to
 forecast price changes, but within the same common framework for
 position risk management.</p>
 </blockquote>
+<h3 id="avoid-mistake-instead-of-silver-bullet">avoid mistake instead of
+silver bullet</h3>
+<p>This book claims that there is no magic system that will
+automatically make huge profits for you, and you should be wary of
+anyone who says otherwise, especially if they want to sell it to
+you.</p>
+<p>Instead, <strong>success in systematic trading is mostly down to
+avoiding common mistakes</strong> such as over complicating your system,
+being too optimistic about likely returns, taking excessive risks, and
+trading too often.</p>
+<p>The aim of this book isn’t just to offer a single predefined system
+for trading, but to provide a modular framework which can be adapted to
+meet your needs. Part three describes the framework in detail. Just like
+you can choose different engines and tyres on a car, my framework
+includes options for different trading rules and position sizing
+calculations.</p>
+<h3 id="why-system-trading">why system trading</h3>
+<h2 id="avoid-flawed-human-brain-with-systematic-trading-rules">Avoid
+Flawed Human Brain with Systematic Trading Rules</h2>
+<h3 id="flawed-human-brain">flawed human brain</h3>
+<p>Meddling is due to the biggest cognitive bias of all:
+<strong>overconfidence</strong>. We think we are cleverer than the
+trading system and we are. To stop meddling with our trading systems we
+require what economists call a <strong>commitment
+mechanism</strong>.</p>
+<p><strong>Creating a purely objective system</strong> is a powerful
+commitment mechanism.</p>
+<p>A highly subjective rule would be something like ‘Sell for small
+losses, and hold on to large profit making positions’.</p>
+<p>Another advantage of objective systems is that they can be automated,
+and automation is a good commitment mechanism</p>
+<p>But automation doesn’t stop meddling, having a system which requires
+a human to do the actual execution of automatically generated trades is
+still prone to meddling, so it must be done with a <strong>well designed
+system</strong> in which you have full confidence.</p>
+<p>One simple principle is systems whose performance and behaviour can
+be explained will be more preferred</p>
+<p>pitfalls to avoid when designing trading systems:
+<strong>over-fitting, overtrading and over-betting</strong></p>
+<ul>
+<li>over-fitting</li>
+</ul>
+<p>If we’re not careful the rules selected will fit the data too well.
+They will be highly tuned to one set of market conditions and perform
+worse in actual trading than a simpler rule would.</p>
+<ul>
+<li>overtrading</li>
+</ul>
+<p>Both amateur investors and professional managers have a tendency to
+trade too frequently.There are extra costs involved in trading more
+often.</p>
+<p>Overtrading suggests overconfidence in your own relative ability to
+overcome the higher hurdle of bigger costs.</p>
+<ul>
+<li>over-betting</li>
+</ul>
+<p>If your confidence is unbounded you can bet the maximum that your
+broker allows you to. Potentially this could be a ten-fold leverage on
+an individual equity bet, equating to an annual standard deviation of
+returns of around 200%.</p>
+<h3 id="systematic-trading-rules">systematic trading rules</h3>
+<p>This section mostly relates to how trading rules are fitted. This is
+less applicable to asset allocating investors and semi-automatic
+traders</p>
+<p>two types of trading rules: <strong>ideas first or data
+first</strong></p>
+<p><img data-src="https://wulc.me/imgs/data_first_vs_idea_first.jpg" height="50%" width="50%"></p>
+<p>The author favors the ideas first method. This usually results in
+intuitive, simpler and more transparent rules. In the author's
+experience, consistently profitable trading comes out of careful
+research, done by thoughtful and knowledgeable people, who seek to
+understand where their profits come from.</p>
+<p>But some situations the data first process could be better; for
+example in high frequency trading where there is plenty of data, rules
+can be refitted regularly and novel ideas are more likely to be found as
+market structure evolves.</p>
 <!-- flag of hidden posts -->
     </div>
 
