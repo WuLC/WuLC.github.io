@@ -34,7 +34,7 @@
 <meta property="og:image" content="https://wulc.me/imgs/image_1cfpcf7brpr9i4k1h0aklg8vt9.png">
 <meta property="og:image" content="https://wulc.me/imgs/ROC_PR.png">
 <meta property="article:published_time" content="2018-06-16T04:00:37.000Z">
-<meta property="article:modified_time" content="2023-07-16T15:28:28.089Z">
+<meta property="article:modified_time" content="2024-07-25T14:02:52.185Z">
 <meta property="article:author" content="良超">
 <meta property="article:tag" content="机器学习">
 <meta name="twitter:card" content="summary">
@@ -271,10 +271,12 @@ alt="roc vs pr" />
 <figcaption aria-hidden="true">roc vs pr</figcaption>
 </figure>
 <p>上面四个指标用大白话解释如下</p>
-<p><strong>Recall：查全率，正样本中被预测出来是正的比例(越大越好)
-Precision：查准率，预测的正样本中被正确预测的比例(越大越好) True
-Positive Rate：跟 Recall 定义一样 （越大越好) FPR :
-负样本中被预测为正的比例(越小越好)</strong></p>
+<ul>
+<li>Recall：查全率，正样本中被预测出来是正的比例(越大越好)</li>
+<li>Precision：查准率，预测的正样本中被正确预测的比例(越大越好)</li>
+<li>True Positive Rate：跟 Recall 定义一样(越大越好)</li>
+<li>FPR : 负样本中被预测为正的比例(越小越好)</li>
+</ul>
 <p>对于一个二分类问题，往往要设定一个 threshold，当预测值大于这个
 threshold 时预测为正样本，小于这个 threshold 时预测为负样本。如果以
 Recall 为横轴，Precision 为纵轴，那么设定一个 threshold
@@ -341,14 +343,16 @@ should I use each?</a> 中也举了一下的例子说明了在欺诈检测的问
 <blockquote>
 <p>Let's take an example of fraud detection problem where there are 100
 frauds out of 2 million samples.</p>
-<p>Algorithm 1: 90 relevant out of 100 identified Algorithm 2: 90
-relevant out of 1000 identified</p>
+<ul>
+<li>Algorithm 1: 90 relevant out of 100 identified</li>
+<li>Algorithm 2: 90 relevant out of 1000 identified</li>
+</ul>
 <p><strong>Evidently, algorithm 1 is more preferable because it
 identified less number of false positive</strong>.</p>
-<p>In the context of ROC curve, Algorithm 1: TPR=90/100=0.9, FPR=
-10/1,999,900=0.00000500025 Algorithm 2: TPR=90/100=0.9,
+<p>In the context of ROC curve, - Algorithm 1: TPR=90/100=0.9, FPR=
+10/1,999,900=0.00000500025 - Algorithm 2: TPR=90/100=0.9,
 FPR=910/1,999,900=0.00045502275 The FPR difference is 0.0004500225</p>
-<p>For PR Curve Algorithm 1: precision=0.9, recall=0.9 Algorithm 2:
+<p>For PR Curve - Algorithm 1: precision=0.9, recall=0.9 - Algorithm 2:
 Precision=90/1000=0.09, recall= 0.9 Precision difference= 0.81</p>
 <p><strong>The difference is more apparent in PR curve</strong></p>
 </blockquote>
