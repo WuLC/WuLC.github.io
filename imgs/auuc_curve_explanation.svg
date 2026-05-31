@@ -1,0 +1,117 @@
+<svg width="1200" height="720" viewBox="0 0 1200 720" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title { font: 700 34px -apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif; fill:#1f2937; }
+      .sub   { font: 400 20px -apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif; fill:#4b5563; }
+      .axis  { stroke:#374151; stroke-width:2; }
+      .grid  { stroke:#e5e7eb; stroke-width:1; }
+      .tick  { font: 500 15px -apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif; fill:#4b5563; }
+      .label { font: 600 17px -apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif; fill:#111827; }
+      .note  { font: 600 20px -apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif; fill:#1d4ed8; }
+      .small { font: 400 15px -apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif; fill:#6b7280; }
+      .ate   { font: 700 16px -apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif; fill:#dc2626; }
+    </style>
+  </defs>
+
+  <!-- 整体背景 -->
+  <rect width="1200" height="720" fill="#ffffff"/>
+
+  <!-- 标题 -->
+  <text x="80" y="60" class="title">AUUC 示意图</text>
+  <text x="80" y="92" class="sub">AUUC = 模型 uplift 曲线与横轴（0 增量线）之间的整块面积</text>
+
+  <!-- 绘图区背景 -->
+  <!-- 图区: x 130→1060, y 120→560 -->
+  <rect x="130" y="120" width="930" height="440" fill="#fafafa"/>
+
+  <!-- 水平网格线 -->
+  <line x1="130" y1="340" x2="1060" y2="340" class="grid"/>
+  <line x1="130" y1="230" x2="1060" y2="230" class="grid"/>
+  <!-- ATE 参考线 (y=472) 用浅红虚线 -->
+  <line x1="130" y1="472" x2="1060" y2="472" stroke="#fca5a5" stroke-width="1.5" stroke-dasharray="6 4"/>
+
+  <!-- 垂直网格线 -->
+  <line x1="223" y1="120" x2="223" y2="560" class="grid"/>
+  <line x1="409" y1="120" x2="409" y2="560" class="grid"/>
+  <line x1="595" y1="120" x2="595" y2="560" class="grid"/>
+  <line x1="781" y1="120" x2="781" y2="560" class="grid"/>
+  <line x1="967" y1="120" x2="967" y2="560" class="grid"/>
+
+  <!--
+    曲线数据（平均 uplift 随覆盖比例下降）
+    coverage%: 0   10   20   30   40   50   60   70   80   90  100
+    avg uplift: 0.35 0.30 0.24 0.19 0.16 0.14 0.12 0.11 0.10 0.09 0.08
+    y_svg = 560 - uplift/0.40 * 440
+    x_svg = 130 + coverage% * 9.3
+  -->
+
+  <!-- AUUC 着色区（曲线下方至横轴） -->
+  <polygon points="130,560 130,175 223,231 316,296 409,351 502,384 595,406 688,428 781,439 874,450 967,461 1060,472 1060,560"
+           fill="#93c5fd" fill-opacity="0.45"/>
+
+  <!-- ATE 虚线（随机排序的期望曲线） -->
+  <line x1="130" y1="472" x2="1060" y2="472" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="10 6"/>
+
+  <!-- 模型 uplift 曲线（从左上向右下递减） -->
+  <polyline points="130,175 223,231 316,296 409,351 502,384 595,406 688,428 781,439 874,450 967,461 1060,472"
+            fill="none" stroke="#2563eb" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
+
+  <!-- 坐标轴 -->
+  <line x1="130" y1="560" x2="1060" y2="560" class="axis"/>
+  <line x1="130" y1="560" x2="130"  y2="120" class="axis"/>
+
+  <!-- Y 轴刻度 -->
+  <line x1="122" y1="175" x2="130" y2="175" stroke="#374151" stroke-width="2"/>
+  <line x1="122" y1="340" x2="130" y2="340" stroke="#374151" stroke-width="2"/>
+  <line x1="122" y1="472" x2="130" y2="472" stroke="#374151" stroke-width="2"/>
+  <line x1="122" y1="560" x2="130" y2="560" stroke="#374151" stroke-width="2"/>
+
+  <!-- Y 轴标签 -->
+  <text x="116" y="179" text-anchor="end" class="tick">0.35</text>
+  <text x="116" y="344" text-anchor="end" class="tick">0.20</text>
+  <text x="116" y="476" text-anchor="end" class="ate">ATE</text>
+  <text x="116" y="564" text-anchor="end" class="tick">0</text>
+
+  <!-- X 轴刻度 -->
+  <line x1="130"  y1="560" x2="130"  y2="568" stroke="#374151" stroke-width="2"/>
+  <line x1="223"  y1="560" x2="223"  y2="568" stroke="#374151" stroke-width="2"/>
+  <line x1="409"  y1="560" x2="409"  y2="568" stroke="#374151" stroke-width="2"/>
+  <line x1="595"  y1="560" x2="595"  y2="568" stroke="#374151" stroke-width="2"/>
+  <line x1="781"  y1="560" x2="781"  y2="568" stroke="#374151" stroke-width="2"/>
+  <line x1="967"  y1="560" x2="967"  y2="568" stroke="#374151" stroke-width="2"/>
+  <line x1="1060" y1="560" x2="1060" y2="568" stroke="#374151" stroke-width="2"/>
+
+  <!-- X 轴标签 -->
+  <text x="130"  y="588" text-anchor="middle" class="tick">0%</text>
+  <text x="223"  y="588" text-anchor="middle" class="tick">10%</text>
+  <text x="409"  y="588" text-anchor="middle" class="tick">30%</text>
+  <text x="595"  y="588" text-anchor="middle" class="tick">50%</text>
+  <text x="781"  y="588" text-anchor="middle" class="tick">70%</text>
+  <text x="967"  y="588" text-anchor="middle" class="tick">90%</text>
+  <text x="1060" y="588" text-anchor="middle" class="tick">100%</text>
+
+  <!-- X 轴标题 -->
+  <text x="595" y="622" text-anchor="middle" class="label">覆盖人群比例（按预测 uplift 从高到低排序）</text>
+
+  <!-- Y 轴标题（旋转） -->
+  <text x="50" y="340" text-anchor="middle" class="label" transform="rotate(-90,50,340)">前 k% 用户的平均 uplift</text>
+
+  <!-- AUUC 标注（在着色区内部） -->
+  <text x="310" y="460" text-anchor="middle" class="note">AUUC</text>
+  <text x="310" y="485" text-anchor="middle" font-size="15" fill="#2563eb">（曲线下总面积）</text>
+
+  <!-- ATE 标注 -->
+  <text x="1072" y="476" class="ate">← ATE</text>
+  <text x="1072" y="495" class="ate">（随机排序均值）</text>
+
+  <!-- 图例 -->
+  <rect x="730" y="130" width="300" height="85" fill="white" stroke="#e5e7eb" stroke-width="1" rx="4"/>
+  <line x1="748" y1="158" x2="786" y2="158" stroke="#2563eb" stroke-width="5"/>
+  <text x="798" y="163" class="label">模型 uplift 曲线 U(p)</text>
+  <line x1="748" y1="192" x2="786" y2="192" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="10 6"/>
+  <text x="798" y="197" class="label">ATE（随机排序均值）</text>
+
+  <!-- 说明文字 -->
+  <text x="80" y="655" class="small">读图要点：曲线从左上角向右下方下降，排序越准、曲线越高，AUUC 越大；最终收敛到 ATE。</text>
+  <text x="80" y="680" class="small">AUUC 的参照系是横轴（0 增量线），面积包含了 ATE 本身的贡献；即使随机排序，AUUC 期望值也等于 ATE。</text>
+</svg>

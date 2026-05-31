@@ -1,0 +1,115 @@
+<svg width="1200" height="720" viewBox="0 0 1200 720" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title { font: 700 34px -apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif; fill:#1f2937; }
+      .sub   { font: 400 20px -apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif; fill:#4b5563; }
+      .axis  { stroke:#374151; stroke-width:2; }
+      .grid  { stroke:#e5e7eb; stroke-width:1; }
+      .tick  { font: 500 15px -apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif; fill:#4b5563; }
+      .label { font: 600 17px -apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif; fill:#111827; }
+      .note  { font: 600 20px -apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif; fill:#b45309; }
+      .small { font: 400 15px -apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif; fill:#6b7280; }
+      .ate   { font: 700 16px -apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif; fill:#ea580c; }
+    </style>
+  </defs>
+
+  <!-- 整体背景 -->
+  <rect width="1200" height="720" fill="#ffffff"/>
+
+  <!-- 标题 -->
+  <text x="80" y="60" class="title">Qini 示意图</text>
+  <text x="80" y="92" class="sub">Qini = 模型 uplift 曲线超出随机基线（ATE 水平线）的超额面积 = AUUC − ATE</text>
+
+  <!-- 绘图区背景 -->
+  <rect x="130" y="120" width="930" height="440" fill="#fafafa"/>
+
+  <!-- 水平网格线 -->
+  <line x1="130" y1="340" x2="1060" y2="340" class="grid"/>
+  <line x1="130" y1="230" x2="1060" y2="230" class="grid"/>
+
+  <!-- 垂直网格线 -->
+  <line x1="223" y1="120" x2="223" y2="560" class="grid"/>
+  <line x1="409" y1="120" x2="409" y2="560" class="grid"/>
+  <line x1="595" y1="120" x2="595" y2="560" class="grid"/>
+  <line x1="781" y1="120" x2="781" y2="560" class="grid"/>
+  <line x1="967" y1="120" x2="967" y2="560" class="grid"/>
+
+  <!--
+    曲线数据（与 AUUC 图保持一致）
+    coverage%:  0   10   20   30   40   50   60   70   80   90  100
+    avg uplift: 0.35 0.30 0.24 0.19 0.16 0.14 0.12 0.11 0.10 0.09 0.08
+    ATE = 0.08  →  y = 472
+  -->
+
+  <!-- Qini 着色区（曲线与 ATE 水平线之间的区域） -->
+  <polygon points="130,175 223,231 316,296 409,351 502,384 595,406 688,428 781,439 874,450 967,461 1060,472 130,472"
+           fill="#fde68a" fill-opacity="0.70"/>
+
+  <!-- 随机基线：ATE 水平线（实线，橙色） -->
+  <line x1="130" y1="472" x2="1060" y2="472" stroke="#ea580c" stroke-width="3"/>
+
+  <!-- 模型 uplift 曲线（从左上向右下递减） -->
+  <polyline points="130,175 223,231 316,296 409,351 502,384 595,406 688,428 781,439 874,450 967,461 1060,472"
+            fill="none" stroke="#2563eb" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
+
+  <!-- 坐标轴 -->
+  <line x1="130" y1="560" x2="1060" y2="560" class="axis"/>
+  <line x1="130" y1="560" x2="130"  y2="120" class="axis"/>
+
+  <!-- Y 轴刻度 -->
+  <line x1="122" y1="175" x2="130" y2="175" stroke="#374151" stroke-width="2"/>
+  <line x1="122" y1="340" x2="130" y2="340" stroke="#374151" stroke-width="2"/>
+  <line x1="122" y1="472" x2="130" y2="472" stroke="#374151" stroke-width="2"/>
+  <line x1="122" y1="560" x2="130" y2="560" stroke="#374151" stroke-width="2"/>
+
+  <!-- Y 轴标签 -->
+  <text x="116" y="179" text-anchor="end" class="tick">0.35</text>
+  <text x="116" y="344" text-anchor="end" class="tick">0.20</text>
+  <text x="116" y="476" text-anchor="end" class="ate">ATE</text>
+  <text x="116" y="564" text-anchor="end" class="tick">0</text>
+
+  <!-- X 轴刻度 -->
+  <line x1="130"  y1="560" x2="130"  y2="568" stroke="#374151" stroke-width="2"/>
+  <line x1="223"  y1="560" x2="223"  y2="568" stroke="#374151" stroke-width="2"/>
+  <line x1="409"  y1="560" x2="409"  y2="568" stroke="#374151" stroke-width="2"/>
+  <line x1="595"  y1="560" x2="595"  y2="568" stroke="#374151" stroke-width="2"/>
+  <line x1="781"  y1="560" x2="781"  y2="568" stroke="#374151" stroke-width="2"/>
+  <line x1="967"  y1="560" x2="967"  y2="568" stroke="#374151" stroke-width="2"/>
+  <line x1="1060" y1="560" x2="1060" y2="568" stroke="#374151" stroke-width="2"/>
+
+  <!-- X 轴标签 -->
+  <text x="130"  y="588" text-anchor="middle" class="tick">0%</text>
+  <text x="223"  y="588" text-anchor="middle" class="tick">10%</text>
+  <text x="409"  y="588" text-anchor="middle" class="tick">30%</text>
+  <text x="595"  y="588" text-anchor="middle" class="tick">50%</text>
+  <text x="781"  y="588" text-anchor="middle" class="tick">70%</text>
+  <text x="967"  y="588" text-anchor="middle" class="tick">90%</text>
+  <text x="1060" y="588" text-anchor="middle" class="tick">100%</text>
+
+  <!-- X 轴标题 -->
+  <text x="595" y="622" text-anchor="middle" class="label">覆盖人群比例（按预测 uplift 从高到低排序）</text>
+
+  <!-- Y 轴标题（旋转） -->
+  <text x="50" y="340" text-anchor="middle" class="label" transform="rotate(-90,50,340)">前 k% 用户的平均 uplift</text>
+
+  <!-- Qini 标注（着色区内部） -->
+  <text x="360" y="395" text-anchor="middle" class="note">Qini</text>
+  <text x="360" y="420" text-anchor="middle" font-size="15" fill="#b45309">（超出基线的面积）</text>
+
+  <!-- ATE 标注 -->
+  <text x="1072" y="476" class="ate">← ATE</text>
+  <text x="1072" y="495" class="ate">（随机基线）</text>
+
+  <!-- 图例 -->
+  <rect x="710" y="130" width="330" height="108" fill="white" stroke="#e5e7eb" stroke-width="1" rx="4"/>
+  <line x1="728" y1="158" x2="766" y2="158" stroke="#2563eb" stroke-width="5"/>
+  <text x="778" y="163" class="label">模型 uplift 曲线 U(p)</text>
+  <line x1="728" y1="190" x2="766" y2="190" stroke="#ea580c" stroke-width="3"/>
+  <text x="778" y="195" class="label">随机基线（ATE 水平线）</text>
+  <rect x="728" y="206" width="38" height="18" fill="#fde68a" fill-opacity="0.70" stroke="#b45309" stroke-width="1"/>
+  <text x="778" y="220" class="label">Qini 面积</text>
+
+  <!-- 说明文字 -->
+  <text x="80" y="655" class="small">读图要点：随机基线是一条高度为 ATE 的水平线（而非对角线），代表"乱序排列时任意覆盖比例下的期望均值"。</text>
+  <text x="80" y="680" class="small">Qini = AUUC − ATE；好模型 → Qini 为正；排序完全随机 → Qini 期望为 0；排序比随机差 → Qini 为负。</text>
+</svg>

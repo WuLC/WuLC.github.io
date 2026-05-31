@@ -1,0 +1,12 @@
+/* global CONFIG, NexT, pjax, LocalSearch */
+document.addEventListener("DOMContentLoaded",()=>{if(!CONFIG.path)
+// Search DB path
+return void console.warn("`hexo-generator-searchdb` plugin is not installed!");const e=new LocalSearch({path:CONFIG.path,top_n_per_article:CONFIG.localsearch.top_n_per_article,unescape:CONFIG.localsearch.unescape}),t=document.querySelector(".search-input"),s=document.querySelector(".search-result-container"),c=()=>{if(!e.isfetched)return;const c=t.value.trim().toLowerCase(),n=c.split(/[-\s]+/);let a=[];if(c.length>0&&(
+// Perform local searching
+a=e.getResultItems(n)),1===n.length&&""===n[0])s.innerHTML='<div class="search-result-icon"><i class="fa fa-search fa-5x"></i></div>';else if(0===a.length)s.innerHTML='<div class="search-result-icon"><i class="far fa-frown fa-5x"></i></div>';else{a.sort((e,t)=>e.includedCount!==t.includedCount?t.includedCount-e.includedCount:e.hitCount!==t.hitCount?t.hitCount-e.hitCount:t.id-e.id);const e=CONFIG.i18n.hits.replace("${hits}",a.length);s.innerHTML=`<div class="search-stats">${e}</div>\n        <hr>\n        <ul class="search-result-list">${a.map(e=>e.item).join("")}</ul>`,"object"==typeof pjax&&pjax.refresh(s)}};e.highlightSearchWords(document.querySelector(".post-body")),CONFIG.localsearch.preload&&e.fetchData(),t.addEventListener("input",c),window.addEventListener("search:loaded",c),
+// Handle and trigger popup window
+document.querySelectorAll(".popup-trigger").forEach(s=>{s.addEventListener("click",()=>{NexT.utils.setGutter(),document.body.classList.add("search-active"),
+// Wait for search-popup animation to complete
+setTimeout(()=>t.focus(),500),e.isfetched||e.fetchData()})});
+// Monitor main search box
+const n=()=>{NexT.utils.setGutter("0"),document.body.classList.remove("search-active")};document.querySelector(".search-pop-overlay").addEventListener("click",e=>{e.target===document.querySelector(".search-pop-overlay")&&n()}),document.querySelector(".popup-btn-close").addEventListener("click",n),document.addEventListener("pjax:success",()=>{e.highlightSearchWords(document.querySelector(".post-body")),n()}),window.addEventListener("keydown",s=>{(s.ctrlKey||s.metaKey)&&"k"===s.key&&(s.preventDefault(),NexT.utils.setGutter(),document.body.classList.add("search-active"),setTimeout(()=>t.focus(),500),e.isfetched||e.fetchData())}),window.addEventListener("keyup",e=>{"Escape"===e.key&&n()})});

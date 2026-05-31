@@ -1,0 +1,130 @@
+<svg width="1600" height="510" viewBox="0 0 1600 510" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      text { font-family: -apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif; }
+      .title  { font-size:26px; font-weight:700; fill:#1f2937; }
+      .sub    { font-size:14px; fill:#6b7280; }
+      .bh     { font-size:13px; font-weight:700; fill:#ffffff; }
+      .bc     { font-size:12px; fill:#374151; }
+      .fbtext { font-size:13px; fill:#6b7280; }
+      .core   { font-size:14px; font-weight:600; fill:#1f2937; }
+    </style>
+
+    <!-- 步骤间箭头标记 -->
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#9ca3af"/>
+    </marker>
+    <!-- 反馈箭头标记（指向上方） -->
+    <marker id="arr-fb" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#6b7280"/>
+    </marker>
+  </defs>
+
+  <rect width="1600" height="510" fill="#ffffff"/>
+
+  <!-- ── 标题 ── -->
+  <text x="800" y="44" text-anchor="middle" class="title">Uplift Modeling 从实验到策略落地的核心链路</text>
+  <text x="800" y="70" text-anchor="middle" class="sub">RCT实验 → 数据构造 → Uplift训练 → 个体预估 → 约束求解 → 平滑策略 → 在线闭环</text>
+
+  <!--
+    ── 7 个步骤框 ──
+    框宽 W=183，间距 G=35，步长 S=218
+    左边距 = 55，右边距 = 1600-1546=54
+    框 i 左边 x_i = 55 + i*218，中心 x_i+91
+    框高 225（顶 y=88，底 y=313）
+    表头高 40（y=88..128），内容区 y=128..313
+    内容行 y=202, 225, 248（垂直居中于内容区）
+    表头文字 dominant-baseline="middle" y=108（表头中线）
+  -->
+
+  <!-- ①  RCT实验  x=55..238 -->
+  <rect x="55"  y="88"  width="183" height="225" rx="5" fill="#ffffff" stroke="#93c5fd" stroke-width="1.5"/>
+  <rect x="55"  y="88"  width="183" height="40"  rx="5" fill="#2563eb"/>
+  <rect x="55"  y="108" width="183" height="20"       fill="#2563eb"/>
+  <text x="147" y="108" text-anchor="middle" dominant-baseline="middle" class="bh">① RCT实验</text>
+  <text x="147" y="202" text-anchor="middle" class="bc">随机实验或 Switchback设计</text>
+  <text x="147" y="225" text-anchor="middle" class="bc">确保 treatment 随机分配</text>
+  <text x="147" y="248" text-anchor="middle" class="bc">保证因果可识别性</text>
+
+  <!-- ② 数据构造  x=273..456 -->
+  <rect x="273" y="88"  width="183" height="225" rx="5" fill="#ffffff" stroke="#6ee7b7" stroke-width="1.5"/>
+  <rect x="273" y="88"  width="183" height="40"  rx="5" fill="#059669"/>
+  <rect x="273" y="108" width="183" height="20"       fill="#059669"/>
+  <text x="365" y="108" text-anchor="middle" dominant-baseline="middle" class="bh">② 数据构造</text>
+  <text x="365" y="202" text-anchor="middle" class="bc">异质性特征工程</text>
+  <text x="365" y="225" text-anchor="middle" class="bc">增益标签与成本标签</text>
+  <text x="365" y="248" text-anchor="middle" class="bc">稳健化与归一化</text>
+
+  <!-- ③ Uplift训练  x=491..674 -->
+  <rect x="491" y="88"  width="183" height="225" rx="5" fill="#ffffff" stroke="#c4b5fd" stroke-width="1.5"/>
+  <rect x="491" y="88"  width="183" height="40"  rx="5" fill="#7c3aed"/>
+  <rect x="491" y="108" width="183" height="20"       fill="#7c3aed"/>
+  <text x="583" y="108" text-anchor="middle" dominant-baseline="middle" class="bh">③ Uplift训练</text>
+  <text x="583" y="202" text-anchor="middle" class="bc">Causal Forest训练</text>
+  <text x="583" y="225" text-anchor="middle" class="bc">学习条件平均处理效应</text>
+  <text x="583" y="248" text-anchor="middle" class="bc">识别人群差异</text>
+
+  <!-- ④ 个体预估  x=709..892 -->
+  <rect x="709" y="88"  width="183" height="225" rx="5" fill="#ffffff" stroke="#bae6fd" stroke-width="1.5"/>
+  <rect x="709" y="88"  width="183" height="40"  rx="5" fill="#0369a1"/>
+  <rect x="709" y="108" width="183" height="20"       fill="#0369a1"/>
+  <text x="801" y="108" text-anchor="middle" dominant-baseline="middle" class="bh">④ 个体预估</text>
+  <text x="801" y="202" text-anchor="middle" class="bc">输出每个用户的</text>
+  <text x="801" y="225" text-anchor="middle" class="bc">gain_i 与 cost_i</text>
+  <text x="801" y="248" text-anchor="middle" class="bc">形成可决策分数</text>
+
+  <!-- ⑤ 约束求解  x=927..1110 -->
+  <rect x="927" y="88"  width="183" height="225" rx="5" fill="#ffffff" stroke="#fed7aa" stroke-width="1.5"/>
+  <rect x="927" y="88"  width="183" height="40"  rx="5" fill="#ea580c"/>
+  <rect x="927" y="108" width="183" height="20"       fill="#ea580c"/>
+  <text x="1019" y="108" text-anchor="middle" dominant-baseline="middle" class="bh">⑤ 约束求解</text>
+  <text x="1019" y="202" text-anchor="middle" class="bc">ROI = gain / cost</text>
+  <text x="1019" y="225" text-anchor="middle" class="bc">排序 + 预算约束</text>
+  <text x="1019" y="248" text-anchor="middle" class="bc">选择最值得干预的人</text>
+
+  <!-- ⑥ 平滑策略  x=1145..1328 -->
+  <rect x="1145" y="88"  width="183" height="225" rx="5" fill="#ffffff" stroke="#fde68a" stroke-width="1.5"/>
+  <rect x="1145" y="88"  width="183" height="40"  rx="5" fill="#ca8a04"/>
+  <rect x="1145" y="108" width="183" height="20"       fill="#ca8a04"/>
+  <text x="1237" y="108" text-anchor="middle" dominant-baseline="middle" class="bh">⑥ 平滑策略</text>
+  <text x="1237" y="202" text-anchor="middle" class="bc">硬阈值 → 概率/强度</text>
+  <text x="1237" y="225" text-anchor="middle" class="bc">保留探索空间</text>
+  <text x="1237" y="248" text-anchor="middle" class="bc">提升预算利用率</text>
+
+  <!-- ⑦ 在线闭环  x=1363..1546 -->
+  <rect x="1363" y="88"  width="183" height="225" rx="5" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+  <rect x="1363" y="88"  width="183" height="40"  rx="5" fill="#475569"/>
+  <rect x="1363" y="108" width="183" height="20"       fill="#475569"/>
+  <text x="1455" y="108" text-anchor="middle" dominant-baseline="middle" class="bh">⑦ 在线闭环</text>
+  <text x="1455" y="202" text-anchor="middle" class="bc">留随机桶持续校准</text>
+  <text x="1455" y="225" text-anchor="middle" class="bc">观察分布漂移与副作用</text>
+  <text x="1455" y="248" text-anchor="middle" class="bc">IPW/DR 修正后回训</text>
+
+  <!-- ── 步骤间箭头（y=200，框中线）──
+       箭头 i: x1 = 55 + (i+1)*183 + i*35 + 5 = 243 + i*218
+               x2 = 55 + (i+1)*218 - 5      = 268 + i*218
+  -->
+  <line x1="243" y1="200" x2="268" y2="200" stroke="#9ca3af" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="461" y1="200" x2="486" y2="200" stroke="#9ca3af" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="679" y1="200" x2="704" y2="200" stroke="#9ca3af" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="897" y1="200" x2="922" y2="200" stroke="#9ca3af" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="1115" y1="200" x2="1140" y2="200" stroke="#9ca3af" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="1333" y1="200" x2="1358" y2="200" stroke="#9ca3af" stroke-width="2" marker-end="url(#arr)"/>
+
+  <!-- ── 反馈回路：从⑦底部 → 下行 → 左行 → 上行至①底部，箭头向上 ── -->
+  <path d="M 1455 313 L 1455 383 L 147 383 L 147 313"
+        stroke="#6b7280" stroke-width="2" fill="none"
+        marker-end="url(#arr-fb)"/>
+  <!-- 反馈路径两端的小起始圆点 -->
+  <circle cx="1455" cy="313" r="4" fill="#6b7280"/>
+
+  <!-- 反馈标签 -->
+  <text x="800" y="406" text-anchor="middle" class="fbtext">仅用随机桶 / IPW 修正后的样本回训，避免选择偏差累积</text>
+
+  <!-- ── 核心思想框 ── -->
+  <rect x="300" y="430" width="1000" height="54" rx="6"
+        fill="#f9fafb" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="800" y="461" text-anchor="middle" class="core">核心思想：不是预测「谁会发生结果」，而是预测「对谁干预最值得」。</text>
+</svg>
