@@ -1,0 +1,144 @@
+<svg width="1600" height="860" viewBox="0 0 1600 860" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      text { font-family: -apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif; }
+      .title { font-size:30px; font-weight:700; fill:#172033; }
+      .subtitle { font-size:16px; fill:#64748b; }
+      .panel-title { font-size:21px; font-weight:700; fill:#1e293b; }
+      .panel-sub { font-size:14px; fill:#64748b; }
+      .axis { stroke:#334155; stroke-width:2; }
+      .grid { stroke:#e2e8f0; stroke-width:1; }
+      .tick { font-size:13px; fill:#64748b; }
+      .axis-label { font-size:15px; font-weight:600; fill:#334155; }
+      .legend { font-size:14px; fill:#334155; }
+      .label-blue { font-size:14px; font-weight:700; fill:#2563eb; }
+      .label-red { font-size:14px; font-weight:700; fill:#dc2626; }
+      .label-amber { font-size:14px; font-weight:700; fill:#b45309; }
+      .card-title { font-size:15px; font-weight:700; fill:#1e293b; }
+      .card-text { font-size:14px; fill:#475569; }
+      .formula { font-size:16px; font-weight:600; fill:#1e293b; }
+    </style>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,1 L9,5 L0,9 Z" fill="#2563eb"/>
+    </marker>
+  </defs>
+
+  <rect width="1600" height="860" fill="#ffffff"/>
+
+  <text x="800" y="48" text-anchor="middle" class="title">平均 uplift 曲线与累计增益曲线</text>
+  <text x="800" y="76" text-anchor="middle" class="subtitle">同一组排序信息，不同的 Y 轴定义；两条曲线可以相互转换，但曲线下面积并不相同</text>
+
+  <!-- 左侧：平均 uplift 曲线 -->
+  <rect x="60" y="105" width="720" height="555" rx="10" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="90" y="140" class="panel-title">① 平均 uplift 曲线 U(p)</text>
+  <text x="90" y="164" class="panel-sub">前 p 比例人群的 average uplift；理想排序下通常左高右低</text>
+
+  <!-- 左图网格，绘图区 x=120..750, y=200..610 -->
+  <line x1="120" y1="200" x2="750" y2="200" class="grid"/>
+  <line x1="120" y1="302" x2="750" y2="302" class="grid"/>
+  <line x1="120" y1="405" x2="750" y2="405" class="grid"/>
+  <line x1="120" y1="507" x2="750" y2="507" class="grid"/>
+  <line x1="120" y1="610" x2="750" y2="610" class="axis"/>
+  <line x1="120" y1="200" x2="120" y2="610" class="axis"/>
+  <line x1="278" y1="200" x2="278" y2="610" class="grid"/>
+  <line x1="435" y1="200" x2="435" y2="610" class="grid"/>
+  <line x1="593" y1="200" x2="593" y2="610" class="grid"/>
+  <line x1="750" y1="200" x2="750" y2="610" class="grid"/>
+
+  <!-- ATE 水平基线 -->
+  <line x1="120" y1="533" x2="750" y2="533" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="9 6"/>
+  <text x="625" y="525" class="label-red">随机基线：ATE</text>
+
+  <!-- 平均 uplift 曲线，U(1)=ATE -->
+  <polyline points="126,222 183,259 246,317 309,364 372,399 435,428 498,452 561,473 624,493 687,513 750,533"
+            fill="none" stroke="#2563eb" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="183" cy="259" r="5" fill="#2563eb"/>
+  <circle cx="435" cy="428" r="5" fill="#2563eb"/>
+  <circle cx="750" cy="533" r="6" fill="#2563eb"/>
+  <text x="146" y="215" class="label-blue">头部 average uplift 高</text>
+  <text x="646" y="557" class="label-blue">U(1)=ATE</text>
+
+  <!-- 左图刻度和轴标题 -->
+  <text x="108" y="205" text-anchor="end" class="tick">高</text>
+  <text x="108" y="615" text-anchor="end" class="tick">0</text>
+  <text x="120" y="634" text-anchor="middle" class="tick">0%</text>
+  <text x="278" y="634" text-anchor="middle" class="tick">25%</text>
+  <text x="435" y="634" text-anchor="middle" class="tick">50%</text>
+  <text x="593" y="634" text-anchor="middle" class="tick">75%</text>
+  <text x="750" y="634" text-anchor="middle" class="tick">100%</text>
+  <text x="435" y="653" text-anchor="middle" class="axis-label">覆盖比例 p（按预测 uplift 从高到低）</text>
+  <text x="82" y="405" text-anchor="middle" class="axis-label" transform="rotate(-90 82 405)">前缀 average uplift：U(p)</text>
+
+  <!-- 右侧：累计增益曲线 -->
+  <rect x="820" y="105" width="720" height="555" rx="10" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="850" y="140" class="panel-title">② 累计增益曲线 G(p)=p·U(p)</text>
+  <text x="850" y="164" class="panel-sub">从原点出发；是否继续上升取决于新纳入人群的 marginal treatment effect</text>
+
+  <!-- 右图网格，绘图区 x=880..1510, y=200..610 -->
+  <line x1="880" y1="200" x2="1510" y2="200" class="grid"/>
+  <line x1="880" y1="302" x2="1510" y2="302" class="grid"/>
+  <line x1="880" y1="405" x2="1510" y2="405" class="grid"/>
+  <line x1="880" y1="507" x2="1510" y2="507" class="grid"/>
+  <line x1="880" y1="610" x2="1510" y2="610" class="axis"/>
+  <line x1="880" y1="200" x2="880" y2="610" class="axis"/>
+  <line x1="1038" y1="200" x2="1038" y2="610" class="grid"/>
+  <line x1="1195" y1="200" x2="1195" y2="610" class="grid"/>
+  <line x1="1353" y1="200" x2="1353" y2="610" class="grid"/>
+  <line x1="1510" y1="200" x2="1510" y2="610" class="grid"/>
+
+  <!-- AUUC：模型曲线到零轴的面积 -->
+  <polygon points="880,610 943,473 1006,382 1069,323 1132,282 1195,255 1258,241 1321,236 1384,246 1447,268 1510,309 1510,610"
+           fill="#bfdbfe" fill-opacity="0.45"/>
+
+  <!-- Qini：模型曲线与随机基线之间的面积 -->
+  <polygon points="880,610 943,473 1006,382 1069,323 1132,282 1195,255 1258,241 1321,236 1384,246 1447,268 1510,309 1447,339 1384,369 1321,399 1258,429 1195,460 1132,490 1069,520 1006,550 943,580 880,610"
+           fill="#fde68a" fill-opacity="0.72"/>
+
+  <!-- 随机基线与模型曲线 -->
+  <line x1="880" y1="610" x2="1510" y2="309" stroke="#94a3b8" stroke-width="3" stroke-dasharray="9 6"/>
+  <polyline points="880,610 943,473 1006,382 1069,323 1132,282 1195,255 1258,241 1321,236 1384,246 1447,268 1510,309"
+            fill="none" stroke="#2563eb" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- 最佳覆盖点与趋势 -->
+  <line x1="1321" y1="236" x2="1321" y2="610" stroke="#0f766e" stroke-width="2" stroke-dasharray="5 5"/>
+  <circle cx="1321" cy="236" r="7" fill="#0f766e"/>
+  <text x="1294" y="216" text-anchor="middle" font-size="14" font-weight="700" fill="#0f766e">最大累计增益</text>
+  <path d="M930 452 C990 340,1060 280,1160 255" fill="none" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow-blue)"/>
+  <text x="960" y="430" class="label-blue">τ(p)&gt;0：上升</text>
+  <text x="1362" y="232" class="label-red">τ(p)&lt;0：下降</text>
+
+  <!-- 图例 -->
+  <rect x="900" y="182" width="302" height="118" rx="5" fill="#ffffff" stroke="#e2e8f0"/>
+  <line x1="918" y1="204" x2="955" y2="204" stroke="#2563eb" stroke-width="5"/>
+  <text x="966" y="209" class="legend">模型累计增益 G(p)</text>
+  <line x1="918" y1="230" x2="955" y2="230" stroke="#94a3b8" stroke-width="3" stroke-dasharray="9 6"/>
+  <text x="966" y="235" class="legend">随机基线 p·ATE</text>
+  <rect x="918" y="244" width="37" height="15" fill="#bfdbfe" fill-opacity="0.65" stroke="#60a5fa"/>
+  <text x="966" y="257" class="legend">AUUC：模型曲线到零轴的面积</text>
+  <rect x="918" y="270" width="37" height="15" fill="#fde68a" stroke="#d97706"/>
+  <text x="966" y="283" class="legend">Qini：超出随机基线的面积</text>
+
+  <!-- 右图刻度和轴标题 -->
+  <text x="868" y="205" text-anchor="end" class="tick">高</text>
+  <text x="868" y="615" text-anchor="end" class="tick">0</text>
+  <text x="880" y="634" text-anchor="middle" class="tick">0%</text>
+  <text x="1038" y="634" text-anchor="middle" class="tick">25%</text>
+  <text x="1195" y="634" text-anchor="middle" class="tick">50%</text>
+  <text x="1353" y="634" text-anchor="middle" class="tick">75%</text>
+  <text x="1510" y="634" text-anchor="middle" class="tick">100%</text>
+  <text x="1195" y="653" text-anchor="middle" class="axis-label">覆盖比例 p（按预测 uplift 从高到低）</text>
+  <text x="842" y="405" text-anchor="middle" class="axis-label" transform="rotate(-90 842 405)">归一化累计增益：G(p)</text>
+
+  <!-- 底部解释卡片 -->
+  <rect x="60" y="685" width="720" height="118" rx="8" fill="#eff6ff" stroke="#bfdbfe"/>
+  <text x="85" y="716" class="card-title">如何读左图</text>
+  <text x="85" y="742" class="card-text">U(p) 是当前整个前缀的人均 effect。理想排序下，覆盖越多，新增用户的 effect 越低，</text>
+  <text x="85" y="766" class="card-text">所以曲线通常左高右低，并在覆盖 100% 时回到总体 ATE。</text>
+
+  <rect x="820" y="685" width="720" height="118" rx="8" fill="#fffbeb" stroke="#fde68a"/>
+  <text x="845" y="716" class="card-title">如何读右图</text>
+  <text x="845" y="742" class="card-text">G(p) 从原点出发，但不保证始终向右上。新纳入人群 effect 为正时上升，为负时下降；</text>
+  <text x="845" y="766" class="card-text">蓝色曲线到零轴的面积是 AUUC，黄色区域是相对随机策略的 Qini。</text>
+
+  <text x="800" y="834" text-anchor="middle" class="formula">关键关系：G(p)=p·U(p)　｜　G′(p)=τ(p)　｜　G(1)=ATE</text>
+</svg>
