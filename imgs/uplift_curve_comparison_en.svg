@@ -1,0 +1,143 @@
+<svg width="1600" height="860" viewBox="0 0 1600 860" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      text { font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif; }
+      .title { font-size:30px; font-weight:700; fill:#172033; }
+      .subtitle { font-size:16px; fill:#64748b; }
+      .panel-title { font-size:21px; font-weight:700; fill:#1e293b; }
+      .panel-sub { font-size:14px; fill:#64748b; }
+      .axis { stroke:#334155; stroke-width:2; }
+      .grid { stroke:#e2e8f0; stroke-width:1; }
+      .tick { font-size:13px; fill:#64748b; }
+      .axis-label { font-size:15px; font-weight:600; fill:#334155; }
+      .legend { font-size:14px; fill:#334155; }
+      .label-blue { font-size:14px; font-weight:700; fill:#2563eb; }
+      .label-red { font-size:14px; font-weight:700; fill:#dc2626; }
+      .card-title { font-size:15px; font-weight:700; fill:#1e293b; }
+      .card-text { font-size:14px; fill:#475569; }
+      .formula { font-size:16px; font-weight:600; fill:#1e293b; }
+    </style>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,1 L9,5 L0,9 Z" fill="#2563eb"/>
+    </marker>
+  </defs>
+
+  <rect width="1600" height="860" fill="#ffffff"/>
+
+  <text x="800" y="48" text-anchor="middle" class="title">Average Uplift Curve vs. Cumulative Gain Curve</text>
+  <text x="800" y="76" text-anchor="middle" class="subtitle">The same ranking information on different y-axes: the curves are convertible, but their areas are not equal</text>
+
+  <!-- Left: average uplift curve -->
+  <rect x="60" y="105" width="720" height="555" rx="10" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="90" y="140" class="panel-title">① Average uplift curve U(p)</text>
+  <text x="90" y="164" class="panel-sub">Average uplift of the top p fraction; an ideal ranking usually slopes downward</text>
+
+  <!-- Left plot grid: x=120..750, y=200..610 -->
+  <line x1="120" y1="200" x2="750" y2="200" class="grid"/>
+  <line x1="120" y1="302" x2="750" y2="302" class="grid"/>
+  <line x1="120" y1="405" x2="750" y2="405" class="grid"/>
+  <line x1="120" y1="507" x2="750" y2="507" class="grid"/>
+  <line x1="120" y1="610" x2="750" y2="610" class="axis"/>
+  <line x1="120" y1="200" x2="120" y2="610" class="axis"/>
+  <line x1="278" y1="200" x2="278" y2="610" class="grid"/>
+  <line x1="435" y1="200" x2="435" y2="610" class="grid"/>
+  <line x1="593" y1="200" x2="593" y2="610" class="grid"/>
+  <line x1="750" y1="200" x2="750" y2="610" class="grid"/>
+
+  <!-- Horizontal ATE baseline -->
+  <line x1="120" y1="533" x2="750" y2="533" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="9 6"/>
+  <text x="600" y="525" class="label-red">Random baseline: ATE</text>
+
+  <!-- Average uplift curve, U(1)=ATE -->
+  <polyline points="126,222 183,259 246,317 309,364 372,399 435,428 498,452 561,473 624,493 687,513 750,533"
+            fill="none" stroke="#2563eb" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="183" cy="259" r="5" fill="#2563eb"/>
+  <circle cx="435" cy="428" r="5" fill="#2563eb"/>
+  <circle cx="750" cy="533" r="6" fill="#2563eb"/>
+  <text x="146" y="215" class="label-blue">High average uplift at the top</text>
+  <text x="646" y="557" class="label-blue">U(1)=ATE</text>
+
+  <!-- Left ticks and axis labels -->
+  <text x="108" y="205" text-anchor="end" class="tick">High</text>
+  <text x="108" y="615" text-anchor="end" class="tick">0</text>
+  <text x="120" y="634" text-anchor="middle" class="tick">0%</text>
+  <text x="278" y="634" text-anchor="middle" class="tick">25%</text>
+  <text x="435" y="634" text-anchor="middle" class="tick">50%</text>
+  <text x="593" y="634" text-anchor="middle" class="tick">75%</text>
+  <text x="750" y="634" text-anchor="middle" class="tick">100%</text>
+  <text x="435" y="653" text-anchor="middle" class="axis-label">Coverage p (ranked by predicted uplift, high to low)</text>
+  <text x="82" y="405" text-anchor="middle" class="axis-label" transform="rotate(-90 82 405)">Prefix average uplift: U(p)</text>
+
+  <!-- Right: cumulative gain curve -->
+  <rect x="820" y="105" width="720" height="555" rx="10" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="850" y="140" class="panel-title">② Cumulative gain curve G(p)=p·U(p)</text>
+  <text x="850" y="164" class="panel-sub">Starts at the origin; its slope is the rank-local treatment effect</text>
+
+  <!-- Right plot grid: x=880..1510, y=200..610 -->
+  <line x1="880" y1="200" x2="1510" y2="200" class="grid"/>
+  <line x1="880" y1="302" x2="1510" y2="302" class="grid"/>
+  <line x1="880" y1="405" x2="1510" y2="405" class="grid"/>
+  <line x1="880" y1="507" x2="1510" y2="507" class="grid"/>
+  <line x1="880" y1="610" x2="1510" y2="610" class="axis"/>
+  <line x1="880" y1="200" x2="880" y2="610" class="axis"/>
+  <line x1="1038" y1="200" x2="1038" y2="610" class="grid"/>
+  <line x1="1195" y1="200" x2="1195" y2="610" class="grid"/>
+  <line x1="1353" y1="200" x2="1353" y2="610" class="grid"/>
+  <line x1="1510" y1="200" x2="1510" y2="610" class="grid"/>
+
+  <!-- AUUC: area between the model curve and zero -->
+  <polygon points="880,610 943,473 1006,382 1069,323 1132,282 1195,255 1258,241 1321,236 1384,246 1447,268 1510,309 1510,610"
+           fill="#bfdbfe" fill-opacity="0.45"/>
+
+  <!-- Qini: area between the model curve and random baseline -->
+  <polygon points="880,610 943,473 1006,382 1069,323 1132,282 1195,255 1258,241 1321,236 1384,246 1447,268 1510,309 1447,339 1384,369 1321,399 1258,429 1195,460 1132,490 1069,520 1006,550 943,580 880,610"
+           fill="#fde68a" fill-opacity="0.72"/>
+
+  <!-- Random baseline and model curve -->
+  <line x1="880" y1="610" x2="1510" y2="309" stroke="#94a3b8" stroke-width="3" stroke-dasharray="9 6"/>
+  <polyline points="880,610 943,473 1006,382 1069,323 1132,282 1195,255 1258,241 1321,236 1384,246 1447,268 1510,309"
+            fill="none" stroke="#2563eb" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Best coverage point and slope direction -->
+  <line x1="1321" y1="236" x2="1321" y2="610" stroke="#0f766e" stroke-width="2" stroke-dasharray="5 5"/>
+  <circle cx="1321" cy="236" r="7" fill="#0f766e"/>
+  <text x="1350" y="216" text-anchor="middle" font-size="14" font-weight="700" fill="#0f766e">Maximum cumulative gain</text>
+  <path d="M930 452 C990 340,1060 280,1160 255" fill="none" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow-blue)"/>
+  <text x="960" y="430" class="label-blue">τ(p)&gt;0: rising</text>
+  <text x="1370" y="250" class="label-red">τ(p)&lt;0: falling</text>
+
+  <!-- Legend -->
+  <rect x="900" y="182" width="340" height="118" rx="5" fill="#ffffff" stroke="#e2e8f0"/>
+  <line x1="918" y1="204" x2="955" y2="204" stroke="#2563eb" stroke-width="5"/>
+  <text x="966" y="209" class="legend">Model cumulative gain G(p)</text>
+  <line x1="918" y1="230" x2="955" y2="230" stroke="#94a3b8" stroke-width="3" stroke-dasharray="9 6"/>
+  <text x="966" y="235" class="legend">Random baseline p·ATE</text>
+  <rect x="918" y="244" width="37" height="15" fill="#bfdbfe" fill-opacity="0.65" stroke="#60a5fa"/>
+  <text x="966" y="257" class="legend">AUUC: area under the model curve</text>
+  <rect x="918" y="270" width="37" height="15" fill="#fde68a" stroke="#d97706"/>
+  <text x="966" y="283" class="legend">Qini: area above the random baseline</text>
+
+  <!-- Right ticks and axis labels -->
+  <text x="868" y="205" text-anchor="end" class="tick">High</text>
+  <text x="868" y="615" text-anchor="end" class="tick">0</text>
+  <text x="880" y="634" text-anchor="middle" class="tick">0%</text>
+  <text x="1038" y="634" text-anchor="middle" class="tick">25%</text>
+  <text x="1195" y="634" text-anchor="middle" class="tick">50%</text>
+  <text x="1353" y="634" text-anchor="middle" class="tick">75%</text>
+  <text x="1510" y="634" text-anchor="middle" class="tick">100%</text>
+  <text x="1195" y="653" text-anchor="middle" class="axis-label">Coverage p (ranked by predicted uplift, high to low)</text>
+  <text x="842" y="405" text-anchor="middle" class="axis-label" transform="rotate(-90 842 405)">Normalized cumulative gain: G(p)</text>
+
+  <!-- Explanatory cards -->
+  <rect x="60" y="685" width="720" height="118" rx="8" fill="#eff6ff" stroke="#bfdbfe"/>
+  <text x="85" y="716" class="card-title">How to read the left panel</text>
+  <text x="85" y="742" class="card-text">U(p) is the per-user effect across the entire prefix. Under an ideal ranking, newly added users</text>
+  <text x="85" y="766" class="card-text">have lower effects, so the curve usually declines and returns to the population ATE at 100%.</text>
+
+  <rect x="820" y="685" width="720" height="118" rx="8" fill="#fffbeb" stroke="#fde68a"/>
+  <text x="845" y="716" class="card-title">How to read the right panel</text>
+  <text x="845" y="742" class="card-text">G(p) starts at the origin but need not always rise: positive effects raise it; negative effects lower it.</text>
+  <text x="845" y="766" class="card-text">AUUC is the blue area to zero; Qini is the yellow area above the random baseline.</text>
+
+  <text x="800" y="834" text-anchor="middle" class="formula">Key relationships: G(p)=p·U(p)  |  G′(p)=τ(p)  |  G(1)=ATE</text>
+</svg>
